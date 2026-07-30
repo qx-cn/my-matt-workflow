@@ -1193,6 +1193,85 @@ class DoctorTests(unittest.TestCase):
             allow_missing=True,
         )
 
+    def test_upstream_manifest_wrapper_preserves_skill_hashes(self):
+        root = Path(__file__).resolve().parents[1]
+        spec = importlib.util.spec_from_file_location(
+            "workflow_cli_manifest_wrapper", root / "tools/workflow.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, str(root / "tools"))
+        try:
+            assert spec.loader is not None
+            spec.loader.exec_module(module)
+        finally:
+            sys.path.pop(0)
+
+        skills = module._load_upstream_skills_snapshot(
+            root / "upstream" / "manifest.json"
+        )
+        raw = json.loads((root / "upstream" / "manifest.json").read_text())
+        self.assertEqual(
+            {
+                "repo": "https://github.com/mattpocock/skills.git",
+                "commit": "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+            },
+            raw["source"],
+        )
+        self.assertEqual(raw["skills"], skills)
+        self.assertIn("ask-matt", skills)
+        self.assertEqual(
+            {"ask-matt": skills["ask-matt"]},
+            module._upstream_skills_from_manifest(
+                {"ask-matt": skills["ask-matt"]}
+            ),
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.json"
+            module._write_upstream_manifest(
+                path,
+                {"implement": {"SKILL.md": "abc"}},
+                source={
+                    "repo": "https://github.com/mattpocock/skills.git",
+                    "commit": "deadbeef",
+                },
+            )
+            rewritten = json.loads(path.read_text())
+            self.assertEqual("deadbeef", rewritten["source"]["commit"])
+            self.assertEqual(
+                {"implement": {"SKILL.md": "abc"}},
+                module._load_upstream_skills_snapshot(path),
+            )
+            module._write_upstream_manifest(
+                path, {"implement": {"SKILL.md": "def"}}
+            )
+            preserved = json.loads(path.read_text())
+            self.assertEqual("deadbeef", preserved["source"]["commit"])
+            self.assertEqual("def", preserved["skills"]["implement"]["SKILL.md"])
+
+    def test_fidelity_ledger_covers_upstream_derived_skills(self):
+        root = Path(__file__).resolve().parents[1]
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        manifest = json.loads((root / "upstream" / "manifest.json").read_text())
+        by_upstream = {entry["upstream_skill"]: entry for entry in fidelity["skills"]}
+        self.assertEqual(set(manifest["skills"]), set(by_upstream))
+        self.assertTrue(
+            set(fidelity["conclusions"])
+            >= {
+                "faithful",
+                "restore-required",
+                "adapter-rework-required",
+                "unreviewed",
+            }
+        )
+        for entry in fidelity["skills"]:
+            self.assertEqual(
+                manifest["skills"][entry["upstream_skill"]],
+                entry["support_files"],
+            )
+            self.assertIn(entry["conclusion"], fidelity["conclusions"])
+            self.assertNotEqual(entry["conclusion"], "faithful")
+
     def test_recommendations_rank_general_candidates_and_defer_specialized_ones(self):
         report = build_recommendation_report(
             [

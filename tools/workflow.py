@@ -339,6 +339,45 @@ def _load_json(path: Path) -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
 
 
+def _upstream_skills_from_manifest(raw: dict) -> dict[str, dict[str, str]]:
+    """Extract the skill→file hash map from bare or wrapped upstream manifests."""
+    if not raw:
+        return {}
+    skills = raw.get("skills")
+    if isinstance(skills, dict) and isinstance(raw.get("source"), dict):
+        if not all(isinstance(files, dict) for files in skills.values()):
+            raise SystemExit("upstream/manifest.json skills 必须是文件哈希映射")
+        return skills
+    if "source" in raw or "skills" in raw:
+        raise SystemExit("upstream/manifest.json 包装格式无效：需要 source 与 skills")
+    if not all(isinstance(files, dict) for files in raw.values()):
+        raise SystemExit("upstream/manifest.json 必须是 Skill 文件哈希映射")
+    return raw
+
+
+def _load_upstream_skills_snapshot(path: Path) -> dict[str, dict[str, str]]:
+    return _upstream_skills_from_manifest(_load_json(path))
+
+
+def _write_upstream_manifest(
+    path: Path,
+    skills: dict[str, dict[str, str]],
+    *,
+    source: dict | None = None,
+) -> None:
+    """Write wrapped upstream manifest, preserving an existing source pin."""
+    existing = _load_json(path)
+    pinned = source
+    if pinned is None and isinstance(existing.get("source"), dict):
+        pinned = existing["source"]
+    if pinned is None:
+        pinned = {"repo": OFFICIAL_UPSTREAM, "commit": ""}
+    path.write_text(
+        json.dumps({"source": pinned, "skills": skills}, ensure_ascii=False, indent=2)
+        + "\n"
+    )
+
+
 def _load_list(path: Path) -> list[str]:
     if not path.exists():
         return []
@@ -380,7 +419,7 @@ def _adapted_snapshot(upstream: Path) -> dict:
 
 
 def command_doctor(args: argparse.Namespace) -> None:
-    previous = _load_json(ROOT / "upstream" / "manifest.json")
+    previous = _load_upstream_skills_snapshot(ROOT / "upstream" / "manifest.json")
     known_unmapped = set(_load_list(ROOT / "upstream" / "unmapped.json"))
     def check(upstream: Path) -> None:
         current = _adapted_snapshot(upstream)
@@ -401,7 +440,7 @@ def command_doctor(args: argparse.Namespace) -> None:
 
 
 def command_sync(args: argparse.Namespace) -> None:
-    previous = _load_json(ROOT / "upstream" / "manifest.json")
+    previous = _load_upstream_skills_snapshot(ROOT / "upstream" / "manifest.json")
     def review(upstream: Path) -> dict:
         current = _adapted_snapshot(upstream)
         validate_upstream_snapshot(current, set(ADAPTATION_MAP), allow_missing=True)
@@ -444,9 +483,7 @@ def command_snapshot(args: argparse.Namespace) -> None:
         set(ADAPTATION_MAP),
         allow_missing=args.allow_deletions,
     )
-    (ROOT / "upstream" / "manifest.json").write_text(
-        json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n"
-    )
+    _write_upstream_manifest(ROOT / "upstream" / "manifest.json", snapshot)
     (ROOT / "upstream" / "unmapped.json").write_text(
         json.dumps(unmapped, ensure_ascii=False, indent=2) + "\n"
     )

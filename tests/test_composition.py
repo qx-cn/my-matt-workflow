@@ -47,6 +47,26 @@ class CompositionManifestTests(unittest.TestCase):
             ):
                 validate_composition_manifest(manifest, skills)
 
+    def test_routable_entry_cycle_is_rejected_with_path(self):
+        """Router A → entry B via routable_entries, B → A via callers."""
+        manifest = CompositionManifest(
+            version=1,
+            callers={
+                "my-b": (DependencyEdge("my-a", "always"),),
+            },
+            routable_entries={
+                "my-a": ("my-b",),
+            },
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            skills = Path(tmp)
+            for name in ("my-a", "my-b"):
+                (skills / name).mkdir()
+            with self.assertRaisesRegex(
+                CompositionError, r"my-a.*my-b|my-b.*my-a"
+            ):
+                validate_composition_manifest(manifest, skills)
+
     def test_unknown_dependency_reports_caller_and_target(self):
         manifest = CompositionManifest(
             version=1,

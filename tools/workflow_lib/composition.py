@@ -125,10 +125,12 @@ def validate_composition_manifest(
         stack.append(skill)
         for edge in sorted(manifest.callers.get(skill, ()), key=lambda item: item.skill):
             visit(edge.skill)
+        for entry in sorted(manifest.routable_entries.get(skill, ())):
+            visit(entry)
         stack.pop()
         state[skill] = 2
 
-    for caller in sorted(manifest.callers):
+    for caller in sorted(set(manifest.callers) | set(manifest.routable_entries)):
         visit(caller)
 
 

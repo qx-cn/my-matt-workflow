@@ -1,112 +1,118 @@
 {
-  "ask-matt": {
-    "SKILL.md": "b1a134ada29cbfded84bc9a7f93356ab7a3d7f800edf1f541a2a964118ad45a7",
-    "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
+  "source": {
+    "repo": "https://github.com/mattpocock/skills.git",
+    "commit": "2ab958093e83e0ec752e6c1c5932da465bf23e0c"
   },
-  "grill-me": {
-    "SKILL.md": "6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54",
-    "agents/openai.yaml": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b"
-  },
-  "grill-with-docs": {
-    "SKILL.md": "610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165",
-    "agents/openai.yaml": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9"
-  },
-  "to-spec": {
-    "SKILL.md": "267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7",
-    "agents/openai.yaml": "1c5b4d1e3d8e52287ef19cc2742fdbbfae1914ac75d33af3e4c8174f08cc55bb"
-  },
-  "to-tickets": {
-    "SKILL.md": "5ecdf1d4df8a360ed39df21a2347f97ba177afd449a577da4f6b6ea8e1ebb808",
-    "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
-  },
-  "implement": {
-    "SKILL.md": "6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3",
-    "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
-  },
-  "tdd": {
-    "SKILL.md": "5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f",
-    "agents/openai.yaml": "ea6f01cf1b8c06a4b0f5b649d74b1b8ce8685e72af1b38d70d877693e092af0b",
-    "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
-    "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
-  },
-  "code-review": {
-    "SKILL.md": "6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f",
-    "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
-  },
-  "diagnosing-bugs": {
-    "SKILL.md": "7a0779480f323a66d109404646bcc1a14bf0232b45b3e3ea93b652a035718acb",
-    "agents/openai.yaml": "3e430dbe4334a87597488c060cb3dc3786bb00c9182877d6f5ec41f62490e90b",
-    "scripts/hitl-loop.template.sh": "b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8"
-  },
-  "handoff": {
-    "SKILL.md": "57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc",
-    "agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28"
-  },
-  "prototype": {
-    "LOGIC.md": "cf372862bccd3db7f18ea57abd76d6c32e6adf65b9e7f46c73d433e107567a5c",
-    "SKILL.md": "03074862d4b6e4eaf472aa75146e1d193dd9e3bba0e4303a9b2425562d1d44cc",
-    "UI.md": "e2ca04434be54acdee2f5df582ef8038fadf582bbcc99be0d2e27737ff8ed096",
-    "agents/openai.yaml": "5af65e43ab41a350436697b81e27b7f848d36782043b73c322bb2c9fa9cc55dc"
-  },
-  "wayfinder": {
-    "SKILL.md": "257e40665b28ae959ffdcb97d7a72b074360f4a3d201bd84786505308546e434",
-    "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
-  },
-  "triage": {
-    "AGENT-BRIEF.md": "5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b",
-    "OUT-OF-SCOPE.md": "2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914",
-    "SKILL.md": "d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1",
-    "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
-  },
-  "research": {
-    "SKILL.md": "af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c",
-    "agents/openai.yaml": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
-  },
-  "domain-modeling": {
-    "ADR-FORMAT.md": "f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2",
-    "CONTEXT-FORMAT.md": "b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597",
-    "SKILL.md": "152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579",
-    "agents/openai.yaml": "f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b"
-  },
-  "codebase-design": {
-    "DEEPENING.md": "125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06",
-    "DESIGN-IT-TWICE.md": "21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31",
-    "SKILL.md": "a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad",
-    "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f"
-  },
-  "improve-codebase-architecture": {
-    "HTML-REPORT.md": "0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1",
-    "SKILL.md": "4b4cb798c3863d5b6f5c0b4604af1ecb5beb6df82553c972898a91ba38bcf289",
-    "agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
-  },
-  "teach": {
-    "GLOSSARY-FORMAT.md": "d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6",
-    "LEARNING-RECORD-FORMAT.md": "855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17",
-    "MISSION-FORMAT.md": "8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7",
-    "RESOURCES-FORMAT.md": "2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08",
-    "SKILL.md": "6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259",
-    "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
-  },
-  "writing-great-skills": {
-    "GLOSSARY.md": "cccd684c73fb7a06f523497b0121765f92d2b33d6ef9c51602294849233451d6",
-    "SKILL.md": "4d6ccbc3760b1bd4107c495a79872286ea69494003f3b0a719fc95b147457061",
-    "agents/openai.yaml": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d"
-  },
-  "resolving-merge-conflicts": {
-    "SKILL.md": "c7c9ba81362a786aac05d2223123bf1bd2f8a99c3243a72882ede9c68bedfb24",
-    "agents/openai.yaml": "a1f4f96838f2ed6282eb28abbbf99029cb8fadce552baf53da90a025b8bffddf"
-  },
-  "to-questionnaire": {
-    "SKILL.md": "8e7f9ed8d7b2e66babf1a54aee9b94319bf38c32619cffe78819df6518ead5fc",
-    "agents/openai.yaml": "9e8a06c38c8842eea8d4922cb9d1ead8e3ace647bab259b943c994a1b4742bc2"
-  },
-  "wizard": {
-    "SKILL.md": "e113612095b14178e680022153f2409fb14ea8b992e55d59ad8ce94071ffaf49",
-    "agents/openai.yaml": "b7f38980ab3ac03275edeae3209bd80de2592bd4b50b851fcf4cd57c22fff8eb",
-    "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
-  },
-  "edit-article": {
-    "SKILL.md": "e10fba546f45357fe0aaa7494b9e186910d4525818d19f9b2ad6f28cc506aa5e",
-    "agents/openai.yaml": "075b2f1305938182c3aa4aa9b139fff0b7cfacb33b774c2e3e42180794e87394"
+  "skills": {
+    "ask-matt": {
+      "SKILL.md": "b1a134ada29cbfded84bc9a7f93356ab7a3d7f800edf1f541a2a964118ad45a7",
+      "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
+    },
+    "grill-me": {
+      "SKILL.md": "6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54",
+      "agents/openai.yaml": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b"
+    },
+    "grill-with-docs": {
+      "SKILL.md": "610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165",
+      "agents/openai.yaml": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9"
+    },
+    "to-spec": {
+      "SKILL.md": "267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7",
+      "agents/openai.yaml": "1c5b4d1e3d8e52287ef19cc2742fdbbfae1914ac75d33af3e4c8174f08cc55bb"
+    },
+    "to-tickets": {
+      "SKILL.md": "5ecdf1d4df8a360ed39df21a2347f97ba177afd449a577da4f6b6ea8e1ebb808",
+      "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
+    },
+    "implement": {
+      "SKILL.md": "6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3",
+      "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
+    },
+    "tdd": {
+      "SKILL.md": "5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f",
+      "agents/openai.yaml": "ea6f01cf1b8c06a4b0f5b649d74b1b8ce8685e72af1b38d70d877693e092af0b",
+      "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
+      "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
+    },
+    "code-review": {
+      "SKILL.md": "6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f",
+      "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
+    },
+    "diagnosing-bugs": {
+      "SKILL.md": "7a0779480f323a66d109404646bcc1a14bf0232b45b3e3ea93b652a035718acb",
+      "agents/openai.yaml": "3e430dbe4334a87597488c060cb3dc3786bb00c9182877d6f5ec41f62490e90b",
+      "scripts/hitl-loop.template.sh": "b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8"
+    },
+    "handoff": {
+      "SKILL.md": "57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc",
+      "agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28"
+    },
+    "prototype": {
+      "LOGIC.md": "cf372862bccd3db7f18ea57abd76d6c32e6adf65b9e7f46c73d433e107567a5c",
+      "SKILL.md": "03074862d4b6e4eaf472aa75146e1d193dd9e3bba0e4303a9b2425562d1d44cc",
+      "UI.md": "e2ca04434be54acdee2f5df582ef8038fadf582bbcc99be0d2e27737ff8ed096",
+      "agents/openai.yaml": "5af65e43ab41a350436697b81e27b7f848d36782043b73c322bb2c9fa9cc55dc"
+    },
+    "wayfinder": {
+      "SKILL.md": "257e40665b28ae959ffdcb97d7a72b074360f4a3d201bd84786505308546e434",
+      "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
+    },
+    "triage": {
+      "AGENT-BRIEF.md": "5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b",
+      "OUT-OF-SCOPE.md": "2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914",
+      "SKILL.md": "d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1",
+      "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
+    },
+    "research": {
+      "SKILL.md": "af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c",
+      "agents/openai.yaml": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+    },
+    "domain-modeling": {
+      "ADR-FORMAT.md": "f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2",
+      "CONTEXT-FORMAT.md": "b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597",
+      "SKILL.md": "152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579",
+      "agents/openai.yaml": "f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b"
+    },
+    "codebase-design": {
+      "DEEPENING.md": "125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06",
+      "DESIGN-IT-TWICE.md": "21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31",
+      "SKILL.md": "a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad",
+      "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f"
+    },
+    "improve-codebase-architecture": {
+      "HTML-REPORT.md": "0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1",
+      "SKILL.md": "4b4cb798c3863d5b6f5c0b4604af1ecb5beb6df82553c972898a91ba38bcf289",
+      "agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
+    },
+    "teach": {
+      "GLOSSARY-FORMAT.md": "d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6",
+      "LEARNING-RECORD-FORMAT.md": "855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17",
+      "MISSION-FORMAT.md": "8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7",
+      "RESOURCES-FORMAT.md": "2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08",
+      "SKILL.md": "6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259",
+      "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
+    },
+    "writing-great-skills": {
+      "GLOSSARY.md": "cccd684c73fb7a06f523497b0121765f92d2b33d6ef9c51602294849233451d6",
+      "SKILL.md": "4d6ccbc3760b1bd4107c495a79872286ea69494003f3b0a719fc95b147457061",
+      "agents/openai.yaml": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d"
+    },
+    "resolving-merge-conflicts": {
+      "SKILL.md": "c7c9ba81362a786aac05d2223123bf1bd2f8a99c3243a72882ede9c68bedfb24",
+      "agents/openai.yaml": "a1f4f96838f2ed6282eb28abbbf99029cb8fadce552baf53da90a025b8bffddf"
+    },
+    "to-questionnaire": {
+      "SKILL.md": "8e7f9ed8d7b2e66babf1a54aee9b94319bf38c32619cffe78819df6518ead5fc",
+      "agents/openai.yaml": "9e8a06c38c8842eea8d4922cb9d1ead8e3ace647bab259b943c994a1b4742bc2"
+    },
+    "wizard": {
+      "SKILL.md": "e113612095b14178e680022153f2409fb14ea8b992e55d59ad8ce94071ffaf49",
+      "agents/openai.yaml": "b7f38980ab3ac03275edeae3209bd80de2592bd4b50b851fcf4cd57c22fff8eb",
+      "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
+    },
+    "edit-article": {
+      "SKILL.md": "e10fba546f45357fe0aaa7494b9e186910d4525818d19f9b2ad6f28cc506aa5e",
+      "agents/openai.yaml": "075b2f1305938182c3aa4aa9b139fff0b7cfacb33b774c2e3e42180794e87394"
+    }
   }
 }
