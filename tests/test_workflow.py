@@ -1724,6 +1724,12 @@ class ReleaseTests(unittest.TestCase):
                 "不要改动 `STAGES` 标记上方的库",
             ],
             "my-edit-article": ["articles", "默认生成新稿", "原地修改"],
+            "my-work-artifacts": [
+                "work-list",
+                "work-resolve",
+                "work-read",
+                "默认 `@` 下拉框显示",
+            ],
         }
 
         for skill, required_text in expected.items():
@@ -1735,7 +1741,7 @@ class ReleaseTests(unittest.TestCase):
                 for phrase in required_text:
                     self.assertIn(phrase, text)
 
-        self.assertEqual(28, len(validate_skills(root)))
+        self.assertEqual(29, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"

@@ -37,6 +37,40 @@ class SharedResourceTests(unittest.TestCase):
                 (other / "references/shared/humanizer.md").exists()
             )
 
+    def test_artifact_access_is_bundled_only_for_reader_consumers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        with tempfile.TemporaryDirectory() as tmp:
+            for skill in (
+                "my-code-review",
+                "my-wayfinder",
+                "my-implement",
+                "my-domain-modeling",
+                "my-tdd",
+                "my-diagnosing-bugs",
+            ):
+                with self.subTest(skill=skill):
+                    reader = Path(tmp) / skill
+                    reader.mkdir()
+                    bundle_resources_for_skill(
+                        manifest, ROOT, skill, reader
+                    )
+                    self.assertTrue(
+                        (
+                            reader
+                            / "references/shared/adapters/artifact-access.md"
+                        ).is_file()
+                    )
+
+            other = Path(tmp) / "my-install"
+            other.mkdir()
+            bundle_resources_for_skill(manifest, ROOT, "my-install", other)
+            self.assertFalse(
+                (
+                    other
+                    / "references/shared/adapters/artifact-access.md"
+                ).exists()
+            )
+
     def test_missing_resource_consumer_reports_source_and_target(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -22,6 +22,8 @@ disable-model-invocation: true
 
 按需创建文件：只有内容可写时才创建。首个术语解决后才创建 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；首次需要 ADR 才创建 `.agent/work/<topic>/domain/adr/`。若仓库存在多个领域上下文，以项目配置和目录边界确定术语及 ADR 的归属；不明确时，按 `decision_policy` 询问或在已批准的无人值守计划中记录假设。
 
+读取既有个人术语表或 ADR 时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
+
 ## 会话期间
 
 ### 对照术语表提出质疑

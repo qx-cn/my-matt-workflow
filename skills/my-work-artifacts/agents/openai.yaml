@@ -1,0 +1,5 @@
+interface:
+  display_name: "Work Artifacts"
+  short_description: "Read ignored local work artifacts safely"
+policy:
+  allow_implicit_invocation: false

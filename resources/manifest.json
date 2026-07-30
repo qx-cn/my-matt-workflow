@@ -38,7 +38,13 @@
       "source": "resources/adapters/artifact-access.md",
       "release_path": "references/shared/adapters/artifact-access.md",
       "consumers": [
-        "my-grill-with-docs"
+        "my-grill-with-docs",
+        "my-code-review",
+        "my-wayfinder",
+        "my-implement",
+        "my-domain-modeling",
+        "my-tdd",
+        "my-diagnosing-bugs"
       ]
     },
     "policies": {

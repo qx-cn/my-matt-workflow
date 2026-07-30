@@ -352,10 +352,16 @@
         "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
       },
       "local_support_files": {
-        "SKILL.md": "8ccc8b6accdd5d3c4c3bbd5a91242f8e882ab2a1c9bacc3726e24032414c3d86",
+        "SKILL.md": "4a6f86c864e062fe639ac42f387a8f22e6dd37ecf0d7a32567f8707482a1f6e0",
         "agents/openai.yaml": "527fc83e8ad11a49feddf81b5e464c05b4f951c74171f04bfc6491fd09d25799"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#工作产物访问",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/code-review-audit.md",
       "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
@@ -939,11 +945,17 @@
         "scripts/hitl-loop.template.sh": "b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8"
       },
       "local_support_files": {
-        "SKILL.md": "f708461f77854006652d2394446fb17a8985985f36a3253ea1e11677e5ee6300",
+        "SKILL.md": "0a213a802c75bea84a0007aab5c1a8fa4f05c704751cbb0011185aea752f6c6a",
         "agents/openai.yaml": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
         "scripts/hitl-loop.template.sh": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#工作产物访问",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/diagnosing-bugs-audit.md",
       "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
@@ -1284,7 +1296,7 @@
       "local_support_files": {
         "ADR-FORMAT.md": "d032f6a96b24664ce37c8e1d3b083b3090bd39e9377e532a85b04b220454ef9a",
         "CONTEXT-FORMAT.md": "3502f543e3cda988f510e5f04605171eef298487113ea2e68ebf4a2777ab4780",
-        "SKILL.md": "b4f380f42f90dc5b3fcc91c6efcf175f776e96604f6cad83f19678cee1b3989a",
+        "SKILL.md": "c4f0db5cd05b517a0f6f1c0a618276cab9a6b547b3956d16ffd68eb7a83b8cdb",
         "agents/openai.yaml": "3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb"
       },
       "allowed_local_adaptations": [
@@ -1322,6 +1334,11 @@
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
           "classification": "local-only-adaptation",
           "adaptation": "保留 false 以表达本地 manual-only 调用 policy；它与 SKILL.md#frontmatter.disable-model-invocation 共同构成该行为，且该 metadata 适配本身不改变 interface 的原有名称和描述。"
+        },
+        {
+          "path": "SKILL.md#工作产物访问",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
         }
       ],
       "conclusion": "adapter-rework-required",
@@ -1744,13 +1761,18 @@
           "path": "SKILL.md#本地适配",
           "classification": "local-only-adaptation",
           "adaptation": "One consumer-specific adapter pointer preserves manual-only local workflow controls without changing the upstream core."
+        },
+        {
+          "path": "SKILL.md#工作产物访问",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
         }
       ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/implement-plan-2.md",
       "notes": "Plan 2 restored the pinned upstream implementation flow and moved local controls into declared adapters.",
       "local_support_files": {
-        "SKILL.md": "6deaccce278ab7b50761b9aaa5d26e82db84ad45a18faf71dc17f5b76ed397e0",
+        "SKILL.md": "1f5b41f24d719d1b95091207544aee55555e717808558e6168c5fad5d79bcdcb",
         "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
       },
       "section_mappings": [
@@ -2777,7 +2799,7 @@
         "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
       },
       "local_support_files": {
-        "SKILL.md": "8d87bd834157f98fe04d6d5b22f396719ed6429192f2db8774e17e614f2f5c09",
+        "SKILL.md": "b7c549d6d08991125b60b7bd58c78802c9a9eea72eaccc3e8c747eca987221b6",
         "agents/openai.yaml": "00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c",
         "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
         "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
@@ -2808,6 +2830,11 @@
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
           "classification": "local-only-adaptation",
           "adaptation": "保留 false 以表达本地 manual-only 调用 policy；该 metadata 本身不改变 TDD 方法。"
+        },
+        {
+          "path": "SKILL.md#工作产物访问",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
         }
       ],
       "conclusion": "adapter-rework-required",
@@ -4336,10 +4363,16 @@
         "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
       },
       "local_support_files": {
-        "SKILL.md": "b3e6f4ff33af1acb008a9879510934e93093c0a97356c961dc7d40da753a83c9",
+        "SKILL.md": "ed52334e5904513a6676e627a210e5b4919696c68fe5c48b6290ea72dc4720e3",
         "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#工作产物访问",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/wayfinder-audit.md",
       "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",

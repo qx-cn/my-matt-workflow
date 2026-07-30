@@ -14,4 +14,4 @@ disable-model-invocation: true
 
 将工作提交到当前分支。
 
-本地适配：实施前与组合阶段仅通过 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md)、[工作范围](references/shared/adapters/work-scope.md) 和 [组合调用](references/shared/adapters/composition.md) 确定本地控制。
+本地适配：实施前与组合阶段仅通过 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md)、[工作范围](references/shared/adapters/work-scope.md)、[组合调用](references/shared/adapters/composition.md) 和 [工作产物访问](references/shared/adapters/artifact-access.md) 确定本地控制。

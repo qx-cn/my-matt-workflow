@@ -33,6 +33,8 @@ disable-model-invocation: true
 3. 与分支或功能匹配的 `.agent/work/`、`docs/`、`specs/` 下的 PRD/Spec；
 4. 若都没有，按 `decision_policy` 询问、报告“无 Spec 可用”，或停止。
 
+读取 `.agent/work/` 产物时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
+
 没有 Spec 时跳过 Spec 轴，并明确报告原因。
 
 ### 3. 定位 Standards 来源

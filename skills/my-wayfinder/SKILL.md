@@ -24,6 +24,8 @@ disable-model-invocation: true
 
 没有 Tracker 时，地图位于 `.agent/work/<initiative>/wayfinders/wayfinders-<initiative>-<time-or-sequence>.md`，Ticket 位于 `.agent/work/<initiative>/tickets/tickets-<initiative>-<time-or-sequence>.md`。地图与 Ticket 的文件名都必须同时包含类型、initiative 与可排序键；人与人之间仍以标题引用。地图是**索引**，不是内容仓库：它只摘要并链接已解决 Ticket；每个决定的详细内容只存在于一个 Ticket 中。
 
+读取本地地图或 Ticket 时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
+
 每个会话只加载一次低分辨率地图。开放 Ticket 不列在地图正文；在 Tracker 中由查询发现，在本地由 `tickets/` 中带有开放状态的文件发现。
 
 ```markdown

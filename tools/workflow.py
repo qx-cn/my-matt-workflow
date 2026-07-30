@@ -32,6 +32,11 @@ from workflow_lib.profile import (
 from workflow_lib.recommendations import build_recommendation_report
 from workflow_lib.release import build_release, release_matches_source, validate_skills
 from workflow_lib.sync import build_review_bundle
+from workflow_lib.artifact_resolver import (
+    list_work_artifacts,
+    read_work_artifact,
+    resolve_work_artifact,
+)
 from workflow_lib.work_artifacts import (
     analyze_work_artifacts,
     apply_work_artifact_migration,
@@ -337,6 +342,36 @@ def command_work_layout(args: argparse.Namespace) -> None:
     print(json.dumps(analyze_work_artifacts(Path(args.repo)), ensure_ascii=False, indent=2))
 
 
+def command_work_list(args: argparse.Namespace) -> None:
+    """List ignored work artifacts without mutating the project."""
+    artifacts = list_work_artifacts(
+        Path(args.repo), topic=args.topic, artifact_type=args.artifact_type
+    )
+    print(
+        json.dumps(
+            [artifact.as_dict() for artifact in artifacts],
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+
+
+def command_work_resolve(args: argparse.Namespace) -> None:
+    """Resolve one ignored work artifact without reading its content."""
+    artifact = resolve_work_artifact(
+        Path(args.repo), args.topic, args.artifact_type, args.selector
+    )
+    print(json.dumps(artifact.as_dict(), ensure_ascii=False, indent=2))
+
+
+def command_work_read(args: argparse.Namespace) -> None:
+    """Read one bounded UTF-8 work artifact without mutating the project."""
+    artifact = resolve_work_artifact(
+        Path(args.repo), args.topic, args.artifact_type, args.selector
+    )
+    print(read_work_artifact(artifact), end="")
+
+
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
 
@@ -631,6 +666,26 @@ def parser() -> argparse.ArgumentParser:
     work_layout = sub.add_parser("work-layout")
     work_layout.add_argument("--repo", default=".")
     work_layout.set_defaults(func=command_work_layout)
+
+    work_list = sub.add_parser("work-list")
+    work_list.add_argument("--repo", default=".")
+    work_list.add_argument("--topic")
+    work_list.add_argument("--type", dest="artifact_type")
+    work_list.set_defaults(func=command_work_list)
+
+    work_resolve = sub.add_parser("work-resolve")
+    work_resolve.add_argument("--repo", default=".")
+    work_resolve.add_argument("--topic", required=True)
+    work_resolve.add_argument("--type", dest="artifact_type", required=True)
+    work_resolve.add_argument("--selector", default="latest")
+    work_resolve.set_defaults(func=command_work_resolve)
+
+    work_read = sub.add_parser("work-read")
+    work_read.add_argument("--repo", default=".")
+    work_read.add_argument("--topic", required=True)
+    work_read.add_argument("--type", dest="artifact_type", required=True)
+    work_read.add_argument("--selector", default="latest")
+    work_read.set_defaults(func=command_work_read)
 
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--upstream", default=OFFICIAL_UPSTREAM)
