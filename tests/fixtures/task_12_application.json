@@ -1,0 +1,457 @@
+{
+  "version": 1,
+  "pinned_commit": "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+  "skills": {
+    "code-review": {
+      "source_path": "skills/engineering/code-review",
+      "local_skill": "my-code-review",
+      "constraints": [
+        {
+          "id": "code-review-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. 固定基线",
+          "text": "继续前确认固定点可解析"
+        }
+      ],
+      "rules": [
+        {
+          "id": "code-review-apply-primary-rule",
+          "when": {
+            "request": "code-review"
+          },
+          "requires_constraints": [
+            "code-review-primary-rule"
+          ],
+          "outcome": "validate-fixed-point"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "code-review-application",
+          "input": {
+            "request": "code-review"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "code-review-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#1. 固定基线",
+              "text": "继续前确认固定点可解析"
+            }
+          ],
+          "expected": "validate-fixed-point"
+        }
+      ]
+    },
+    "ask-matt": {
+      "source_path": "skills/engineering/ask-matt",
+      "local_skill": "my-ask-matt",
+      "constraints": [
+        {
+          "id": "ask-matt-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#上下文卫生",
+          "text": "若会话在 `/my-to-tickets` 前接近该限制"
+        }
+      ],
+      "rules": [
+        {
+          "id": "ask-matt-apply-primary-rule",
+          "when": {
+            "request": "ask-matt"
+          },
+          "requires_constraints": [
+            "ask-matt-primary-rule"
+          ],
+          "outcome": "handoff-before-degradation"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "ask-matt-application",
+          "input": {
+            "request": "ask-matt"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "ask-matt-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#上下文卫生",
+              "text": "若会话在 `/my-to-tickets` 前接近该限制"
+            }
+          ],
+          "expected": "handoff-before-degradation"
+        }
+      ]
+    },
+    "diagnosing-bugs": {
+      "source_path": "skills/engineering/diagnosing-bugs",
+      "local_skill": "my-diagnosing-bugs",
+      "constraints": [
+        {
+          "id": "diagnosing-bugs-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#确实无法建立循环时",
+          "text": "没有紧凑、可变红的命令，就不得进入常规假设阶段"
+        }
+      ],
+      "rules": [
+        {
+          "id": "diagnosing-bugs-apply-primary-rule",
+          "when": {
+            "request": "diagnosing-bugs"
+          },
+          "requires_constraints": [
+            "diagnosing-bugs-primary-rule"
+          ],
+          "outcome": "stop-before-hypothesis"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "diagnosing-bugs-application",
+          "input": {
+            "request": "diagnosing-bugs"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "diagnosing-bugs-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#确实无法建立循环时",
+              "text": "没有紧凑、可变红的命令，就不得进入常规假设阶段"
+            }
+          ],
+          "expected": "stop-before-hypothesis"
+        }
+      ]
+    },
+    "handoff": {
+      "source_path": "skills/productivity/handoff",
+      "local_skill": "my-handoff",
+      "constraints": [
+        {
+          "id": "handoff-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#My Handoff",
+          "text": "已有产物只引用，不复制正文"
+        }
+      ],
+      "rules": [
+        {
+          "id": "handoff-apply-primary-rule",
+          "when": {
+            "request": "handoff"
+          },
+          "requires_constraints": [
+            "handoff-primary-rule"
+          ],
+          "outcome": "reference-existing-artifacts"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "handoff-application",
+          "input": {
+            "request": "handoff"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "handoff-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#My Handoff",
+              "text": "已有产物只引用，不复制正文"
+            }
+          ],
+          "expected": "reference-existing-artifacts"
+        }
+      ]
+    },
+    "edit-article": {
+      "source_path": "skills/personal/edit-article",
+      "local_skill": "my-edit-article",
+      "constraints": [
+        {
+          "id": "edit-article-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#编辑文章",
+          "text": "每段不超过 240 个字符"
+        }
+      ],
+      "rules": [
+        {
+          "id": "edit-article-apply-primary-rule",
+          "when": {
+            "request": "edit-article"
+          },
+          "requires_constraints": [
+            "edit-article-primary-rule"
+          ],
+          "outcome": "rewrite-with-paragraph-limit"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "edit-article-application",
+          "input": {
+            "request": "edit-article"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "edit-article-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#编辑文章",
+              "text": "每段不超过 240 个字符"
+            }
+          ],
+          "expected": "rewrite-with-paragraph-limit"
+        }
+      ]
+    },
+    "resolving-merge-conflicts": {
+      "source_path": "skills/engineering/resolving-merge-conflicts",
+      "local_skill": "my-resolving-merge-conflicts",
+      "constraints": [
+        {
+          "id": "resolving-merge-conflicts-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#安全解决冲突",
+          "text": "批准前不得修改冲突文件、暂存、提交或 push"
+        }
+      ],
+      "rules": [
+        {
+          "id": "resolving-merge-conflicts-apply-primary-rule",
+          "when": {
+            "request": "resolving-merge-conflicts"
+          },
+          "requires_constraints": [
+            "resolving-merge-conflicts-primary-rule"
+          ],
+          "outcome": "wait-for-approval"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "resolving-merge-conflicts-application",
+          "input": {
+            "request": "resolving-merge-conflicts"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "resolving-merge-conflicts-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#安全解决冲突",
+              "text": "批准前不得修改冲突文件、暂存、提交或 push"
+            }
+          ],
+          "expected": "wait-for-approval"
+        }
+      ]
+    },
+    "to-tickets": {
+      "source_path": "skills/engineering/to-tickets",
+      "local_skill": "my-to-tickets",
+      "constraints": [
+        {
+          "id": "to-tickets-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. 起草纵向切片",
+          "text": "每个切片穿过每一层"
+        }
+      ],
+      "rules": [
+        {
+          "id": "to-tickets-apply-primary-rule",
+          "when": {
+            "request": "to-tickets"
+          },
+          "requires_constraints": [
+            "to-tickets-primary-rule"
+          ],
+          "outcome": "draft-vertical-slices"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "to-tickets-application",
+          "input": {
+            "request": "to-tickets"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "to-tickets-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#3. 起草纵向切片",
+              "text": "每个切片穿过每一层"
+            }
+          ],
+          "expected": "draft-vertical-slices"
+        }
+      ]
+    },
+    "to-spec": {
+      "source_path": "skills/engineering/to-spec",
+      "local_skill": "my-to-spec",
+      "constraints": [
+        {
+          "id": "to-spec-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#document-body",
+          "text": "**不要重新访谈用户**"
+        }
+      ],
+      "rules": [
+        {
+          "id": "to-spec-apply-primary-rule",
+          "when": {
+            "request": "to-spec"
+          },
+          "requires_constraints": [
+            "to-spec-primary-rule"
+          ],
+          "outcome": "synthesize-without-interview"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "to-spec-application",
+          "input": {
+            "request": "to-spec"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "to-spec-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#document-body",
+              "text": "**不要重新访谈用户**"
+            }
+          ],
+          "expected": "synthesize-without-interview"
+        }
+      ]
+    },
+    "research": {
+      "source_path": "skills/engineering/research",
+      "local_skill": "my-research",
+      "constraints": [
+        {
+          "id": "research-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#My Research",
+          "text": "优先官方文档、标准、源代码和第一方 API"
+        }
+      ],
+      "rules": [
+        {
+          "id": "research-apply-primary-rule",
+          "when": {
+            "request": "research"
+          },
+          "requires_constraints": [
+            "research-primary-rule"
+          ],
+          "outcome": "use-primary-sources"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "research-application",
+          "input": {
+            "request": "research"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "research-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#My Research",
+              "text": "优先官方文档、标准、源代码和第一方 API"
+            }
+          ],
+          "expected": "use-primary-sources"
+        }
+      ]
+    },
+    "prototype": {
+      "source_path": "skills/engineering/prototype",
+      "local_skill": "my-prototype",
+      "constraints": [
+        {
+          "id": "prototype-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#My Prototype",
+          "text": "原型是**回答一个问题的可抛弃代码**"
+        }
+      ],
+      "rules": [
+        {
+          "id": "prototype-apply-primary-rule",
+          "when": {
+            "request": "prototype"
+          },
+          "requires_constraints": [
+            "prototype-primary-rule"
+          ],
+          "outcome": "build-throwaway-answer"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "prototype-application",
+          "input": {
+            "request": "prototype"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "prototype-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#My Prototype",
+              "text": "原型是**回答一个问题的可抛弃代码**"
+            }
+          ],
+          "expected": "build-throwaway-answer"
+        }
+      ]
+    },
+    "wayfinder": {
+      "source_path": "skills/engineering/wayfinder",
+      "local_skill": "my-wayfinder",
+      "constraints": [
+        {
+          "id": "wayfinder-primary-rule",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#规划，而不是交付",
+          "text": "否则只产出决定，不直接交付最终成果"
+        }
+      ],
+      "rules": [
+        {
+          "id": "wayfinder-apply-primary-rule",
+          "when": {
+            "request": "wayfinder"
+          },
+          "requires_constraints": [
+            "wayfinder-primary-rule"
+          ],
+          "outcome": "plan-not-deliver"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "wayfinder-application",
+          "input": {
+            "request": "wayfinder"
+          },
+          "retrieved_constraints": [
+            {
+              "id": "wayfinder-primary-rule",
+              "document": "SKILL.md",
+              "source_section": "SKILL.md#规划，而不是交付",
+              "text": "否则只产出决定，不直接交付最终成果"
+            }
+          ],
+          "expected": "plan-not-deliver"
+        }
+      ]
+    }
+  }
+}

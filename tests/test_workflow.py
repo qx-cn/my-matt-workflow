@@ -3916,5 +3916,172 @@ class WizardParityTests(unittest.TestCase):
                 )
 
 
+class Task12AuditPopulationTests(unittest.TestCase):
+    TASK_12_SKILLS = (
+        "code-review",
+        "ask-matt",
+        "diagnosing-bugs",
+        "handoff",
+        "edit-article",
+        "resolving-merge-conflicts",
+        "to-tickets",
+        "to-spec",
+        "research",
+        "prototype",
+        "wayfinder",
+    )
+
+    @staticmethod
+    def _section_contents(document, source_section):
+        _, separator, heading = source_section.partition("#")
+        if not separator:
+            return None
+        if heading == "document-body":
+            return document
+        heading_match = re.search(
+            rf"^(?P<markers>#+)\s+{re.escape(heading)}\s*$",
+            document,
+            re.MULTILINE,
+        )
+        if heading_match is None:
+            return None
+        next_heading = re.search(
+            rf"^#{{1,{len(heading_match['markers'])}}}\s+",
+            document[heading_match.end() :],
+            re.MULTILINE,
+        )
+        section_end = (
+            heading_match.end() + next_heading.start()
+            if next_heading is not None
+            else len(document)
+        )
+        return document[heading_match.end() : section_end]
+
+    @staticmethod
+    def _apply_rules(scenario, rules):
+        outcomes = [
+            rule["outcome"]
+            for rule in rules
+            if all(
+                scenario["input"].get(field) == expected
+                for field, expected in rule["when"].items()
+            )
+            and set(rule["requires_constraints"])
+            <= {
+                constraint["id"]
+                for constraint in scenario["retrieved_constraints"]
+            }
+        ]
+        return outcomes[0] if len(outcomes) == 1 else None
+
+    def _assert_skill_audit(self, skill):
+        root = Path(__file__).resolve().parents[1]
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        fixture = json.loads(
+            (root / "tests/fixtures/task_12_application.json").read_text()
+        )["skills"][skill]
+        entry = next(
+            item for item in fidelity["skills"] if item["upstream_skill"] == skill
+        )
+        source_dir = (
+            root
+            / ".superpowers/sdd/mattpocock-skills-pinned"
+            / fixture["source_path"]
+        )
+        local_dir = root / "skills" / entry["local_skill"]
+
+        self.assertEqual(fixture["source_path"], entry["canonical_source_path"])
+        self.assertEqual("adapter-rework-required", entry["conclusion"])
+        self.assertTrue(entry["evidence_path"])
+        self.assertTrue((root / entry["evidence_path"]).is_file())
+        self.assertTrue(entry["sections"]["upstream"])
+        self.assertTrue(entry["sections"]["local"])
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertTrue(entry["allowed_local_adaptations"])
+
+        for relative, source_hash in entry["support_files"].items():
+            with self.subTest(skill=skill, support_file=relative):
+                self.assertEqual(
+                    source_hash,
+                    hashlib.sha256((source_dir / relative).read_bytes()).hexdigest(),
+                )
+                self.assertIn(relative, entry["local_support_files"])
+                self.assertEqual(
+                    entry["local_support_files"][relative],
+                    hashlib.sha256((local_dir / relative).read_bytes()).hexdigest(),
+                )
+
+        for mapping in entry["section_mappings"]:
+            with self.subTest(skill=skill, mapping=mapping["upstream"]):
+                document_name, _, heading = mapping["local"].partition("#")
+                document = (local_dir / document_name).read_text()
+                if document_name.endswith(".yaml"):
+                    self.assertEqual("interface", heading)
+                    self.assertIn("interface:", document)
+                else:
+                    self.assertIsNotNone(
+                        self._section_contents(document, mapping["local"])
+                    )
+
+        evidence = (root / entry["evidence_path"]).read_text()
+        for required in (
+            "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+            fixture["source_path"],
+            "adapter-rework-required",
+            "Plan 2",
+        ):
+            with self.subTest(skill=skill, evidence=required):
+                self.assertIn(required, evidence)
+
+        rules = fixture["rules"]
+        self.assertTrue(rules)
+        for scenario in fixture["scenarios"]:
+            with self.subTest(skill=skill, scenario=scenario["id"]):
+                self.assertTrue(scenario["retrieved_constraints"])
+                for constraint in scenario["retrieved_constraints"]:
+                    document = (local_dir / constraint["document"]).read_text()
+                    section = self._section_contents(
+                        document, constraint["source_section"]
+                    )
+                    self.assertIsNotNone(section)
+                    self.assertIn(constraint["text"], section)
+                self.assertEqual(
+                    scenario["expected"], self._apply_rules(scenario, rules)
+                )
+
+    def test_code_review_audit(self):
+        self._assert_skill_audit("code-review")
+
+    def test_ask_matt_audit(self):
+        self._assert_skill_audit("ask-matt")
+
+    def test_diagnosing_bugs_audit(self):
+        self._assert_skill_audit("diagnosing-bugs")
+
+    def test_handoff_audit(self):
+        self._assert_skill_audit("handoff")
+
+    def test_edit_article_audit(self):
+        self._assert_skill_audit("edit-article")
+
+    def test_resolving_merge_conflicts_audit(self):
+        self._assert_skill_audit("resolving-merge-conflicts")
+
+    def test_to_tickets_audit(self):
+        self._assert_skill_audit("to-tickets")
+
+    def test_to_spec_audit(self):
+        self._assert_skill_audit("to-spec")
+
+    def test_research_audit(self):
+        self._assert_skill_audit("research")
+
+    def test_prototype_audit(self):
+        self._assert_skill_audit("prototype")
+
+    def test_wayfinder_audit(self):
+        self._assert_skill_audit("wayfinder")
+
+
 if __name__ == "__main__":
     unittest.main()
