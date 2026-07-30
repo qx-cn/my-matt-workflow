@@ -1342,7 +1342,102 @@ class DoctorTests(unittest.TestCase):
                 entry["support_files"],
             )
             self.assertIn(entry["conclusion"], fidelity["conclusions"])
-            self.assertNotEqual(entry["conclusion"], "faithful")
+            if entry["conclusion"] == "faithful":
+                self.assertTrue(entry["sections"]["complete"])
+                self.assertTrue(entry["sections"]["translated"])
+                self.assertEqual([], entry["sections"]["missing"])
+                self.assertTrue(entry["evidence_path"])
+
+    def test_codebase_design_restoration_records_parity_and_usable_method(self):
+        root = Path(__file__).resolve().parents[1]
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item
+            for item in fidelity["skills"]
+            if item["local_skill"] == "my-codebase-design"
+        )
+
+        expected_sections = {
+            "Glossary",
+            "Deep vs shallow",
+            "Principles",
+            "Designing for testability",
+            "Relationships",
+            "Rejected framings",
+            "Going deeper",
+            "DEEPENING.md#Dependency categories",
+            "DEEPENING.md#Seam discipline",
+            "DEEPENING.md#Testing strategy: replace, don't layer",
+            "DESIGN-IT-TWICE.md#Process",
+            "DESIGN-IT-TWICE.md#Frame the problem space",
+            "DESIGN-IT-TWICE.md#Spawn sub-agents",
+            "DESIGN-IT-TWICE.md#Present and compare",
+        }
+        self.assertEqual(
+            expected_sections,
+            {item["upstream"] for item in entry["sections"]["complete"]},
+        )
+        self.assertEqual(
+            expected_sections,
+            {item["upstream"] for item in entry["sections"]["translated"]},
+        )
+        for item in entry["sections"]["complete"]:
+            with self.subTest(section=item["upstream"]):
+                self.assertTrue(item["local"])
+                self.assertRegex(
+                    item["evidence"],
+                    r"(SKILL|DEEPENING|DESIGN-IT-TWICE)\.md#",
+                )
+        self.assertEqual([], entry["sections"]["missing"])
+        for support_file in ("SKILL.md", "DEEPENING.md", "DESIGN-IT-TWICE.md"):
+            with self.subTest(support_file=support_file):
+                self.assertRegex(
+                    entry["support_files"][support_file],
+                    r"^[0-9a-f]{64}$",
+                )
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": (
+                        "保留本地名称、手动调用元数据，以及仓库要求的简短"
+                        "“项目策略优先”提示；不改变上游方法。"
+                    ),
+                }
+            ],
+            entry["allowed_local_adaptations"],
+        )
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertTrue(entry["evidence_path"])
+
+        skill_dir = root / "skills" / "my-codebase-design"
+        skill = (skill_dir / "SKILL.md").read_text()
+        deepening = (skill_dir / "DEEPENING.md").read_text()
+        design_twice = (skill_dir / "DESIGN-IT-TWICE.md").read_text()
+
+        # The retrieved method must guide a real deepening decision, not only
+        # preserve vocabulary labels.
+        for instruction in (
+            "接受依赖，而不是创建依赖",
+            "删除测试",
+            "Interface 就是测试面",
+            "两个 Adapter 才意味着真实的 Seam",
+        ):
+            with self.subTest(instruction=instruction):
+                self.assertIn(instruction, skill)
+        for dependency_category in (
+            "进程内",
+            "可本地替代",
+            "远程但自有",
+            "真正外部",
+        ):
+            with self.subTest(dependency_category=dependency_category):
+                self.assertIn(dependency_category, deepening)
+        self.assertIn("替换，而不是叠加", deepening)
+        self.assertIn("3 个以上", design_twice)
+        self.assertIn("根本不同", design_twice)
+        self.assertIn("深度", design_twice)
+        self.assertIn("局部性", design_twice)
 
     def test_recommendations_rank_general_candidates_and_defer_specialized_ones(self):
         report = build_recommendation_report(

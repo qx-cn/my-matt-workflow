@@ -65,10 +65,70 @@
       "upstream_path": "engineering/codebase-design",
       "local_skill": "my-codebase-design",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#Glossary",
+          "SKILL.md#Deep vs shallow",
+          "SKILL.md#Principles",
+          "SKILL.md#Designing for testability",
+          "SKILL.md#Relationships",
+          "SKILL.md#Rejected framings",
+          "SKILL.md#Going deeper",
+          "DEEPENING.md#Dependency categories",
+          "DEEPENING.md#Seam discipline",
+          "DEEPENING.md#Testing strategy: replace, don't layer",
+          "DESIGN-IT-TWICE.md#Process",
+          "DESIGN-IT-TWICE.md#Frame the problem space",
+          "DESIGN-IT-TWICE.md#Spawn sub-agents",
+          "DESIGN-IT-TWICE.md#Present and compare"
+        ],
+        "local": [
+          "SKILL.md#术语表",
+          "SKILL.md#深模块与浅模块",
+          "SKILL.md#原则",
+          "SKILL.md#为可测试性而设计",
+          "SKILL.md#关系",
+          "SKILL.md#被否决的表述",
+          "SKILL.md#继续深入",
+          "DEEPENING.md#依赖类别",
+          "DEEPENING.md#Seam 纪律",
+          "DEEPENING.md#测试策略：替换，而不是叠加",
+          "DESIGN-IT-TWICE.md#过程",
+          "DESIGN-IT-TWICE.md#界定问题空间",
+          "DESIGN-IT-TWICE.md#启动子代理",
+          "DESIGN-IT-TWICE.md#展示并比较"
+        ],
+        "complete": [
+          {"upstream": "Glossary", "local": "术语表", "evidence": "SKILL.md#术语表保留 Module、Interface、Implementation、Depth、Seam、Adapter、Leverage、Locality 的定义和禁用替代词。"},
+          {"upstream": "Deep vs shallow", "local": "深模块与浅模块", "evidence": "SKILL.md#深模块与浅模块保留两幅图、接口问题和深浅模块判断。"},
+          {"upstream": "Principles", "local": "原则", "evidence": "SKILL.md#原则保留内部/外部 Seam、删除测试、测试面和双 Adapter 约束。"},
+          {"upstream": "Designing for testability", "local": "为可测试性而设计", "evidence": "SKILL.md#为可测试性而设计保留两组 TypeScript 示例和小表面积约束。"},
+          {"upstream": "Relationships", "local": "关系", "evidence": "SKILL.md#关系保留 Module、Interface、Depth、Seam、Adapter、Leverage、Locality 的关系。"},
+          {"upstream": "Rejected framings", "local": "被否决的表述", "evidence": "SKILL.md#被否决的表述保留三种被否决的 Depth、Interface 和 Boundary 表述。"},
+          {"upstream": "Going deeper", "local": "继续深入", "evidence": "SKILL.md#继续深入保留对两个支持文档和比较维度的链接说明。"},
+          {"upstream": "DEEPENING.md#Dependency categories", "local": "DEEPENING.md#依赖类别", "evidence": "DEEPENING.md#依赖类别保留四种依赖类别、测试方式和 Ports & Adapters 推荐表述。"},
+          {"upstream": "DEEPENING.md#Seam discipline", "local": "DEEPENING.md#Seam 纪律", "evidence": "DEEPENING.md#Seam 纪律保留单 Adapter 不足和内部/外部 Seam 的约束。"},
+          {"upstream": "DEEPENING.md#Testing strategy: replace, don't layer", "local": "DEEPENING.md#测试策略：替换，而不是叠加", "evidence": "DEEPENING.md#测试策略：替换，而不是叠加保留删除旧浅层测试、经 Interface 断言和重构稳定性。"},
+          {"upstream": "DESIGN-IT-TWICE.md#Process", "local": "DESIGN-IT-TWICE.md#过程", "evidence": "DESIGN-IT-TWICE.md#过程保留三个顺序步骤。"},
+          {"upstream": "DESIGN-IT-TWICE.md#Frame the problem space", "local": "DESIGN-IT-TWICE.md#界定问题空间", "evidence": "DESIGN-IT-TWICE.md#界定问题空间保留约束、依赖分类、说明性草图和立即进入步骤 2 的时机。"},
+          {"upstream": "DESIGN-IT-TWICE.md#Spawn sub-agents", "local": "DESIGN-IT-TWICE.md#启动子代理", "evidence": "DESIGN-IT-TWICE.md#启动子代理保留 3 个以上根本不同的设计、四种约束和五项输出。"},
+          {"upstream": "DESIGN-IT-TWICE.md#Present and compare", "local": "DESIGN-IT-TWICE.md#展示并比较", "evidence": "DESIGN-IT-TWICE.md#展示并比较保留顺序展示、Depth/Locality/Seam 比较和明确推荐。"}
+        ],
+        "translated": [
+          {"upstream": "Glossary", "local": "术语表", "evidence": "SKILL.md#术语表"},
+          {"upstream": "Deep vs shallow", "local": "深模块与浅模块", "evidence": "SKILL.md#深模块与浅模块"},
+          {"upstream": "Principles", "local": "原则", "evidence": "SKILL.md#原则"},
+          {"upstream": "Designing for testability", "local": "为可测试性而设计", "evidence": "SKILL.md#为可测试性而设计"},
+          {"upstream": "Relationships", "local": "关系", "evidence": "SKILL.md#关系"},
+          {"upstream": "Rejected framings", "local": "被否决的表述", "evidence": "SKILL.md#被否决的表述"},
+          {"upstream": "Going deeper", "local": "继续深入", "evidence": "SKILL.md#继续深入"},
+          {"upstream": "DEEPENING.md#Dependency categories", "local": "DEEPENING.md#依赖类别", "evidence": "DEEPENING.md#依赖类别"},
+          {"upstream": "DEEPENING.md#Seam discipline", "local": "DEEPENING.md#Seam 纪律", "evidence": "DEEPENING.md#Seam 纪律"},
+          {"upstream": "DEEPENING.md#Testing strategy: replace, don't layer", "local": "DEEPENING.md#测试策略：替换，而不是叠加", "evidence": "DEEPENING.md#测试策略：替换，而不是叠加"},
+          {"upstream": "DESIGN-IT-TWICE.md#Process", "local": "DESIGN-IT-TWICE.md#过程", "evidence": "DESIGN-IT-TWICE.md#过程"},
+          {"upstream": "DESIGN-IT-TWICE.md#Frame the problem space", "local": "DESIGN-IT-TWICE.md#界定问题空间", "evidence": "DESIGN-IT-TWICE.md#界定问题空间"},
+          {"upstream": "DESIGN-IT-TWICE.md#Spawn sub-agents", "local": "DESIGN-IT-TWICE.md#启动子代理", "evidence": "DESIGN-IT-TWICE.md#启动子代理"},
+          {"upstream": "DESIGN-IT-TWICE.md#Present and compare", "local": "DESIGN-IT-TWICE.md#展示并比较", "evidence": "DESIGN-IT-TWICE.md#展示并比较"}
+        ],
         "missing": [],
         "local_added": []
       },
@@ -78,10 +138,15 @@
         "SKILL.md": "a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad",
         "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit."
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "保留本地名称、手动调用元数据，以及仓库要求的简短“项目策略优先”提示；不改变上游方法。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-1-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
       "upstream_skill": "diagnosing-bugs",
