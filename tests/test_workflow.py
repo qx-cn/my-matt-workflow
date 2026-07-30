@@ -434,10 +434,14 @@ class ProfileTests(unittest.TestCase):
 
     def test_skills_keep_slim_policy_footer_and_local_preset_docs(self):
         root = Path(__file__).resolve().parents[1] / "skills"
+        restored_without_policy_footer = {
+            "my-writing-great-skills",
+            "my-triage",
+        }
         for skill_file in root.glob("my-*/SKILL.md"):
             text = skill_file.read_text()
             with self.subTest(skill=skill_file.parent.name):
-                if skill_file.parent.name == "my-writing-great-skills":
+                if skill_file.parent.name in restored_without_policy_footer:
                     self.assertNotIn("项目策略优先", text)
                     continue
                 self.assertIn("已解析生效策略", text)
@@ -547,7 +551,6 @@ class WorkArtifactTests(unittest.TestCase):
             "my-grill-with-docs": ".agent/work/<topic>/grills/",
             "my-to-spec": ".agent/work/<feature-slug>/specs/",
             "my-to-tickets": ".agent/work/<feature-slug>/tickets/tickets-",
-            "my-triage": ".agent/work/<feature>/triages/",
             "my-wayfinder": ".agent/work/<initiative>/wayfinders/",
             "my-prototype": ".agent/work/<feature>/prototypes/",
             "my-ask-matt": ".agent/work/<feature>/tickets/tickets-",
@@ -1644,7 +1647,10 @@ class ReleaseTests(unittest.TestCase):
     def test_legacy_skills_keep_project_policy_precedence(self):
         source_skills = Path(__file__).parents[1] / "skills"
         for skill_file in source_skills.glob("my-*/SKILL.md"):
-            if skill_file.parent.name == "my-writing-great-skills":
+            if skill_file.parent.name in {
+                "my-writing-great-skills",
+                "my-triage",
+            }:
                 continue
             self.assertIn("项目策略优先", skill_file.read_text(), skill_file)
 
@@ -2185,6 +2191,159 @@ class WritingGreatSkillsParityTests(unittest.TestCase):
                         case["expected"]["decision"],
                         self._apply_writing_great_skills_mapping(case),
                     )
+
+
+class TriageParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_triage_constraint_mapping(case):
+        outcomes = [
+            mapping["outcome"]
+            for mapping in case["constraint_mapping"]
+            if all(
+                case["input"].get(field) == expected
+                for field, expected in mapping["when"].items()
+            )
+            and set(mapping["constraints"])
+            <= {constraint["id"] for constraint in case["retrieved_constraints"]}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_triage_restoration_records_complete_translated_parity(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-triage"
+        self.assertTrue(skill_dir.is_dir(), "missing restored my-triage Skill")
+
+        documents = {
+            "SKILL.md": (skill_dir / "SKILL.md").read_text(),
+            "AGENT-BRIEF.md": (skill_dir / "AGENT-BRIEF.md").read_text(),
+            "OUT-OF-SCOPE.md": (skill_dir / "OUT-OF-SCOPE.md").read_text(),
+        }
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item
+            for item in fidelity["skills"]
+            if item["local_skill"] == "my-triage"
+        )
+
+        self.assertEqual("skills/engineering/triage", entry["upstream_path"])
+        expected_mappings = {
+            "SKILL.md#Triage": ("SKILL.md", "分诊"),
+            "SKILL.md#Reference docs": ("SKILL.md", "参考文档"),
+            "SKILL.md#Roles": ("SKILL.md", "角色"),
+            "SKILL.md#Invocation": ("SKILL.md", "调用"),
+            "SKILL.md#Show what needs attention": ("SKILL.md", "显示需要关注的事项"),
+            "SKILL.md#Triage a specific issue or PR": ("SKILL.md", "分诊特定 Issue 或 PR"),
+            "SKILL.md#Quick state override": ("SKILL.md", "快速状态覆盖"),
+            "SKILL.md#Needs-info template": ("SKILL.md", "需要更多信息模板"),
+            "SKILL.md#Resuming a previous session": ("SKILL.md", "恢复之前的会话"),
+            "AGENT-BRIEF.md#Writing Agent Briefs": ("AGENT-BRIEF.md", "编写 Agent 简报"),
+            "AGENT-BRIEF.md#Principles": ("AGENT-BRIEF.md", "原则"),
+            "AGENT-BRIEF.md#Durability over precision": ("AGENT-BRIEF.md", "持久性优先于精确性"),
+            "AGENT-BRIEF.md#Behavioral, not procedural": ("AGENT-BRIEF.md", "描述行为，而非过程"),
+            "AGENT-BRIEF.md#Complete acceptance criteria": ("AGENT-BRIEF.md", "完整的验收标准"),
+            "AGENT-BRIEF.md#Explicit scope boundaries": ("AGENT-BRIEF.md", "明确的范围边界"),
+            "AGENT-BRIEF.md#Template": ("AGENT-BRIEF.md", "模板"),
+            "AGENT-BRIEF.md#Examples": ("AGENT-BRIEF.md", "示例"),
+            "AGENT-BRIEF.md#Good agent brief (bug)": ("AGENT-BRIEF.md", "好的 Agent 简报（Bug）"),
+            "AGENT-BRIEF.md#Good agent brief (enhancement)": ("AGENT-BRIEF.md", "好的 Agent 简报（增强）"),
+            "AGENT-BRIEF.md#Good agent brief (PR)": ("AGENT-BRIEF.md", "好的 Agent 简报（PR）"),
+            "AGENT-BRIEF.md#Bad agent brief": ("AGENT-BRIEF.md", "不好的 Agent 简报"),
+            "OUT-OF-SCOPE.md#Out-of-Scope Knowledge Base": ("OUT-OF-SCOPE.md", "超出范围知识库"),
+            "OUT-OF-SCOPE.md#Directory structure": ("OUT-OF-SCOPE.md", "目录结构"),
+            "OUT-OF-SCOPE.md#File format": ("OUT-OF-SCOPE.md", "文件格式"),
+            "OUT-OF-SCOPE.md#Naming the file": ("OUT-OF-SCOPE.md", "文件命名"),
+            "OUT-OF-SCOPE.md#Writing the reason": ("OUT-OF-SCOPE.md", "编写理由"),
+            "OUT-OF-SCOPE.md#When to check `.out-of-scope/`": ("OUT-OF-SCOPE.md", "何时检查 `.out-of-scope/`"),
+            "OUT-OF-SCOPE.md#When to write to `.out-of-scope/`": ("OUT-OF-SCOPE.md", "何时写入 `.out-of-scope/`"),
+            "OUT-OF-SCOPE.md#Updating or removing out-of-scope files": ("OUT-OF-SCOPE.md", "更新或移除超出范围文件"),
+        }
+        for field in ("complete", "translated"):
+            mappings = entry["sections"][field]
+            self.assertEqual(expected_mappings.keys(), {item["upstream"] for item in mappings})
+            for mapping in mappings:
+                with self.subTest(field=field, section=mapping["upstream"]):
+                    document, heading = expected_mappings[mapping["upstream"]]
+                    self.assertEqual(heading, mapping["local"])
+                    self.assertIn(heading, documents[document])
+                    self.assertRegex(mapping["evidence"], r"\.md#")
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual([], entry["sections"]["local_added"])
+        self.assertEqual(
+            {
+                "AGENT-BRIEF.md": "5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b",
+                "OUT-OF-SCOPE.md": "2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914",
+                "SKILL.md": "d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1",
+                "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+            },
+            entry["support_files"],
+        )
+        metadata = skill_dir / "agents" / "openai.yaml"
+        self.assertTrue(metadata.is_file(), "missing local manual-only metadata")
+        self.assertEqual(
+            hashlib.sha256(metadata.read_bytes()).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertIn("allow_implicit_invocation: false", metadata.read_text())
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
+                }
+            ],
+            entry["allowed_local_adaptations"],
+        )
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertEqual(".superpowers/sdd/task-3-report.md", entry["evidence_path"])
+
+    def test_triage_scenarios_apply_retrieved_constraints(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-triage"
+        fixture_path = root / "tests" / "fixtures" / "triage_workflow_application.json"
+        self.assertTrue(fixture_path.is_file(), "missing triage workflow fixture")
+        self.assertTrue(skill_dir.is_dir(), "missing restored my-triage Skill")
+
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual("skills/engineering/triage", fixture["source_path"])
+        self.assertEqual(
+            {
+                "state-transition",
+                "deterministic-ordering",
+                "needs-info",
+                "validation-failure",
+                "recovery",
+            },
+            {case["id"] for case in fixture["scenarios"]},
+        )
+        documents = {
+            "SKILL.md": (skill_dir / "SKILL.md").read_text(),
+            "AGENT-BRIEF.md": (skill_dir / "AGENT-BRIEF.md").read_text(),
+            "OUT-OF-SCOPE.md": (skill_dir / "OUT-OF-SCOPE.md").read_text(),
+        }
+        for case in fixture["scenarios"]:
+            with self.subTest(scenario=case["id"]):
+                self.assertIsInstance(case["input"], dict)
+                self.assertTrue(case["retrieved_constraints"])
+                constraint_ids = set()
+                for constraint in case["retrieved_constraints"]:
+                    self.assertNotIn(constraint["id"], constraint_ids)
+                    constraint_ids.add(constraint["id"])
+                    self.assertIn(constraint["document"], documents)
+                    self.assertIn(
+                        constraint["text"], documents[constraint["document"]]
+                    )
+                self.assertTrue(case["constraint_mapping"])
+                for mapping in case["constraint_mapping"]:
+                    self.assertTrue(mapping["when"])
+                    self.assertTrue(mapping["constraints"])
+                    self.assertTrue(set(mapping["constraints"]) <= constraint_ids)
+                    self.assertEqual(case["expected"], mapping["outcome"])
+                self.assertEqual(
+                    case["expected"],
+                    self._apply_triage_constraint_mapping(case),
+                )
 
 
 if __name__ == "__main__":

@@ -501,13 +501,55 @@
     },
     {
       "upstream_skill": "triage",
-      "upstream_path": "engineering/triage",
+      "upstream_path": "skills/engineering/triage",
       "local_skill": "my-triage",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#Triage", "SKILL.md#Reference docs", "SKILL.md#Roles", "SKILL.md#Invocation", "SKILL.md#Show what needs attention", "SKILL.md#Triage a specific issue or PR", "SKILL.md#Quick state override", "SKILL.md#Needs-info template", "SKILL.md#Resuming a previous session",
+          "AGENT-BRIEF.md#Writing Agent Briefs", "AGENT-BRIEF.md#Principles", "AGENT-BRIEF.md#Durability over precision", "AGENT-BRIEF.md#Behavioral, not procedural", "AGENT-BRIEF.md#Complete acceptance criteria", "AGENT-BRIEF.md#Explicit scope boundaries", "AGENT-BRIEF.md#Template", "AGENT-BRIEF.md#Examples", "AGENT-BRIEF.md#Good agent brief (bug)", "AGENT-BRIEF.md#Good agent brief (enhancement)", "AGENT-BRIEF.md#Good agent brief (PR)", "AGENT-BRIEF.md#Bad agent brief",
+          "OUT-OF-SCOPE.md#Out-of-Scope Knowledge Base", "OUT-OF-SCOPE.md#Directory structure", "OUT-OF-SCOPE.md#File format", "OUT-OF-SCOPE.md#Naming the file", "OUT-OF-SCOPE.md#Writing the reason", "OUT-OF-SCOPE.md#When to check `.out-of-scope/`", "OUT-OF-SCOPE.md#When to write to `.out-of-scope/`", "OUT-OF-SCOPE.md#Updating or removing out-of-scope files"
+        ],
+        "local": [
+          "SKILL.md#分诊", "SKILL.md#参考文档", "SKILL.md#角色", "SKILL.md#调用", "SKILL.md#显示需要关注的事项", "SKILL.md#分诊特定 Issue 或 PR", "SKILL.md#快速状态覆盖", "SKILL.md#需要更多信息模板", "SKILL.md#恢复之前的会话",
+          "AGENT-BRIEF.md#编写 Agent 简报", "AGENT-BRIEF.md#原则", "AGENT-BRIEF.md#持久性优先于精确性", "AGENT-BRIEF.md#描述行为，而非过程", "AGENT-BRIEF.md#完整的验收标准", "AGENT-BRIEF.md#明确的范围边界", "AGENT-BRIEF.md#模板", "AGENT-BRIEF.md#示例", "AGENT-BRIEF.md#好的 Agent 简报（Bug）", "AGENT-BRIEF.md#好的 Agent 简报（增强）", "AGENT-BRIEF.md#好的 Agent 简报（PR）", "AGENT-BRIEF.md#不好的 Agent 简报",
+          "OUT-OF-SCOPE.md#超出范围知识库", "OUT-OF-SCOPE.md#目录结构", "OUT-OF-SCOPE.md#文件格式", "OUT-OF-SCOPE.md#文件命名", "OUT-OF-SCOPE.md#编写理由", "OUT-OF-SCOPE.md#何时检查 `.out-of-scope/`", "OUT-OF-SCOPE.md#何时写入 `.out-of-scope/`", "OUT-OF-SCOPE.md#更新或移除超出范围文件"
+        ],
+        "complete": [
+          {"upstream": "SKILL.md#Triage", "local": "分诊", "evidence": "SKILL.md#分诊保留 Issue/外部 PR 的统一状态机、免责声明和裸编号解析。"},
+          {"upstream": "SKILL.md#Reference docs", "local": "参考文档", "evidence": "SKILL.md#参考文档保留两份支持文档及其职责链接。"},
+          {"upstream": "SKILL.md#Roles", "local": "角色", "evidence": "SKILL.md#角色保留两类类别角色、五种状态角色、恰好一个类别/状态、冲突停止和转换规则。"},
+          {"upstream": "SKILL.md#Invocation", "local": "调用", "evidence": "SKILL.md#调用保留自然语言调用和四个示例。"},
+          {"upstream": "SKILL.md#Show what needs attention", "local": "显示需要关注的事项", "evidence": "SKILL.md#显示需要关注的事项保留三个桶、最旧优先、外部 PR 过滤和显式指定 PR 例外。"},
+          {"upstream": "SKILL.md#Triage a specific issue or PR", "local": "分诊特定 Issue 或 PR", "evidence": "SKILL.md#分诊特定 Issue 或 PR保留上下文收集、冗余/既往拒绝检查、建议、验证、追问及全部结果处理。"},
+          {"upstream": "SKILL.md#Quick state override", "local": "快速状态覆盖", "evidence": "SKILL.md#快速状态覆盖保留维护者覆盖、操作确认、跳过追问和可选简报。"},
+          {"upstream": "SKILL.md#Needs-info template", "local": "需要更多信息模板", "evidence": "SKILL.md#需要更多信息模板保留已确认内容、具体可操作问题和不丢失已解决工作。"},
+          {"upstream": "SKILL.md#Resuming a previous session", "local": "恢复之前的会话", "evidence": "SKILL.md#恢复之前的会话保留读取既有记录、检查回复、更新全貌和不重复提问。"},
+          {"upstream": "AGENT-BRIEF.md#Writing Agent Briefs", "local": "编写 Agent 简报", "evidence": "AGENT-BRIEF.md#编写 Agent 简报保留 Issue/PR 的权威契约和差异。"},
+          {"upstream": "AGENT-BRIEF.md#Principles", "local": "原则", "evidence": "AGENT-BRIEF.md#原则保留耐久性、行为、验收与范围原则。"},
+          {"upstream": "AGENT-BRIEF.md#Durability over precision", "local": "持久性优先于精确性", "evidence": "AGENT-BRIEF.md#持久性优先于精确性保留接口契约、禁止路径/行号和重构适应性。"},
+          {"upstream": "AGENT-BRIEF.md#Behavioral, not procedural", "local": "描述行为，而非过程", "evidence": "AGENT-BRIEF.md#描述行为，而非过程保留好坏示例和实现自主性。"},
+          {"upstream": "AGENT-BRIEF.md#Complete acceptance criteria", "local": "完整的验收标准", "evidence": "AGENT-BRIEF.md#完整的验收标准保留独立可验证的具体标准。"},
+          {"upstream": "AGENT-BRIEF.md#Explicit scope boundaries", "local": "明确的范围边界", "evidence": "AGENT-BRIEF.md#明确的范围边界保留防止过度打磨的边界。"},
+          {"upstream": "AGENT-BRIEF.md#Template", "local": "模板", "evidence": "AGENT-BRIEF.md#模板保留类别、摘要、当前/期望行为、接口、验收和范围字段。"},
+          {"upstream": "AGENT-BRIEF.md#Examples", "local": "示例", "evidence": "AGENT-BRIEF.md#示例保留 Bug、增强、PR 和反例。"},
+          {"upstream": "AGENT-BRIEF.md#Good agent brief (bug)", "local": "好的 Agent 简报（Bug）", "evidence": "AGENT-BRIEF.md#好的 Agent 简报（Bug）保留截断边界示例和四项可测试验收标准。"},
+          {"upstream": "AGENT-BRIEF.md#Good agent brief (enhancement)", "local": "好的 Agent 简报（增强）", "evidence": "AGENT-BRIEF.md#好的 Agent 简报（增强）保留 out-of-scope 文件格式、匹配和范围。"},
+          {"upstream": "AGENT-BRIEF.md#Good agent brief (PR)", "local": "好的 Agent 简报（PR）", "evidence": "AGENT-BRIEF.md#好的 Agent 简报（PR）保留现有 diff、JSON 错误、退出码和默认输出约束。"},
+          {"upstream": "AGENT-BRIEF.md#Bad agent brief", "local": "不好的 Agent 简报", "evidence": "AGENT-BRIEF.md#不好的 Agent 简报保留缺失类别、模糊、过时定位、验收和边界等失败原因。"},
+          {"upstream": "OUT-OF-SCOPE.md#Out-of-Scope Knowledge Base", "local": "超出范围知识库", "evidence": "OUT-OF-SCOPE.md#超出范围知识库保留组织记忆和去重两个目的。"},
+          {"upstream": "OUT-OF-SCOPE.md#Directory structure", "local": "目录结构", "evidence": "OUT-OF-SCOPE.md#目录结构保留按概念而非按 Issue 分组的目录示例。"},
+          {"upstream": "OUT-OF-SCOPE.md#File format", "local": "文件格式", "evidence": "OUT-OF-SCOPE.md#文件格式保留可读设计文档风格、深色模式示例、代码和既往请求。"},
+          {"upstream": "OUT-OF-SCOPE.md#Naming the file", "local": "文件命名", "evidence": "OUT-OF-SCOPE.md#文件命名保留可识别的 kebab-case 概念文件名。"},
+          {"upstream": "OUT-OF-SCOPE.md#Writing the reason", "local": "编写理由", "evidence": "OUT-OF-SCOPE.md#编写理由保留项目、技术、战略理由与避免临时借口。"},
+          {"upstream": "OUT-OF-SCOPE.md#When to check `.out-of-scope/`", "local": "何时检查 `.out-of-scope/`", "evidence": "OUT-OF-SCOPE.md#何时检查 `.out-of-scope/`保留概念匹配和确认/重新考虑/不同意分支。"},
+          {"upstream": "OUT-OF-SCOPE.md#When to write to `.out-of-scope/`", "local": "何时写入 `.out-of-scope/`", "evidence": "OUT-OF-SCOPE.md#何时写入 `.out-of-scope/`保留增强拒绝、已实现例外和六步关闭流程。"},
+          {"upstream": "OUT-OF-SCOPE.md#Updating or removing out-of-scope files", "local": "更新或移除超出范围文件", "evidence": "OUT-OF-SCOPE.md#更新或移除超出范围文件保留重新考虑时的删除、历史记录和正常分诊。"}
+        ],
+        "translated": [
+          {"upstream": "SKILL.md#Triage", "local": "分诊", "evidence": "SKILL.md#分诊"}, {"upstream": "SKILL.md#Reference docs", "local": "参考文档", "evidence": "SKILL.md#参考文档"}, {"upstream": "SKILL.md#Roles", "local": "角色", "evidence": "SKILL.md#角色"}, {"upstream": "SKILL.md#Invocation", "local": "调用", "evidence": "SKILL.md#调用"}, {"upstream": "SKILL.md#Show what needs attention", "local": "显示需要关注的事项", "evidence": "SKILL.md#显示需要关注的事项"}, {"upstream": "SKILL.md#Triage a specific issue or PR", "local": "分诊特定 Issue 或 PR", "evidence": "SKILL.md#分诊特定 Issue 或 PR"}, {"upstream": "SKILL.md#Quick state override", "local": "快速状态覆盖", "evidence": "SKILL.md#快速状态覆盖"}, {"upstream": "SKILL.md#Needs-info template", "local": "需要更多信息模板", "evidence": "SKILL.md#需要更多信息模板"}, {"upstream": "SKILL.md#Resuming a previous session", "local": "恢复之前的会话", "evidence": "SKILL.md#恢复之前的会话"},
+          {"upstream": "AGENT-BRIEF.md#Writing Agent Briefs", "local": "编写 Agent 简报", "evidence": "AGENT-BRIEF.md#编写 Agent 简报"}, {"upstream": "AGENT-BRIEF.md#Principles", "local": "原则", "evidence": "AGENT-BRIEF.md#原则"}, {"upstream": "AGENT-BRIEF.md#Durability over precision", "local": "持久性优先于精确性", "evidence": "AGENT-BRIEF.md#持久性优先于精确性"}, {"upstream": "AGENT-BRIEF.md#Behavioral, not procedural", "local": "描述行为，而非过程", "evidence": "AGENT-BRIEF.md#描述行为，而非过程"}, {"upstream": "AGENT-BRIEF.md#Complete acceptance criteria", "local": "完整的验收标准", "evidence": "AGENT-BRIEF.md#完整的验收标准"}, {"upstream": "AGENT-BRIEF.md#Explicit scope boundaries", "local": "明确的范围边界", "evidence": "AGENT-BRIEF.md#明确的范围边界"}, {"upstream": "AGENT-BRIEF.md#Template", "local": "模板", "evidence": "AGENT-BRIEF.md#模板"}, {"upstream": "AGENT-BRIEF.md#Examples", "local": "示例", "evidence": "AGENT-BRIEF.md#示例"}, {"upstream": "AGENT-BRIEF.md#Good agent brief (bug)", "local": "好的 Agent 简报（Bug）", "evidence": "AGENT-BRIEF.md#好的 Agent 简报（Bug）"}, {"upstream": "AGENT-BRIEF.md#Good agent brief (enhancement)", "local": "好的 Agent 简报（增强）", "evidence": "AGENT-BRIEF.md#好的 Agent 简报（增强）"}, {"upstream": "AGENT-BRIEF.md#Good agent brief (PR)", "local": "好的 Agent 简报（PR）", "evidence": "AGENT-BRIEF.md#好的 Agent 简报（PR）"}, {"upstream": "AGENT-BRIEF.md#Bad agent brief", "local": "不好的 Agent 简报", "evidence": "AGENT-BRIEF.md#不好的 Agent 简报"},
+          {"upstream": "OUT-OF-SCOPE.md#Out-of-Scope Knowledge Base", "local": "超出范围知识库", "evidence": "OUT-OF-SCOPE.md#超出范围知识库"}, {"upstream": "OUT-OF-SCOPE.md#Directory structure", "local": "目录结构", "evidence": "OUT-OF-SCOPE.md#目录结构"}, {"upstream": "OUT-OF-SCOPE.md#File format", "local": "文件格式", "evidence": "OUT-OF-SCOPE.md#文件格式"}, {"upstream": "OUT-OF-SCOPE.md#Naming the file", "local": "文件命名", "evidence": "OUT-OF-SCOPE.md#文件命名"}, {"upstream": "OUT-OF-SCOPE.md#Writing the reason", "local": "编写理由", "evidence": "OUT-OF-SCOPE.md#编写理由"}, {"upstream": "OUT-OF-SCOPE.md#When to check `.out-of-scope/`", "local": "何时检查 `.out-of-scope/`", "evidence": "OUT-OF-SCOPE.md#何时检查 `.out-of-scope/`"}, {"upstream": "OUT-OF-SCOPE.md#When to write to `.out-of-scope/`", "local": "何时写入 `.out-of-scope/`", "evidence": "OUT-OF-SCOPE.md#何时写入 `.out-of-scope/`"}, {"upstream": "OUT-OF-SCOPE.md#Updating or removing out-of-scope files", "local": "更新或移除超出范围文件", "evidence": "OUT-OF-SCOPE.md#更新或移除超出范围文件"}
+        ],
         "missing": [],
         "local_added": []
       },
@@ -517,10 +559,18 @@
         "SKILL.md": "d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1",
         "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit. Support: AGENT-BRIEF.md, OUT-OF-SCOPE.md."
+      "local_support_files": {
+        "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-3-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
       "upstream_skill": "wayfinder",
