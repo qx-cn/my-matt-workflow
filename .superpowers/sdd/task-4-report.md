@@ -20,6 +20,13 @@ DONE
 | GREEN | Restored all five Chinese documents, fidelity mappings, and the structured application fixture; the same focused command → `Ran 2 tests ... OK`. |
 | Regression | First `python3 -m unittest discover -s tests -p 'test_*.py' -v` exposed obsolete local-adapter expectations for the restored upstream skill's policy footer and `.agent/work` layout. The applicable assertions now treat `my-teach` as a source-faithful restored skill; the final full run → `Ran 93 tests ... OK` (1.931s). |
 
+## Review correction
+
+- Finding: the lesson definition translated “one tightly-scoped thing” as “一项范围明确知识”, incorrectly limiting lessons to knowledge even though the source's teaching model supports both knowledge and skills.
+- RED: added `test_teach_lesson_scope_allows_knowledge_or_skill`, then ran `python3 -m unittest tests.test_workflow.TeachParityTests.test_teach_lesson_scope_allows_knowledge_or_skill -v` → failed because `一项范围明确的内容` was absent.
+- GREEN: changed only the scope noun to the neutral “一项范围明确的内容”, retaining the mission linkage “与任务紧密关联”; `python3 -m unittest tests.test_workflow.TeachParityTests -v` → `Ran 3 tests ... OK`.
+- Full regression: `python3 -m unittest discover -s tests -p 'test_*.py' -v` → `Ran 94 tests ... OK` (3.828s).
+
 ## Parity evidence
 
 - `SKILL.md` fully translates the teaching workspace, knowledge/skills/wisdom philosophy, fluency versus storage strength, short HTML lessons, reusable assets, mission confirmation, ZPD selection, citations, feedback loops, community wisdom, reference documents, and teaching notes.

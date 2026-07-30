@@ -2363,6 +2363,16 @@ class TeachParityTests(unittest.TestCase):
             return None
         return outcomes[0]
 
+    def test_teach_lesson_scope_allows_knowledge_or_skill(self):
+        root = Path(__file__).resolve().parents[1]
+        skill = (root / "skills" / "my-teach" / "SKILL.md").read_text()
+        lesson_definition = next(
+            line for line in skill.splitlines() if "`./lessons/*.html`" in line
+        )
+
+        self.assertIn("一项范围明确的内容", lesson_definition)
+        self.assertIn("与任务紧密关联", lesson_definition)
+
     def test_teach_restoration_records_complete_translated_parity(self):
         root = Path(__file__).resolve().parents[1]
         skill_dir = root / "skills" / "my-teach"
