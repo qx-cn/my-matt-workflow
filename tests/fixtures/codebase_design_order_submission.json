@@ -1,0 +1,91 @@
+{
+  "input": {
+    "module": "OrderSubmissionService",
+    "public_methods": [
+      "validateOrder(order)",
+      "calculateTax(order)",
+      "chargeCard(order)",
+      "saveOrder(order)"
+    ],
+    "created_dependency": "new StripeGateway()",
+    "obsolete_tests": [
+      "per-method shallow tests"
+    ]
+  },
+  "retrieved_constraints": [
+    {
+      "id": "accept-dependencies",
+      "document": "SKILL.md",
+      "text": "接受依赖，而不是创建依赖",
+      "consequence": "inject-payment-gateway"
+    },
+    {
+      "id": "external-dependency",
+      "document": "DEEPENING.md",
+      "text": "真正外部",
+      "consequence": "inject-payment-gateway"
+    },
+    {
+      "id": "real-seam",
+      "document": "DEEPENING.md",
+      "text": "两个 Adapter 才意味着真实的 Seam",
+      "consequence": "separate-production-and-test-adapters"
+    },
+    {
+      "id": "interface-test-surface",
+      "document": "DEEPENING.md",
+      "text": "Interface 就是测试面",
+      "consequence": "test-public-interface-only"
+    },
+    {
+      "id": "replace-shallow-tests",
+      "document": "DEEPENING.md",
+      "text": "替换，而不是叠加",
+      "consequence": "remove-obsolete-shallow-tests"
+    },
+    {
+      "id": "small-surface",
+      "document": "SKILL.md",
+      "text": "小的表面积",
+      "consequence": "one-deep-submit-interface"
+    }
+  ],
+  "recommendation": {
+    "interface": {
+      "module": "OrderSubmission",
+      "public_methods": [
+        "submit(order)"
+      ]
+    },
+    "dependency_injection": {
+      "port": "PaymentGateway",
+      "injected_into": "OrderSubmission"
+    },
+    "adapters": {
+      "production": "StripePaymentGateway",
+      "test": "InMemoryPaymentGateway"
+    },
+    "internalized_workflow": [
+      "validateOrder(order)",
+      "calculateTax(order)",
+      "paymentGateway.charge(order)",
+      "persistOrder(order)"
+    ],
+    "error_ordering": "translatePaymentError(error) before exposing the submit result",
+    "tests": {
+      "surface": "OrderSubmission.submit(order)",
+      "internal_state": false
+    },
+    "removed_tests": [
+      "per-method shallow tests"
+    ],
+    "consequence_by_constraint": {
+      "accept-dependencies": "inject-payment-gateway",
+      "external-dependency": "inject-payment-gateway",
+      "real-seam": "separate-production-and-test-adapters",
+      "interface-test-surface": "test-public-interface-only",
+      "replace-shallow-tests": "remove-obsolete-shallow-tests",
+      "small-surface": "one-deep-submit-interface"
+    }
+  }
+}

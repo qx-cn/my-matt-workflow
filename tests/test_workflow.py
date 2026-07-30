@@ -1456,6 +1456,131 @@ class DoctorTests(unittest.TestCase):
         self.assertIn("深度", design_twice)
         self.assertIn("局部性", design_twice)
 
+        # Apply the retrieved method to a concrete shallow-module input.  The
+        # fixture is deliberately structured so this test validates the
+        # constraint-to-consequence recommendation, not report prose.
+        application_path = (
+            root / "tests" / "fixtures" / "codebase_design_order_submission.json"
+        )
+        self.assertTrue(
+            application_path.is_file(),
+            "missing OrderSubmission retrieval/application fixture",
+        )
+        application = json.loads(application_path.read_text())
+
+        self.assertEqual("OrderSubmissionService", application["input"]["module"])
+        self.assertEqual(
+            [
+                "validateOrder(order)",
+                "calculateTax(order)",
+                "chargeCard(order)",
+                "saveOrder(order)",
+            ],
+            application["input"]["public_methods"],
+        )
+        self.assertEqual(
+            "new StripeGateway()",
+            application["input"]["created_dependency"],
+        )
+        self.assertEqual(
+            ["per-method shallow tests"],
+            application["input"]["obsolete_tests"],
+        )
+
+        source_documents = {
+            "SKILL.md": skill,
+            "DEEPENING.md": deepening,
+        }
+        retrieved = {
+            item["id"]: item
+            for item in application["retrieved_constraints"]
+        }
+        expected_constraints = {
+            "accept-dependencies": (
+                "SKILL.md",
+                "接受依赖，而不是创建依赖",
+                "inject-payment-gateway",
+            ),
+            "external-dependency": (
+                "DEEPENING.md",
+                "真正外部",
+                "inject-payment-gateway",
+            ),
+            "real-seam": (
+                "DEEPENING.md",
+                "两个 Adapter 才意味着真实的 Seam",
+                "separate-production-and-test-adapters",
+            ),
+            "interface-test-surface": (
+                "DEEPENING.md",
+                "Interface 就是测试面",
+                "test-public-interface-only",
+            ),
+            "replace-shallow-tests": (
+                "DEEPENING.md",
+                "替换，而不是叠加",
+                "remove-obsolete-shallow-tests",
+            ),
+            "small-surface": (
+                "SKILL.md",
+                "小的表面积",
+                "one-deep-submit-interface",
+            ),
+        }
+        self.assertEqual(set(expected_constraints), set(retrieved))
+        for constraint_id, (document, text, consequence) in expected_constraints.items():
+            with self.subTest(constraint=constraint_id):
+                constraint = retrieved[constraint_id]
+                self.assertEqual(document, constraint["document"])
+                self.assertEqual(text, constraint["text"])
+                self.assertEqual(consequence, constraint["consequence"])
+                self.assertIn(text, source_documents[document])
+
+        recommendation = application["recommendation"]
+        self.assertEqual(
+            {"module": "OrderSubmission", "public_methods": ["submit(order)"]},
+            recommendation["interface"],
+        )
+        self.assertEqual(
+            {"port": "PaymentGateway", "injected_into": "OrderSubmission"},
+            recommendation["dependency_injection"],
+        )
+        self.assertEqual(
+            {
+                "production": "StripePaymentGateway",
+                "test": "InMemoryPaymentGateway",
+            },
+            recommendation["adapters"],
+        )
+        self.assertEqual(
+            [
+                "validateOrder(order)",
+                "calculateTax(order)",
+                "paymentGateway.charge(order)",
+                "persistOrder(order)",
+            ],
+            recommendation["internalized_workflow"],
+        )
+        self.assertEqual(
+            "translatePaymentError(error) before exposing the submit result",
+            recommendation["error_ordering"],
+        )
+        self.assertEqual(
+            {"surface": "OrderSubmission.submit(order)", "internal_state": False},
+            recommendation["tests"],
+        )
+        self.assertEqual(
+            ["per-method shallow tests"],
+            recommendation["removed_tests"],
+        )
+        self.assertEqual(
+            {
+                constraint_id: consequence
+                for constraint_id, (_, _, consequence) in expected_constraints.items()
+            },
+            recommendation["consequence_by_constraint"],
+        )
+
     def test_recommendations_rank_general_candidates_and_defer_specialized_ones(self):
         report = build_recommendation_report(
             [
