@@ -38,4 +38,8 @@ The source body was compared section-by-section, including examples, ordering, c
 
 ## Retrieval/application scenario
 
-`tests/fixtures/task_12_application.json` defines `to-spec-application`. It retrieves `SKILL.md#document-body`, verifies `**不要重新访谈用户**` within that exact heading, and independently derives `synthesize-without-interview` only when the retrieved constraint is present.
+`tests/fixtures/task_12_application.json` defines `to-spec-application`. It retrieves `SKILL.md#frontmatter.description`, verifies `不重新访谈，只综合已有讨论` within that exact heading, and independently derives `synthesize-without-interview` only when the retrieved constraint is present.
+
+## Task 12 review repair
+
+The scenario now resolves an explicit frontmatter heading; no whole-document fallback is used.

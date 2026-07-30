@@ -17,9 +17,10 @@ The audited source sections and their local counterparts are:
 
 | Pinned upstream section | Local counterpart |
 | --- | --- |
-| `SKILL.md#Plan, don't do` | `SKILL.md#My Wayfinder` |
-| `SKILL.md#Refer by name` | `SKILL.md#规划，而不是交付` |
-| `SKILL.md#The Map` | `SKILL.md#始终用名称引用` |
+| `SKILL.md#frontmatter.name` | `SKILL.md#My Wayfinder` |
+| `SKILL.md#Plan, don't do` | `SKILL.md#规划，而不是交付` |
+| `SKILL.md#Refer by name` | `SKILL.md#始终用名称引用` |
+| `SKILL.md#The Map` | `SKILL.md#地图` |
 | `SKILL.md#The map body` | `SKILL.md#地图` |
 | `SKILL.md#Destination` | `SKILL.md#目的地` |
 | `SKILL.md#Notes` | `SKILL.md#备注` |
@@ -48,3 +49,7 @@ The source body was compared section-by-section, including examples, ordering, c
 ## Retrieval/application scenario
 
 `tests/fixtures/task_12_application.json` defines `wayfinder-application`. It retrieves `SKILL.md#规划，而不是交付`, verifies `否则只产出决定，不直接交付最终成果` within that exact heading, and independently derives `plan-not-deliver` only when the retrieved constraint is present.
+
+## Task 12 review repair
+
+The explicit `frontmatter.name` → local title mapping aligns the Plan, Refer, and Map headings with their counterparts. Both pinned-upstream and local headings resolve for every recorded mapping.

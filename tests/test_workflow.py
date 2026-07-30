@@ -3931,13 +3931,70 @@ class Task12AuditPopulationTests(unittest.TestCase):
         "wayfinder",
     )
 
+    EXPECTED_SECTION_MAPPINGS = {
+        "code-review": [
+            ("SKILL.md#frontmatter.name", "SKILL.md#代码审查"),
+            ("SKILL.md#Process", "SKILL.md#过程"),
+            ("SKILL.md#1. Pin the fixed point", "SKILL.md#1. 固定基线"),
+            (
+                "SKILL.md#2. Identify the spec source",
+                "SKILL.md#2. 定位 Spec 来源",
+            ),
+            (
+                "SKILL.md#3. Identify the standards sources",
+                "SKILL.md#3. 定位 Standards 来源",
+            ),
+            (
+                "SKILL.md#4. Spawn both sub-agents in parallel",
+                "SKILL.md#4. 分别审查",
+            ),
+            ("SKILL.md#5. Aggregate", "SKILL.md#5. 汇总"),
+            ("SKILL.md#Why two axes", "SKILL.md#为什么是两轴"),
+            ("agents/openai.yaml#interface", "agents/openai.yaml#interface"),
+        ],
+        "wayfinder": [
+            ("SKILL.md#frontmatter.name", "SKILL.md#My Wayfinder"),
+            ("SKILL.md#Plan, don't do", "SKILL.md#规划，而不是交付"),
+            ("SKILL.md#Refer by name", "SKILL.md#始终用名称引用"),
+            ("SKILL.md#The Map", "SKILL.md#地图"),
+            ("SKILL.md#The map body", "SKILL.md#地图"),
+            ("SKILL.md#Destination", "SKILL.md#目的地"),
+            ("SKILL.md#Notes", "SKILL.md#备注"),
+            ("SKILL.md#Decisions so far", "SKILL.md#已作决定"),
+            ("SKILL.md#Not yet specified", "SKILL.md#尚未明确"),
+            ("SKILL.md#Out of scope", "SKILL.md#范围外"),
+            ("SKILL.md#Tickets", "SKILL.md#Tickets"),
+            ("SKILL.md#Question", "SKILL.md#问题"),
+            ("SKILL.md#Ticket Types", "SKILL.md#Ticket 类型"),
+            ("SKILL.md#Fog of war", "SKILL.md#战争迷雾"),
+            ("SKILL.md#Out of scope", "SKILL.md#范围外"),
+            ("SKILL.md#Invocation", "SKILL.md#调用方式"),
+            ("SKILL.md#Chart the map", "SKILL.md#绘制地图"),
+            ("SKILL.md#Work through the map", "SKILL.md#沿地图工作"),
+            ("agents/openai.yaml#interface", "agents/openai.yaml#interface"),
+        ],
+    }
+
     @staticmethod
     def _section_contents(document, source_section):
         _, separator, heading = source_section.partition("#")
         if not separator:
             return None
-        if heading == "document-body":
-            return document
+        if heading.startswith("frontmatter."):
+            frontmatter = re.match(
+                r"\A---\n(?P<contents>.*?)\n---",
+                document,
+                re.DOTALL,
+            )
+            if frontmatter is None:
+                return None
+            key = heading.removeprefix("frontmatter.")
+            value = re.search(
+                rf"^{re.escape(key)}:\s*(?P<value>.+)$",
+                frontmatter["contents"],
+                re.MULTILINE,
+            )
+            return None if value is None else value["value"]
         heading_match = re.search(
             rf"^(?P<markers>#+)\s+{re.escape(heading)}\s*$",
             document,
@@ -3956,6 +4013,19 @@ class Task12AuditPopulationTests(unittest.TestCase):
             else len(document)
         )
         return document[heading_match.end() : section_end]
+
+    def _resolve_section(self, directory, source_section):
+        document_name, _, heading = source_section.partition("#")
+        self.assertTrue(document_name)
+        self.assertTrue(heading)
+        document = (directory / document_name).read_text()
+        if document_name.endswith(".yaml"):
+            self.assertEqual("interface", heading)
+            self.assertIn("interface:", document)
+            return document
+        section = self._section_contents(document, source_section)
+        self.assertIsNotNone(section)
+        return section
 
     @staticmethod
     def _apply_rules(scenario, rules):
@@ -4013,15 +4083,32 @@ class Task12AuditPopulationTests(unittest.TestCase):
 
         for mapping in entry["section_mappings"]:
             with self.subTest(skill=skill, mapping=mapping["upstream"]):
-                document_name, _, heading = mapping["local"].partition("#")
-                document = (local_dir / document_name).read_text()
-                if document_name.endswith(".yaml"):
-                    self.assertEqual("interface", heading)
-                    self.assertIn("interface:", document)
-                else:
-                    self.assertIsNotNone(
-                        self._section_contents(document, mapping["local"])
-                    )
+                self._resolve_section(source_dir, mapping["upstream"])
+                self._resolve_section(local_dir, mapping["local"])
+
+        if skill in self.EXPECTED_SECTION_MAPPINGS:
+            expected_mappings = self.EXPECTED_SECTION_MAPPINGS[skill]
+            actual_mappings = [
+                (mapping["upstream"], mapping["local"])
+                for mapping in entry["section_mappings"]
+            ]
+            self.assertEqual(expected_mappings, actual_mappings)
+            self.assertEqual(
+                [upstream for upstream, _ in expected_mappings],
+                entry["sections"]["upstream"],
+            )
+            self.assertEqual(
+                [local for _, local in expected_mappings],
+                entry["sections"]["local"],
+            )
+            for bucket in ("complete", "translated"):
+                self.assertEqual(
+                    expected_mappings,
+                    [
+                        (mapping["upstream"], mapping["local"])
+                        for mapping in entry["sections"][bucket]
+                    ],
+                )
 
         evidence = (root / entry["evidence_path"]).read_text()
         for required in (
@@ -4039,11 +4126,13 @@ class Task12AuditPopulationTests(unittest.TestCase):
             with self.subTest(skill=skill, scenario=scenario["id"]):
                 self.assertTrue(scenario["retrieved_constraints"])
                 for constraint in scenario["retrieved_constraints"]:
-                    document = (local_dir / constraint["document"]).read_text()
-                    section = self._section_contents(
-                        document, constraint["source_section"]
+                    self.assertEqual(
+                        constraint["document"],
+                        constraint["source_section"].split("#", 1)[0],
                     )
-                    self.assertIsNotNone(section)
+                    section = self._resolve_section(
+                        local_dir, constraint["source_section"]
+                    )
                     self.assertIn(constraint["text"], section)
                 self.assertEqual(
                     scenario["expected"], self._apply_rules(scenario, rules)

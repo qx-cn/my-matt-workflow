@@ -17,13 +17,14 @@ The audited source sections and their local counterparts are:
 
 | Pinned upstream section | Local counterpart |
 | --- | --- |
-| `SKILL.md#Process` | `SKILL.md#代码审查` |
-| `SKILL.md#1. Pin the fixed point` | `SKILL.md#过程` |
-| `SKILL.md#2. Identify the spec source` | `SKILL.md#1. 固定基线` |
-| `SKILL.md#3. Identify the standards sources` | `SKILL.md#2. 定位 Spec 来源` |
-| `SKILL.md#4. Spawn both sub-agents in parallel` | `SKILL.md#3. 定位 Standards 来源` |
-| `SKILL.md#5. Aggregate` | `SKILL.md#4. 分别审查` |
-| `SKILL.md#Why two axes` | `SKILL.md#5. 汇总` |
+| `SKILL.md#frontmatter.name` | `SKILL.md#代码审查` |
+| `SKILL.md#Process` | `SKILL.md#过程` |
+| `SKILL.md#1. Pin the fixed point` | `SKILL.md#1. 固定基线` |
+| `SKILL.md#2. Identify the spec source` | `SKILL.md#2. 定位 Spec 来源` |
+| `SKILL.md#3. Identify the standards sources` | `SKILL.md#3. 定位 Standards 来源` |
+| `SKILL.md#4. Spawn both sub-agents in parallel` | `SKILL.md#4. 分别审查` |
+| `SKILL.md#5. Aggregate` | `SKILL.md#5. 汇总` |
+| `SKILL.md#Why two axes` | `SKILL.md#为什么是两轴` |
 | `agents/openai.yaml#interface` | `agents/openai.yaml#interface` |
 
 The source body was compared section-by-section, including examples, ordering, constraints, stop conditions, frontmatter/runtime metadata, and all listed support files. Metadata interface fields are accounted for separately from local policy metadata.
@@ -38,3 +39,7 @@ The source body was compared section-by-section, including examples, ordering, c
 ## Retrieval/application scenario
 
 `tests/fixtures/task_12_application.json` defines `code-review-application`. It retrieves `SKILL.md#1. 固定基线`, verifies `继续前确认固定点可解析` within that exact heading, and independently derives `validate-fixed-point` only when the retrieved constraint is present.
+
+## Task 12 review repair
+
+The explicit `frontmatter.name` → local title mapping prevents the numbered process sections from shifting. Both pinned-upstream and local headings resolve for every recorded mapping.

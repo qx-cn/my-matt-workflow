@@ -17,7 +17,7 @@ The audited source sections and their local counterparts are:
 
 | Pinned upstream section | Local counterpart |
 | --- | --- |
-| `SKILL.md#document-body` | `SKILL.md#document-body` |
+| `SKILL.md#frontmatter.name` | `SKILL.md#My Handoff` |
 | `agents/openai.yaml#interface` | `agents/openai.yaml#interface` |
 
 The source body was compared section-by-section, including examples, ordering, constraints, stop conditions, frontmatter/runtime metadata, and all listed support files. Metadata interface fields are accounted for separately from local policy metadata.
@@ -32,3 +32,7 @@ The source body was compared section-by-section, including examples, ordering, c
 ## Retrieval/application scenario
 
 `tests/fixtures/task_12_application.json` defines `handoff-application`. It retrieves `SKILL.md#My Handoff`, verifies `已有产物只引用，不复制正文` within that exact heading, and independently derives `reference-existing-artifacts` only when the retrieved constraint is present.
+
+## Task 12 review repair
+
+The source name frontmatter explicitly maps to the local title; no whole-document fallback is recorded.

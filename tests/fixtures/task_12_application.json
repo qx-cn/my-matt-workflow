@@ -296,8 +296,8 @@
         {
           "id": "to-spec-primary-rule",
           "document": "SKILL.md",
-          "source_section": "SKILL.md#document-body",
-          "text": "**不要重新访谈用户**"
+          "source_section": "SKILL.md#frontmatter.description",
+          "text": "不重新访谈，只综合已有讨论"
         }
       ],
       "rules": [
@@ -322,8 +322,8 @@
             {
               "id": "to-spec-primary-rule",
               "document": "SKILL.md",
-              "source_section": "SKILL.md#document-body",
-              "text": "**不要重新访谈用户**"
+              "source_section": "SKILL.md#frontmatter.description",
+              "text": "不重新访谈，只综合已有讨论"
             }
           ],
           "expected": "synthesize-without-interview"

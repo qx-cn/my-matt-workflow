@@ -234,6 +234,7 @@
       "local_skill": "my-code-review",
       "sections": {
         "upstream": [
+          "SKILL.md#frontmatter.name",
           "SKILL.md#Process",
           "SKILL.md#1. Pin the fixed point",
           "SKILL.md#2. Identify the spec source",
@@ -251,42 +252,48 @@
           "SKILL.md#3. 定位 Standards 来源",
           "SKILL.md#4. 分别审查",
           "SKILL.md#5. 汇总",
+          "SKILL.md#为什么是两轴",
           "agents/openai.yaml#interface"
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#Process",
+            "upstream": "SKILL.md#frontmatter.name",
             "local": "SKILL.md#代码审查",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#1. Pin the fixed point",
+            "upstream": "SKILL.md#Process",
             "local": "SKILL.md#过程",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#2. Identify the spec source",
+            "upstream": "SKILL.md#1. Pin the fixed point",
             "local": "SKILL.md#1. 固定基线",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#3. Identify the standards sources",
+            "upstream": "SKILL.md#2. Identify the spec source",
             "local": "SKILL.md#2. 定位 Spec 来源",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#4. Spawn both sub-agents in parallel",
+            "upstream": "SKILL.md#3. Identify the standards sources",
             "local": "SKILL.md#3. 定位 Standards 来源",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#5. Aggregate",
+            "upstream": "SKILL.md#4. Spawn both sub-agents in parallel",
             "local": "SKILL.md#4. 分别审查",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#Why two axes",
+            "upstream": "SKILL.md#5. Aggregate",
             "local": "SKILL.md#5. 汇总",
+            "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
+          },
+          {
+            "upstream": "SKILL.md#Why two axes",
+            "local": "SKILL.md#为什么是两轴",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
@@ -297,38 +304,43 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#Process",
+            "upstream": "SKILL.md#frontmatter.name",
             "local": "SKILL.md#代码审查",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#1. Pin the fixed point",
+            "upstream": "SKILL.md#Process",
             "local": "SKILL.md#过程",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#2. Identify the spec source",
+            "upstream": "SKILL.md#1. Pin the fixed point",
             "local": "SKILL.md#1. 固定基线",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#3. Identify the standards sources",
+            "upstream": "SKILL.md#2. Identify the spec source",
             "local": "SKILL.md#2. 定位 Spec 来源",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#4. Spawn both sub-agents in parallel",
+            "upstream": "SKILL.md#3. Identify the standards sources",
             "local": "SKILL.md#3. 定位 Standards 来源",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#5. Aggregate",
+            "upstream": "SKILL.md#4. Spawn both sub-agents in parallel",
             "local": "SKILL.md#4. 分别审查",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
-            "upstream": "SKILL.md#Why two axes",
+            "upstream": "SKILL.md#5. Aggregate",
             "local": "SKILL.md#5. 汇总",
+            "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
+          },
+          {
+            "upstream": "SKILL.md#Why two axes",
+            "local": "SKILL.md#为什么是两轴",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
           },
           {
@@ -364,38 +376,43 @@
       "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
       "section_mappings": [
         {
-          "upstream": "SKILL.md#Process",
+          "upstream": "SKILL.md#frontmatter.name",
           "local": "SKILL.md#代码审查",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
-          "upstream": "SKILL.md#1. Pin the fixed point",
+          "upstream": "SKILL.md#Process",
           "local": "SKILL.md#过程",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
-          "upstream": "SKILL.md#2. Identify the spec source",
+          "upstream": "SKILL.md#1. Pin the fixed point",
           "local": "SKILL.md#1. 固定基线",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
-          "upstream": "SKILL.md#3. Identify the standards sources",
+          "upstream": "SKILL.md#2. Identify the spec source",
           "local": "SKILL.md#2. 定位 Spec 来源",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
-          "upstream": "SKILL.md#4. Spawn both sub-agents in parallel",
+          "upstream": "SKILL.md#3. Identify the standards sources",
           "local": "SKILL.md#3. 定位 Standards 来源",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
-          "upstream": "SKILL.md#5. Aggregate",
+          "upstream": "SKILL.md#4. Spawn both sub-agents in parallel",
           "local": "SKILL.md#4. 分别审查",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
-          "upstream": "SKILL.md#Why two axes",
+          "upstream": "SKILL.md#5. Aggregate",
           "local": "SKILL.md#5. 汇总",
+          "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
+        },
+        {
+          "upstream": "SKILL.md#Why two axes",
+          "local": "SKILL.md#为什么是两轴",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/code-review-audit.md."
         },
         {
@@ -1339,17 +1356,17 @@
       "local_skill": "my-edit-article",
       "sections": {
         "upstream": [
-          "SKILL.md#document-body",
+          "SKILL.md#frontmatter.name",
           "agents/openai.yaml#interface"
         ],
         "local": [
-          "SKILL.md#document-body",
+          "SKILL.md#编辑文章",
           "agents/openai.yaml#interface"
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#编辑文章",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/edit-article-audit.md."
           },
           {
@@ -1360,8 +1377,8 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#编辑文章",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/edit-article-audit.md."
           },
           {
@@ -1395,8 +1412,8 @@
       "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
       "section_mappings": [
         {
-          "upstream": "SKILL.md#document-body",
-          "local": "SKILL.md#document-body",
+          "upstream": "SKILL.md#frontmatter.name",
+          "local": "SKILL.md#编辑文章",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/edit-article-audit.md."
         },
         {
@@ -1527,17 +1544,17 @@
       "local_skill": "my-handoff",
       "sections": {
         "upstream": [
-          "SKILL.md#document-body",
+          "SKILL.md#frontmatter.name",
           "agents/openai.yaml#interface"
         ],
         "local": [
-          "SKILL.md#document-body",
+          "SKILL.md#My Handoff",
           "agents/openai.yaml#interface"
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#My Handoff",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/handoff-audit.md."
           },
           {
@@ -1548,8 +1565,8 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#My Handoff",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/handoff-audit.md."
           },
           {
@@ -1583,8 +1600,8 @@
       "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
       "section_mappings": [
         {
-          "upstream": "SKILL.md#document-body",
-          "local": "SKILL.md#document-body",
+          "upstream": "SKILL.md#frontmatter.name",
+          "local": "SKILL.md#My Handoff",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/handoff-audit.md."
         },
         {
@@ -2360,17 +2377,17 @@
       "local_skill": "my-research",
       "sections": {
         "upstream": [
-          "SKILL.md#document-body",
+          "SKILL.md#frontmatter.name",
           "agents/openai.yaml#interface"
         ],
         "local": [
-          "SKILL.md#document-body",
+          "SKILL.md#My Research",
           "agents/openai.yaml#interface"
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#My Research",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/research-audit.md."
           },
           {
@@ -2381,8 +2398,8 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#My Research",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/research-audit.md."
           },
           {
@@ -2418,8 +2435,8 @@
       "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
       "section_mappings": [
         {
-          "upstream": "SKILL.md#document-body",
-          "local": "SKILL.md#document-body",
+          "upstream": "SKILL.md#frontmatter.name",
+          "local": "SKILL.md#My Research",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/research-audit.md."
         },
         {
@@ -2436,17 +2453,17 @@
       "local_skill": "my-resolving-merge-conflicts",
       "sections": {
         "upstream": [
-          "SKILL.md#document-body",
+          "SKILL.md#frontmatter.name",
           "agents/openai.yaml#interface"
         ],
         "local": [
-          "SKILL.md#document-body",
+          "SKILL.md#安全解决冲突",
           "agents/openai.yaml#interface"
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#安全解决冲突",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/resolving-merge-conflicts-audit.md."
           },
           {
@@ -2457,8 +2474,8 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#document-body",
-            "local": "SKILL.md#document-body",
+            "upstream": "SKILL.md#frontmatter.name",
+            "local": "SKILL.md#安全解决冲突",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/resolving-merge-conflicts-audit.md."
           },
           {
@@ -2494,8 +2511,8 @@
       "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
       "section_mappings": [
         {
-          "upstream": "SKILL.md#document-body",
-          "local": "SKILL.md#document-body",
+          "upstream": "SKILL.md#frontmatter.name",
+          "local": "SKILL.md#安全解决冲突",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/resolving-merge-conflicts-audit.md."
         },
         {
@@ -3969,6 +3986,7 @@
       "local_skill": "my-wayfinder",
       "sections": {
         "upstream": [
+          "SKILL.md#frontmatter.name",
           "SKILL.md#Plan, don't do",
           "SKILL.md#Refer by name",
           "SKILL.md#The Map",
@@ -3993,6 +4011,7 @@
           "SKILL.md#规划，而不是交付",
           "SKILL.md#始终用名称引用",
           "SKILL.md#地图",
+          "SKILL.md#地图",
           "SKILL.md#目的地",
           "SKILL.md#备注",
           "SKILL.md#已作决定",
@@ -4010,18 +4029,23 @@
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#Plan, don't do",
+            "upstream": "SKILL.md#frontmatter.name",
             "local": "SKILL.md#My Wayfinder",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
           },
           {
-            "upstream": "SKILL.md#Refer by name",
+            "upstream": "SKILL.md#Plan, don't do",
             "local": "SKILL.md#规划，而不是交付",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
           },
           {
-            "upstream": "SKILL.md#The Map",
+            "upstream": "SKILL.md#Refer by name",
             "local": "SKILL.md#始终用名称引用",
+            "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
+          },
+          {
+            "upstream": "SKILL.md#The Map",
+            "local": "SKILL.md#地图",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
           },
           {
@@ -4102,18 +4126,23 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#Plan, don't do",
+            "upstream": "SKILL.md#frontmatter.name",
             "local": "SKILL.md#My Wayfinder",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
           },
           {
-            "upstream": "SKILL.md#Refer by name",
+            "upstream": "SKILL.md#Plan, don't do",
             "local": "SKILL.md#规划，而不是交付",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
           },
           {
-            "upstream": "SKILL.md#The Map",
+            "upstream": "SKILL.md#Refer by name",
             "local": "SKILL.md#始终用名称引用",
+            "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
+          },
+          {
+            "upstream": "SKILL.md#The Map",
+            "local": "SKILL.md#地图",
             "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
           },
           {
@@ -4217,18 +4246,23 @@
       "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
       "section_mappings": [
         {
-          "upstream": "SKILL.md#Plan, don't do",
+          "upstream": "SKILL.md#frontmatter.name",
           "local": "SKILL.md#My Wayfinder",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
         },
         {
-          "upstream": "SKILL.md#Refer by name",
+          "upstream": "SKILL.md#Plan, don't do",
           "local": "SKILL.md#规划，而不是交付",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
         },
         {
-          "upstream": "SKILL.md#The Map",
+          "upstream": "SKILL.md#Refer by name",
           "local": "SKILL.md#始终用名称引用",
+          "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
+        },
+        {
+          "upstream": "SKILL.md#The Map",
+          "local": "SKILL.md#地图",
           "evidence": "Concrete source-local mapping recorded in upstream/evidence/wayfinder-audit.md."
         },
         {
