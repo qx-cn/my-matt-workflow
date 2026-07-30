@@ -567,13 +567,61 @@
     },
     {
       "upstream_skill": "writing-great-skills",
-      "upstream_path": "productivity/writing-great-skills",
+      "upstream_path": "skills/productivity/writing-great-skills",
       "local_skill": "my-writing-great-skills",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#Invocation", "SKILL.md#Writing the description", "SKILL.md#Information hierarchy", "SKILL.md#When to split", "SKILL.md#Pruning", "SKILL.md#Leading words", "SKILL.md#Failure modes",
+          "GLOSSARY.md#Predictability", "GLOSSARY.md#Invocation", "GLOSSARY.md#Model-Invoked", "GLOSSARY.md#User-Invoked", "GLOSSARY.md#Description", "GLOSSARY.md#Context Pointer", "GLOSSARY.md#Context Load", "GLOSSARY.md#Cognitive Load", "GLOSSARY.md#Router Skill", "GLOSSARY.md#Granularity", "GLOSSARY.md#Information Hierarchy", "GLOSSARY.md#Steps", "GLOSSARY.md#Reference", "GLOSSARY.md#External Reference", "GLOSSARY.md#Progressive Disclosure", "GLOSSARY.md#Co-location", "GLOSSARY.md#Sprawl", "GLOSSARY.md#Steering", "GLOSSARY.md#Branch", "GLOSSARY.md#Leading Word", "GLOSSARY.md#Completion Criterion", "GLOSSARY.md#Legwork", "GLOSSARY.md#Post-Completion Steps", "GLOSSARY.md#Premature Completion", "GLOSSARY.md#Negation", "GLOSSARY.md#Pruning", "GLOSSARY.md#Single Source of Truth", "GLOSSARY.md#Duplication", "GLOSSARY.md#Relevance", "GLOSSARY.md#Sediment", "GLOSSARY.md#No-Op"
+        ],
+        "local": [
+          "SKILL.md#调用", "SKILL.md#编写描述", "SKILL.md#信息层级", "SKILL.md#何时拆分", "SKILL.md#剪枝", "SKILL.md#主导词", "SKILL.md#失效模式",
+          "GLOSSARY.md#可预测性", "GLOSSARY.md#调用", "GLOSSARY.md#模型调用", "GLOSSARY.md#用户调用", "GLOSSARY.md#描述", "GLOSSARY.md#上下文指针", "GLOSSARY.md#上下文负荷", "GLOSSARY.md#认知负荷", "GLOSSARY.md#路由 Skill", "GLOSSARY.md#粒度", "GLOSSARY.md#信息层级", "GLOSSARY.md#步骤", "GLOSSARY.md#参考", "GLOSSARY.md#外部参考", "GLOSSARY.md#渐进式披露", "GLOSSARY.md#共置", "GLOSSARY.md#蔓延", "GLOSSARY.md#引导", "GLOSSARY.md#分支", "GLOSSARY.md#主导词", "GLOSSARY.md#完成条件", "GLOSSARY.md#基础工作", "GLOSSARY.md#完成后步骤", "GLOSSARY.md#提前完成", "GLOSSARY.md#否定", "GLOSSARY.md#剪枝", "GLOSSARY.md#单一事实来源", "GLOSSARY.md#重复", "GLOSSARY.md#相关性", "GLOSSARY.md#沉积", "GLOSSARY.md#无效操作"
+        ],
+        "complete": [
+          {"upstream": "SKILL.md#Invocation", "local": "调用", "evidence": "SKILL.md#调用保留模型调用、用户调用、两类负荷与路由 Skill 的取舍。"},
+          {"upstream": "SKILL.md#Writing the description", "local": "编写描述", "evidence": "SKILL.md#编写描述保留主导词前置、每分支一个触发条件及删减规则。"},
+          {"upstream": "SKILL.md#Information hierarchy", "local": "信息层级", "evidence": "SKILL.md#信息层级保留三层梯子、完成条件、渐进式披露、分支与共置。"},
+          {"upstream": "SKILL.md#When to split", "local": "何时拆分", "evidence": "SKILL.md#何时拆分保留按调用与按序列拆分的成本和条件。"},
+          {"upstream": "SKILL.md#Pruning", "local": "剪枝", "evidence": "SKILL.md#剪枝保留单一事实来源、相关性与逐句无效操作测试。"},
+          {"upstream": "SKILL.md#Leading words", "local": "主导词", "evidence": "SKILL.md#主导词保留 tight/red 两个示例及双重可预测性作用。"},
+          {"upstream": "SKILL.md#Failure modes", "local": "失效模式", "evidence": "SKILL.md#失效模式保留提前完成、重复、沉积、蔓延、无效操作和否定的诊断与修复。"},
+          {"upstream": "GLOSSARY.md#Predictability", "local": "可预测性", "evidence": "GLOSSARY.md#可预测性保留相同过程而非相同输出的根本美德。"},
+          {"upstream": "GLOSSARY.md#Invocation", "local": "调用", "evidence": "GLOSSARY.md#调用保留调用轴与两种负荷。"},
+          {"upstream": "GLOSSARY.md#Model-Invoked", "local": "模型调用", "evidence": "GLOSSARY.md#模型调用保留描述、可发现性和共享参考的约束。"},
+          {"upstream": "GLOSSARY.md#User-Invoked", "local": "用户调用", "evidence": "GLOSSARY.md#用户调用保留仅人类可达与零上下文负荷。"},
+          {"upstream": "GLOSSARY.md#Description", "local": "描述", "evidence": "GLOSSARY.md#描述保留描述即调用轴和强制加载指针。"},
+          {"upstream": "GLOSSARY.md#Context Pointer", "local": "上下文指针", "evidence": "GLOSSARY.md#上下文指针保留措辞决定可靠性及先强化措辞的修复顺序。"},
+          {"upstream": "GLOSSARY.md#Context Load", "local": "上下文负荷", "evidence": "GLOSSARY.md#上下文负荷保留描述的 token 与注意力成本。"},
+          {"upstream": "GLOSSARY.md#Cognitive Load", "local": "认知负荷", "evidence": "GLOSSARY.md#认知负荷保留人类索引和人类能动性的权衡。"},
+          {"upstream": "GLOSSARY.md#Router Skill", "local": "路由 Skill", "evidence": "GLOSSARY.md#路由 Skill保留只能提示、不能触发用户调用 Skill 的界限。"},
+          {"upstream": "GLOSSARY.md#Granularity", "local": "粒度", "evidence": "GLOSSARY.md#粒度保留调用与序列两种切分及合并序列的风险。"},
+          {"upstream": "GLOSSARY.md#Information Hierarchy", "local": "信息层级", "evidence": "GLOSSARY.md#信息层级保留三层梯子、扁平参考和方差杠杆。"},
+          {"upstream": "GLOSSARY.md#Steps", "local": "步骤", "evidence": "GLOSSARY.md#步骤保留步骤首要性和完成条件。"},
+          {"upstream": "GLOSSARY.md#Reference", "local": "参考", "evidence": "GLOSSARY.md#参考保留按需材料与渐进式披露候选。"},
+          {"upstream": "GLOSSARY.md#External Reference", "local": "外部参考", "evidence": "GLOSSARY.md#外部参考保留用户调用 Skill 的共享参考边界。"},
+          {"upstream": "GLOSSARY.md#Progressive Disclosure", "local": "渐进式披露", "evidence": "GLOSSARY.md#渐进式披露保留按分支披露和不可靠指针的处理。"},
+          {"upstream": "GLOSSARY.md#Co-location", "local": "共置", "evidence": "GLOSSARY.md#共置保留与信息层级、重复不同的职责。"},
+          {"upstream": "GLOSSARY.md#Sprawl", "local": "蔓延", "evidence": "GLOSSARY.md#蔓延保留长度本身的成本及层级修复。"},
+          {"upstream": "GLOSSARY.md#Steering", "local": "引导", "evidence": "GLOSSARY.md#引导保留运行时行为向可预测性收敛的轴。"},
+          {"upstream": "GLOSSARY.md#Branch", "local": "分支", "evidence": "GLOSSARY.md#分支保留不同调用方式与路径定义。"},
+          {"upstream": "GLOSSARY.md#Leading Word", "local": "主导词", "evidence": "GLOSSARY.md#主导词保留预训练先验、分布式定义和描述调用。"},
+          {"upstream": "GLOSSARY.md#Completion Criterion", "local": "完成条件", "evidence": "GLOSSARY.md#完成条件保留清晰度、要求度、步骤与扁平参考的差异。"},
+          {"upstream": "GLOSSARY.md#Legwork", "local": "基础工作", "evidence": "GLOSSARY.md#基础工作保留步骤内工作、提高方式和变薄条件。"},
+          {"upstream": "GLOSSARY.md#Post-Completion Steps", "local": "完成后步骤", "evidence": "GLOSSARY.md#完成后步骤保留可见后续步骤的前拉力。"},
+          {"upstream": "GLOSSARY.md#Premature Completion", "local": "提前完成", "evidence": "GLOSSARY.md#提前完成保留必要条件、两个杠杆和真实上下文边界。"},
+          {"upstream": "GLOSSARY.md#Negation", "local": "否定", "evidence": "GLOSSARY.md#否定保留大象示例、正向引导和硬护栏例外。"},
+          {"upstream": "GLOSSARY.md#Pruning", "local": "剪枝", "evidence": "GLOSSARY.md#剪枝保留失效模式与补救措施配对。"},
+          {"upstream": "GLOSSARY.md#Single Source of Truth", "local": "单一事实来源", "evidence": "GLOSSARY.md#单一事实来源保留一个权威位置的定义。"},
+          {"upstream": "GLOSSARY.md#Duplication", "local": "重复", "evidence": "GLOSSARY.md#重复保留维护、token、突出度成本及与主导词的反面关系。"},
+          {"upstream": "GLOSSARY.md#Relevance", "local": "相关性", "evidence": "GLOSSARY.md#相关性保留无关、过时与无效操作的区分。"},
+          {"upstream": "GLOSSARY.md#Sediment", "local": "沉积", "evidence": "GLOSSARY.md#沉积保留过时层累积及其与重复的区别。"},
+          {"upstream": "GLOSSARY.md#No-Op", "local": "无效操作", "evidence": "GLOSSARY.md#无效操作保留默认行为测试及模型相对判断。"}
+        ],
+        "translated": [
+          {"upstream": "SKILL.md#Invocation", "local": "调用", "evidence": "SKILL.md#调用"}, {"upstream": "SKILL.md#Writing the description", "local": "编写描述", "evidence": "SKILL.md#编写描述"}, {"upstream": "SKILL.md#Information hierarchy", "local": "信息层级", "evidence": "SKILL.md#信息层级"}, {"upstream": "SKILL.md#When to split", "local": "何时拆分", "evidence": "SKILL.md#何时拆分"}, {"upstream": "SKILL.md#Pruning", "local": "剪枝", "evidence": "SKILL.md#剪枝"}, {"upstream": "SKILL.md#Leading words", "local": "主导词", "evidence": "SKILL.md#主导词"}, {"upstream": "SKILL.md#Failure modes", "local": "失效模式", "evidence": "SKILL.md#失效模式"},
+          {"upstream": "GLOSSARY.md#Predictability", "local": "可预测性", "evidence": "GLOSSARY.md#可预测性"}, {"upstream": "GLOSSARY.md#Invocation", "local": "调用", "evidence": "GLOSSARY.md#调用"}, {"upstream": "GLOSSARY.md#Model-Invoked", "local": "模型调用", "evidence": "GLOSSARY.md#模型调用"}, {"upstream": "GLOSSARY.md#User-Invoked", "local": "用户调用", "evidence": "GLOSSARY.md#用户调用"}, {"upstream": "GLOSSARY.md#Description", "local": "描述", "evidence": "GLOSSARY.md#描述"}, {"upstream": "GLOSSARY.md#Context Pointer", "local": "上下文指针", "evidence": "GLOSSARY.md#上下文指针"}, {"upstream": "GLOSSARY.md#Context Load", "local": "上下文负荷", "evidence": "GLOSSARY.md#上下文负荷"}, {"upstream": "GLOSSARY.md#Cognitive Load", "local": "认知负荷", "evidence": "GLOSSARY.md#认知负荷"}, {"upstream": "GLOSSARY.md#Router Skill", "local": "路由 Skill", "evidence": "GLOSSARY.md#路由 Skill"}, {"upstream": "GLOSSARY.md#Granularity", "local": "粒度", "evidence": "GLOSSARY.md#粒度"}, {"upstream": "GLOSSARY.md#Information Hierarchy", "local": "信息层级", "evidence": "GLOSSARY.md#信息层级"}, {"upstream": "GLOSSARY.md#Steps", "local": "步骤", "evidence": "GLOSSARY.md#步骤"}, {"upstream": "GLOSSARY.md#Reference", "local": "参考", "evidence": "GLOSSARY.md#参考"}, {"upstream": "GLOSSARY.md#External Reference", "local": "外部参考", "evidence": "GLOSSARY.md#外部参考"}, {"upstream": "GLOSSARY.md#Progressive Disclosure", "local": "渐进式披露", "evidence": "GLOSSARY.md#渐进式披露"}, {"upstream": "GLOSSARY.md#Co-location", "local": "共置", "evidence": "GLOSSARY.md#共置"}, {"upstream": "GLOSSARY.md#Sprawl", "local": "蔓延", "evidence": "GLOSSARY.md#蔓延"}, {"upstream": "GLOSSARY.md#Steering", "local": "引导", "evidence": "GLOSSARY.md#引导"}, {"upstream": "GLOSSARY.md#Branch", "local": "分支", "evidence": "GLOSSARY.md#分支"}, {"upstream": "GLOSSARY.md#Leading Word", "local": "主导词", "evidence": "GLOSSARY.md#主导词"}, {"upstream": "GLOSSARY.md#Completion Criterion", "local": "完成条件", "evidence": "GLOSSARY.md#完成条件"}, {"upstream": "GLOSSARY.md#Legwork", "local": "基础工作", "evidence": "GLOSSARY.md#基础工作"}, {"upstream": "GLOSSARY.md#Post-Completion Steps", "local": "完成后步骤", "evidence": "GLOSSARY.md#完成后步骤"}, {"upstream": "GLOSSARY.md#Premature Completion", "local": "提前完成", "evidence": "GLOSSARY.md#提前完成"}, {"upstream": "GLOSSARY.md#Negation", "local": "否定", "evidence": "GLOSSARY.md#否定"}, {"upstream": "GLOSSARY.md#Pruning", "local": "剪枝", "evidence": "GLOSSARY.md#剪枝"}, {"upstream": "GLOSSARY.md#Single Source of Truth", "local": "单一事实来源", "evidence": "GLOSSARY.md#单一事实来源"}, {"upstream": "GLOSSARY.md#Duplication", "local": "重复", "evidence": "GLOSSARY.md#重复"}, {"upstream": "GLOSSARY.md#Relevance", "local": "相关性", "evidence": "GLOSSARY.md#相关性"}, {"upstream": "GLOSSARY.md#Sediment", "local": "沉积", "evidence": "GLOSSARY.md#沉积"}, {"upstream": "GLOSSARY.md#No-Op", "local": "无效操作", "evidence": "GLOSSARY.md#无效操作"}
+        ],
         "missing": [],
         "local_added": []
       },
@@ -582,10 +630,18 @@
         "SKILL.md": "4d6ccbc3760b1bd4107c495a79872286ea69494003f3b0a719fc95b147457061",
         "agents/openai.yaml": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit."
+      "local_support_files": {
+        "agents/openai.yaml": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "保留本地名称、手动调用元数据，以及仓库要求的简短“项目策略优先”提示；不改变上游方法。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-2-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     }
   ]
 }

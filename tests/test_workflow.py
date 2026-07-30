@@ -2002,5 +2002,137 @@ class SyncTests(unittest.TestCase):
         )
 
 
+class WritingGreatSkillsParityTests(unittest.TestCase):
+    def test_restoration_records_full_parity_and_applies_guidance(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-writing-great-skills"
+        skill = (skill_dir / "SKILL.md").read_text()
+        glossary = (skill_dir / "GLOSSARY.md").read_text()
+        documents = {"SKILL.md": skill, "GLOSSARY.md": glossary}
+
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item
+            for item in fidelity["skills"]
+            if item["local_skill"] == "my-writing-great-skills"
+        )
+        self.assertEqual(
+            "skills/productivity/writing-great-skills",
+            entry["upstream_path"],
+        )
+        expected_sections = {
+            "SKILL.md#Invocation",
+            "SKILL.md#Writing the description",
+            "SKILL.md#Information hierarchy",
+            "SKILL.md#When to split",
+            "SKILL.md#Pruning",
+            "SKILL.md#Leading words",
+            "SKILL.md#Failure modes",
+            "GLOSSARY.md#Predictability",
+            "GLOSSARY.md#Invocation",
+            "GLOSSARY.md#Model-Invoked",
+            "GLOSSARY.md#User-Invoked",
+            "GLOSSARY.md#Description",
+            "GLOSSARY.md#Context Pointer",
+            "GLOSSARY.md#Context Load",
+            "GLOSSARY.md#Cognitive Load",
+            "GLOSSARY.md#Router Skill",
+            "GLOSSARY.md#Granularity",
+            "GLOSSARY.md#Information Hierarchy",
+            "GLOSSARY.md#Steps",
+            "GLOSSARY.md#Reference",
+            "GLOSSARY.md#External Reference",
+            "GLOSSARY.md#Progressive Disclosure",
+            "GLOSSARY.md#Co-location",
+            "GLOSSARY.md#Sprawl",
+            "GLOSSARY.md#Steering",
+            "GLOSSARY.md#Branch",
+            "GLOSSARY.md#Leading Word",
+            "GLOSSARY.md#Completion Criterion",
+            "GLOSSARY.md#Legwork",
+            "GLOSSARY.md#Post-Completion Steps",
+            "GLOSSARY.md#Premature Completion",
+            "GLOSSARY.md#Negation",
+            "GLOSSARY.md#Pruning",
+            "GLOSSARY.md#Single Source of Truth",
+            "GLOSSARY.md#Duplication",
+            "GLOSSARY.md#Relevance",
+            "GLOSSARY.md#Sediment",
+            "GLOSSARY.md#No-Op",
+        }
+        for field in ("complete", "translated"):
+            mappings = entry["sections"][field]
+            self.assertEqual(expected_sections, {item["upstream"] for item in mappings})
+            for mapping in mappings:
+                with self.subTest(field=field, section=mapping["upstream"]):
+                    self.assertTrue(mapping["local"])
+                    self.assertRegex(mapping["evidence"], r"(SKILL|GLOSSARY)\.md#")
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertEqual(
+            ".superpowers/sdd/task-2-report.md",
+            entry["evidence_path"],
+        )
+        self.assertEqual(
+            ["GLOSSARY.md", "SKILL.md", "agents/openai.yaml"],
+            sorted(entry["support_files"]),
+        )
+        self.assertEqual(
+            hashlib.sha256(
+                (skill_dir / "agents" / "openai.yaml").read_bytes()
+            ).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": (
+                        "保留本地名称、手动调用元数据，以及仓库要求的简短"
+                        "“项目策略优先”提示；不改变上游方法。"
+                    ),
+                }
+            ],
+            entry["allowed_local_adaptations"],
+        )
+
+        for phrase in (
+            "上下文负荷",
+            "一个分支只保留一个触发条件",
+            "完成条件",
+            "渐进式披露",
+            "按调用拆分",
+            "单一事实来源",
+            "提前完成",
+            "正向",
+        ):
+            with self.subTest(translation=phrase):
+                self.assertIn(phrase, skill + glossary)
+
+        fixture_path = root / "tests" / "fixtures" / "writing_great_skills_wording.json"
+        self.assertTrue(fixture_path.is_file(), "missing wording application fixture")
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual(
+            {"baseline", "fixed", "stress"},
+            set(fixture["groups"]),
+        )
+        for group, cases in fixture["groups"].items():
+            with self.subTest(group=group):
+                self.assertGreaterEqual(len(cases), 5)
+                for case in cases:
+                    self.assertIn(
+                        case["expected"]["decision"],
+                        {"accept", "reject", "rewrite"},
+                    )
+                    self.assertTrue(case["expected"]["observable"])
+                    self.assertTrue(case["retrieved_guidance"])
+                    for guidance in case["retrieved_guidance"]:
+                        self.assertIn(guidance["document"], documents)
+                        self.assertIn(
+                            guidance["text"],
+                            documents[guidance["document"]],
+                        )
+
+
 if __name__ == "__main__":
     unittest.main()
