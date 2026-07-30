@@ -22,3 +22,9 @@ env/
 # macOS and iCloud metadata
 .DS_Store
 *.icloud
+
+# Git worktrees
+.worktrees/
+
+# Superpowers SDD scratch
+.superpowers/
