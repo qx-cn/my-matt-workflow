@@ -547,14 +547,21 @@
       "local_skill": "my-to-questionnaire",
       "sections": {
         "upstream": [
+          "SKILL.md#To Questionnaire",
           "SKILL.md#Questionnaire workflow",
           "SKILL.md#Document structure"
         ],
         "local": [
           "SKILL.md#生成发现问卷",
+          "SKILL.md#生成发现问卷",
           "SKILL.md#文档结构"
         ],
         "complete": [
+          {
+            "upstream": "SKILL.md#To Questionnaire",
+            "local": "生成发现问卷",
+            "evidence": "SKILL.md#生成发现问卷将上游 to-questionnaire 文档标题译为本地标题。"
+          },
           {
             "upstream": "SKILL.md#Questionnaire workflow",
             "local": "生成发现问卷",
@@ -567,6 +574,11 @@
           }
         ],
         "translated": [
+          {
+            "upstream": "SKILL.md#To Questionnaire",
+            "local": "生成发现问卷",
+            "evidence": "SKILL.md#生成发现问卷"
+          },
           {
             "upstream": "SKILL.md#Questionnaire workflow",
             "local": "生成发现问卷",

@@ -2888,6 +2888,7 @@ class ToQuestionnaireParityTests(unittest.TestCase):
             "skills/in-progress/to-questionnaire", entry["upstream_path"]
         )
         expected_mappings = {
+            "SKILL.md#To Questionnaire": ("SKILL.md", "生成发现问卷"),
             "SKILL.md#Questionnaire workflow": (
                 "SKILL.md",
                 "生成发现问卷",
