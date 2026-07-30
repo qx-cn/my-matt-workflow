@@ -68,3 +68,49 @@ The ledger preserves the pinned-upstream SHA-256 hashes for `SKILL.md`, `DEEPENI
 ## Concerns
 
 None. The original pinned checkout was present at the required commit; no source, runtime metadata, composition, resources, release, installer, or unrelated Skill files were changed.
+
+## Review repair — upstream provenance and local metadata
+
+### RED / GREEN evidence
+
+#### RED
+
+The focused regression first rejected the ledger's unresolvable source location:
+
+```text
+$ python3 -m unittest tests.test_workflow.DoctorTests.test_codebase_design_restoration_records_parity_and_usable_method
+FAIL: 'skills/engineering/codebase-design' != 'engineering/codebase-design'
+```
+
+After the source location was corrected, the same focused test exposed that the ledger recorded only the pinned upstream metadata hash, not the preserved local manual-only metadata:
+
+```text
+FAIL: None != '0c24ffe790dc0aa8291bc52076db14f8a718b96cc7ab402381a26ee81ce579a9'
+```
+
+#### GREEN
+
+```text
+$ python3 -m unittest tests.test_workflow.DoctorTests.test_codebase_design_restoration_records_parity_and_usable_method
+Ran 1 test ... OK
+
+$ python3 -m unittest discover -s tests
+Ran 87 tests in 14.009s ... OK
+```
+
+The ledger now records `skills/engineering/codebase-design`, which resolves from the pinned checkout root, and separately records the SHA-256 byte hash of the unchanged local `agents/openai.yaml`. The existing `support_files` entry remains the upstream snapshot hash; `local_support_files` identifies the permitted local runtime metadata.
+
+### Retrieval / application scenario
+
+**Given design situation.** `OrderSubmissionService` is shallow: callers invoke `validateOrder`, `calculateTax`, `chargeCard`, and `saveOrder` separately, while `chargeCard` constructs `StripeGateway` directly. Each caller recreates ordering and error-handling logic, and tests target the four pass-through methods.
+
+**Retrieved constraints applied.** The restored method says to accept dependencies rather than create them, classifies Stripe as a genuinely external dependency, and requires a port at that seam with both production and test Adapters before treating it as a real seam. It also requires the Interface to be the test surface and directs replacement—not layering—of obsolete shallow tests.
+
+**Resulting interface / seam recommendation.** Replace the four public methods with one deep `OrderSubmission.submit(order)` Interface. Inject a `PaymentGateway` port into the module; provide a Stripe production Adapter and an in-memory or mock test Adapter. Keep validation, tax calculation, persistence ordering, and error translation inside the module rather than exposing their intermediate operations. Test observable `submit` results through that Interface, then delete the former per-method shallow tests. This gives callers one small entry point while keeping the only external Seam at payment.
+
+### Changed files and commit
+
+- `tests/test_workflow.py` — adds exact upstream-path and local metadata-byte-hash assertions.
+- `upstream/fidelity.json` — corrects the source path and records the preserved local metadata hash without changing other fidelity entries.
+
+Implementation commit: `ff06b17` (`Fix codebase-design fidelity provenance`).
