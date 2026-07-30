@@ -18,7 +18,7 @@ DONE
 - `GLOSSARY.md` is now a complete Chinese translation of all 31 glossary headings, including every invocation, information-hierarchy, steering, and pruning term plus its failure modes and avoid lists.
 - `upstream/fidelity.json` records all 38 source-to-local section mappings in both `complete` and `translated`, has no missing sections, uses the exact source path, links this report as evidence, records every upstream support-file hash, and has a `faithful` conclusion.
 - Manual-only metadata was preserved unchanged. The local `agents/openai.yaml` hash is `b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d`; it matches the pinned support-file hash.
-- The sole bounded local adaptation is explicit: local name/manual-call metadata and the brief repository-required `项目策略优先` footer in `SKILL.md`; no upstream method was changed.
+- The sole bounded local adaptation is explicit: local name/manual-call metadata; no upstream method was changed.
 
 ## TDD evidence
 
@@ -55,3 +55,12 @@ DONE
 ## Concerns
 
 None blocking. No release was built or published, and no unrelated Skill or foundational composition/resource/release/installer/.agent infrastructure was modified.
+
+## Follow-up repair evidence
+
+- RED: `python3 -m unittest tests.test_workflow.WritingGreatSkillsParityTests` → failed as expected because `my-writing-great-skills/SKILL.md` still contained the `项目策略优先` policy footer and the fidelity adaptation still recorded it.
+- GREEN: removed only that Skill's footer and updated its fidelity adaptation; the same focused command → `Ran 2 tests ... OK`.
+- RED: the upgraded fixture assertion then failed as expected because each case had a prose `input` rather than a structured mapping.
+- GREEN: each of the 15 cases now supplies structured input facts plus a task-local `constraint_mapping`; the focused test retrieves every cited source phrase and applies matching facts to exactly one documented `accept`/`reject`/`rewrite` decision.
+- Regression: `python3 -m unittest discover -s tests` → `Ran 89 tests ... OK` (1.997s).
+- Commit: `5b9d4b0` — Restore writing guidance without policy overrides.
