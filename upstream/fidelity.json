@@ -148,7 +148,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-1-report.md",
+      "evidence_path": "upstream/evidence/codebase-design-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
@@ -370,7 +370,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-5-report.md",
+      "evidence_path": "upstream/evidence/improve-codebase-architecture-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。唯一语义中立适配仅限报告呈现：SKILL.md 的报告指令与 HTML-REPORT.md 均使用离线内联 CSS/SVG。"
     },
     {
@@ -538,7 +538,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-4-report.md",
+      "evidence_path": "upstream/evidence/teach-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
@@ -607,7 +607,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-6-report.md",
+      "evidence_path": "upstream/evidence/to-questionnaire-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
@@ -722,7 +722,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-3-report.md",
+      "evidence_path": "upstream/evidence/triage-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
@@ -948,7 +948,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-2-report.md",
+      "evidence_path": "upstream/evidence/writing-great-skills-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     }
   ]

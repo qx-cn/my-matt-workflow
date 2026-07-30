@@ -1354,6 +1354,28 @@ class DoctorTests(unittest.TestCase):
                 self.assertTrue(entry["sections"]["translated"])
                 self.assertEqual([], entry["sections"]["missing"])
                 self.assertTrue(entry["evidence_path"])
+                evidence_path = Path(entry["evidence_path"])
+                with self.subTest(skill=entry["local_skill"]):
+                    self.assertEqual(
+                        ("upstream", "evidence"),
+                        evidence_path.parts[:2],
+                    )
+                    self.assertTrue(
+                        (root / evidence_path).is_file(),
+                        "faithful evidence must resolve in source",
+                    )
+                    tracked = subprocess.run(
+                        ["git", "ls-files", "--error-unmatch", "--", str(evidence_path)],
+                        cwd=root,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(
+                        0,
+                        tracked.returncode,
+                        f"faithful evidence must be committed: {evidence_path}",
+                    )
 
     def test_codebase_design_restoration_records_parity_and_usable_method(self):
         root = Path(__file__).resolve().parents[1]
@@ -2119,7 +2141,7 @@ class WritingGreatSkillsParityTests(unittest.TestCase):
         self.assertEqual([], entry["sections"]["missing"])
         self.assertEqual("faithful", entry["conclusion"])
         self.assertEqual(
-            ".superpowers/sdd/task-2-report.md",
+            "upstream/evidence/writing-great-skills-restoration.md",
             entry["evidence_path"],
         )
         self.assertEqual(
@@ -2308,7 +2330,10 @@ class TriageParityTests(unittest.TestCase):
             entry["allowed_local_adaptations"],
         )
         self.assertEqual("faithful", entry["conclusion"])
-        self.assertEqual(".superpowers/sdd/task-3-report.md", entry["evidence_path"])
+        self.assertEqual(
+            "upstream/evidence/triage-restoration.md",
+            entry["evidence_path"],
+        )
 
     def test_triage_scenarios_apply_retrieved_constraints(self):
         root = Path(__file__).resolve().parents[1]
@@ -2522,7 +2547,10 @@ class TeachParityTests(unittest.TestCase):
             entry["allowed_local_adaptations"],
         )
         self.assertEqual("faithful", entry["conclusion"])
-        self.assertEqual(".superpowers/sdd/task-4-report.md", entry["evidence_path"])
+        self.assertEqual(
+            "upstream/evidence/teach-restoration.md",
+            entry["evidence_path"],
+        )
 
     def test_teach_scenarios_apply_retrieved_constraints(self):
         root = Path(__file__).resolve().parents[1]
@@ -2729,7 +2757,10 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
             entry["allowed_local_adaptations"],
         )
         self.assertEqual("faithful", entry["conclusion"])
-        self.assertEqual(".superpowers/sdd/task-5-report.md", entry["evidence_path"])
+        self.assertEqual(
+            "upstream/evidence/improve-codebase-architecture-restoration.md",
+            entry["evidence_path"],
+        )
 
         skill = documents["SKILL.md"]
         report = documents["HTML-REPORT.md"]
@@ -2960,7 +2991,10 @@ class ToQuestionnaireParityTests(unittest.TestCase):
             entry["allowed_local_adaptations"],
         )
         self.assertEqual("faithful", entry["conclusion"])
-        self.assertEqual(".superpowers/sdd/task-6-report.md", entry["evidence_path"])
+        self.assertEqual(
+            "upstream/evidence/to-questionnaire-restoration.md",
+            entry["evidence_path"],
+        )
 
         for instruction in (
             "只就“发送”采访用户，而不要就主题采访用户",
