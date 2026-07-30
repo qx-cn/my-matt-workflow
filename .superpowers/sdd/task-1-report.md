@@ -114,3 +114,45 @@ The ledger now records `skills/engineering/codebase-design`, which resolves from
 - `upstream/fidelity.json` — corrects the source path and records the preserved local metadata hash without changing other fidelity entries.
 
 Implementation commit: `ff06b17` (`Fix codebase-design fidelity provenance`).
+
+## Review repair — applied retrieval contract
+
+### RED / GREEN evidence
+
+#### RED
+
+The focused regression was extended before adding the task-local application fixture:
+
+```text
+$ python3 -m unittest tests.test_workflow.DoctorTests.test_codebase_design_restoration_records_parity_and_usable_method
+FAIL: missing OrderSubmission retrieval/application fixture
+Ran 1 test in 0.001s
+FAILED (failures=1)
+```
+
+#### GREEN
+
+After adding the structured fixture, the same focused regression passed:
+
+```text
+$ python3 -m unittest tests.test_workflow.DoctorTests.test_codebase_design_restoration_records_parity_and_usable_method
+Ran 1 test in 0.001s
+OK
+
+$ python3 -m unittest discover -s tests
+Ran 87 tests in 1.759s
+OK
+```
+
+### Applied retrieval evidence
+
+`tests/fixtures/codebase_design_order_submission.json` models the shallow
+`OrderSubmissionService` input and records every retrieved constraint with its
+recommendation consequence. The focused test loads that fixture, retrieves each
+constraint from the restored `SKILL.md` or `DEEPENING.md`, and verifies the
+resulting recommendation has exactly one public `submit(order)` Interface,
+injected `PaymentGateway`, separate Stripe and in-memory test Adapters,
+internal validation/tax/payment/persistence/error ordering, public-Interface
+tests only, and removal of the obsolete per-method shallow tests.
+
+Implementation commit: `ed7627c` (`Add codebase-design application regression`).
