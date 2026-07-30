@@ -1,0 +1,5 @@
+interface:
+  display_name: "Grilling"
+  short_description: "Run a focused design interview"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,5 @@
+interface:
+  display_name: "安全解决冲突"
+  short_description: "审阅后解决 Git merge/rebase 冲突"
+policy:
+  allow_implicit_invocation: false

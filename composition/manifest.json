@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "callers": {
+    "my-grill-me": [
+      {"skill": "my-grilling", "when": "always"}
+    ],
+    "my-grill-with-docs": [
+      {"skill": "my-grilling", "when": "always"},
+      {"skill": "my-domain-modeling", "when": "domain-vocabulary"}
+    ],
+    "my-implement": [
+      {"skill": "my-tdd", "when": "tdd-phase"},
+      {"skill": "my-code-review", "when": "review-phase"}
+    ],
+    "my-wayfinder": [
+      {"skill": "my-grilling", "when": "grilling-decision"},
+      {"skill": "my-domain-modeling", "when": "domain-decision"},
+      {"skill": "my-research", "when": "research-ticket"},
+      {"skill": "my-prototype", "when": "prototype-ticket"},
+      {"skill": "my-to-spec", "when": "handoff-to-spec"}
+    ],
+    "my-improve-codebase-architecture": [
+      {"skill": "my-codebase-design", "when": "design-vocabulary"},
+      {"skill": "my-grill-with-docs", "when": "selected-candidate"}
+    ],
+    "my-doctor": [
+      {"skill": "my-sync", "when": "user-confirms-sync"}
+    ]
+  },
+  "routable_entries": {
+    "my-ask-matt": [
+      "my-grill-with-docs",
+      "my-grill-me",
+      "my-triage",
+      "my-implement",
+      "my-wayfinder",
+      "my-diagnosing-bugs"
+    ]
+  }
+}

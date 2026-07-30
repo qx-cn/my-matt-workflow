@@ -1,0 +1,5 @@
+interface:
+  display_name: "生成异步问卷"
+  short_description: "把外部知识缺口整理为发现问卷"
+policy:
+  allow_implicit_invocation: false

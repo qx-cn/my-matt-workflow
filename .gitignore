@@ -1,0 +1,24 @@
+# Local Agent state and work artifacts
+.agent/
+
+# Generated release artifacts and local release pointer
+releases/
+current.json
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# Local logs and temporary files
+*.log
+*.tmp
+
+# macOS and iCloud metadata
+.DS_Store
+*.icloud

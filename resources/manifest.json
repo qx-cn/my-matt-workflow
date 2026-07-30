@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "resources": {
+    "humanizer": {
+      "source": "resources/humanizer.md",
+      "release_path": "references/shared/humanizer.md",
+      "consumers": [
+        "my-to-spec",
+        "my-to-tickets",
+        "my-grill-with-docs",
+        "my-code-review"
+      ]
+    },
+    "policies": {
+      "source_dir": "policies",
+      "release_path": "references/policies",
+      "consumers": "*"
+    }
+  }
+}
