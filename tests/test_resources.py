@@ -71,6 +71,38 @@ class SharedResourceTests(unittest.TestCase):
                 ).exists()
             )
 
+    def test_workflow_control_pointers_are_bundled_for_consumers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        expectations = {
+            "my-ask-matt": (
+                "references/shared/adapters/composition.md",
+                "references/policies/context-hygiene.md",
+            ),
+            "my-handoff": ("references/policies/context-hygiene.md",),
+            "my-resolving-merge-conflicts": (
+                "references/policies/merge-conflict-approval.md",
+            ),
+            "my-to-tickets": (
+                "references/shared/adapters/ticket-selection.md",
+            ),
+            "my-triage": (
+                "references/shared/adapters/ticket-selection.md",
+            ),
+            "my-wayfinder": (
+                "references/shared/adapters/composition.md",
+                "references/policies/decision-taxonomy.md",
+            ),
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            for skill, references in expectations.items():
+                with self.subTest(skill=skill):
+                    target = Path(tmp) / skill
+                    target.mkdir()
+                    bundle_resources_for_skill(manifest, ROOT, skill, target)
+                    for reference in references:
+                        self.assertTrue((target / reference).is_file())
+
     def test_missing_resource_consumer_reports_source_and_target(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -26,8 +26,8 @@ The source body was compared section-by-section, including examples, ordering, c
 
 - Allowed local adaptation: a renamed manual-invocation Skill may retain repository-specific metadata only when it does not alter the upstream method.
 - Material delta: The local approval-first and destructive-command safeguards intentionally change the upstream always-resolve/finish-merge behavior and require an explicit adapter boundary.
-- Conclusion: **adapter-rework-required**.
-- Exact follow-up queue: **Plan 2 — `my-resolving-merge-conflicts` adapter rework**; this audit does not restore or refactor the Skill.
+- Plan 4 keeps the concise approval-before-mutation guard in the Skill and moves the detailed confirmation-only contract to `policies/merge-conflict-approval.md`.
+- Conclusion: **adapter-rework-required**, with the local safety contract referenced rather than repeated.
 
 ## Retrieval/application scenario
 

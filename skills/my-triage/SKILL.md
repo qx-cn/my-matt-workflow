@@ -44,6 +44,25 @@ disable-model-invocation: true
 
 状态转换：未标记的 Issue 通常先进入 `needs-triage`；随后可转为 `needs-info`、`ready-for-agent`、`ready-for-human` 或 `wontfix`。报告者回复后，`needs-info` 返回 `needs-triage`。维护者可随时覆盖——标出看起来异常的转换，并在继续前询问。
 
+## 本地 Ticket 门卫
+
+`my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 只保留为用户决策，也不进入 triage。若分诊结果需要保存到本地，使用以下 `ready-for-agent` 模板，且只在维护者确认分类和状态后写入：
+
+```yaml
+---
+id: <topic>-<NN>
+title: <可执行标题>
+ticket_kind: implementation
+status: ready-for-agent
+blocked_by: []
+claimed_by:
+tags: []
+sequence: <NN>
+---
+```
+
+`blocked_by` 必须是 YAML 列表；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。可实现性、引用与完成门禁均由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断。
+
 ## 调用
 
 维护者调用 `/triage`，并用自然语言描述想做什么。理解该请求后执行。示例：

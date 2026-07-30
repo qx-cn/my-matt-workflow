@@ -159,13 +159,19 @@
         "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
       },
       "local_support_files": {
-        "SKILL.md": "93a4f3bdd9a5d12148a292f56aa1ead2483d6db4e5d333cd90bc9470f55155f5",
+        "SKILL.md": "52fe1af951299b4cad3f1acd6e01fc80c225118696bb1cea9c43fb58160d9f0c",
         "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#自动手动交接",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 4 delegates automatic/manual composition and context hygiene to bundled shared references."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/ask-matt-audit.md",
-      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
+      "notes": "Plan 4 centralizes automatic/manual handoff and context hygiene in consumer-bundled adapters and shared policies.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#Ask Matt",
@@ -1687,13 +1693,19 @@
         "agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28"
       },
       "local_support_files": {
-        "SKILL.md": "1f9903a3ad5835787675fb64ac601d816d995794b648a9516ca05d5b0692fcd3",
+        "SKILL.md": "5e8346c3f270018d3682a129ea5df545d1421b301eb997b2227e255bc4da4530",
         "agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#上下文卫生",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 4 adds one shared context-hygiene pointer without changing the handoff method."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/handoff-audit.md",
-      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
+      "notes": "Plan 4 adds only the shared context-hygiene pointer; handoff storage behavior remains unchanged.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -2644,13 +2656,19 @@
         "agents/openai.yaml": "a1f4f96838f2ed6282eb28abbbf99029cb8fadce552baf53da90a025b8bffddf"
       },
       "local_support_files": {
-        "SKILL.md": "b52a56999e7106416e266d84fc387d2bc1709ebc85fd6a440424134d38f0c953",
+        "SKILL.md": "913cb3dc8d41e79d6a4b560ab703c7d709cff097783d4084d63b3a94152d81a0",
         "agents/openai.yaml": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#合并冲突批准",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 4 centralizes confirmation-only conflict controls in a shared policy."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/resolving-merge-conflicts-audit.md",
-      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
+      "notes": "Plan 4 moves approval and fixed prohibitions to the shared merge-conflict policy.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -3645,20 +3663,28 @@
           }
         ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#结构化本地 Ticket 模板"
+        ]
       },
       "support_files": {
         "SKILL.md": "5ecdf1d4df8a360ed39df21a2347f97ba177afd449a577da4f6b6ea8e1ebb808",
         "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
       },
       "local_support_files": {
-        "SKILL.md": "26120e980a549a2d73903e54e03cf5b02a708c1a651a73a3574873e605e9ec13",
+        "SKILL.md": "6da9c7b440465d24f62ce4dc92184f9a1268424558bcde1750bd606811f96222",
         "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
       },
-      "allowed_local_adaptations": [],
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#结构化本地Ticket模板",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 4 adds explicit local ticket fields and delegates behavior to tickets.py."
+        }
+      ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/to-tickets-audit.md",
-      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
+      "notes": "Plan 4 adds a structured local-ticket schema and delegates eligibility, reference closure, ordering, and completion gates to tickets.py.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#To Tickets",
@@ -4089,7 +4115,9 @@
           }
         ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#本地 Ticket 门卫"
+        ]
       },
       "support_files": {
         "AGENT-BRIEF.md": "5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b",
@@ -4100,18 +4128,23 @@
       "local_support_files": {
         "AGENT-BRIEF.md": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
         "OUT-OF-SCOPE.md": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
-        "SKILL.md": "24eb3dcaf4d11e5c9f047e2c8d392fc3caec025a82cb9568345ccb62750495cd",
+        "SKILL.md": "b18716d463035d30c094f35e7bc34f9a4407a98a3cf4416606ec692d8822b897",
         "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
       },
       "allowed_local_adaptations": [
         {
           "path": "SKILL.md",
           "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
+        },
+        {
+          "path": "SKILL.md#本地Ticket门卫",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 4 adds a bounded structured local-ticket guard."
         }
       ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/triage-restoration.md",
-      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
+      "notes": "Plan 4 adds a bounded local-ticket guard and structured ready-for-agent template backed by the ticket-selection adapter."
     },
     {
       "upstream_skill": "wayfinder",
@@ -4356,14 +4389,16 @@
           }
         ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#结构化决策 Ticket"
+        ]
       },
       "support_files": {
         "SKILL.md": "257e40665b28ae959ffdcb97d7a72b074360f4a3d201bd84786505308546e434",
         "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
       },
       "local_support_files": {
-        "SKILL.md": "ed52334e5904513a6676e627a210e5b4919696c68fe5c48b6290ea72dc4720e3",
+        "SKILL.md": "6cc0c3262c0f0b7e514c7a965ce2f3ac1c943b83625db1828d00daff024a2937",
         "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
       },
       "allowed_local_adaptations": [
@@ -4371,11 +4406,16 @@
           "path": "SKILL.md#工作产物访问",
           "classification": "local-only-adaptation",
           "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
+        },
+        {
+          "path": "SKILL.md#结构化决策Ticket",
+          "classification": "local-only-adaptation",
+          "adaptation": "Plan 4 adds an explicit non-implementable Wayfinder ticket schema."
         }
       ],
       "conclusion": "faithful",
       "evidence_path": "upstream/evidence/wayfinder-audit.md",
-      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
+      "notes": "Plan 4 adds a structured decision-ticket schema and shared eligibility/decision pointers; Wayfinder tickets remain non-implementable.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",

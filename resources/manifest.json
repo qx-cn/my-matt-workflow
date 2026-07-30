@@ -17,14 +17,18 @@
       "consumers": [
         "my-grill-me",
         "my-grill-with-docs",
-        "my-implement"
+        "my-implement",
+        "my-ask-matt",
+        "my-wayfinder"
       ]
     },
     "adapter-ticket-selection": {
       "source": "resources/adapters/ticket-selection.md",
       "release_path": "references/shared/adapters/ticket-selection.md",
       "consumers": [
-        "my-implement"
+        "my-implement",
+        "my-to-tickets",
+        "my-triage"
       ]
     },
     "adapter-work-scope": {

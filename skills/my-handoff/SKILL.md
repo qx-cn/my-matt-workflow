@@ -17,6 +17,6 @@ disable-model-invocation: true
 - 建议手动调用的 `my-*` Skills；
 - 下一步具体动作。
 
-已有产物只引用，不复制正文。移除密钥、密码、个人身份和不必要的企业内部信息。
+已有产物只引用，不复制正文。移除密钥、密码、个人身份和不必要的企业内部信息。阶段边界与最小上下文遵循[上下文卫生](references/policies/context-hygiene.md)。
 
 `my-handoff` 是项目交接目录的唯一管理者。项目内按需求 topic 分目录保存：`.agent/work/<topic>/handoffs/handoffs-<topic>-<time-or-sequence>.md`；`<topic>` 使用简短的 kebab-case 名称，例如 `requirements-reset`。同一需求的后续交接只新增新文件，不覆盖历史记录，不同需求不得混放。没有项目时保存到操作系统临时目录，而非当前工作区。不要自动删除旧交接；只创建新文档并在新文档中引用前序交接。

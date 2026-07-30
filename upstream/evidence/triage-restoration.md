@@ -8,8 +8,9 @@
 
 ## Parity and bounded adaptations
 
-- `skills/my-triage/` restores the triage state machine, invocation and resumption flow, agent-brief guidance, and out-of-scope knowledge-base process. The ledger records all source mappings as complete and translated, with no missing or local-added sections.
-- The only bounded adaptation retains the local name and manual invocation metadata; the upstream method is unchanged.
+- `skills/my-triage/` restores the triage state machine, invocation and resumption flow, agent-brief guidance, and out-of-scope knowledge-base process. The ledger records all source mappings as complete and translated, with no missing source sections.
+- Plan 4 adds one bounded local Ticket guard: structured implementation Tickets are already triaged, Wayfinder decisions are never implementation candidates, and locally stored ready-for-agent tickets use the executable ticket model.
+- The upstream triage state machine remains unchanged; composition, write controls and ticket eligibility are referenced rather than duplicated.
 
 ## Verification and restoration source
 

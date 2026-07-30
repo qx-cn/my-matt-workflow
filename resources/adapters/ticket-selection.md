@@ -1,5 +1,9 @@
-# Ticket 准入与选择适配
+# Ticket 准入、完成与选择适配
 
-实施前，Ticket 必须同时满足：`ticket_kind: implementation`、`status: ready-for-agent`、所有 `blocked_by` 已完成、至少一条可验证验收标准，且不带 `wayfinder:*` 标记。`ticket_kind: wayfinder-decision` 或带 `wayfinder:*` 的 Ticket 永不进入实施；未解决的产品决定必须保留给用户。
+本适配的可执行真相来源是 `tools/workflow_lib/tickets.py`。本地 Ticket 使用 YAML frontmatter：`ticket_kind` 只能是 `implementation` 或 `wayfinder-decision`；`status`、`blocked_by`（YAML 列表）和 `claimed_by` 必须显式存在。缺失或旧式 `ticket_kind` 是歧义，绝不推断。
 
-用户指定的 Ticket 不满足准入时，说明具体缺项并停止；不得静默改选。只有用户明确确认改选后，才可从可实施集合中按既有确定性顺序选择另一张。缺少类型的旧 Ticket 不猜测，按现有模板和明确状态无法唯一判断时请求确认。
+实施候选必须同时是 `ticket_kind: implementation`、`status: ready-for-agent`、未认领、每个 `blocked_by` Ticket 的 `status: complete`，并至少有一个未勾选的验收复选框。`wayfinder-decision` 或任何 `wayfinder:*` 标签永远不得进入实施，即使其他字段看似就绪。引用只可按唯一的 id、路径或标题解析；孤儿、歧义和依赖环必须先修复。
+
+自动选择只从合格候选中按 `sequence`、再按稳定 id 排序。用户明确选择的 Ticket 不合格时，报告全部缺项并停止；不得静默重选。Triage 不重新处理已有结构化 implementation Ticket；Wayfinder Ticket 也不转换为 implementation。
+
+关闭 implementation Ticket 前，所有验收复选框必须勾选；否则保留开放状态并说明未完成项。用户专属产品取舍不由这个机械门禁代替。

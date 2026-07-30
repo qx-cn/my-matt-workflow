@@ -1713,7 +1713,10 @@ class ReleaseTests(unittest.TestCase):
     def test_adopted_skills_include_metadata_and_safety_boundaries(self):
         root = Path(__file__).resolve().parents[1] / "skills"
         expected = {
-            "my-resolving-merge-conflicts": ["批准前", "Force Push", "回滚"],
+            "my-resolving-merge-conflicts": [
+                "批准前",
+                "references/policies/merge-conflict-approval.md",
+            ],
             "my-to-questionnaire": [
                 "to-questionnaire-<slug>.md",
                 "只就“发送”采访用户，而不要就主题采访用户",
@@ -1741,6 +1744,11 @@ class ReleaseTests(unittest.TestCase):
                 for phrase in required_text:
                     self.assertIn(phrase, text)
 
+        conflict_policy = (
+            root.parent / "policies" / "merge-conflict-approval.md"
+        ).read_text()
+        self.assertIn("Force Push", conflict_policy)
+        self.assertIn("回滚", conflict_policy)
         self.assertEqual(29, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
@@ -2408,7 +2416,8 @@ class TriageParityTests(unittest.TestCase):
                     self.assertIn(heading, documents[document])
                     self.assertRegex(mapping["evidence"], r"\.md#")
         self.assertEqual([], entry["sections"]["missing"])
-        self.assertEqual([], entry["sections"]["local_added"])
+        self.assertEqual(1, len(entry["sections"]["local_added"]))
+        self.assertTrue(entry["sections"]["local_added"][0].startswith("SKILL.md#"))
         self.assertEqual(
             {
                 "AGENT-BRIEF.md": "5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b",
@@ -2425,14 +2434,11 @@ class TriageParityTests(unittest.TestCase):
             entry["local_support_files"]["agents/openai.yaml"],
         )
         self.assertIn("allow_implicit_invocation: false", metadata.read_text())
-        self.assertEqual(
-            [
-                {
-                    "path": "SKILL.md",
-                    "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
-                }
-            ],
-            entry["allowed_local_adaptations"],
+        self.assertTrue(
+            any(
+                adaptation.get("classification") == "local-only-adaptation"
+                for adaptation in entry["allowed_local_adaptations"]
+            )
         )
         self.assertEqual("faithful", entry["conclusion"])
         self.assertEqual(

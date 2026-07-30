@@ -64,16 +64,31 @@ disable-model-invocation: true
 
 <local-ticket-template>
 
+```yaml
+---
+id: <feature-slug>-<NN>
+title: <Ticket 标题>
+ticket_kind: implementation
+status: ready-for-agent
+blocked_by: []
+claimed_by:
+tags: []
+sequence: <NN>
+---
+```
+
 # <NN> — <Ticket 标题>
 
 **要构建什么：** 从用户视角描述该 Ticket 端到端实现的行为，而非逐层实现清单。
 
-**被谁阻塞：** 阻塞本 Ticket 的编号/标题，或“无——可立即开始”。
+`blocked_by` 必须填 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取时仅填写 `claimed_by`，完成阻塞 Ticket 时将其 `status` 设为 `complete`。不要依靠正文状态行或猜测旧 Ticket 的类型。
 
-**状态：** ready-for-agent
+## 验收标准
 
 - [ ] 验收标准 1
 - [ ] 验收标准 2
+
+关闭前勾选全部验收项；本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
 
 </local-ticket-template>
 

@@ -10,10 +10,7 @@ disable-model-invocation: true
 
 **工作流**是穿过多个 Skill 的路径。大部分路径沿着一条**主流程**前进，另有两个入口汇入它；其余要么独立，要么是下层共用词汇。
 
-读取 `.agent/matt-workflow.md` 的 `composition_policy`。判断出入口后：
-
-- `automatic`：读取并遵守对应的已打包参考，在用户明确启动的当前流程中继续：[my-grill-with-docs](references/composed/my-grill-with-docs/SKILL.md)、[my-grill-me](references/composed/my-grill-me/SKILL.md)、[my-triage](references/composed/my-triage/SKILL.md)、[my-implement](references/composed/my-implement/SKILL.md)、[my-wayfinder](references/composed/my-wayfinder/SKILL.md) 或 [my-diagnosing-bugs](references/composed/my-diagnosing-bugs/SKILL.md)。只加载实际选中的入口，不自动启动无关根 Skill。
-- `manual`：只推荐下一条当前运行时的显式命令并停止；Cursor / Claude 使用 `/my-<skill>`，Codex 使用 `$my-<skill>`。
+读取 `.agent/matt-workflow.md` 的 `composition_policy`，并遵循 [组合调用](references/shared/adapters/composition.md)。当前流程可进入：[my-grill-with-docs](references/composed/my-grill-with-docs/SKILL.md)、[my-grill-me](references/composed/my-grill-me/SKILL.md)、[my-triage](references/composed/my-triage/SKILL.md)、[my-implement](references/composed/my-implement/SKILL.md)、[my-wayfinder](references/composed/my-wayfinder/SKILL.md) 或 [my-diagnosing-bugs](references/composed/my-diagnosing-bugs/SKILL.md)；只加载实际选中的入口。manual 时 Cursor / Claude 使用 `/my-<skill>`，Codex 使用 `$my-<skill>`，随后停止。
 
 ## 主流程：想法 → 交付
 
@@ -32,9 +29,7 @@ disable-model-invocation: true
 
 ### 上下文卫生
 
-第 1–3 步必须保持在**同一个未中断的上下文窗口**中：直到 `/my-to-tickets` 后才压缩或清理，让访谈、Spec 与 Ticket 建立在同一套思考上。每个 `/my-implement` 则从 Ticket 开始新的上下文。
-
-限制是 [smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)：约 120k token 内模型仍能清晰推理的窗口。若会话在 `/my-to-tickets` 前接近该限制，不要在降级状态硬撑；使用 `/my-handoff` 并在新线程继续。
+访谈、Spec、Ticket 与交接的阶段边界遵循[上下文卫生](references/policies/context-hygiene.md)。若会话在 `/my-to-tickets` 前接近该限制，不要在降级状态硬撑；使用 `/my-handoff` 并在新线程继续。
 
 ## 入口
 

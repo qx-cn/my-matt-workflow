@@ -57,12 +57,26 @@ disable-model-invocation: true
 每个 Ticket 都是地图的子 Issue，或是本地 `tickets/` 下的一个文件；其正文只写一个可在约一个 100K token Agent 会话内解决的问题：
 
 ```markdown
+---
+id: <initiative>-<NN>
+title: <决策 Ticket 标题>
+ticket_kind: wayfinder-decision
+status: open
+blocked_by: []
+claimed_by:
+tags:
+  - wayfinder:<research|prototype|grilling|task>
+sequence: <NN>
+---
+
+# <决策 Ticket 标题>
+
 ## 问题
 
 <本 Ticket 要解决的决定或调查>
 ```
 
-每个 Ticket 标记 `wayfinder:<type>`，类型为 `research`、`prototype`、`grilling` 或 `task`（见[Ticket 类型](#ticket-类型)）。
+每个 Ticket 标记 `wayfinder:<type>`，类型为 `research`、`prototype`、`grilling` 或 `task`（见[Ticket 类型](#ticket-类型)）。这些 Ticket 的 `ticket_kind` 永远是 `wayfinder-decision`；不得改成 implementation 或交给 `my-implement`。产品取舍必须保留给用户，见[决策分类](references/policies/decision-taxonomy.md)。
 
 会话开始时先**认领**一个 Ticket，再做任何工作：Tracker 中将其分配给当前负责人；本地 Ticket 标明认领会话、时间与负责人。未关闭、未认领的 Ticket 才可认领，以避免并行会话重复工作。
 
@@ -102,9 +116,9 @@ disable-model-invocation: true
 
 ## 调用方式
 
-有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。
+有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。依赖调用和地图完成后的交接遵循 [组合调用](references/shared/adapters/composition.md)。
 
-需要依赖时，`composition_policy: automatic` 按当前阶段读取并遵守已打包参考：[my-grilling](references/composed/my-grilling/SKILL.md)、[my-domain-modeling](references/composed/my-domain-modeling/SKILL.md)、[my-research](references/composed/my-research/SKILL.md)、[my-prototype](references/composed/my-prototype/SKILL.md) 或 [my-to-spec](references/composed/my-to-spec/SKILL.md)。`manual` 时只输出下一条显式调用并停止：Cursor / Claude 使用 `/my-<skill>`，Codex 使用 `$my-<skill>`。
+需要依赖时，只加载当前阶段所需的已打包参考：[my-grilling](references/composed/my-grilling/SKILL.md)、[my-domain-modeling](references/composed/my-domain-modeling/SKILL.md)、[my-research](references/composed/my-research/SKILL.md)、[my-prototype](references/composed/my-prototype/SKILL.md) 或 [my-to-spec](references/composed/my-to-spec/SKILL.md)；自动或手动的调用及停止规则由组合适配决定。
 
 ### 绘制地图
 

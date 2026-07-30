@@ -43,8 +43,8 @@ The source body was compared section-by-section, including examples, ordering, c
 
 - Allowed local adaptation: a renamed manual-invocation Skill may retain repository-specific metadata only when it does not alter the upstream method.
 - Material delta: The local local-markdown tracker fallback and policy-controlled subagent/transition behavior adapt upstream tracker operations and require bounded preservation of one-ticket and decision-only stops.
-- Conclusion: **adapter-rework-required**.
-- Exact follow-up queue: **Plan 2 — `my-wayfinder` adapter rework**; this audit does not restore or refactor the Skill.
+- Plan 4 makes local decision Tickets explicit: `ticket_kind: wayfinder-decision`, a `wayfinder:*` tag, structured blockers and claim state. `tickets.py` excludes them from implementation selection, while decision ownership remains in the shared decision taxonomy.
+- Conclusion: **adapter-rework-required**, with automatic/manual handoff delegated to the consumer-bundled composition adapter.
 
 ## Retrieval/application scenario
 

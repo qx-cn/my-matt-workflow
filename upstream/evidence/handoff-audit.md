@@ -36,3 +36,7 @@ The source body was compared section-by-section, including examples, ordering, c
 ## Task 12 review repair
 
 The source name frontmatter explicitly maps to the local title; no whole-document fallback is recorded.
+
+## Plan 4 workflow repair
+
+The handoff body retains its upstream recovery method. Context limits, sensitive-data minimization and the distinction between compacting and cross-session handoff are now referenced through the shared `context-hygiene.md` policy, rather than a duplicated project-policy tail.

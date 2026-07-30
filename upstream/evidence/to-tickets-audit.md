@@ -37,8 +37,8 @@ The source body was compared section-by-section, including examples, ordering, c
 
 - Allowed local adaptation: a renamed manual-invocation Skill may retain repository-specific metadata only when it does not alter the upstream method.
 - Material delta: The local backend-specific paths, confirmation gates, and humanizer step replace the upstream tracker contract and must preserve the vertical-slice and blocking-edge method.
-- Conclusion: **adapter-rework-required**.
-- Exact follow-up queue: **Plan 2 — `my-to-tickets` adapter rework**; this audit does not restore or refactor the Skill.
+- Plan 4 adds a bounded local frontmatter template (`ticket_kind`, `status`, YAML-list `blocked_by`, `claimed_by`, tags and sequence). Eligibility, graph closure, ordering and completion gates live in `tools/workflow_lib/tickets.py`, not copied policy prose.
+- Conclusion: **adapter-rework-required**, with local behavior limited to declared shared adapters and the executable ticket model.
 
 ## Retrieval/application scenario
 
