@@ -1375,6 +1375,15 @@ class DoctorTests(unittest.TestCase):
                 "unreviewed",
             }
         )
+        self.assertFalse(
+            [
+                entry["local_skill"]
+                for entry in fidelity["skills"]
+                if entry["conclusion"]
+                in {"restore-required", "adapter-rework-required", "unreviewed"}
+            ],
+            "Plan 6 fidelity closure must not retain unresolved source-derived Skills",
+        )
         for entry in fidelity["skills"]:
             self.assertEqual(
                 manifest["skills"][entry["upstream_skill"]],
@@ -3363,6 +3372,7 @@ class TddParityTests(unittest.TestCase):
             entry["conclusion"],
             {"faithful", "restore-required", "adapter-rework-required"},
         )
+        self.assertEqual("faithful", entry["conclusion"])
         self.assertEqual("upstream/evidence/tdd-audit.md", entry["evidence_path"])
         self.assertTrue(evidence_path.is_file())
         evidence = evidence_path.read_text()
@@ -3502,6 +3512,7 @@ class GrillingParityTests(unittest.TestCase):
             {
                 "SKILL.md#document-body",
                 "agents/openai.yaml#interface.display_name",
+                "agents/openai.yaml#interface.short_description",
             },
             {mapping["upstream"] for mapping in entry["sections"]["complete"]},
         )
@@ -3517,19 +3528,14 @@ class GrillingParityTests(unittest.TestCase):
             ["agents/openai.yaml#policy"],
             entry["sections"]["local_added"],
         )
-        short_description_delta = next(
-            (
-                adaptation
+        self.assertFalse(
+            any(
+                adaptation["path"]
+                == "agents/openai.yaml#interface.short_description"
                 for adaptation in entry["allowed_local_adaptations"]
-                if adaptation["path"] == "agents/openai.yaml#interface.short_description"
-            ),
-            None,
+            )
         )
-        self.assertIsNotNone(short_description_delta)
-        assert short_description_delta is not None
-        self.assertIn("缩窄", short_description_delta["adaptation"])
-        self.assertIn("Plan 2", short_description_delta["adaptation"])
-        self.assertEqual("adapter-rework-required", entry["conclusion"])
+        self.assertEqual("faithful", entry["conclusion"])
         self.assertEqual("upstream/evidence/grilling-audit.md", entry["evidence_path"])
         self.assertTrue(evidence_path.is_file())
         evidence = evidence_path.read_text()
@@ -3537,8 +3543,8 @@ class GrillingParityTests(unittest.TestCase):
             "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
             "SKILL.md",
             "agents/openai.yaml",
-            "项目策略优先",
-            "Plan 2",
+            "Stress-test thinking one question at a time",
+            "Plan 6",
         ):
             with self.subTest(evidence=text):
                 self.assertIn(text, evidence)
@@ -3730,7 +3736,7 @@ class DomainModelingParityTests(unittest.TestCase):
             ).hexdigest(),
             entry["local_support_files"]["agents/openai.yaml"],
         )
-        self.assertEqual("adapter-rework-required", entry["conclusion"])
+        self.assertEqual("faithful", entry["conclusion"])
         self.assertEqual(
             "upstream/evidence/domain-modeling-audit.md",
             entry["evidence_path"],
@@ -3743,10 +3749,9 @@ class DomainModelingParityTests(unittest.TestCase):
             "CONTEXT-FORMAT.md",
             "ADR-FORMAT.md",
             "agents/openai.yaml",
-            "项目策略优先",
             "frontmatter",
             "disable-model-invocation",
-            "Plan 2",
+            "Plan 6",
         ):
             with self.subTest(evidence=text):
                 self.assertIn(text, evidence)
@@ -3756,6 +3761,7 @@ class DomainModelingParityTests(unittest.TestCase):
         self.assertIn("If unclear, ask.", source_files["CONTEXT-FORMAT.md"].read_text())
         self.assertIn("按 `decision_policy` 询问", local_skill)
         self.assertNotIn("均服从该生效策略", local_skill)
+        self.assertNotIn("记录假设", local_skill)
         self.assertIn("name: domain-modeling", source_skill)
         self.assertIn("name: my-domain-modeling", local_skill)
         self.assertIn(

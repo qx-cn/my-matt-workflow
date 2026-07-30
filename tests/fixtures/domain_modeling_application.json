@@ -38,7 +38,6 @@
       "outcome": "read-context-map"
     },
     {
-      "policy": "upstream",
       "when": {
         "multiple_contexts": true,
         "topic_context_clear": false
@@ -47,18 +46,6 @@
         "clarify-unclear-multiple-contexts"
       ],
       "outcome": "ask-for-clarification"
-    },
-    {
-      "policy": "local",
-      "when": {
-        "multiple_contexts": true,
-        "topic_context_clear": false,
-        "approved_unattended_plan": true
-      },
-      "requires_constraints": [
-        "clarify-unclear-multiple-contexts"
-      ],
-      "outcome": "record-routing-assumption"
     },
     {
       "when": {
@@ -100,18 +87,14 @@
       "id": "clarify-unclear-multiple-contexts",
       "input": {
         "multiple_contexts": true,
-        "topic_context_clear": false,
-        "approved_unattended_plan": true
+        "topic_context_clear": false
       },
       "retrieved_constraints": [
         {
           "id": "clarify-unclear-multiple-contexts"
         }
       ],
-      "expected": {
-        "upstream": "ask-for-clarification",
-        "local": "record-routing-assumption"
-      }
+      "expected": "ask-for-clarification"
     },
     {
       "id": "record-resolved-term",

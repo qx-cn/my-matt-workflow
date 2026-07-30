@@ -20,7 +20,7 @@
 
 | Local file | SHA-256 | Classification |
 | --- | --- | --- |
-| `skills/my-tdd/SKILL.md` | `0bbe3c5acbdff94058b10e4202274696caf19b5737d6b152db4252866b4d2684` | translated body plus local metadata/policy additions |
+| `skills/my-tdd/SKILL.md` | `b7c549d6d08991125b60b7bd58c78802c9a9eea72eaccc3e8c747eca987221b6` | translated body plus local metadata/policy additions |
 | `skills/my-tdd/mocking.md` | `3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef` | byte-identical |
 | `skills/my-tdd/tests.md` | `859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a` | byte-identical |
 | `skills/my-tdd/agents/openai.yaml` | `00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c` | local policy metadata added |
@@ -49,20 +49,14 @@
   manual-invocation metadata adaptation.
 - `agents/openai.yaml#policy.allow_implicit_invocation: false` is the
   corresponding local-only manual-invocation metadata adaptation.
-- `SKILL.md#项目策略优先` is a local-only project-policy entry point. Its rule
-  that instructions to ask, confirm, stop, or limit subsequent work defer to
-  the effective policy can weaken the upstream stop condition in
-  `SKILL.md#Seams — where tests go`: no test at an unconfirmed seam.
+Plan 2 centralized the policy adapter and removed the local policy override.
+The naming, description translation, manual-invocation metadata, and
+artifact-access pointer are permitted bounded adaptations; none bypasses the
+upstream seam-confirmation gate.
 
-The naming, description translation, and manual-invocation metadata are
-permitted adaptations. The policy override is not currently bounded so that it
-preserves the upstream seam-confirmation gate.
+Conclusion: **faithful**.
 
-Conclusion: **adapter-rework-required**.
-
-Exact follow-up queue: **Plan 2 — `my-tdd` adapter rework**. Constrain or
-remove the policy override so it cannot bypass pre-agreed seam confirmation;
-do not restore or refactor this Skill in this audit task.
+Plan 6 closure: no test may be written at an unconfirmed seam.
 
 ## Retrieval/application evidence
 

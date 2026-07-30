@@ -1302,7 +1302,7 @@
       "local_support_files": {
         "ADR-FORMAT.md": "d032f6a96b24664ce37c8e1d3b083b3090bd39e9377e532a85b04b220454ef9a",
         "CONTEXT-FORMAT.md": "3502f543e3cda988f510e5f04605171eef298487113ea2e68ebf4a2777ab4780",
-        "SKILL.md": "c4f0db5cd05b517a0f6f1c0a618276cab9a6b547b3956d16ffd68eb7a83b8cdb",
+        "SKILL.md": "b35a7f3214bbea6db34f855891fd0a3ab12d5a3e58adf0fffd295a544aece75c",
         "agents/openai.yaml": "3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb"
       },
       "allowed_local_adaptations": [
@@ -1320,7 +1320,7 @@
             "SKILL.md#frontmatter.description"
           ],
           "classification": "changed-local-adaptation",
-          "adaptation": "本地 description 改写并缩窄了上游的调用范围，未保留“另一 Skill 需要维护领域模型”这一调用场景；它是有上游对应项的适配差异，须在 Plan 2 复核是否恢复该范围。"
+          "adaptation": "本地 description 改写并缩窄了上游的调用范围，未保留“另一 Skill 需要维护领域模型”这一调用场景；它是有上游对应项的适配差异，其完整的维护触发语义已在正文中保留。"
         },
         {
           "path": "SKILL.md#frontmatter.disable-model-invocation",
@@ -1334,7 +1334,7 @@
             "SKILL.md#Update CONTEXT.md inline",
             "CONTEXT-FORMAT.md#Single vs multi-context repos"
           ],
-          "adaptation": "项目配置的正式文档位置和 topic-local 个人术语表/ADR 候选可保留按需创建、术语表与实现决策分离；但它改变了上游 root CONTEXT.md/docs/adr 契约，并允许无人值守计划在上下文归属不清时记录假设，须在 Plan 2 明确边界。"
+          "adaptation": "项目配置的正式文档位置和 topic-local 个人术语表/ADR 候选保留按需创建、术语表与实现决策分离；它改变了上游 root CONTEXT.md/docs/adr 契约，但共享适配不改变不明确时必须询问的上游门槛。"
         },
         {
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
@@ -1347,9 +1347,9 @@
           "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
         }
       ],
-      "conclusion": "adapter-rework-required",
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/domain-modeling-audit.md",
-      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 审计。术语质疑、场景、代码核对和 ADR 方法已翻译；文档位置、个人先写与项目策略覆盖改变了上游领域路由/即时捕获契约，转入 Plan 2 的 my-domain-modeling adapter rework。"
+      "notes": "Plan 2 centralized the policy adapter and Plan 6 removed the approved-unattended routing exception. The local translation now retains the upstream clarification and immediate-capture method; document locations, local registration, and manual-only metadata remain declared, bounded adaptations."
     },
     {
       "upstream_skill": "edit-article",
@@ -1525,6 +1525,11 @@
             "upstream": "agents/openai.yaml#interface.display_name",
             "local": "agents/openai.yaml#interface.display_name",
             "evidence": "agents/openai.yaml 保留 interface.display_name “Grilling”。"
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.short_description",
+            "local": "agents/openai.yaml#interface.short_description",
+            "evidence": "Byte-identical runtime interface metadata after Plan 6 restoration."
           }
         ],
         "translated": [
@@ -1550,21 +1555,17 @@
       },
       "local_support_files": {
         "SKILL.md": "e2836a1be4560c2f75b28af0e84db713e88feb2c677d62550be917853381acce",
-        "agents/openai.yaml": "fd9b95d5468600190f9cedf23a575fc71ffa2fde03b5d55bacd2fee2b27063a6"
+        "agents/openai.yaml": "7b6a632a92aa599776dfb602d8260a75f6740f73277d523b9dc92584b584a3ef"
       },
       "allowed_local_adaptations": [
         {
-          "path": "agents/openai.yaml#interface.short_description",
-          "adaptation": "本地 short_description 改为 “Run a focused design interview”，缩窄了上游 “Stress-test thinking one question at a time” 的范围；这是需在 Plan 2 重做的适配差异，不计为 local-only 或完整翻译。"
-        },
-        {
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
-          "adaptation": "保留 false 以表达本地手动调用；不改变 short_description 已缩窄且需 Plan 2 重做的结论。"
+          "adaptation": "保留 false 以表达本地手动调用；该 metadata 不改变完整的压力测试范围或确认门槛。"
         }
       ],
-      "conclusion": "adapter-rework-required",
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/grilling-audit.md",
-      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 审计。正文流程已翻译，但项目策略覆盖共同理解前不得行动的门控，且 metadata 说明缩窄压力测试范围；转入 Plan 2 的 my-grilling adapter rework 队列。"
+      "notes": "Plan 2 centralized the policy adapter, so the local Skill no longer contains an override for the shared-understanding gate. Plan 6 restored the upstream stress-test short description; only declared manual-only metadata remains."
     },
     {
       "upstream_skill": "grill-with-docs",
@@ -2855,9 +2856,9 @@
           "adaptation": "Plan 3 adds one link to the consumer-bundled artifact-access adapter; CLI details remain in my-work-artifacts."
         }
       ],
-      "conclusion": "adapter-rework-required",
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/tdd-audit.md",
-      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 审计。TDD 正文、mocking.md、tests.md 和 interface metadata 已保留；项目策略覆盖可能绕过未确认 seam 的停止条件，转入 Plan 2 的 my-tdd adapter rework。"
+      "notes": "Plan 2 centralized the policy adapter, leaving the upstream seam-confirmation stop condition intact. The remaining local registration, Chinese description, manual-only metadata, and artifact-access pointer are declared bounded adaptations."
     },
     {
       "upstream_skill": "teach",

@@ -8,8 +8,8 @@
 
 | File | Pinned source SHA-256 | Local SHA-256 | Result |
 | --- | --- | --- | --- |
-| `SKILL.md` | `152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579` | `17381af6c821d090b1bf6b5d9ea64697c1ce2143c4e6016134cc826449d115d1` | Chinese translation with changed frontmatter identity and invocation metadata, plus changed repository-document and write-policy contract. |
-| `CONTEXT-FORMAT.md` | `b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597` | `3502f543e3cda988f510e5f04605171eef298487113ea2e68ebf4a2777ab4780` | Chinese translation with topic-local personal-glossary routing and policy-controlled ambiguity handling. |
+| `SKILL.md` | `152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579` | `b35a7f3214bbea6db34f855891fd0a3ab12d5a3e58adf0fffd295a544aece75c` | Chinese translation with changed local registration and manual-only metadata, plus declared project-document locations that retain the upstream clarification gate. |
+| `CONTEXT-FORMAT.md` | `b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597` | `3502f543e3cda988f510e5f04605171eef298487113ea2e68ebf4a2777ab4780` | Chinese translation with topic-local personal-glossary routing and retained ambiguity clarification. |
 | `ADR-FORMAT.md` | `f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2` | `d032f6a96b24664ce37c8e1d3b083b3090bd39e9377e532a85b04b220454ef9a` | Chinese translation with topic-local ADR candidates and project-policy team-write gate. |
 | `agents/openai.yaml` | `f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b` | `3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb` | Both interface fields match; local-only manual-invocation policy is added. |
 
@@ -32,43 +32,42 @@
 | `agents/openai.yaml#interface.display_name` | `agents/openai.yaml#interface.display_name` | Identical: `Domain Modeling`. |
 | `agents/openai.yaml#interface.short_description` | `agents/openai.yaml#interface.short_description` | Identical: `Build and sharpen a domain model`. |
 | `SKILL.md#frontmatter.name` | `SKILL.md#frontmatter.name` | Changed local adaptation: `domain-modeling` is registered locally as `my-domain-modeling`; this has an upstream counterpart and is not local-only. |
-| `SKILL.md#frontmatter.description` | `SKILL.md#frontmatter.description` | Changed local adaptation: the Chinese description is reworded and narrows the upstream invocation scope, omitting the case where another Skill needs to maintain the model. |
+| `SKILL.md#frontmatter.description` | `SKILL.md#frontmatter.description` | Changed local adaptation: the Chinese description is reworded; the local body explicitly retains the case where another Skill needs to maintain the model. |
 | `SKILL.md#File structure` | `SKILL.md#文件结构` | Changed: upstream’s root `CONTEXT.md`, root `CONTEXT-MAP.md`, and `docs/adr/` convention is replaced by project-configured formal locations plus topic-local `.agent/work/<topic>/domain/` files. |
 | `SKILL.md#Update CONTEXT.md inline` | `SKILL.md#就地更新个人术语表` | Changed: upstream directly updates the project `CONTEXT.md` upon resolution; local first writes a personal glossary, then makes team-document writes policy-controlled external actions. |
-| `CONTEXT-FORMAT.md#Single vs multi-context repos` | `CONTEXT-FORMAT.md#单上下文与多上下文仓库` | Changed: upstream requires asking when multi-context routing is unclear; local permits an approved unattended plan to record an assumption instead. |
+| `CONTEXT-FORMAT.md#Single vs multi-context repos` | `CONTEXT-FORMAT.md#单上下文与多上下文仓库` | Changed document location vocabulary, while retaining the upstream requirement to ask when multi-context routing is unclear. |
 | _none_ | `SKILL.md#frontmatter.disable-model-invocation` | Local-only adaptation: `disable-model-invocation: true` is an independent manual-only invocation signal. |
 
-No upstream content is absent; the five changed upstream sections and one local-only frontmatter addition are adaptation deltas, not restoration gaps.
+No upstream content is absent; the five changed upstream sections and one local-only frontmatter addition are bounded adaptation deltas, not restoration gaps.
 
 ## Local-only additions and adaptation assessment
 
 - `SKILL.md#frontmatter.name` is a changed local adaptation, because it replaces an upstream field with `my-domain-modeling`; it is not a local-only addition.
-- `SKILL.md#frontmatter.description` is a changed local adaptation, because it rewords and narrows an upstream field; its lost cross-Skill maintenance trigger belongs in the Plan 2 rework review.
+- `SKILL.md#frontmatter.description` is a changed local adaptation; the local body preserves the cross-Skill maintenance trigger, so the translation retains the upstream invocation scope.
 - `SKILL.md#frontmatter.disable-model-invocation: true` is a local-only adaptation and independently signals manual-only invocation.
 - `SKILL.md#项目策略优先` is local-only. It declares that instructions to ask, confirm, stop, or limit later work yield to the effective project policy (except listed safety limits).
 - `agents/openai.yaml#policy.allow_implicit_invocation: false` is also a local-only manual-only policy setting. Manual-only behavior is therefore jointly represented by this setting and `SKILL.md#frontmatter.disable-model-invocation`, not by `agents/openai.yaml` alone.
 - The project-configured document locations, personal working copies, and manual-only invocation settings are potentially valid local adaptations when they preserve the upstream method.
-- The policy override is not faithful as written: it can weaken the upstream unconditional “If unclear, ask” routing constraint and direct inline model capture. It therefore requires a bounded adapter rework, not a restoration of translated documents.
+- Plan 2 centralized the policy adapter, and Plan 6 removed the approved-unattended routing exception. The remaining location and manual-only adaptations do not weaken the upstream unconditional “If unclear, ask” routing constraint or immediate model capture.
 
 ## Conclusion and follow-up
 
-- Conclusion: **adapter-rework-required**.
-- Exact follow-up destination: **Plan 2 — `my-domain-modeling` adapter rework**.
-- Do not restore or refactor `skills/my-domain-modeling` during this audit. Constrain the policy adapter so it cannot bypass upstream domain-routing clarification or the immediate model-capture requirement; retain only adaptations proven not to weaken that method.
+- Conclusion: **faithful**.
+- Plan 6 closure: `my-domain-modeling` retains the upstream domain-routing clarification and immediate model-capture method, with only declared bounded adaptations.
 
 ## Retrieval/application evidence
 
 `tests/fixtures/domain_modeling_application.json` is a structured, section-bound scenario exercise:
 
 1. a known multi-context map is retrieved before routing a clear topic;
-2. an unclear multi-context topic retrieves the routing constraint, then evaluates independent upstream and local rules: upstream asks for clarification while the local policy permits an approved unattended plan to record an assumption;
+2. an unclear multi-context topic retrieves the routing constraint and requires clarification;
 3. a resolved term without implementation detail is recorded in the local glossary; and
 4. an ADR is drafted only when all three upstream-derived gates hold.
 
-`DomainModelingParityTests` retrieves each cited local constraint and requires exactly one matching outcome for each policy-scoped rule set. The divergent unclear-routing outcomes make the **adapter-rework-required** conclusion observable.
+`DomainModelingParityTests` retrieves each cited local constraint and requires exactly one matching outcome. The unclear-routing scenario proves the restored clarification gate.
 
 ## Review remediation evidence
 
 - The fidelity ledger records all behavior-changing `SKILL.md` frontmatter deltas: changed `name`, narrowed/reworded `description`, and local-only `disable-model-invocation: true`.
 - The manual-only behavior is tracked as two independent local adaptations—`SKILL.md#frontmatter.disable-model-invocation` and `agents/openai.yaml#policy.allow_implicit_invocation`—rather than being attributed only to the YAML policy.
-- The structured unclear multi-context scenario retrieves `CONTEXT-FORMAT.md#单上下文与多上下文仓库` and exposes the upstream clarification requirement against the locally permitted unattended assumption.
+- The structured unclear multi-context scenario retrieves `CONTEXT-FORMAT.md#单上下文与多上下文仓库` and proves the retained upstream clarification requirement.
