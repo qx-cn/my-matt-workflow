@@ -673,25 +673,19 @@
           {"upstream": "SKILL.md#Seams — where tests go", "local": "SKILL.md#Seam——测试放在哪里", "evidence": "SKILL.md#Seam——测试放在哪里保留公共边界、预先确认、未确认不得写测试和提问。"},
           {"upstream": "SKILL.md#Anti-patterns", "local": "SKILL.md#反模式", "evidence": "SKILL.md#反模式保留实现耦合、同义反复、水平切片与纵向 tracer bullet。"},
           {"upstream": "SKILL.md#Rules of the loop", "local": "SKILL.md#循环规则", "evidence": "SKILL.md#循环规则保留先 red 后 green、一次一个切片和重构移至审查阶段。"},
-          {"upstream": "mocking.md#When to Mock", "local": "mocking.md#When to Mock", "evidence": "mocking.md 与固定上游字节一致，保留仅 mock 系统边界和禁止 mock 内部协作者。"},
-          {"upstream": "mocking.md#Designing for Mockability", "local": "mocking.md#Designing for Mockability", "evidence": "mocking.md 与固定上游字节一致，保留依赖注入、SDK 风格接口和全部示例。"},
-          {"upstream": "tests.md#Good Tests", "local": "tests.md#Good Tests", "evidence": "tests.md 与固定上游字节一致，保留集成式公共接口测试和五项特征。"},
-          {"upstream": "tests.md#Bad Tests", "local": "tests.md#Bad Tests", "evidence": "tests.md 与固定上游字节一致，保留实现细节、旁路验证和同义反复反例。"},
-          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml 保留 display_name “TDD”。"},
-          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml 保留 short_description “Test-driven red-green-refactor”。"}
+          {"upstream": "mocking.md#When to Mock", "local": "mocking.md#When to Mock", "evidence": "mocking.md 与固定上游 byte-identical，保留仅 mock 系统边界和禁止 mock 内部协作者。"},
+          {"upstream": "mocking.md#Designing for Mockability", "local": "mocking.md#Designing for Mockability", "evidence": "mocking.md 与固定上游 byte-identical，保留依赖注入、SDK 风格接口和全部示例。"},
+          {"upstream": "tests.md#Good Tests", "local": "tests.md#Good Tests", "evidence": "tests.md 与固定上游 byte-identical，保留集成式公共接口测试和五项特征。"},
+          {"upstream": "tests.md#Bad Tests", "local": "tests.md#Bad Tests", "evidence": "tests.md 与固定上游 byte-identical，保留实现细节、旁路验证和同义反复反例。"},
+          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml#interface.display_name 与上游 byte-identical：`TDD`。"},
+          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml#interface.short_description 与上游 byte-identical：`Test-driven red-green-refactor`。"}
         ],
         "translated": [
           {"upstream": "SKILL.md#preamble", "local": "SKILL.md#测试驱动开发", "evidence": "SKILL.md#测试驱动开发"},
           {"upstream": "SKILL.md#What a good test is", "local": "SKILL.md#好测试是什么", "evidence": "SKILL.md#好测试是什么"},
           {"upstream": "SKILL.md#Seams — where tests go", "local": "SKILL.md#Seam——测试放在哪里", "evidence": "SKILL.md#Seam——测试放在哪里"},
           {"upstream": "SKILL.md#Anti-patterns", "local": "SKILL.md#反模式", "evidence": "SKILL.md#反模式"},
-          {"upstream": "SKILL.md#Rules of the loop", "local": "SKILL.md#循环规则", "evidence": "SKILL.md#循环规则"},
-          {"upstream": "mocking.md#When to Mock", "local": "mocking.md#When to Mock", "evidence": "mocking.md#When to Mock"},
-          {"upstream": "mocking.md#Designing for Mockability", "local": "mocking.md#Designing for Mockability", "evidence": "mocking.md#Designing for Mockability"},
-          {"upstream": "tests.md#Good Tests", "local": "tests.md#Good Tests", "evidence": "tests.md#Good Tests"},
-          {"upstream": "tests.md#Bad Tests", "local": "tests.md#Bad Tests", "evidence": "tests.md#Bad Tests"},
-          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml#interface.display_name"},
-          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml#interface.short_description"}
+          {"upstream": "SKILL.md#Rules of the loop", "local": "SKILL.md#循环规则", "evidence": "SKILL.md#循环规则"}
         ],
         "missing": [],
         "local_added": [

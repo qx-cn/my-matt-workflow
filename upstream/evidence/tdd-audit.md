@@ -78,3 +78,19 @@ constraint retrieval scenarios:
 
 `TddParityTests` verifies each retrieved local constraint appears in its cited
 document and that exactly one rule yields each expected outcome.
+
+## Task 11 review remediation
+
+The fidelity ledger classifies only the five changed Chinese `SKILL.md` body
+mappings as `translated`. The two `mocking.md` sections, two `tests.md`
+sections, and the two unchanged `agents/openai.yaml#interface` fields remain
+complete and byte-identical. The whole `agents/openai.yaml` file remains a
+local adaptation solely because it adds policy metadata; that does not make
+its unchanged interface fields translated.
+
+`TddParityTests` now resolves every fixture constraint and every scenario
+retrieval from its declared `document#heading`. It bounds the lookup at the
+next heading of the same or higher level, then asserts the constraint text
+inside that section. This verifies `SKILL.md#循环规则` and
+`mocking.md#When to Mock` as real local headings instead of accepting text
+found elsewhere in their files.

@@ -3112,6 +3112,30 @@ class ToQuestionnaireParityTests(unittest.TestCase):
 
 class TddParityTests(unittest.TestCase):
     @staticmethod
+    def _section_contents(document, source_section):
+        _, separator, heading = source_section.partition("#")
+        if not separator or not heading:
+            return None
+        heading_match = re.search(
+            rf"^(?P<markers>#+)\s+{re.escape(heading)}\s*$",
+            document,
+            re.MULTILINE,
+        )
+        if heading_match is None:
+            return None
+        next_heading = re.search(
+            rf"^#{{1,{len(heading_match['markers'])}}}\s+",
+            document[heading_match.end() :],
+            re.MULTILINE,
+        )
+        section_end = (
+            heading_match.end() + next_heading.start()
+            if next_heading is not None
+            else len(document)
+        )
+        return document[heading_match.end() : section_end]
+
+    @staticmethod
     def _apply_tdd_rules(input_facts, retrieved_constraints, rules):
         outcomes = [
             rule["outcome"]
@@ -3171,6 +3195,37 @@ class TddParityTests(unittest.TestCase):
             },
             entry["local_support_files"],
         )
+        translated_sections = {
+            mapping["upstream"] for mapping in entry["sections"]["translated"]
+        }
+        self.assertEqual(
+            {
+                "SKILL.md#preamble",
+                "SKILL.md#What a good test is",
+                "SKILL.md#Seams — where tests go",
+                "SKILL.md#Anti-patterns",
+                "SKILL.md#Rules of the loop",
+            },
+            translated_sections,
+        )
+        complete_mappings = {
+            mapping["upstream"]: mapping
+            for mapping in entry["sections"]["complete"]
+        }
+        for source_section in (
+            "mocking.md#When to Mock",
+            "mocking.md#Designing for Mockability",
+            "tests.md#Good Tests",
+            "tests.md#Bad Tests",
+            "agents/openai.yaml#interface.display_name",
+            "agents/openai.yaml#interface.short_description",
+        ):
+            with self.subTest(source_section=source_section):
+                self.assertIn(source_section, complete_mappings)
+                self.assertIn(
+                    "byte-identical",
+                    complete_mappings[source_section]["evidence"],
+                )
         self.assertIn(
             entry["conclusion"],
             {"faithful", "restore-required", "adapter-rework-required"},
@@ -3206,15 +3261,33 @@ class TddParityTests(unittest.TestCase):
         for constraint in fixture["constraints"]:
             with self.subTest(constraint=constraint["id"]):
                 self.assertIn(constraint["document"], local_documents)
-                self.assertIn(
-                    constraint["text"],
-                    local_documents[constraint["document"]],
+                self.assertEqual(
+                    constraint["document"],
+                    constraint["source_section"].split("#", 1)[0],
                 )
-                self.assertIn("#", constraint["source_section"])
+                section_contents = self._section_contents(
+                    local_documents[constraint["document"]],
+                    constraint["source_section"],
+                )
+                self.assertIsNotNone(section_contents)
+                self.assertIn(constraint["text"], section_contents)
 
         for scenario in fixture["scenarios"]:
             with self.subTest(scenario=scenario["id"]):
                 self.assertTrue(scenario["retrieved_constraints"])
+                for constraint in scenario["retrieved_constraints"]:
+                    with self.subTest(constraint=constraint["id"]):
+                        self.assertIn(constraint["document"], local_documents)
+                        self.assertEqual(
+                            constraint["document"],
+                            constraint["source_section"].split("#", 1)[0],
+                        )
+                        section_contents = self._section_contents(
+                            local_documents[constraint["document"]],
+                            constraint["source_section"],
+                        )
+                        self.assertIsNotNone(section_contents)
+                        self.assertIn(constraint["text"], section_contents)
                 self.assertEqual(
                     scenario["expected"],
                     self._apply_tdd_rules(
