@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "tdd-seam-pressure",
+  "skills": ["my-tdd"],
+  "assertions": ["a hard-to-test dependency creates seam pressure before implementation expands"],
+  "evidence": {
+    "version": 1,
+    "scenario": "tdd-seam-pressure",
+    "sources": [{"path": "skills/my-tdd/SKILL.md", "sha256": "sha256:b7c549d6d08991125b60b7bd58c78802c9a9eea72eaccc3e8c747eca987221b6"}]
+  }
+}

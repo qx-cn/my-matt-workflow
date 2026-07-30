@@ -549,7 +549,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("Mysterious Name", text)
 
 
-class GitIgnoreTests(unittest.TestCase):
+class GitIgnoreRepositoryTests(unittest.TestCase):
     def test_non_git_project_keeps_agent_directory_without_gitignore(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp)
@@ -1986,6 +1986,10 @@ class WorkflowCliTests(unittest.TestCase):
             "disable-model-invocation: true\n"
             "---\n\n"
             "# Demo\n"
+        )
+        (skill / "agents").mkdir()
+        (skill / "agents" / "openai.yaml").write_text(
+            "allow_implicit_invocation: false\n"
         )
         return workflow
 

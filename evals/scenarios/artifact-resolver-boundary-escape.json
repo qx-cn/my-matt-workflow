@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "artifact-resolver-boundary-escape",
+  "skills": ["my-work-artifacts"],
+  "assertions": ["artifact resolution rejects paths that escape the configured work-artifact boundary"],
+  "evidence": {
+    "version": 1,
+    "scenario": "artifact-resolver-boundary-escape",
+    "sources": [{"path": "skills/my-work-artifacts/SKILL.md", "sha256": "sha256:11b55c60d88070af35d9b8386f4e6c6024848f6085cb6e7f5096035c015fd422"}]
+  }
+}

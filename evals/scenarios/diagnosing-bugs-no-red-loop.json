@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "diagnosing-bugs-no-red-loop",
+  "skills": ["my-diagnosing-bugs"],
+  "assertions": ["diagnosis does not loop on a red test without a new discriminating hypothesis"],
+  "evidence": {
+    "version": 1,
+    "scenario": "diagnosing-bugs-no-red-loop",
+    "sources": [{"path": "skills/my-diagnosing-bugs/SKILL.md", "sha256": "sha256:0a213a802c75bea84a0007aab5c1a8fa4f05c704751cbb0011185aea752f6c6a"}]
+  }
+}

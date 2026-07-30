@@ -21,6 +21,8 @@ from workflow_lib.doctor import (
     validate_upstream_snapshot,
 )
 from workflow_lib.installer import install_release
+from workflow_lib.check import CheckError, run_check
+from workflow_lib.evals import EvalError, validate_evals, validate_scenario_evidence
 from workflow_lib.profile import (
     apply_personal_ignores,
     get_policy_preset,
@@ -30,7 +32,8 @@ from workflow_lib.profile import (
     render_profile,
 )
 from workflow_lib.recommendations import build_recommendation_report
-from workflow_lib.release import build_release, release_matches_source, validate_skills
+from workflow_lib.release import build_release, release_matches_source
+from workflow_lib.smoke_registry import SmokeRegistryError, resolve_smoke_scenarios
 from workflow_lib.sync import build_review_bundle
 from workflow_lib.artifact_resolver import (
     list_work_artifacts,
@@ -47,6 +50,7 @@ from workflow_lib.tickets import (
     select_wayfinder_ticket,
     wayfinder_candidates,
 )
+from workflow_lib.validator import ValidationError, validate_repository
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -198,8 +202,66 @@ def command_setup(args: argparse.Namespace) -> None:
 
 
 def command_validate(_: argparse.Namespace) -> None:
-    skills = validate_skills(ROOT / "skills", repo_root=ROOT)
-    print(f"VALID skills={len(skills)}")
+    try:
+        report = validate_repository(ROOT)
+    except ValidationError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(f"VALID skills={report['skills']}")
+
+
+def command_validate_evals(args: argparse.Namespace) -> None:
+    """Print strict deterministic scenario validation as machine-readable JSON."""
+    try:
+        report = validate_evals(ROOT, allow_missing=args.allow_missing)
+    except EvalError as exc:
+        print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
+        raise SystemExit(1) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_smoke(args: argparse.Namespace) -> None:
+    """Validate evidence for scenarios selected through the checked-in registry."""
+    try:
+        scenarios = resolve_smoke_scenarios(ROOT, args.skills)
+        if not scenarios:
+            print(
+                json.dumps(
+                    {
+                        "status": "skipped",
+                        "reason": "no matching smoke scenarios",
+                        "skills": sorted(set(args.skills)),
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+            )
+            return
+        for scenario in scenarios:
+            validate_scenario_evidence(ROOT, scenario)
+    except (EvalError, SmokeRegistryError) as exc:
+        print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
+        raise SystemExit(1) from exc
+    print(
+        json.dumps(
+            {
+                "status": "valid",
+                "skills": sorted(set(args.skills)),
+                "scenarios": [scenario.identifier for scenario in scenarios],
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    )
+
+
+def command_check(_: argparse.Namespace) -> None:
+    """Run the one local all-up gate without depending on Git."""
+    try:
+        report = run_check(ROOT)
+    except CheckError as exc:
+        print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
+        raise SystemExit(1) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
 def _write_current_release(path: Path, release_id: str) -> None:
@@ -638,6 +700,17 @@ def parser() -> argparse.ArgumentParser:
 
     validate = sub.add_parser("validate")
     validate.set_defaults(func=command_validate)
+
+    validate_evals = sub.add_parser("validate-evals")
+    validate_evals.add_argument("--allow-missing", action="store_true")
+    validate_evals.set_defaults(func=command_validate_evals)
+
+    smoke = sub.add_parser("smoke")
+    smoke.add_argument("--skills", nargs="+", required=True)
+    smoke.set_defaults(func=command_smoke)
+
+    check = sub.add_parser("check")
+    check.set_defaults(func=command_check)
 
     build = sub.add_parser("build")
     build.add_argument("--release-id")

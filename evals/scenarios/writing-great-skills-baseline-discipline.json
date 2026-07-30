@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "writing-great-skills-baseline-discipline",
+  "skills": ["my-writing-great-skills"],
+  "assertions": ["skill changes establish and preserve a measurable baseline"],
+  "evidence": {
+    "version": 1,
+    "scenario": "writing-great-skills-baseline-discipline",
+    "sources": [{"path": "skills/my-writing-great-skills/SKILL.md", "sha256": "sha256:19f93d958ee47d8125fa264535b80cca0a73c0c4bc555d97aefc19b5819e071c"}]
+  }
+}

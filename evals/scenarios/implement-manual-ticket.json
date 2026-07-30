@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "implement-manual-ticket",
+  "skills": ["my-implement"],
+  "assertions": ["manual composition returns an explicit invocation and stops"],
+  "evidence": {
+    "version": 1,
+    "scenario": "implement-manual-ticket",
+    "sources": [{"path": "skills/my-implement/SKILL.md", "sha256": "sha256:1f5b41f24d719d1b95091207544aee55555e717808558e6168c5fad5d79bcdcb"}]
+  }
+}

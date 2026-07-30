@@ -476,6 +476,11 @@ def build_release(
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", release_id):
         raise ReleaseError(f"release_id 非法：{release_id}")
     root = (repo_root or skills_dir.parent).resolve()
+    # Keep direct library callers behind the same source/evidence preflight as
+    # the CLI, while allowing deliberately minimal unit fixtures.
+    from .validator import preflight_build
+
+    preflight_build(root, skills_dir)
     release = releases_dir / release_id
     if release.exists():
         raise ReleaseError(f"release 已存在：{release_id}")

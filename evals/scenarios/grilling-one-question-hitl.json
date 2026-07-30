@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "grilling-one-question-hitl",
+  "skills": ["my-grilling"],
+  "assertions": ["grilling asks one question at a time and waits for the human response"],
+  "evidence": {
+    "version": 1,
+    "scenario": "grilling-one-question-hitl",
+    "sources": [{"path": "skills/my-grilling/SKILL.md", "sha256": "sha256:e2836a1be4560c2f75b28af0e84db713e88feb2c677d62550be917853381acce"}]
+  }
+}
