@@ -2887,8 +2887,18 @@ class ToQuestionnaireParityTests(unittest.TestCase):
         self.assertEqual(
             "skills/in-progress/to-questionnaire", entry["upstream_path"]
         )
+        upstream_metadata = (
+            root
+            / ".superpowers/sdd/mattpocock-skills-pinned"
+            / entry["upstream_path"]
+            / "agents/openai.yaml"
+        ).read_text()
+        self.assertIn('display_name: "To Questionnaire"', upstream_metadata)
         expected_mappings = {
-            "SKILL.md#To Questionnaire": ("SKILL.md", "生成发现问卷"),
+            "agents/openai.yaml#interface.display_name": (
+                "SKILL.md",
+                "生成发现问卷",
+            ),
             "SKILL.md#Questionnaire workflow": (
                 "SKILL.md",
                 "生成发现问卷",
@@ -2906,6 +2916,11 @@ class ToQuestionnaireParityTests(unittest.TestCase):
                     self.assertEqual(heading, mapping["local"])
                     self.assertIn(heading, skill)
                     self.assertRegex(mapping["evidence"], r"SKILL\.md#")
+                    if mapping["upstream"] == "agents/openai.yaml#interface.display_name":
+                        self.assertIn(
+                            "metadata-to-local-title translation/adaptation",
+                            mapping["evidence"],
+                        )
         self.assertEqual([], entry["sections"]["missing"])
         self.assertEqual([], entry["sections"]["local_added"])
         self.assertEqual(
@@ -2928,7 +2943,12 @@ class ToQuestionnaireParityTests(unittest.TestCase):
             [
                 {
                     "path": "SKILL.md",
-                    "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
+                    "adaptation": (
+                        "将上游 agents/openai.yaml#interface.display_name（"
+                        "“To Questionnaire”）翻译/适配为本地文档标题 "
+                        "SKILL.md#生成发现问卷；保留本地手动调用元数据；"
+                        "不改变上游方法。"
+                    ),
                 }
             ],
             entry["allowed_local_adaptations"],

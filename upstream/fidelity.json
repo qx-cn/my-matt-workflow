@@ -547,7 +547,7 @@
       "local_skill": "my-to-questionnaire",
       "sections": {
         "upstream": [
-          "SKILL.md#To Questionnaire",
+          "agents/openai.yaml#interface.display_name",
           "SKILL.md#Questionnaire workflow",
           "SKILL.md#Document structure"
         ],
@@ -558,9 +558,9 @@
         ],
         "complete": [
           {
-            "upstream": "SKILL.md#To Questionnaire",
+            "upstream": "agents/openai.yaml#interface.display_name",
             "local": "生成发现问卷",
-            "evidence": "SKILL.md#生成发现问卷将上游 to-questionnaire 文档标题译为本地标题。"
+            "evidence": "agents/openai.yaml#interface.display_name（“To Questionnaire”）到 SKILL.md#生成发现问卷是 metadata-to-local-title translation/adaptation：将上游显示名称译为本地文档标题。"
           },
           {
             "upstream": "SKILL.md#Questionnaire workflow",
@@ -575,9 +575,9 @@
         ],
         "translated": [
           {
-            "upstream": "SKILL.md#To Questionnaire",
+            "upstream": "agents/openai.yaml#interface.display_name",
             "local": "生成发现问卷",
-            "evidence": "SKILL.md#生成发现问卷"
+            "evidence": "agents/openai.yaml#interface.display_name（“To Questionnaire”）到 SKILL.md#生成发现问卷是 metadata-to-local-title translation/adaptation。"
           },
           {
             "upstream": "SKILL.md#Questionnaire workflow",
@@ -603,7 +603,7 @@
       "allowed_local_adaptations": [
         {
           "path": "SKILL.md",
-          "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
+          "adaptation": "将上游 agents/openai.yaml#interface.display_name（“To Questionnaire”）翻译/适配为本地文档标题 SKILL.md#生成发现问卷；保留本地手动调用元数据；不改变上游方法。"
         }
       ],
       "conclusion": "faithful",
