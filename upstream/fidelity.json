@@ -748,13 +748,101 @@
     },
     {
       "upstream_skill": "wizard",
-      "upstream_path": "in-progress/wizard",
+      "upstream_path": "skills/in-progress/wizard",
       "local_skill": "my-wizard",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "agents/openai.yaml#interface.display_name",
+          "SKILL.md#Wizard",
+          "SKILL.md#Process",
+          "SKILL.md#1. Scope the procedure",
+          "SKILL.md#2. Map each stage's journey",
+          "SKILL.md#3. Author the wizard",
+          "SKILL.md#4. Verify and hand off"
+        ],
+        "local": [
+          "SKILL.md#向导",
+          "SKILL.md#向导",
+          "SKILL.md#流程",
+          "SKILL.md#1. 界定流程范围",
+          "SKILL.md#2. 绘制每个阶段的路径",
+          "SKILL.md#3. 编写向导",
+          "SKILL.md#4. 验证并交付"
+        ],
+        "complete": [
+          {
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "向导",
+            "evidence": "agents/openai.yaml#interface.display_name（“Wizard”）到 SKILL.md#向导是 metadata-to-local-title translation/adaptation：将上游显示名称译为本地文档标题。"
+          },
+          {
+            "upstream": "SKILL.md#Wizard",
+            "local": "向导",
+            "evidence": "SKILL.md#向导保留向导的逐步人工流程、URL 打开、值捕获、.env/GitHub Secrets 写入、确认、进度显示、模板库边界与临时默认。"
+          },
+          {
+            "upstream": "SKILL.md#Process",
+            "local": "流程",
+            "evidence": "SKILL.md#流程保留四个顺序阶段和每阶段的完成条件。"
+          },
+          {
+            "upstream": "SKILL.md#1. Scope the procedure",
+            "local": "1. 界定流程范围",
+            "evidence": "SKILL.md#1. 界定流程范围保留先读仓库、配置/迁移检查面、阶段和值确认，以及来源、落点和秘密性完成条件。"
+          },
+          {
+            "upstream": "SKILL.md#2. Map each stage's journey",
+            "local": "2. 绘制每个阶段的路径",
+            "evidence": "SKILL.md#2. 绘制每个阶段的路径保留 URL、操作、值和变量的精确人工路径；未知 UI 或命令时停止并询问或查阅文档，禁止编造。"
+          },
+          {
+            "upstream": "SKILL.md#3. Author the wizard",
+            "local": "3. 编写向导",
+            "evidence": "SKILL.md#3. 编写向导保留复制模板、依赖顺序阶段、库辅助函数、诚实估时、先开 URL、秘密输入、.env/GitHub 写入、不可逆确认和不可修改库。"
+          },
+          {
+            "upstream": "SKILL.md#4. Verify and hand off",
+            "local": "4. 验证并交付",
+            "evidence": "SKILL.md#4. 验证并交付保留 bash -n/shellcheck、chmod、静态追踪、禁止端到端运行、运行说明及可重复路径的提交/README 交接。"
+          }
+        ],
+        "translated": [
+          {
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "向导",
+            "evidence": "agents/openai.yaml#interface.display_name（“Wizard”）到 SKILL.md#向导是 metadata-to-local-title translation/adaptation。"
+          },
+          {
+            "upstream": "SKILL.md#Wizard",
+            "local": "向导",
+            "evidence": "SKILL.md#向导"
+          },
+          {
+            "upstream": "SKILL.md#Process",
+            "local": "流程",
+            "evidence": "SKILL.md#流程"
+          },
+          {
+            "upstream": "SKILL.md#1. Scope the procedure",
+            "local": "1. 界定流程范围",
+            "evidence": "SKILL.md#1. 界定流程范围"
+          },
+          {
+            "upstream": "SKILL.md#2. Map each stage's journey",
+            "local": "2. 绘制每个阶段的路径",
+            "evidence": "SKILL.md#2. 绘制每个阶段的路径"
+          },
+          {
+            "upstream": "SKILL.md#3. Author the wizard",
+            "local": "3. 编写向导",
+            "evidence": "SKILL.md#3. 编写向导"
+          },
+          {
+            "upstream": "SKILL.md#4. Verify and hand off",
+            "local": "4. 验证并交付",
+            "evidence": "SKILL.md#4. 验证并交付"
+          }
+        ],
         "missing": [],
         "local_added": []
       },
@@ -763,10 +851,27 @@
         "agents/openai.yaml": "b7f38980ab3ac03275edeae3209bd80de2592bd4b50b851fcf4cd57c22fff8eb",
         "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit. Support: template.sh."
+      "local_support_files": {
+        "agents/openai.yaml": "6121df8ba3c13d06bbb1f179971de67caca75263caf90dd41e0bf88fe6aba9e7",
+        "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
+      },
+      "local_file_metadata": {
+        "template.sh": {
+          "sha256": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+          "mode": "0644",
+          "source_mode": "0644",
+          "library_unchanged": true
+        }
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "将上游 agents/openai.yaml#interface.display_name（“Wizard”）翻译/适配为本地文档标题 SKILL.md#向导；保留本地手动调用元数据；不改变上游方法。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-7-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；template.sh 的内容哈希和 0644 文件模式均与上游快照相同，未保留项目策略覆盖。"
     },
     {
       "upstream_skill": "writing-great-skills",

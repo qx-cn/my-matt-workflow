@@ -1,0 +1,198 @@
+{
+  "version": 1,
+  "skill": "my-wizard",
+  "source_path": "skills/in-progress/wizard",
+  "rules": [
+    {
+      "id": "confirm-scoped-stage-plan",
+      "when": {
+        "repository_examined": true,
+        "stages_and_values_identified": true,
+        "user_confirmed": true
+      },
+      "requires_constraints": [
+        "read-repository-first",
+        "confirm-stage-order"
+      ],
+      "outcome": {
+        "scope": "ready-to-map"
+      }
+    },
+    {
+      "id": "progress-only-with-concrete-journey",
+      "when": {
+        "stage_journey_precise": true,
+        "url_opened_before_value": true
+      },
+      "requires_constraints": [
+        "stranger-followable-journey",
+        "open-before-asking"
+      ],
+      "outcome": {
+        "next_step": "author-with-template"
+      }
+    },
+    {
+      "id": "stop-on-unknown-or-unsafe-instructions",
+      "when": {
+        "current_ui_or_command_known": false
+      },
+      "requires_constraints": [
+        "ask-or-check-never-invent"
+      ],
+      "outcome": {
+        "stop_and_request_clarification": true,
+        "invent_steps": false
+      }
+    },
+    {
+      "id": "author-from-unchanged-template",
+      "when": {
+        "authoring_wizard": true
+      },
+      "requires_constraints": [
+        "copy-template",
+        "preserve-library"
+      ],
+      "outcome": {
+        "template_library_unchanged": true,
+        "stages_follow_dependency_order": true
+      }
+    },
+    {
+      "id": "complete-with-static-verification",
+      "when": {
+        "script_authored": true,
+        "validation_planned": true
+      },
+      "requires_constraints": [
+        "syntax-check",
+        "do-not-run-end-to-end"
+      ],
+      "outcome": {
+        "run_bash_syntax_check": true,
+        "run_end_to_end": false,
+        "handoff_instructions": true
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "wizard-discovery",
+      "input": {
+        "repository_examined": true,
+        "stages_and_values_identified": true,
+        "user_confirmed": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "read-repository-first",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. 界定流程范围",
+          "text": "先阅读仓库——不要凭空提问"
+        },
+        {
+          "id": "confirm-stage-order",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. 界定流程范围",
+          "text": "向用户展示按顺序排列的阶段及每个阶段产出的值，并确认"
+        }
+      ],
+      "expected": {
+        "scope": "ready-to-map"
+      }
+    },
+    {
+      "id": "prompt-process-progression",
+      "input": {
+        "stage_journey_precise": true,
+        "url_opened_before_value": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "stranger-followable-journey",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#2. 绘制每个阶段的路径",
+          "text": "一个陌生人可以遵循的具体指令"
+        },
+        {
+          "id": "open-before-asking",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. 编写向导",
+          "text": "在请求值之前打开 URL"
+        }
+      ],
+      "expected": {
+        "next_step": "author-with-template"
+      }
+    },
+    {
+      "id": "invalid-or-unsafe-input-stop",
+      "input": {
+        "current_ui_or_command_known": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "ask-or-check-never-invent",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#2. 绘制每个阶段的路径",
+          "text": "永远不要编造可能不存在的步骤"
+        }
+      ],
+      "expected": {
+        "stop_and_request_clarification": true,
+        "invent_steps": false
+      }
+    },
+    {
+      "id": "template-use",
+      "input": {
+        "authoring_wizard": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "copy-template",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. 编写向导",
+          "text": "将 `template.sh` 复制到目标路径"
+        },
+        {
+          "id": "preserve-library",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. 编写向导",
+          "text": "不要改动 `STAGES` 标记上方的库"
+        }
+      ],
+      "expected": {
+        "template_library_unchanged": true,
+        "stages_follow_dependency_order": true
+      }
+    },
+    {
+      "id": "completion",
+      "input": {
+        "script_authored": true,
+        "validation_planned": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "syntax-check",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#4. 验证并交付",
+          "text": "`bash -n <script>`"
+        },
+        {
+          "id": "do-not-run-end-to-end",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#4. 验证并交付",
+          "text": "不要自行端到端运行"
+        }
+      ],
+      "expected": {
+        "run_bash_syntax_check": true,
+        "run_end_to_end": false,
+        "handoff_instructions": true
+      }
+    }
+  ]
+}

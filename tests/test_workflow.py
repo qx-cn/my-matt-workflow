@@ -439,6 +439,7 @@ class ProfileTests(unittest.TestCase):
             "my-triage",
             "my-teach",
             "my-improve-codebase-architecture",
+            "my-wizard",
         }
         for skill_file in root.glob("my-*/SKILL.md"):
             text = skill_file.read_text()
@@ -1632,7 +1633,11 @@ class ReleaseTests(unittest.TestCase):
                 "to-questionnaire-<slug>.md",
                 "只就“发送”采访用户，而不要就主题采访用户",
             ],
-            "my-wizard": ["wizards", "不得回显秘密", "单独确认"],
+            "my-wizard": [
+                "每个阶段按顺序命名",
+                "永远不要编造可能不存在的步骤",
+                "不要改动 `STAGES` 标记上方的库",
+            ],
             "my-edit-article": ["articles", "默认生成新稿", "原地修改"],
         }
 
@@ -1656,6 +1661,7 @@ class ReleaseTests(unittest.TestCase):
                 "my-triage",
                 "my-teach",
                 "my-improve-codebase-architecture",
+                "my-wizard",
             }:
                 continue
             self.assertIn("项目策略优先", skill_file.read_text(), skill_file)
@@ -3023,6 +3029,221 @@ class ToQuestionnaireParityTests(unittest.TestCase):
                         case["input"],
                         case["retrieved_constraints"],
                         fixture["rules"],
+                    ),
+                )
+
+
+class WizardParityTests(unittest.TestCase):
+    @staticmethod
+    def _section_contents(document, source_section):
+        _, separator, heading = source_section.partition("#")
+        if not separator or not heading:
+            return None
+        heading_match = re.search(
+            rf"^(?P<markers>#+)\s+{re.escape(heading)}\s*$",
+            document,
+            re.MULTILINE,
+        )
+        if heading_match is None:
+            return None
+        next_heading = re.search(
+            rf"^#{{1,{len(heading_match['markers'])}}}\s+",
+            document[heading_match.end() :],
+            re.MULTILINE,
+        )
+        section_end = (
+            heading_match.end() + next_heading.start()
+            if next_heading is not None
+            else len(document)
+        )
+        return document[heading_match.end() : section_end]
+
+    @staticmethod
+    def _apply_wizard_rules(input_facts, retrieved_constraints, rules):
+        outcomes = [
+            rule["outcome"]
+            for rule in rules
+            if all(
+                input_facts.get(field) == expected
+                for field, expected in rule["when"].items()
+            )
+            and set(rule["requires_constraints"])
+            <= {constraint["id"] for constraint in retrieved_constraints}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_wizard_restoration_records_complete_translated_parity(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-wizard"
+        skill = (skill_dir / "SKILL.md").read_text()
+        template = skill_dir / "template.sh"
+        metadata = skill_dir / "agents" / "openai.yaml"
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item for item in fidelity["skills"] if item["local_skill"] == "my-wizard"
+        )
+
+        self.assertEqual("skills/in-progress/wizard", entry["upstream_path"])
+        source_dir = (
+            root / ".superpowers/sdd/mattpocock-skills-pinned" / entry["upstream_path"]
+        )
+        source_metadata = (source_dir / "agents/openai.yaml").read_text()
+        self.assertIn('display_name: "Wizard"', source_metadata)
+        expected_mappings = {
+            "agents/openai.yaml#interface.display_name": ("SKILL.md", "向导"),
+            "SKILL.md#Wizard": ("SKILL.md", "向导"),
+            "SKILL.md#Process": ("SKILL.md", "流程"),
+            "SKILL.md#1. Scope the procedure": ("SKILL.md", "1. 界定流程范围"),
+            "SKILL.md#2. Map each stage's journey": (
+                "SKILL.md",
+                "2. 绘制每个阶段的路径",
+            ),
+            "SKILL.md#3. Author the wizard": ("SKILL.md", "3. 编写向导"),
+            "SKILL.md#4. Verify and hand off": ("SKILL.md", "4. 验证并交付"),
+        }
+        for field in ("complete", "translated"):
+            mappings = entry["sections"][field]
+            self.assertEqual(
+                expected_mappings.keys(), {item["upstream"] for item in mappings}
+            )
+            for mapping in mappings:
+                with self.subTest(field=field, section=mapping["upstream"]):
+                    document, heading = expected_mappings[mapping["upstream"]]
+                    self.assertEqual(heading, mapping["local"])
+                    self.assertIn(heading, skill)
+                    self.assertRegex(mapping["evidence"], r"SKILL\.md#")
+                    if mapping["upstream"] == "agents/openai.yaml#interface.display_name":
+                        self.assertIn(
+                            "metadata-to-local-title translation/adaptation",
+                            mapping["evidence"],
+                        )
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual([], entry["sections"]["local_added"])
+        self.assertEqual(
+            {
+                "SKILL.md": (
+                    "e113612095b14178e680022153f2409fb14ea8b992e55d59ad8ce94071ffaf49"
+                ),
+                "agents/openai.yaml": (
+                    "b7f38980ab3ac03275edeae3209bd80de2592bd4b50b851fcf4cd57c22fff8eb"
+                ),
+                "template.sh": (
+                    "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
+                ),
+            },
+            entry["support_files"],
+        )
+        self.assertEqual(
+            hashlib.sha256(metadata.read_bytes()).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertEqual(
+            hashlib.sha256(template.read_bytes()).hexdigest(),
+            entry["local_support_files"]["template.sh"],
+        )
+        self.assertEqual(
+            {
+                "template.sh": {
+                    "sha256": hashlib.sha256(template.read_bytes()).hexdigest(),
+                    "mode": "0644",
+                    "source_mode": "0644",
+                    "library_unchanged": True,
+                }
+            },
+            entry["local_file_metadata"],
+        )
+        self.assertEqual(
+            (source_dir / "template.sh").read_bytes(),
+            template.read_bytes(),
+            "the reusable library and example stages must be restored faithfully",
+        )
+        self.assertEqual(0o644, template.stat().st_mode & 0o777)
+        self.assertEqual(0, subprocess.run(["bash", "-n", template]).returncode)
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": (
+                        "将上游 agents/openai.yaml#interface.display_name（“Wizard”）"
+                        "翻译/适配为本地文档标题 SKILL.md#向导；保留本地手动调用元数据；"
+                        "不改变上游方法。"
+                    ),
+                }
+            ],
+            entry["allowed_local_adaptations"],
+        )
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertEqual(".superpowers/sdd/task-7-report.md", entry["evidence_path"])
+
+        for instruction in (
+            "每个阶段按顺序命名",
+            "若你并不知道当前 UI 或确切命令",
+            "永远不要编造可能不存在的步骤",
+            "不要改动 `STAGES` 标记上方的库",
+            "`bash -n <script>`",
+            "不要自行端到端运行",
+        ):
+            with self.subTest(instruction=instruction):
+                self.assertIn(instruction, skill)
+        self.assertNotIn("项目策略优先", skill)
+
+    def test_wizard_scenarios_apply_section_bounded_constraints(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-wizard"
+        fixture_path = root / "tests" / "fixtures" / "wizard_application.json"
+        self.assertTrue(
+            fixture_path.is_file(), "missing wizard retrieval/application fixture"
+        )
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual("skills/in-progress/wizard", fixture["source_path"])
+        self.assertEqual(
+            {
+                "wizard-discovery",
+                "prompt-process-progression",
+                "invalid-or-unsafe-input-stop",
+                "template-use",
+                "completion",
+            },
+            {case["id"] for case in fixture["scenarios"]},
+        )
+        rules = fixture["rules"]
+        self.assertTrue(rules)
+        rule_ids = set()
+        for rule in rules:
+            self.assertNotIn(rule["id"], rule_ids)
+            rule_ids.add(rule["id"])
+            self.assertTrue(rule["when"])
+            self.assertTrue(rule["requires_constraints"])
+            self.assertIsInstance(rule["outcome"], dict)
+
+        documents = {"SKILL.md": (skill_dir / "SKILL.md").read_text()}
+        for case in fixture["scenarios"]:
+            with self.subTest(scenario=case["id"]):
+                self.assertIsInstance(case["input"], dict)
+                self.assertTrue(case["retrieved_constraints"])
+                constraint_ids = set()
+                for constraint in case["retrieved_constraints"]:
+                    self.assertNotIn(constraint["id"], constraint_ids)
+                    constraint_ids.add(constraint["id"])
+                    self.assertIn(constraint["document"], documents)
+                    self.assertEqual(
+                        constraint["document"],
+                        constraint["source_section"].split("#", 1)[0],
+                    )
+                    section_contents = self._section_contents(
+                        documents[constraint["document"]],
+                        constraint["source_section"],
+                    )
+                    self.assertIsNotNone(section_contents)
+                    self.assertIn(constraint["text"], section_contents)
+                self.assertEqual(
+                    case["expected"],
+                    self._apply_wizard_rules(
+                        case["input"],
+                        case["retrieved_constraints"],
+                        rules,
                     ),
                 )
 
