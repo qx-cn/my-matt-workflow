@@ -11,6 +11,36 @@
         "my-code-review"
       ]
     },
+    "adapter-composition": {
+      "source": "resources/adapters/composition.md",
+      "release_path": "references/shared/adapters/composition.md",
+      "consumers": [
+        "my-grill-me",
+        "my-grill-with-docs",
+        "my-implement"
+      ]
+    },
+    "adapter-ticket-selection": {
+      "source": "resources/adapters/ticket-selection.md",
+      "release_path": "references/shared/adapters/ticket-selection.md",
+      "consumers": [
+        "my-implement"
+      ]
+    },
+    "adapter-work-scope": {
+      "source": "resources/adapters/work-scope.md",
+      "release_path": "references/shared/adapters/work-scope.md",
+      "consumers": [
+        "my-implement"
+      ]
+    },
+    "adapter-artifact-access": {
+      "source": "resources/adapters/artifact-access.md",
+      "release_path": "references/shared/adapters/artifact-access.md",
+      "consumers": [
+        "my-grill-with-docs"
+      ]
+    },
     "policies": {
       "source_dir": "policies",
       "release_path": "references/policies",

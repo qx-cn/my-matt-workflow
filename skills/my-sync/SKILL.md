@@ -19,5 +19,3 @@ disable-model-invocation: true
 7. 验证全部通过后构建新 release；用户确认并安装成功后，才运行 `workflow.py snapshot` 更新上游快照基线。若已明确接受上游 Skill 删除，使用 `snapshot --allow-deletions`。
 
 逐项决策和验证是硬门禁，即使用户要求全自动或跳过测试也不能省略。不自动合并，不在未完成决策时更新 manifest。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

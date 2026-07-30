@@ -113,5 +113,3 @@ disable-model-invocation: true
 
 - **在给定依赖条件下深化一组模块**——见 [DEEPENING.md](DEEPENING.md)：依赖类别、Seam 纪律，以及“替换而不是叠加”的测试。
 - **探索备选 Interface**——见 [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md)：并行启动子代理，以多种根本不同的方式设计 Interface，然后按 Depth、Locality 和 Seam 位置比较。
-
-> 项目策略优先：本仓库的已解析生效策略优先于本 Skill；缺省按 strict-control；它不改变上述上游设计方法。

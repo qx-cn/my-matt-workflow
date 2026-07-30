@@ -55,5 +55,3 @@ disable-model-invocation: true
 3. **源于真实权衡**：存在真实替代方案，并因具体原因选择其一。
 
 缺任何一项就不写 ADR。使用 [ADR-FORMAT.md](ADR-FORMAT.md) 的格式先写个人候选；写回团队 ADR 目录前遵守项目写入策略。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

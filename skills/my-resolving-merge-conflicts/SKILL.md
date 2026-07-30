@@ -15,5 +15,3 @@ disable-model-invocation: true
 5. 仅在项目 `commit_policy` 允许时完成 merge/rebase 所需的 commit 或 continue；未经确认不得 push。
 
 始终禁止 Force Push、改写 Git 历史、`git reset --hard`、`git clean`、自动 `merge --abort` 或 `rebase --abort` 等破坏性操作。完成时报告已解决项、验证证据和回滚方式。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

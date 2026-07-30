@@ -13,5 +13,3 @@ disable-model-invocation: true
 5. 报告 release ID 和所选 Agent 根目录中 `my-matt-workflow/install-state.json` 的安装状态。
 
 安装器只管理 manifest 中列出的 `my-*` Skills，不删除其他个人 Skills。校验失败时停止，不覆盖现有安装。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

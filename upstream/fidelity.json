@@ -152,28 +152,20 @@
           }
         ],
         "missing": [],
-        "local_added": [
-          "SKILL.md#项目策略优先"
-        ]
+        "local_added": []
       },
       "support_files": {
         "SKILL.md": "b1a134ada29cbfded84bc9a7f93356ab7a3d7f800edf1f541a2a964118ad45a7",
         "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
       },
       "local_support_files": {
-        "SKILL.md": "50d23a5df9783adeb7c544b1fcadf8978f56e5de0a53340e1f96ef4ca4b12f03",
+        "SKILL.md": "93a4f3bdd9a5d12148a292f56aa1ead2483d6db4e5d333cd90bc9470f55155f5",
         "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local router adds workflow-specific entrances and composition policy dispatch; its policy footer can weaken the upstream uninterrupted-context and explicit-stop guidance."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/ask-matt-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#Ask Matt",
@@ -352,7 +344,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -361,19 +352,13 @@
         "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
       },
       "local_support_files": {
-        "SKILL.md": "3514c7d81f5da0d5f7e41bd9fd9205aac9e0b529ea982d93be9389c5bdacbce0",
+        "SKILL.md": "8ccc8b6accdd5d3c4c3bbd5a91242f8e882ab2a1c9bacc3726e24032414c3d86",
         "agents/openai.yaml": "527fc83e8ad11a49feddf81b5e464c05b4f951c74171f04bfc6491fd09d25799"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local fallback to an implementation-start record and policy-controlled parallelism can bypass the upstream requirement to ask for an omitted fixed point and to run both independent review axes."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/code-review-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -613,6 +598,9 @@
         "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f"
       },
       "local_support_files": {
+        "DEEPENING.md": "b8f5f13090b8705eeb3d2f48deb75ddda9430ca8f3f9d5d49fc255434b6020bc",
+        "DESIGN-IT-TWICE.md": "607c1779b276bbd47c2d551ed037a4276bc125cf9c64e72c2f9eec28875e2531",
+        "SKILL.md": "31cede6df66469feece31c8a68bc7e2774a6758ad0096e7b216095e3a3bd76bb",
         "agents/openai.yaml": "0c24ffe790dc0aa8291bc52076db14f8a718b96cc7ab402381a26ee81ce579a9"
       },
       "allowed_local_adaptations": [
@@ -942,7 +930,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -952,20 +939,14 @@
         "scripts/hitl-loop.template.sh": "b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8"
       },
       "local_support_files": {
-        "SKILL.md": "e32fe1da4a59a7e39c79d3cad1ed974b1c44b0fe633940eaaa90a763e9166402",
+        "SKILL.md": "f708461f77854006652d2394446fb17a8985985f36a3253ea1e11677e5ee6300",
         "agents/openai.yaml": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
         "scripts/hitl-loop.template.sh": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local autonomous limited-evidence mode permits work after the upstream hard no-loop stop condition, so the adapter must be bounded."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/diagnosing-bugs-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#Diagnosing Bugs",
@@ -1291,7 +1272,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -1302,6 +1282,9 @@
         "agents/openai.yaml": "f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b"
       },
       "local_support_files": {
+        "ADR-FORMAT.md": "d032f6a96b24664ce37c8e1d3b083b3090bd39e9377e532a85b04b220454ef9a",
+        "CONTEXT-FORMAT.md": "3502f543e3cda988f510e5f04605171eef298487113ea2e68ebf4a2777ab4780",
+        "SKILL.md": "b4f380f42f90dc5b3fcc91c6efcf175f776e96604f6cad83f19678cee1b3989a",
         "agents/openai.yaml": "3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb"
       },
       "allowed_local_adaptations": [
@@ -1334,10 +1317,6 @@
             "CONTEXT-FORMAT.md#Single vs multi-context repos"
           ],
           "adaptation": "项目配置的正式文档位置和 topic-local 个人术语表/ADR 候选可保留按需创建、术语表与实现决策分离；但它改变了上游 root CONTEXT.md/docs/adr 契约，并允许无人值守计划在上下文归属不清时记录假设，须在 Plan 2 明确边界。"
-        },
-        {
-          "path": "SKILL.md#项目策略优先",
-          "adaptation": "本地项目策略和绝对安全底线入口。其“询问、确认、停止或限制后续工作”可服从策略的覆盖会削弱上游不清楚上下文时必须询问及即时捕获模型的约束，须在 Plan 2 改写为不削弱上游方法的 adapter。"
         },
         {
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
@@ -1388,28 +1367,20 @@
           }
         ],
         "missing": [],
-        "local_added": [
-          "SKILL.md#项目策略优先"
-        ]
+        "local_added": []
       },
       "support_files": {
         "SKILL.md": "e10fba546f45357fe0aaa7494b9e186910d4525818d19f9b2ad6f28cc506aa5e",
         "agents/openai.yaml": "075b2f1305938182c3aa4aa9b139fff0b7cfacb33b774c2e3e42180794e87394"
       },
       "local_support_files": {
-        "SKILL.md": "b76b886f8a5664ff3ea7ecf2041a62bc0c9f93c5fd6703fe4acaefdc32b6e995",
+        "SKILL.md": "06cd7bf72c6e6aa510567aee8b639416e803c816ed97e26d5dfd5144e80f1a7f",
         "agents/openai.yaml": "4873c8a1310b0159b404b42de01ba069b899dda4a4d2bd214c6881bc6305d45d"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local default-new-draft and approval flow extend the upstream article-editing process; the unbounded policy footer can weaken its section-confirmation gate."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/edit-article-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -1428,21 +1399,81 @@
       "upstream_path": "productivity/grill-me",
       "local_skill": "my-grill-me",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description"
+        ],
+        "local": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description",
+          "SKILL.md#本地适配"
+        ],
+        "complete": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "Pinned core flow is translated in full; see the Plan 2 evidence file."
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "agents/openai.yaml#interface.display_name",
+            "evidence": "Byte-identical runtime interface metadata."
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.short_description",
+            "local": "agents/openai.yaml#interface.short_description",
+            "evidence": "Byte-identical runtime interface metadata."
+          }
+        ],
+        "translated": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "Pinned core flow is translated in full; see the Plan 2 evidence file."
+          }
+        ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#本地适配"
+        ]
       },
       "support_files": {
         "SKILL.md": "6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54",
         "agents/openai.yaml": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "adapter-rework-required",
-      "evidence_path": null,
-      "notes": "Plan 2: adapter bloat; local adapter rework later (≤15 lines)."
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#本地适配",
+          "classification": "local-only-adaptation",
+          "adaptation": "One consumer-specific adapter pointer preserves manual-only local workflow controls without changing the upstream core."
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": "upstream/evidence/grill-me-plan-2.md",
+      "notes": "Plan 2 restored the pinned grilling entry point and retained only the declared composition adapter.",
+      "local_support_files": {
+        "SKILL.md": "537eedbe0037835eb01229bed83cfcfbe4f4aa534f4ed58572ed00c150340090",
+        "agents/openai.yaml": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b"
+      },
+      "section_mappings": [
+        {
+          "upstream": "SKILL.md#document-body",
+          "local": "SKILL.md#document-body",
+          "evidence": "Core flow translation and adapter separation are recorded in the Plan 2 evidence file."
+        },
+        {
+          "upstream": "agents/openai.yaml#interface.display_name",
+          "local": "agents/openai.yaml#interface.display_name",
+          "evidence": "Runtime metadata is byte-identical."
+        },
+        {
+          "upstream": "agents/openai.yaml#interface.short_description",
+          "local": "agents/openai.yaml#interface.short_description",
+          "evidence": "Runtime metadata is byte-identical."
+        }
+      ]
     },
     {
       "upstream_skill": "grilling",
@@ -1487,7 +1518,6 @@
         ],
         "missing": [],
         "local_added": [
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -1496,13 +1526,10 @@
         "agents/openai.yaml": "cf29b9a8dbf35a58a908a6ca4f64dcd86c2b2130291eee0a78b9f706b138825b"
       },
       "local_support_files": {
+        "SKILL.md": "e2836a1be4560c2f75b28af0e84db713e88feb2c677d62550be917853381acce",
         "agents/openai.yaml": "fd9b95d5468600190f9cedf23a575fc71ffa2fde03b5d55bacd2fee2b27063a6"
       },
       "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "adaptation": "本地项目策略入口及绝对安全底线；此适配会令上游的无条件确认门受生效策略覆盖，因此必须在 Plan 2 重做为不削弱上游门控的适配。"
-        },
         {
           "path": "agents/openai.yaml#interface.short_description",
           "adaptation": "本地 short_description 改为 “Run a focused design interview”，缩窄了上游 “Stress-test thinking one question at a time” 的范围；这是需在 Plan 2 重做的适配差异，不计为 local-only 或完整翻译。"
@@ -1521,21 +1548,81 @@
       "upstream_path": "engineering/grill-with-docs",
       "local_skill": "my-grill-with-docs",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description"
+        ],
+        "local": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description",
+          "SKILL.md#本地适配"
+        ],
+        "complete": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "Pinned core flow is translated in full; see the Plan 2 evidence file."
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "agents/openai.yaml#interface.display_name",
+            "evidence": "Byte-identical runtime interface metadata."
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.short_description",
+            "local": "agents/openai.yaml#interface.short_description",
+            "evidence": "Byte-identical runtime interface metadata."
+          }
+        ],
+        "translated": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "Pinned core flow is translated in full; see the Plan 2 evidence file."
+          }
+        ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#本地适配"
+        ]
       },
       "support_files": {
         "SKILL.md": "610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165",
         "agents/openai.yaml": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "adapter-rework-required",
-      "evidence_path": null,
-      "notes": "Plan 2: adapter bloat; local adapter rework later (≤15 lines)."
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#本地适配",
+          "classification": "local-only-adaptation",
+          "adaptation": "One consumer-specific adapter pointer preserves manual-only local workflow controls without changing the upstream core."
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": "upstream/evidence/grill-with-docs-plan-2.md",
+      "notes": "Plan 2 restored the pinned grilling-with-domain-modeling entry point and retained only declared adapters.",
+      "local_support_files": {
+        "SKILL.md": "6eca3c5c6d82e7ad4b63fa321bbdefc8047da06e4e20496aaf680cca84aac005",
+        "agents/openai.yaml": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9"
+      },
+      "section_mappings": [
+        {
+          "upstream": "SKILL.md#document-body",
+          "local": "SKILL.md#document-body",
+          "evidence": "Core flow translation and adapter separation are recorded in the Plan 2 evidence file."
+        },
+        {
+          "upstream": "agents/openai.yaml#interface.display_name",
+          "local": "agents/openai.yaml#interface.display_name",
+          "evidence": "Runtime metadata is byte-identical."
+        },
+        {
+          "upstream": "agents/openai.yaml#interface.short_description",
+          "local": "agents/openai.yaml#interface.short_description",
+          "evidence": "Runtime metadata is byte-identical."
+        }
+      ]
     },
     {
       "upstream_skill": "handoff",
@@ -1576,28 +1663,20 @@
           }
         ],
         "missing": [],
-        "local_added": [
-          "SKILL.md#项目策略优先"
-        ]
+        "local_added": []
       },
       "support_files": {
         "SKILL.md": "57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc",
         "agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28"
       },
       "local_support_files": {
-        "SKILL.md": "90f5867be75fa09e403c77ef574dedef50aaf7cb3aceef9b2a63f53f9ea9b328",
+        "SKILL.md": "1f9903a3ad5835787675fb64ac601d816d995794b648a9516ca05d5b0692fcd3",
         "agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local project-directory ownership and filename convention replace the upstream OS-temporary-directory destination and add policy-controlled behavior."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/handoff-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -1616,21 +1695,81 @@
       "upstream_path": "engineering/implement",
       "local_skill": "my-implement",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description"
+        ],
+        "local": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description",
+          "SKILL.md#本地适配"
+        ],
+        "complete": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "Pinned core flow is translated in full; see the Plan 2 evidence file."
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "agents/openai.yaml#interface.display_name",
+            "evidence": "Byte-identical runtime interface metadata."
+          },
+          {
+            "upstream": "agents/openai.yaml#interface.short_description",
+            "local": "agents/openai.yaml#interface.short_description",
+            "evidence": "Byte-identical runtime interface metadata."
+          }
+        ],
+        "translated": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "Pinned core flow is translated in full; see the Plan 2 evidence file."
+          }
+        ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#本地适配"
+        ]
       },
       "support_files": {
         "SKILL.md": "6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3",
         "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "adapter-rework-required",
-      "evidence_path": null,
-      "notes": "Plan 2: adapter bloat; local adapter rework later (≤15 lines)."
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#本地适配",
+          "classification": "local-only-adaptation",
+          "adaptation": "One consumer-specific adapter pointer preserves manual-only local workflow controls without changing the upstream core."
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": "upstream/evidence/implement-plan-2.md",
+      "notes": "Plan 2 restored the pinned upstream implementation flow and moved local controls into declared adapters.",
+      "local_support_files": {
+        "SKILL.md": "6deaccce278ab7b50761b9aaa5d26e82db84ad45a18faf71dc17f5b76ed397e0",
+        "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
+      },
+      "section_mappings": [
+        {
+          "upstream": "SKILL.md#document-body",
+          "local": "SKILL.md#document-body",
+          "evidence": "Core flow translation and adapter separation are recorded in the Plan 2 evidence file."
+        },
+        {
+          "upstream": "agents/openai.yaml#interface.display_name",
+          "local": "agents/openai.yaml#interface.display_name",
+          "evidence": "Runtime metadata is byte-identical."
+        },
+        {
+          "upstream": "agents/openai.yaml#interface.short_description",
+          "local": "agents/openai.yaml#interface.short_description",
+          "evidence": "Runtime metadata is byte-identical."
+        }
+      ]
     },
     {
       "upstream_skill": "improve-codebase-architecture",
@@ -1832,6 +1971,8 @@
         "agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
       },
       "local_support_files": {
+        "HTML-REPORT.md": "0ee9a2e4d6547ead25b3ba6802a9a71f5f5946c8019ef903e7bfbaf6038ec85b",
+        "SKILL.md": "41097259973e49e2c64f7bad286530249c11bca9e31ce7fc2635c52647c13789",
         "agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
       },
       "allowed_local_adaptations": [
@@ -2201,7 +2342,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -2213,20 +2353,14 @@
       },
       "local_support_files": {
         "LOGIC.md": "7949b2624159bdc2ebb8d1e1c00de22cdd9d1ca6409b137f8dab320f77a595be",
-        "SKILL.md": "fdc4a4fc6e4bf46090b8ba3d4c3aa7a44c8562a868bf06669d315a8b83db14c9",
+        "SKILL.md": "5345e2e348136390c865e52987f99046fd36f47ac18f80afd5362498bb8034eb",
         "UI.md": "e8869abc5a4e7a619a903ebe52c6fa9915696499e1dc659df439ea3d86c968b1",
         "agents/openai.yaml": "6b2d4fa3345bda08b144147a563dafeb1e42d7bd47898d1c21f1493845f22d6a"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local storage and capture policy replace the upstream required throwaway-branch commit with policy-controlled retention and must retain the no-production/prototype boundary."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/prototype-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "LOGIC.md#Logic Prototype",
@@ -2411,7 +2545,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -2420,19 +2553,13 @@
         "agents/openai.yaml": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
       },
       "local_support_files": {
-        "SKILL.md": "946a9c280b76f4c837c804a52b9fecf24886b339d373c70ff7309fb3a76b9c7f",
+        "SKILL.md": "e033541e50a59f7476cb6c8e8f8c79fee2bc2e1ff087a00dbaee82faddaf82f8",
         "agents/openai.yaml": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local workflow omits the upstream mandatory background-agent delegation and adds data-handling and writeback constraints."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/research-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -2487,7 +2614,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -2496,19 +2622,13 @@
         "agents/openai.yaml": "a1f4f96838f2ed6282eb28abbbf99029cb8fadce552baf53da90a025b8bffddf"
       },
       "local_support_files": {
-        "SKILL.md": "c17ce4b533dd6f6685b6f599c86a8577333b33c22641a735701e8fe1b308b773",
+        "SKILL.md": "b52a56999e7106416e266d84fc387d2bc1709ebc85fd6a440424134d38f0c953",
         "agents/openai.yaml": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local approval-first and destructive-command safeguards intentionally change the upstream always-resolve/finish-merge behavior and require an explicit adapter boundary."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/resolving-merge-conflicts-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -2647,7 +2767,6 @@
         "missing": [],
         "local_added": [
           "SKILL.md#frontmatter.disable-model-invocation",
-          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
       },
@@ -2658,10 +2777,10 @@
         "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
       },
       "local_support_files": {
-        "SKILL.md": "0bbe3c5acbdff94058b10e4202274696caf19b5737d6b152db4252866b4d2684",
+        "SKILL.md": "8d87bd834157f98fe04d6d5b22f396719ed6429192f2db8774e17e614f2f5c09",
+        "agents/openai.yaml": "00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c",
         "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
-        "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a",
-        "agents/openai.yaml": "00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c"
+        "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
       },
       "allowed_local_adaptations": [
         {
@@ -2684,11 +2803,6 @@
           "path": "SKILL.md#frontmatter.disable-model-invocation",
           "classification": "local-only-adaptation",
           "adaptation": "本地新增 `disable-model-invocation: true`，与 runtime policy 共同表达 manual-only 调用行为。"
-        },
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "local-only-adaptation",
-          "adaptation": "本地项目策略入口会让询问、确认和停止受生效策略覆盖；这可能削弱上游未确认 seam 不得写测试的硬门控，须在 Plan 2 限定为不改变该门控。"
         },
         {
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
@@ -3061,6 +3175,11 @@
         "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
       },
       "local_support_files": {
+        "GLOSSARY-FORMAT.md": "0adaa5a845dfcc1af249c44d35f430d8f4874a35a749c72dde933fad1c674900",
+        "LEARNING-RECORD-FORMAT.md": "08a81a101ae3914014169f5951ffb51f556d38cf0cbc4607f32abdff29b37fe6",
+        "MISSION-FORMAT.md": "34795a146494816b55a6ef7d83c62624e14f59b599850f02fce59944d3751947",
+        "RESOURCES-FORMAT.md": "e66202357468ab6d49a0c9ba911adf1ca5de2f8eafbb6bf3f8d363f378b6e3b6",
+        "SKILL.md": "c64a4a3a8adfa1131b0c08f1b2259c5ef0d55b3090bdb8f45f920883402e4ef3",
         "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
       },
       "allowed_local_adaptations": [
@@ -3130,6 +3249,7 @@
         "agents/openai.yaml": "9e8a06c38c8842eea8d4922cb9d1ead8e3ace647bab259b943c994a1b4742bc2"
       },
       "local_support_files": {
+        "SKILL.md": "b676e85da4a88be4ee41d187edad7534d7c038f3d33f898fa516accbcd6a4be1",
         "agents/openai.yaml": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436"
       },
       "allowed_local_adaptations": [
@@ -3265,28 +3385,20 @@
           }
         ],
         "missing": [],
-        "local_added": [
-          "SKILL.md#项目策略优先"
-        ]
+        "local_added": []
       },
       "support_files": {
         "SKILL.md": "267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7",
         "agents/openai.yaml": "1c5b4d1e3d8e52287ef19cc2742fdbbfae1914ac75d33af3e4c8174f08cc55bb"
       },
       "local_support_files": {
-        "SKILL.md": "35fbee96bcc6d6b8759aa91759de8f18baf8e8da4bc71d2c9b4023409dd03aeb",
+        "SKILL.md": "c7443f4e08ae47491bbcefc45873787bb3c0583fa11fede6e6701a4660716c58",
         "agents/openai.yaml": "1c5b4d1e3d8e52287ef19cc2742fdbbfae1914ac75d33af3e4c8174f08cc55bb"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local backend and external-write policy add routing behavior; its policy footer can change the upstream seam-confirmation and publication sequence."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/to-spec-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#Process",
@@ -3506,28 +3618,20 @@
           }
         ],
         "missing": [],
-        "local_added": [
-          "SKILL.md#项目策略优先"
-        ]
+        "local_added": []
       },
       "support_files": {
         "SKILL.md": "5ecdf1d4df8a360ed39df21a2347f97ba177afd449a577da4f6b6ea8e1ebb808",
         "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
       },
       "local_support_files": {
-        "SKILL.md": "8dc60c65d779479b9cfdbf35c1bee8a083e11a8388bb5f06f432265b1cb1ef84",
+        "SKILL.md": "26120e980a549a2d73903e54e03cf5b02a708c1a651a73a3574873e605e9ec13",
         "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local backend-specific paths, confirmation gates, and humanizer step replace the upstream tracker contract and must preserve the vertical-slice and blocking-edge method."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/to-tickets-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#To Tickets",
@@ -3967,6 +4071,9 @@
         "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
       },
       "local_support_files": {
+        "AGENT-BRIEF.md": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+        "OUT-OF-SCOPE.md": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+        "SKILL.md": "24eb3dcaf4d11e5c9f047e2c8d392fc3caec025a82cb9568345ccb62750495cd",
         "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
       },
       "allowed_local_adaptations": [
@@ -4222,28 +4329,20 @@
           }
         ],
         "missing": [],
-        "local_added": [
-          "SKILL.md#项目策略优先"
-        ]
+        "local_added": []
       },
       "support_files": {
         "SKILL.md": "257e40665b28ae959ffdcb97d7a72b074360f4a3d201bd84786505308546e434",
         "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
       },
       "local_support_files": {
-        "SKILL.md": "683c24880e57644e9efa0b2269dc8eb5fbc8c07df562bdaccedf8c98e62ce446",
+        "SKILL.md": "b3e6f4ff33af1acb008a9879510934e93093c0a97356c961dc7d40da753a83c9",
         "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
       },
-      "allowed_local_adaptations": [
-        {
-          "path": "SKILL.md#项目策略优先",
-          "classification": "adapter-rework-required",
-          "adaptation": "The local local-markdown tracker fallback and policy-controlled subagent/transition behavior adapt upstream tracker operations and require bounded preservation of one-ticket and decision-only stops."
-        }
-      ],
-      "conclusion": "adapter-rework-required",
+      "allowed_local_adaptations": [],
+      "conclusion": "faithful",
       "evidence_path": "upstream/evidence/wayfinder-audit.md",
-      "notes": "Task 12 audit: source method is materially represented, but the listed local adapter delta requires Plan 2 rework; no restoration performed.",
+      "notes": "Plan 2 removed the duplicated policy footer; no remaining local adaptation is recorded.",
       "section_mappings": [
         {
           "upstream": "SKILL.md#frontmatter.name",
@@ -4448,6 +4547,7 @@
         "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
       },
       "local_support_files": {
+        "SKILL.md": "302c1d390eb392aaac572b41f277ba5744393974de213db5117e6eb06c9e4cda",
         "agents/openai.yaml": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
         "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
       },
@@ -4947,6 +5047,8 @@
         "agents/openai.yaml": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d"
       },
       "local_support_files": {
+        "GLOSSARY.md": "48299e78d471d1627434289757f72987c3df28312e90b410a00572e47fa3600b",
+        "SKILL.md": "19f93d958ee47d8125fa264535b80cca0a73c0c4bc555d97aefc19b5819e071c",
         "agents/openai.yaml": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d"
       },
       "allowed_local_adaptations": [

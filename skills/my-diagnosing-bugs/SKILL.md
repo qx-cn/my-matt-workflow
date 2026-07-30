@@ -137,5 +137,3 @@ disable-model-invocation: true
 - [ ] 已在按项目策略允许创建的 Commit / PR 信息中说明最终正确的假设，使下一位调试者能够学习。
 
 然后追问：什么能预防这个 Bug？若答案涉及架构变化（没有好的测试 seam、调用方纠缠、隐藏耦合），在修复完成后将具体发现交给 `my-improve-codebase-architecture`；此时掌握的信息比修复前更多。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

@@ -20,5 +20,3 @@ disable-model-invocation: true
 `--apply` 是硬门禁：即使用户要求赶时间或跳过询问，也必须先展示最终摘要并获得一次新的明确确认；最初的 setup 请求不算这次确认。
 
 从当前 Agent 安装根目录中的 `my-matt-workflow/install-state.json` 读取来源；不得假设特定 Agent 品牌或用户目录。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

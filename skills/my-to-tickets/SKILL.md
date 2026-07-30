@@ -99,5 +99,3 @@ disable-model-invocation: true
 </issue-template>
 
 无论采用何种形式，都避免具体文件路径和代码片段，它们很快会过期。例外是原型产生了比文字更精确的决策片段（状态机、reducer、schema、类型形状）：可内嵌并简要标注来自原型，但只保留决策丰富部分，而非可运行 demo。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。

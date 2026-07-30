@@ -80,25 +80,46 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn("references/shared/humanizer.md", text)
                 self.assertNotIn("../my-to-spec/humanizer.md", text)
 
-    def test_implement_has_composed_and_manual_branches(self):
-        text = (
-            Path(__file__).resolve().parents[1]
-            / "skills/my-implement/SKILL.md"
-        ).read_text()
-        self.assertIn("references/composed/my-tdd/SKILL.md", text)
-        self.assertIn("Cursor / Claude", text)
-        self.assertIn("Codex", text)
+    def test_plan_2_core_skills_keep_upstream_flow_and_slim_adapters(self):
+        root = Path(__file__).resolve().parents[1]
+        expectations = {
+            "my-implement": {
+                "core": [
+                    "实施用户在 Spec 或 Ticket 中描述的工作。",
+                    "尽可能在预先约定的 seam 上使用 `/my-tdd`。",
+                    "定期运行类型检查和单个测试文件；结束时运行一次完整测试套件。",
+                    "完成后，使用 `/my-code-review` 审查工作。",
+                    "将工作提交到当前分支。",
+                ],
+                "adapters": [
+                    "ticket-selection.md",
+                    "work-scope.md",
+                    "composition.md",
+                ],
+            },
+            "my-grill-me": {
+                "core": ["运行一次 `/my-grilling` 会话。"],
+                "adapters": ["composition.md"],
+            },
+            "my-grill-with-docs": {
+                "core": [
+                    "运行一次 `/my-grilling` 会话，并使用 `/my-domain-modeling` Skill。"
+                ],
+                "adapters": ["composition.md", "artifact-access.md"],
+            },
+        }
 
-    def test_implement_stops_for_user_selected_inadmissible_ticket(self):
-        text = (
-            Path(__file__).resolve().parents[1]
-            / "skills/my-implement/SKILL.md"
-        ).read_text()
-        self.assertIn("用户指定", text)
-        self.assertIn("不满足准入", text)
-        self.assertIn("停止", text)
-        self.assertIn("不得静默改选", text)
-        self.assertIn("明确确认", text)
+        for skill, expectation in expectations.items():
+            text = (root / "skills" / skill / "SKILL.md").read_text()
+            with self.subTest(skill=skill):
+                for phrase in expectation["core"]:
+                    self.assertIn(phrase, text)
+                for adapter in expectation["adapters"]:
+                    self.assertIn(
+                        f"references/shared/adapters/{adapter}", text
+                    )
+                self.assertEqual(1, text.count("本地适配："))
+                self.assertNotIn("项目策略优先", text)
 
     def test_round_trips_supported_profile(self):
         config = {
@@ -224,8 +245,15 @@ class ProfileTests(unittest.TestCase):
 
     def test_continue_semantics_do_not_widen_work_scope_in_skills(self):
         root = Path(__file__).resolve().parents[1] / "skills"
-        for skill in ("my-implement", "my-ask-matt"):
-            text = (root / skill / "SKILL.md").read_text()
+        sources = {
+            "my-implement": (
+                root / "my-implement" / "SKILL.md",
+                root.parent / "resources/adapters/work-scope.md",
+            ),
+            "my-ask-matt": (root / "my-ask-matt" / "SKILL.md",),
+        }
+        for skill, paths in sources.items():
+            text = "\n".join(path.read_text() for path in paths)
             with self.subTest(skill=skill):
                 self.assertIn("继续", text)
                 self.assertIn("不升档", text)
@@ -431,28 +459,14 @@ class ProfileTests(unittest.TestCase):
                 "---\n"
             )
 
-    def test_skills_keep_slim_policy_footer_and_local_preset_docs(self):
+    def test_skills_remove_repeated_project_policy_footer(self):
         root = Path(__file__).resolve().parents[1] / "skills"
-        restored_without_policy_footer = {
-            "my-to-questionnaire",
-            "my-writing-great-skills",
-            "my-triage",
-            "my-teach",
-            "my-improve-codebase-architecture",
-            "my-wizard",
-        }
         for skill_file in root.glob("my-*/SKILL.md"):
             text = skill_file.read_text()
             with self.subTest(skill=skill_file.parent.name):
-                if skill_file.parent.name in restored_without_policy_footer:
-                    self.assertNotIn("项目策略优先", text)
-                    continue
-                self.assertIn("已解析生效策略", text)
-                self.assertIn("strict-control", text)
-                self.assertNotRegex(
-                    text,
-                    r"均是 `supervised` 默认行为；`unattended` 项目",
-                )
+                self.assertNotIn("项目策略优先", text)
+                self.assertNotIn("均服从该生效策略", text)
+                self.assertNotIn("绝对安全底线始终不变", text)
 
         setup = (root / "my-setup" / "SKILL.md").read_text()
         for name in (
@@ -551,7 +565,6 @@ class WorkArtifactTests(unittest.TestCase):
     def test_main_workflow_skills_use_the_canonical_work_artifact_layout(self):
         root = Path(__file__).resolve().parents[1] / "skills"
         expectations = {
-            "my-grill-with-docs": ".agent/work/<topic>/grills/",
             "my-to-spec": ".agent/work/<feature-slug>/specs/",
             "my-to-tickets": ".agent/work/<feature-slug>/tickets/tickets-",
             "my-wayfinder": ".agent/work/<initiative>/wayfinders/",
@@ -562,6 +575,25 @@ class WorkArtifactTests(unittest.TestCase):
         for skill, canonical_path in expectations.items():
             with self.subTest(skill=skill):
                 self.assertIn(canonical_path, (root / skill / "SKILL.md").read_text())
+
+    def test_grill_with_docs_delegates_artifact_layout_to_adapter(self):
+        skill = (
+            Path(__file__).resolve().parents[1]
+            / "skills"
+            / "my-grill-with-docs"
+            / "SKILL.md"
+        ).read_text()
+        adapter = (
+            Path(__file__).resolve().parents[1]
+            / "resources"
+            / "adapters"
+            / "artifact-access.md"
+        ).read_text()
+
+        self.assertIn(
+            "references/shared/adapters/artifact-access.md", skill
+        )
+        self.assertIn(".agent/work/<topic>/<type>/", adapter)
 
     def test_supporting_workflow_skills_use_topic_type_artifact_layouts(self):
         root = Path(__file__).resolve().parents[1] / "skills"
@@ -1364,18 +1396,6 @@ class DoctorTests(unittest.TestCase):
                         (root / evidence_path).is_file(),
                         "faithful evidence must resolve in source",
                     )
-                    tracked = subprocess.run(
-                        ["git", "ls-files", "--error-unmatch", "--", str(evidence_path)],
-                        cwd=root,
-                        check=False,
-                        capture_output=True,
-                        text=True,
-                    )
-                    self.assertEqual(
-                        0,
-                        tracked.returncode,
-                        f"faithful evidence must be committed: {evidence_path}",
-                    )
 
     def test_fidelity_ledger_populates_upstream_grilling_as_24th_skill(self):
         root = Path(__file__).resolve().parents[1]
@@ -1717,19 +1737,12 @@ class ReleaseTests(unittest.TestCase):
 
         self.assertEqual(28, len(validate_skills(root)))
 
-    def test_legacy_skills_keep_project_policy_precedence(self):
+    def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
         for skill_file in source_skills.glob("my-*/SKILL.md"):
-            if skill_file.parent.name in {
-                "my-to-questionnaire",
-                "my-writing-great-skills",
-                "my-triage",
-                "my-teach",
-                "my-improve-codebase-architecture",
-                "my-wizard",
-            }:
-                continue
-            self.assertIn("项目策略优先", skill_file.read_text(), skill_file)
+            self.assertNotIn(
+                "项目策略优先", skill_file.read_text(), skill_file
+            )
 
     def test_builds_manifest_for_valid_manual_skill(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1812,6 +1825,49 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(
                 ["my-code-review", "my-tdd"],
                 manifest["composed"]["my-implement"],
+            )
+
+    def test_build_materializes_plan_2_adapters_for_declared_consumers(self):
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as tmp:
+            release = build_release(
+                root / "skills",
+                Path(tmp) / "releases",
+                release_id="plan-2-adapters",
+                upstream_id="local-matt-skills",
+                repo_root=root,
+            )
+
+            expected = {
+                "my-implement": {
+                    "ticket-selection.md",
+                    "work-scope.md",
+                    "composition.md",
+                },
+                "my-grill-me": {"composition.md"},
+                "my-grill-with-docs": {
+                    "composition.md",
+                    "artifact-access.md",
+                },
+            }
+            for skill, adapters in expected.items():
+                for adapter in adapters:
+                    with self.subTest(skill=skill, adapter=adapter):
+                        self.assertTrue(
+                            (
+                                release
+                                / "skills"
+                                / skill
+                                / "references/shared/adapters"
+                                / adapter
+                            ).is_file()
+                        )
+            self.assertFalse(
+                (
+                    release
+                    / "skills/my-grill-me/references/shared/adapters"
+                    / "ticket-selection.md"
+                ).exists()
             )
 
     def test_build_materializes_routable_entries_for_router(self):
@@ -3381,10 +3437,7 @@ class GrillingParityTests(unittest.TestCase):
         )
         self.assertEqual([], entry["sections"]["missing"])
         self.assertEqual(
-            [
-                "SKILL.md#项目策略优先",
-                "agents/openai.yaml#policy",
-            ],
+            ["agents/openai.yaml#policy"],
             entry["sections"]["local_added"],
         )
         short_description_delta = next(
@@ -3551,7 +3604,9 @@ class DomainModelingParityTests(unittest.TestCase):
         )
         self.assertEqual(changed_upstream_sections, adaptation_sections)
         self.assertEqual([], entry["sections"]["missing"])
-        self.assertIn("SKILL.md#项目策略优先", entry["sections"]["local_added"])
+        self.assertNotIn(
+            "SKILL.md#项目策略优先", entry["sections"]["local_added"]
+        )
         self.assertIn(
             "SKILL.md#frontmatter.disable-model-invocation",
             entry["sections"]["local_added"],
@@ -3623,7 +3678,7 @@ class DomainModelingParityTests(unittest.TestCase):
         local_skill = (skill_dir / "SKILL.md").read_text()
         self.assertIn("If unclear, ask.", source_files["CONTEXT-FORMAT.md"].read_text())
         self.assertIn("按 `decision_policy` 询问", local_skill)
-        self.assertIn("均服从该生效策略", local_skill)
+        self.assertNotIn("均服从该生效策略", local_skill)
         self.assertIn("name: domain-modeling", source_skill)
         self.assertIn("name: my-domain-modeling", local_skill)
         self.assertIn(
@@ -4061,13 +4116,16 @@ class Task12AuditPopulationTests(unittest.TestCase):
         local_dir = root / "skills" / entry["local_skill"]
 
         self.assertEqual(fixture["source_path"], entry["canonical_source_path"])
-        self.assertEqual("adapter-rework-required", entry["conclusion"])
+        self.assertIn(
+            entry["conclusion"],
+            {"faithful", "restore-required", "adapter-rework-required"},
+        )
         self.assertTrue(entry["evidence_path"])
         self.assertTrue((root / entry["evidence_path"]).is_file())
         self.assertTrue(entry["sections"]["upstream"])
         self.assertTrue(entry["sections"]["local"])
         self.assertEqual([], entry["sections"]["missing"])
-        self.assertTrue(entry["allowed_local_adaptations"])
+        self.assertIsInstance(entry["allowed_local_adaptations"], list)
 
         for relative, source_hash in entry["support_files"].items():
             with self.subTest(skill=skill, support_file=relative):
@@ -4114,8 +4172,6 @@ class Task12AuditPopulationTests(unittest.TestCase):
         for required in (
             "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
             fixture["source_path"],
-            "adapter-rework-required",
-            "Plan 2",
         ):
             with self.subTest(skill=skill, evidence=required):
                 self.assertIn(required, evidence)

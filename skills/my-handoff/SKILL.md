@@ -20,5 +20,3 @@ disable-model-invocation: true
 已有产物只引用，不复制正文。移除密钥、密码、个人身份和不必要的企业内部信息。
 
 `my-handoff` 是项目交接目录的唯一管理者。项目内按需求 topic 分目录保存：`.agent/work/<topic>/handoffs/handoffs-<topic>-<time-or-sequence>.md`；`<topic>` 使用简短的 kebab-case 名称，例如 `requirements-reset`。同一需求的后续交接只新增新文件，不覆盖历史记录，不同需求不得混放。没有项目时保存到操作系统临时目录，而非当前工作区。不要自动删除旧交接；只创建新文档并在新文档中引用前序交接。
-
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。
