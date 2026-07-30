@@ -226,6 +226,53 @@ class CheckGateTests(unittest.TestCase):
                     run_check(root)
             self.assertTrue(release.is_dir())
 
+    def test_canonical_build_rejects_missing_eval_and_smoke_inputs(self):
+        def remove_evidence(root: Path) -> None:
+            scenario = (
+                root / "evals" / "scenarios" / "implement-automatic-ticket.json"
+            )
+            raw = json.loads(scenario.read_text())
+            del raw["evidence"]
+            scenario.write_text(json.dumps(raw))
+
+        cases = (
+            (
+                "evals",
+                lambda root: shutil.rmtree(root / "evals"),
+                "scenario directory is missing",
+            ),
+            (
+                "scenarios",
+                lambda root: shutil.rmtree(root / "evals" / "scenarios"),
+                "scenario directory is missing",
+            ),
+            (
+                "evidence",
+                remove_evidence,
+                "evidence fields are invalid",
+            ),
+            (
+                "smoke-registry",
+                lambda root: (root / "evals" / "smoke-registry.json").unlink(),
+                "invalid smoke registry JSON",
+            ),
+        )
+        for name, remove_input, error in cases:
+            with self.subTest(input=name), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp) / "repository"
+                self._source_copy(root)
+                remove_input(root)
+
+                with self.assertRaisesRegex(ValidationError, error):
+                    build_release(
+                        root / "skills",
+                        root / "releases",
+                        release_id=f"missing-{name}",
+                        upstream_id="local-matt-skills",
+                        repo_root=root,
+                    )
+                self.assertFalse((root / "releases" / f"missing-{name}").exists())
+
     def test_workflow_check_succeeds_from_complete_non_git_copy(self):
         if os.environ.get("MY_MATT_NESTED_CHECK"):
             self.skipTest("avoids recursively checking the copied repository")

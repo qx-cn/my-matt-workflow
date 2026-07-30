@@ -165,17 +165,29 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
 
 
 def preflight_build(repo_root: Path, skills_dir: Path) -> None:
-    """Use complete source gates when present, preserving minimal build fixtures."""
+    """Require all source gates for canonical package builds."""
     root = repo_root.resolve()
-    if (root / "evals").is_dir():
-        validate_repository(root)
-        from .evals import validate_evals
-        from .smoke_registry import SmokeRegistryError, validate_smoke_registry
-
-        validate_evals(root)
-        try:
-            validate_smoke_registry(root)
-        except SmokeRegistryError as exc:
-            raise ValidationError(str(exc)) from exc
+    canonical = all(
+        (
+            (root / "composition" / "manifest.json").is_file(),
+            (root / "resources" / "manifest.json").is_file(),
+        )
+    )
+    if not canonical:
+        # Deliberately minimal library fixtures may include a focused
+        # composition manifest but not the complete package manifests.
+        validate_skills(skills_dir, repo_root=root)
         return
-    validate_skills(skills_dir, repo_root=root)
+
+    validate_repository(root)
+    from .evals import EvalError, validate_evals
+    from .smoke_registry import SmokeRegistryError, validate_smoke_registry
+
+    try:
+        validate_evals(root)
+    except EvalError as exc:
+        raise ValidationError(str(exc)) from exc
+    try:
+        validate_smoke_registry(root)
+    except SmokeRegistryError as exc:
+        raise ValidationError(str(exc)) from exc
