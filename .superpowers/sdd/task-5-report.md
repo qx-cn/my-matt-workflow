@@ -19,6 +19,9 @@ DONE
 | RED | Added `ImproveCodebaseArchitectureParityTests`, then ran `python3 -m unittest tests.test_workflow.ImproveCodebaseArchitectureParityTests -v` → failed as expected: the ledger path lacked the required `skills/` prefix and `architecture_application.json` was absent. |
 | GREEN | Restored both Chinese documents, fidelity mappings, and the structured fixture; the same focused command → `Ran 2 tests ... OK`. |
 | Regression | The first full suite exposed three obsolete local-adapter assertions requiring a policy footer and `.agent/work/...` report path that conflict with the pinned upstream method. They now explicitly classify this restored skill alongside the other source-faithful restorations. Final `python3 -m unittest discover -s tests -p 'test_*.py' -v` → `Ran 96 tests ... OK` (1.805s). |
+| Review remediation RED | Extended the focused test first, then ran `python3 -m unittest tests.test_workflow.ImproveCodebaseArchitectureParityTests -v` → failed as expected: `SKILL.md` still instructed Tailwind/Mermaid, the ledger scoped the exception only to `HTML-REPORT.md`, and the fixture was version 1. |
+| Review remediation GREEN | Updated only the report instruction, its one bounded ledger exception, and the task-local fixture/test; the same focused command → `Ran 2 tests ... OK` (0.002s). |
+| Review remediation regression | `python3 -m unittest discover -s tests -p 'test_*.py' -v` → `Ran 96 tests ... OK` (2.510s). |
 
 ## Parity evidence
 
@@ -30,11 +33,11 @@ DONE
 
 ## Offline HTML adaptation
 
-The single bounded adaptation is explicit in the fidelity ledger: upstream Tailwind and Mermaid CDN dependencies are replaced with inline CSS/SVG and static local diagrams. This preserves the report’s single-file, visual, candidate-card, before/after, and vocabulary semantics while satisfying the local offline-report requirement; no remote scripts or CDN URLs remain.
+The single bounded adaptation is explicit in the fidelity ledger and covers only the report instruction in `SKILL.md` plus `HTML-REPORT.md`: upstream Tailwind and Mermaid CDN dependencies are replaced with inline CSS/SVG and static local diagrams. This preserves the report’s single-file, visual, candidate-card, before/after, and vocabulary semantics while satisfying the local offline-report requirement; no remote scripts or CDN URLs remain.
 
 ## Retrieval/application fixture
 
-`tests/fixtures/architecture_application.json` contains four structured scenarios. The focused test verifies that every cited Chinese constraint is retrievable from its declared restored document, belongs to a source section, and produces exactly one expected outcome when its input facts match:
+`tests/fixtures/architecture_application.json` contains four structured scenarios and independent task-local rules. The focused test verifies that every cited Chinese constraint is retrievable from its declared restored document and source section, then derives exactly one expected outcome from the scenario input facts and required retrieved constraints rather than its fixture ID:
 
 - `exploration-before-recommendation` → widens a scattered scan only after the glossary/ADRs and friction exploration are complete.
 - `yagni-rejection` → rejects a candidate when deletion does not concentrate complexity.

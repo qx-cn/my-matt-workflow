@@ -365,13 +365,13 @@
           "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
         },
         {
-          "path": "HTML-REPORT.md",
-          "adaptation": "为满足本地离线报告要求，保留所有上游语义，同时将 CDN 依赖改为内联 CSS/SVG 与本地可用的静态图示。"
+          "path": "SKILL.md#2. 将候选项呈现为 HTML 报告, HTML-REPORT.md",
+          "adaptation": "单一离线报告适配：为满足本地离线报告要求，保留所有上游语义，同时将 Tailwind/Mermaid 的远程依赖改为内联 CSS/SVG 与本地可用的静态图示。"
         }
       ],
       "conclusion": "faithful",
       "evidence_path": ".superpowers/sdd/task-5-report.md",
-      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。HTML 报告的唯一语义中立适配是移除 CDN，改为离线内联 CSS/SVG。"
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。唯一语义中立适配仅限报告呈现：SKILL.md 的报告指令与 HTML-REPORT.md 均使用离线内联 CSS/SVG。"
     },
     {
       "upstream_skill": "prototype",

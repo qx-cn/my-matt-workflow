@@ -2572,16 +2572,40 @@ class TeachParityTests(unittest.TestCase):
 
 class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
     @staticmethod
-    def _apply_architecture_constraint_mapping(case):
+    def _section_contents(document, source_section):
+        _, separator, heading = source_section.partition("#")
+        if not separator or not heading:
+            return None
+        heading_match = re.search(
+            rf"^(?P<markers>#+)\s+{re.escape(heading)}\s*$",
+            document,
+            re.MULTILINE,
+        )
+        if heading_match is None:
+            return None
+        next_heading = re.search(
+            rf"^#{{1,{len(heading_match['markers'])}}}\s+",
+            document[heading_match.end() :],
+            re.MULTILINE,
+        )
+        section_end = (
+            heading_match.end() + next_heading.start()
+            if next_heading is not None
+            else len(document)
+        )
+        return document[heading_match.end() : section_end]
+
+    @staticmethod
+    def _apply_architecture_rules(input_facts, retrieved_constraints, rules):
         outcomes = [
-            mapping["outcome"]
-            for mapping in case["constraint_mapping"]
+            rule["outcome"]
+            for rule in rules
             if all(
-                case["input"].get(field) == expected
-                for field, expected in mapping["when"].items()
+                input_facts.get(field) == expected
+                for field, expected in rule["when"].items()
             )
-            and set(mapping["constraints"])
-            <= {constraint["id"] for constraint in case["retrieved_constraints"]}
+            and set(rule["requires_constraints"])
+            <= {constraint["id"] for constraint in retrieved_constraints}
         ]
         if len(outcomes) != 1:
             return None
@@ -2683,10 +2707,11 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
                     "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
                 },
                 {
-                    "path": "HTML-REPORT.md",
+                    "path": "SKILL.md#2. 将候选项呈现为 HTML 报告, HTML-REPORT.md",
                     "adaptation": (
-                        "为满足本地离线报告要求，保留所有上游语义，同时将 CDN "
-                        "依赖改为内联 CSS/SVG 与本地可用的静态图示。"
+                        "单一离线报告适配：为满足本地离线报告要求，保留所有上游"
+                        "语义，同时将 Tailwind/Mermaid 的远程依赖改为内联 CSS/SVG "
+                        "与本地可用的静态图示。"
                     ),
                 },
             ],
@@ -2697,6 +2722,18 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
 
         skill = documents["SKILL.md"]
         report = documents["HTML-REPORT.md"]
+        report_instructions = self._section_contents(
+            skill,
+            "SKILL.md#2. 将候选项呈现为 HTML 报告",
+        )
+        self.assertIsNotNone(report_instructions)
+        self.assertNotRegex(
+            report_instructions,
+            r"(?i)tailwind|mermaid|cdn|远程(?:依赖|脚本)",
+        )
+        for offline_instruction in ("内联 CSS", "内联 SVG", "静态图示"):
+            with self.subTest(offline_instruction=offline_instruction):
+                self.assertIn(offline_instruction, report_instructions)
         for instruction in (
             "范围先于扫描——YAGNI",
             "删除测试",
@@ -2733,6 +2770,7 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
             "skills/engineering/improve-codebase-architecture",
             fixture["source_path"],
         )
+        self.assertEqual(2, fixture["version"])
         self.assertEqual(
             {
                 "exploration-before-recommendation",
@@ -2742,6 +2780,16 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
             },
             {case["id"] for case in fixture["scenarios"]},
         )
+        self.assertTrue(fixture["rules"])
+        rules = fixture["rules"]
+        rule_ids = set()
+        for rule in rules:
+            self.assertNotIn(rule["id"], rule_ids)
+            rule_ids.add(rule["id"])
+            self.assertTrue(rule["when"])
+            self.assertTrue(rule["requires_constraints"])
+            self.assertNotIn("id", rule["when"])
+            self.assertIsInstance(rule["outcome"], dict)
         documents = {
             "SKILL.md": (skill_dir / "SKILL.md").read_text(),
             "HTML-REPORT.md": (skill_dir / "HTML-REPORT.md").read_text(),
@@ -2756,19 +2804,26 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
                     constraint_ids.add(constraint["id"])
                     self.assertIn(constraint["document"], documents)
                     self.assertTrue(constraint["source_section"])
+                    self.assertEqual(
+                        constraint["document"],
+                        constraint["source_section"].split("#", 1)[0],
+                    )
+                    section_contents = self._section_contents(
+                        documents[constraint["document"]],
+                        constraint["source_section"],
+                    )
+                    self.assertIsNotNone(section_contents)
                     self.assertIn(
                         constraint["text"],
-                        documents[constraint["document"]],
+                        section_contents,
                     )
-                self.assertTrue(case["constraint_mapping"])
-                for mapping in case["constraint_mapping"]:
-                    self.assertTrue(mapping["when"])
-                    self.assertTrue(mapping["constraints"])
-                    self.assertTrue(set(mapping["constraints"]) <= constraint_ids)
-                    self.assertEqual(case["expected"], mapping["outcome"])
                 self.assertEqual(
                     case["expected"],
-                    self._apply_architecture_constraint_mapping(case),
+                    self._apply_architecture_rules(
+                        case["input"],
+                        case["retrieved_constraints"],
+                        rules,
+                    ),
                 )
 
 
