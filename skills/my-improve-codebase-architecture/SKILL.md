@@ -1,20 +1,71 @@
 ---
 name: my-improve-codebase-architecture
-description: 发现并比较能提升模块深度、局部性和可测试性的架构机会
+description: 扫描代码库中的深化机会，以可视化 HTML 报告呈现，并深挖用户选择的候选项。
 disable-model-invocation: true
 ---
 
-# My Improve Codebase Architecture
+# 改进代码库架构
 
-1. 读取项目配置、领域来源、ADR 和近期变更热点。
-2. `composition_policy: automatic` 时读取并遵守 [my-codebase-design](references/composed/my-codebase-design/SKILL.md)，再围绕用户指定区域或高频变更区域探索理解摩擦；`manual` 时输出下一条显式调用并停止：Cursor / Claude 使用 `/my-codebase-design`，Codex 使用 `$my-codebase-design`。
-   - 一个概念是否散落在许多浅 Module；
-   - Interface 是否接近 Implementation 的复杂度；
-   - 变更和测试是否缺少 Locality；
-   - 是否存在真正值得建立的 Seam。
-3. 对候选项应用删除测试，并标注 `Strong`、`Worth exploring` 或 `Speculative`。
-4. 在 `.agent/work/<topic>/architecture-reports/architecture-reports-<topic>-<time-or-sequence>.html` 生成完全离线、自包含的 HTML 报告；使用内联 CSS/SVG，不加载 CDN，不外传代码信息。
-5. 每个候选包含文件、问题、方案、收益、前后关系图和与 ADR 的冲突。
-6. 只推荐候选，不直接重构。用户选择候选且当前已批准流程包含下一阶段时，`automatic` 读取并遵守 [my-grill-with-docs](references/composed/my-grill-with-docs/SKILL.md)；`manual` 输出下一条显式调用并停止：Cursor / Claude 使用 `/my-grill-with-docs`，Codex 使用 `$my-grill-with-docs`。当前流程未批准下一阶段时只建议，不扩展范围。
+找出架构摩擦，并提出**深化机会**——将浅模块转为深模块的重构。目标是可测试性和 AI 可导航性。
 
-> 项目策略优先：读取 `.agent/matt-workflow.md` 的已解析生效策略；缺键或空值按 `strict-control`。本 Skill 中要求询问、确认、停止或限制后续工作的表述，除绝对安全底线外，均服从该生效策略。绝对安全底线始终不变：不得 Force Push、改写 Git 历史、执行破坏性 Git 操作，或向外部服务发送敏感信息。
+此命令由项目的领域模型提供信息，并建立在共享的设计词汇之上：
+
+- 运行 `/my-codebase-design` Skill，使用其架构词汇（**模块**、**接口**、**深度**、**接缝**、**适配器**、**杠杆**、**局部性**）和原则（删除测试、“接口就是测试面”、“一个适配器是假设接缝，两个才是真实接缝”）。每条建议都必须严格使用这些术语——不要漂移为“组件”、“服务”、“API”或“边界”。
+- `CONTEXT.md` 中的领域语言为好的接缝命名；`docs/adr/` 中的 ADR 记录了此命令不应重新争论的决策。
+
+## 流程
+
+### 1. 探索
+
+**范围先于扫描——YAGNI。**深化模块的价值在于让未来对它的变更更容易，因此要额外关注代码库中近期变动的部分。先决定*看哪里*，再开始看：
+
+- 如果用户给出了方向——某个模块、子系统或痛点——就采用它，并跳过下面的推断。
+- 否则，回溯一段足够长的提交历史（`git log --oneline`），找出代码库的热点——反复出现的文件和区域——并让这些路径优先引导你的注意力。若变更分散且没有明显热点，就扩大范围。
+
+先阅读项目的领域词汇表（`CONTEXT.md`）以及所触及区域中的所有 ADR。
+
+然后使用 Agent 工具的 `subagent_type=Explore` 探索代码库。不要遵循僵化的启发式规则——自然地探索，并记录你在哪里感到理解摩擦：
+
+- 理解一个概念是否需要在许多小模块之间来回跳转？
+- 哪些模块是**浅的**——接口几乎和实现一样复杂？
+- 哪些纯函数只是为了可测试性而被抽取，但真正的 Bug 藏在调用方式中（没有**局部性**）？
+- 哪些紧密耦合的模块跨接缝泄漏？
+- 代码库的哪些部分没有测试，或难以通过当前接口测试？
+
+对任何疑似浅薄的对象应用**删除测试**：删除它会集中复杂度，还是只会移动复杂度？“是，会集中”才是你要找的信号。
+
+### 2. 将候选项呈现为 HTML 报告
+
+将单个自包含 HTML 文件写入操作系统临时目录，避免任何内容落入仓库。通过 `$TMPDIR` 解析临时目录，回退到 `/tmp`（Windows 上为 `%TEMP%`），并写入 `<tmpdir>/architecture-review-<timestamp>.html`，使每次运行都有新文件。为用户打开它——Linux 使用 `xdg-open <path>`、macOS 使用 `open <path>`、Windows 使用 `start <path>`——并告知其绝对路径。
+
+报告使用 Tailwind 进行布局和样式，并在图形、流程或时序最能可靠表达结构时使用 Mermaid。将 Mermaid 与手工 CSS/SVG 图示混用——关系呈图状时使用 Mermaid（调用图、依赖、时序）；需要更具编辑感的视觉效果时使用手工 div/SVG（面积图、横截面、折叠动画）。每个候选项都要有前后对比图。要有视觉表达。
+
+每个候选项都要渲染一张卡片，包含：
+
+- **文件**——涉及哪些文件/模块
+- **问题**——当前架构为何造成摩擦
+- **方案**——会改变什么的通俗说明
+- **收益**——以局部性、杠杆及测试如何改善来说明
+- **前后对比图**——并排的手工绘制图示，展示浅薄性与深化结果
+- **推荐强度**——`Strong`、`Worth exploring`、`Speculative` 之一，并渲染为徽章
+
+在报告末尾添加**首要推荐**部分：最先应处理哪个候选项，以及原因。
+
+**领域使用 `CONTEXT.md` 词汇，架构使用 `/my-codebase-design` 词汇。**若 `CONTEXT.md` 定义了“Order”，应说“Order 接入模块”，不要说“FooBarHandler”，也不要说“Order 服务”。
+
+**ADR 冲突**：只有当候选项的摩擦真实到值得重开 ADR 时，才将它与现有 ADR 的矛盾呈现出来。要在卡片中清晰标记（例如警告提示：*“与 ADR-0007 矛盾——但因……值得重新讨论”*）。不要列出每一种被 ADR 禁止的理论性重构。
+
+完整的 HTML 骨架、图示模式和样式指引见 [HTML-REPORT.md](HTML-REPORT.md)。
+
+不要先提出接口。文件写好后，询问用户：“你想探索其中哪一个？”
+
+### 3. 深挖循环
+
+用户选择候选项后，运行 `/my-grilling` Skill，与其一起走过决策树——约束、依赖、深化模块的形状、接缝后放什么、哪些测试仍能存活。
+
+当决策逐步明确时，副作用应内联发生——一路运行 `/my-domain-modeling` Skill，使领域模型保持最新：
+
+- **要以 `CONTEXT.md` 中没有的概念为深化模块命名？**添加该术语到 `CONTEXT.md`。若文件不存在，按需创建。
+- **在对话中明确了一个模糊术语？**立刻在 `CONTEXT.md` 中更新它。
+- **用户以承重理由拒绝了候选项？**提出 ADR，表述为：“要我把它记录为 ADR 吗？这样未来的架构审查不再重新建议它。”只在该理由确实会让未来探索者避免重新提出同一建议时才提出；跳过短暂理由（“现在不值得做”）和不言自明的理由。
+- **想探索深化模块的替代接口？**运行 `/my-codebase-design` Skill，并使用其设计两次的并行子代理模式。

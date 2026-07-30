@@ -303,13 +303,51 @@
     },
     {
       "upstream_skill": "improve-codebase-architecture",
-      "upstream_path": "engineering/improve-codebase-architecture",
+      "upstream_path": "skills/engineering/improve-codebase-architecture",
       "local_skill": "my-improve-codebase-architecture",
       "sections": {
         "upstream": [],
         "local": [],
-        "complete": [],
-        "translated": [],
+        "complete": [
+          {"upstream": "SKILL.md#Improve Codebase Architecture", "local": "改进代码库架构", "evidence": "SKILL.md#改进代码库架构保留深化机会、可测试性与 AI 可导航性的目标。"},
+          {"upstream": "SKILL.md#Process", "local": "流程", "evidence": "SKILL.md#流程保留探索、报告和深挖的顺序。"},
+          {"upstream": "SKILL.md#1. Explore", "local": "1. 探索", "evidence": "SKILL.md#1. 探索保留 YAGNI、热点推断、CONTEXT/ADR 前置阅读、探索摩擦与删除测试。"},
+          {"upstream": "SKILL.md#2. Present candidates as an HTML report", "local": "2. 将候选项呈现为 HTML 报告", "evidence": "SKILL.md#2. 将候选项呈现为 HTML 报告保留候选卡、强度、图示、ADR 冲突和用户选择的停止条件。"},
+          {"upstream": "SKILL.md#3. Grilling loop", "local": "3. 深挖循环", "evidence": "SKILL.md#3. 深挖循环保留决策树、CONTEXT 更新、承重拒绝理由的 ADR 提议和替代接口探索。"},
+          {"upstream": "HTML-REPORT.md#HTML Report Format", "local": "HTML 报告格式", "evidence": "HTML-REPORT.md#HTML 报告格式保留单文件临时报告和混合图示语义；离线实现见适配说明。"},
+          {"upstream": "HTML-REPORT.md#Scaffold", "local": "骨架", "evidence": "HTML-REPORT.md#骨架保留 HTML 结构、标题、候选区、首要推荐区和图示样式层。"},
+          {"upstream": "HTML-REPORT.md#Header", "local": "页首", "evidence": "HTML-REPORT.md#页首保留仓库、日期、图例和直接进入候选项的约束。"},
+          {"upstream": "HTML-REPORT.md#Candidate card", "local": "候选项卡片", "evidence": "HTML-REPORT.md#候选项卡片保留标题、强度、依赖类别、文件、前后图、问题、方案、收益和 ADR 提示。"},
+          {"upstream": "HTML-REPORT.md#Diagram patterns", "local": "图示模式", "evidence": "HTML-REPORT.md#图示模式保留按候选项选择并混合模式的约束。"},
+          {"upstream": "HTML-REPORT.md#Mermaid graph (the workhorse for dependencies / call flow)", "local": "Mermaid 图（依赖关系与调用流程的主力）", "evidence": "HTML-REPORT.md#Mermaid 图（依赖关系与调用流程的主力）保留调用、依赖、泄漏和深模块的图状表达。"},
+          {"upstream": "HTML-REPORT.md#Hand-built boxes-and-arrows (when Mermaid's layout fights you)", "local": "手工绘制的方框与箭头（当 Mermaid 布局不适用时）", "evidence": "HTML-REPORT.md#手工绘制的方框与箭头（当 Mermaid 布局不适用时）保留 div 与内联 SVG 的编辑性图示。"},
+          {"upstream": "HTML-REPORT.md#Cross-section (good for layered shallowness)", "local": "横截面图（适合分层的浅薄性）", "evidence": "HTML-REPORT.md#横截面图（适合分层的浅薄性）保留六薄层到一厚层的对比。"},
+          {"upstream": "HTML-REPORT.md#Mass diagram (good for \"interface as wide as implementation\")", "local": "面积图（适合“接口与实现一样宽”）", "evidence": "HTML-REPORT.md#面积图（适合“接口与实现一样宽”）保留接口与实现面积表达深浅。"},
+          {"upstream": "HTML-REPORT.md#Call-graph collapse", "local": "调用图折叠", "evidence": "HTML-REPORT.md#调用图折叠保留嵌套调用树向深模块折叠的前后对比。"},
+          {"upstream": "HTML-REPORT.md#Style guidance", "local": "样式指南", "evidence": "HTML-REPORT.md#样式指南保留编辑感、色彩、尺寸、示意标签和静态报告约束。"},
+          {"upstream": "HTML-REPORT.md#Top recommendation section", "local": "首要推荐部分", "evidence": "HTML-REPORT.md#首要推荐部分保留大卡片、候选名称、理由与锚点链接。"},
+          {"upstream": "HTML-REPORT.md#Tone", "local": "语气", "evidence": "HTML-REPORT.md#语气保留术语白名单/禁用替代词、示例、收益表述和删减规则。"}
+        ],
+        "translated": [
+          {"upstream": "SKILL.md#Improve Codebase Architecture", "local": "改进代码库架构", "evidence": "SKILL.md#改进代码库架构"},
+          {"upstream": "SKILL.md#Process", "local": "流程", "evidence": "SKILL.md#流程"},
+          {"upstream": "SKILL.md#1. Explore", "local": "1. 探索", "evidence": "SKILL.md#1. 探索"},
+          {"upstream": "SKILL.md#2. Present candidates as an HTML report", "local": "2. 将候选项呈现为 HTML 报告", "evidence": "SKILL.md#2. 将候选项呈现为 HTML 报告"},
+          {"upstream": "SKILL.md#3. Grilling loop", "local": "3. 深挖循环", "evidence": "SKILL.md#3. 深挖循环"},
+          {"upstream": "HTML-REPORT.md#HTML Report Format", "local": "HTML 报告格式", "evidence": "HTML-REPORT.md#HTML 报告格式"},
+          {"upstream": "HTML-REPORT.md#Scaffold", "local": "骨架", "evidence": "HTML-REPORT.md#骨架"},
+          {"upstream": "HTML-REPORT.md#Header", "local": "页首", "evidence": "HTML-REPORT.md#页首"},
+          {"upstream": "HTML-REPORT.md#Candidate card", "local": "候选项卡片", "evidence": "HTML-REPORT.md#候选项卡片"},
+          {"upstream": "HTML-REPORT.md#Diagram patterns", "local": "图示模式", "evidence": "HTML-REPORT.md#图示模式"},
+          {"upstream": "HTML-REPORT.md#Mermaid graph (the workhorse for dependencies / call flow)", "local": "Mermaid 图（依赖关系与调用流程的主力）", "evidence": "HTML-REPORT.md#Mermaid 图（依赖关系与调用流程的主力）"},
+          {"upstream": "HTML-REPORT.md#Hand-built boxes-and-arrows (when Mermaid's layout fights you)", "local": "手工绘制的方框与箭头（当 Mermaid 布局不适用时）", "evidence": "HTML-REPORT.md#手工绘制的方框与箭头（当 Mermaid 布局不适用时）"},
+          {"upstream": "HTML-REPORT.md#Cross-section (good for layered shallowness)", "local": "横截面图（适合分层的浅薄性）", "evidence": "HTML-REPORT.md#横截面图（适合分层的浅薄性）"},
+          {"upstream": "HTML-REPORT.md#Mass diagram (good for \"interface as wide as implementation\")", "local": "面积图（适合“接口与实现一样宽”）", "evidence": "HTML-REPORT.md#面积图（适合“接口与实现一样宽”）"},
+          {"upstream": "HTML-REPORT.md#Call-graph collapse", "local": "调用图折叠", "evidence": "HTML-REPORT.md#调用图折叠"},
+          {"upstream": "HTML-REPORT.md#Style guidance", "local": "样式指南", "evidence": "HTML-REPORT.md#样式指南"},
+          {"upstream": "HTML-REPORT.md#Top recommendation section", "local": "首要推荐部分", "evidence": "HTML-REPORT.md#首要推荐部分"},
+          {"upstream": "HTML-REPORT.md#Tone", "local": "语气", "evidence": "HTML-REPORT.md#语气"}
+        ],
         "missing": [],
         "local_added": []
       },
@@ -318,10 +356,22 @@
         "SKILL.md": "4b4cb798c3863d5b6f5c0b4604af1ecb5beb6df82553c972898a91ba38bcf289",
         "agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit. HTML-REPORT.md offline exception deferred to later plan."
+      "local_support_files": {
+        "agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
+        },
+        {
+          "path": "HTML-REPORT.md",
+          "adaptation": "为满足本地离线报告要求，保留所有上游语义，同时将 CDN 依赖改为内联 CSS/SVG 与本地可用的静态图示。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-5-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。HTML 报告的唯一语义中立适配是移除 CDN，改为离线内联 CSS/SVG。"
     },
     {
       "upstream_skill": "prototype",

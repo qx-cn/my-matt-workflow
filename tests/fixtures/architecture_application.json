@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "source_path": "skills/engineering/improve-codebase-architecture",
+  "scenarios": [
+    {
+      "id": "exploration-before-recommendation",
+      "input": {
+        "user_named_direction": false,
+        "hot_spot_found": false,
+        "context_and_adrs_read": true,
+        "exploration_completed": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "widen-scattered-scan",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. Explore",
+          "text": "若变更分散且没有明显热点，就扩大范围。"
+        },
+        {
+          "id": "read-domain-and-adrs-first",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. Explore",
+          "text": "先阅读项目的领域词汇表（`CONTEXT.md`）以及所触及区域中的所有 ADR。"
+        },
+        {
+          "id": "explore-friction-before-candidates",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. Explore",
+          "text": "自然地探索，并记录你在哪里感到理解摩擦"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "user_named_direction": false,
+            "hot_spot_found": false,
+            "context_and_adrs_read": true,
+            "exploration_completed": true
+          },
+          "constraints": [
+            "widen-scattered-scan",
+            "read-domain-and-adrs-first",
+            "explore-friction-before-candidates"
+          ],
+          "outcome": {
+            "scan_scope": "widened",
+            "may_recommend": true
+          }
+        }
+      ],
+      "expected": {
+        "scan_scope": "widened",
+        "may_recommend": true
+      }
+    },
+    {
+      "id": "yagni-rejection",
+      "input": {
+        "deletion_concentrates_complexity": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "deletion-test-signal",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#1. Explore",
+          "text": "“是，会集中”才是你要找的信号。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "deletion_concentrates_complexity": false
+          },
+          "constraints": [
+            "deletion-test-signal"
+          ],
+          "outcome": {
+            "recommendation": "reject",
+            "reason": "deletion-does-not-concentrate-complexity"
+          }
+        }
+      ],
+      "expected": {
+        "recommendation": "reject",
+        "reason": "deletion-does-not-concentrate-complexity"
+      }
+    },
+    {
+      "id": "report-recommendation",
+      "input": {
+        "candidate_passed_deletion_test": true,
+        "report_written": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "fresh-temp-report",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#2. Present candidates as an HTML report",
+          "text": "写入 `<tmpdir>/architecture-review-<timestamp>.html`，使每次运行都有新文件。"
+        },
+        {
+          "id": "before-after-visual",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#2. Present candidates as an HTML report",
+          "text": "每个候选项都要有前后对比图。"
+        },
+        {
+          "id": "ask-after-writing",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#2. Present candidates as an HTML report",
+          "text": "不要先提出接口。文件写好后，询问用户：“你想探索其中哪一个？”"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "candidate_passed_deletion_test": true,
+            "report_written": true
+          },
+          "constraints": [
+            "fresh-temp-report",
+            "before-after-visual",
+            "ask-after-writing"
+          ],
+          "outcome": {
+            "report_path": "tmpdir/architecture-review-<timestamp>.html",
+            "includes_before_after_visual": true,
+            "next_action": "ask-user-to-pick-candidate",
+            "propose_interfaces": false
+          }
+        }
+      ],
+      "expected": {
+        "report_path": "tmpdir/architecture-review-<timestamp>.html",
+        "includes_before_after_visual": true,
+        "next_action": "ask-user-to-pick-candidate",
+        "propose_interfaces": false
+      }
+    },
+    {
+      "id": "grilling-domain-modeling-loop",
+      "input": {
+        "candidate_selected": true,
+        "new_concept_not_in_context": true,
+        "rejection_reason_load_bearing": true,
+        "alternative_interfaces_requested": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "start-grilling-after-selection",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. Grilling loop",
+          "text": "用户选择候选项后，运行 `/my-grilling` Skill"
+        },
+        {
+          "id": "add-new-domain-term",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. Grilling loop",
+          "text": "添加该术语到 `CONTEXT.md`。若文件不存在，按需创建。"
+        },
+        {
+          "id": "offer-adr-for-load-bearing-rejection",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. Grilling loop",
+          "text": "未来的架构审查不再重新建议它。"
+        },
+        {
+          "id": "explore-alternative-interfaces",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#3. Grilling loop",
+          "text": "运行 `/my-codebase-design` Skill，并使用其设计两次的并行子代理模式。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "candidate_selected": true,
+            "new_concept_not_in_context": true,
+            "rejection_reason_load_bearing": true,
+            "alternative_interfaces_requested": true
+          },
+          "constraints": [
+            "start-grilling-after-selection",
+            "add-new-domain-term",
+            "offer-adr-for-load-bearing-rejection",
+            "explore-alternative-interfaces"
+          ],
+          "outcome": {
+            "run_grilling": true,
+            "update_context": true,
+            "offer_adr": true,
+            "run_codebase_design_twice": true
+          }
+        }
+      ],
+      "expected": {
+        "run_grilling": true,
+        "update_context": true,
+        "offer_adr": true,
+        "run_codebase_design_twice": true
+      }
+    }
+  ]
+}

@@ -437,6 +437,7 @@ class ProfileTests(unittest.TestCase):
             "my-writing-great-skills",
             "my-triage",
             "my-teach",
+            "my-improve-codebase-architecture",
         }
         for skill_file in root.glob("my-*/SKILL.md"):
             text = skill_file.read_text()
@@ -566,7 +567,6 @@ class WorkArtifactTests(unittest.TestCase):
             "my-handoff": ".agent/work/<topic>/handoffs/",
             "my-research": ".agent/work/<topic>/researches/",
             "my-domain-modeling": ".agent/work/<topic>/domain/",
-            "my-improve-codebase-architecture": ".agent/work/<topic>/architecture-reports/",
         }
 
         for skill, canonical_path in expectations.items():
@@ -1650,6 +1650,7 @@ class ReleaseTests(unittest.TestCase):
                 "my-writing-great-skills",
                 "my-triage",
                 "my-teach",
+                "my-improve-codebase-architecture",
             }:
                 continue
             self.assertIn("项目策略优先", skill_file.read_text(), skill_file)
@@ -2566,6 +2567,208 @@ class TeachParityTests(unittest.TestCase):
                 self.assertEqual(
                     case["expected"],
                     self._apply_teach_constraint_mapping(case),
+                )
+
+
+class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_architecture_constraint_mapping(case):
+        outcomes = [
+            mapping["outcome"]
+            for mapping in case["constraint_mapping"]
+            if all(
+                case["input"].get(field) == expected
+                for field, expected in mapping["when"].items()
+            )
+            and set(mapping["constraints"])
+            <= {constraint["id"] for constraint in case["retrieved_constraints"]}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_architecture_restoration_records_translated_parity(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-improve-codebase-architecture"
+        documents = {
+            "SKILL.md": (skill_dir / "SKILL.md").read_text(),
+            "HTML-REPORT.md": (skill_dir / "HTML-REPORT.md").read_text(),
+        }
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item
+            for item in fidelity["skills"]
+            if item["local_skill"] == "my-improve-codebase-architecture"
+        )
+
+        self.assertEqual(
+            "skills/engineering/improve-codebase-architecture",
+            entry["upstream_path"],
+        )
+        expected_mappings = {
+            "SKILL.md#Improve Codebase Architecture": ("SKILL.md", "改进代码库架构"),
+            "SKILL.md#Process": ("SKILL.md", "流程"),
+            "SKILL.md#1. Explore": ("SKILL.md", "1. 探索"),
+            "SKILL.md#2. Present candidates as an HTML report": (
+                "SKILL.md",
+                "2. 将候选项呈现为 HTML 报告",
+            ),
+            "SKILL.md#3. Grilling loop": ("SKILL.md", "3. 深挖循环"),
+            "HTML-REPORT.md#HTML Report Format": ("HTML-REPORT.md", "HTML 报告格式"),
+            "HTML-REPORT.md#Scaffold": ("HTML-REPORT.md", "骨架"),
+            "HTML-REPORT.md#Header": ("HTML-REPORT.md", "页首"),
+            "HTML-REPORT.md#Candidate card": ("HTML-REPORT.md", "候选项卡片"),
+            "HTML-REPORT.md#Diagram patterns": ("HTML-REPORT.md", "图示模式"),
+            "HTML-REPORT.md#Mermaid graph (the workhorse for dependencies / call flow)": (
+                "HTML-REPORT.md",
+                "Mermaid 图（依赖关系与调用流程的主力）",
+            ),
+            "HTML-REPORT.md#Hand-built boxes-and-arrows (when Mermaid's layout fights you)": (
+                "HTML-REPORT.md",
+                "手工绘制的方框与箭头（当 Mermaid 布局不适用时）",
+            ),
+            "HTML-REPORT.md#Cross-section (good for layered shallowness)": (
+                "HTML-REPORT.md",
+                "横截面图（适合分层的浅薄性）",
+            ),
+            "HTML-REPORT.md#Mass diagram (good for \"interface as wide as implementation\")": (
+                "HTML-REPORT.md",
+                "面积图（适合“接口与实现一样宽”）",
+            ),
+            "HTML-REPORT.md#Call-graph collapse": (
+                "HTML-REPORT.md",
+                "调用图折叠",
+            ),
+            "HTML-REPORT.md#Style guidance": ("HTML-REPORT.md", "样式指南"),
+            "HTML-REPORT.md#Top recommendation section": (
+                "HTML-REPORT.md",
+                "首要推荐部分",
+            ),
+            "HTML-REPORT.md#Tone": ("HTML-REPORT.md", "语气"),
+        }
+        for field in ("complete", "translated"):
+            mappings = entry["sections"][field]
+            self.assertEqual(expected_mappings.keys(), {item["upstream"] for item in mappings})
+            for mapping in mappings:
+                with self.subTest(field=field, section=mapping["upstream"]):
+                    document, heading = expected_mappings[mapping["upstream"]]
+                    self.assertEqual(heading, mapping["local"])
+                    self.assertIn(heading, documents[document])
+                    self.assertRegex(mapping["evidence"], r"(SKILL|HTML-REPORT)\.md#")
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual([], entry["sections"]["local_added"])
+        self.assertEqual(
+            {
+                "HTML-REPORT.md": (
+                    "0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1"
+                ),
+                "SKILL.md": (
+                    "4b4cb798c3863d5b6f5c0b4604af1ecb5beb6df82553c972898a91ba38bcf289"
+                ),
+                "agents/openai.yaml": (
+                    "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1"
+                ),
+            },
+            entry["support_files"],
+        )
+        metadata = skill_dir / "agents" / "openai.yaml"
+        self.assertEqual(
+            hashlib.sha256(metadata.read_bytes()).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
+                },
+                {
+                    "path": "HTML-REPORT.md",
+                    "adaptation": (
+                        "为满足本地离线报告要求，保留所有上游语义，同时将 CDN "
+                        "依赖改为内联 CSS/SVG 与本地可用的静态图示。"
+                    ),
+                },
+            ],
+            entry["allowed_local_adaptations"],
+        )
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertEqual(".superpowers/sdd/task-5-report.md", entry["evidence_path"])
+
+        skill = documents["SKILL.md"]
+        report = documents["HTML-REPORT.md"]
+        for instruction in (
+            "范围先于扫描——YAGNI",
+            "删除测试",
+            "不要先提出接口",
+            "用户选择候选项后",
+            "添加该术语到 `CONTEXT.md`",
+            "未来的架构审查不再重新建议它",
+        ):
+            with self.subTest(instruction=instruction):
+                self.assertIn(instruction, skill)
+        self.assertNotIn("https://cdn.tailwindcss.com", report)
+        self.assertNotIn("https://cdn.jsdelivr.net", report)
+        for report_requirement in (
+            "每个候选项都要有前后对比图",
+            "首要推荐",
+            "模块",
+            "接口",
+            "局部性",
+            "杠杆",
+        ):
+            with self.subTest(report_requirement=report_requirement):
+                self.assertIn(report_requirement, report)
+
+    def test_architecture_scenarios_apply_retrieved_constraints(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-improve-codebase-architecture"
+        fixture_path = root / "tests" / "fixtures" / "architecture_application.json"
+        self.assertTrue(
+            fixture_path.is_file(),
+            "missing architecture retrieval/application fixture",
+        )
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual(
+            "skills/engineering/improve-codebase-architecture",
+            fixture["source_path"],
+        )
+        self.assertEqual(
+            {
+                "exploration-before-recommendation",
+                "yagni-rejection",
+                "report-recommendation",
+                "grilling-domain-modeling-loop",
+            },
+            {case["id"] for case in fixture["scenarios"]},
+        )
+        documents = {
+            "SKILL.md": (skill_dir / "SKILL.md").read_text(),
+            "HTML-REPORT.md": (skill_dir / "HTML-REPORT.md").read_text(),
+        }
+        for case in fixture["scenarios"]:
+            with self.subTest(scenario=case["id"]):
+                self.assertIsInstance(case["input"], dict)
+                self.assertTrue(case["retrieved_constraints"])
+                constraint_ids = set()
+                for constraint in case["retrieved_constraints"]:
+                    self.assertNotIn(constraint["id"], constraint_ids)
+                    constraint_ids.add(constraint["id"])
+                    self.assertIn(constraint["document"], documents)
+                    self.assertTrue(constraint["source_section"])
+                    self.assertIn(
+                        constraint["text"],
+                        documents[constraint["document"]],
+                    )
+                self.assertTrue(case["constraint_mapping"])
+                for mapping in case["constraint_mapping"]:
+                    self.assertTrue(mapping["when"])
+                    self.assertTrue(mapping["constraints"])
+                    self.assertTrue(set(mapping["constraints"]) <= constraint_ids)
+                    self.assertEqual(case["expected"], mapping["outcome"])
+                self.assertEqual(
+                    case["expected"],
+                    self._apply_architecture_constraint_mapping(case),
                 )
 
 
