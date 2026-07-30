@@ -3110,6 +3110,121 @@ class ToQuestionnaireParityTests(unittest.TestCase):
                 )
 
 
+class TddParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_tdd_rules(input_facts, retrieved_constraints, rules):
+        outcomes = [
+            rule["outcome"]
+            for rule in rules
+            if all(
+                input_facts.get(field) == expected
+                for field, expected in rule["when"].items()
+            )
+            and set(rule["requires_constraints"])
+            <= {constraint["id"] for constraint in retrieved_constraints}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_tdd_audit_records_source_local_deltas_and_application_scenarios(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-tdd"
+        source_dir = (
+            root
+            / ".superpowers/sdd/mattpocock-skills-pinned"
+            / "skills/engineering/tdd"
+        )
+        source_files = {
+            "SKILL.md": source_dir / "SKILL.md",
+            "mocking.md": source_dir / "mocking.md",
+            "tests.md": source_dir / "tests.md",
+            "agents/openai.yaml": source_dir / "agents/openai.yaml",
+        }
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            (
+                item
+                for item in fidelity["skills"]
+                if item["local_skill"] == "my-tdd"
+            ),
+            None,
+        )
+        evidence_path = root / "upstream/evidence/tdd-audit.md"
+        fixture_path = root / "tests/fixtures/tdd_application.json"
+
+        self.assertIsNotNone(entry)
+        assert entry is not None
+        self.assertEqual("engineering/tdd", entry["upstream_path"])
+        self.assertEqual(
+            {
+                name: hashlib.sha256(path.read_bytes()).hexdigest()
+                for name, path in source_files.items()
+            },
+            entry["support_files"],
+        )
+        self.assertIn("local_support_files", entry)
+        self.assertEqual(
+            {
+                name: hashlib.sha256((skill_dir / name).read_bytes()).hexdigest()
+                for name in source_files
+            },
+            entry["local_support_files"],
+        )
+        self.assertIn(
+            entry["conclusion"],
+            {"faithful", "restore-required", "adapter-rework-required"},
+        )
+        self.assertEqual("upstream/evidence/tdd-audit.md", entry["evidence_path"])
+        self.assertTrue(evidence_path.is_file())
+        evidence = evidence_path.read_text()
+        for text in (
+            "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+            "skills/engineering/tdd",
+            "SKILL.md",
+            "mocking.md",
+            "tests.md",
+            "agents/openai.yaml",
+            "Source files and SHA-256",
+            "Local files and SHA-256",
+            f"Conclusion: **{entry['conclusion']}**",
+        ):
+            with self.subTest(evidence=text):
+                self.assertIn(text, evidence)
+
+        self.assertTrue(fixture_path.is_file())
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual("engineering/tdd", fixture["source_path"])
+        self.assertEqual(
+            {"red-green-slice", "mock-only-system-boundary"},
+            {scenario["id"] for scenario in fixture["scenarios"]},
+        )
+        local_documents = {
+            name: (skill_dir / name).read_text()
+            for name in ("SKILL.md", "mocking.md", "tests.md")
+        }
+        for constraint in fixture["constraints"]:
+            with self.subTest(constraint=constraint["id"]):
+                self.assertIn(constraint["document"], local_documents)
+                self.assertIn(
+                    constraint["text"],
+                    local_documents[constraint["document"]],
+                )
+                self.assertIn("#", constraint["source_section"])
+
+        for scenario in fixture["scenarios"]:
+            with self.subTest(scenario=scenario["id"]):
+                self.assertTrue(scenario["retrieved_constraints"])
+                self.assertEqual(
+                    scenario["expected"],
+                    self._apply_tdd_rules(
+                        scenario["input"],
+                        scenario["retrieved_constraints"],
+                        fixture["rules"],
+                    ),
+                )
+
+
 class GrillingParityTests(unittest.TestCase):
     @staticmethod
     def _apply_grilling_rules(input_facts, retrieved_constraints, rules):

@@ -634,12 +634,71 @@
       "upstream_path": "engineering/tdd",
       "local_skill": "my-tdd",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#frontmatter.name",
+          "SKILL.md#frontmatter.description",
+          "SKILL.md#preamble",
+          "SKILL.md#What a good test is",
+          "SKILL.md#Seams — where tests go",
+          "SKILL.md#Anti-patterns",
+          "SKILL.md#Rules of the loop",
+          "mocking.md#When to Mock",
+          "mocking.md#Designing for Mockability",
+          "tests.md#Good Tests",
+          "tests.md#Bad Tests",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description"
+        ],
+        "local": [
+          "SKILL.md#frontmatter.name",
+          "SKILL.md#frontmatter.description",
+          "SKILL.md#测试驱动开发",
+          "SKILL.md#好测试是什么",
+          "SKILL.md#Seam——测试放在哪里",
+          "SKILL.md#反模式",
+          "SKILL.md#循环规则",
+          "mocking.md#When to Mock",
+          "mocking.md#Designing for Mockability",
+          "tests.md#Good Tests",
+          "tests.md#Bad Tests",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description",
+          "SKILL.md#frontmatter.disable-model-invocation",
+          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#policy"
+        ],
+        "complete": [
+          {"upstream": "SKILL.md#preamble", "local": "SKILL.md#测试驱动开发", "evidence": "SKILL.md#测试驱动开发保留测试循环的参考目的、循环前/中查阅和项目术语/ADR 约束。"},
+          {"upstream": "SKILL.md#What a good test is", "local": "SKILL.md#好测试是什么", "evidence": "SKILL.md#好测试是什么保留经公共接口验证行为、可穿越重构和规格式命名。"},
+          {"upstream": "SKILL.md#Seams — where tests go", "local": "SKILL.md#Seam——测试放在哪里", "evidence": "SKILL.md#Seam——测试放在哪里保留公共边界、预先确认、未确认不得写测试和提问。"},
+          {"upstream": "SKILL.md#Anti-patterns", "local": "SKILL.md#反模式", "evidence": "SKILL.md#反模式保留实现耦合、同义反复、水平切片与纵向 tracer bullet。"},
+          {"upstream": "SKILL.md#Rules of the loop", "local": "SKILL.md#循环规则", "evidence": "SKILL.md#循环规则保留先 red 后 green、一次一个切片和重构移至审查阶段。"},
+          {"upstream": "mocking.md#When to Mock", "local": "mocking.md#When to Mock", "evidence": "mocking.md 与固定上游字节一致，保留仅 mock 系统边界和禁止 mock 内部协作者。"},
+          {"upstream": "mocking.md#Designing for Mockability", "local": "mocking.md#Designing for Mockability", "evidence": "mocking.md 与固定上游字节一致，保留依赖注入、SDK 风格接口和全部示例。"},
+          {"upstream": "tests.md#Good Tests", "local": "tests.md#Good Tests", "evidence": "tests.md 与固定上游字节一致，保留集成式公共接口测试和五项特征。"},
+          {"upstream": "tests.md#Bad Tests", "local": "tests.md#Bad Tests", "evidence": "tests.md 与固定上游字节一致，保留实现细节、旁路验证和同义反复反例。"},
+          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml 保留 display_name “TDD”。"},
+          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml 保留 short_description “Test-driven red-green-refactor”。"}
+        ],
+        "translated": [
+          {"upstream": "SKILL.md#preamble", "local": "SKILL.md#测试驱动开发", "evidence": "SKILL.md#测试驱动开发"},
+          {"upstream": "SKILL.md#What a good test is", "local": "SKILL.md#好测试是什么", "evidence": "SKILL.md#好测试是什么"},
+          {"upstream": "SKILL.md#Seams — where tests go", "local": "SKILL.md#Seam——测试放在哪里", "evidence": "SKILL.md#Seam——测试放在哪里"},
+          {"upstream": "SKILL.md#Anti-patterns", "local": "SKILL.md#反模式", "evidence": "SKILL.md#反模式"},
+          {"upstream": "SKILL.md#Rules of the loop", "local": "SKILL.md#循环规则", "evidence": "SKILL.md#循环规则"},
+          {"upstream": "mocking.md#When to Mock", "local": "mocking.md#When to Mock", "evidence": "mocking.md#When to Mock"},
+          {"upstream": "mocking.md#Designing for Mockability", "local": "mocking.md#Designing for Mockability", "evidence": "mocking.md#Designing for Mockability"},
+          {"upstream": "tests.md#Good Tests", "local": "tests.md#Good Tests", "evidence": "tests.md#Good Tests"},
+          {"upstream": "tests.md#Bad Tests", "local": "tests.md#Bad Tests", "evidence": "tests.md#Bad Tests"},
+          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml#interface.display_name"},
+          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml#interface.short_description"}
+        ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#frontmatter.disable-model-invocation",
+          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#policy"
+        ]
       },
       "support_files": {
         "SKILL.md": "5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f",
@@ -647,10 +706,44 @@
         "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
         "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "unreviewed",
-      "evidence_path": null,
-      "notes": "Baseline frozen; fidelity not yet audited."
+      "local_support_files": {
+        "SKILL.md": "0bbe3c5acbdff94058b10e4202274696caf19b5737d6b152db4252866b4d2684",
+        "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
+        "tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a",
+        "agents/openai.yaml": "00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#frontmatter.name",
+          "upstream_sections": ["SKILL.md#frontmatter.name"],
+          "classification": "changed-local-adaptation",
+          "adaptation": "上游 name `tdd` 改为本地注册名 `my-tdd`；不改变 TDD 方法。"
+        },
+        {
+          "path": "SKILL.md#frontmatter.description",
+          "upstream_sections": ["SKILL.md#frontmatter.description"],
+          "classification": "changed-local-adaptation",
+          "adaptation": "本地中文 description 保留上游测试先行功能/修复、red-green-refactor 和集成测试的调用范围。"
+        },
+        {
+          "path": "SKILL.md#frontmatter.disable-model-invocation",
+          "classification": "local-only-adaptation",
+          "adaptation": "本地新增 `disable-model-invocation: true`，与 runtime policy 共同表达 manual-only 调用行为。"
+        },
+        {
+          "path": "SKILL.md#项目策略优先",
+          "classification": "local-only-adaptation",
+          "adaptation": "本地项目策略入口会让询问、确认和停止受生效策略覆盖；这可能削弱上游未确认 seam 不得写测试的硬门控，须在 Plan 2 限定为不改变该门控。"
+        },
+        {
+          "path": "agents/openai.yaml#policy.allow_implicit_invocation",
+          "classification": "local-only-adaptation",
+          "adaptation": "保留 false 以表达本地 manual-only 调用 policy；该 metadata 本身不改变 TDD 方法。"
+        }
+      ],
+      "conclusion": "adapter-rework-required",
+      "evidence_path": "upstream/evidence/tdd-audit.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 审计。TDD 正文、mocking.md、tests.md 和 interface metadata 已保留；项目策略覆盖可能绕过未确认 seam 的停止条件，转入 Plan 2 的 my-tdd adapter rework。"
     },
     {
       "upstream_skill": "teach",

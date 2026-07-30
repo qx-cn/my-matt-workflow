@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "skill": "my-tdd",
+  "source_path": "engineering/tdd",
+  "constraints": [
+    {
+      "id": "red-before-green",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#循环规则",
+      "text": "**先 red，后 green。** 先写失败测试，再只写足以通过的代码。不要预判未来测试或加入推测性功能。"
+    },
+    {
+      "id": "one-slice-at-a-time",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#循环规则",
+      "text": "**一次一个切片。** 每轮一个 seam、一个测试、一个最小实现。"
+    },
+    {
+      "id": "mock-system-boundaries-only",
+      "document": "mocking.md",
+      "source_section": "mocking.md#When to Mock",
+      "text": "Mock at **system boundaries** only:"
+    },
+    {
+      "id": "do-not-mock-internal-collaborators",
+      "document": "mocking.md",
+      "source_section": "mocking.md#When to Mock",
+      "text": "- Internal collaborators"
+    }
+  ],
+  "rules": [
+    {
+      "id": "start-red-green-slice",
+      "when": {
+        "implementation_exists": false,
+        "seam_confirmed": true
+      },
+      "requires_constraints": [
+        "red-before-green",
+        "one-slice-at-a-time"
+      ],
+      "outcome": {
+        "action": "write-failing-test",
+        "implementation": "none",
+        "slice_count": 1
+      }
+    },
+    {
+      "id": "use-real-internal-collaborator",
+      "when": {
+        "dependency_type": "internal-collaborator",
+        "is_system_boundary": false
+      },
+      "requires_constraints": [
+        "mock-system-boundaries-only",
+        "do-not-mock-internal-collaborators"
+      ],
+      "outcome": {
+        "action": "use-real-collaborator",
+        "mock": false
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "red-green-slice",
+      "input": {
+        "implementation_exists": false,
+        "seam_confirmed": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "red-before-green",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#循环规则",
+          "text": "**先 red，后 green。** 先写失败测试，再只写足以通过的代码。不要预判未来测试或加入推测性功能。"
+        },
+        {
+          "id": "one-slice-at-a-time",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#循环规则",
+          "text": "**一次一个切片。** 每轮一个 seam、一个测试、一个最小实现。"
+        }
+      ],
+      "expected": {
+        "action": "write-failing-test",
+        "implementation": "none",
+        "slice_count": 1
+      }
+    },
+    {
+      "id": "mock-only-system-boundary",
+      "input": {
+        "dependency_type": "internal-collaborator",
+        "is_system_boundary": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "mock-system-boundaries-only",
+          "document": "mocking.md",
+          "source_section": "mocking.md#When to Mock",
+          "text": "Mock at **system boundaries** only:"
+        },
+        {
+          "id": "do-not-mock-internal-collaborators",
+          "document": "mocking.md",
+          "source_section": "mocking.md#When to Mock",
+          "text": "- Internal collaborators"
+        }
+      ],
+      "expected": {
+        "action": "use-real-collaborator",
+        "mock": false
+      }
+    }
+  ]
+}
