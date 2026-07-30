@@ -190,13 +190,14 @@ class CheckGateTests(unittest.TestCase):
         )
 
     def test_release_verification_is_not_applicable_without_current_release(self):
-        self.assertEqual(
-            {
-                "status": "not-applicable",
-                "reason": "release verification is not applicable: no current release",
-            },
-            verify_current_release(ROOT),
-        )
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(
+                {
+                    "status": "not-applicable",
+                    "reason": "release verification is not applicable: no current release",
+                },
+                verify_current_release(Path(tmp)),
+            )
 
     def test_check_rejects_stale_current_release_and_accepts_matching_release(self):
         with tempfile.TemporaryDirectory() as tmp:
