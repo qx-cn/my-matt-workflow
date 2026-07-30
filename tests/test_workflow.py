@@ -1,3 +1,4 @@
+import argparse
 import hashlib
 import importlib.util
 import json
@@ -1248,6 +1249,77 @@ class DoctorTests(unittest.TestCase):
             preserved = json.loads(path.read_text())
             self.assertEqual("deadbeef", preserved["source"]["commit"])
             self.assertEqual("def", preserved["skills"]["implement"]["SKILL.md"])
+
+    def test_snapshot_records_commit_of_tree_that_produced_hashes(self):
+        root = Path(__file__).resolve().parents[1]
+        spec = importlib.util.spec_from_file_location(
+            "workflow_cli_snapshot_provenance", root / "tools/workflow.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, str(root / "tools"))
+        try:
+            assert spec.loader is not None
+            spec.loader.exec_module(module)
+        finally:
+            sys.path.pop(0)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            upstream = workspace / "upstream-source"
+            for upstream_path in module.UPSTREAM_PATHS.values():
+                skill = upstream / "skills" / upstream_path
+                skill.mkdir(parents=True, exist_ok=True)
+                (skill / "SKILL.md").write_text(f"# {upstream_path}\n")
+            subprocess.run(["git", "init", "-q"], cwd=upstream, check=True)
+            subprocess.run(["git", "add", "."], cwd=upstream, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Test",
+                    "-c",
+                    "user.email=test@example.com",
+                    "commit",
+                    "-qm",
+                    "snapshot source",
+                ],
+                cwd=upstream,
+                check=True,
+            )
+            source_commit = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=upstream,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            workflow_root = workspace / "workflow"
+            manifest_path = workflow_root / "upstream" / "manifest.json"
+            manifest_path.parent.mkdir(parents=True)
+            manifest_path.write_text(
+                json.dumps({"implement": {"SKILL.md": "old-hash"}})
+            )
+            original_root = module.ROOT
+            module.ROOT = workflow_root
+            try:
+                module.command_snapshot(
+                    argparse.Namespace(
+                        upstream=str(upstream),
+                        allow_deletions=False,
+                    )
+                )
+            finally:
+                module.ROOT = original_root
+
+            manifest = json.loads(manifest_path.read_text())
+            self.assertEqual(
+                {"repo": str(upstream.resolve()), "commit": source_commit},
+                manifest["source"],
+            )
+            self.assertEqual(
+                module._adapted_snapshot(upstream),
+                manifest["skills"],
+            )
 
     def test_fidelity_ledger_covers_upstream_derived_skills(self):
         root = Path(__file__).resolve().parents[1]

@@ -418,6 +418,20 @@ def _adapted_snapshot(upstream: Path) -> dict:
     return snapshot_mapped_tree(upstream, UPSTREAM_PATHS)
 
 
+def _source_commit(upstream: Path) -> str:
+    """Return the Git commit that produced an upstream source tree."""
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=upstream,
+        capture_output=True,
+        text=True,
+    )
+    commit = result.stdout.strip()
+    if result.returncode or not re.fullmatch(r"[0-9a-f]{40,64}", commit):
+        raise SystemExit(f"上游快照需要可识别的 Git commit：{upstream}")
+    return commit
+
+
 def command_doctor(args: argparse.Namespace) -> None:
     previous = _load_upstream_skills_snapshot(ROOT / "upstream" / "manifest.json")
     known_unmapped = set(_load_list(ROOT / "upstream" / "unmapped.json"))
@@ -471,11 +485,12 @@ def command_recommend(args: argparse.Namespace) -> None:
 
 
 def command_snapshot(args: argparse.Namespace) -> None:
-    snapshot, unmapped = _with_upstream(
+    snapshot, unmapped, commit = _with_upstream(
         args.upstream,
         lambda upstream: (
             _adapted_snapshot(upstream),
             discover_unmapped_skills(upstream, UPSTREAM_PATHS),
+            _source_commit(upstream),
         ),
     )
     validate_upstream_snapshot(
@@ -483,7 +498,15 @@ def command_snapshot(args: argparse.Namespace) -> None:
         set(ADAPTATION_MAP),
         allow_missing=args.allow_deletions,
     )
-    _write_upstream_manifest(ROOT / "upstream" / "manifest.json", snapshot)
+    source_repo = Path(args.upstream).expanduser()
+    _write_upstream_manifest(
+        ROOT / "upstream" / "manifest.json",
+        snapshot,
+        source={
+            "repo": str(source_repo.resolve()) if source_repo.exists() else args.upstream,
+            "commit": commit,
+        },
+    )
     (ROOT / "upstream" / "unmapped.json").write_text(
         json.dumps(unmapped, ensure_ascii=False, indent=2) + "\n"
     )
