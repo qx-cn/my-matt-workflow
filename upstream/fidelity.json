@@ -62,7 +62,7 @@
     },
     {
       "upstream_skill": "codebase-design",
-      "upstream_path": "engineering/codebase-design",
+      "upstream_path": "skills/engineering/codebase-design",
       "local_skill": "my-codebase-design",
       "sections": {
         "upstream": [
@@ -137,6 +137,9 @@
         "DESIGN-IT-TWICE.md": "21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31",
         "SKILL.md": "a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad",
         "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f"
+      },
+      "local_support_files": {
+        "agents/openai.yaml": "0c24ffe790dc0aa8291bc52076db14f8a718b96cc7ab402381a26ee81ce579a9"
       },
       "allowed_local_adaptations": [
         {

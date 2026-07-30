@@ -1356,6 +1356,23 @@ class DoctorTests(unittest.TestCase):
             for item in fidelity["skills"]
             if item["local_skill"] == "my-codebase-design"
         )
+        self.assertEqual(
+            "skills/engineering/codebase-design",
+            entry["upstream_path"],
+        )
+        metadata_hash = hashlib.sha256(
+            (
+                root
+                / "skills"
+                / "my-codebase-design"
+                / "agents"
+                / "openai.yaml"
+            ).read_bytes()
+        ).hexdigest()
+        self.assertEqual(
+            entry.get("local_support_files", {}).get("agents/openai.yaml"),
+            metadata_hash,
+        )
 
         expected_sections = {
             "Glossary",
