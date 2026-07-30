@@ -41,6 +41,12 @@ from workflow_lib.work_artifacts import (
     analyze_work_artifacts,
     apply_work_artifact_migration,
 )
+from workflow_lib.tickets import (
+    TicketError,
+    load_tickets,
+    select_wayfinder_ticket,
+    wayfinder_candidates,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -372,6 +378,39 @@ def command_work_read(args: argparse.Namespace) -> None:
     print(read_work_artifact(artifact), end="")
 
 
+def _ticket_summary(ticket) -> dict[str, object]:
+    return {
+        "id": ticket.identifier,
+        "title": ticket.title,
+        "path": ticket.path.as_posix(),
+        "sequence": ticket.sequence,
+    }
+
+
+def command_wayfinder_frontier(args: argparse.Namespace) -> None:
+    """Print the read-only local Wayfinder frontier or one requested member."""
+    try:
+        tickets = load_tickets(Path(path) for path in args.ticket)
+        if args.select is not None:
+            print(
+                json.dumps(
+                    _ticket_summary(select_wayfinder_ticket(tickets, args.select)),
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            return
+        print(
+            json.dumps(
+                [_ticket_summary(ticket) for ticket in wayfinder_candidates(tickets)],
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+    except TicketError as exc:
+        raise SystemExit(str(exc)) from exc
+
+
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
 
@@ -686,6 +725,11 @@ def parser() -> argparse.ArgumentParser:
     work_read.add_argument("--type", dest="artifact_type", required=True)
     work_read.add_argument("--selector", default="latest")
     work_read.set_defaults(func=command_work_read)
+
+    wayfinder_frontier = sub.add_parser("wayfinder-frontier")
+    wayfinder_frontier.add_argument("ticket", nargs="+", metavar="TICKET")
+    wayfinder_frontier.add_argument("--select")
+    wayfinder_frontier.set_defaults(func=command_wayfinder_frontier)
 
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--upstream", default=OFFICIAL_UPSTREAM)

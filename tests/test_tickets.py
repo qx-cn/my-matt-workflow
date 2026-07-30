@@ -10,7 +10,10 @@ from tools.workflow_lib.tickets import (
     implementation_candidates,
     parse_ticket,
     select_implementation_ticket,
+    select_wayfinder_ticket,
     ticket_eligibility,
+    wayfinder_candidates,
+    wayfinder_eligibility,
 )
 
 
@@ -69,6 +72,23 @@ class TicketParsingTests(unittest.TestCase):
 
         with self.assertRaisesRegex(TicketParseError, "blocked_by.*YAML list"):
             parse_ticket(text, path=Path("tickets/first.md"))
+
+    def test_claimed_by_cannot_be_omitted(self):
+        text = ticket_text(identifier="first", title="First").replace(
+            "claimed_by: \n", ""
+        )
+
+        with self.assertRaisesRegex(TicketParseError, "claimed_by.*required"):
+            parse_ticket(text, path=Path("tickets/first.md"))
+
+    def test_explicit_empty_claimed_by_is_unclaimed(self):
+        ticket = parse("first", claimed_by="")
+
+        self.assertIsNone(ticket.claimed_by)
+
+    def test_claimed_by_must_be_a_scalar(self):
+        with self.assertRaisesRegex(TicketParseError, "claimed_by.*string"):
+            parse("first", claimed_by="[]")
 
     def test_parses_block_lists_and_checkbox_states(self):
         ticket = parse(
@@ -207,3 +227,118 @@ class TicketSelectionTests(unittest.TestCase):
             completion_problems(pending),
         )
         self.assertEqual((), completion_problems(complete))
+
+
+class WayfinderSelectionTests(unittest.TestCase):
+    def test_frontier_requires_open_unclaimed_unblocked_decision_tickets(self):
+        completed = parse(
+            "completed",
+            ticket_kind="wayfinder-decision",
+            status="complete",
+        )
+        eligible = parse(
+            "eligible",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            blocked_by="[completed]",
+        )
+        blocked = parse(
+            "blocked",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            blocked_by="[eligible]",
+        )
+        claimed = parse(
+            "claimed",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            claimed_by="agent-a",
+        )
+        wrong_kind = parse("implementation", ticket_kind="implementation", status="open")
+        missing_kind = parse("legacy", ticket_kind=None, status="open")
+        wrong_status = parse(
+            "ready",
+            ticket_kind="wayfinder-decision",
+            status="ready-for-agent",
+        )
+        missing_status = parse_ticket(
+            ticket_text(
+                identifier="missing-status",
+                title="missing-status",
+                ticket_kind="wayfinder-decision",
+            ).replace("status: ready-for-agent\n", ""),
+            path=Path("tickets/missing-status.md"),
+        )
+        graph = build_ticket_graph(
+            (
+                completed,
+                eligible,
+                blocked,
+                claimed,
+                wrong_kind,
+                missing_kind,
+                wrong_status,
+                missing_status,
+            )
+        )
+
+        self.assertTrue(wayfinder_eligibility(eligible, graph).eligible)
+        self.assertFalse(wayfinder_eligibility(blocked, graph).eligible)
+        self.assertFalse(wayfinder_eligibility(claimed, graph).eligible)
+        self.assertFalse(wayfinder_eligibility(wrong_kind, graph).eligible)
+        self.assertFalse(wayfinder_eligibility(missing_kind, graph).eligible)
+        self.assertFalse(wayfinder_eligibility(wrong_status, graph).eligible)
+        self.assertFalse(wayfinder_eligibility(missing_status, graph).eligible)
+
+    def test_frontier_sorts_and_selects_by_sequence_then_identifier(self):
+        later = parse(
+            "later",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            sequence=3,
+        )
+        second = parse(
+            "z-second",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            sequence=1,
+        )
+        first = parse(
+            "a-first",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            sequence=1,
+        )
+        no_sequence = parse(
+            "none",
+            ticket_kind="wayfinder-decision",
+            status="open",
+        )
+
+        candidates = wayfinder_candidates((later, second, first, no_sequence))
+
+        self.assertEqual(
+            ["a-first", "z-second", "later", "none"],
+            [ticket.identifier for ticket in candidates],
+        )
+        self.assertEqual(
+            "a-first", select_wayfinder_ticket(candidates).identifier
+        )
+
+    def test_explicit_invalid_wayfinder_selection_does_not_fall_back(self):
+        claimed = parse(
+            "claimed",
+            ticket_kind="wayfinder-decision",
+            status="open",
+            claimed_by="agent-a",
+        )
+        ready = parse(
+            "ready",
+            ticket_kind="wayfinder-decision",
+            status="open",
+        )
+
+        with self.assertRaisesRegex(
+            TicketSelectionError, r"claimed.*already claimed"
+        ):
+            select_wayfinder_ticket((claimed, ready), selected="claimed")

@@ -1998,6 +1998,67 @@ class WorkflowCliTests(unittest.TestCase):
             check=False,
         )
 
+    def test_wayfinder_frontier_cli_is_read_only_and_rejects_invalid_selection(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workflow = self._workflow(Path(tmp))
+            tickets = workflow / "tickets"
+            tickets.mkdir()
+
+            def write_ticket(
+                name: str,
+                *,
+                status: str = "open",
+                claimed_by: str = "",
+                sequence: int = 1,
+            ) -> Path:
+                path = tickets / f"{name}.md"
+                path.write_text(
+                    "---\n"
+                    f"id: {name}\n"
+                    f"title: {name}\n"
+                    "ticket_kind: wayfinder-decision\n"
+                    f"status: {status}\n"
+                    "blocked_by: []\n"
+                    f"claimed_by: {claimed_by}\n"
+                    "tags: []\n"
+                    f"sequence: {sequence}\n"
+                    "---\n\n"
+                    f"# {name}\n"
+                )
+                return path
+
+            later = write_ticket("later", sequence=2)
+            first = write_ticket("first", sequence=1)
+            claimed = write_ticket("claimed", claimed_by="agent-a", sequence=0)
+
+            frontier = self._run(
+                workflow,
+                "wayfinder-frontier",
+                str(later),
+                str(first),
+                str(claimed),
+            )
+
+            self.assertEqual(0, frontier.returncode, frontier.stderr)
+            self.assertEqual(
+                ["first", "later"],
+                [ticket["id"] for ticket in json.loads(frontier.stdout)],
+            )
+
+            rejected = self._run(
+                workflow,
+                "wayfinder-frontier",
+                str(later),
+                str(first),
+                str(claimed),
+                "--select",
+                "claimed",
+            )
+
+            self.assertNotEqual(0, rejected.returncode)
+            self.assertIn("claimed", rejected.stderr)
+            self.assertIn("already claimed", rejected.stderr)
+
     def test_deploy_reuses_the_current_release_when_skills_are_unchanged(self):
         with tempfile.TemporaryDirectory() as tmp:
             workflow = self._workflow(Path(tmp))

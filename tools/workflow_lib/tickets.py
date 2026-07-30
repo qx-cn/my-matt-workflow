@@ -14,6 +14,7 @@ WAYFINDER_DECISION = "wayfinder-decision"
 TICKET_KINDS = frozenset({IMPLEMENTATION, WAYFINDER_DECISION})
 COMPLETE_STATUS = "complete"
 READY_FOR_AGENT = "ready-for-agent"
+OPEN_STATUS = "open"
 _CHECKBOX = re.compile(r"^\s*[-*]\s+\[([ xX])\]\s+", re.MULTILINE)
 _HEADING = re.compile(r"^#\s+(.+?)\s*$", re.MULTILINE)
 _SEQUENCE = re.compile(r"^(?:tickets?-)?(\d+)(?:[-_.]|$)")
@@ -176,8 +177,14 @@ def _required_string(data: dict[str, object], key: str, fallback: str) -> str:
     return value.strip()
 
 
-def _string_or_none(data: dict[str, object], key: str) -> str | None:
-    value = data.get(key)
+def _string_or_none(
+    data: dict[str, object], key: str, *, required: bool = False
+) -> str | None:
+    if key not in data:
+        if required:
+            raise TicketParseError(f"{key} is required and must be a string")
+        return None
+    value = data[key]
     if value is None:
         return None
     if not isinstance(value, str):
@@ -213,7 +220,7 @@ def _sequence(data: dict[str, object], path: Path) -> int | None:
 
 
 def parse_ticket(text: str, *, path: Path) -> Ticket:
-    """Parse the local ticket frontmatter subset and acceptance checkboxes."""
+    """Parse a ticket; ``claimed_by:`` explicitly represents an unclaimed ticket."""
 
     data, body = _parse_frontmatter(text)
     heading = _HEADING.search(body)
@@ -231,7 +238,7 @@ def parse_ticket(text: str, *, path: Path) -> Ticket:
         ticket_kind=ticket_kind,
         status=_string_or_none(data, "status"),
         blocked_by=_string_list(data, "blocked_by", required=True),
-        claimed_by=_string_or_none(data, "claimed_by"),
+        claimed_by=_string_or_none(data, "claimed_by", required=True),
         tags=_string_list(data, "tags"),
         sequence=_sequence(data, path),
         unchecked_acceptance=statuses.count(" "),
@@ -354,6 +361,28 @@ def ticket_eligibility(ticket: Ticket, graph: TicketGraph) -> TicketEligibility:
     return TicketEligibility(ticket, tuple(reasons))
 
 
+def wayfinder_eligibility(ticket: Ticket, graph: TicketGraph) -> TicketEligibility:
+    """Evaluate the open, unclaimed Wayfinder decision frontier independently."""
+
+    reasons: list[str] = []
+    if ticket.ticket_kind is None:
+        reasons.append("ticket_kind is missing or ambiguous")
+    elif ticket.ticket_kind != WAYFINDER_DECISION:
+        reasons.append("ticket_kind is not wayfinder-decision")
+    if ticket.status != OPEN_STATUS:
+        reasons.append("status is not open")
+    if ticket.claimed_by is not None:
+        reasons.append("ticket is already claimed")
+    incomplete = [
+        blocker.identifier
+        for blocker in graph.blockers[ticket]
+        if blocker.status != COMPLETE_STATUS
+    ]
+    if incomplete:
+        reasons.append("blockers are incomplete: " + ", ".join(incomplete))
+    return TicketEligibility(ticket, tuple(reasons))
+
+
 def completion_problems(ticket: Ticket) -> tuple[str, ...]:
     """Return the gates that prevent closing a completed implementation ticket."""
 
@@ -390,6 +419,22 @@ def implementation_candidates(tickets: Iterable[Ticket]) -> tuple[Ticket, ...]:
     )
 
 
+def wayfinder_candidates(tickets: Iterable[Ticket]) -> tuple[Ticket, ...]:
+    """Return the stable open, unclaimed, unblocked Wayfinder frontier."""
+
+    graph = build_ticket_graph(tickets)
+    return tuple(
+        sorted(
+            (
+                ticket
+                for ticket in graph.tickets
+                if wayfinder_eligibility(ticket, graph).eligible
+            ),
+            key=_ticket_sort_key,
+        )
+    )
+
+
 def select_implementation_ticket(
     tickets: Iterable[Ticket], selected: str | None = None
 ) -> Ticket:
@@ -419,4 +464,36 @@ def select_implementation_ticket(
     )
     if not candidates:
         raise TicketSelectionError("no implementation-eligible tickets")
+    return candidates[0]
+
+
+def select_wayfinder_ticket(
+    tickets: Iterable[Ticket], selected: str | None = None
+) -> Ticket:
+    """Select one Wayfinder frontier ticket without falling back from a request."""
+
+    graph = build_ticket_graph(tickets)
+    if selected is not None:
+        try:
+            ticket = graph.resolve(selected)
+        except TicketGraphError as exc:
+            raise TicketSelectionError(str(exc)) from exc
+        verdict = wayfinder_eligibility(ticket, graph)
+        if not verdict.eligible:
+            raise TicketSelectionError(
+                f"{ticket.identifier} is not wayfinder-eligible: "
+                + "; ".join(verdict.reasons)
+            )
+        return ticket
+
+    candidates = sorted(
+        (
+            ticket
+            for ticket in graph.tickets
+            if wayfinder_eligibility(ticket, graph).eligible
+        ),
+        key=_ticket_sort_key,
+    )
+    if not candidates:
+        raise TicketSelectionError("no wayfinder-eligible tickets")
     return candidates[0]
