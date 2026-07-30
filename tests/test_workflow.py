@@ -230,11 +230,10 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn("继续", text)
                 self.assertIn("不升档", text)
                 self.assertIn("work_scope_policy", text)
-        # Non-navigation skills keep a slim policy footer without continue encyclopaedia.
+        # Restored upstream skills preserve their source method without a local policy footer.
         teach = (root / "my-teach" / "SKILL.md").read_text()
-        self.assertIn("已解析生效策略", teach)
-        self.assertNotIn("不升档", teach)
-        self.assertNotIn("五档预设", teach)
+        self.assertNotIn("项目策略优先", teach)
+        self.assertNotIn("已解析生效策略", teach)
 
     def test_render_makes_every_known_key_explicit_including_defaults(self):
         rendered = render_profile({"schema_version": 1, "task_backend": "local"})
@@ -437,6 +436,7 @@ class ProfileTests(unittest.TestCase):
         restored_without_policy_footer = {
             "my-writing-great-skills",
             "my-triage",
+            "my-teach",
         }
         for skill_file in root.glob("my-*/SKILL.md"):
             text = skill_file.read_text()
@@ -565,7 +565,6 @@ class WorkArtifactTests(unittest.TestCase):
         expectations = {
             "my-handoff": ".agent/work/<topic>/handoffs/",
             "my-research": ".agent/work/<topic>/researches/",
-            "my-teach": ".agent/work/<topic>/learning/",
             "my-domain-modeling": ".agent/work/<topic>/domain/",
             "my-improve-codebase-architecture": ".agent/work/<topic>/architecture-reports/",
         }
@@ -1650,6 +1649,7 @@ class ReleaseTests(unittest.TestCase):
             if skill_file.parent.name in {
                 "my-writing-great-skills",
                 "my-triage",
+                "my-teach",
             }:
                 continue
             self.assertIn("项目策略优先", skill_file.read_text(), skill_file)
@@ -2343,6 +2343,219 @@ class TriageParityTests(unittest.TestCase):
                 self.assertEqual(
                     case["expected"],
                     self._apply_triage_constraint_mapping(case),
+                )
+
+
+class TeachParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_teach_constraint_mapping(case):
+        outcomes = [
+            mapping["outcome"]
+            for mapping in case["constraint_mapping"]
+            if all(
+                case["input"].get(field) == expected
+                for field, expected in mapping["when"].items()
+            )
+            and set(mapping["constraints"])
+            <= {constraint["id"] for constraint in case["retrieved_constraints"]}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_teach_restoration_records_complete_translated_parity(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-teach"
+        documents = {
+            "SKILL.md": (skill_dir / "SKILL.md").read_text(),
+            "GLOSSARY-FORMAT.md": (
+                skill_dir / "GLOSSARY-FORMAT.md"
+            ).read_text(),
+            "LEARNING-RECORD-FORMAT.md": (
+                skill_dir / "LEARNING-RECORD-FORMAT.md"
+            ).read_text(),
+            "MISSION-FORMAT.md": (
+                skill_dir / "MISSION-FORMAT.md"
+            ).read_text(),
+            "RESOURCES-FORMAT.md": (
+                skill_dir / "RESOURCES-FORMAT.md"
+            ).read_text(),
+        }
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item
+            for item in fidelity["skills"]
+            if item["local_skill"] == "my-teach"
+        )
+
+        self.assertEqual("skills/productivity/teach", entry["upstream_path"])
+        expected_mappings = {
+            "SKILL.md#Teaching Workspace": ("SKILL.md", "教学工作区"),
+            "SKILL.md#Philosophy": ("SKILL.md", "教学理念"),
+            "SKILL.md#Fluency vs Storage Strength": (
+                "SKILL.md",
+                "流畅度与存储强度",
+            ),
+            "SKILL.md#Lessons": ("SKILL.md", "课程"),
+            "SKILL.md#Assets": ("SKILL.md", "资源组件"),
+            "SKILL.md#The Mission": ("SKILL.md", "学习任务"),
+            "SKILL.md#Zone Of Proximal Development": (
+                "SKILL.md",
+                "最近发展区",
+            ),
+            "SKILL.md#Knowledge": ("SKILL.md", "知识"),
+            "SKILL.md#Skills": ("SKILL.md", "技能"),
+            "SKILL.md#Acquiring Wisdom": ("SKILL.md", "获取智慧"),
+            "SKILL.md#Reference Documents": ("SKILL.md", "参考文档"),
+            "SKILL.md#`NOTES.md`": ("SKILL.md", "`NOTES.md`"),
+            "GLOSSARY-FORMAT.md#GLOSSARY.md Format": (
+                "GLOSSARY-FORMAT.md",
+                "GLOSSARY.md 格式",
+            ),
+            "GLOSSARY-FORMAT.md#Structure": (
+                "GLOSSARY-FORMAT.md",
+                "结构",
+            ),
+            "GLOSSARY-FORMAT.md#Rules": ("GLOSSARY-FORMAT.md", "规则"),
+            "LEARNING-RECORD-FORMAT.md#Learning Record Format": (
+                "LEARNING-RECORD-FORMAT.md",
+                "学习记录格式",
+            ),
+            "LEARNING-RECORD-FORMAT.md#Template": (
+                "LEARNING-RECORD-FORMAT.md",
+                "模板",
+            ),
+            "LEARNING-RECORD-FORMAT.md#Optional sections": (
+                "LEARNING-RECORD-FORMAT.md",
+                "可选章节",
+            ),
+            "LEARNING-RECORD-FORMAT.md#Numbering": (
+                "LEARNING-RECORD-FORMAT.md",
+                "编号",
+            ),
+            "LEARNING-RECORD-FORMAT.md#When to write a learning record": (
+                "LEARNING-RECORD-FORMAT.md",
+                "何时编写学习记录",
+            ),
+            "LEARNING-RECORD-FORMAT.md#What does _not_ qualify": (
+                "LEARNING-RECORD-FORMAT.md",
+                "不符合条件的情形",
+            ),
+            "LEARNING-RECORD-FORMAT.md#Supersession": (
+                "LEARNING-RECORD-FORMAT.md",
+                "取代",
+            ),
+            "MISSION-FORMAT.md#MISSION.md Format": (
+                "MISSION-FORMAT.md",
+                "MISSION.md 格式",
+            ),
+            "MISSION-FORMAT.md#Template": ("MISSION-FORMAT.md", "模板"),
+            "MISSION-FORMAT.md#Rules": ("MISSION-FORMAT.md", "规则"),
+            "RESOURCES-FORMAT.md#RESOURCES.md Format": (
+                "RESOURCES-FORMAT.md",
+                "RESOURCES.md 格式",
+            ),
+            "RESOURCES-FORMAT.md#Structure": (
+                "RESOURCES-FORMAT.md",
+                "结构",
+            ),
+            "RESOURCES-FORMAT.md#Rules": ("RESOURCES-FORMAT.md", "规则"),
+        }
+        for field in ("complete", "translated"):
+            mappings = entry["sections"][field]
+            self.assertEqual(expected_mappings.keys(), {item["upstream"] for item in mappings})
+            for mapping in mappings:
+                with self.subTest(field=field, section=mapping["upstream"]):
+                    document, heading = expected_mappings[mapping["upstream"]]
+                    self.assertEqual(heading, mapping["local"])
+                    self.assertIn(heading, documents[document])
+                    self.assertRegex(mapping["evidence"], r"\.md#")
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual([], entry["sections"]["local_added"])
+        self.assertEqual(
+            {
+                "GLOSSARY-FORMAT.md": "d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6",
+                "LEARNING-RECORD-FORMAT.md": "855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17",
+                "MISSION-FORMAT.md": "8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7",
+                "RESOURCES-FORMAT.md": "2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08",
+                "SKILL.md": "6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259",
+                "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f",
+            },
+            entry["support_files"],
+        )
+        metadata = skill_dir / "agents" / "openai.yaml"
+        self.assertTrue(metadata.is_file(), "missing local manual-only metadata")
+        self.assertEqual(
+            hashlib.sha256(metadata.read_bytes()).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertIn("allow_implicit_invocation: false", metadata.read_text())
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
+                }
+            ],
+            entry["allowed_local_adaptations"],
+        )
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertEqual(".superpowers/sdd/task-4-report.md", entry["evidence_path"])
+
+    def test_teach_scenarios_apply_retrieved_constraints(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-teach"
+        fixture_path = root / "tests" / "fixtures" / "teach_application.json"
+        self.assertTrue(fixture_path.is_file(), "missing teach application fixture")
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual("skills/productivity/teach", fixture["source_path"])
+        self.assertEqual(
+            {
+                "zpd-selection",
+                "storage-strength",
+                "mission-revision",
+                "learning-record",
+                "glossary-promotion",
+                "resources-curation",
+            },
+            {case["id"] for case in fixture["scenarios"]},
+        )
+        documents = {
+            "SKILL.md": (skill_dir / "SKILL.md").read_text(),
+            "GLOSSARY-FORMAT.md": (
+                skill_dir / "GLOSSARY-FORMAT.md"
+            ).read_text(),
+            "LEARNING-RECORD-FORMAT.md": (
+                skill_dir / "LEARNING-RECORD-FORMAT.md"
+            ).read_text(),
+            "MISSION-FORMAT.md": (
+                skill_dir / "MISSION-FORMAT.md"
+            ).read_text(),
+            "RESOURCES-FORMAT.md": (
+                skill_dir / "RESOURCES-FORMAT.md"
+            ).read_text(),
+        }
+        for case in fixture["scenarios"]:
+            with self.subTest(scenario=case["id"]):
+                self.assertIsInstance(case["input"], dict)
+                self.assertTrue(case["retrieved_constraints"])
+                constraint_ids = set()
+                for constraint in case["retrieved_constraints"]:
+                    self.assertNotIn(constraint["id"], constraint_ids)
+                    constraint_ids.add(constraint["id"])
+                    self.assertIn(constraint["document"], documents)
+                    self.assertIn(
+                        constraint["text"], documents[constraint["document"]]
+                    )
+                self.assertTrue(case["constraint_mapping"])
+                for mapping in case["constraint_mapping"]:
+                    self.assertTrue(mapping["when"])
+                    self.assertTrue(mapping["constraints"])
+                    self.assertTrue(set(mapping["constraints"]) <= constraint_ids)
+                    self.assertEqual(case["expected"], mapping["outcome"])
+                self.assertEqual(
+                    case["expected"],
+                    self._apply_teach_constraint_mapping(case),
                 )
 
 

@@ -1,0 +1,232 @@
+{
+  "source_path": "skills/productivity/teach",
+  "scenarios": [
+    {
+      "id": "zpd-selection",
+      "input": {
+        "requested_topic": null,
+        "learning_records_reviewed": true,
+        "mission_relevant": true,
+        "fits_zpd": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "review-records",
+          "document": "SKILL.md",
+          "text": "阅读其 `learning-records`"
+        },
+        {
+          "id": "teach-relevant-zpd",
+          "document": "SKILL.md",
+          "text": "教授最相关且处于其最近发展区内的内容。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "requested_topic": null,
+            "learning_records_reviewed": true,
+            "mission_relevant": true,
+            "fits_zpd": true
+          },
+          "constraints": ["review-records", "teach-relevant-zpd"],
+          "outcome": {
+            "next_step": "teach-most-relevant-zpd-topic"
+          }
+        }
+      ],
+      "expected": {
+        "next_step": "teach-most-relevant-zpd-topic"
+      }
+    },
+    {
+      "id": "storage-strength",
+      "input": {
+        "lesson_type": "skill",
+        "uses_retrieval_practice": true,
+        "uses_spacing": true,
+        "uses_interleaving": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "storage-goal",
+          "document": "SKILL.md",
+          "text": "存储强度才是真正的目标。"
+        },
+        {
+          "id": "retrieval-practice",
+          "document": "SKILL.md",
+          "text": "使用检索练习（从记忆中回忆）"
+        },
+        {
+          "id": "spacing",
+          "document": "SKILL.md",
+          "text": "间隔练习（将练习分布在一段时间内）"
+        },
+        {
+          "id": "interleaving",
+          "document": "SKILL.md",
+          "text": "交错练习（在练习中混合不同但相关的主题——仅适用于技能练习）"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "lesson_type": "skill",
+            "uses_retrieval_practice": true,
+            "uses_spacing": true,
+            "uses_interleaving": true
+          },
+          "constraints": [
+            "storage-goal",
+            "retrieval-practice",
+            "spacing",
+            "interleaving"
+          ],
+          "outcome": {
+            "lesson_design": "durable-skill-practice"
+          }
+        }
+      ],
+      "expected": {
+        "lesson_design": "durable-skill-practice"
+      }
+    },
+    {
+      "id": "mission-revision",
+      "input": {
+        "mission_shifted": true,
+        "user_confirmed": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "confirmation",
+          "document": "SKILL.md",
+          "text": "改变学习任务之前须向用户确认。"
+        },
+        {
+          "id": "revise-reality",
+          "document": "MISSION-FORMAT.md",
+          "text": "现实改变时修订。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "mission_shifted": true,
+            "user_confirmed": false
+          },
+          "constraints": ["confirmation", "revise-reality"],
+          "outcome": {
+            "action": "ask-for-confirmation-before-updating-mission"
+          }
+        }
+      ],
+      "expected": {
+        "action": "ask-for-confirmation-before-updating-mission"
+      }
+    },
+    {
+      "id": "learning-record",
+      "input": {
+        "demonstrated_nontrivial_understanding": true,
+        "merely_covered": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "genuine-understanding",
+          "document": "LEARNING-RECORD-FORMAT.md",
+          "text": "用户展示了对某项非平凡内容的真正理解"
+        },
+        {
+          "id": "not-coverage",
+          "document": "LEARNING-RECORD-FORMAT.md",
+          "text": "覆盖不等于学习。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "demonstrated_nontrivial_understanding": true,
+            "merely_covered": false
+          },
+          "constraints": ["genuine-understanding", "not-coverage"],
+          "outcome": {
+            "write_learning_record": true
+          }
+        }
+      ],
+      "expected": {
+        "write_learning_record": true
+      }
+    },
+    {
+      "id": "glossary-promotion",
+      "input": {
+        "user_understands_term": true,
+        "definition_is_tight": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "understood-only",
+          "document": "GLOSSARY-FORMAT.md",
+          "text": "仅当用户理解一个术语时才加入它。"
+        },
+        {
+          "id": "tight-definition",
+          "document": "GLOSSARY-FORMAT.md",
+          "text": "保持定义严谨。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "user_understands_term": true,
+            "definition_is_tight": true
+          },
+          "constraints": ["understood-only", "tight-definition"],
+          "outcome": {
+            "add_term_to_glossary": true
+          }
+        }
+      ],
+      "expected": {
+        "add_term_to_glossary": true
+      }
+    },
+    {
+      "id": "resources-curation",
+      "input": {
+        "high_trust": false,
+        "annotated": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "high-trust-only",
+          "document": "RESOURCES-FORMAT.md",
+          "text": "仅使用高可信来源。"
+        },
+        {
+          "id": "annotate",
+          "document": "RESOURCES-FORMAT.md",
+          "text": "为每个条目添加注释。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "high_trust": false,
+            "annotated": false
+          },
+          "constraints": ["high-trust-only", "annotate"],
+          "outcome": {
+            "include_resource": false
+          }
+        }
+      ],
+      "expected": {
+        "include_resource": false
+      }
+    }
+  ]
+}

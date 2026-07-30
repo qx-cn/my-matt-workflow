@@ -413,13 +413,60 @@
     },
     {
       "upstream_skill": "teach",
-      "upstream_path": "productivity/teach",
+      "upstream_path": "skills/productivity/teach",
       "local_skill": "my-teach",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#Teaching Workspace", "SKILL.md#Philosophy", "SKILL.md#Fluency vs Storage Strength", "SKILL.md#Lessons", "SKILL.md#Assets", "SKILL.md#The Mission", "SKILL.md#Zone Of Proximal Development", "SKILL.md#Knowledge", "SKILL.md#Skills", "SKILL.md#Acquiring Wisdom", "SKILL.md#Reference Documents", "SKILL.md#`NOTES.md`",
+          "GLOSSARY-FORMAT.md#GLOSSARY.md Format", "GLOSSARY-FORMAT.md#Structure", "GLOSSARY-FORMAT.md#Rules",
+          "LEARNING-RECORD-FORMAT.md#Learning Record Format", "LEARNING-RECORD-FORMAT.md#Template", "LEARNING-RECORD-FORMAT.md#Optional sections", "LEARNING-RECORD-FORMAT.md#Numbering", "LEARNING-RECORD-FORMAT.md#When to write a learning record", "LEARNING-RECORD-FORMAT.md#What does _not_ qualify", "LEARNING-RECORD-FORMAT.md#Supersession",
+          "MISSION-FORMAT.md#MISSION.md Format", "MISSION-FORMAT.md#Template", "MISSION-FORMAT.md#Rules",
+          "RESOURCES-FORMAT.md#RESOURCES.md Format", "RESOURCES-FORMAT.md#Structure", "RESOURCES-FORMAT.md#Rules"
+        ],
+        "local": [
+          "SKILL.md#教学工作区", "SKILL.md#教学理念", "SKILL.md#流畅度与存储强度", "SKILL.md#课程", "SKILL.md#资源组件", "SKILL.md#学习任务", "SKILL.md#最近发展区", "SKILL.md#知识", "SKILL.md#技能", "SKILL.md#获取智慧", "SKILL.md#参考文档", "SKILL.md#`NOTES.md`",
+          "GLOSSARY-FORMAT.md#GLOSSARY.md 格式", "GLOSSARY-FORMAT.md#结构", "GLOSSARY-FORMAT.md#规则",
+          "LEARNING-RECORD-FORMAT.md#学习记录格式", "LEARNING-RECORD-FORMAT.md#模板", "LEARNING-RECORD-FORMAT.md#可选章节", "LEARNING-RECORD-FORMAT.md#编号", "LEARNING-RECORD-FORMAT.md#何时编写学习记录", "LEARNING-RECORD-FORMAT.md#不符合条件的情形", "LEARNING-RECORD-FORMAT.md#取代",
+          "MISSION-FORMAT.md#MISSION.md 格式", "MISSION-FORMAT.md#模板", "MISSION-FORMAT.md#规则",
+          "RESOURCES-FORMAT.md#RESOURCES.md 格式", "RESOURCES-FORMAT.md#结构", "RESOURCES-FORMAT.md#规则"
+        ],
+        "complete": [
+          {"upstream": "SKILL.md#Teaching Workspace", "local": "教学工作区", "evidence": "SKILL.md#教学工作区保留工作区状态、全部七类文件、格式链接、递增命名及组件定义。"},
+          {"upstream": "SKILL.md#Philosophy", "local": "教学理念", "evidence": "SKILL.md#教学理念保留知识、技能、智慧三分法、可信资源优先、参数化知识禁令与主题差异。"},
+          {"upstream": "SKILL.md#Fluency vs Storage Strength", "local": "流畅度与存储强度", "evidence": "SKILL.md#流畅度与存储强度保留两种强度、流畅度错觉及检索、间隔、交错练习。"},
+          {"upstream": "SKILL.md#Lessons", "local": "课程", "evidence": "SKILL.md#课程保留递增 HTML 文件、Tufte 美学、短课、单一可见收获、ZPD、CLI 打开、锚点、主要来源和追问提醒。"},
+          {"upstream": "SKILL.md#Assets", "local": "资源组件", "evidence": "SKILL.md#资源组件保留复用优先、先读 assets、抽取可复用组件、禁止未来重复内联和共享样式表。"},
+          {"upstream": "SKILL.md#The Mission", "local": "学习任务", "evidence": "SKILL.md#学习任务保留任务作为教学基础、任务不清时先追问、现实目标作用、更新任务和用户确认。"},
+          {"upstream": "SKILL.md#Zone Of Proximal Development", "local": "最近发展区", "evidence": "SKILL.md#最近发展区保留恰到好处的挑战、显式请求例外、读取记录、任务相关性和最相关内容选择。"},
+          {"upstream": "SKILL.md#Knowledge", "local": "知识", "evidence": "SKILL.md#知识保留技能驱动的最小知识、先教后练、可信资源、引用和工作记忆约束。"},
+          {"upstream": "SKILL.md#Skills", "local": "技能", "evidence": "SKILL.md#技能保留持久性与灵活性、费力检索、互动课程、现实步骤、紧密反馈和等长测验答案。"},
+          {"upstream": "SKILL.md#Acquiring Wisdom", "local": "获取智慧", "evidence": "SKILL.md#获取智慧保留真实互动、先尝试回答再委托社区、线上线下社区和尊重不加入偏好。"},
+          {"upstream": "SKILL.md#Reference Documents", "local": "参考文档", "evidence": "SKILL.md#参考文档保留课程外的压缩知识、快速参考、各类适用主题和术语表一致性。"},
+          {"upstream": "SKILL.md#`NOTES.md`", "local": "`NOTES.md`", "evidence": "SKILL.md#`NOTES.md`保留记录教学偏好和工作笔记以供后续课程设计。"},
+          {"upstream": "GLOSSARY-FORMAT.md#GLOSSARY.md Format", "local": "GLOSSARY.md 格式", "evidence": "GLOSSARY-FORMAT.md#GLOSSARY.md 格式保留规范语言、压缩定义即理解证据。"},
+          {"upstream": "GLOSSARY-FORMAT.md#Structure", "local": "结构", "evidence": "GLOSSARY-FORMAT.md#结构保留主题、术语、肌肥大、渐进超负荷、RPE 与避免别名的完整模板。"},
+          {"upstream": "GLOSSARY-FORMAT.md#Rules", "local": "规则", "evidence": "GLOSSARY-FORMAT.md#规则保留理解后收录、取舍、严谨定义、术语复用、分组、歧义和随理解修订。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#Learning Record Format", "local": "学习记录格式", "evidence": "LEARNING-RECORD-FORMAT.md#学习记录格式保留目录、递增命名、ADR 类比、ZPD 用途和延迟创建。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#Template", "local": "模板", "evidence": "LEARNING-RECORD-FORMAT.md#模板保留简短标题、1–3 句格式，以及记录已知内容和后续教学影响而非填表。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#Optional sections", "local": "可选章节", "evidence": "LEARNING-RECORD-FORMAT.md#可选章节保留状态、证据、影响及仅在有价值时使用。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#Numbering", "local": "编号", "evidence": "LEARNING-RECORD-FORMAT.md#编号保留扫描最高编号后加一。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#When to write a learning record", "local": "何时编写学习记录", "evidence": "LEARNING-RECORD-FORMAT.md#何时编写学习记录保留真正理解、已有知识、纠正误解和任务转移四种条件。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#What does _not_ qualify", "local": "不符合条件的情形", "evidence": "LEARNING-RECORD-FORMAT.md#不符合条件的情形保留覆盖不等于学习、术语表去重和不记录会话日志。"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#Supersession", "local": "取代", "evidence": "LEARNING-RECORD-FORMAT.md#取代保留矛盾记录标记为 superseded 而非删除的历史信号。"},
+          {"upstream": "MISSION-FORMAT.md#MISSION.md Format", "local": "MISSION.md 格式", "evidence": "MISSION-FORMAT.md#MISSION.md 格式保留根目录、原因和全部教学决策可追溯性。"},
+          {"upstream": "MISSION-FORMAT.md#Template", "local": "模板", "evidence": "MISSION-FORMAT.md#模板保留原因、可观察成功、约束和范围外字段。"},
+          {"upstream": "MISSION-FORMAT.md#Rules", "local": "规则", "evidence": "MISSION-FORMAT.md#规则保留单任务、具体目标、反问模糊、现实修订和一屏指南针约束。"},
+          {"upstream": "RESOURCES-FORMAT.md#RESOURCES.md Format", "local": "RESOURCES.md 格式", "evidence": "RESOURCES-FORMAT.md#RESOURCES.md 格式保留可信来源、讲解知识非参数化猜测和社区智慧。"},
+          {"upstream": "RESOURCES-FORMAT.md#Structure", "local": "结构", "evidence": "RESOURCES-FORMAT.md#结构保留知识与智慧社区分组、书籍、文章、社区和本地课程示例。"},
+          {"upstream": "RESOURCES-FORMAT.md#Rules", "local": "规则", "evidence": "RESOURCES-FORMAT.md#规则保留高可信、每项注释、知识/智慧分组、缺口、果断修剪和社区偏好。"}
+        ],
+        "translated": [
+          {"upstream": "SKILL.md#Teaching Workspace", "local": "教学工作区", "evidence": "SKILL.md#教学工作区"}, {"upstream": "SKILL.md#Philosophy", "local": "教学理念", "evidence": "SKILL.md#教学理念"}, {"upstream": "SKILL.md#Fluency vs Storage Strength", "local": "流畅度与存储强度", "evidence": "SKILL.md#流畅度与存储强度"}, {"upstream": "SKILL.md#Lessons", "local": "课程", "evidence": "SKILL.md#课程"}, {"upstream": "SKILL.md#Assets", "local": "资源组件", "evidence": "SKILL.md#资源组件"}, {"upstream": "SKILL.md#The Mission", "local": "学习任务", "evidence": "SKILL.md#学习任务"}, {"upstream": "SKILL.md#Zone Of Proximal Development", "local": "最近发展区", "evidence": "SKILL.md#最近发展区"}, {"upstream": "SKILL.md#Knowledge", "local": "知识", "evidence": "SKILL.md#知识"}, {"upstream": "SKILL.md#Skills", "local": "技能", "evidence": "SKILL.md#技能"}, {"upstream": "SKILL.md#Acquiring Wisdom", "local": "获取智慧", "evidence": "SKILL.md#获取智慧"}, {"upstream": "SKILL.md#Reference Documents", "local": "参考文档", "evidence": "SKILL.md#参考文档"}, {"upstream": "SKILL.md#`NOTES.md`", "local": "`NOTES.md`", "evidence": "SKILL.md#`NOTES.md`"},
+          {"upstream": "GLOSSARY-FORMAT.md#GLOSSARY.md Format", "local": "GLOSSARY.md 格式", "evidence": "GLOSSARY-FORMAT.md#GLOSSARY.md 格式"}, {"upstream": "GLOSSARY-FORMAT.md#Structure", "local": "结构", "evidence": "GLOSSARY-FORMAT.md#结构"}, {"upstream": "GLOSSARY-FORMAT.md#Rules", "local": "规则", "evidence": "GLOSSARY-FORMAT.md#规则"},
+          {"upstream": "LEARNING-RECORD-FORMAT.md#Learning Record Format", "local": "学习记录格式", "evidence": "LEARNING-RECORD-FORMAT.md#学习记录格式"}, {"upstream": "LEARNING-RECORD-FORMAT.md#Template", "local": "模板", "evidence": "LEARNING-RECORD-FORMAT.md#模板"}, {"upstream": "LEARNING-RECORD-FORMAT.md#Optional sections", "local": "可选章节", "evidence": "LEARNING-RECORD-FORMAT.md#可选章节"}, {"upstream": "LEARNING-RECORD-FORMAT.md#Numbering", "local": "编号", "evidence": "LEARNING-RECORD-FORMAT.md#编号"}, {"upstream": "LEARNING-RECORD-FORMAT.md#When to write a learning record", "local": "何时编写学习记录", "evidence": "LEARNING-RECORD-FORMAT.md#何时编写学习记录"}, {"upstream": "LEARNING-RECORD-FORMAT.md#What does _not_ qualify", "local": "不符合条件的情形", "evidence": "LEARNING-RECORD-FORMAT.md#不符合条件的情形"}, {"upstream": "LEARNING-RECORD-FORMAT.md#Supersession", "local": "取代", "evidence": "LEARNING-RECORD-FORMAT.md#取代"},
+          {"upstream": "MISSION-FORMAT.md#MISSION.md Format", "local": "MISSION.md 格式", "evidence": "MISSION-FORMAT.md#MISSION.md 格式"}, {"upstream": "MISSION-FORMAT.md#Template", "local": "模板", "evidence": "MISSION-FORMAT.md#模板"}, {"upstream": "MISSION-FORMAT.md#Rules", "local": "规则", "evidence": "MISSION-FORMAT.md#规则"},
+          {"upstream": "RESOURCES-FORMAT.md#RESOURCES.md Format", "local": "RESOURCES.md 格式", "evidence": "RESOURCES-FORMAT.md#RESOURCES.md 格式"}, {"upstream": "RESOURCES-FORMAT.md#Structure", "local": "结构", "evidence": "RESOURCES-FORMAT.md#结构"}, {"upstream": "RESOURCES-FORMAT.md#Rules", "local": "规则", "evidence": "RESOURCES-FORMAT.md#规则"}
+        ],
         "missing": [],
         "local_added": []
       },
@@ -431,10 +478,18 @@
         "SKILL.md": "6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259",
         "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit."
+      "local_support_files": {
+        "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-4-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
       "upstream_skill": "to-questionnaire",
