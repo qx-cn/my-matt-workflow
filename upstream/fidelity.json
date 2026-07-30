@@ -636,7 +636,7 @@
       "allowed_local_adaptations": [
         {
           "path": "SKILL.md",
-          "adaptation": "保留本地名称、手动调用元数据，以及仓库要求的简短“项目策略优先”提示；不改变上游方法。"
+          "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
         }
       ],
       "conclusion": "faithful",

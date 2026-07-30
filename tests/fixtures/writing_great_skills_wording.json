@@ -3,185 +3,112 @@
     "baseline": [
       {
         "id": "description-one-trigger-per-branch",
-        "input": "描述同时写“用 TDD 构建功能”和“用户要求测试先行”。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "一个分支只保留一个触发条件"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "将两句同义触发语合并为一个 TDD 分支。"
-        }
+        "input": {"scenario": "描述同时写“用 TDD 构建功能”和“用户要求测试先行”。", "same_branch_synonyms": true},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "一个分支只保留一个触发条件"}],
+        "constraint_mapping": [{"when": {"same_branch_synonyms": true}, "guidance": ["一个分支只保留一个触发条件"], "decision": "rewrite", "observable": "将两句同义触发语合并为一个 TDD 分支。"}],
+        "expected": {"decision": "rewrite", "observable": "将两句同义触发语合并为一个 TDD 分支。"}
       },
       {
         "id": "step-needs-checkable-bound",
-        "input": "步骤的停止语是“理解需求后继续”。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "完成条件"},
-          {"document": "GLOSSARY.md", "text": "既可检查又穷尽"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "用可检查且穷尽的完成条件替换“理解需求”。"
-        }
+        "input": {"scenario": "步骤的停止语是“理解需求后继续”。", "completion_checkable": false, "completion_exhaustive": false},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "完成条件"}, {"document": "GLOSSARY.md", "text": "既可检查又穷尽"}],
+        "constraint_mapping": [{"when": {"completion_checkable": false, "completion_exhaustive": false}, "guidance": ["完成条件", "既可检查又穷尽"], "decision": "rewrite", "observable": "用可检查且穷尽的完成条件替换“理解需求”。"}],
+        "expected": {"decision": "rewrite", "observable": "用可检查且穷尽的完成条件替换“理解需求”。"}
       },
       {
         "id": "disclose-branch-specific-reference",
-        "input": "所有分支都在 SKILL.md 内联一份只供发布分支使用的部署手册。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "渐进式披露"},
-          {"document": "GLOSSARY.md", "text": "只有部分分支需要的内容"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "将部署手册移至链接文件，并在发布分支写明指针。"
-        }
+        "input": {"scenario": "所有分支都在 SKILL.md 内联一份只供发布分支使用的部署手册。", "reference_needed_by_all_branches": false, "reference_inlined": true},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "渐进式披露"}, {"document": "GLOSSARY.md", "text": "只有部分分支需要的内容"}],
+        "constraint_mapping": [{"when": {"reference_needed_by_all_branches": false, "reference_inlined": true}, "guidance": ["渐进式披露", "只有部分分支需要的内容"], "decision": "rewrite", "observable": "将部署手册移至链接文件，并在发布分支写明指针。"}],
+        "expected": {"decision": "rewrite", "observable": "将部署手册移至链接文件，并在发布分支写明指针。"}
       },
       {
         "id": "one-authoritative-rule",
-        "input": "同一回滚规则同时出现在两个标题中。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "单一事实来源"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "保留一个权威规则位置，另一处改为指向它。"
-        }
+        "input": {"scenario": "同一回滚规则同时出现在两个标题中。", "authoritative_rule_locations": 2},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "单一事实来源"}],
+        "constraint_mapping": [{"when": {"authoritative_rule_locations": 2}, "guidance": ["单一事实来源"], "decision": "rewrite", "observable": "保留一个权威规则位置，另一处改为指向它。"}],
+        "expected": {"decision": "rewrite", "observable": "保留一个权威规则位置，另一处改为指向它。"}
       },
       {
         "id": "pretrained-leading-word",
-        "input": "用“谨慎地、认真地、非常仔细地”反复描述审查行为。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "主导词"},
-          {"document": "SKILL.md", "text": "折叠"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "以一个已有的主导词替代重复的行为解释。"
-        }
+        "input": {"scenario": "用“谨慎地、认真地、非常仔细地”反复描述审查行为。", "repeated_explanations": true, "pretrained_leading_word": false},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "主导词"}, {"document": "SKILL.md", "text": "折叠"}],
+        "constraint_mapping": [{"when": {"repeated_explanations": true, "pretrained_leading_word": false}, "guidance": ["主导词", "折叠"], "decision": "rewrite", "observable": "以一个已有的主导词替代重复的行为解释。"}],
+        "expected": {"decision": "rewrite", "observable": "以一个已有的主导词替代重复的行为解释。"}
       }
     ],
     "fixed": [
       {
         "id": "manual-skill-remains-user-invoked",
-        "input": "该 Skill 只由人手动输入名称运行，且没有其他 Skill 需要它。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "用户调用"},
-          {"document": "SKILL.md", "text": "避免上下文负荷"}
-        ],
-        "expected": {
-          "decision": "accept",
-          "observable": "保留 disable-model-invocation: true。"
-        }
+        "input": {"scenario": "该 Skill 只由人手动输入名称运行，且没有其他 Skill 需要它。", "human_invocation_only": true, "other_skill_reach_required": false},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "用户调用"}, {"document": "SKILL.md", "text": "避免上下文负荷"}],
+        "constraint_mapping": [{"when": {"human_invocation_only": true, "other_skill_reach_required": false}, "guidance": ["用户调用", "避免上下文负荷"], "decision": "accept", "observable": "保留 disable-model-invocation: true。"}],
+        "expected": {"decision": "accept", "observable": "保留 disable-model-invocation: true。"}
       },
       {
         "id": "pointer-wording-controls-retrieval",
-        "input": "链接的文字只写“更多资料”，但其中是每次审查都必须遵循的规则。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "上下文指针"},
-          {"document": "GLOSSARY.md", "text": "先修复措辞"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "将链接文字改为明确说明必须何时读取该规则。"
-        }
+        "input": {"scenario": "链接的文字只写“更多资料”，但其中是每次审查都必须遵循的规则。", "pointer_wording_explicit": false, "target_required": true},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "上下文指针"}, {"document": "GLOSSARY.md", "text": "先修复措辞"}],
+        "constraint_mapping": [{"when": {"pointer_wording_explicit": false, "target_required": true}, "guidance": ["上下文指针", "先修复措辞"], "decision": "rewrite", "observable": "将链接文字改为明确说明必须何时读取该规则。"}],
+        "expected": {"decision": "rewrite", "observable": "将链接文字改为明确说明必须何时读取该规则。"}
       },
       {
         "id": "sharpen-before-splitting",
-        "input": "Agent 总在验证结束前跳到下一步；草案直接把每一步拆成独立 Skill。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "先收紧完成条件"},
-          {"document": "GLOSSARY.md", "text": "仅当条件不可避免地模糊"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "先写清完成条件；只有仍观察到匆忙时才按序列拆分。"
-        }
+        "input": {"scenario": "Agent 总在验证结束前跳到下一步；草案直接把每一步拆成独立 Skill。", "premature_completion_observed": true, "completion_irreducibly_fuzzy": false, "sequence_split_proposed": true},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "先收紧完成条件"}, {"document": "GLOSSARY.md", "text": "仅当条件不可避免地模糊"}],
+        "constraint_mapping": [{"when": {"premature_completion_observed": true, "completion_irreducibly_fuzzy": false, "sequence_split_proposed": true}, "guidance": ["先收紧完成条件", "仅当条件不可避免地模糊"], "decision": "rewrite", "observable": "先写清完成条件；只有仍观察到匆忙时才按序列拆分。"}],
+        "expected": {"decision": "rewrite", "observable": "先写清完成条件；只有仍观察到匆忙时才按序列拆分。"}
       },
       {
         "id": "delete-noop-prose",
-        "input": "规则写“请认真完成任务”，没有额外约束或可观察结果。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "无效操作"},
-          {"document": "GLOSSARY.md", "text": "与默认值相比"}
-        ],
-        "expected": {
-          "decision": "reject",
-          "observable": "删除未改变默认行为的规则，而不是仅替换同义词。"
-        }
+        "input": {"scenario": "规则写“请认真完成任务”，没有额外约束或可观察结果。", "changes_default_behavior": false},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "无效操作"}, {"document": "GLOSSARY.md", "text": "与默认值相比"}],
+        "constraint_mapping": [{"when": {"changes_default_behavior": false}, "guidance": ["无效操作", "与默认值相比"], "decision": "reject", "observable": "删除未改变默认行为的规则，而不是仅替换同义词。"}],
+        "expected": {"decision": "reject", "observable": "删除未改变默认行为的规则，而不是仅替换同义词。"}
       },
       {
         "id": "positive-steering",
-        "input": "规则写“不要写冗长注释”。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "正向"},
-          {"document": "GLOSSARY.md", "text": "写一行注释"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "改写为“写一行注释”等正向目标。"
-        }
+        "input": {"scenario": "规则写“不要写冗长注释”。", "negative_steering": true, "hard_guardrail": false},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "正向"}, {"document": "GLOSSARY.md", "text": "写一行注释"}],
+        "constraint_mapping": [{"when": {"negative_steering": true, "hard_guardrail": false}, "guidance": ["正向", "写一行注释"], "decision": "rewrite", "observable": "改写为“写一行注释”等正向目标。"}],
+        "expected": {"decision": "rewrite", "observable": "改写为“写一行注释”等正向目标。"}
       }
     ],
     "stress": [
       {
         "id": "synonym-stuffed-description",
-        "input": "描述通过六个近义短语列出“修复、纠错、排障、调试、解决 bug、查问题”。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "一个分支只保留一个触发条件"},
-          {"document": "SKILL.md", "text": "一个分支只保留一个触发条件"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "合并同一排障分支的近义触发短语。"
-        }
+        "input": {"scenario": "描述通过六个近义短语列出“修复、纠错、排障、调试、解决 bug、查问题”。", "same_branch_synonyms": true},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "一个分支只保留一个触发条件"}],
+        "constraint_mapping": [{"when": {"same_branch_synonyms": true}, "guidance": ["一个分支只保留一个触发条件"], "decision": "rewrite", "observable": "合并同一排障分支的近义触发短语。"}],
+        "expected": {"decision": "rewrite", "observable": "合并同一排障分支的近义触发短语。"}
       },
       {
         "id": "split-only-when-earned",
-        "input": "为了看起来模块化，提案把没有独立主导词且无人需要的 Skill 拆成两个模型调用 Skill。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "按调用拆分"},
-          {"document": "GLOSSARY.md", "text": "上下文负荷"}
-        ],
-        "expected": {
-          "decision": "reject",
-          "observable": "拒绝拆分；没有独立可达性就不增加始终加载的描述。"
-        }
+        "input": {"scenario": "为了看起来模块化，提案把没有独立主导词且无人需要的 Skill 拆成两个模型调用 Skill。", "distinct_leading_word": false, "independent_reach_required": false, "model_invoked_split": true},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "按调用拆分"}, {"document": "GLOSSARY.md", "text": "上下文负荷"}],
+        "constraint_mapping": [{"when": {"distinct_leading_word": false, "independent_reach_required": false, "model_invoked_split": true}, "guidance": ["按调用拆分", "上下文负荷"], "decision": "reject", "observable": "拒绝拆分；没有独立可达性就不增加始终加载的描述。"}],
+        "expected": {"decision": "reject", "observable": "拒绝拆分；没有独立可达性就不增加始终加载的描述。"}
       },
       {
         "id": "sprawl-needs-hierarchy",
-        "input": "每一行都相关的 600 行 Skill 因担心拆分而保留所有参考。",
-        "retrieved_guidance": [
-          {"document": "GLOSSARY.md", "text": "蔓延"},
-          {"document": "GLOSSARY.md", "text": "信息层级"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "将条件性参考披露到支持文件，并按分支或序列拆分。"
-        }
+        "input": {"scenario": "每一行都相关的 600 行 Skill 因担心拆分而保留所有参考。", "sprawl": true, "conditional_reference_inlined": true},
+        "retrieved_guidance": [{"document": "GLOSSARY.md", "text": "蔓延"}, {"document": "GLOSSARY.md", "text": "信息层级"}],
+        "constraint_mapping": [{"when": {"sprawl": true, "conditional_reference_inlined": true}, "guidance": ["蔓延", "信息层级"], "decision": "rewrite", "observable": "将条件性参考披露到支持文件，并按分支或序列拆分。"}],
+        "expected": {"decision": "rewrite", "observable": "将条件性参考披露到支持文件，并按分支或序列拆分。"}
       },
       {
         "id": "hard-guardrail-keeps-positive-pair",
-        "input": "不可绕过的密钥泄露护栏只能用禁止语表达，但草案没有说明应做什么。",
-        "retrieved_guidance": [
-          {"document": "SKILL.md", "text": "硬护栏"},
-          {"document": "GLOSSARY.md", "text": "与正向目标配对"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "保留必要禁止，同时加入安全处理密钥的正向动作。"
-        }
+        "input": {"scenario": "不可绕过的密钥泄露护栏只能用禁止语表达，但草案没有说明应做什么。", "hard_guardrail": true, "positive_action_present": false},
+        "retrieved_guidance": [{"document": "SKILL.md", "text": "硬护栏"}, {"document": "GLOSSARY.md", "text": "与正向目标配对"}],
+        "constraint_mapping": [{"when": {"hard_guardrail": true, "positive_action_present": false}, "guidance": ["硬护栏", "与正向目标配对"], "decision": "rewrite", "observable": "保留必要禁止，同时加入安全处理密钥的正向动作。"}],
+        "expected": {"decision": "rewrite", "observable": "保留必要禁止，同时加入安全处理密钥的正向动作。"}
       },
       {
         "id": "thin-legwork-is-not-premature-completion",
-        "input": "一份没有步骤的参考清单遗漏了多条检查项，作者称其为提前完成。",
-        "retrieved_guidance": [
-          {"document": "GLOSSARY.md", "text": "并非提前完成"},
-          {"document": "GLOSSARY.md", "text": "基础工作"}
-        ],
-        "expected": {
-          "decision": "rewrite",
-          "observable": "诊断为未满足穷尽要求的基础工作，并补充明确的覆盖门槛。"
-        }
+        "input": {"scenario": "一份没有步骤的参考清单遗漏了多条检查项，作者称其为提前完成。", "steps_present": false, "exhaustive_coverage_met": false},
+        "retrieved_guidance": [{"document": "GLOSSARY.md", "text": "并非提前完成"}, {"document": "GLOSSARY.md", "text": "基础工作"}],
+        "constraint_mapping": [{"when": {"steps_present": false, "exhaustive_coverage_met": false}, "guidance": ["并非提前完成", "基础工作"], "decision": "rewrite", "observable": "诊断为未满足穷尽要求的基础工作，并补充明确的覆盖门槛。"}],
+        "expected": {"decision": "rewrite", "observable": "诊断为未满足穷尽要求的基础工作，并补充明确的覆盖门槛。"}
       }
     ]
   }

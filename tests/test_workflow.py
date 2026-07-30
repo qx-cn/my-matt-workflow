@@ -437,6 +437,9 @@ class ProfileTests(unittest.TestCase):
         for skill_file in root.glob("my-*/SKILL.md"):
             text = skill_file.read_text()
             with self.subTest(skill=skill_file.parent.name):
+                if skill_file.parent.name == "my-writing-great-skills":
+                    self.assertNotIn("项目策略优先", text)
+                    continue
                 self.assertIn("已解析生效策略", text)
                 self.assertIn("strict-control", text)
                 self.assertNotRegex(
@@ -1638,9 +1641,11 @@ class ReleaseTests(unittest.TestCase):
 
         self.assertEqual(28, len(validate_skills(root)))
 
-    def test_every_skill_declares_project_policy_precedence(self):
+    def test_legacy_skills_keep_project_policy_precedence(self):
         source_skills = Path(__file__).parents[1] / "skills"
         for skill_file in source_skills.glob("my-*/SKILL.md"):
+            if skill_file.parent.name == "my-writing-great-skills":
+                continue
             self.assertIn("项目策略优先", skill_file.read_text(), skill_file)
 
     def test_builds_manifest_for_valid_manual_skill(self):
@@ -2003,6 +2008,32 @@ class SyncTests(unittest.TestCase):
 
 
 class WritingGreatSkillsParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_writing_great_skills_mapping(case):
+        decisions = {
+            mapping["decision"]
+            for mapping in case["constraint_mapping"]
+            if all(
+                case["input"].get(field) == expected
+                for field, expected in mapping["when"].items()
+            )
+        }
+        if len(decisions) != 1:
+            return None
+        return decisions.pop()
+
+    def test_restored_skill_has_no_project_policy_footer(self):
+        root = Path(__file__).resolve().parents[1]
+        skill = (
+            root / "skills" / "my-writing-great-skills" / "SKILL.md"
+        ).read_text()
+
+        self.assertNotIn("项目策略优先", skill)
+        self.assertNotIn("读取 `.agent/matt-workflow.md`", skill)
+        self.assertNotIn("本 Skill 中要求询问、确认、停止或限制后续工作的表述", skill)
+        self.assertNotIn("均服从该生效策略", skill)
+        self.assertNotIn("绝对安全底线始终不变", skill)
+
     def test_restoration_records_full_parity_and_applies_guidance(self):
         root = Path(__file__).resolve().parents[1]
         skill_dir = root / "skills" / "my-writing-great-skills"
@@ -2088,8 +2119,7 @@ class WritingGreatSkillsParityTests(unittest.TestCase):
                 {
                     "path": "SKILL.md",
                     "adaptation": (
-                        "保留本地名称、手动调用元数据，以及仓库要求的简短"
-                        "“项目策略优先”提示；不改变上游方法。"
+                        "保留本地名称和手动调用元数据；不改变上游方法。"
                     ),
                 }
             ],
@@ -2120,18 +2150,41 @@ class WritingGreatSkillsParityTests(unittest.TestCase):
             with self.subTest(group=group):
                 self.assertGreaterEqual(len(cases), 5)
                 for case in cases:
+                    self.assertIsInstance(case["input"], dict)
                     self.assertIn(
                         case["expected"]["decision"],
                         {"accept", "reject", "rewrite"},
                     )
                     self.assertTrue(case["expected"]["observable"])
                     self.assertTrue(case["retrieved_guidance"])
-                    for guidance in case["retrieved_guidance"]:
+                    guidance_by_text = {
+                        guidance["text"]: guidance
+                        for guidance in case["retrieved_guidance"]
+                    }
+                    self.assertEqual(
+                        len(case["retrieved_guidance"]), len(guidance_by_text)
+                    )
+                    for guidance in guidance_by_text.values():
                         self.assertIn(guidance["document"], documents)
                         self.assertIn(
                             guidance["text"],
                             documents[guidance["document"]],
                         )
+                    self.assertTrue(case["constraint_mapping"])
+                    for mapping in case["constraint_mapping"]:
+                        self.assertTrue(mapping["when"])
+                        self.assertEqual(
+                            case["expected"]["decision"], mapping["decision"]
+                        )
+                        self.assertEqual(
+                            case["expected"]["observable"], mapping["observable"]
+                        )
+                        for guidance_text in mapping["guidance"]:
+                            self.assertIn(guidance_text, guidance_by_text)
+                    self.assertEqual(
+                        case["expected"]["decision"],
+                        self._apply_writing_great_skills_mapping(case),
+                    )
 
 
 if __name__ == "__main__":
