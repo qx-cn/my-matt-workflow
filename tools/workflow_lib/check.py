@@ -56,8 +56,10 @@ def verify_current_release(root: Path) -> dict[str, object]:
     return {"status": "valid", "release": release.name}
 
 
-def run_check(repo_root: Path) -> dict[str, object]:
-    """Run static, unit, eval, and current-release gates without Git commands."""
+def run_check(
+    repo_root: Path, *, check_current_release: bool = True
+) -> dict[str, object]:
+    """Run static, unit, eval, registry, and optional current-release gates."""
     root = repo_root.resolve()
     try:
         static = validate_repository(root)
@@ -75,10 +77,12 @@ def run_check(repo_root: Path) -> dict[str, object]:
     if tests.returncode:
         output = (tests.stdout + tests.stderr).strip()
         raise CheckError("unit tests failed:\n" + output)
-    return {
+    report = {
         "status": "valid",
         "static": static,
         "evals": evals,
         "tests": {"status": "valid"},
-        "release": verify_current_release(root),
     }
+    if check_current_release:
+        report["release"] = verify_current_release(root)
+    return report

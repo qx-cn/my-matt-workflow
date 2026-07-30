@@ -225,6 +225,13 @@ class CheckGateTests(unittest.TestCase):
             ):
                 with self.assertRaisesRegex(CheckError, "current release is stale"):
                     run_check(root)
+            with mock.patch(
+                "tools.workflow_lib.check.subprocess.run", return_value=completed
+            ):
+                replacement_gate = run_check(root, check_current_release=False)
+            self.assertEqual("valid", replacement_gate["status"])
+            self.assertEqual({"status": "valid"}, replacement_gate["tests"])
+            self.assertNotIn("release", replacement_gate)
             self.assertTrue(release.is_dir())
 
     def test_canonical_build_rejects_missing_eval_and_smoke_inputs(self):
@@ -273,6 +280,80 @@ class CheckGateTests(unittest.TestCase):
                         repo_root=root,
                     )
                 self.assertFalse((root / "releases" / f"missing-{name}").exists())
+
+    def test_workflow_build_refuses_release_when_unit_gate_fails(self):
+        if os.environ.get("MY_MATT_NESTED_BUILD_GATE"):
+            self.skipTest("avoids recursively building the copied repository")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repository"
+            self._source_copy(root)
+            (root / "tests" / "test_intentional_gate_failure.py").write_text(
+                "import unittest\n\n"
+                "class IntentionalGateFailure(unittest.TestCase):\n"
+                "    def test_failure(self):\n"
+                "        self.fail('intentional unit gate failure')\n"
+            )
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "build",
+                    "--release-id",
+                    "blocked-v1",
+                ],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ | {"MY_MATT_NESTED_BUILD_GATE": "1"},
+            )
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertIn("unit tests failed", result.stdout)
+            self.assertFalse((root / "releases" / "blocked-v1").exists())
+            self.assertFalse((root / "current.json").exists())
+
+    def test_workflow_build_can_replace_a_stale_current_release(self):
+        if os.environ.get("MY_MATT_NESTED_BUILD_GATE"):
+            self.skipTest("avoids recursively building the copied repository")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repository"
+            self._source_copy(root)
+            build_release(
+                root / "skills",
+                root / "releases",
+                release_id="stale-v1",
+                upstream_id="local-matt-skills",
+                repo_root=root,
+            )
+            (root / "current.json").write_text('{"release_id": "stale-v1"}\n')
+            skill = root / "skills" / "my-sync" / "SKILL.md"
+            skill.write_text(skill.read_text() + "\nReplacement release fixture.\n")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "build",
+                    "--release-id",
+                    "replacement-v2",
+                ],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ | {"MY_MATT_NESTED_BUILD_GATE": "1"},
+            )
+
+            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            self.assertTrue((root / "releases" / "stale-v1").is_dir())
+            self.assertTrue((root / "releases" / "replacement-v2").is_dir())
+            self.assertEqual(
+                {"release_id": "replacement-v2"},
+                json.loads((root / "current.json").read_text()),
+            )
+            self.assertEqual("valid", verify_current_release(root)["status"])
 
     def test_workflow_check_succeeds_from_complete_non_git_copy(self):
         if os.environ.get("MY_MATT_NESTED_CHECK"):

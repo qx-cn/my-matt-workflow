@@ -260,13 +260,18 @@ def command_smoke(args: argparse.Namespace) -> None:
     )
 
 
-def command_check(_: argparse.Namespace) -> None:
-    """Run the one local all-up gate without depending on Git."""
+def _run_all_up_gate(*, check_current_release: bool) -> dict[str, object]:
+    """Run the authoritative source gate and render failures consistently."""
     try:
-        report = run_check(ROOT)
+        return run_check(ROOT, check_current_release=check_current_release)
     except CheckError as exc:
         print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
         raise SystemExit(1) from exc
+
+
+def command_check(_: argparse.Namespace) -> None:
+    """Run the one local all-up gate without depending on Git."""
+    report = _run_all_up_gate(check_current_release=True)
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
@@ -297,6 +302,10 @@ def _write_current_release(path: Path, release_id: str) -> None:
 
 
 def command_build(args: argparse.Namespace) -> None:
+    # A build may replace a stale current release, so only its parity comparison
+    # is inapplicable here. Every source, eval, registry, and unit-test gate runs
+    # before the immutable release directory can be created.
+    _run_all_up_gate(check_current_release=False)
     release_id = args.release_id or datetime.now().strftime("%Y%m%d-%H%M%S")
     release = build_release(
         ROOT / "skills",

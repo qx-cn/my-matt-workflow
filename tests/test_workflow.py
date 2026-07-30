@@ -2075,8 +2075,14 @@ class WorkflowCliTests(unittest.TestCase):
     def test_deploy_reuses_the_current_release_when_skills_are_unchanged(self):
         with tempfile.TemporaryDirectory() as tmp:
             workflow = self._workflow(Path(tmp))
-            first = self._run(workflow, "build", "--release-id", "v1")
-            self.assertEqual(0, first.returncode, first.stderr)
+            build_release(
+                workflow / "skills",
+                workflow / "releases",
+                release_id="v1",
+                upstream_id="local-matt-skills",
+                repo_root=workflow,
+            )
+            (workflow / "current.json").write_text('{"release_id": "v1"}\n')
 
             deployed = self._run(
                 workflow,
@@ -2149,15 +2155,21 @@ class WorkflowCliTests(unittest.TestCase):
     def test_deploy_builds_an_initial_release_when_none_exists(self):
         with tempfile.TemporaryDirectory() as tmp:
             workflow = self._workflow(Path(tmp))
-
-            deployed = self._run(
-                workflow,
-                "deploy",
-                "--agent-home",
-                str(Path(tmp) / "agent"),
+            module = self._load_workflow_module()
+            agent_home = Path(tmp) / "agent"
+            args = argparse.Namespace(
+                release_id="v1",
+                upstream_id="local-matt-skills",
+                target="auto",
+                agent_home=str(agent_home),
             )
+            with (
+                mock.patch.object(module, "ROOT", workflow),
+                mock.patch.object(module, "_run_all_up_gate") as gate,
+            ):
+                module.command_deploy(args)
 
-            self.assertEqual(0, deployed.returncode, deployed.stderr)
+            gate.assert_called_once_with(check_current_release=False)
             self.assertEqual(
                 1,
                 len([path for path in (workflow / "releases").iterdir() if path.is_dir()]),
@@ -2181,8 +2193,14 @@ class WorkflowCliTests(unittest.TestCase):
                     "---\n\n"
                     "# Demo\n"
                 )
-                built = self._run(workflow, "build", "--release-id", release_id)
-                self.assertEqual(0, built.returncode, built.stderr)
+                build_release(
+                    workflow / "skills",
+                    workflow / "releases",
+                    release_id=release_id,
+                    upstream_id="local-matt-skills",
+                    repo_root=workflow,
+                )
+            (workflow / "current.json").write_text('{"release_id": "v3"}\n')
 
             agent_home = root / "agent"
             installed = self._run(
