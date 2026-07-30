@@ -178,6 +178,8 @@
       "local_skill": "my-domain-modeling",
       "sections": {
         "upstream": [
+          "SKILL.md#frontmatter.name",
+          "SKILL.md#frontmatter.description",
           "SKILL.md#File structure",
           "SKILL.md#Challenge against the glossary",
           "SKILL.md#Sharpen fuzzy language",
@@ -197,6 +199,9 @@
           "agents/openai.yaml#interface.short_description"
         ],
         "local": [
+          "SKILL.md#frontmatter.name",
+          "SKILL.md#frontmatter.description",
+          "SKILL.md#frontmatter.disable-model-invocation",
           "SKILL.md#文件结构",
           "SKILL.md#对照术语表提出质疑",
           "SKILL.md#收紧模糊语言",
@@ -251,6 +256,7 @@
         ],
         "missing": [],
         "local_added": [
+          "SKILL.md#frontmatter.disable-model-invocation",
           "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ]
@@ -266,6 +272,27 @@
       },
       "allowed_local_adaptations": [
         {
+          "path": "SKILL.md#frontmatter.name",
+          "upstream_sections": [
+            "SKILL.md#frontmatter.name"
+          ],
+          "classification": "changed-local-adaptation",
+          "adaptation": "上游 name `domain-modeling` 改为本地注册名 `my-domain-modeling`；这是有上游对应项的本地命名适配，不是 local-only 新增，也不改变领域建模方法。"
+        },
+        {
+          "path": "SKILL.md#frontmatter.description",
+          "upstream_sections": [
+            "SKILL.md#frontmatter.description"
+          ],
+          "classification": "changed-local-adaptation",
+          "adaptation": "本地 description 改写并缩窄了上游的调用范围，未保留“另一 Skill 需要维护领域模型”这一调用场景；它是有上游对应项的适配差异，须在 Plan 2 复核是否恢复该范围。"
+        },
+        {
+          "path": "SKILL.md#frontmatter.disable-model-invocation",
+          "classification": "local-only-adaptation",
+          "adaptation": "本地新增 `disable-model-invocation: true`，独立表达 manual-only 调用行为；它与 agents/openai.yaml 的 policy setting 共同构成该行为，不能只归因于后者。"
+        },
+        {
           "path": "SKILL.md#文件结构, SKILL.md#就地更新个人术语表, CONTEXT-FORMAT.md#单上下文与多上下文仓库",
           "upstream_sections": [
             "SKILL.md#File structure",
@@ -280,7 +307,8 @@
         },
         {
           "path": "agents/openai.yaml#policy.allow_implicit_invocation",
-          "adaptation": "保留 false 以表达本地手动调用；该 metadata 适配本身不改变 interface 的原有名称和描述。"
+          "classification": "local-only-adaptation",
+          "adaptation": "保留 false 以表达本地 manual-only 调用 policy；它与 SKILL.md#frontmatter.disable-model-invocation 共同构成该行为，且该 metadata 适配本身不改变 interface 的原有名称和描述。"
         }
       ],
       "conclusion": "adapter-rework-required",

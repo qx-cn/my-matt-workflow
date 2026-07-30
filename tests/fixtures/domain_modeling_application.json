@@ -8,6 +8,12 @@
       "text": "项目配置或已有团队映射表列出了多个上下文时，先读取它以定位上下文；"
     },
     {
+      "id": "clarify-unclear-multiple-contexts",
+      "document": "CONTEXT-FORMAT.md",
+      "source_section": "CONTEXT-FORMAT.md#单上下文与多上下文仓库",
+      "text": "多个上下文并存时，判断当前议题属于哪个上下文；不明确时，按项目 `decision_policy` 询问或在获准的无人值守计划中记录假设。"
+    },
+    {
       "id": "glossary-excludes-implementation",
       "document": "SKILL.md",
       "source_section": "SKILL.md#就地更新个人术语表",
@@ -30,6 +36,29 @@
         "map-context-before-routing"
       ],
       "outcome": "read-context-map"
+    },
+    {
+      "policy": "upstream",
+      "when": {
+        "multiple_contexts": true,
+        "topic_context_clear": false
+      },
+      "requires_constraints": [
+        "clarify-unclear-multiple-contexts"
+      ],
+      "outcome": "ask-for-clarification"
+    },
+    {
+      "policy": "local",
+      "when": {
+        "multiple_contexts": true,
+        "topic_context_clear": false,
+        "approved_unattended_plan": true
+      },
+      "requires_constraints": [
+        "clarify-unclear-multiple-contexts"
+      ],
+      "outcome": "record-routing-assumption"
     },
     {
       "when": {
@@ -66,6 +95,23 @@
         }
       ],
       "expected": "read-context-map"
+    },
+    {
+      "id": "clarify-unclear-multiple-contexts",
+      "input": {
+        "multiple_contexts": true,
+        "topic_context_clear": false,
+        "approved_unattended_plan": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "clarify-unclear-multiple-contexts"
+        }
+      ],
+      "expected": {
+        "upstream": "ask-for-clarification",
+        "local": "record-routing-assumption"
+      }
     },
     {
       "id": "record-resolved-term",

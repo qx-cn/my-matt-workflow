@@ -3264,11 +3264,14 @@ class GrillingParityTests(unittest.TestCase):
 
 class DomainModelingParityTests(unittest.TestCase):
     @staticmethod
-    def _apply_domain_modeling_rules(input_facts, retrieved_constraints, rules):
+    def _apply_domain_modeling_rules(
+        input_facts, retrieved_constraints, rules, policy=None
+    ):
         outcomes = [
             rule["outcome"]
             for rule in rules
-            if all(
+            if (policy is None or rule.get("policy") == policy)
+            and all(
                 input_facts.get(field) == expected
                 for field, expected in rule["when"].items()
             )
@@ -3305,6 +3308,8 @@ class DomainModelingParityTests(unittest.TestCase):
             "agents/openai.yaml": source_dir / "agents/openai.yaml",
         }
         source_sections = {
+            "SKILL.md#frontmatter.name",
+            "SKILL.md#frontmatter.description",
             "SKILL.md#File structure",
             "SKILL.md#Challenge against the glossary",
             "SKILL.md#Sharpen fuzzy language",
@@ -3341,6 +3346,8 @@ class DomainModelingParityTests(unittest.TestCase):
             for mapping in entry["sections"][bucket]
         }
         changed_upstream_sections = {
+            "SKILL.md#frontmatter.name",
+            "SKILL.md#frontmatter.description",
             "SKILL.md#File structure",
             "SKILL.md#Update CONTEXT.md inline",
             "CONTEXT-FORMAT.md#Single vs multi-context repos",
@@ -3357,7 +3364,46 @@ class DomainModelingParityTests(unittest.TestCase):
         self.assertEqual(changed_upstream_sections, adaptation_sections)
         self.assertEqual([], entry["sections"]["missing"])
         self.assertIn("SKILL.md#项目策略优先", entry["sections"]["local_added"])
+        self.assertIn(
+            "SKILL.md#frontmatter.disable-model-invocation",
+            entry["sections"]["local_added"],
+        )
         self.assertIn("agents/openai.yaml#policy", entry["sections"]["local_added"])
+        frontmatter_adaptations = {
+            adaptation["path"]: adaptation
+            for adaptation in entry["allowed_local_adaptations"]
+            if adaptation["path"].startswith("SKILL.md#frontmatter.")
+        }
+        self.assertEqual(
+            {
+                "SKILL.md#frontmatter.name",
+                "SKILL.md#frontmatter.description",
+                "SKILL.md#frontmatter.disable-model-invocation",
+            },
+            set(frontmatter_adaptations),
+        )
+        self.assertEqual(
+            "changed-local-adaptation",
+            frontmatter_adaptations["SKILL.md#frontmatter.name"]["classification"],
+        )
+        self.assertEqual(
+            "changed-local-adaptation",
+            frontmatter_adaptations["SKILL.md#frontmatter.description"][
+                "classification"
+            ],
+        )
+        self.assertEqual(
+            "local-only-adaptation",
+            frontmatter_adaptations[
+                "SKILL.md#frontmatter.disable-model-invocation"
+            ]["classification"],
+        )
+        self.assertIn(
+            "manual-only",
+            frontmatter_adaptations[
+                "SKILL.md#frontmatter.disable-model-invocation"
+            ]["adaptation"],
+        )
         self.assertEqual(
             hashlib.sha256(
                 (skill_dir / "agents/openai.yaml").read_bytes()
@@ -3378,6 +3424,8 @@ class DomainModelingParityTests(unittest.TestCase):
             "ADR-FORMAT.md",
             "agents/openai.yaml",
             "项目策略优先",
+            "frontmatter",
+            "disable-model-invocation",
             "Plan 2",
         ):
             with self.subTest(evidence=text):
@@ -3388,6 +3436,14 @@ class DomainModelingParityTests(unittest.TestCase):
         self.assertIn("If unclear, ask.", source_files["CONTEXT-FORMAT.md"].read_text())
         self.assertIn("按 `decision_policy` 询问", local_skill)
         self.assertIn("均服从该生效策略", local_skill)
+        self.assertIn("name: domain-modeling", source_skill)
+        self.assertIn("name: my-domain-modeling", local_skill)
+        self.assertIn(
+            "description: Build and sharpen a project's domain model.",
+            source_skill,
+        )
+        self.assertIn("description: 澄清领域术语、关系、边界和难以逆转的设计决策", local_skill)
+        self.assertIn("disable-model-invocation: true", local_skill)
         self.assertIn("only when you have something to write", source_skill)
         self.assertIn("只有内容可写时才创建", local_skill)
         self.assertTrue(fixture_path.is_file())
@@ -3397,6 +3453,7 @@ class DomainModelingParityTests(unittest.TestCase):
         self.assertEqual(
             {
                 "route-multiple-contexts",
+                "clarify-unclear-multiple-contexts",
                 "record-resolved-term",
                 "offer-adr-only-for-real-tradeoff",
             },
@@ -3419,14 +3476,34 @@ class DomainModelingParityTests(unittest.TestCase):
 
         for scenario in fixture["scenarios"]:
             with self.subTest(scenario=scenario["id"]):
-                self.assertEqual(
-                    scenario["expected"],
-                    self._apply_domain_modeling_rules(
-                        scenario["input"],
-                        scenario["retrieved_constraints"],
-                        fixture["rules"],
-                    ),
-                )
+                if isinstance(scenario["expected"], dict):
+                    self.assertEqual(
+                        "ask-for-clarification",
+                        scenario["expected"]["upstream"],
+                    )
+                    self.assertEqual(
+                        "record-routing-assumption",
+                        scenario["expected"]["local"],
+                    )
+                    for policy, expected in scenario["expected"].items():
+                        self.assertEqual(
+                            expected,
+                            self._apply_domain_modeling_rules(
+                                scenario["input"],
+                                scenario["retrieved_constraints"],
+                                fixture["rules"],
+                                policy,
+                            ),
+                        )
+                else:
+                    self.assertEqual(
+                        scenario["expected"],
+                        self._apply_domain_modeling_rules(
+                            scenario["input"],
+                            scenario["retrieved_constraints"],
+                            fixture["rules"],
+                        ),
+                    )
 
 
 class WizardParityTests(unittest.TestCase):
