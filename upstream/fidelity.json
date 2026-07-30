@@ -852,7 +852,7 @@
         "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
       },
       "local_support_files": {
-        "agents/openai.yaml": "6121df8ba3c13d06bbb1f179971de67caca75263caf90dd41e0bf88fe6aba9e7",
+        "agents/openai.yaml": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
         "template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f"
       },
       "local_file_metadata": {
@@ -870,7 +870,7 @@
         }
       ],
       "conclusion": "faithful",
-      "evidence_path": ".superpowers/sdd/task-7-report.md",
+      "evidence_path": "upstream/evidence/wizard-restoration.md",
       "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；template.sh 的内容哈希和 0644 文件模式均与上游快照相同，未保留项目策略覆盖。"
     },
     {

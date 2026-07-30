@@ -1,5 +1,5 @@
 interface:
   display_name: "向导"
-  short_description: "生成交互式 Bash 向导"
+  short_description: "交互式设置向导"
 policy:
   allow_implicit_invocation: false

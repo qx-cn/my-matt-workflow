@@ -3085,6 +3085,7 @@ class WizardParityTests(unittest.TestCase):
             item for item in fidelity["skills"] if item["local_skill"] == "my-wizard"
         )
 
+        self.assertIn('short_description: "交互式设置向导"', metadata.read_text())
         self.assertEqual("skills/in-progress/wizard", entry["upstream_path"])
         source_dir = (
             root / ".superpowers/sdd/mattpocock-skills-pinned" / entry["upstream_path"]
@@ -3175,7 +3176,13 @@ class WizardParityTests(unittest.TestCase):
             entry["allowed_local_adaptations"],
         )
         self.assertEqual("faithful", entry["conclusion"])
-        self.assertEqual(".superpowers/sdd/task-7-report.md", entry["evidence_path"])
+        self.assertEqual(
+            "upstream/evidence/wizard-restoration.md", entry["evidence_path"]
+        )
+        self.assertTrue(
+            (root / entry["evidence_path"]).is_file(),
+            "wizard evidence must resolve in committed source",
+        )
 
         for instruction in (
             "每个阶段按顺序命名",
