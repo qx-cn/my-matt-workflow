@@ -3,17 +3,29 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
-from tools.workflow_lib.evals import EvalError, load_scenarios, validate_evals
+from tools.workflow_lib.check import CheckError, run_check, verify_current_release
+from tools.workflow_lib.evals import (
+    EvalError,
+    load_scenarios,
+    run_scenario,
+    validate_evals,
+)
 from tools.workflow_lib.installer import install_release
 from tools.workflow_lib.release import build_release
-from tools.workflow_lib.smoke_registry import resolve_smoke_scenarios
+from tools.workflow_lib.smoke_registry import (
+    SmokeRegistryError,
+    resolve_smoke_scenarios,
+    validate_smoke_registry,
+)
 from tools.workflow_lib.validator import (
     ValidationError,
     validate_markdown_references,
@@ -30,6 +42,45 @@ class EvalValidationTests(unittest.TestCase):
             {"status": "valid", "scenarios": 8, "required_scenarios": 8},
             validate_evals(ROOT),
         )
+
+    def test_checked_in_scenarios_dispatch_deterministic_behavior(self):
+        scenarios = load_scenarios(ROOT / "evals")
+        self.assertEqual(
+            [scenario.identifier for scenario in scenarios],
+            sorted(scenario.identifier for scenario in scenarios),
+        )
+        for scenario in scenarios:
+            self.assertEqual(
+                scenario.expected,
+                run_scenario(ROOT, scenario),
+                scenario.identifier,
+            )
+
+    def test_tampered_structured_expected_outcome_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(ROOT / "evals", root / "evals")
+            shutil.copytree(ROOT / "skills", root / "skills")
+            scenario = root / "evals/scenarios/grilling-one-question-hitl.json"
+            raw = json.loads(scenario.read_text())
+            raw["expected"]["stop"] = "continue-questioning"
+            scenario.write_text(json.dumps(raw))
+
+            with self.assertRaisesRegex(EvalError, "outcome mismatch"):
+                validate_evals(root)
+
+    def test_tampered_structured_input_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(ROOT / "evals", root / "evals")
+            shutil.copytree(ROOT / "skills", root / "skills")
+            scenario = root / "evals/scenarios/implement-automatic-ticket.json"
+            raw = json.loads(scenario.read_text())
+            raw["input"]["policy"] = "manual"
+            scenario.write_text(json.dumps(raw))
+
+            with self.assertRaisesRegex(EvalError, "outcome mismatch"):
+                validate_evals(root)
 
     def test_allow_missing_does_not_allow_malformed_scenarios(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -68,8 +119,15 @@ class EvalValidationTests(unittest.TestCase):
             with self.assertRaisesRegex(EvalError, "stale"):
                 validate_evals(root)
 
-    def test_smoke_registry_returns_no_entries_as_an_explicit_empty_selection(self):
-        self.assertEqual((), resolve_smoke_scenarios(ROOT, ["my-no-such-skill"]))
+    def test_smoke_registry_validates_complete_registered_scenarios(self):
+        scenarios = load_scenarios(ROOT / "evals")
+        registry = validate_smoke_registry(ROOT, scenarios)
+        registered = {identifier for identifiers in registry.values() for identifier in identifiers}
+        self.assertEqual({scenario.identifier for scenario in scenarios}, registered)
+
+    def test_smoke_registry_rejects_unknown_requested_skill(self):
+        with self.assertRaisesRegex(SmokeRegistryError, "not registered"):
+            resolve_smoke_scenarios(ROOT, ["my-no-such-skill"])
 
 
 class StaticGateTests(unittest.TestCase):
@@ -87,7 +145,7 @@ class StaticGateTests(unittest.TestCase):
 
 
 class EvalCliTests(unittest.TestCase):
-    def test_validate_evals_and_unmapped_smoke_report_machine_readable_status(self):
+    def test_validate_evals_and_smoke_report_machine_readable_status(self):
         valid = subprocess.run(
             [sys.executable, "tools/workflow.py", "validate-evals"],
             cwd=ROOT,
@@ -98,22 +156,109 @@ class EvalCliTests(unittest.TestCase):
         self.assertEqual(0, valid.returncode, valid.stderr)
         self.assertEqual("valid", json.loads(valid.stdout)["status"])
 
-        skipped = subprocess.run(
+        unknown = subprocess.run(
             [sys.executable, "tools/workflow.py", "smoke", "--skills", "my-unknown"],
             cwd=ROOT,
             capture_output=True,
             text=True,
             check=False,
         )
-        self.assertEqual(0, skipped.returncode, skipped.stderr)
-        report = json.loads(skipped.stdout)
-        self.assertEqual("skipped", report["status"])
-        self.assertIn("no matching", report["reason"])
+        self.assertNotEqual(0, unknown.returncode)
+        report = json.loads(unknown.stdout)
+        self.assertEqual("invalid", report["status"])
+        self.assertIn("not registered", report["error"])
+
+        registry = subprocess.run(
+            [sys.executable, "tools/workflow.py", "smoke"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, registry.returncode, registry.stderr)
+        self.assertEqual("valid", json.loads(registry.stdout)["status"])
+
+
+class CheckGateTests(unittest.TestCase):
+    def _source_copy(self, destination: Path) -> None:
+        shutil.copytree(
+            ROOT,
+            destination,
+            ignore=shutil.ignore_patterns(
+                ".git", ".worktrees", "releases", "current.json", "__pycache__"
+            ),
+        )
+
+    def test_release_verification_is_not_applicable_without_current_release(self):
+        self.assertEqual(
+            {
+                "status": "not-applicable",
+                "reason": "release verification is not applicable: no current release",
+            },
+            verify_current_release(ROOT),
+        )
+
+    def test_check_rejects_stale_current_release_and_accepts_matching_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repository"
+            self._source_copy(root)
+            release = build_release(
+                root / "skills",
+                root / "releases",
+                release_id="check-v1",
+                upstream_id="local-matt-skills",
+                repo_root=root,
+            )
+            (root / "current.json").write_text('{"release_id": "check-v1"}\n')
+            completed = subprocess.CompletedProcess([], 0, "", "")
+            with mock.patch(
+                "tools.workflow_lib.check.subprocess.run", return_value=completed
+            ):
+                self.assertEqual("valid", run_check(root)["status"])
+            (root / "skills" / "my-sync" / "SKILL.md").write_text(
+                (root / "skills" / "my-sync" / "SKILL.md").read_text()
+                + "\nChanged after release.\n"
+            )
+            with mock.patch(
+                "tools.workflow_lib.check.subprocess.run", return_value=completed
+            ):
+                with self.assertRaisesRegex(CheckError, "current release is stale"):
+                    run_check(root)
+            self.assertTrue(release.is_dir())
+
+    def test_workflow_check_succeeds_from_complete_non_git_copy(self):
+        if os.environ.get("MY_MATT_NESTED_CHECK"):
+            self.skipTest("avoids recursively checking the copied repository")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repository"
+            self._source_copy(root)
+            self.assertFalse((root / ".git").exists())
+            environment = os.environ | {"MY_MATT_NESTED_CHECK": "1"}
+            result = subprocess.run(
+                [sys.executable, "tools/workflow.py", "check"],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=environment,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual("valid", json.loads(result.stdout)["status"])
 
 
 class FullReleaseE2ETests(unittest.TestCase):
     def test_build_install_and_rollback_all_manual_skills_in_temporary_homes(self):
         with tempfile.TemporaryDirectory() as tmp:
+            source_v2 = Path(tmp) / "source-v2"
+            shutil.copytree(
+                ROOT,
+                source_v2,
+                ignore=shutil.ignore_patterns(
+                    ".git", ".worktrees", "releases", "current.json", "__pycache__"
+                ),
+            )
+            v2_skill = source_v2 / "skills" / "my-sync" / "SKILL.md"
+            v2_skill.write_text(v2_skill.read_text() + "\nVersion two fixture.\n")
             releases = Path(tmp) / "releases"
             first = build_release(
                 ROOT / "skills",
@@ -123,11 +268,11 @@ class FullReleaseE2ETests(unittest.TestCase):
                 repo_root=ROOT,
             )
             second = build_release(
-                ROOT / "skills",
+                source_v2 / "skills",
                 releases,
                 release_id="e2e-v2",
                 upstream_id="local-matt-skills",
-                repo_root=ROOT,
+                repo_root=source_v2,
             )
             for target in ("cursor", "claude", "codex"):
                 home = Path(tmp) / target
@@ -135,15 +280,27 @@ class FullReleaseE2ETests(unittest.TestCase):
                 self.assertEqual(
                     29, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
-
-            cursor_home = Path(tmp) / "cursor"
-            install_release(second, cursor_home, target="cursor")
-            install_release(first, cursor_home, target="cursor")
-            state = json.loads(
-                (cursor_home / "my-matt-workflow" / "install-state.json").read_text()
-            )
-            self.assertEqual("e2e-v1", state["release_id"])
-            self.assertEqual(
-                29,
-                len([path for path in (cursor_home / "skills").iterdir() if path.is_dir()]),
-            )
+                original = (home / "skills" / "my-sync" / "SKILL.md").read_bytes()
+                install_release(second, home, target=target)
+                self.assertEqual(
+                    "e2e-v2",
+                    json.loads(
+                        (home / "my-matt-workflow" / "install-state.json").read_text()
+                    )["release_id"],
+                )
+                self.assertNotEqual(
+                    original, (home / "skills" / "my-sync" / "SKILL.md").read_bytes()
+                )
+                install_release(first, home, target=target)
+                self.assertEqual(
+                    "e2e-v1",
+                    json.loads(
+                        (home / "my-matt-workflow" / "install-state.json").read_text()
+                    )["release_id"],
+                )
+                self.assertEqual(
+                    original, (home / "skills" / "my-sync" / "SKILL.md").read_bytes()
+                )
+                self.assertEqual(
+                    29, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                )

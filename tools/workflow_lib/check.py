@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .evals import EvalError, validate_evals
 from .release import release_matches_source
+from .smoke_registry import SmokeRegistryError, validate_smoke_registry
 from .validator import ValidationError, validate_repository
 
 
@@ -37,7 +38,10 @@ def verify_current_release(root: Path) -> dict[str, object]:
     """Verify source/release parity if a repository has a current release."""
     release = _current_release(root)
     if release is None:
-        return {"status": "skipped", "reason": "no current release"}
+        return {
+            "status": "not-applicable",
+            "reason": "release verification is not applicable: no current release",
+        }
     try:
         matches = release_matches_source(
             release,
@@ -58,7 +62,8 @@ def run_check(repo_root: Path) -> dict[str, object]:
     try:
         static = validate_repository(root)
         evals = validate_evals(root)
-    except (ValidationError, EvalError) as exc:
+        validate_smoke_registry(root)
+    except (ValidationError, EvalError, SmokeRegistryError) as exc:
         raise CheckError(str(exc)) from exc
     tests = subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", "tests"],

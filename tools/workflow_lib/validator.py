@@ -170,7 +170,12 @@ def preflight_build(repo_root: Path, skills_dir: Path) -> None:
     if (root / "evals").is_dir():
         validate_repository(root)
         from .evals import validate_evals
+        from .smoke_registry import SmokeRegistryError, validate_smoke_registry
 
         validate_evals(root)
+        try:
+            validate_smoke_registry(root)
+        except SmokeRegistryError as exc:
+            raise ValidationError(str(exc)) from exc
         return
     validate_skills(skills_dir, repo_root=root)

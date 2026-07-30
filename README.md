@@ -16,8 +16,7 @@
 在本目录运行：
 
 ```bash
-python3 tools/workflow.py validate
-python3 -m unittest discover -s tests -p 'test_*.py' -v
+python3 tools/workflow.py check
 python3 tools/workflow.py doctor
 python3 tools/workflow.py doctor --recommend
 python3 tools/workflow.py recommend
@@ -25,5 +24,7 @@ python3 tools/workflow.py sync
 python3 tools/workflow.py build --release-id <release-id>
 python3 tools/workflow.py install --target codex
 ```
+
+`workflow.py check` 是源树的权威本地门禁：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试，并在存在 `current.json` 时验证当前 release 与源树一致。尚未构建首个 release 时会明确报告 release 验证不适用；`build` 只运行静态/eval/注册表预检，不替代 `check`。
 
 项目首次使用时手动运行 `/my-setup`。日常通过 `/my-ask-matt` 查询下一条命令，再手动调用推荐的 `/my-*`。

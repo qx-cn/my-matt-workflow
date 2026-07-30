@@ -1,8 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "implement-manual-ticket",
+  "type": "implementation-selection",
   "skills": ["my-implement"],
-  "assertions": ["manual composition returns an explicit invocation and stops"],
+  "input": {
+    "policy": "manual",
+    "tickets": [
+      {
+        "filename": "01-ready.md",
+        "id": "ready",
+        "title": "Ready",
+        "ticket_kind": "implementation",
+        "status": "ready-for-agent",
+        "blocked_by": [],
+        "claimed_by": null,
+        "tags": [],
+        "sequence": 1,
+        "acceptance": {"checked": 0, "unchecked": 1}
+      }
+    ]
+  },
+  "expected": {"status": "manual-selection-required", "selected": null},
   "evidence": {
     "version": 1,
     "scenario": "implement-manual-ticket",

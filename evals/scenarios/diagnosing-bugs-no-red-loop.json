@@ -1,8 +1,18 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "diagnosing-bugs-no-red-loop",
+  "type": "diagnosing-contract",
   "skills": ["my-diagnosing-bugs"],
-  "assertions": ["diagnosis does not loop on a red test without a new discriminating hypothesis"],
+  "input": {
+    "red_loop": true,
+    "new_discriminating_hypothesis": false,
+    "decision_policy": "ask"
+  },
+  "expected": {
+    "status": "stop",
+    "rule": "no-repeat-red-loop",
+    "next": "form-discriminating-hypothesis"
+  },
   "evidence": {
     "version": 1,
     "scenario": "diagnosing-bugs-no-red-loop",

@@ -1,8 +1,29 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "artifact-resolver-boundary-escape",
+  "type": "artifact-resolver",
   "skills": ["my-work-artifacts"],
-  "assertions": ["artifact resolution rejects paths that escape the configured work-artifact boundary"],
+  "input": {
+    "attacks": [
+      {
+        "name": "parent-selector",
+        "selector": "../outside.md",
+        "error": "非法选择器"
+      },
+      {
+        "name": "symlink-escape",
+        "selector": "escape.md",
+        "error": "工作产物路径越界"
+      }
+    ]
+  },
+  "expected": {
+    "status": "rejected",
+    "attacks": [
+      {"name": "parent-selector", "error": "非法选择器"},
+      {"name": "symlink-escape", "error": "工作产物路径越界"}
+    ]
+  },
   "evidence": {
     "version": 1,
     "scenario": "artifact-resolver-boundary-escape",

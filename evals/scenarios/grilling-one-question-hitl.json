@@ -1,8 +1,18 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "grilling-one-question-hitl",
+  "type": "grilling-contract",
   "skills": ["my-grilling"],
-  "assertions": ["grilling asks one question at a time and waits for the human response"],
+  "input": {
+    "questions_asked": 1,
+    "human_response": false,
+    "understanding_confirmed": false
+  },
+  "expected": {
+    "status": "stop",
+    "rule": "human-in-the-loop",
+    "next": "await-human-response"
+  },
   "evidence": {
     "version": 1,
     "scenario": "grilling-one-question-hitl",

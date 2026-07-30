@@ -1,8 +1,38 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "implement-mixed-ticket",
+  "type": "implementation-selection",
   "skills": ["my-implement", "my-wayfinder"],
-  "assertions": ["the Plan 4 ticket model rejects a Wayfinder ticket while selecting a ready implementation ticket"],
+  "input": {
+    "policy": "automatic",
+    "tickets": [
+      {
+        "filename": "01-decision.md",
+        "id": "decision",
+        "title": "Choose approach",
+        "ticket_kind": "wayfinder-decision",
+        "status": "open",
+        "blocked_by": [],
+        "claimed_by": null,
+        "tags": ["wayfinder:decision"],
+        "sequence": 1,
+        "acceptance": {"checked": 0, "unchecked": 0}
+      },
+      {
+        "filename": "02-implementation.md",
+        "id": "implementation",
+        "title": "Implement approach",
+        "ticket_kind": "implementation",
+        "status": "ready-for-agent",
+        "blocked_by": [],
+        "claimed_by": null,
+        "tags": [],
+        "sequence": 2,
+        "acceptance": {"checked": 0, "unchecked": 1}
+      }
+    ]
+  },
+  "expected": {"status": "selected", "selected": "implementation"},
   "evidence": {
     "version": 1,
     "scenario": "implement-mixed-ticket",

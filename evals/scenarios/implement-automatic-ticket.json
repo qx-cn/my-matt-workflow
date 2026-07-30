@@ -1,8 +1,38 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "implement-automatic-ticket",
+  "type": "implementation-selection",
   "skills": ["my-implement"],
-  "assertions": ["automatic composition selects one implementation-ready ticket"],
+  "input": {
+    "policy": "automatic",
+    "tickets": [
+      {
+        "filename": "01-ready-later.md",
+        "id": "ready-later",
+        "title": "Ready later",
+        "ticket_kind": "implementation",
+        "status": "ready-for-agent",
+        "blocked_by": [],
+        "claimed_by": null,
+        "tags": [],
+        "sequence": 20,
+        "acceptance": {"checked": 0, "unchecked": 1}
+      },
+      {
+        "filename": "02-ready-first.md",
+        "id": "ready-first",
+        "title": "Ready first",
+        "ticket_kind": "implementation",
+        "status": "ready-for-agent",
+        "blocked_by": [],
+        "claimed_by": null,
+        "tags": [],
+        "sequence": 10,
+        "acceptance": {"checked": 0, "unchecked": 1}
+      }
+    ]
+  },
+  "expected": {"status": "selected", "selected": "ready-first"},
   "evidence": {
     "version": 1,
     "scenario": "implement-automatic-ticket",

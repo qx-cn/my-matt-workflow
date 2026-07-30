@@ -22,7 +22,7 @@ from workflow_lib.doctor import (
 )
 from workflow_lib.installer import install_release
 from workflow_lib.check import CheckError, run_check
-from workflow_lib.evals import EvalError, validate_evals, validate_scenario_evidence
+from workflow_lib.evals import EvalError, run_scenario, validate_evals, validate_scenario_evidence
 from workflow_lib.profile import (
     apply_personal_ignores,
     get_policy_preset,
@@ -33,7 +33,11 @@ from workflow_lib.profile import (
 )
 from workflow_lib.recommendations import build_recommendation_report
 from workflow_lib.release import build_release, release_matches_source
-from workflow_lib.smoke_registry import SmokeRegistryError, resolve_smoke_scenarios
+from workflow_lib.smoke_registry import (
+    SmokeRegistryError,
+    load_smoke_registry,
+    resolve_smoke_scenarios,
+)
 from workflow_lib.sync import build_review_bundle
 from workflow_lib.artifact_resolver import (
     list_work_artifacts,
@@ -227,9 +231,10 @@ def command_smoke(args: argparse.Namespace) -> None:
             print(
                 json.dumps(
                     {
-                        "status": "skipped",
-                        "reason": "no matching smoke scenarios",
-                        "skills": sorted(set(args.skills)),
+                        "status": "valid",
+                        "skills": [],
+                        "registered_skills": sorted(load_smoke_registry(ROOT)),
+                        "scenarios": [],
                     },
                     ensure_ascii=False,
                     sort_keys=True,
@@ -238,6 +243,7 @@ def command_smoke(args: argparse.Namespace) -> None:
             return
         for scenario in scenarios:
             validate_scenario_evidence(ROOT, scenario)
+            run_scenario(ROOT, scenario)
     except (EvalError, SmokeRegistryError) as exc:
         print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
         raise SystemExit(1) from exc
@@ -706,7 +712,7 @@ def parser() -> argparse.ArgumentParser:
     validate_evals.set_defaults(func=command_validate_evals)
 
     smoke = sub.add_parser("smoke")
-    smoke.add_argument("--skills", nargs="+", required=True)
+    smoke.add_argument("--skills", nargs="*", default=[])
     smoke.set_defaults(func=command_smoke)
 
     check = sub.add_parser("check")

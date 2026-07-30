@@ -1,8 +1,18 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "tdd-seam-pressure",
+  "type": "tdd-contract",
   "skills": ["my-tdd"],
-  "assertions": ["a hard-to-test dependency creates seam pressure before implementation expands"],
+  "input": {
+    "dependency": "hard-to-test",
+    "seam": {"confirmed": false, "visibility": "public"},
+    "slice": "single"
+  },
+  "expected": {
+    "status": "stop",
+    "rule": "confirm-public-seam-before-test",
+    "next": "await-user-confirmation"
+  },
   "evidence": {
     "version": 1,
     "scenario": "tdd-seam-pressure",
