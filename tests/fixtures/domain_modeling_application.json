@@ -1,0 +1,98 @@
+{
+  "source_path": "engineering/domain-modeling",
+  "constraints": [
+    {
+      "id": "map-context-before-routing",
+      "document": "CONTEXT-FORMAT.md",
+      "source_section": "CONTEXT-FORMAT.md#单上下文与多上下文仓库",
+      "text": "项目配置或已有团队映射表列出了多个上下文时，先读取它以定位上下文；"
+    },
+    {
+      "id": "glossary-excludes-implementation",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#就地更新个人术语表",
+      "text": "个人术语表必须完全不含实现细节，不得把它当作 Spec、草稿本或实现决策库；它只是一份词汇表。"
+    },
+    {
+      "id": "adr-requires-three-conditions",
+      "document": "ADR-FORMAT.md",
+      "source_section": "ADR-FORMAT.md#何时建议 ADR",
+      "text": "必须同时满足以下三项："
+    }
+  ],
+  "rules": [
+    {
+      "when": {
+        "context_map_exists": true,
+        "topic_context_clear": true
+      },
+      "requires_constraints": [
+        "map-context-before-routing"
+      ],
+      "outcome": "read-context-map"
+    },
+    {
+      "when": {
+        "term_resolved": true,
+        "definition_has_implementation_detail": false
+      },
+      "requires_constraints": [
+        "glossary-excludes-implementation"
+      ],
+      "outcome": "write-personal-glossary"
+    },
+    {
+      "when": {
+        "hard_to_reverse": true,
+        "surprising_without_context": true,
+        "real_tradeoff": true
+      },
+      "requires_constraints": [
+        "adr-requires-three-conditions"
+      ],
+      "outcome": "draft-personal-adr"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "route-multiple-contexts",
+      "input": {
+        "context_map_exists": true,
+        "topic_context_clear": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "map-context-before-routing"
+        }
+      ],
+      "expected": "read-context-map"
+    },
+    {
+      "id": "record-resolved-term",
+      "input": {
+        "term_resolved": true,
+        "definition_has_implementation_detail": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "glossary-excludes-implementation"
+        }
+      ],
+      "expected": "write-personal-glossary"
+    },
+    {
+      "id": "offer-adr-only-for-real-tradeoff",
+      "input": {
+        "hard_to_reverse": true,
+        "surprising_without_context": true,
+        "real_tradeoff": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "adr-requires-three-conditions"
+        }
+      ],
+      "expected": "draft-personal-adr"
+    }
+  ]
+}

@@ -3262,6 +3262,173 @@ class GrillingParityTests(unittest.TestCase):
                 )
 
 
+class DomainModelingParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_domain_modeling_rules(input_facts, retrieved_constraints, rules):
+        outcomes = [
+            rule["outcome"]
+            for rule in rules
+            if all(
+                input_facts.get(field) == expected
+                for field, expected in rule["when"].items()
+            )
+            and set(rule["requires_constraints"])
+            <= {constraint["id"] for constraint in retrieved_constraints}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_domain_modeling_audit_records_parity_deltas_and_scenarios(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-domain-modeling"
+        source_dir = (
+            root
+            / ".superpowers/sdd/mattpocock-skills-pinned"
+            / "skills/engineering/domain-modeling"
+        )
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            (
+                item
+                for item in fidelity["skills"]
+                if item["local_skill"] == "my-domain-modeling"
+            ),
+            None,
+        )
+        evidence_path = root / "upstream/evidence/domain-modeling-audit.md"
+        fixture_path = root / "tests/fixtures/domain_modeling_application.json"
+        source_files = {
+            "SKILL.md": source_dir / "SKILL.md",
+            "CONTEXT-FORMAT.md": source_dir / "CONTEXT-FORMAT.md",
+            "ADR-FORMAT.md": source_dir / "ADR-FORMAT.md",
+            "agents/openai.yaml": source_dir / "agents/openai.yaml",
+        }
+        source_sections = {
+            "SKILL.md#File structure",
+            "SKILL.md#Challenge against the glossary",
+            "SKILL.md#Sharpen fuzzy language",
+            "SKILL.md#Discuss concrete scenarios",
+            "SKILL.md#Cross-reference with code",
+            "SKILL.md#Update CONTEXT.md inline",
+            "SKILL.md#Offer ADRs sparingly",
+            "CONTEXT-FORMAT.md#Structure",
+            "CONTEXT-FORMAT.md#Rules",
+            "CONTEXT-FORMAT.md#Single vs multi-context repos",
+            "ADR-FORMAT.md#Template",
+            "ADR-FORMAT.md#Optional sections",
+            "ADR-FORMAT.md#Numbering",
+            "ADR-FORMAT.md#When to offer an ADR",
+            "ADR-FORMAT.md#What qualifies",
+            "agents/openai.yaml#interface.display_name",
+            "agents/openai.yaml#interface.short_description",
+        }
+
+        self.assertIsNotNone(entry)
+        assert entry is not None
+        self.assertEqual("engineering/domain-modeling", entry["upstream_path"])
+        self.assertEqual(
+            {
+                name: hashlib.sha256(path.read_bytes()).hexdigest()
+                for name, path in source_files.items()
+            },
+            entry["support_files"],
+        )
+        self.assertEqual(source_sections, set(entry["sections"]["upstream"]))
+        translated = {
+            mapping["upstream"]
+            for bucket in ("complete", "translated")
+            for mapping in entry["sections"][bucket]
+        }
+        changed_upstream_sections = {
+            "SKILL.md#File structure",
+            "SKILL.md#Update CONTEXT.md inline",
+            "CONTEXT-FORMAT.md#Single vs multi-context repos",
+        }
+        adaptation_sections = {
+            section
+            for adaptation in entry["allowed_local_adaptations"]
+            for section in adaptation.get("upstream_sections", [])
+        }
+        self.assertEqual(
+            source_sections - changed_upstream_sections,
+            translated,
+        )
+        self.assertEqual(changed_upstream_sections, adaptation_sections)
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertIn("SKILL.md#项目策略优先", entry["sections"]["local_added"])
+        self.assertIn("agents/openai.yaml#policy", entry["sections"]["local_added"])
+        self.assertEqual(
+            hashlib.sha256(
+                (skill_dir / "agents/openai.yaml").read_bytes()
+            ).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertEqual("adapter-rework-required", entry["conclusion"])
+        self.assertEqual(
+            "upstream/evidence/domain-modeling-audit.md",
+            entry["evidence_path"],
+        )
+        self.assertTrue(evidence_path.is_file())
+        evidence = evidence_path.read_text()
+        for text in (
+            "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+            "skills/engineering/domain-modeling",
+            "CONTEXT-FORMAT.md",
+            "ADR-FORMAT.md",
+            "agents/openai.yaml",
+            "项目策略优先",
+            "Plan 2",
+        ):
+            with self.subTest(evidence=text):
+                self.assertIn(text, evidence)
+
+        source_skill = source_files["SKILL.md"].read_text()
+        local_skill = (skill_dir / "SKILL.md").read_text()
+        self.assertIn("If unclear, ask.", source_files["CONTEXT-FORMAT.md"].read_text())
+        self.assertIn("按 `decision_policy` 询问", local_skill)
+        self.assertIn("均服从该生效策略", local_skill)
+        self.assertIn("only when you have something to write", source_skill)
+        self.assertIn("只有内容可写时才创建", local_skill)
+        self.assertTrue(fixture_path.is_file())
+
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual("engineering/domain-modeling", fixture["source_path"])
+        self.assertEqual(
+            {
+                "route-multiple-contexts",
+                "record-resolved-term",
+                "offer-adr-only-for-real-tradeoff",
+            },
+            {scenario["id"] for scenario in fixture["scenarios"]},
+        )
+        local_documents = {
+            "SKILL.md": local_skill,
+            "CONTEXT-FORMAT.md": (
+                skill_dir / "CONTEXT-FORMAT.md"
+            ).read_text(),
+            "ADR-FORMAT.md": (skill_dir / "ADR-FORMAT.md").read_text(),
+        }
+        for constraint in fixture["constraints"]:
+            with self.subTest(constraint=constraint["id"]):
+                self.assertIn(constraint["document"], local_documents)
+                self.assertIn(
+                    constraint["text"],
+                    local_documents[constraint["document"]],
+                )
+
+        for scenario in fixture["scenarios"]:
+            with self.subTest(scenario=scenario["id"]):
+                self.assertEqual(
+                    scenario["expected"],
+                    self._apply_domain_modeling_rules(
+                        scenario["input"],
+                        scenario["retrieved_constraints"],
+                        fixture["rules"],
+                    ),
+                )
+
+
 class WizardParityTests(unittest.TestCase):
     @staticmethod
     def _section_contents(document, source_section):

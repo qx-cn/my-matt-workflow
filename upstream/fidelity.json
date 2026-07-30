@@ -177,12 +177,83 @@
       "upstream_path": "engineering/domain-modeling",
       "local_skill": "my-domain-modeling",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#File structure",
+          "SKILL.md#Challenge against the glossary",
+          "SKILL.md#Sharpen fuzzy language",
+          "SKILL.md#Discuss concrete scenarios",
+          "SKILL.md#Cross-reference with code",
+          "SKILL.md#Update CONTEXT.md inline",
+          "SKILL.md#Offer ADRs sparingly",
+          "CONTEXT-FORMAT.md#Structure",
+          "CONTEXT-FORMAT.md#Rules",
+          "CONTEXT-FORMAT.md#Single vs multi-context repos",
+          "ADR-FORMAT.md#Template",
+          "ADR-FORMAT.md#Optional sections",
+          "ADR-FORMAT.md#Numbering",
+          "ADR-FORMAT.md#When to offer an ADR",
+          "ADR-FORMAT.md#What qualifies",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description"
+        ],
+        "local": [
+          "SKILL.md#文件结构",
+          "SKILL.md#对照术语表提出质疑",
+          "SKILL.md#收紧模糊语言",
+          "SKILL.md#讨论具体场景",
+          "SKILL.md#与代码交叉验证",
+          "SKILL.md#就地更新个人术语表",
+          "SKILL.md#谨慎提出 ADR",
+          "CONTEXT-FORMAT.md#结构",
+          "CONTEXT-FORMAT.md#规则",
+          "CONTEXT-FORMAT.md#单上下文与多上下文仓库",
+          "ADR-FORMAT.md#模板",
+          "ADR-FORMAT.md#可选章节",
+          "ADR-FORMAT.md#编号",
+          "ADR-FORMAT.md#何时建议 ADR",
+          "ADR-FORMAT.md#符合条件的例子",
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description",
+          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#policy"
+        ],
+        "complete": [
+          {"upstream": "SKILL.md#Challenge against the glossary", "local": "SKILL.md#对照术语表提出质疑", "evidence": "SKILL.md#对照术语表提出质疑保留术语冲突时立即指出并请求澄清。"},
+          {"upstream": "SKILL.md#Sharpen fuzzy language", "local": "SKILL.md#收紧模糊语言", "evidence": "SKILL.md#收紧模糊语言保留为含糊或多义语言提出精确规范名称。"},
+          {"upstream": "SKILL.md#Discuss concrete scenarios", "local": "SKILL.md#讨论具体场景", "evidence": "SKILL.md#讨论具体场景保留用边缘场景压测关系并收紧边界。"},
+          {"upstream": "SKILL.md#Cross-reference with code", "local": "SKILL.md#与代码交叉验证", "evidence": "SKILL.md#与代码交叉验证保留以代码核对说明并明确暴露矛盾。"},
+          {"upstream": "SKILL.md#Offer ADRs sparingly", "local": "SKILL.md#谨慎提出 ADR", "evidence": "SKILL.md#谨慎提出 ADR保留三项同时成立才建议 ADR 的门槛。"},
+          {"upstream": "CONTEXT-FORMAT.md#Structure", "local": "CONTEXT-FORMAT.md#结构", "evidence": "CONTEXT-FORMAT.md#结构保留上下文描述、术语定义和避免用词的格式。"},
+          {"upstream": "CONTEXT-FORMAT.md#Rules", "local": "CONTEXT-FORMAT.md#规则", "evidence": "CONTEXT-FORMAT.md#规则保留取舍、紧凑定义、上下文特有术语和按簇分组。"},
+          {"upstream": "ADR-FORMAT.md#Template", "local": "ADR-FORMAT.md#模板", "evidence": "ADR-FORMAT.md#模板保留短标题、背景、决定和理由的最小格式。"},
+          {"upstream": "ADR-FORMAT.md#Optional sections", "local": "ADR-FORMAT.md#可选章节", "evidence": "ADR-FORMAT.md#可选章节保留状态、考虑选项和后果的按需使用。"},
+          {"upstream": "ADR-FORMAT.md#Numbering", "local": "ADR-FORMAT.md#编号", "evidence": "ADR-FORMAT.md#编号保留扫描最高编号后递增的规则。"},
+          {"upstream": "ADR-FORMAT.md#When to offer an ADR", "local": "ADR-FORMAT.md#何时建议 ADR", "evidence": "ADR-FORMAT.md#何时建议 ADR保留难以逆转、缺少背景会令人意外和真实权衡三项门槛。"},
+          {"upstream": "ADR-FORMAT.md#What qualifies", "local": "ADR-FORMAT.md#符合条件的例子", "evidence": "ADR-FORMAT.md#符合条件的例子保留架构、集成、锁定、边界、约束和非显然替代方案。"},
+          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml 保留 display_name “Domain Modeling”。"},
+          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml 保留 short_description “Build and sharpen a domain model”。"}
+        ],
+        "translated": [
+          {"upstream": "SKILL.md#Challenge against the glossary", "local": "SKILL.md#对照术语表提出质疑", "evidence": "SKILL.md#对照术语表提出质疑"},
+          {"upstream": "SKILL.md#Sharpen fuzzy language", "local": "SKILL.md#收紧模糊语言", "evidence": "SKILL.md#收紧模糊语言"},
+          {"upstream": "SKILL.md#Discuss concrete scenarios", "local": "SKILL.md#讨论具体场景", "evidence": "SKILL.md#讨论具体场景"},
+          {"upstream": "SKILL.md#Cross-reference with code", "local": "SKILL.md#与代码交叉验证", "evidence": "SKILL.md#与代码交叉验证"},
+          {"upstream": "SKILL.md#Offer ADRs sparingly", "local": "SKILL.md#谨慎提出 ADR", "evidence": "SKILL.md#谨慎提出 ADR"},
+          {"upstream": "CONTEXT-FORMAT.md#Structure", "local": "CONTEXT-FORMAT.md#结构", "evidence": "CONTEXT-FORMAT.md#结构"},
+          {"upstream": "CONTEXT-FORMAT.md#Rules", "local": "CONTEXT-FORMAT.md#规则", "evidence": "CONTEXT-FORMAT.md#规则"},
+          {"upstream": "ADR-FORMAT.md#Template", "local": "ADR-FORMAT.md#模板", "evidence": "ADR-FORMAT.md#模板"},
+          {"upstream": "ADR-FORMAT.md#Optional sections", "local": "ADR-FORMAT.md#可选章节", "evidence": "ADR-FORMAT.md#可选章节"},
+          {"upstream": "ADR-FORMAT.md#Numbering", "local": "ADR-FORMAT.md#编号", "evidence": "ADR-FORMAT.md#编号"},
+          {"upstream": "ADR-FORMAT.md#When to offer an ADR", "local": "ADR-FORMAT.md#何时建议 ADR", "evidence": "ADR-FORMAT.md#何时建议 ADR"},
+          {"upstream": "ADR-FORMAT.md#What qualifies", "local": "ADR-FORMAT.md#符合条件的例子", "evidence": "ADR-FORMAT.md#符合条件的例子"},
+          {"upstream": "agents/openai.yaml#interface.display_name", "local": "agents/openai.yaml#interface.display_name", "evidence": "agents/openai.yaml#interface.display_name"},
+          {"upstream": "agents/openai.yaml#interface.short_description", "local": "agents/openai.yaml#interface.short_description", "evidence": "agents/openai.yaml#interface.short_description"}
+        ],
         "missing": [],
-        "local_added": []
+        "local_added": [
+          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#policy"
+        ]
       },
       "support_files": {
         "ADR-FORMAT.md": "f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2",
@@ -190,10 +261,31 @@
         "SKILL.md": "152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579",
         "agents/openai.yaml": "f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "unreviewed",
-      "evidence_path": null,
-      "notes": "Baseline frozen; fidelity not yet audited."
+      "local_support_files": {
+        "agents/openai.yaml": "3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#文件结构, SKILL.md#就地更新个人术语表, CONTEXT-FORMAT.md#单上下文与多上下文仓库",
+          "upstream_sections": [
+            "SKILL.md#File structure",
+            "SKILL.md#Update CONTEXT.md inline",
+            "CONTEXT-FORMAT.md#Single vs multi-context repos"
+          ],
+          "adaptation": "项目配置的正式文档位置和 topic-local 个人术语表/ADR 候选可保留按需创建、术语表与实现决策分离；但它改变了上游 root CONTEXT.md/docs/adr 契约，并允许无人值守计划在上下文归属不清时记录假设，须在 Plan 2 明确边界。"
+        },
+        {
+          "path": "SKILL.md#项目策略优先",
+          "adaptation": "本地项目策略和绝对安全底线入口。其“询问、确认、停止或限制后续工作”可服从策略的覆盖会削弱上游不清楚上下文时必须询问及即时捕获模型的约束，须在 Plan 2 改写为不削弱上游方法的 adapter。"
+        },
+        {
+          "path": "agents/openai.yaml#policy.allow_implicit_invocation",
+          "adaptation": "保留 false 以表达本地手动调用；该 metadata 适配本身不改变 interface 的原有名称和描述。"
+        }
+      ],
+      "conclusion": "adapter-rework-required",
+      "evidence_path": "upstream/evidence/domain-modeling-audit.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 审计。术语质疑、场景、代码核对和 ADR 方法已翻译；文档位置、个人先写与项目策略覆盖改变了上游领域路由/即时捕获契约，转入 Plan 2 的 my-domain-modeling adapter rework。"
     },
     {
       "upstream_skill": "edit-article",
