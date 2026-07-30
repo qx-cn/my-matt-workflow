@@ -1380,6 +1380,17 @@ class DoctorTests(unittest.TestCase):
     def test_fidelity_ledger_populates_upstream_grilling_as_24th_skill(self):
         root = Path(__file__).resolve().parents[1]
         fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        manifest = json.loads((root / "upstream" / "manifest.json").read_text())
+        spec = importlib.util.spec_from_file_location(
+            "workflow_cli_grilling_registration", root / "tools/workflow.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, str(root / "tools"))
+        try:
+            assert spec.loader is not None
+            spec.loader.exec_module(module)
+        finally:
+            sys.path.pop(0)
         entries = fidelity["skills"]
         grilling = next(
             (
@@ -1391,18 +1402,23 @@ class DoctorTests(unittest.TestCase):
         )
 
         self.assertEqual(24, len(entries))
+        self.assertEqual(24, len(manifest["skills"]))
+        self.assertEqual(24, len(module.ADAPTATION_MAP))
+        self.assertEqual(24, len(module.UPSTREAM_PATHS))
+        self.assertEqual(set(manifest["skills"]), set(module.ADAPTATION_MAP))
+        self.assertEqual(set(manifest["skills"]), set(module.UPSTREAM_PATHS))
         self.assertIsNotNone(grilling)
         assert grilling is not None
         self.assertEqual("productivity/grilling", grilling["upstream_path"])
         self.assertEqual("my-grilling", grilling["local_skill"])
         self.assertNotIn("my-grilling", fidelity["local_only_skills"])
+        self.assertEqual(["my-grilling"], module.ADAPTATION_MAP["grilling"])
+        self.assertEqual("productivity/grilling", module.UPSTREAM_PATHS["grilling"])
+        self.assertIn("grilling", manifest["skills"])
         self.assertEqual(
             "upstream/evidence/grilling-audit.md", grilling["evidence_path"]
         )
         self.assertTrue((root / grilling["evidence_path"]).is_file())
-        workflow_source = (root / "tools" / "workflow.py").read_text()
-        self.assertIn('"grilling": ["my-grilling"]', workflow_source)
-        self.assertIn('"grilling": "productivity/grilling"', workflow_source)
 
     def test_codebase_design_restoration_records_parity_and_usable_method(self):
         root = Path(__file__).resolve().parents[1]
@@ -3154,22 +3170,47 @@ class GrillingParityTests(unittest.TestCase):
             entry["local_support_files"]["agents/openai.yaml"],
         )
         self.assertEqual(
-            {"SKILL.md#document-body", "agents/openai.yaml#interface"},
+            [
+                "SKILL.md#document-body",
+                "agents/openai.yaml#interface.display_name",
+                "agents/openai.yaml#interface.short_description",
+            ],
+            entry["sections"]["upstream"],
+        )
+        self.assertEqual(
+            {
+                "SKILL.md#document-body",
+                "agents/openai.yaml#interface.display_name",
+            },
             {mapping["upstream"] for mapping in entry["sections"]["complete"]},
         )
         self.assertEqual(
-            {"SKILL.md#document-body", "agents/openai.yaml#interface"},
+            {
+                "SKILL.md#document-body",
+                "agents/openai.yaml#interface.display_name",
+            },
             {mapping["upstream"] for mapping in entry["sections"]["translated"]},
         )
         self.assertEqual([], entry["sections"]["missing"])
         self.assertEqual(
             [
                 "SKILL.md#项目策略优先",
-                "agents/openai.yaml#interface.short_description",
                 "agents/openai.yaml#policy",
             ],
             entry["sections"]["local_added"],
         )
+        short_description_delta = next(
+            (
+                adaptation
+                for adaptation in entry["allowed_local_adaptations"]
+                if adaptation["path"] == "agents/openai.yaml#interface.short_description"
+            ),
+            None,
+        )
+        self.assertIsNotNone(short_description_delta)
+        assert short_description_delta is not None
+        self.assertIn("缩窄", short_description_delta["adaptation"])
+        self.assertIn("Plan 2", short_description_delta["adaptation"])
         self.assertEqual("adapter-rework-required", entry["conclusion"])
         self.assertEqual("upstream/evidence/grilling-audit.md", entry["evidence_path"])
         self.assertTrue(evidence_path.is_file())

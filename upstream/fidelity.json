@@ -244,13 +244,14 @@
       "sections": {
         "upstream": [
           "SKILL.md#document-body",
-          "agents/openai.yaml#interface"
+          "agents/openai.yaml#interface.display_name",
+          "agents/openai.yaml#interface.short_description"
         ],
         "local": [
           "SKILL.md#document-body",
-          "agents/openai.yaml#interface",
-          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#interface.display_name",
           "agents/openai.yaml#interface.short_description",
+          "SKILL.md#项目策略优先",
           "agents/openai.yaml#policy"
         ],
         "complete": [
@@ -260,9 +261,9 @@
             "evidence": "SKILL.md 的四段上游访谈流程已译为本地正文，保留逐支决策、一次一问、事实先查和共同理解前不得行动。"
           },
           {
-            "upstream": "agents/openai.yaml#interface",
-            "local": "agents/openai.yaml#interface",
-            "evidence": "agents/openai.yaml 保留 interface.display_name “Grilling”；本地 short_description 作为界面文案调整已单列为适配。"
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "agents/openai.yaml#interface.display_name",
+            "evidence": "agents/openai.yaml 保留 interface.display_name “Grilling”。"
           }
         ],
         "translated": [
@@ -272,15 +273,14 @@
             "evidence": "SKILL.md#document-body"
           },
           {
-            "upstream": "agents/openai.yaml#interface",
-            "local": "agents/openai.yaml#interface",
-            "evidence": "agents/openai.yaml#interface"
+            "upstream": "agents/openai.yaml#interface.display_name",
+            "local": "agents/openai.yaml#interface.display_name",
+            "evidence": "agents/openai.yaml#interface.display_name"
           }
         ],
         "missing": [],
         "local_added": [
           "SKILL.md#项目策略优先",
-          "agents/openai.yaml#interface.short_description",
           "agents/openai.yaml#policy"
         ]
       },
@@ -297,8 +297,12 @@
           "adaptation": "本地项目策略入口及绝对安全底线；此适配会令上游的无条件确认门受生效策略覆盖，因此必须在 Plan 2 重做为不削弱上游门控的适配。"
         },
         {
-          "path": "agents/openai.yaml",
-          "adaptation": "保留本地界面 metadata：short_description 改为 “Run a focused design interview”，并以 policy.allow_implicit_invocation=false 表达本地手动调用；后续适配须恢复上游 “stress-test” 范围。"
+          "path": "agents/openai.yaml#interface.short_description",
+          "adaptation": "本地 short_description 改为 “Run a focused design interview”，缩窄了上游 “Stress-test thinking one question at a time” 的范围；这是需在 Plan 2 重做的适配差异，不计为 local-only 或完整翻译。"
+        },
+        {
+          "path": "agents/openai.yaml#policy.allow_implicit_invocation",
+          "adaptation": "保留 false 以表达本地手动调用；不改变 short_description 已缩窄且需 Plan 2 重做的结论。"
         }
       ],
       "conclusion": "adapter-rework-required",

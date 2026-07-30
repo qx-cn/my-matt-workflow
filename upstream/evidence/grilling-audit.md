@@ -37,3 +37,14 @@ The local metadata SHA-256 is `fd9b95d5468600190f9cedf23a575fc71ffa2fde03b5d55ba
 
 `GrillingParityTests` validates that each scenario retrieves the cited local
 constraint and produces exactly one expected outcome.
+
+## Review remediation evidence
+
+- The fidelity ledger now records `agents/openai.yaml#interface.display_name`
+  and `agents/openai.yaml#interface.short_description` independently. Only the
+  unchanged display name is complete/translated.
+- The narrowed short description is recorded as a Plan 2 rework-required
+  adaptation delta, not as a local-only addition or a complete translation.
+- The population guard parses the upstream manifest and imports
+  `ADAPTATION_MAP` and `UPSTREAM_PATHS` to verify the 24-entry closure and the
+  `grilling` registrations directly.
