@@ -543,13 +543,41 @@
     },
     {
       "upstream_skill": "to-questionnaire",
-      "upstream_path": "in-progress/to-questionnaire",
+      "upstream_path": "skills/in-progress/to-questionnaire",
       "local_skill": "my-to-questionnaire",
       "sections": {
-        "upstream": [],
-        "local": [],
-        "complete": [],
-        "translated": [],
+        "upstream": [
+          "SKILL.md#Questionnaire workflow",
+          "SKILL.md#Document structure"
+        ],
+        "local": [
+          "SKILL.md#生成发现问卷",
+          "SKILL.md#文档结构"
+        ],
+        "complete": [
+          {
+            "upstream": "SKILL.md#Questionnaire workflow",
+            "local": "生成发现问卷",
+            "evidence": "SKILL.md#生成发现问卷保留仅询问发送、收件人和所需回报的范围；三步顺序、每步完成条件、当前目录文件名及覆盖条件。"
+          },
+          {
+            "upstream": "SKILL.md#Document structure",
+            "local": "文档结构",
+            "evidence": "SKILL.md#文档结构保留发现问卷定位、重要性排序、主题分组、完整模板、单一概念问题、答案留白、示例和收尾兜底问题。"
+          }
+        ],
+        "translated": [
+          {
+            "upstream": "SKILL.md#Questionnaire workflow",
+            "local": "生成发现问卷",
+            "evidence": "SKILL.md#生成发现问卷"
+          },
+          {
+            "upstream": "SKILL.md#Document structure",
+            "local": "文档结构",
+            "evidence": "SKILL.md#文档结构"
+          }
+        ],
         "missing": [],
         "local_added": []
       },
@@ -557,10 +585,18 @@
         "SKILL.md": "8e7f9ed8d7b2e66babf1a54aee9b94319bf38c32619cffe78819df6518ead5fc",
         "agents/openai.yaml": "9e8a06c38c8842eea8d4922cb9d1ead8e3ace647bab259b943c994a1b4742bc2"
       },
-      "allowed_local_adaptations": [],
-      "conclusion": "restore-required",
-      "evidence_path": null,
-      "notes": "Plan 1: severe distortion; restore from upstream baseline before audit."
+      "local_support_files": {
+        "agents/openai.yaml": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md",
+          "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。"
+        }
+      ],
+      "conclusion": "faithful",
+      "evidence_path": ".superpowers/sdd/task-6-report.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 完整翻译并核对；支持文件哈希仍指向该上游快照。"
     },
     {
       "upstream_skill": "to-spec",

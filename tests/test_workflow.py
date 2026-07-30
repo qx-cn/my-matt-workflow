@@ -434,6 +434,7 @@ class ProfileTests(unittest.TestCase):
     def test_skills_keep_slim_policy_footer_and_local_preset_docs(self):
         root = Path(__file__).resolve().parents[1] / "skills"
         restored_without_policy_footer = {
+            "my-to-questionnaire",
             "my-writing-great-skills",
             "my-triage",
             "my-teach",
@@ -1627,7 +1628,10 @@ class ReleaseTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1] / "skills"
         expected = {
             "my-resolving-merge-conflicts": ["批准前", "Force Push", "回滚"],
-            "my-to-questionnaire": ["questionnaires", "不得自动对外发送"],
+            "my-to-questionnaire": [
+                "to-questionnaire-<slug>.md",
+                "只就“发送”采访用户，而不要就主题采访用户",
+            ],
             "my-wizard": ["wizards", "不得回显秘密", "单独确认"],
             "my-edit-article": ["articles", "默认生成新稿", "原地修改"],
         }
@@ -1647,6 +1651,7 @@ class ReleaseTests(unittest.TestCase):
         source_skills = Path(__file__).parents[1] / "skills"
         for skill_file in source_skills.glob("my-*/SKILL.md"):
             if skill_file.parent.name in {
+                "my-to-questionnaire",
                 "my-writing-great-skills",
                 "my-triage",
                 "my-teach",
@@ -2823,6 +2828,180 @@ class ImproveCodebaseArchitectureParityTests(unittest.TestCase):
                         case["input"],
                         case["retrieved_constraints"],
                         rules,
+                    ),
+                )
+
+
+class ToQuestionnaireParityTests(unittest.TestCase):
+    @staticmethod
+    def _section_contents(document, source_section):
+        _, separator, heading = source_section.partition("#")
+        if not separator or not heading:
+            return None
+        heading_match = re.search(
+            rf"^(?P<markers>#+)\s+{re.escape(heading)}\s*$",
+            document,
+            re.MULTILINE,
+        )
+        if heading_match is None:
+            return None
+        next_heading = re.search(
+            rf"^#{{1,{len(heading_match['markers'])}}}\s+",
+            document[heading_match.end() :],
+            re.MULTILINE,
+        )
+        section_end = (
+            heading_match.end() + next_heading.start()
+            if next_heading is not None
+            else len(document)
+        )
+        return document[heading_match.end() : section_end]
+
+    @staticmethod
+    def _apply_questionnaire_rules(input_facts, retrieved_constraints, rules):
+        outcomes = [
+            rule["outcome"]
+            for rule in rules
+            if all(
+                input_facts.get(field) == expected
+                for field, expected in rule["when"].items()
+            )
+            and set(rule["requires_constraints"])
+            <= {constraint["id"] for constraint in retrieved_constraints}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_questionnaire_restoration_records_complete_translated_parity(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-to-questionnaire"
+        skill = (skill_dir / "SKILL.md").read_text()
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            item
+            for item in fidelity["skills"]
+            if item["local_skill"] == "my-to-questionnaire"
+        )
+
+        self.assertEqual(
+            "skills/in-progress/to-questionnaire", entry["upstream_path"]
+        )
+        expected_mappings = {
+            "SKILL.md#Questionnaire workflow": (
+                "SKILL.md",
+                "生成发现问卷",
+            ),
+            "SKILL.md#Document structure": ("SKILL.md", "文档结构"),
+        }
+        for field in ("complete", "translated"):
+            mappings = entry["sections"][field]
+            self.assertEqual(
+                expected_mappings.keys(), {item["upstream"] for item in mappings}
+            )
+            for mapping in mappings:
+                with self.subTest(field=field, section=mapping["upstream"]):
+                    document, heading = expected_mappings[mapping["upstream"]]
+                    self.assertEqual(heading, mapping["local"])
+                    self.assertIn(heading, skill)
+                    self.assertRegex(mapping["evidence"], r"SKILL\.md#")
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual([], entry["sections"]["local_added"])
+        self.assertEqual(
+            {
+                "SKILL.md": (
+                    "8e7f9ed8d7b2e66babf1a54aee9b94319bf38c32619cffe78819df6518ead5fc"
+                ),
+                "agents/openai.yaml": (
+                    "9e8a06c38c8842eea8d4922cb9d1ead8e3ace647bab259b943c994a1b4742bc2"
+                ),
+            },
+            entry["support_files"],
+        )
+        metadata = skill_dir / "agents" / "openai.yaml"
+        self.assertEqual(
+            hashlib.sha256(metadata.read_bytes()).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertEqual(
+            [
+                {
+                    "path": "SKILL.md",
+                    "adaptation": "保留本地名称和手动调用元数据；不改变上游方法。",
+                }
+            ],
+            entry["allowed_local_adaptations"],
+        )
+        self.assertEqual("faithful", entry["conclusion"])
+        self.assertEqual(".superpowers/sdd/task-6-report.md", entry["evidence_path"])
+
+        for instruction in (
+            "只就“发送”采访用户，而不要就主题采访用户",
+            "收件人的角色、专长以及与用户的关系",
+            "用户必须在拿到答案后能够做出或决定什么",
+            "当前目录中的 `to-questionnaire-<slug>.md`",
+            "步骤 2 中用户列出的每一项都由一个问题覆盖",
+            "异步意味着你可能只能获得一次回复",
+            "每个问题只问一个概念",
+            "答案留白",
+            "还有什么遗漏？",
+            "部分答案和“我不知道”同样有用",
+        ):
+            with self.subTest(instruction=instruction):
+                self.assertIn(instruction, skill)
+        self.assertNotIn("项目策略优先", skill)
+
+    def test_questionnaire_scenarios_apply_section_bounded_constraints(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-to-questionnaire"
+        fixture_path = (
+            root / "tests" / "fixtures" / "questionnaire_application.json"
+        )
+        self.assertTrue(
+            fixture_path.is_file(),
+            "missing questionnaire retrieval/application fixture",
+        )
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual(
+            "skills/in-progress/to-questionnaire", fixture["source_path"]
+        )
+        self.assertEqual(
+            {
+                "questionnaire-structure",
+                "asking-one-useful-question",
+                "scope-and-ambiguity",
+                "done-when",
+            },
+            {case["id"] for case in fixture["scenarios"]},
+        )
+        self.assertTrue(fixture["rules"])
+        for rule in fixture["rules"]:
+            self.assertTrue(rule["when"])
+            self.assertTrue(rule["requires_constraints"])
+            self.assertIsInstance(rule["outcome"], dict)
+
+        documents = {"SKILL.md": (skill_dir / "SKILL.md").read_text()}
+        for case in fixture["scenarios"]:
+            with self.subTest(scenario=case["id"]):
+                self.assertIsInstance(case["input"], dict)
+                self.assertTrue(case["retrieved_constraints"])
+                constraint_ids = set()
+                for constraint in case["retrieved_constraints"]:
+                    self.assertNotIn(constraint["id"], constraint_ids)
+                    constraint_ids.add(constraint["id"])
+                    self.assertIn(constraint["document"], documents)
+                    section_contents = self._section_contents(
+                        documents[constraint["document"]],
+                        constraint["source_section"],
+                    )
+                    self.assertIsNotNone(section_contents)
+                    self.assertIn(constraint["text"], section_contents)
+                self.assertEqual(
+                    case["expected"],
+                    self._apply_questionnaire_rules(
+                        case["input"],
+                        case["retrieved_constraints"],
+                        fixture["rules"],
                     ),
                 )
 
