@@ -1377,6 +1377,33 @@ class DoctorTests(unittest.TestCase):
                         f"faithful evidence must be committed: {evidence_path}",
                     )
 
+    def test_fidelity_ledger_populates_upstream_grilling_as_24th_skill(self):
+        root = Path(__file__).resolve().parents[1]
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entries = fidelity["skills"]
+        grilling = next(
+            (
+                entry
+                for entry in entries
+                if entry["upstream_skill"] == "grilling"
+            ),
+            None,
+        )
+
+        self.assertEqual(24, len(entries))
+        self.assertIsNotNone(grilling)
+        assert grilling is not None
+        self.assertEqual("productivity/grilling", grilling["upstream_path"])
+        self.assertEqual("my-grilling", grilling["local_skill"])
+        self.assertNotIn("my-grilling", fidelity["local_only_skills"])
+        self.assertEqual(
+            "upstream/evidence/grilling-audit.md", grilling["evidence_path"]
+        )
+        self.assertTrue((root / grilling["evidence_path"]).is_file())
+        workflow_source = (root / "tools" / "workflow.py").read_text()
+        self.assertIn('"grilling": ["my-grilling"]', workflow_source)
+        self.assertIn('"grilling": "productivity/grilling"', workflow_source)
+
     def test_codebase_design_restoration_records_parity_and_usable_method(self):
         root = Path(__file__).resolve().parents[1]
         fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
@@ -3063,6 +3090,133 @@ class ToQuestionnaireParityTests(unittest.TestCase):
                         case["input"],
                         case["retrieved_constraints"],
                         fixture["rules"],
+                    ),
+                )
+
+
+class GrillingParityTests(unittest.TestCase):
+    @staticmethod
+    def _apply_grilling_rules(input_facts, retrieved_constraints, rules):
+        outcomes = [
+            rule["outcome"]
+            for rule in rules
+            if all(
+                input_facts.get(field) == expected
+                for field, expected in rule["when"].items()
+            )
+            and set(rule["requires_constraints"])
+            <= {constraint["id"] for constraint in retrieved_constraints}
+        ]
+        if len(outcomes) != 1:
+            return None
+        return outcomes[0]
+
+    def test_grilling_audit_records_source_local_delta_and_retrieval_scenarios(self):
+        root = Path(__file__).resolve().parents[1]
+        skill_dir = root / "skills" / "my-grilling"
+        source_dir = (
+            root
+            / ".superpowers/sdd/mattpocock-skills-pinned"
+            / "skills/productivity/grilling"
+        )
+        fidelity = json.loads((root / "upstream" / "fidelity.json").read_text())
+        entry = next(
+            (
+                item
+                for item in fidelity["skills"]
+                if item["local_skill"] == "my-grilling"
+            ),
+            None,
+        )
+        evidence_path = root / "upstream/evidence/grilling-audit.md"
+        fixture_path = root / "tests/fixtures/grilling_application.json"
+        source_skill = (source_dir / "SKILL.md").read_text()
+        source_metadata = (source_dir / "agents/openai.yaml").read_text()
+        local_skill = (skill_dir / "SKILL.md").read_text()
+        local_metadata = (skill_dir / "agents/openai.yaml").read_text()
+
+        self.assertIsNotNone(entry)
+        assert entry is not None
+        self.assertEqual("productivity/grilling", entry["upstream_path"])
+        self.assertEqual(
+            {
+                "SKILL.md": hashlib.sha256(
+                    (source_dir / "SKILL.md").read_bytes()
+                ).hexdigest(),
+                "agents/openai.yaml": hashlib.sha256(
+                    (source_dir / "agents/openai.yaml").read_bytes()
+                ).hexdigest(),
+            },
+            entry["support_files"],
+        )
+        self.assertEqual(
+            hashlib.sha256((skill_dir / "agents/openai.yaml").read_bytes()).hexdigest(),
+            entry["local_support_files"]["agents/openai.yaml"],
+        )
+        self.assertEqual(
+            {"SKILL.md#document-body", "agents/openai.yaml#interface"},
+            {mapping["upstream"] for mapping in entry["sections"]["complete"]},
+        )
+        self.assertEqual(
+            {"SKILL.md#document-body", "agents/openai.yaml#interface"},
+            {mapping["upstream"] for mapping in entry["sections"]["translated"]},
+        )
+        self.assertEqual([], entry["sections"]["missing"])
+        self.assertEqual(
+            [
+                "SKILL.md#项目策略优先",
+                "agents/openai.yaml#interface.short_description",
+                "agents/openai.yaml#policy",
+            ],
+            entry["sections"]["local_added"],
+        )
+        self.assertEqual("adapter-rework-required", entry["conclusion"])
+        self.assertEqual("upstream/evidence/grilling-audit.md", entry["evidence_path"])
+        self.assertTrue(evidence_path.is_file())
+        evidence = evidence_path.read_text()
+        for text in (
+            "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+            "SKILL.md",
+            "agents/openai.yaml",
+            "项目策略优先",
+            "Plan 2",
+        ):
+            with self.subTest(evidence=text):
+                self.assertIn(text, evidence)
+        self.assertIn("Interview me relentlessly", source_skill)
+        self.assertIn("持续就此事的每个方面高强度访谈", local_skill)
+        self.assertIn('display_name: "Grilling"', source_metadata)
+        self.assertIn('display_name: "Grilling"', local_metadata)
+        self.assertTrue(fixture_path.is_file())
+
+        fixture = json.loads(fixture_path.read_text())
+        self.assertEqual("productivity/grilling", fixture["source_path"])
+        self.assertEqual(
+            {
+                "look-up-facts",
+                "interview-decisions",
+                "wait-for-shared-understanding",
+            },
+            {scenario["id"] for scenario in fixture["scenarios"]},
+        )
+        constraint_ids = set()
+        for constraint in fixture["constraints"]:
+            self.assertNotIn(constraint["id"], constraint_ids)
+            constraint_ids.add(constraint["id"])
+            self.assertEqual("SKILL.md", constraint["document"])
+            self.assertEqual("SKILL.md#document-body", constraint["source_section"])
+            self.assertIn(constraint["text"], local_skill)
+
+        rules = fixture["rules"]
+        self.assertTrue(rules)
+        for scenario in fixture["scenarios"]:
+            with self.subTest(scenario=scenario["id"]):
+                retrieved_constraints = scenario["retrieved_constraints"]
+                self.assertTrue(retrieved_constraints)
+                self.assertEqual(
+                    scenario["expected"],
+                    self._apply_grilling_rules(
+                        scenario["input"], retrieved_constraints, rules
                     ),
                 )
 

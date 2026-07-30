@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "skill": "my-grilling",
+  "source_path": "productivity/grilling",
+  "constraints": [
+    {
+      "id": "look-up-facts",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#document-body",
+      "text": "能通过探索环境（文件系统、工具等）找到的**事实**，应自行查证而非提问"
+    },
+    {
+      "id": "one-question-at-a-time",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#document-body",
+      "text": "每次只问一个问题，等待反馈后再继续"
+    },
+    {
+      "id": "recommend-an-answer",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#document-body",
+      "text": "每个问题都给出推荐答案"
+    },
+    {
+      "id": "confirmation-gate",
+      "document": "SKILL.md",
+      "source_section": "SKILL.md#document-body",
+      "text": "在用户确认双方已达成共同理解前，不得执行该事项"
+    }
+  ],
+  "rules": [
+    {
+      "id": "look-up-before-asking",
+      "when": {
+        "item_type": "fact",
+        "environment_explorable": true
+      },
+      "requires_constraints": [
+        "look-up-facts"
+      ],
+      "outcome": {
+        "action": "inspect-environment",
+        "questions_asked": 0
+      }
+    },
+    {
+      "id": "interview-one-decision",
+      "when": {
+        "item_type": "decision",
+        "shared_understanding": false
+      },
+      "requires_constraints": [
+        "one-question-at-a-time",
+        "recommend-an-answer"
+      ],
+      "outcome": {
+        "action": "ask-one-decision-question",
+        "include_recommendation": true
+      }
+    },
+    {
+      "id": "wait-for-confirmation",
+      "when": {
+        "requested_action": "execute",
+        "shared_understanding": false
+      },
+      "requires_constraints": [
+        "confirmation-gate"
+      ],
+      "outcome": {
+        "action": "wait-for-confirmation",
+        "execute": false
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "look-up-facts",
+      "input": {
+        "item_type": "fact",
+        "environment_explorable": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "look-up-facts",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#document-body",
+          "text": "能通过探索环境（文件系统、工具等）找到的**事实**，应自行查证而非提问"
+        }
+      ],
+      "expected": {
+        "action": "inspect-environment",
+        "questions_asked": 0
+      }
+    },
+    {
+      "id": "interview-decisions",
+      "input": {
+        "item_type": "decision",
+        "shared_understanding": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "one-question-at-a-time",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#document-body",
+          "text": "每次只问一个问题，等待反馈后再继续"
+        },
+        {
+          "id": "recommend-an-answer",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#document-body",
+          "text": "每个问题都给出推荐答案"
+        }
+      ],
+      "expected": {
+        "action": "ask-one-decision-question",
+        "include_recommendation": true
+      }
+    },
+    {
+      "id": "wait-for-shared-understanding",
+      "input": {
+        "requested_action": "execute",
+        "shared_understanding": false
+      },
+      "retrieved_constraints": [
+        {
+          "id": "confirmation-gate",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#document-body",
+          "text": "在用户确认双方已达成共同理解前，不得执行该事项"
+        }
+      ],
+      "expected": {
+        "action": "wait-for-confirmation",
+        "execute": false
+      }
+    }
+  ]
+}

@@ -49,6 +49,7 @@ AGENT_HOMES = {
 ADAPTATION_MAP = {
     "ask-matt": ["my-ask-matt"],
     "grill-me": ["my-grill-me"],
+    "grilling": ["my-grilling"],
     "grill-with-docs": ["my-grill-with-docs"],
     "to-spec": ["my-to-spec"],
     "to-tickets": ["my-to-tickets"],
@@ -75,6 +76,7 @@ ADAPTATION_MAP = {
 UPSTREAM_PATHS = {
     "ask-matt": "engineering/ask-matt",
     "grill-me": "productivity/grill-me",
+    "grilling": "productivity/grilling",
     "grill-with-docs": "engineering/grill-with-docs",
     "to-spec": "engineering/to-spec",
     "to-tickets": "engineering/to-tickets",

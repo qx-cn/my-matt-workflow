@@ -14,8 +14,7 @@
     "my-doctor",
     "my-install",
     "my-setup",
-    "my-sync",
-    "my-grilling"
+    "my-sync"
   ],
   "skills": [
     {
@@ -237,6 +236,74 @@
       "conclusion": "adapter-rework-required",
       "evidence_path": null,
       "notes": "Plan 2: adapter bloat; local adapter rework later (≤15 lines)."
+    },
+    {
+      "upstream_skill": "grilling",
+      "upstream_path": "productivity/grilling",
+      "local_skill": "my-grilling",
+      "sections": {
+        "upstream": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface"
+        ],
+        "local": [
+          "SKILL.md#document-body",
+          "agents/openai.yaml#interface",
+          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#interface.short_description",
+          "agents/openai.yaml#policy"
+        ],
+        "complete": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "SKILL.md 的四段上游访谈流程已译为本地正文，保留逐支决策、一次一问、事实先查和共同理解前不得行动。"
+          },
+          {
+            "upstream": "agents/openai.yaml#interface",
+            "local": "agents/openai.yaml#interface",
+            "evidence": "agents/openai.yaml 保留 interface.display_name “Grilling”；本地 short_description 作为界面文案调整已单列为适配。"
+          }
+        ],
+        "translated": [
+          {
+            "upstream": "SKILL.md#document-body",
+            "local": "SKILL.md#document-body",
+            "evidence": "SKILL.md#document-body"
+          },
+          {
+            "upstream": "agents/openai.yaml#interface",
+            "local": "agents/openai.yaml#interface",
+            "evidence": "agents/openai.yaml#interface"
+          }
+        ],
+        "missing": [],
+        "local_added": [
+          "SKILL.md#项目策略优先",
+          "agents/openai.yaml#interface.short_description",
+          "agents/openai.yaml#policy"
+        ]
+      },
+      "support_files": {
+        "SKILL.md": "44331dda57f461db4fec3f2efb6ddabe7aaaa0a57ae0f88a883bc61aed8a0587",
+        "agents/openai.yaml": "cf29b9a8dbf35a58a908a6ca4f64dcd86c2b2130291eee0a78b9f706b138825b"
+      },
+      "local_support_files": {
+        "agents/openai.yaml": "fd9b95d5468600190f9cedf23a575fc71ffa2fde03b5d55bacd2fee2b27063a6"
+      },
+      "allowed_local_adaptations": [
+        {
+          "path": "SKILL.md#项目策略优先",
+          "adaptation": "本地项目策略入口及绝对安全底线；此适配会令上游的无条件确认门受生效策略覆盖，因此必须在 Plan 2 重做为不削弱上游门控的适配。"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "adaptation": "保留本地界面 metadata：short_description 改为 “Run a focused design interview”，并以 policy.allow_implicit_invocation=false 表达本地手动调用；后续适配须恢复上游 “stress-test” 范围。"
+        }
+      ],
+      "conclusion": "adapter-rework-required",
+      "evidence_path": "upstream/evidence/grilling-audit.md",
+      "notes": "已按固定上游提交 2ab958093e83e0ec752e6c1c5932da465bf23e0c 审计。正文流程已翻译，但项目策略覆盖共同理解前不得行动的门控，且 metadata 说明缩窄压力测试范围；转入 Plan 2 的 my-grilling adapter rework 队列。"
     },
     {
       "upstream_skill": "grill-with-docs",
