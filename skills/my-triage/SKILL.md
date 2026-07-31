@@ -61,7 +61,7 @@ sequence: <NN>
 ---
 ```
 
-`blocked_by` 必须是 YAML 列表；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。可实现性、引用与完成门禁均由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断。
+`blocked_by` 必须是 YAML 列表；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。可实现性、引用与完成门槛均由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断。
 
 ## 调用
 

@@ -11,7 +11,7 @@ _CATALOG: dict[str, dict[str, str]] = {
         "priority": "none",
         "suggested_name": "my-resolving-merge-conflicts",
         "reason": "本地 my-resolving-merge-conflicts 已覆盖审阅、验证与安全边界。",
-        "caveat": "本地版本保留批准门禁与禁止破坏性 Git 操作。",
+        "caveat": "本地版本保留批准门槛与禁止破坏性 Git 操作。",
     },
     "in-progress/to-questionnaire": {
         "status": "covered",

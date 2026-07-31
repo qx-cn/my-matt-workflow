@@ -14,8 +14,8 @@ disable-model-invocation: true
    - 按新的折中方案重写。
    对推荐候选还可选择：纳入迁移待办，暂缓，或明确排除；候选本身不等于已采用 Skill。
 4. 所有需要处理的变化与候选都有决定后，才修改个人 Skills；未决定的候选可继续留在报告中，不阻塞无关同步。
-5. 修改后运行 `python3 tools/workflow.py check` 作为权威本地门禁；它包含严格静态/eval/冒烟注册表验证、完整单元测试，以及已有 current release 时的源/release 一致性检查。再运行受影响 Skills 的 `workflow.py smoke --skills <my-skill>`。
+5. 修改后运行 `python3 tools/workflow.py check` 作为权威本地检查；它包含严格静态/eval/冒烟注册表验证、完整单元测试，以及已有 current release 时的源/release 一致性检查。再运行受影响 Skills 的 `workflow.py smoke --skills <my-skill>`。
 6. 任一验证失败时停止：不构建 release，不更新 `upstream/manifest.json`。
 7. 验证全部通过后构建新 release；用户确认并安装成功后，才运行 `workflow.py snapshot` 更新上游快照基线。若已明确接受上游 Skill 删除，使用 `snapshot --allow-deletions`。
 
-逐项决策和验证是硬门禁，即使用户要求全自动或跳过测试也不能省略。不自动合并，不在未完成决策时更新 manifest。
+逐项决策和验证是硬门槛，即使用户要求全自动或跳过测试也不能省略。不自动合并，不在未完成决策时更新 manifest。

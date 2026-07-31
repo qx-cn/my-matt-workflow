@@ -25,6 +25,6 @@ python3 tools/workflow.py build --release-id <release-id>
 python3 tools/workflow.py install --target codex
 ```
 
-`workflow.py check` 是源树的权威本地门禁：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试，并在存在 `current.json` 时验证当前 release 与源树一致。尚未构建首个 release 时会明确报告 release 验证不适用；`build` 会在创建 release 前运行同一套完整门禁，只跳过旧 current release 的一致性比较，以便用新 release 替换已过期的旧 release。
+`workflow.py check` 是源树的权威本地检查：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试，并在存在 `current.json` 时验证当前 release 与源树一致。尚未构建首个 release 时会明确报告 release 验证不适用；`build` 会在创建 release 前运行同一套完整检查，只跳过旧 current release 的一致性比较，以便用新 release 替换已过期的旧 release。
 
 项目首次使用时手动运行 `/my-setup`。日常通过 `/my-ask-matt` 查询下一条命令，再手动调用推荐的 `/my-*`。

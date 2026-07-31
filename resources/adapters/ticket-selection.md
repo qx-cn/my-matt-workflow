@@ -8,4 +8,4 @@
 
 Wayfinder frontier 只包括 `ticket_kind: wayfinder-decision`、`status: open`、显式未认领且所有 `blocked_by` Ticket 已 `complete` 的 Ticket；其选择规则与 implementation 完全独立。`python3 tools/workflow.py wayfinder-frontier <TICKET>...` 只读输出稳定排序的 frontier；`--select <id>` 选择指定合格 Ticket，不合格时失败且不回退。
 
-关闭 implementation Ticket 前，所有验收复选框必须勾选；否则保留开放状态并说明未完成项。用户专属产品取舍不由这个机械门禁代替。
+关闭 implementation Ticket 前，所有验收复选框必须勾选；否则保留开放状态并说明未完成项。用户专属产品取舍不由这个机械门槛代替。

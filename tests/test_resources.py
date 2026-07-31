@@ -21,14 +21,20 @@ class SharedResourceTests(unittest.TestCase):
     def test_humanizer_is_bundled_only_for_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         with tempfile.TemporaryDirectory() as tmp:
-            consumer = Path(tmp) / "my-to-spec"
-            consumer.mkdir()
-            bundle_resources_for_skill(
-                manifest, ROOT, "my-to-spec", consumer
-            )
-            self.assertTrue(
-                (consumer / "references/shared/humanizer.md").is_file()
-            )
+            for name in (
+                "my-to-spec",
+                "my-to-tickets",
+                "my-grill-with-docs",
+                "my-code-review",
+                "my-humanizer",
+            ):
+                consumer = Path(tmp) / name
+                consumer.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, name, consumer)
+                self.assertTrue(
+                    (consumer / "references/shared/humanizer.md").is_file(),
+                    name,
+                )
 
             other = Path(tmp) / "my-install"
             other.mkdir()

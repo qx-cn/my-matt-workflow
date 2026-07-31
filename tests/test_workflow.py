@@ -494,7 +494,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("`deny`", sot)
         self.assertIn("`confirm`", sot)
         self.assertIn("`allow`", sot)
-        self.assertIn("/humanizer", sot)
+        self.assertIn("/my-humanizer", sot)
         self.assertIn("叙述段", sot)
         self.assertIn("契约段", sot)
         self.assertIn("必须 / 不得", sot)
@@ -1758,7 +1758,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(29, len(validate_skills(root)))
+        self.assertEqual(30, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
@@ -2163,16 +2163,16 @@ class WorkflowCliTests(unittest.TestCase):
                 target="auto",
                 agent_home=str(agent_home),
             )
-            with (
-                mock.patch.object(module, "ROOT", workflow),
-                mock.patch.object(module, "_run_all_up_gate") as gate,
-            ):
+            with mock.patch.object(module, "ROOT", workflow):
                 module.command_deploy(args)
 
-            gate.assert_called_once_with(check_current_release=False)
             self.assertEqual(
                 1,
                 len([path for path in (workflow / "releases").iterdir() if path.is_dir()]),
+            )
+            self.assertEqual(
+                {"release_id": "v1"},
+                json.loads((workflow / "current.json").read_text()),
             )
 
     def test_prune_releases_keeps_current_and_agent_referenced_releases(self):
