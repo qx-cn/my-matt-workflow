@@ -281,9 +281,7 @@ class CheckGateTests(unittest.TestCase):
                     )
                 self.assertFalse((root / "releases" / f"missing-{name}").exists())
 
-    def test_workflow_build_refuses_release_when_unit_gate_fails(self):
-        if os.environ.get("MY_MATT_NESTED_BUILD_GATE"):
-            self.skipTest("avoids recursively building the copied repository")
+    def test_workflow_build_does_not_repeat_the_unit_gate(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "repository"
             self._source_copy(root)
@@ -309,14 +307,14 @@ class CheckGateTests(unittest.TestCase):
                 env=os.environ | {"MY_MATT_NESTED_BUILD_GATE": "1"},
             )
 
-            self.assertNotEqual(0, result.returncode)
-            self.assertIn("unit tests failed", result.stdout)
-            self.assertFalse((root / "releases" / "blocked-v1").exists())
-            self.assertFalse((root / "current.json").exists())
+            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            self.assertTrue((root / "releases" / "blocked-v1").is_dir())
+            self.assertEqual(
+                {"release_id": "blocked-v1"},
+                json.loads((root / "current.json").read_text()),
+            )
 
     def test_workflow_build_can_replace_a_stale_current_release(self):
-        if os.environ.get("MY_MATT_NESTED_BUILD_GATE"):
-            self.skipTest("avoids recursively building the copied repository")
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "repository"
             self._source_copy(root)
