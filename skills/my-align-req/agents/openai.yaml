@@ -1,0 +1,5 @@
+interface:
+  display_name: "Align Req"
+  short_description: "回述需求并对照方案，标出漂移"
+policy:
+  allow_implicit_invocation: false

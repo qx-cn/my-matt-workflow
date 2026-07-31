@@ -159,7 +159,7 @@
         "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
       },
       "local_support_files": {
-        "SKILL.md": "6ef0cdc3dfb3fd65fb4b49da6ba78da014b3649d585e4b2ad44cbf388c3ace2c",
+        "SKILL.md": "551e39a1467365aeae67e16b2dd5dc4f12b712b40513baa1a62c781d9124e6c8",
         "agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c"
       },
       "allowed_local_adaptations": [
