@@ -1,5 +1,0 @@
-interface:
-  display_name: "Sync"
-  short_description: "Review and adapt upstream changes"
-policy:
-  allow_implicit_invocation: false

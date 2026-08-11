@@ -3,14 +3,7 @@
   "skills": {
     "my-diagnosing-bugs": ["diagnosing-bugs-no-red-loop"],
     "my-grilling": ["grilling-one-question-hitl"],
-    "my-implement": [
-      "implement-automatic-ticket",
-      "implement-manual-ticket",
-      "implement-mixed-ticket"
-    ],
     "my-tdd": ["tdd-seam-pressure"],
-    "my-wayfinder": ["implement-mixed-ticket"],
-    "my-work-artifacts": ["artifact-resolver-boundary-escape"],
     "my-writing-great-skills": ["writing-great-skills-baseline-discipline"]
   }
 }

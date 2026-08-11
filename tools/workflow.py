@@ -13,13 +13,6 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-from workflow_lib.doctor import (
-    compare_snapshots,
-    discover_unmapped_skills,
-    snapshot_mapped_tree,
-    snapshot_tree,
-    validate_upstream_snapshot,
-)
 from workflow_lib.installer import install_release
 from workflow_lib.check import CheckError, run_check
 from workflow_lib.evals import EvalError, run_scenario, validate_evals, validate_scenario_evidence
@@ -31,92 +24,20 @@ from workflow_lib.profile import (
     preset_cli_choices,
     render_profile,
 )
-from workflow_lib.recommendations import build_recommendation_report
 from workflow_lib.release import build_release, release_matches_source
 from workflow_lib.smoke_registry import (
     SmokeRegistryError,
     load_smoke_registry,
     resolve_smoke_scenarios,
 )
-from workflow_lib.sync import build_review_bundle
-from workflow_lib.artifact_resolver import (
-    list_work_artifacts,
-    read_work_artifact,
-    resolve_work_artifact,
-)
-from workflow_lib.work_artifacts import (
-    analyze_work_artifacts,
-    apply_work_artifact_migration,
-)
-from workflow_lib.tickets import (
-    TicketError,
-    load_tickets,
-    select_wayfinder_ticket,
-    wayfinder_candidates,
-)
 from workflow_lib.validator import ValidationError, validate_repository
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OFFICIAL_UPSTREAM = "https://github.com/mattpocock/skills.git"
 AGENT_HOMES = {
     "codex": Path.home() / ".codex",
     "cursor": Path.home() / ".cursor",
     "claude": Path.home() / ".claude",
-}
-
-ADAPTATION_MAP = {
-    "ask-matt": ["my-ask-matt"],
-    "grill-me": ["my-grill-me"],
-    "grilling": ["my-grilling"],
-    "grill-with-docs": ["my-grill-with-docs"],
-    "to-spec": ["my-to-spec"],
-    "to-tickets": ["my-to-tickets"],
-    "implement": ["my-implement"],
-    "tdd": ["my-tdd", "my-implement"],
-    "code-review": ["my-code-review", "my-implement"],
-    "diagnosing-bugs": ["my-diagnosing-bugs"],
-    "handoff": ["my-handoff"],
-    "prototype": ["my-prototype"],
-    "wayfinder": ["my-wayfinder"],
-    "triage": ["my-triage"],
-    "research": ["my-research"],
-    "domain-modeling": ["my-domain-modeling", "my-grill-with-docs"],
-    "codebase-design": ["my-codebase-design", "my-improve-codebase-architecture"],
-    "improve-codebase-architecture": ["my-improve-codebase-architecture"],
-    "teach": ["my-teach"],
-    "writing-great-skills": ["my-writing-great-skills"],
-    "resolving-merge-conflicts": ["my-resolving-merge-conflicts"],
-    "to-questionnaire": ["my-to-questionnaire"],
-    "wizard": ["my-wizard"],
-    "edit-article": ["my-edit-article"],
-}
-
-UPSTREAM_PATHS = {
-    "ask-matt": "engineering/ask-matt",
-    "grill-me": "productivity/grill-me",
-    "grilling": "productivity/grilling",
-    "grill-with-docs": "engineering/grill-with-docs",
-    "to-spec": "engineering/to-spec",
-    "to-tickets": "engineering/to-tickets",
-    "implement": "engineering/implement",
-    "tdd": "engineering/tdd",
-    "code-review": "engineering/code-review",
-    "diagnosing-bugs": "engineering/diagnosing-bugs",
-    "handoff": "productivity/handoff",
-    "prototype": "engineering/prototype",
-    "wayfinder": "engineering/wayfinder",
-    "triage": "engineering/triage",
-    "research": "engineering/research",
-    "domain-modeling": "engineering/domain-modeling",
-    "codebase-design": "engineering/codebase-design",
-    "improve-codebase-architecture": "engineering/improve-codebase-architecture",
-    "teach": "productivity/teach",
-    "writing-great-skills": "productivity/writing-great-skills",
-    "resolving-merge-conflicts": "engineering/resolving-merge-conflicts",
-    "to-questionnaire": "in-progress/to-questionnaire",
-    "wizard": "in-progress/wizard",
-    "edit-article": "personal/edit-article",
 }
 
 
@@ -136,12 +57,6 @@ def command_setup(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve()
     profile_path = repo / ".agent" / "matt-workflow.md"
     has_existing_profile = profile_path.exists()
-    if args.confirm_candidate_link_repair and not args.migrate_work_artifacts:
-        raise SystemExit("候选链接修复需要同时指定 --migrate-work-artifacts")
-    if args.migrate_work_artifacts and not args.apply:
-        raise SystemExit("迁移工作产物需要 --apply 作为明确确认")
-    if args.migrate_work_artifacts and not has_existing_profile:
-        raise SystemExit("仅已配置项目可以迁移工作产物")
     existing: dict = {}
     notes = "# 项目工作流说明\n\n仓库规则始终优先。"
     if has_existing_profile:
@@ -185,8 +100,6 @@ def command_setup(args: argparse.Namespace) -> None:
     config = merge_profile(defaults | existing, preset | explicit)
     rendered = render_profile(config, notes)
     print(rendered)
-    if has_existing_profile:
-        print(json.dumps(analyze_work_artifacts(repo), ensure_ascii=False, indent=2))
     if not args.apply:
         return
     agent_dir = repo / ".agent"
@@ -194,15 +107,6 @@ def command_setup(args: argparse.Namespace) -> None:
     (agent_dir / "matt-workflow.md").write_text(rendered)
     added, conflicts = apply_personal_ignores(repo)
     print(json.dumps({"added": added, "conflicts": conflicts}, ensure_ascii=False))
-    if args.migrate_work_artifacts:
-        apply_work_artifact_migration(
-            repo,
-            confirmed_candidate_link_repairs={
-                tuple(candidate)
-                for candidate in args.confirm_candidate_link_repair
-            },
-        )
-        print("MIGRATED work artifacts")
 
 
 def command_validate(_: argparse.Namespace) -> None:
@@ -302,9 +206,6 @@ def _write_current_release(path: Path, release_id: str) -> None:
 
 
 def command_build(args: argparse.Namespace) -> None:
-    # Builds package source that has already passed the explicit local gate.
-    # ``build_release`` still verifies release inputs and stages atomically, but
-    # does not repeat the full unit-test gate.
     release_id = args.release_id or datetime.now().strftime("%Y%m%d-%H%M%S")
     release = build_release(
         ROOT / "skills",
@@ -412,133 +313,6 @@ def command_prune_releases(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
-def command_refresh_project(args: argparse.Namespace) -> None:
-    """Apply a confirmed refresh without making the caller repeat setup flags."""
-    args.refresh = True
-    args.apply = True
-    command_setup(args)
-
-
-def command_work_layout(args: argparse.Namespace) -> None:
-    """Print a read-only work-artifact migration plan."""
-    print(json.dumps(analyze_work_artifacts(Path(args.repo)), ensure_ascii=False, indent=2))
-
-
-def command_work_list(args: argparse.Namespace) -> None:
-    """List ignored work artifacts without mutating the project."""
-    artifacts = list_work_artifacts(
-        Path(args.repo), topic=args.topic, artifact_type=args.artifact_type
-    )
-    print(
-        json.dumps(
-            [artifact.as_dict() for artifact in artifacts],
-            ensure_ascii=False,
-            indent=2,
-        )
-    )
-
-
-def command_work_resolve(args: argparse.Namespace) -> None:
-    """Resolve one ignored work artifact without reading its content."""
-    artifact = resolve_work_artifact(
-        Path(args.repo), args.topic, args.artifact_type, args.selector
-    )
-    print(json.dumps(artifact.as_dict(), ensure_ascii=False, indent=2))
-
-
-def command_work_read(args: argparse.Namespace) -> None:
-    """Read one bounded UTF-8 work artifact without mutating the project."""
-    artifact = resolve_work_artifact(
-        Path(args.repo), args.topic, args.artifact_type, args.selector
-    )
-    print(read_work_artifact(artifact), end="")
-
-
-def _ticket_summary(ticket) -> dict[str, object]:
-    return {
-        "id": ticket.identifier,
-        "title": ticket.title,
-        "path": ticket.path.as_posix(),
-        "sequence": ticket.sequence,
-    }
-
-
-def command_wayfinder_frontier(args: argparse.Namespace) -> None:
-    """Print the read-only local Wayfinder frontier or one requested member."""
-    try:
-        tickets = load_tickets(Path(path) for path in args.ticket)
-        if args.select is not None:
-            print(
-                json.dumps(
-                    _ticket_summary(select_wayfinder_ticket(tickets, args.select)),
-                    ensure_ascii=False,
-                    indent=2,
-                )
-            )
-            return
-        print(
-            json.dumps(
-                [_ticket_summary(ticket) for ticket in wayfinder_candidates(tickets)],
-                ensure_ascii=False,
-                indent=2,
-            )
-        )
-    except TicketError as exc:
-        raise SystemExit(str(exc)) from exc
-
-
-def _load_json(path: Path) -> dict:
-    return json.loads(path.read_text()) if path.exists() else {}
-
-
-def _upstream_skills_from_manifest(raw: dict) -> dict[str, dict[str, str]]:
-    """Extract the skill→file hash map from bare or wrapped upstream manifests."""
-    if not raw:
-        return {}
-    skills = raw.get("skills")
-    if isinstance(skills, dict) and isinstance(raw.get("source"), dict):
-        if not all(isinstance(files, dict) for files in skills.values()):
-            raise SystemExit("upstream/manifest.json skills 必须是文件哈希映射")
-        return skills
-    if "source" in raw or "skills" in raw:
-        raise SystemExit("upstream/manifest.json 包装格式无效：需要 source 与 skills")
-    if not all(isinstance(files, dict) for files in raw.values()):
-        raise SystemExit("upstream/manifest.json 必须是 Skill 文件哈希映射")
-    return raw
-
-
-def _load_upstream_skills_snapshot(path: Path) -> dict[str, dict[str, str]]:
-    return _upstream_skills_from_manifest(_load_json(path))
-
-
-def _write_upstream_manifest(
-    path: Path,
-    skills: dict[str, dict[str, str]],
-    *,
-    source: dict | None = None,
-) -> None:
-    """Write wrapped upstream manifest, preserving an existing source pin."""
-    existing = _load_json(path)
-    pinned = source
-    if pinned is None and isinstance(existing.get("source"), dict):
-        pinned = existing["source"]
-    if pinned is None:
-        pinned = {"repo": OFFICIAL_UPSTREAM, "commit": ""}
-    path.write_text(
-        json.dumps({"source": pinned, "skills": skills}, ensure_ascii=False, indent=2)
-        + "\n"
-    )
-
-
-def _load_list(path: Path) -> list[str]:
-    if not path.exists():
-        return []
-    value = json.loads(path.read_text())
-    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
-        raise SystemExit(f"无效的上游未映射 Skill 基线：{path}")
-    return value
-
-
 def _resolve_agent_home(args: argparse.Namespace) -> Path:
     if args.agent_home:
         return Path(args.agent_home).expanduser()
@@ -550,119 +324,6 @@ def _resolve_agent_home(args: argparse.Namespace) -> Path:
     if not candidates:
         raise SystemExit("未检测到 Agent Skill 目录；请指定 --target 或 --agent-home")
     raise SystemExit("检测到多个 Agent Skill 目录；请指定 --target 或 --agent-home")
-
-
-def _with_upstream(source: str, operation):
-    source_path = Path(source).expanduser()
-    if source_path.exists():
-        return operation(source_path)
-    if not re.match(r"(?:https?|git)://", source):
-        raise SystemExit(f"上游路径不存在：{source}")
-    with tempfile.TemporaryDirectory(prefix="my-matt-upstream-") as directory:
-        checkout = Path(directory) / "skills"
-        result = subprocess.run(["git", "clone", "--depth", "1", source, str(checkout)])
-        if result.returncode:
-            raise SystemExit("无法下载上游 Skills")
-        return operation(checkout)
-
-
-def _adapted_snapshot(upstream: Path) -> dict:
-    return snapshot_mapped_tree(upstream, UPSTREAM_PATHS)
-
-
-def _source_commit(upstream: Path) -> str:
-    """Return the Git commit that produced an upstream source tree."""
-    result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=upstream,
-        capture_output=True,
-        text=True,
-    )
-    commit = result.stdout.strip()
-    if result.returncode or not re.fullmatch(r"[0-9a-f]{40,64}", commit):
-        raise SystemExit(f"上游快照需要可识别的 Git commit：{upstream}")
-    return commit
-
-
-def command_doctor(args: argparse.Namespace) -> None:
-    previous = _load_upstream_skills_snapshot(ROOT / "upstream" / "manifest.json")
-    known_unmapped = set(_load_list(ROOT / "upstream" / "unmapped.json"))
-    def check(upstream: Path) -> None:
-        current = _adapted_snapshot(upstream)
-        validate_upstream_snapshot(current, set(ADAPTATION_MAP), allow_missing=True)
-        result = {"changes": build_review_bundle(compare_snapshots(previous, current), ADAPTATION_MAP)}
-        unmapped = discover_unmapped_skills(upstream, UPSTREAM_PATHS)
-        additions = sorted(set(unmapped) - known_unmapped)
-        if additions:
-            result["unmapped_upstream_skills"] = additions
-        if args.recommend:
-            result["recommendations"] = build_recommendation_report(unmapped)
-        if result["changes"] or additions:
-            print(json.dumps(result, ensure_ascii=False, indent=2))
-            raise SystemExit(2)
-        if args.recommend:
-            print(json.dumps(result, ensure_ascii=False, indent=2))
-    _with_upstream(args.upstream, check)
-
-
-def command_sync(args: argparse.Namespace) -> None:
-    previous = _load_upstream_skills_snapshot(ROOT / "upstream" / "manifest.json")
-    def review(upstream: Path) -> dict:
-        current = _adapted_snapshot(upstream)
-        validate_upstream_snapshot(current, set(ADAPTATION_MAP), allow_missing=True)
-        return {
-            "changes": build_review_bundle(
-                compare_snapshots(previous, current), ADAPTATION_MAP
-            ),
-            "recommendations": build_recommendation_report(
-                discover_unmapped_skills(upstream, UPSTREAM_PATHS)
-            ),
-        }
-
-    bundle = _with_upstream(args.upstream, review)
-    review_path = ROOT / "upstream" / "review.json"
-    review_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2) + "\n")
-    print(review_path)
-
-
-def command_recommend(args: argparse.Namespace) -> None:
-    """Print a review-only recommendation report for unadopted upstream Skills."""
-    def inspect(upstream: Path) -> None:
-        report = build_recommendation_report(
-            discover_unmapped_skills(upstream, UPSTREAM_PATHS)
-        )
-        print(json.dumps(report, ensure_ascii=False, indent=2))
-
-    _with_upstream(args.upstream, inspect)
-
-
-def command_snapshot(args: argparse.Namespace) -> None:
-    snapshot, unmapped, commit = _with_upstream(
-        args.upstream,
-        lambda upstream: (
-            _adapted_snapshot(upstream),
-            discover_unmapped_skills(upstream, UPSTREAM_PATHS),
-            _source_commit(upstream),
-        ),
-    )
-    validate_upstream_snapshot(
-        snapshot,
-        set(ADAPTATION_MAP),
-        allow_missing=args.allow_deletions,
-    )
-    source_repo = Path(args.upstream).expanduser()
-    _write_upstream_manifest(
-        ROOT / "upstream" / "manifest.json",
-        snapshot,
-        source={
-            "repo": str(source_repo.resolve()) if source_repo.exists() else args.upstream,
-            "commit": commit,
-        },
-    )
-    (ROOT / "upstream" / "unmapped.json").write_text(
-        json.dumps(unmapped, ensure_ascii=False, indent=2) + "\n"
-    )
-    print(f"SNAPSHOT skills={len(snapshot)}")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -702,14 +363,6 @@ def parser() -> argparse.ArgumentParser:
     setup.add_argument("--domain-source", action="append")
     setup.add_argument("--apply", action="store_true")
     setup.add_argument("--refresh", action="store_true")
-    setup.add_argument("--migrate-work-artifacts", action="store_true")
-    setup.add_argument(
-        "--confirm-candidate-link-repair",
-        action="append",
-        nargs=2,
-        metavar=("SOURCE", "LINK"),
-        default=[],
-    )
     setup.set_defaults(func=command_setup)
 
     validate = sub.add_parser("validate")
@@ -748,93 +401,6 @@ def parser() -> argparse.ArgumentParser:
     prune_releases.add_argument("--agent-home", action="append", default=[])
     prune_releases.add_argument("--apply", action="store_true")
     prune_releases.set_defaults(func=command_prune_releases)
-
-    refresh_project = sub.add_parser("refresh-project")
-    refresh_project.add_argument("--repo", default=".")
-    refresh_project.add_argument(
-        "--preset",
-        choices=preset_cli_choices(),
-        metavar="PRESET",
-        help=(
-            "策略预设："
-            "strict-control|light-control|review|semi-auto|full-auto"
-            "（兼容别名 supervised|unattended）"
-        ),
-    )
-    refresh_project.add_argument(
-        "--composition-policy", choices=["manual", "automatic"]
-    )
-    refresh_project.add_argument(
-        "--work-scope-policy",
-        choices=["single-ticket", "ready-frontier", "approved-plan"],
-    )
-    refresh_project.add_argument("--decision-policy", choices=["ask", "autonomous", "halt"])
-    refresh_project.add_argument("--task-backend", choices=["local", "external", "project-docs", "none"])
-    refresh_project.add_argument("--base-branch")
-    refresh_project.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--commit-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--external-write-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--docs-writeback", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--humanizer-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--test-command", action="append")
-    refresh_project.add_argument("--standards-source", action="append")
-    refresh_project.add_argument("--domain-source", action="append")
-    refresh_project.add_argument("--migrate-work-artifacts", action="store_true")
-    refresh_project.add_argument(
-        "--confirm-candidate-link-repair",
-        action="append",
-        nargs=2,
-        metavar=("SOURCE", "LINK"),
-        default=[],
-    )
-    refresh_project.set_defaults(func=command_refresh_project)
-
-    work_layout = sub.add_parser("work-layout")
-    work_layout.add_argument("--repo", default=".")
-    work_layout.set_defaults(func=command_work_layout)
-
-    work_list = sub.add_parser("work-list")
-    work_list.add_argument("--repo", default=".")
-    work_list.add_argument("--topic")
-    work_list.add_argument("--type", dest="artifact_type")
-    work_list.set_defaults(func=command_work_list)
-
-    work_resolve = sub.add_parser("work-resolve")
-    work_resolve.add_argument("--repo", default=".")
-    work_resolve.add_argument("--topic", required=True)
-    work_resolve.add_argument("--type", dest="artifact_type", required=True)
-    work_resolve.add_argument("--selector", default="latest")
-    work_resolve.set_defaults(func=command_work_resolve)
-
-    work_read = sub.add_parser("work-read")
-    work_read.add_argument("--repo", default=".")
-    work_read.add_argument("--topic", required=True)
-    work_read.add_argument("--type", dest="artifact_type", required=True)
-    work_read.add_argument("--selector", default="latest")
-    work_read.set_defaults(func=command_work_read)
-
-    wayfinder_frontier = sub.add_parser("wayfinder-frontier")
-    wayfinder_frontier.add_argument("ticket", nargs="+", metavar="TICKET")
-    wayfinder_frontier.add_argument("--select")
-    wayfinder_frontier.set_defaults(func=command_wayfinder_frontier)
-
-    doctor = sub.add_parser("doctor")
-    doctor.add_argument("--upstream", default=OFFICIAL_UPSTREAM)
-    doctor.add_argument("--recommend", action="store_true")
-    doctor.set_defaults(func=command_doctor)
-
-    sync = sub.add_parser("sync")
-    sync.add_argument("--upstream", default=OFFICIAL_UPSTREAM)
-    sync.set_defaults(func=command_sync)
-
-    recommend = sub.add_parser("recommend")
-    recommend.add_argument("--upstream", default=OFFICIAL_UPSTREAM)
-    recommend.set_defaults(func=command_recommend)
-
-    snapshot = sub.add_parser("snapshot")
-    snapshot.add_argument("--upstream", default=OFFICIAL_UPSTREAM)
-    snapshot.add_argument("--allow-deletions", action="store_true")
-    snapshot.set_defaults(func=command_snapshot)
 
     return result
 

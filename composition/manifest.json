@@ -22,9 +22,6 @@
     "my-improve-codebase-architecture": [
       {"skill": "my-codebase-design", "when": "design-vocabulary"},
       {"skill": "my-grill-with-docs", "when": "selected-candidate"}
-    ],
-    "my-doctor": [
-      {"skill": "my-sync", "when": "user-confirms-sync"}
     ]
   },
   "routable_entries": {

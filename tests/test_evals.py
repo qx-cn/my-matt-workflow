@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class EvalValidationTests(unittest.TestCase):
     def test_checked_in_scenarios_and_evidence_are_strictly_valid(self):
         self.assertEqual(
-            {"status": "valid", "scenarios": 8, "required_scenarios": 8},
+            {"status": "valid", "scenarios": 4, "required_scenarios": 4},
             validate_evals(ROOT),
         )
 
@@ -74,12 +74,12 @@ class EvalValidationTests(unittest.TestCase):
             root = Path(tmp)
             shutil.copytree(ROOT / "evals", root / "evals")
             shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/implement-automatic-ticket.json"
+            scenario = root / "evals/scenarios/diagnosing-bugs-no-red-loop.json"
             raw = json.loads(scenario.read_text())
             raw["input"]["policy"] = "manual"
             scenario.write_text(json.dumps(raw))
 
-            with self.assertRaisesRegex(EvalError, "outcome mismatch"):
+            with self.assertRaisesRegex(EvalError, "fields must be"):
                 validate_evals(root)
 
     def test_allow_missing_does_not_allow_malformed_scenarios(self):
@@ -97,7 +97,7 @@ class EvalValidationTests(unittest.TestCase):
             root = Path(tmp)
             shutil.copytree(ROOT / "evals", root / "evals")
             shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/implement-automatic-ticket.json"
+            scenario = root / "evals/scenarios/tdd-seam-pressure.json"
             raw = json.loads(scenario.read_text())
             del raw["evidence"]
             scenario.write_text(json.dumps(raw))
@@ -111,7 +111,7 @@ class EvalValidationTests(unittest.TestCase):
             root = Path(tmp)
             shutil.copytree(ROOT / "evals", root / "evals")
             shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/implement-automatic-ticket.json"
+            scenario = root / "evals/scenarios/tdd-seam-pressure.json"
             raw = json.loads(scenario.read_text())
             raw["evidence"]["sources"][0]["sha256"] = "sha256:" + "0" * 64
             scenario.write_text(json.dumps(raw))
@@ -216,8 +216,8 @@ class CheckGateTests(unittest.TestCase):
                 "tools.workflow_lib.check.subprocess.run", return_value=completed
             ):
                 self.assertEqual("valid", run_check(root)["status"])
-            (root / "skills" / "my-sync" / "SKILL.md").write_text(
-                (root / "skills" / "my-sync" / "SKILL.md").read_text()
+            (root / "skills" / "my-humanizer" / "SKILL.md").write_text(
+                (root / "skills" / "my-humanizer" / "SKILL.md").read_text()
                 + "\nChanged after release.\n"
             )
             with mock.patch(
@@ -237,7 +237,7 @@ class CheckGateTests(unittest.TestCase):
     def test_canonical_build_rejects_missing_eval_and_smoke_inputs(self):
         def remove_evidence(root: Path) -> None:
             scenario = (
-                root / "evals" / "scenarios" / "implement-automatic-ticket.json"
+                root / "evals" / "scenarios" / "tdd-seam-pressure.json"
             )
             raw = json.loads(scenario.read_text())
             del raw["evidence"]
@@ -326,7 +326,7 @@ class CheckGateTests(unittest.TestCase):
                 repo_root=root,
             )
             (root / "current.json").write_text('{"release_id": "stale-v1"}\n')
-            skill = root / "skills" / "my-sync" / "SKILL.md"
+            skill = root / "skills" / "my-humanizer" / "SKILL.md"
             skill.write_text(skill.read_text() + "\nReplacement release fixture.\n")
 
             result = subprocess.run(
@@ -384,7 +384,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                     ".git", ".worktrees", "releases", "current.json", "__pycache__"
                 ),
             )
-            v2_skill = source_v2 / "skills" / "my-sync" / "SKILL.md"
+            v2_skill = source_v2 / "skills" / "my-humanizer" / "SKILL.md"
             v2_skill.write_text(v2_skill.read_text() + "\nVersion two fixture.\n")
             releases = Path(tmp) / "releases"
             first = build_release(
@@ -405,9 +405,9 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    30, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    27, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
-                original = (home / "skills" / "my-sync" / "SKILL.md").read_bytes()
+                original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
                 self.assertEqual(
                     "e2e-v2",
@@ -416,7 +416,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                     )["release_id"],
                 )
                 self.assertNotEqual(
-                    original, (home / "skills" / "my-sync" / "SKILL.md").read_bytes()
+                    original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 install_release(first, home, target=target)
                 self.assertEqual(
@@ -426,8 +426,8 @@ class FullReleaseE2ETests(unittest.TestCase):
                     )["release_id"],
                 )
                 self.assertEqual(
-                    original, (home / "skills" / "my-sync" / "SKILL.md").read_bytes()
+                    original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    30, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    27, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )

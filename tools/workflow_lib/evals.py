@@ -5,12 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-
-from .artifact_resolver import ArtifactResolverError, resolve_work_artifact
-from .tickets import TicketError, load_tickets, select_implementation_ticket
 
 
 class EvalError(RuntimeError):
@@ -21,26 +17,20 @@ SCENARIO_VERSION = 2
 EVIDENCE_VERSION = 1
 REQUIRED_SCENARIOS = frozenset(
     {
-        "implement-automatic-ticket",
-        "implement-manual-ticket",
-        "implement-mixed-ticket",
         "tdd-seam-pressure",
         "grilling-one-question-hitl",
         "diagnosing-bugs-no-red-loop",
         "writing-great-skills-baseline-discipline",
-        "artifact-resolver-boundary-escape",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
 _SKILL_PATH = re.compile(r"^skills/(my-[a-z0-9-]+)/.+$")
 _SCENARIO_TYPES = frozenset(
     {
-        "implementation-selection",
         "tdd-contract",
         "grilling-contract",
         "diagnosing-contract",
         "skill-writing-contract",
-        "artifact-resolver",
     }
 )
 
@@ -176,104 +166,6 @@ def _require_fields(
     return value
 
 
-def _ticket_document(raw: object, location: str) -> str:
-    ticket = _require_fields(
-        raw,
-        {
-            "filename",
-            "id",
-            "title",
-            "ticket_kind",
-            "status",
-            "blocked_by",
-            "claimed_by",
-            "tags",
-            "sequence",
-            "acceptance",
-        },
-        location,
-    )
-    filename = ticket["filename"]
-    if not isinstance(filename, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]*\.md", filename):
-        raise EvalError(f"{location}.filename: must be a normalized Markdown filename")
-    for field in ("id", "title", "ticket_kind", "status"):
-        if not isinstance(ticket[field], str) or not ticket[field]:
-            raise EvalError(f"{location}.{field}: must be a non-empty string")
-    if ticket["claimed_by"] is not None and (
-        not isinstance(ticket["claimed_by"], str) or not ticket["claimed_by"]
-    ):
-        raise EvalError(f"{location}.claimed_by: must be a string or null")
-    if not isinstance(ticket["sequence"], int) or ticket["sequence"] < 0:
-        raise EvalError(f"{location}.sequence: must be a non-negative integer")
-    for field in ("blocked_by", "tags"):
-        if not isinstance(ticket[field], list) or not all(
-            isinstance(value, str) and value for value in ticket[field]
-        ):
-            raise EvalError(f"{location}.{field}: must be a string list")
-    acceptance = _require_fields(
-        ticket["acceptance"], {"checked", "unchecked"}, f"{location}.acceptance"
-    )
-    if not all(isinstance(acceptance[key], int) and acceptance[key] >= 0 for key in acceptance):
-        raise EvalError(f"{location}.acceptance: checkbox counts must be non-negative integers")
-    claimed_by = "" if ticket["claimed_by"] is None else str(ticket["claimed_by"])
-    lines = [
-        "---",
-        f"id: {ticket['id']}",
-        f"title: {ticket['title']}",
-        f"ticket_kind: {ticket['ticket_kind']}",
-        f"status: {ticket['status']}",
-        f"blocked_by: [{', '.join(ticket['blocked_by'])}]",
-        f"claimed_by: {claimed_by}",
-        f"tags: [{', '.join(ticket['tags'])}]",
-        f"sequence: {ticket['sequence']}",
-        "---",
-        f"# {ticket['title']}",
-    ]
-    lines.extend("- [x] accepted" for _ in range(acceptance["checked"]))
-    lines.extend("- [ ] pending" for _ in range(acceptance["unchecked"]))
-    return "\n".join(lines) + "\n"
-
-
-def _evaluate_implementation_selection(input_value: dict[str, object]) -> dict[str, object]:
-    policy = input_value.get("policy")
-    tickets = input_value.get("tickets")
-    if policy not in {"automatic", "manual"}:
-        raise EvalError("implementation-selection.input.policy: must be automatic or manual")
-    if not isinstance(tickets, list) or not tickets:
-        raise EvalError("implementation-selection.input.tickets: must be a non-empty list")
-    if policy == "manual":
-        return {"status": "manual-selection-required", "selected": None}
-    with tempfile.TemporaryDirectory(prefix="my-matt-eval-tickets-") as directory:
-        root = Path(directory)
-        paths: list[Path] = []
-        for index, raw in enumerate(tickets):
-            document = _ticket_document(raw, f"implementation-selection.input.tickets[{index}]")
-            filename = _require_fields(
-                raw,
-                {
-                    "filename",
-                    "id",
-                    "title",
-                    "ticket_kind",
-                    "status",
-                    "blocked_by",
-                    "claimed_by",
-                    "tags",
-                    "sequence",
-                    "acceptance",
-                },
-                f"implementation-selection.input.tickets[{index}]",
-            )["filename"]
-            path = root / str(filename)
-            path.write_text(document, encoding="utf-8")
-            paths.append(path)
-        try:
-            selected = select_implementation_ticket(load_tickets(paths))
-        except TicketError as exc:
-            raise EvalError(f"implementation-selection runtime failed: {exc}") from exc
-    return {"status": "selected", "selected": selected.identifier}
-
-
 def _evaluate_tdd_contract(input_value: dict[str, object]) -> dict[str, object]:
     case = _require_fields(
         input_value, {"dependency", "seam", "slice"}, "tdd-contract.input"
@@ -363,48 +255,13 @@ def _evaluate_skill_writing_contract(input_value: dict[str, object]) -> dict[str
     }
 
 
-def _evaluate_artifact_resolver(input_value: dict[str, object]) -> dict[str, object]:
-    attacks = input_value.get("attacks")
-    if not isinstance(attacks, list) or not attacks:
-        raise EvalError("artifact-resolver.input.attacks: must be a non-empty list")
-    outcomes: list[dict[str, str]] = []
-    with tempfile.TemporaryDirectory(prefix="my-matt-eval-artifacts-") as directory:
-        root = Path(directory)
-        work = root / ".agent" / "work" / "checkout" / "specs"
-        work.mkdir(parents=True)
-        (work / "specs-checkout-01.md").write_text("# safe\n", encoding="utf-8")
-        outside = root / "outside.md"
-        outside.write_text("# outside\n", encoding="utf-8")
-        (work / "escape.md").symlink_to(outside)
-        for index, raw in enumerate(attacks):
-            attack = _require_fields(
-                raw, {"name", "selector", "error"}, f"artifact-resolver.input.attacks[{index}]"
-            )
-            if not all(isinstance(attack[key], str) and attack[key] for key in attack):
-                raise EvalError(f"artifact-resolver.input.attacks[{index}]: values must be strings")
-            try:
-                resolve_work_artifact(root, "checkout", "specs", attack["selector"])
-            except ArtifactResolverError as exc:
-                message = str(exc)
-                if attack["error"] not in message:
-                    raise EvalError(
-                        f"artifact-resolver runtime mismatch for {attack['name']}: {message}"
-                    ) from exc
-                outcomes.append({"name": attack["name"], "error": attack["error"]})
-            else:
-                raise EvalError(f"artifact-resolver attack was accepted: {attack['name']}")
-    return {"status": "rejected", "attacks": outcomes}
-
-
 def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
     """Execute one structured deterministic scenario and assert its exact outcome."""
     evaluators = {
-        "implementation-selection": _evaluate_implementation_selection,
         "tdd-contract": _evaluate_tdd_contract,
         "grilling-contract": _evaluate_grilling_contract,
         "diagnosing-contract": _evaluate_diagnosing_contract,
         "skill-writing-contract": _evaluate_skill_writing_contract,
-        "artifact-resolver": _evaluate_artifact_resolver,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:
