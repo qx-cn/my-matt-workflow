@@ -122,6 +122,8 @@ def _declared_generated_targets(
                     relative = path.relative_to(source)
                     if relative == Path("agents/openai.yaml"):
                         continue
+                    if relative.name == "SKILL.md":
+                        relative = relative.with_name("COMPOSED.md")
                     targets[caller].add(
                         str(
                             Path("references/composed")
@@ -281,6 +283,12 @@ def _validate_staged_references(staged_skills_dir: Path) -> None:
                 raise ReleaseError(
                     f"{skill_dir.name}: 组合目录包含运行时元数据："
                     f"{forbidden[0].relative_to(skill_dir)}"
+                )
+            invocable = sorted(composed.rglob("SKILL.md"))
+            if invocable:
+                raise ReleaseError(
+                    f"{skill_dir.name}: 组合目录包含可注册 Skill："
+                    f"{invocable[0].relative_to(skill_dir)}"
                 )
 
 
