@@ -7,6 +7,8 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from .rules import EXECUTION_AGENTS
+
 
 class ProfileError(ValueError):
     """Raised when a project profile is unsupported or invalid."""
@@ -31,6 +33,7 @@ PROFILE_FIELD_ORDER = (
     "composition_policy",
     "work_scope_policy",
     "decision_policy",
+    "default_execution_agent",
     "test_commands",
     "standards_sources",
     "domain_sources",
@@ -40,6 +43,7 @@ BASE_DEFAULTS: dict[str, Any] = {
     "schema_version": 1,
     "task_backend": "local",
     "default_base_branch": "main",
+    "default_execution_agent": "auto",
     "test_commands": [],
     "standards_sources": [],
     "domain_sources": [],
@@ -157,6 +161,12 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
         "autonomous": "记录证据后自行判断",
         "halt": "遇决策停止",
     },
+    "default_execution_agent": {
+        "auto": "由安装状态或当前执行环境解析",
+        "codex": "默认由 Codex 实施",
+        "cursor": "默认由 Cursor 实施",
+        "claude": "默认由 Claude 实施",
+    },
 }
 
 # Only workflow artefacts belong in a repository. Agent configuration directories
@@ -224,7 +234,7 @@ def format_policy_catalog() -> str:
     ]
     defaults = effective_profile({})
     for key in PROFILE_FIELD_ORDER:
-        if key in {"schema_version", "default_base_branch", "test_commands",
+        if key in {"schema_version", "default_base_branch", "default_execution_agent", "test_commands",
                    "standards_sources", "domain_sources"}:
             lines.append(f"- {key}: 默认 {defaults[key]!r}")
             continue
@@ -245,6 +255,8 @@ def format_policy_catalog() -> str:
             allowed = sorted(WORK_SCOPE_POLICIES)
         elif key == "decision_policy":
             allowed = sorted(DECISION_POLICIES)
+        elif key == "default_execution_agent":
+            allowed = ["auto", *sorted(EXECUTION_AGENTS)]
         else:
             allowed = []
         detail = "; ".join(
@@ -317,6 +329,11 @@ def _validate(config: dict[str, Any]) -> None:
             "decision_policy 必须是："
             f"{', '.join(sorted(DECISION_POLICIES))}"
         )
+    execution_agent = _coalesce(
+        config, "default_execution_agent", BASE_DEFAULTS["default_execution_agent"]
+    )
+    if execution_agent != "auto" and execution_agent not in EXECUTION_AGENTS:
+        raise ProfileError("default_execution_agent 必须是 auto、codex、cursor 或 claude")
     for field in (
         "branch_policy",
         "commit_policy",
