@@ -17,6 +17,27 @@ class CompositionError(RuntimeError):
 _MARKDOWN_LINK = re.compile(
     r"(?P<prefix>!?\[[^\]]*\]\()(?P<target><[^>]+>|[^)\s]+)(?P<suffix>\))"
 )
+_COMPOSED_METADATA = {"name", "description", "disable-model-invocation"}
+
+
+def _strip_composed_frontmatter(text: str) -> str:
+    """Remove Skill registration metadata from a read-only composed copy."""
+    lines = text.splitlines(keepends=True)
+    if not lines or lines[0].strip() != "---":
+        return text
+    try:
+        end = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
+    except StopIteration:
+        return text
+
+    retained = [
+        line
+        for line in lines[1:end]
+        if line.split(":", 1)[0].strip() not in _COMPOSED_METADATA
+    ]
+    if not any(line.strip() and not line.lstrip().startswith("#") for line in retained):
+        return "".join(lines[end + 1:]).lstrip("\n")
+    return "---\n" + "".join(retained) + "---\n" + "".join(lines[end + 1:])
 
 
 def _rewrite_relative_skill_links(text: str) -> str:
@@ -254,7 +275,10 @@ def compose_dependency_references(
             destination = target / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             if path.suffix == ".md":
-                destination.write_text(_rewrite_relative_skill_links(path.read_text()))
+                contents = _rewrite_relative_skill_links(path.read_text())
+                if path.name == "SKILL.md":
+                    contents = _strip_composed_frontmatter(contents)
+                destination.write_text(contents)
             else:
                 shutil.copy2(path, destination)
             written.append(str(destination.relative_to(caller_staged_dir)))

@@ -37,26 +37,17 @@ from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
 
 
 class ProfileTests(unittest.TestCase):
-    def test_ask_matt_routes_with_composed_and_manual_branches(self):
+    def test_ask_matt_routes_with_manual_branches_without_composed_entries(self):
         text = (
             Path(__file__).resolve().parents[1]
             / "skills/my-ask-matt/SKILL.md"
         ).read_text()
-        for skill_name in (
-            "my-grill-with-docs",
-            "my-grill-me",
-            "my-triage",
-            "my-implement",
-            "my-wayfinder",
-            "my-diagnosing-bugs",
-        ):
-            with self.subTest(skill=skill_name):
-                self.assertIn(
-                    f"references/composed/{skill_name}/COMPOSED.md", text
-                )
+        self.assertNotIn("references/composed/", text)
         self.assertIn("Cursor / Claude", text)
         self.assertIn("Codex", text)
         self.assertIn("停止", text)
+        self.assertIn("路由索引", text)
+        self.assertIn("不要在本 Skill 内执行", text)
 
     def test_consumers_point_to_generated_resources(self):
         root = Path(__file__).resolve().parents[1] / "skills"
@@ -122,15 +113,15 @@ class ProfileTests(unittest.TestCase):
                 result.stdout,
             )
 
-    def test_plan_2_core_skills_keep_upstream_flow_and_slim_adapters(self):
+    def test_composition_callers_use_one_dispatch_channel(self):
         root = Path(__file__).resolve().parents[1]
         expectations = {
             "my-implement": {
                 "core": [
                     "实施用户在 Spec 或 Ticket 中描述的工作。",
-                    "尽可能在预先约定的 seam 上使用 `/my-tdd`。",
+                    "在预先约定的 seam 上进入 `my-tdd` 阶段。",
                     "定期运行类型检查和单个测试文件；结束时运行一次完整测试套件。",
-                    "完成后，使用 `/my-code-review` 审查工作。",
+                    "完成后进入 `my-code-review` 阶段审查工作。",
                     "将工作提交到当前分支。",
                 ],
                 "adapters": [
@@ -139,14 +130,9 @@ class ProfileTests(unittest.TestCase):
                     "composition.md",
                 ],
             },
-            "my-grill-me": {
-                "core": ["运行一次 `/my-grilling` 会话。"],
-                "adapters": ["composition.md"],
-            },
+            "my-grill-me": {"core": ["composition_policy", "随后停止"], "adapters": ["composition.md"]},
             "my-grill-with-docs": {
-                "core": [
-                    "运行一次 `/my-grilling` 会话，并使用 `/my-domain-modeling` Skill。"
-                ],
+                "core": ["composition_policy", "随后停止"],
                 "adapters": ["composition.md", "artifact-access.md"],
             },
         }
@@ -160,7 +146,8 @@ class ProfileTests(unittest.TestCase):
                     self.assertIn(
                         f"references/shared/adapters/{adapter}", text
                     )
-                self.assertEqual(1, text.count("本地适配："))
+                self.assertIn("automatic", text)
+                self.assertIn("manual", text)
                 self.assertNotIn("项目策略优先", text)
 
     def test_round_trips_supported_profile(self):
@@ -982,16 +969,60 @@ class ReleaseTests(unittest.TestCase):
             )
             self.assertTrue(
                 (
-                    release
-                    / "skills/my-implement/references/composed/my-code-review"
-                    / "references/shared/humanizer.md"
+                    release / "skills/my-implement/references/shared/humanizer.md"
                 ).is_file()
+            )
+            self.assertIn(
+                "../../shared/humanizer.md",
+                (
+                    release
+                    / "skills/my-implement/references/composed/my-code-review/COMPOSED.md"
+                ).read_text(),
+            )
+            self.assertEqual(
+                [],
+                list(
+                    release.glob(
+                        "skills/*/references/composed/**/references/policies"
+                    )
+                )
+                + list(
+                    release.glob(
+                        "skills/*/references/composed/**/references/shared"
+                    )
+                ),
             )
             manifest = json.loads((release / "manifest.json").read_text())
             self.assertEqual(
                 ["my-code-review", "my-tdd"],
                 manifest["composed"]["my-implement"],
             )
+
+    def test_release_bundles_policies_only_for_explicit_consumers(self):
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as tmp:
+            release = build_release(
+                root / "skills",
+                Path(tmp) / "releases",
+                release_id="policy-consumers-v1",
+                upstream_id="local-matt-skills",
+                repo_root=root,
+            )
+            for skill in (
+                "my-ask-matt",
+                "my-handoff",
+                "my-resolving-merge-conflicts",
+                "my-wayfinder",
+            ):
+                with self.subTest(consumer=skill):
+                    self.assertTrue(
+                        (release / "skills" / skill / "references/policies").is_dir()
+                    )
+            for skill in ("my-install", "my-grilling", "my-grill-me"):
+                with self.subTest(non_consumer=skill):
+                    self.assertFalse(
+                        (release / "skills" / skill / "references/policies").exists()
+                    )
 
     def test_build_materializes_plan_2_adapters_for_declared_consumers(self):
         root = Path(__file__).resolve().parents[1]
@@ -1036,16 +1067,8 @@ class ReleaseTests(unittest.TestCase):
                 ).exists()
             )
 
-    def test_build_materializes_routable_entries_for_router(self):
+    def test_build_does_not_materialize_routable_entries_for_router(self):
         root = Path(__file__).resolve().parents[1]
-        expected = [
-            "my-diagnosing-bugs",
-            "my-grill-me",
-            "my-grill-with-docs",
-            "my-implement",
-            "my-triage",
-            "my-wayfinder",
-        ]
         with tempfile.TemporaryDirectory() as tmp:
             release = build_release(
                 root / "skills",
@@ -1055,20 +1078,11 @@ class ReleaseTests(unittest.TestCase):
                 repo_root=root,
             )
 
-            for skill_name in expected:
-                with self.subTest(skill=skill_name):
-                    self.assertTrue(
-                        (
-                            release
-                            / "skills/my-ask-matt/references/composed"
-                            / skill_name
-                            / "COMPOSED.md"
-                        ).is_file()
-                    )
-            manifest = json.loads((release / "manifest.json").read_text())
-            self.assertEqual(
-                expected, manifest["composed"]["my-ask-matt"]
+            self.assertFalse(
+                (release / "skills/my-ask-matt/references/composed").exists()
             )
+            manifest = json.loads((release / "manifest.json").read_text())
+            self.assertNotIn("my-ask-matt", manifest["composed"])
 
     def test_rejects_skill_that_allows_model_invocation(self):
         with tempfile.TemporaryDirectory() as tmp:

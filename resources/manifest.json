@@ -9,7 +9,10 @@
         "my-to-tickets",
         "my-grill-with-docs",
         "my-code-review",
-        "my-humanizer"
+        "my-humanizer",
+        "my-implement",
+        "my-wayfinder",
+        "my-improve-codebase-architecture"
       ]
     },
     "adapter-composition": {
@@ -20,7 +23,8 @@
         "my-grill-with-docs",
         "my-implement",
         "my-ask-matt",
-        "my-wayfinder"
+        "my-wayfinder",
+        "my-improve-codebase-architecture"
       ]
     },
     "adapter-ticket-selection": {
@@ -49,7 +53,8 @@
         "my-implement",
         "my-domain-modeling",
         "my-tdd",
-        "my-diagnosing-bugs"
+        "my-diagnosing-bugs",
+        "my-improve-codebase-architecture"
       ]
     },
     "adapter-project-rules": {
@@ -60,13 +65,20 @@
         "my-to-spec",
         "my-to-tickets",
         "my-implement",
-        "my-code-review"
+        "my-code-review",
+        "my-wayfinder",
+        "my-improve-codebase-architecture"
       ]
     },
     "policies": {
       "source_dir": "policies",
       "release_path": "references/policies",
-      "consumers": "*"
+      "consumers": [
+        "my-ask-matt",
+        "my-handoff",
+        "my-resolving-merge-conflicts",
+        "my-wayfinder"
+      ]
     }
   }
 }

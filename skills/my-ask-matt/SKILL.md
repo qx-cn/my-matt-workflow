@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 **工作流**是穿过多个 Skill 的路径。大部分路径沿着一条**主流程**前进，另有两个入口汇入它；其余要么独立，要么是下层共用词汇。
 
-读取 `.agent/matt-workflow.md` 的 `composition_policy`，并遵循 [组合调用](references/shared/adapters/composition.md)。当前流程可进入：[my-grill-with-docs](references/composed/my-grill-with-docs/COMPOSED.md)、[my-grill-me](references/composed/my-grill-me/COMPOSED.md)、[my-triage](references/composed/my-triage/COMPOSED.md)、[my-implement](references/composed/my-implement/COMPOSED.md)、[my-wayfinder](references/composed/my-wayfinder/COMPOSED.md) 或 [my-diagnosing-bugs](references/composed/my-diagnosing-bugs/COMPOSED.md)；只加载实际选中的入口。manual 时 Cursor / Claude 使用 `/my-<skill>`，Codex 使用 `$my-<skill>`，随后停止。
+本 Skill 是路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy`，并遵循[组合调用](references/shared/adapters/composition.md)：选出下一跳后，Cursor / Claude 输出 `/my-<skill>`，Codex 输出 `$my-<skill>`，随后停止。不要在本 Skill 内执行被选 Skill 的方法正文；路由入口只命名，不打包。
 
 ## 主流程：想法 → 交付
 

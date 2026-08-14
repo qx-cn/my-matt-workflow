@@ -109,6 +109,26 @@ class SharedResourceTests(unittest.TestCase):
                     for reference in references:
                         self.assertTrue((target / reference).is_file())
 
+    def test_policies_are_bundled_only_for_explicit_consumers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        with tempfile.TemporaryDirectory() as tmp:
+            for skill, policy in {
+                "my-ask-matt": "context-hygiene.md",
+                "my-handoff": "context-hygiene.md",
+                "my-resolving-merge-conflicts": "merge-conflict-approval.md",
+                "my-wayfinder": "decision-taxonomy.md",
+            }.items():
+                target = Path(tmp) / skill
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, skill, target)
+                self.assertTrue((target / "references/policies" / policy).is_file())
+
+            for skill in ("my-install", "my-grilling", "my-grill-me"):
+                target = Path(tmp) / skill
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, skill, target)
+                self.assertFalse((target / "references/policies").exists(), skill)
+
     def test_missing_resource_consumer_reports_source_and_target(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -1,8 +1,13 @@
 # 组合调用适配
 
-读取 `.agent/matt-workflow.md` 的 `composition_policy`，只在当前流程已进入相应阶段时选择依赖：
+读取 `.agent/matt-workflow.md` 的 `composition_policy`，只在当前流程已进入相应阶段时选择依赖。
 
-- `automatic`：读取并遵守宿主 Skill 指向的已打包 `references/composed/` 参考。
+- `callers` 是方法依赖：构建时打包到 `references/composed/<skill>/COMPOSED.md`。`automatic` 读取并遵守当前阶段需要的正文；`manual` 输出下一条显式调用后停止。
+- `routable_entries` 是路由入口：只命名下一跳，不打包。路由 Skill 选出入口后输出显式调用并停止，不在自身执行被选 Skill 的方法正文。
+
+调用方式：
+
+- `automatic`：只读取宿主已经打包、且当前阶段需要的 `references/composed/` 正文。
 - `manual`：输出当前运行时对应的下一条显式调用，然后停止；不要在宿主流程中隐式执行依赖。
 
 已打包依赖的 Skill 正文固定命名为 `references/composed/<skill>/COMPOSED.md`。这是供宿主读取的参考副本，不是可调用 Skill；顶层 `SKILL.md` 才是运行时注册入口。

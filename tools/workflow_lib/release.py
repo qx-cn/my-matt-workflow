@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import tempfile
@@ -28,6 +29,9 @@ class ReleaseError(RuntimeError):
 
 
 LINK_PATTERN = re.compile(r"\[[^\]]+\]\(([^)]+\.md(?:#[^)]+)?)\)")
+MARKDOWN_LINK_PATTERN = re.compile(
+    r"(?P<prefix>!?\[[^\]]*\]\()(?P<target><[^>]+>|[^)\s]+)(?P<suffix>\))"
+)
 
 
 def _prose_markdown(text: str) -> str:
@@ -110,9 +114,6 @@ def _declared_generated_targets(
             caller: resolve_transitive_closure(composition, caller)
             for caller in composition.callers
         }
-        for router, entries in composition.routable_entries.items():
-            declared_dependencies.setdefault(router, [])
-            declared_dependencies[router].extend(entries)
         for caller, dependencies in declared_dependencies.items():
             for dependency in sorted(set(dependencies)):
                 source = skills_dir / dependency
@@ -290,6 +291,78 @@ def _validate_staged_references(staged_skills_dir: Path) -> None:
                     f"{skill_dir.name}: 组合目录包含可注册 Skill："
                     f"{invocable[0].relative_to(skill_dir)}"
                 )
+            named_composed = [
+                path
+                for path in sorted(composed.rglob("COMPOSED.md"))
+                if re.search(r"(?m)^name:\s*", path.read_text())
+            ]
+            if named_composed:
+                raise ReleaseError(
+                    f"{skill_dir.name}: 组合正文包含可注册 name："
+                    f"{named_composed[0].relative_to(skill_dir)}"
+                )
+            embedded_resources = [
+                path
+                for path in sorted(composed.rglob("*"))
+                if path.is_dir()
+                and path.name in {"policies", "shared"}
+                and path.parent.name == "references"
+            ]
+            if embedded_resources:
+                raise ReleaseError(
+                    f"{skill_dir.name}: 组合目录包含重复共享资源："
+                    f"{embedded_resources[0].relative_to(skill_dir)}"
+                )
+
+
+def _rewrite_composed_resource_links(skill_dir: Path) -> None:
+    """Point composed references at the host Skill's shared resource bundle."""
+    composed = skill_dir / "references" / "composed"
+    if not composed.is_dir():
+        return
+    root = skill_dir.resolve()
+
+    def rewrite(markdown: Path, text: str) -> str:
+        def replace(match: re.Match[str]) -> str:
+            target = match.group("target")
+            wrapped = target.startswith("<") and target.endswith(">")
+            value = target[1:-1] if wrapped else target
+            if value.startswith(("http://", "https://")):
+                return match.group(0)
+            path, separator, fragment = value.partition("#")
+            candidate = (markdown.parent / path).resolve()
+            try:
+                parts = candidate.relative_to(root).parts
+            except ValueError:
+                return match.group(0)
+            resource_start = next(
+                (
+                    index
+                    for index in range(len(parts) - 1)
+                    if parts[index] == "references"
+                    and parts[index + 1] in {"policies", "shared"}
+                ),
+                None,
+            )
+            if resource_start is None:
+                return match.group(0)
+            destination = root.joinpath(*parts[resource_start:])
+            if not destination.is_file():
+                raise ReleaseError(
+                    f"{skill_dir.name}: {markdown.relative_to(skill_dir)} "
+                    f"组合引用的共享资源未打包：{value}"
+                )
+            rewritten = os.path.relpath(destination, markdown.parent).replace(os.sep, "/")
+            if separator:
+                rewritten += separator + fragment
+            if wrapped:
+                rewritten = f"<{rewritten}>"
+            return f"{match.group('prefix')}{rewritten}{match.group('suffix')}"
+
+        return MARKDOWN_LINK_PATTERN.sub(replace, text)
+
+    for markdown in sorted(composed.rglob("*.md")):
+        markdown.write_text(rewrite(markdown, markdown.read_text()))
 
 
 def _manifest_for_staged_tree(
@@ -361,21 +434,6 @@ def _stage_release_tree(
 
         for caller in sorted(composition.callers):
             materialize(caller)
-        for router, entries in sorted(
-            composition.routable_entries.items()
-        ):
-            for entry in entries:
-                materialize(entry)
-            routed = sorted(set(entries))
-            existing = set(composed.get(router, []))
-            missing = [entry for entry in routed if entry not in existing]
-            if missing:
-                compose_dependency_references(
-                    staged_skills,
-                    staged_skills / router,
-                    missing,
-                )
-            composed[router] = sorted(existing | set(routed))
 
     shared_resources: dict[str, list[str]] = {}
     if resources is not None:
@@ -388,19 +446,8 @@ def _stage_release_tree(
             )
             if written:
                 shared_resources[skill_dir.name] = written
-        composed_targets = [
-            path
-            for skill_dir in skill_dirs
-            for path in (staged_skills / skill_dir.name).rglob("*")
-            if path.is_dir() and path.parent.name == "composed"
-        ]
-        for target in sorted(composed_targets):
-            bundle_resources_for_skill(
-                resources,
-                repo_root,
-                target.name,
-                target,
-            )
+    for skill_dir in skill_dirs:
+        _rewrite_composed_resource_links(staged_skills / skill_dir.name)
 
     _validate_staged_references(staged_skills)
     return _manifest_for_staged_tree(

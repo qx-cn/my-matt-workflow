@@ -1,4 +1,5 @@
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -118,6 +119,10 @@ class CompositionMaterializationTests(unittest.TestCase):
             )
             self.assertTrue(
                 (target / "references/composed/my-tdd/tests.md").is_file()
+            )
+            self.assertNotRegex(
+                (target / "references/composed/my-tdd/COMPOSED.md").read_text(),
+                r"(?m)^name:\s*",
             )
             self.assertFalse(
                 (
@@ -314,6 +319,16 @@ class CompositionValidationTests(unittest.TestCase):
                 [],
                 list(release.glob("skills/*/references/composed/**/SKILL.md")),
             )
+            self.assertEqual(
+                [],
+                [
+                    path
+                    for path in release.glob(
+                        "skills/*/references/composed/**/COMPOSED.md"
+                    )
+                    if re.search(r"(?m)^name:\s*", path.read_text())
+                ],
+            )
             deepening = (
                 release
                 / "skills"
@@ -324,6 +339,42 @@ class CompositionValidationTests(unittest.TestCase):
                 / "DEEPENING.md"
             )
             self.assertIn("[SKILL.md](COMPOSED.md)", deepening.read_text())
+
+    def test_staged_tree_rejects_named_composed_body_with_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._skill(root, "my-a")
+            dependency = self._skill(root, "my-b")
+            leaked = dependency / "references/composed/my-leak/COMPOSED.md"
+            leaked.parent.mkdir(parents=True)
+            leaked.write_text(
+                "---\nname: leaked\n---\nreference body\n"
+            )
+            composition = root / "composition"
+            composition.mkdir()
+            (composition / "manifest.json").write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "callers": {
+                            "my-a": [{"skill": "my-b", "when": "always"}]
+                        },
+                        "routable_entries": {},
+                    }
+                )
+            )
+
+            with self.assertRaisesRegex(
+                ReleaseError,
+                r"my-a.*my-b/references/composed/my-leak/COMPOSED\.md",
+            ):
+                build_release(
+                    root / "skills",
+                    root / "releases",
+                    release_id="v1",
+                    upstream_id="test",
+                    repo_root=root,
+                )
 
     def test_build_rejects_source_skill_symlink_escape(self):
         with tempfile.TemporaryDirectory() as tmp:

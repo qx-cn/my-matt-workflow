@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 此命令由项目的领域模型提供信息，并建立在共享的设计词汇之上：
 
-- 运行 `/my-codebase-design` Skill，使用其架构词汇（**模块**、**接口**、**深度**、**接缝**、**适配器**、**杠杆**、**局部性**）和原则（删除测试、“接口就是测试面”、“一个适配器是假设接缝，两个才是真实接缝”）。每条建议都必须严格使用这些术语——不要漂移为“组件”、“服务”、“API”或“边界”。
+- `my-codebase-design` 提供架构词汇（**模块**、**接口**、**深度**、**接缝**、**适配器**、**杠杆**、**局部性**）和原则（删除测试、“接口就是测试面”、“一个适配器是假设接缝，两个才是真实接缝”）。每条建议都必须严格使用这些术语——不要漂移为“组件”、“服务”、“API”或“边界”。
 - `CONTEXT.md` 中的领域语言为好的接缝命名；`docs/adr/` 中的 ADR 记录了此命令不应重新争论的决策。
 
 ## 流程
@@ -51,7 +51,7 @@ disable-model-invocation: true
 
 在报告末尾添加**首要推荐**部分：最先应处理哪个候选项，以及原因。
 
-**领域使用 `CONTEXT.md` 词汇，架构使用 `/my-codebase-design` 词汇。**若 `CONTEXT.md` 定义了“Order”，应说“Order 接入模块”，不要说“FooBarHandler”，也不要说“Order 服务”。
+**领域使用 `CONTEXT.md` 词汇，架构使用 `my-codebase-design` 词汇。**若 `CONTEXT.md` 定义了“Order”，应说“Order 接入模块”，不要说“FooBarHandler”，也不要说“Order 服务”。
 
 **ADR 冲突**：只有当候选项的摩擦真实到值得重开 ADR 时，才将它与现有 ADR 的矛盾呈现出来。要在卡片中清晰标记（例如警告提示：*“与 ADR-0007 矛盾——但因……值得重新讨论”*）。不要列出每一种被 ADR 禁止的理论性重构。
 
@@ -61,11 +61,16 @@ disable-model-invocation: true
 
 ### 3. 深挖循环
 
-用户选择候选项后，运行 `/my-grilling` Skill，与其一起走过决策树——约束、依赖、深化模块的形状、接缝后放什么、哪些测试仍能存活。
+用户选择候选项后，进入 `my-grill-with-docs` 阶段，与其一起走过决策树——约束、依赖、深化模块的形状、接缝后放什么、哪些测试仍能存活。
 
-当决策逐步明确时，副作用应内联发生——一路运行 `/my-domain-modeling` Skill，使领域模型保持最新：
+当决策逐步明确时，由 `my-grill-with-docs` 的组合链路保持领域模型最新：
 
 - **要以 `CONTEXT.md` 中没有的概念为深化模块命名？**添加该术语到 `CONTEXT.md`。若文件不存在，按需创建。
 - **在对话中明确了一个模糊术语？**立刻在 `CONTEXT.md` 中更新它。
 - **用户以承重理由拒绝了候选项？**提出 ADR，表述为：“要我把它记录为 ADR 吗？这样未来的架构审查不再重新建议它。”只在该理由确实会让未来探索者避免重新提出同一建议时才提出；跳过短暂理由（“现在不值得做”）和不言自明的理由。
-- **想探索深化模块的替代接口？**运行 `/my-codebase-design` Skill，并使用其设计两次的并行子代理模式。
+- **想探索深化模块的替代接口？**进入 `my-codebase-design` 阶段，并使用其设计两次的并行子代理模式。
+
+依赖阶段读取 `.agent/matt-workflow.md` 的 `composition_policy` 并遵循[组合调用](references/shared/adapters/composition.md)：
+
+- `automatic`：只读取当前阶段需要的 [my-codebase-design 正文](references/composed/my-codebase-design/COMPOSED.md) 或 [my-grill-with-docs 正文](references/composed/my-grill-with-docs/COMPOSED.md)。
+- `manual`：输出对应的 `/my-<skill>`（Cursor / Claude）或 `$my-<skill>`（Codex）后停止。
