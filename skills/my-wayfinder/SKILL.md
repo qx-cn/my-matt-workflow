@@ -118,7 +118,7 @@ sequence: <NN>
 
 有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。依赖调用和地图完成后的交接遵循 [组合调用](references/shared/adapters/composition.md)。
 
-需要依赖时，只加载当前阶段所需的已打包参考：[my-grilling](references/composed/my-grilling/SKILL.md)、[my-domain-modeling](references/composed/my-domain-modeling/SKILL.md)、[my-research](references/composed/my-research/SKILL.md)、[my-prototype](references/composed/my-prototype/SKILL.md) 或 [my-to-spec](references/composed/my-to-spec/SKILL.md)；自动或手动的调用及停止规则由组合适配决定。
+需要依赖时，只加载当前阶段所需的已打包参考：[my-grilling](references/composed/my-grilling/COMPOSED.md)、[my-domain-modeling](references/composed/my-domain-modeling/COMPOSED.md)、[my-research](references/composed/my-research/COMPOSED.md)、[my-prototype](references/composed/my-prototype/COMPOSED.md) 或 [my-to-spec](references/composed/my-to-spec/COMPOSED.md)；自动或手动的调用及停止规则由组合适配决定。
 
 ### 绘制地图
 
