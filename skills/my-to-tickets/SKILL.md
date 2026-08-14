@@ -18,7 +18,7 @@ disable-model-invocation: true
 
 ### 2. 探索代码库（可选）
 
-若尚未探索代码库，则探索以理解当前状态。Ticket 标题和描述应使用项目领域术语，并遵守相关 ADR。起草前按 [项目规则解析](references/shared/adapters/project-rules.md) 建立规则地图；未解决的规则冲突不得生成 `ready-for-agent` Ticket。
+若尚未探索代码库，则探索以理解当前状态。Ticket 标题和描述应使用项目领域术语，并遵守相关 ADR。起草前按 [项目规则解析](references/shared/adapters/project-rules.md) 为 `execution_agent` 解析规则；未解决的规则冲突不得生成 `ready-for-agent` Ticket。
 
 寻找 prefactor 机会，让实施更容易：“先让变更容易，再做容易的变更。”
 
@@ -77,6 +77,9 @@ tags: []
 sequence: <NN>
 rule_sources: []
 rule_scope: []
+rule_constraints: []
+rule_conflicts: []
+execution_agent: <codex|cursor|claude>
 ---
 ```
 
@@ -89,6 +92,7 @@ rule_scope: []
 - 规则来源：
 - 影响区域：
 - 实施约束：
+- 验证：
 
 `blocked_by` 必须填 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取时仅填写 `claimed_by`，完成阻塞 Ticket 时将其 `status` 设为 `complete`。不要依靠正文状态行或猜测旧 Ticket 的类型。
 
@@ -97,7 +101,7 @@ rule_scope: []
 - [ ] 验收标准 1
 - [ ] 验收标准 2
 
-关闭前勾选全部验收项；本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
+关闭前勾选全部验收项；进入实施前必须运行 `python3 tools/workflow.py validate-ticket <ticket-path>`。本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
 
 </local-ticket-template>
 
