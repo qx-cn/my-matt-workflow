@@ -69,6 +69,49 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn("references/shared/humanizer.md", text)
                 self.assertNotIn("../my-to-spec/humanizer.md", text)
 
+    def test_plan_skills_use_project_rule_adapter(self):
+        root = Path(__file__).resolve().parents[1]
+        adapter = root / "resources/adapters/project-rules.md"
+        self.assertTrue(adapter.is_file())
+        adapter_text = adapter.read_text()
+        self.assertIn(".cursor/rules/**/*.mdc", adapter_text)
+        self.assertIn("规则地图", adapter_text)
+        self.assertIn("不得标记为 `ready-for-agent`", adapter_text)
+
+        for skill in (
+            "my-grill-with-docs",
+            "my-to-spec",
+            "my-to-tickets",
+            "my-implement",
+            "my-code-review",
+        ):
+            text = (root / "skills" / skill / "SKILL.md").read_text()
+            with self.subTest(skill=skill):
+                self.assertIn("references/shared/adapters/project-rules.md", text)
+
+    def test_setup_discovers_cursor_rule_candidates_without_persisting_them(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "AGENTS.md").write_text("rules")
+            rules_dir = repo / ".cursor" / "rules"
+            rules_dir.mkdir(parents=True)
+            (rules_dir / "backend.mdc").write_text("---\nglobs: src/**\n---")
+
+            workflow = Path(__file__).resolve().parents[1] / "tools/workflow.py"
+            result = subprocess.run(
+                [sys.executable, str(workflow), "setup", "--repo", str(repo)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn(
+                '"detected_standards_sources": ["AGENTS.md", '
+                '".cursor/rules/backend.mdc"]',
+                result.stdout,
+            )
+
     def test_plan_2_core_skills_keep_upstream_flow_and_slim_adapters(self):
         root = Path(__file__).resolve().parents[1]
         expectations = {
