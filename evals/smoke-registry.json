@@ -4,6 +4,9 @@
     "my-diagnosing-bugs": ["diagnosing-bugs-no-red-loop"],
     "my-grilling": ["grilling-one-question-hitl"],
     "my-tdd": ["tdd-seam-pressure"],
-    "my-writing-great-skills": ["writing-great-skills-baseline-discipline"]
+    "my-writing-great-skills": ["writing-great-skills-baseline-discipline"],
+    "my-grill-with-docs": ["rule-plan-ticket-loop"],
+    "my-to-tickets": ["rule-plan-ticket-loop"],
+    "my-implement": ["rule-plan-ticket-loop"]
   }
 }
