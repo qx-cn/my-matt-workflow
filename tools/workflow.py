@@ -31,6 +31,8 @@ from workflow_lib.smoke_registry import (
     resolve_smoke_scenarios,
 )
 from workflow_lib.validator import ValidationError, validate_repository
+from workflow_lib.rules import EXECUTION_AGENTS, RuleError, resolve_rules
+from workflow_lib.tickets import TicketError, validate_ready_ticket
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,24 +55,49 @@ def _default_branch(repo: Path) -> str:
     return "main"
 
 
-def _discover_standards_sources(repo: Path) -> list[str]:
+def _discover_standards_sources(repo: Path, agent: str = "auto") -> list[str]:
     """Return project-rule candidates for setup confirmation, without saving them."""
     candidates = [
+        "AGENTS.override.md",
         "AGENTS.md",
-        "CLAUDE.md",
-        ".cursorrules",
         "CONTRIBUTING.md",
         "CODING_STANDARDS.md",
     ]
     discovered = [path for path in candidates if (repo / path).is_file()]
-    cursor_rules = repo / ".cursor" / "rules"
-    if cursor_rules.is_dir():
+    if agent == "cursor":
+        if (repo / ".cursorrules").is_file():
+            discovered.append(".cursorrules")
+        rule_dir = repo / ".cursor" / "rules"
+        pattern = "*.mdc"
+    elif agent == "claude":
+        discovered.extend(
+            path for path in ("CLAUDE.md", ".claude/CLAUDE.md") if (repo / path).is_file()
+        )
+        rule_dir = repo / ".claude" / "rules"
+        pattern = "*.md"
+    else:
+        rule_dir = None
+        pattern = ""
+    if rule_dir is not None and rule_dir.is_dir():
         discovered.extend(
             path.relative_to(repo).as_posix()
-            for path in sorted(cursor_rules.rglob("*.mdc"))
+            for path in sorted(rule_dir.rglob(pattern))
             if path.is_file()
         )
     return discovered
+
+
+def _installed_agent(agent_home: str | None) -> str | None:
+    if not agent_home:
+        return None
+    state_path = Path(agent_home).expanduser() / "my-matt-workflow" / "install-state.json"
+    if not state_path.is_file():
+        return None
+    try:
+        value = json.loads(state_path.read_text()).get("installed_agent")
+    except json.JSONDecodeError:
+        return None
+    return value if value in EXECUTION_AGENTS else None
 
 
 def command_setup(args: argparse.Namespace) -> None:
@@ -96,6 +123,7 @@ def command_setup(args: argparse.Namespace) -> None:
         "composition_policy": "manual",
         "work_scope_policy": "single-ticket",
         "decision_policy": "ask",
+        "default_execution_agent": _installed_agent(args.agent_home) or "auto",
         "test_commands": [],
         "standards_sources": [],
         "domain_sources": [],
@@ -111,6 +139,7 @@ def command_setup(args: argparse.Namespace) -> None:
             "composition_policy": args.composition_policy,
             "work_scope_policy": args.work_scope_policy,
             "decision_policy": args.decision_policy,
+            "default_execution_agent": args.execution_agent,
             "test_commands": args.test_command,
             "standards_sources": args.standards_source,
             "domain_sources": args.domain_source,
@@ -118,9 +147,15 @@ def command_setup(args: argparse.Namespace) -> None:
     preset = get_policy_preset(args.preset) if args.preset else {}
     explicit = {key: value for key, value in overrides.items() if value is not None}
     config = merge_profile(defaults | existing, preset | explicit)
+    effective_agent = config["default_execution_agent"]
     print(
         json.dumps(
-            {"detected_standards_sources": _discover_standards_sources(repo)},
+            {
+                "default_execution_agent": effective_agent,
+                "detected_standards_sources": _discover_standards_sources(
+                    repo, effective_agent
+                ),
+            },
             ensure_ascii=False,
         )
     )
@@ -274,6 +309,22 @@ def command_install(args: argparse.Namespace) -> None:
     print(f"INSTALLED {release.name}")
 
 
+def command_resolve_rules(args: argparse.Namespace) -> None:
+    try:
+        rules = resolve_rules(Path(args.repo), args.agent, args.path)
+    except RuleError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps({"agent": args.agent, "rules": rules}, ensure_ascii=False, indent=2))
+
+
+def command_validate_ticket(args: argparse.Namespace) -> None:
+    try:
+        report = validate_ready_ticket(Path(args.path))
+    except TicketError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False))
+
+
 def command_deploy(args: argparse.Namespace) -> None:
     """Install the current content, creating a release only when it changed."""
     command_validate(args)
@@ -384,6 +435,8 @@ def parser() -> argparse.ArgumentParser:
         choices=["single-ticket", "ready-frontier", "approved-plan"],
     )
     setup.add_argument("--decision-policy", choices=["ask", "autonomous", "halt"])
+    setup.add_argument("--execution-agent", choices=["auto", *sorted(EXECUTION_AGENTS)])
+    setup.add_argument("--agent-home")
     setup.add_argument("--test-command", action="append")
     setup.add_argument("--standards-source", action="append")
     setup.add_argument("--domain-source", action="append")
@@ -415,6 +468,16 @@ def parser() -> argparse.ArgumentParser:
     install.add_argument("--target", choices=["auto", *AGENT_HOMES], default="auto")
     install.add_argument("--agent-home")
     install.set_defaults(func=command_install)
+
+    resolve_rules_cmd = sub.add_parser("resolve-rules")
+    resolve_rules_cmd.add_argument("--repo", default=".")
+    resolve_rules_cmd.add_argument("--agent", choices=sorted(EXECUTION_AGENTS), required=True)
+    resolve_rules_cmd.add_argument("--path", action="append", default=[])
+    resolve_rules_cmd.set_defaults(func=command_resolve_rules)
+
+    validate_ticket = sub.add_parser("validate-ticket")
+    validate_ticket.add_argument("path")
+    validate_ticket.set_defaults(func=command_validate_ticket)
 
     deploy = sub.add_parser("deploy")
     deploy.add_argument("--release-id")
