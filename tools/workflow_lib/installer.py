@@ -150,10 +150,11 @@ def install_release(
 ) -> None:
     """Install one immutable release, restoring the old install on failure."""
     manifest = verify_release(release)
-    if target is not None:
+    install_target = target
+    if install_target is not None:
         for skill_name in sorted(manifest["skills"]):
             validate_skill_metadata_for_target(
-                release / "skills" / skill_name, target
+                release / "skills" / skill_name, install_target
             )
     cursor_home.mkdir(parents=True, exist_ok=True)
     skills_home = cursor_home / "skills"
@@ -172,8 +173,8 @@ def install_release(
 
     previous_managed = set(previous_state.get("skills", []))
     for skill_name in manifest["skills"]:
-        target = skills_home / skill_name
-        if target.exists() and skill_name not in previous_managed:
+        destination = skills_home / skill_name
+        if destination.exists() and skill_name not in previous_managed:
             raise InstallError(f"发现同名非托管 Skill，拒绝覆盖：{skill_name}")
 
     transaction = state_dir / "transaction"
@@ -205,11 +206,11 @@ def install_release(
 
     try:
         for skill_name in sorted(managed):
-            target = skills_home / skill_name
-            if target.exists():
-                target.rename(backup / skill_name)
+            destination = skills_home / skill_name
+            if destination.exists():
+                destination.rename(backup / skill_name)
             if skill_name in manifest["skills"]:
-                (staged / skill_name).rename(target)
+                (staged / skill_name).rename(destination)
 
         state = {
             "release_id": manifest["release_id"],
@@ -217,6 +218,7 @@ def install_release(
             "skills": sorted(manifest["skills"]),
             "installed_at": datetime.now(timezone.utc).isoformat(),
             "transaction_id": transaction_id,
+            "installed_agent": install_target,
         }
         state_temp = transaction / "install-state.json"
         state_temp.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
