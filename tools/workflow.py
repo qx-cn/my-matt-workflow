@@ -53,6 +53,26 @@ def _default_branch(repo: Path) -> str:
     return "main"
 
 
+def _discover_standards_sources(repo: Path) -> list[str]:
+    """Return project-rule candidates for setup confirmation, without saving them."""
+    candidates = [
+        "AGENTS.md",
+        "CLAUDE.md",
+        ".cursorrules",
+        "CONTRIBUTING.md",
+        "CODING_STANDARDS.md",
+    ]
+    discovered = [path for path in candidates if (repo / path).is_file()]
+    cursor_rules = repo / ".cursor" / "rules"
+    if cursor_rules.is_dir():
+        discovered.extend(
+            path.relative_to(repo).as_posix()
+            for path in sorted(cursor_rules.rglob("*.mdc"))
+            if path.is_file()
+        )
+    return discovered
+
+
 def command_setup(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve()
     profile_path = repo / ".agent" / "matt-workflow.md"
@@ -98,6 +118,12 @@ def command_setup(args: argparse.Namespace) -> None:
     preset = get_policy_preset(args.preset) if args.preset else {}
     explicit = {key: value for key, value in overrides.items() if value is not None}
     config = merge_profile(defaults | existing, preset | explicit)
+    print(
+        json.dumps(
+            {"detected_standards_sources": _discover_standards_sources(repo)},
+            ensure_ascii=False,
+        )
+    )
     rendered = render_profile(config, notes)
     print(rendered)
     if not args.apply:
