@@ -39,7 +39,7 @@ disable-model-invocation: true
 
 ### 3. 定位 Standards 来源
 
-按 [项目规则解析](references/shared/adapters/project-rules.md) 发现并匹配 Standards 来源，包括 `.cursor/rules/**/*.mdc` 的 glob；必须按 diff 中实际文件路径判定规则是否适用。
+按 [项目规则解析](references/shared/adapters/project-rules.md) 为该变更的 `execution_agent` 发现并匹配 Standards 来源；必须按 diff 中实际文件路径判定规则是否适用。
 
 无论仓库是否有文档，Standards 轴都带以下 Fowler code smell 基线。两条规则约束它：
 
