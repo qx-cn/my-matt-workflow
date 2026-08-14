@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "id": "rule-plan-ticket-loop",
+  "type": "rule-contract",
+  "skills": ["my-grill-with-docs", "my-to-tickets", "my-implement"],
+  "input": {
+    "execution_agent": "cursor",
+    "rule_evidence": true,
+    "ticket_admission": true,
+    "implementation_recheck": true
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "rule-plan-ticket-implementation-loop",
+    "next": "implement"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "rule-plan-ticket-loop",
+    "sources": [
+      {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:550ab0c60fadf9967ef4239cb39cde925b3e81a01a1188f660b9b7c64e3c1463"},
+      {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:0d05e74f2ea1a65b325bf30f8f8d6986e2454506f0a8d9ff1e38dc0afe8d26eb"},
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:d7a2c74011059e07c75331becebd56fbc7d1ebe2c1f8280c2790f85fb608871c"}
+    ]
+  }
+}
