@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 为当前项目建立 `.agent/matt-workflow.md`。无 Git 项目使用完整的 `.agent/` 工作目录作为文档和进度的持久位置；仅跳过 Git 默认分支发现与 `.gitignore` 维护。
 
-1. 读取项目的 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.cursor/rules/**/*.mdc`、README、贡献文档、Issue 模板和测试命令；存在 Git 时再读取 remote、默认分支和已跟踪目录。将发现的规则源作为 standards sources 候选展示并逐项确认；不要只因写入配置就停止后续按作用范围重新解析规则。
+1. 从当前 Agent 安装状态读取 `installed_agent`，作为 `default_execution_agent` 候选；用户可覆盖。读取该 Agent 的原生规则、`AGENTS.md`、README、贡献文档、Issue 模板和测试命令；存在 Git 时再读取 remote、默认分支和已跟踪目录。不要混读其他 Agent 的专属规则；后续仍按实际作用范围重新解析。
 2. 检测结果只是证据。逐项向用户确认 Tracker、文档来源、测试命令、Git 写操作策略和自治策略。默认建议五档预设之一：`strict-control`（严格控制，默认）、`light-control`（轻轻控制）、`review`（我做审核）、`semi-auto`（半自动化）、`full-auto`（全自动化）。旧名 `supervised` / `unattended` 仅作兼容别名。生成的 `.agent/matt-workflow.md` 会显式写出全部配置键（含默认值与 `humanizer_policy`），并内嵌五档说明；也可逐项覆盖细项。取值说明与校验同源：见 `tools/workflow_lib/profile.py` 的 `format_policy_catalog()`，以及 setup/refresh 写入配置文件顶部的预设注释。
 3. 首次配置先运行 `workflow.py setup --repo <repo>` 展示预览，用户确认后再带 `--apply` 写入。
 4. 已有项目先运行 `workflow.py setup --repo <repo>` 展示工作产物布局 dry-run；报告必须列出移动、待删除旧路径、有效相对链接重写、候选失效链接修复、冲突和无法归类项，且此步零写入。
