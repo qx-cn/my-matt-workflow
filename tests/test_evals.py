@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class EvalValidationTests(unittest.TestCase):
     def test_checked_in_scenarios_and_evidence_are_strictly_valid(self):
         self.assertEqual(
-            {"status": "valid", "scenarios": 4, "required_scenarios": 4},
+            {"status": "valid", "scenarios": 5, "required_scenarios": 4},
             validate_evals(ROOT),
         )
 
