@@ -39,7 +39,7 @@ disable-model-invocation: true
 
 ### 3. 定位 Standards 来源
 
-查找仓库中说明代码写法的文件，例如 `CODING_STANDARDS.md`、`CONTRIBUTING.md`、`AGENTS.md`。
+按 [项目规则解析](references/shared/adapters/project-rules.md) 发现并匹配 Standards 来源，包括 `.cursor/rules/**/*.mdc` 的 glob；必须按 diff 中实际文件路径判定规则是否适用。
 
 无论仓库是否有文档，Standards 轴都带以下 Fowler code smell 基线。两条规则约束它：
 
@@ -61,7 +61,7 @@ disable-model-invocation: true
 
 ### 4. 分别审查
 
-**Standards 审查**需获得完整 diff、Commit 列表、定位到的 Standards 文件及以上 smell 基线；报告每个相关文件/hunk 中的：文档标准违反（引用文件和规则），以及基线 smell（名称与 hunk）。区分硬违规与判断；少于 400 字。此外必须按下方报告模板输出 `### 注释` 与 `### 命名`（不得省略、不得并入 smell 列表）：
+**Standards 审查**需获得完整 diff、Commit 列表、按实际路径匹配的规则地图及以上 smell 基线；报告每个相关文件/hunk 中的：文档标准违反（引用文件和规则），以及基线 smell（名称与 hunk）。区分硬违规与判断；少于 400 字。此外必须按下方报告模板输出 `### 注释` 与 `### 命名`（不得省略、不得并入 smell 列表）：
 
 - `### 注释`：注释是否与代码行为一致；不一致则报告。文案审阅按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；保留有意简短的领域用语。
 - `### 命名`：函数名、变量名（以及类型名，若 diff 涉及）列于此。可引用 Mysterious Name 作依据，但发现必须出现在本小节。仓库已有命名标准时，仓库标准优先。
