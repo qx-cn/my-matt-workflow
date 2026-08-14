@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import heapq
 import json
+import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,6 +12,48 @@ from pathlib import Path
 
 class CompositionError(RuntimeError):
     """Raised when Skill composition declarations are invalid."""
+
+
+_MARKDOWN_LINK = re.compile(
+    r"(?P<prefix>!?\[[^\]]*\]\()(?P<target><[^>]+>|[^)\s]+)(?P<suffix>\))"
+)
+
+
+def _rewrite_relative_skill_links(text: str) -> str:
+    """Point copied Markdown links at non-invocable composed skill bodies."""
+
+    def rewrite_line(line: str) -> str:
+        def replace(match: re.Match[str]) -> str:
+            target = match.group("target")
+            wrapped = target.startswith("<") and target.endswith(">")
+            value = target[1:-1] if wrapped else target
+            if value.startswith(("http://", "https://")):
+                return match.group(0)
+            path, separator, fragment = value.partition("#")
+            if not path.endswith("SKILL.md"):
+                return match.group(0)
+            replacement = path[:-len("SKILL.md")] + "COMPOSED.md"
+            if separator:
+                replacement += separator + fragment
+            if wrapped:
+                replacement = f"<{replacement}>"
+            return f"{match.group('prefix')}{replacement}{match.group('suffix')}"
+
+        return _MARKDOWN_LINK.sub(replace, line)
+
+    rewritten: list[str] = []
+    fence: str | None = None
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        marker = "```" if stripped.startswith("```") else "~~~" if stripped.startswith("~~~") else None
+        if marker is not None:
+            fence = None if fence == marker else marker if fence is None else fence
+            rewritten.append(line)
+        elif fence is None:
+            rewritten.append(rewrite_line(line))
+        else:
+            rewritten.append(line)
+    return "".join(rewritten)
 
 
 @dataclass(frozen=True)
@@ -206,8 +249,13 @@ def compose_dependency_references(
             relative = path.relative_to(source_path)
             if relative == Path("agents/openai.yaml"):
                 continue
+            if relative.name == "SKILL.md":
+                relative = relative.with_name("COMPOSED.md")
             destination = target / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, destination)
+            if path.suffix == ".md":
+                destination.write_text(_rewrite_relative_skill_links(path.read_text()))
+            else:
+                shutil.copy2(path, destination)
             written.append(str(destination.relative_to(caller_staged_dir)))
     return sorted(written)
