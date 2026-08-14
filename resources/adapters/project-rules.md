@@ -1,28 +1,28 @@
 # 项目规则解析适配
 
-本适配是计划与实施的共同**准入门**：项目规则不是背景资料，必须被解析为当前工作的可验证约束。读取 `.agent/matt-workflow.md` 的 `standards_sources` 作为用户确认的补充来源，但不要把它当成唯一来源。
+规则解析以当前计划或 Ticket 的 `execution_agent` 为输入；优先级是本次显式指定、项目 `default_execution_agent`、安装状态的 `installed_agent`。三者都无法确定时停止，不得混读多个 Agent 的专属规则。
 
-## 发现与优先级
+共享规范来自 `AGENTS.md`、`AGENTS.override.md`、贡献规范、编码规范与相关 ADR。跨 Agent 的强制约束应只维护在 `AGENTS.md`；Agent 专属文件只放该 Agent 的触发方式或专属能力。
 
-每次解析时至少检查：仓库根目录及从根到目标区域沿途的 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.cursor/rules/**/*.mdc`，以及 `CONTRIBUTING.md`、`CODING_STANDARDS.md`、相关 ADR。也读取 `standards_sources` 中仍存在的路径。
+使用 `python3 tools/workflow.py resolve-rules --repo <repo> --agent <codex|cursor|claude> --path <影响路径>` 获取规则证据。解析器只读取该目标 Agent 的专属来源：
 
-目录越深的规则只对其覆盖范围生效，并覆盖相同事项上的较上层规则；更具体的 `.cursor/rules` glob 优先于更宽的 glob。规则彼此矛盾、作用范围无法判断，或某条规则要求用户做产品决定时，按 `decision_policy` 询问、记录有证据的判断，或停止；不得静默挑选方便的规则。
+- `codex`：共享规范与 Codex 的 `AGENTS*` 指令；
+- `cursor`：共享规范、`.cursorrules`、`.cursor/rules/**/*.mdc`；
+- `claude`：共享规范、`CLAUDE.md`、`.claude/CLAUDE.md`、`.claude/rules/**/*.md`。
 
-`.cursor/rules` 的 frontmatter 带 `globs` 时，按计划的**影响区域**或实施时的实际文件路径匹配。没有 `globs` 的规则视为该规则目录下所有工作都适用。不要把 Cursor 自动注入规则当作保证：调用本工作流的 Agent 必须显式读取它们。
+Cursor 规则必须按原生语义处理：`alwaysApply: true` 全局适用；`globs` 只匹配目标路径；只有 `description` 的规则需要相关性判断；无三者的规则仅在显式手动引用时适用。Claude 的 `paths` 规则也只在匹配路径时适用。
 
-## 计划阶段：规则地图
+## 计划输出
 
-在访谈结束、Spec 或 Ticket 输出前，建立一份规则地图。每一项至少包含：
+访谈结束、Spec 或 Ticket 输出前解析规则。计划顶部只记录执行 Agent 与未解决冲突数；不要写冗长规则综述。每个计划项固定写四项：
 
-- 规则来源与适用范围；
-- 从规则推出的设计、命名、依赖、测试、验证或交付约束；
-- 规则影响的计划项或影响区域；
-- 尚不能确认的路径匹配或冲突。
+- **影响区域**：模块、目录或 glob；
+- **规则**：来源及匹配依据；
+- **约束**：由规则推出的可执行设计或测试要求；
+- **验证**：证明该项满足约束的测试、检查或人工验证。
 
-计划书必须包含 `## 适用的项目规范` 与 `## 对本计划的约束`。每个可执行计划项或 Ticket 还必须列出其适用规则、影响区域、实施约束和验收标准。影响区域可以是模块、目录或 glob；不要为了匹配规则而把具体文件名写成不可变的实现承诺。
+相关规则未读取、存在未解决冲突，或计划项缺少上述四项时，不得生成 `ready-for-agent` Ticket。
 
-若相关规则尚未读取、规则地图存在未解决冲突，或计划项无法说明如何满足关键约束，则该计划或 Ticket 不得标记为 `ready-for-agent`。
+## 实施与审查
 
-## 实施与审查阶段：重新解析
-
-开始每个 Ticket 前，按实际将修改的路径重建规则地图；这一步不可由计划阶段的概括替代。若新命中的规则只改变局部实现，更新该 Ticket 的执行记录；若改变架构、范围、接口或验收，则回到计划确认。实施和审查都以该地图作为硬约束，并在发现中引用具体规则来源。
+开始每个 Ticket 前，按真实将修改的路径重新执行 `resolve-rules`，再运行 `python3 tools/workflow.py validate-ticket <ticket-path>`。新规则若改变架构、接口、范围或验收，回到计划确认；审查发现必须引用规则来源与匹配依据。
