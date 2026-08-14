@@ -31,6 +31,7 @@ _SCENARIO_TYPES = frozenset(
         "grilling-contract",
         "diagnosing-contract",
         "skill-writing-contract",
+        "rule-contract",
     }
 )
 
@@ -255,6 +256,25 @@ def _evaluate_skill_writing_contract(input_value: dict[str, object]) -> dict[str
     }
 
 
+def _evaluate_rule_contract(input_value: dict[str, object]) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {"execution_agent", "rule_evidence", "ticket_admission", "implementation_recheck"},
+        "rule-contract.input",
+    )
+    if case["execution_agent"] not in {"codex", "cursor", "claude"}:
+        raise EvalError("rule-contract.input.execution_agent: invalid agent")
+    if not isinstance(case["rule_evidence"], bool) or not isinstance(case["ticket_admission"], bool) or not isinstance(case["implementation_recheck"], bool):
+        raise EvalError("rule-contract.input: rule lifecycle values must be booleans")
+    if not case["rule_evidence"]:
+        return {"status": "stop", "rule": "resolve-target-agent-rules", "next": "collect-rule-evidence"}
+    if not case["ticket_admission"]:
+        return {"status": "stop", "rule": "ticket-rule-admission", "next": "complete-ticket-rule-fields"}
+    if not case["implementation_recheck"]:
+        return {"status": "stop", "rule": "recheck-real-paths", "next": "resolve-rules-before-edit"}
+    return {"status": "valid", "rule": "rule-plan-ticket-implementation-loop", "next": "implement"}
+
+
 def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
     """Execute one structured deterministic scenario and assert its exact outcome."""
     evaluators = {
@@ -262,6 +282,7 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "grilling-contract": _evaluate_grilling_contract,
         "diagnosing-contract": _evaluate_diagnosing_contract,
         "skill-writing-contract": _evaluate_skill_writing_contract,
+        "rule-contract": _evaluate_rule_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:
