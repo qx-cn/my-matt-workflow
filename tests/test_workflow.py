@@ -32,6 +32,8 @@ from tools.workflow_lib.profile import (
     resolve_preset_name,
 )
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
+from tools.workflow_lib.rules import resolve_rules
+from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
 
 
 class ProfileTests(unittest.TestCase):
@@ -75,8 +77,8 @@ class ProfileTests(unittest.TestCase):
         self.assertTrue(adapter.is_file())
         adapter_text = adapter.read_text()
         self.assertIn(".cursor/rules/**/*.mdc", adapter_text)
-        self.assertIn("规则地图", adapter_text)
-        self.assertIn("不得标记为 `ready-for-agent`", adapter_text)
+        self.assertIn("execution_agent", adapter_text)
+        self.assertIn("不得生成 `ready-for-agent`", adapter_text)
 
         for skill in (
             "my-grill-with-docs",
@@ -99,7 +101,15 @@ class ProfileTests(unittest.TestCase):
 
             workflow = Path(__file__).resolve().parents[1] / "tools/workflow.py"
             result = subprocess.run(
-                [sys.executable, str(workflow), "setup", "--repo", str(repo)],
+                [
+                    sys.executable,
+                    str(workflow),
+                    "setup",
+                    "--repo",
+                    str(repo),
+                    "--execution-agent",
+                    "cursor",
+                ],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -166,6 +176,7 @@ class ProfileTests(unittest.TestCase):
             "composition_policy": "manual",
             "work_scope_policy": "single-ticket",
             "decision_policy": "ask",
+            "default_execution_agent": "auto",
             "test_commands": ["python3 -m unittest"],
             "standards_sources": [],
             "domain_sources": [],
@@ -218,6 +229,49 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(["make test"], merged["test_commands"])
         self.assertEqual(["AGENTS.md"], merged["standards_sources"])
         self.assertEqual("main", merged["default_base_branch"])
+
+    def test_rule_resolution_keeps_agent_specific_rules_separate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "AGENTS.md").write_text("shared")
+            cursor_rules = repo / ".cursor" / "rules"
+            cursor_rules.mkdir(parents=True)
+            (cursor_rules / "backend.mdc").write_text(
+                "---\nglobs: src/backend/**\nalwaysApply: false\n---\nbackend"
+            )
+            (cursor_rules / "manual.mdc").write_text("---\n---\nmanual")
+            claude_rules = repo / ".claude" / "rules"
+            claude_rules.mkdir(parents=True)
+            (claude_rules / "frontend.md").write_text(
+                "---\npaths: src/frontend/**\n---\nfrontend"
+            )
+
+            cursor = resolve_rules(repo, "cursor", ["src/backend/api.py"])
+            self.assertEqual(
+                ["AGENTS.md", ".cursor/rules/backend.mdc"],
+                [rule["source"] for rule in cursor],
+            )
+            codex = resolve_rules(repo, "codex", ["src/backend/api.py"])
+            self.assertEqual(["AGENTS.md"], [rule["source"] for rule in codex])
+            claude = resolve_rules(repo, "claude", ["src/backend/api.py"])
+            self.assertEqual(["AGENTS.md"], [rule["source"] for rule in claude])
+
+    def test_ready_ticket_requires_rule_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ticket = Path(tmp) / "ticket.md"
+            ticket.write_text(
+                "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
+                "rule_sources: []\nrule_scope: []\nrule_constraints: []\n"
+                "rule_conflicts: []\n---\n"
+            )
+            with self.assertRaisesRegex(TicketError, "规则来源"):
+                validate_ready_ticket(ticket)
+            ticket.write_text(
+                "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
+                'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
+                'rule_constraints: ["run tests"]\nrule_conflicts: []\n---\n'
+            )
+            self.assertEqual("ready", validate_ready_ticket(ticket)["status"])
 
     def test_refresh_can_switch_composition_without_losing_other_settings(self):
         existing = {
@@ -661,6 +715,10 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue(
                 (root / ".claude/skills/my-demo/SKILL.md").is_file()
             )
+            state = json.loads(
+                (root / ".claude/my-matt-workflow/install-state.json").read_text()
+            )
+            self.assertEqual("claude", state["installed_agent"])
 
     def test_can_install_an_older_release_for_rollback(self):
         with tempfile.TemporaryDirectory() as tmp:
