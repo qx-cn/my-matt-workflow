@@ -52,6 +52,17 @@
         "my-diagnosing-bugs"
       ]
     },
+    "adapter-project-rules": {
+      "source": "resources/adapters/project-rules.md",
+      "release_path": "references/shared/adapters/project-rules.md",
+      "consumers": [
+        "my-grill-with-docs",
+        "my-to-spec",
+        "my-to-tickets",
+        "my-implement",
+        "my-code-review"
+      ]
+    },
     "policies": {
       "source_dir": "policies",
       "release_path": "references/policies",
