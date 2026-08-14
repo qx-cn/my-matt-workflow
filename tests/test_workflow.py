@@ -52,7 +52,7 @@ class ProfileTests(unittest.TestCase):
         ):
             with self.subTest(skill=skill_name):
                 self.assertIn(
-                    f"references/composed/{skill_name}/SKILL.md", text
+                    f"references/composed/{skill_name}/COMPOSED.md", text
                 )
         self.assertIn("Cursor / Claude", text)
         self.assertIn("Codex", text)
@@ -971,7 +971,7 @@ class ReleaseTests(unittest.TestCase):
             self.assertTrue(
                 (
                     release
-                    / "skills/my-implement/references/composed/my-tdd/SKILL.md"
+                    / "skills/my-implement/references/composed/my-tdd/COMPOSED.md"
                 ).is_file()
             )
             self.assertTrue(
@@ -1062,7 +1062,7 @@ class ReleaseTests(unittest.TestCase):
                             release
                             / "skills/my-ask-matt/references/composed"
                             / skill_name
-                            / "SKILL.md"
+                            / "COMPOSED.md"
                         ).is_file()
                     )
             manifest = json.loads((release / "manifest.json").read_text())
