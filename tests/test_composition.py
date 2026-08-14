@@ -112,7 +112,10 @@ class CompositionMaterializationTests(unittest.TestCase):
                 target,
                 ["my-tdd"],
             )
-            self.assertIn("references/composed/my-tdd/SKILL.md", written)
+            self.assertIn("references/composed/my-tdd/COMPOSED.md", written)
+            self.assertFalse(
+                (target / "references/composed/my-tdd/SKILL.md").exists()
+            )
             self.assertTrue(
                 (target / "references/composed/my-tdd/tests.md").is_file()
             )
@@ -122,6 +125,29 @@ class CompositionMaterializationTests(unittest.TestCase):
                     / "references/composed/my-tdd/agents/openai.yaml"
                 ).exists()
             )
+
+    def test_rewrites_relative_skill_links_in_composed_markdown(self):
+        from tools.workflow_lib.composition import compose_dependency_references
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skills = root / "skills"
+            dependency = skills / "my-dependency"
+            dependency.mkdir(parents=True)
+            (dependency / "SKILL.md").write_text("# Dependency\n")
+            (dependency / "DEEPENING.md").write_text(
+                "[body](SKILL.md#terms) [remote](https://example.com/SKILL.md)\n"
+            )
+            target = root / "target"
+            target.mkdir()
+
+            compose_dependency_references(skills, target, ["my-dependency"])
+
+            copied = (
+                target / "references/composed/my-dependency/DEEPENING.md"
+            ).read_text()
+            self.assertIn("(COMPOSED.md#terms)", copied)
+            self.assertIn("(https://example.com/SKILL.md)", copied)
 
     def test_rejects_symlinked_file_outside_dependency(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -274,6 +300,30 @@ class CompositionValidationTests(unittest.TestCase):
                     upstream_id="test",
                     repo_root=root,
                 )
+
+    def test_full_release_has_no_composed_skill_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            release = build_release(
+                ROOT / "skills",
+                Path(tmp) / "releases",
+                release_id="v1",
+                upstream_id="test",
+                repo_root=ROOT,
+            )
+            self.assertEqual(
+                [],
+                list(release.glob("skills/*/references/composed/**/SKILL.md")),
+            )
+            deepening = (
+                release
+                / "skills"
+                / "my-improve-codebase-architecture"
+                / "references"
+                / "composed"
+                / "my-codebase-design"
+                / "DEEPENING.md"
+            )
+            self.assertIn("[SKILL.md](COMPOSED.md)", deepening.read_text())
 
     def test_build_rejects_source_skill_symlink_escape(self):
         with tempfile.TemporaryDirectory() as tmp:
