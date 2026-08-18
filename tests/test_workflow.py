@@ -861,6 +861,7 @@ class ReleaseTests(unittest.TestCase):
         body = (skill / "SKILL.md").read_text()
         template = skill / "assets" / "TEMPLATE.html"
         template_text = template.read_text()
+        checker = skill / "scripts" / "check_html.py"
         composition = json.loads((root / "composition" / "manifest.json").read_text())
 
         self.assertIn("assets/TEMPLATE.html", body)
@@ -871,9 +872,22 @@ class ReleaseTests(unittest.TestCase):
         self.assertIn("Kafka、消息队列、事件、回调", body)
         self.assertIn("rerun、backfill、恢复脚本", body)
         self.assertIn("只在描述 Proto、API、消息格式等可观察接口时使用“契约”", body)
+        self.assertIn("source_sync: confirm", body)
+        self.assertIn("章节标题下的导语不写复合键", body)
+        self.assertIn("指代离开上下文后不明确", body)
+        self.assertIn("出现两个以上独立事实、规则、动作或约束时必须拆点", body)
+        self.assertIn("范围边界以及“改动前/改动后”“支持/不支持”", body)
+        self.assertIn("comparison-card", body)
+        self.assertIn("30～60 个中文字符", body)
+        self.assertIn("实际渲染并检查每个章节", body)
         self.assertTrue(template.is_file())
+        self.assertTrue(checker.is_file())
         self.assertIn("{{NAV_ITEMS}}", template_text)
         self.assertIn("{{CHAPTER_SECTIONS}}", template_text)
+        self.assertIn("repeat(12, minmax(0, 1fr))", template_text)
+        self.assertIn("<th>方案摘要</th>", template_text)
+        self.assertIn(".comparison-card", template_text)
+        self.assertIn(".comparison { grid-template-columns: 1fr; }", template_text)
         self.assertNotIn("window.print", template_text)
         self.assertNotIn("@media print", template_text)
         self.assertNotIn("my-tech-design", composition["callers"])
@@ -883,6 +897,74 @@ class ReleaseTests(unittest.TestCase):
                 for entries in composition["routable_entries"].values()
             )
         )
+
+    def test_tech_design_html_checker_rejects_table_in_narrow_card(self):
+        root = Path(__file__).resolve().parents[1]
+        checker = root / "skills/my-tech-design/scripts/check_html.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            html = Path(tmp) / "design.html"
+            html.write_text(
+                '<nav><a data-page-link="overview"></a></nav>'
+                '<section id="overview" data-page="overview">'
+                '<article class="card span-4"><table><tr><td>x</td></tr></table>'
+                "</article></section>"
+            )
+            checked = subprocess.run(
+                [sys.executable, checker, html],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+        self.assertNotEqual(0, checked.returncode)
+        self.assertIn("表格位于 span-4 窄栏", checked.stdout)
+
+    def test_tech_design_html_checker_rejects_mixed_scope_and_unlisted_comparison(self):
+        root = Path(__file__).resolve().parents[1]
+        checker = root / "skills/my-tech-design/scripts/check_html.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            html = Path(tmp) / "design.html"
+            html.write_text(
+                '<nav><a data-page-link="overview"></a></nav>'
+                '<section id="overview" data-page="overview">'
+                '<p>包含 task 表迁移，不包含下游系统改造。</p>'
+                '<div class="comparison"><article class="comparison-card">'
+                '<h3>包含</h3><p>task 表迁移</p>'
+                '</article></div></section>'
+            )
+            checked = subprocess.run(
+                [sys.executable, checker, html],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+        self.assertNotEqual(0, checked.returncode)
+        self.assertIn("“包含/不包含”必须使用独立对比区块", checked.stdout)
+        self.assertIn("comparison-card 未使用列表", checked.stdout)
+
+    def test_tech_design_html_checker_warns_about_dense_paragraphs(self):
+        root = Path(__file__).resolve().parents[1]
+        checker = root / "skills/my-tech-design/scripts/check_html.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            html = Path(tmp) / "design.html"
+            html.write_text(
+                '<nav><a data-page-link="kafka"></a></nav>'
+                '<section id="kafka" data-page="kafka"><p>'
+                'workflow 完成生成后向下游投递消息，消息中包含本次处理结果和执行范围；'
+                '空数据时仍然发送完成通知，发送失败时由任务重试并记录状态，消费者需要按任务去重。'
+                '</p></section>'
+            )
+            checked = subprocess.run(
+                [sys.executable, checker, html],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+        self.assertEqual(0, checked.returncode)
+        self.assertIn("复核可能需要拆点的长段落", checked.stdout)
+        self.assertIn("复核使用分号压缩信息的文字", checked.stdout)
 
     def test_adopted_skills_include_metadata_and_safety_boundaries(self):
         root = Path(__file__).resolve().parents[1] / "skills"

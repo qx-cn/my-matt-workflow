@@ -83,12 +83,13 @@
     }
     .lede { max-width: 780px; margin: 0; color: var(--muted); font-size: 17px; }
 
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
     .span-12 { grid-column: span 12; }
     .span-8 { grid-column: span 8; }
     .span-6 { grid-column: span 6; }
     .span-4 { grid-column: span 4; }
     .card {
+      min-width: 0;
       padding: 22px;
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -126,6 +127,8 @@
     }
     th { color: var(--muted); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
     tr:last-child td { border-bottom: 0; }
+    td, th { overflow-wrap: break-word; word-break: normal; }
+    code { overflow-wrap: anywhere; }
 
     details { border-top: 1px solid var(--line); padding: 13px 0; }
     details:first-of-type { border-top: 0; padding-top: 0; }
@@ -136,11 +139,31 @@
     .callout.warn { border-left-color: #f79009; }
     .callout.danger { border-left-color: #f04438; }
 
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 16px 0;
+    }
+    .comparison-card {
+      min-width: 0;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--paper);
+    }
+    .comparison-card h3,
+    .comparison-card h4 { margin: 0 0 10px; }
+    .comparison-card ul,
+    .comparison-card ol { margin: 0; padding-left: 1.25em; }
+    .comparison-card li + li { margin-top: 8px; }
+
     @media (max-width: 860px) {
       .sidebar { position: static; width: auto; }
       .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       main { margin-left: 0; padding: 28px 18px; }
       .span-8, .span-6, .span-4 { grid-column: span 12; }
+      .comparison { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -179,7 +202,7 @@
           <article class="card span-12">
             <h3>整体改动地图</h3>
             <table>
-              <thead><tr><th>模块</th><th>变化</th><th>影响</th><th>验证</th></tr></thead>
+              <thead><tr><th>改动</th><th>方案摘要</th><th>评审重点</th><th>详情</th></tr></thead>
               <tbody>{{CHANGE_MAP_ROWS}}</tbody>
             </table>
           </article>
