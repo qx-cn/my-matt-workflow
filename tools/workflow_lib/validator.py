@@ -16,6 +16,9 @@ class ValidationError(RuntimeError):
 EXPECTED_MANUAL_SKILLS = 28
 _PLACEHOLDER = re.compile(r"(<[^>]+>|\{\{.+?\}\}|^\s*link\s*$)", re.IGNORECASE)
 _SCRIPT_SUFFIXES = {".sh", ".bash"}
+_SLASH_SKILL_INVOCATION = re.compile(
+    r"(?:^|[\s`(（])/my-[a-z0-9-]+(?=[`\s*.,，。；）)])"
+)
 
 
 def _is_placeholder(markdown: Path, target: str) -> bool:
@@ -144,6 +147,20 @@ def validate_contract_boundaries(skills_dir: Path) -> None:
                 )
 
 
+def validate_invocation_syntax(root: Path) -> None:
+    """Keep Cursor slash commands out of runtime-neutral/Codex prose."""
+    sources = [root / "README.md", root / "resources", root / "skills"]
+    for source in sources:
+        markdown_files = [source] if source.is_file() else sorted(source.rglob("*.md"))
+        for markdown in markdown_files:
+            for line_number, line in enumerate(markdown.read_text().splitlines(), 1):
+                if _SLASH_SKILL_INVOCATION.search(line) and "Cursor / Claude" not in line:
+                    raise ValidationError(
+                        f"{markdown.relative_to(root)}:{line_number}: /my-* 只能出现在 "
+                        "Cursor / Claude 显式调用说明中；Codex 使用 $my-*"
+                    )
+
+
 def validate_repository(repo_root: Path) -> dict[str, int]:
     """Run the complete source validation gate without requiring Git."""
     root = repo_root.resolve()
@@ -161,6 +178,7 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
     validate_markdown_references(root)
     validate_scripts(root)
     validate_contract_boundaries(skills_dir)
+    validate_invocation_syntax(root)
     return {"skills": len(skill_dirs), "scripts": _script_count(root)}
 
 

@@ -28,8 +28,14 @@ def load_manifest(release: Path) -> dict:
         manifest = json.loads((release / "manifest.json").read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise InstallError("release manifest 无法读取") from exc
-    if not manifest.get("release_id") or not isinstance(manifest.get("skills"), dict):
-        raise InstallError("release manifest 缺少 release_id 或 skills")
+    release_id = manifest.get("release_id")
+    if (
+        not isinstance(release_id, str)
+        or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", release_id)
+        or not isinstance(manifest.get("skills"), dict)
+        or not isinstance(manifest.get("runtime"), dict)
+    ):
+        raise InstallError("release manifest 的 release_id、skills 或 runtime 无效")
     return manifest
 
 
@@ -67,6 +73,24 @@ def verify_release(release: Path, manifest: dict | None = None) -> dict:
             source = release / "skills" / skill_name / relative_path
             if not source.is_file() or sha256_file(source) != expected:
                 raise InstallError(f"校验失败：{skill_name}/{relative}")
+    runtime_dir = release / "runtime"
+    expected_runtime = set(manifest["runtime"])
+    actual_runtime = {
+        str(path.relative_to(runtime_dir))
+        for path in runtime_dir.rglob("*")
+        if path.is_file()
+    } if runtime_dir.is_dir() else set()
+    if actual_runtime != expected_runtime:
+        raise InstallError("release runtime 文件集合不一致")
+    if "tools/workflow.py" not in expected_runtime:
+        raise InstallError("release runtime 缺少 tools/workflow.py")
+    for relative, expected in manifest["runtime"].items():
+        relative_path = Path(relative)
+        if relative_path.is_absolute() or ".." in relative_path.parts:
+            raise InstallError(f"非法 runtime 文件路径：{relative}")
+        source = runtime_dir / relative_path
+        if not source.is_file() or sha256_file(source) != expected:
+            raise InstallError(f"runtime 校验失败：{relative}")
     return manifest
 
 
@@ -105,9 +129,11 @@ def _remove_path(path: Path) -> None:
         path.unlink()
 
 
-def recover_interrupted_install(cursor_home: Path) -> None:
+def recover_interrupted_install(
+    state_home: Path, *, skills_home: Path | None = None
+) -> None:
     """Restore the previous install from a persisted transaction journal."""
-    transaction = cursor_home / "my-matt-workflow" / "transaction"
+    transaction = state_home / "my-matt-workflow" / "transaction"
     journal_path = transaction / "journal.json"
     if not journal_path.exists():
         if transaction.exists():
@@ -118,8 +144,8 @@ def recover_interrupted_install(cursor_home: Path) -> None:
     except json.JSONDecodeError as exc:
         raise InstallError("安装事务日志损坏，需要人工检查") from exc
 
-    skills_home = cursor_home / "skills"
-    state_path = cursor_home / "my-matt-workflow" / "install-state.json"
+    skills_home = skills_home or state_home / "skills"
+    state_path = state_home / "my-matt-workflow" / "install-state.json"
     if state_path.exists():
         try:
             state = json.loads(state_path.read_text())
@@ -144,9 +170,10 @@ def recover_interrupted_install(cursor_home: Path) -> None:
 
 def install_release(
     release: Path,
-    cursor_home: Path,
+    state_home: Path,
     *,
     target: str | None = None,
+    skills_home: Path | None = None,
 ) -> None:
     """Install one immutable release, restoring the old install on failure."""
     manifest = verify_release(release)
@@ -156,13 +183,13 @@ def install_release(
             validate_skill_metadata_for_target(
                 release / "skills" / skill_name, install_target
             )
-    cursor_home.mkdir(parents=True, exist_ok=True)
-    skills_home = cursor_home / "skills"
-    skills_home.mkdir(exist_ok=True)
-    state_dir = cursor_home / "my-matt-workflow"
-    state_dir.mkdir(exist_ok=True)
+    state_home.mkdir(parents=True, exist_ok=True)
+    skills_home = skills_home or state_home / "skills"
+    skills_home.mkdir(parents=True, exist_ok=True)
+    state_dir = state_home / "my-matt-workflow"
+    state_dir.mkdir(parents=True, exist_ok=True)
     state_path = state_dir / "install-state.json"
-    recover_interrupted_install(cursor_home)
+    recover_interrupted_install(state_home, skills_home=skills_home)
 
     previous_state: dict = {}
     if state_path.exists():
@@ -184,6 +211,8 @@ def install_release(
     backup.mkdir()
     for skill_name in manifest["skills"]:
         shutil.copytree(release / "skills" / skill_name, staged / skill_name)
+    staged_runtime = transaction / "staged-runtime"
+    shutil.copytree(release / "runtime", staged_runtime)
 
     managed = previous_managed | set(manifest["skills"])
     transaction_id = str(uuid4())
@@ -212,6 +241,20 @@ def install_release(
             if skill_name in manifest["skills"]:
                 (staged / skill_name).rename(destination)
 
+        runtime_dir = state_dir / "runtime" / manifest["release_id"]
+        if runtime_dir.exists():
+            for relative, expected in manifest["runtime"].items():
+                installed = runtime_dir / relative
+                if not installed.is_file() or sha256_file(installed) != expected:
+                    raise InstallError(
+                        f"已安装的同名 runtime 已损坏：{manifest['release_id']}"
+                    )
+            shutil.rmtree(staged_runtime)
+        else:
+            runtime_dir.parent.mkdir(exist_ok=True)
+            staged_runtime.rename(runtime_dir)
+        runtime_entry = runtime_dir / "tools" / "workflow.py"
+
         state = {
             "release_id": manifest["release_id"],
             "source": str(release),
@@ -219,11 +262,13 @@ def install_release(
             "installed_at": datetime.now(timezone.utc).isoformat(),
             "transaction_id": transaction_id,
             "installed_agent": install_target,
+            "skills_home": str(skills_home.resolve()),
+            "runtime_entry": str(runtime_entry.resolve()),
         }
         state_temp = transaction / "install-state.json"
         state_temp.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
         state_temp.replace(state_path)
         shutil.rmtree(transaction)
     except Exception as exc:
-        recover_interrupted_install(cursor_home)
+        recover_interrupted_install(state_home, skills_home=skills_home)
         raise InstallError("安装中断，已恢复旧版本") from exc

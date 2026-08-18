@@ -143,9 +143,9 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
         "deny": "禁止写回文档",
     },
     "humanizer_policy": {
-        "deny": "不主动调用 /my-humanizer",
-        "confirm": "调用 /my-humanizer 并先确认再落笔",
-        "allow": "叙述段可自动 /my-humanizer 落笔；契约段仍冻结",
+        "deny": "不主动调用 my-humanizer",
+        "confirm": "调用 my-humanizer 并先确认再落笔",
+        "allow": "叙述段可自动 my-humanizer 落笔；契约段仍冻结",
     },
     "composition_policy": {
         "manual": "提示用户手动启动依赖 Skill",

@@ -36,11 +36,19 @@ from workflow_lib.tickets import TicketError, validate_ready_ticket
 
 
 ROOT = Path(__file__).resolve().parents[1]
-AGENT_HOMES = {
-    "codex": Path.home() / ".codex",
+AGENT_STATE_HOMES = {
+    "codex": Path(
+        os.environ.get("CODEX_HOME", Path.home() / ".codex")
+    ).expanduser(),
     "cursor": Path.home() / ".cursor",
     "claude": Path.home() / ".claude",
 }
+
+
+def _agent_skills_home(agent: str) -> Path:
+    if agent == "codex":
+        return Path.home() / ".agents" / "skills"
+    return AGENT_STATE_HOMES[agent] / "skills"
 
 
 def _default_branch(repo: Path) -> str:
@@ -295,20 +303,13 @@ def _release_path(release_id: str) -> Path:
 
 def command_install(args: argparse.Namespace) -> None:
     release = _release_path(args.release) if args.release else _current_release()
-    agent_home = _resolve_agent_home(args)
-    target = (
-        args.target
-        if args.target != "auto"
-        else next(
-            (
-                name
-                for name, known_home in AGENT_HOMES.items()
-                if known_home.resolve() == agent_home.resolve()
-            ),
-            None,
-        )
+    state_home, skills_home, target = _resolve_agent_layout(args)
+    install_release(
+        release,
+        state_home,
+        target=target,
+        skills_home=skills_home,
     )
-    install_release(release, agent_home, target=target)
     print(f"INSTALLED {release.name}")
 
 
@@ -370,7 +371,7 @@ def _release_ids_referenced_by(agent_homes: set[Path]) -> set[str]:
 
 def command_prune_releases(args: argparse.Namespace) -> None:
     """Delete only release directories not referenced by a known Agent install."""
-    agent_homes = set(AGENT_HOMES.values()) | {
+    agent_homes = set(AGENT_STATE_HOMES.values()) | {
         Path(path).expanduser() for path in args.agent_home
     }
     referenced = _release_ids_referenced_by(agent_homes)
@@ -393,14 +394,25 @@ def command_prune_releases(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
-def _resolve_agent_home(args: argparse.Namespace) -> Path:
+def _resolve_agent_layout(
+    args: argparse.Namespace,
+) -> tuple[Path, Path, str | None]:
     if args.agent_home:
-        return Path(args.agent_home).expanduser()
+        state_home = Path(args.agent_home).expanduser()
+        target = args.target if args.target != "auto" else None
+        return state_home, state_home / "skills", target
     if args.target != "auto":
-        return AGENT_HOMES[args.target]
-    candidates = [home for home in AGENT_HOMES.values() if (home / "skills").is_dir()]
+        return (
+            AGENT_STATE_HOMES[args.target],
+            _agent_skills_home(args.target),
+            args.target,
+        )
+    candidates = [
+        name for name in AGENT_STATE_HOMES if _agent_skills_home(name).is_dir()
+    ]
     if len(candidates) == 1:
-        return candidates[0]
+        target = candidates[0]
+        return AGENT_STATE_HOMES[target], _agent_skills_home(target), target
     if not candidates:
         raise SystemExit("未检测到 Agent Skill 目录；请指定 --target 或 --agent-home")
     raise SystemExit("检测到多个 Agent Skill 目录；请指定 --target 或 --agent-home")
@@ -468,7 +480,9 @@ def parser() -> argparse.ArgumentParser:
 
     install = sub.add_parser("install")
     install.add_argument("--release")
-    install.add_argument("--target", choices=["auto", *AGENT_HOMES], default="auto")
+    install.add_argument(
+        "--target", choices=["auto", *AGENT_STATE_HOMES], default="auto"
+    )
     install.add_argument("--agent-home")
     install.set_defaults(func=command_install)
 
@@ -485,7 +499,9 @@ def parser() -> argparse.ArgumentParser:
     deploy = sub.add_parser("deploy")
     deploy.add_argument("--release-id")
     deploy.add_argument("--upstream-id", default="local-matt-skills")
-    deploy.add_argument("--target", choices=["auto", *AGENT_HOMES], default="auto")
+    deploy.add_argument(
+        "--target", choices=["auto", *AGENT_STATE_HOMES], default="auto"
+    )
     deploy.add_argument("--agent-home")
     deploy.set_defaults(func=command_deploy)
 

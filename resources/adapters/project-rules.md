@@ -4,7 +4,7 @@
 
 共享规范来自 `AGENTS.md`、`AGENTS.override.md`、贡献规范、编码规范与相关 ADR。跨 Agent 的强制约束应只维护在 `AGENTS.md`；Agent 专属文件只放该 Agent 的触发方式或专属能力。
 
-使用 `python3 tools/workflow.py resolve-rules --repo <repo> --agent <codex|cursor|claude> --path <影响路径>` 获取规则证据。解析器只读取该目标 Agent 的专属来源：
+先从当前 Agent 的 `my-matt-workflow/install-state.json` 读取绝对路径 `runtime_entry`：Codex 状态根为 `${CODEX_HOME:-~/.codex}`，Cursor 为 `~/.cursor`，Claude 为 `~/.claude`；自定义安装则使用安装时指定的 Agent 根目录。使用 `python3 <runtime_entry> resolve-rules --repo <repo> --agent <codex|cursor|claude> --path <影响路径>` 获取规则证据。不得假设当前项目中存在本工作流仓库的 `tools/`。解析器只读取该目标 Agent 的专属来源：
 
 - `codex`：共享规范、Codex 的 `AGENTS*` 指令与 `.agent/rules/**/*`；该目录中的普通文件按全局规则读取；
 - `cursor`：共享规范、`.cursorrules`、`.cursor/rules/**/*.mdc`；
@@ -25,4 +25,4 @@ Cursor 规则必须按原生语义处理：`alwaysApply: true` 全局适用；`g
 
 ## 实施与审查
 
-开始每个 Ticket 前，按真实将修改的路径重新执行 `resolve-rules`，再运行 `python3 tools/workflow.py validate-ticket <ticket-path>`。新规则若改变架构、接口、范围或验收，回到计划确认；审查发现必须引用规则来源与匹配依据。
+开始每个 Ticket 前，按真实将修改的路径重新执行 `resolve-rules`，再运行 `python3 <runtime_entry> validate-ticket <ticket-path>`。新规则若改变架构、接口、范围或验收，回到计划确认；审查发现必须引用规则来源与匹配依据。

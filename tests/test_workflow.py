@@ -34,9 +34,20 @@ from tools.workflow_lib.profile import (
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
 from tools.workflow_lib.rules import resolve_rules
 from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
+from tools.workflow_lib.validator import ValidationError, validate_invocation_syntax
 
 
 class ProfileTests(unittest.TestCase):
+    def test_slash_skill_invocation_requires_explicit_cursor_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "resources").mkdir()
+            (root / "skills").mkdir()
+            (root / "README.md").write_text("Codex 请运行 `/my-demo`。\n")
+
+            with self.assertRaisesRegex(ValidationError, r"Codex 使用 \$my"):
+                validate_invocation_syntax(root)
+
     def test_ask_matt_routes_with_manual_branches_without_composed_entries(self):
         text = (
             Path(__file__).resolve().parents[1]
@@ -556,7 +567,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("`deny`", sot)
         self.assertIn("`confirm`", sot)
         self.assertIn("`allow`", sot)
-        self.assertIn("/my-humanizer", sot)
+        self.assertIn("`my-humanizer`", sot)
         self.assertIn("叙述段", sot)
         self.assertIn("契约段", sot)
         self.assertIn("必须 / 不得", sot)
@@ -660,6 +671,10 @@ class InstallerTests(unittest.TestCase):
         skill_file = skill / "SKILL.md"
         skill_file.write_text(body)
         digest = hashlib.sha256(skill_file.read_bytes()).hexdigest()
+        runtime_entry = release / "runtime" / "tools" / "workflow.py"
+        runtime_entry.parent.mkdir(parents=True)
+        runtime_entry.write_text("#!/usr/bin/env python3\n")
+        runtime_digest = hashlib.sha256(runtime_entry.read_bytes()).hexdigest()
         (release / "manifest.json").write_text(
             json.dumps(
                 {
@@ -669,6 +684,7 @@ class InstallerTests(unittest.TestCase):
                             "SKILL.md": digest,
                         }
                     },
+                    "runtime": {"tools/workflow.py": runtime_digest},
                 }
             )
         )
@@ -699,6 +715,17 @@ class InstallerTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 InstallError, r"额外|EXTRA\.md"
             ):
+                verify_release(release)
+
+    def test_verify_release_rejects_unsafe_runtime_release_id(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            release = self._release(root, "v1", "stable")
+            manifest = json.loads((release / "manifest.json").read_text())
+            manifest["release_id"] = "../escape"
+            (release / "manifest.json").write_text(json.dumps(manifest))
+
+            with self.assertRaisesRegex(InstallError, "release_id"):
                 verify_release(release)
 
     def test_codex_install_rejects_implicit_skill(self):
@@ -744,6 +771,44 @@ class InstallerTests(unittest.TestCase):
                 (root / ".claude/my-matt-workflow/install-state.json").read_text()
             )
             self.assertEqual("claude", state["installed_agent"])
+            self.assertTrue(Path(state["runtime_entry"]).is_file())
+
+    def test_codex_can_split_state_and_skill_roots(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            release = self._release(
+                root,
+                "v1",
+                "---\n"
+                "name: my-demo\n"
+                "description: demo\n"
+                "disable-model-invocation: true\n"
+                "---\n",
+            )
+            metadata = release / "skills/my-demo/agents/openai.yaml"
+            metadata.parent.mkdir()
+            metadata.write_text("policy:\n  allow_implicit_invocation: false\n")
+            manifest = json.loads((release / "manifest.json").read_text())
+            manifest["skills"]["my-demo"]["agents/openai.yaml"] = hashlib.sha256(
+                metadata.read_bytes()
+            ).hexdigest()
+            (release / "manifest.json").write_text(json.dumps(manifest))
+            state_home = root / ".codex"
+            skills_home = root / ".agents" / "skills"
+
+            install_release(
+                release,
+                state_home,
+                target="codex",
+                skills_home=skills_home,
+            )
+
+            self.assertTrue((skills_home / "my-demo/SKILL.md").is_file())
+            state = json.loads(
+                (state_home / "my-matt-workflow/install-state.json").read_text()
+            )
+            self.assertEqual(str(skills_home.resolve()), state["skills_home"])
+            self.assertTrue(Path(state["runtime_entry"]).is_file())
 
     def test_can_install_an_older_release_for_rollback(self):
         with tempfile.TemporaryDirectory() as tmp:

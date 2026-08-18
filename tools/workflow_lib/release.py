@@ -369,6 +369,7 @@ def _rewrite_composed_resource_links(skill_dir: Path) -> None:
 
 def _manifest_for_staged_tree(
     staged_skills_dir: Path,
+    staged_runtime_dir: Path,
     *,
     upstream_id: str,
     composed: dict[str, list[str]],
@@ -384,6 +385,11 @@ def _manifest_for_staged_tree(
             }
             for skill_dir in sorted(staged_skills_dir.iterdir())
             if skill_dir.is_dir()
+        },
+        "runtime": {
+            str(path.relative_to(staged_runtime_dir)): _digest(path)
+            for path in sorted(staged_runtime_dir.rglob("*"))
+            if path.is_file()
         },
         "composed": composed,
         "shared_resources": shared_resources,
@@ -414,6 +420,19 @@ def _stage_release_tree(
     staged_skills.mkdir(parents=True)
     for skill_dir in skill_dirs:
         shutil.copytree(skill_dir, staged_skills / skill_dir.name)
+
+    staged_runtime = staging_root / "runtime"
+    runtime_source = repo_root / "tools"
+    if not (runtime_source / "workflow.py").is_file():
+        runtime_source = Path(__file__).resolve().parents[1]
+    workflow_entry = runtime_source / "workflow.py"
+    runtime_library = runtime_source / "workflow_lib"
+    if not workflow_entry.is_file() or not runtime_library.is_dir():
+        raise ReleaseError("release runtime 缺少 tools/workflow.py 或 workflow_lib")
+    (staged_runtime / "tools" / "workflow_lib").mkdir(parents=True)
+    shutil.copy2(workflow_entry, staged_runtime / "tools" / "workflow.py")
+    for source in sorted(runtime_library.glob("*.py")):
+        shutil.copy2(source, staged_runtime / "tools" / "workflow_lib" / source.name)
 
     composed: dict[str, list[str]] = {}
     if composition is not None:
@@ -454,6 +473,7 @@ def _stage_release_tree(
     _validate_staged_references(staged_skills)
     return _manifest_for_staged_tree(
         staged_skills,
+        staged_runtime,
         upstream_id=upstream_id,
         composed=composed,
         shared_resources=shared_resources,

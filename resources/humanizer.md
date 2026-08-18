@@ -1,6 +1,6 @@
 # humanizer_policy（文档与注释）
 
-本文件是 `humanizer_policy` 服从规则的唯一真相源。生成类 Skill 与 `my-code-review` 只通过一级指针引用此处，不复制三档定义。改写过程见 `/my-humanizer`（先分类可改/冻结，再只改叙述）。
+本文件是 `humanizer_policy` 服从规则的唯一真相源。生成类 Skill 与 `my-code-review` 只通过一级指针引用此处，不复制三档定义。改写过程见 `my-humanizer`（先分类可改/冻结，再只改叙述）。
 
 ## 何时加载
 
@@ -8,9 +8,9 @@
 
 ## 三档行为
 
-- `deny`：不主动调用 `/my-humanizer`；可提示用户自行手动调用。
-- `confirm`：先调用 `/my-humanizer` 标出 AI 腔或给出改写建议；**未确认不得**整篇落笔；确认后再写入或覆盖。
-- `allow`：可对叙述段自动 `/my-humanizer` 落笔。
+- `deny`：不主动调用 `my-humanizer`；可提示用户自行手动调用。
+- `confirm`：先调用 `my-humanizer` 标出 AI 腔或给出改写建议；**未确认不得**整篇落笔；确认后再写入或覆盖。
+- `allow`：可对叙述段自动 `my-humanizer` 落笔。
 
 ## 叙述段与契约段
 

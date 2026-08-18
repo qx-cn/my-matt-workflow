@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
 
-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `/my-setup`。
+读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `my-setup`。
 
 ## 过程
 
@@ -101,7 +101,7 @@ execution_agent: <codex|cursor|claude>
 - [ ] 验收标准 1
 - [ ] 验收标准 2
 
-关闭前勾选全部验收项；进入实施前必须运行 `python3 tools/workflow.py validate-ticket <ticket-path>`。本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
+关闭前勾选全部验收项；进入实施前必须通过安装状态记录的 `runtime_entry` 运行 `validate-ticket <ticket-path>`。本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
 
 </local-ticket-template>
 

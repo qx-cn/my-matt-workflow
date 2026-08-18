@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 实施用户在 Spec 或 Ticket 中描述的工作。
 
-开始每个 Ticket 前，按 [项目规则解析](references/shared/adapters/project-rules.md) 用 Ticket 的 `execution_agent` 和实际将修改的路径重新解析规则，并运行 `python3 tools/workflow.py validate-ticket <ticket-path>`。新规则若改变架构、范围、接口或验收，回到计划确认；不得静默偏离已批准计划。
+开始每个 Ticket 前，按 [项目规则解析](references/shared/adapters/project-rules.md) 用 Ticket 的 `execution_agent` 和实际将修改的路径重新解析规则，并通过安装状态记录的 `runtime_entry` 运行 `validate-ticket <ticket-path>`。新规则若改变架构、范围、接口或验收，回到计划确认；不得静默偏离已批准计划。
 
 在预先约定的 seam 上进入 `my-tdd` 阶段。
 
