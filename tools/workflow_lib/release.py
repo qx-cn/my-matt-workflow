@@ -352,7 +352,9 @@ def _rewrite_composed_resource_links(skill_dir: Path) -> None:
                     f"{skill_dir.name}: {markdown.relative_to(skill_dir)} "
                     f"组合引用的共享资源未打包：{value}"
                 )
-            rewritten = os.path.relpath(destination, markdown.parent).replace(os.sep, "/")
+            source = markdown.parent.resolve().relative_to(root)
+            target_path = destination.relative_to(root)
+            rewritten = os.path.relpath(target_path, source).replace(os.sep, "/")
             if separator:
                 rewritten += separator + fragment
             if wrapped:

@@ -14,6 +14,8 @@ from tools.workflow_lib.composition import (
 )
 from tools.workflow_lib.release import (
     ReleaseError,
+    _rewrite_composed_resource_links,
+    _validate_staged_references,
     build_release,
     validate_skills,
 )
@@ -235,6 +237,36 @@ class CompositionValidationTests(unittest.TestCase):
                     release_id="v1",
                     upstream_id="test",
                 )
+
+    def test_rewrites_composed_shared_link_inside_symlinked_staging_tree(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            real_staging = root / "private-staging"
+            real_staging.mkdir()
+            alias_staging = root / "var-staging"
+            alias_staging.symlink_to(real_staging, target_is_directory=True)
+
+            skill = alias_staging / "skills" / "my-host"
+            resource = skill / "references/shared/adapters/artifact-access.md"
+            resource.parent.mkdir(parents=True)
+            resource.write_text("# Artifact access\n")
+            composed = (
+                skill
+                / "references/composed/my-dependency/COMPOSED.md"
+            )
+            composed.parent.mkdir(parents=True)
+            composed.write_text(
+                "[artifact](../../shared/adapters/artifact-access.md#usage)\n"
+            )
+
+            _rewrite_composed_resource_links(skill)
+
+            self.assertEqual(
+                "[artifact](../../shared/adapters/artifact-access.md#usage)\n",
+                composed.read_text(),
+            )
+            self.assertNotIn(str(real_staging), composed.read_text())
+            _validate_staged_references(alias_staging / "skills")
 
     def test_source_validation_scans_support_markdown(self):
         with tempfile.TemporaryDirectory() as tmp:
