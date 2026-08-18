@@ -1,0 +1,6 @@
+interface:
+  display_name: "Tech Design"
+  short_description: "Create visual interactive technical designs"
+  default_prompt: "Use $my-tech-design to turn this discussion into an interactive HTML technical design."
+policy:
+  allow_implicit_invocation: false

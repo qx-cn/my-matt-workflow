@@ -855,6 +855,23 @@ class ReleaseTests(unittest.TestCase):
                 failures.append(f"{skill_dir.name}: implicit")
         self.assertEqual([], failures)
 
+    def test_tech_design_is_standalone_and_uses_a_fixed_html_template(self):
+        root = Path(__file__).resolve().parents[1]
+        skill = root / "skills" / "my-tech-design"
+        body = (skill / "SKILL.md").read_text()
+        template = skill / "assets" / "TEMPLATE.html"
+        composition = json.loads((root / "composition" / "manifest.json").read_text())
+
+        self.assertIn("assets/TEMPLATE.html", body)
+        self.assertTrue(template.is_file())
+        self.assertNotIn("my-tech-design", composition["callers"])
+        self.assertTrue(
+            all(
+                "my-tech-design" not in entries
+                for entries in composition["routable_entries"].values()
+            )
+        )
+
     def test_adopted_skills_include_metadata_and_safety_boundaries(self):
         root = Path(__file__).resolve().parents[1] / "skills"
         expected = {
@@ -888,7 +905,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(27, len(validate_skills(root)))
+        self.assertEqual(28, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
