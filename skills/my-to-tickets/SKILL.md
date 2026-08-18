@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
 
-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `my-setup`。
+读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `/my-setup`。
 
 ## 过程
 

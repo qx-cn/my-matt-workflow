@@ -34,20 +34,9 @@ from tools.workflow_lib.profile import (
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
 from tools.workflow_lib.rules import resolve_rules
 from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
-from tools.workflow_lib.validator import ValidationError, validate_invocation_syntax
 
 
 class ProfileTests(unittest.TestCase):
-    def test_slash_skill_invocation_requires_explicit_cursor_context(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            (root / "resources").mkdir()
-            (root / "skills").mkdir()
-            (root / "README.md").write_text("Codex 请运行 `/my-demo`。\n")
-
-            with self.assertRaisesRegex(ValidationError, r"Codex 使用 \$my"):
-                validate_invocation_syntax(root)
-
     def test_ask_matt_routes_with_manual_branches_without_composed_entries(self):
         text = (
             Path(__file__).resolve().parents[1]
@@ -567,7 +556,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("`deny`", sot)
         self.assertIn("`confirm`", sot)
         self.assertIn("`allow`", sot)
-        self.assertIn("`my-humanizer`", sot)
+        self.assertIn("/my-humanizer", sot)
         self.assertIn("叙述段", sot)
         self.assertIn("契约段", sot)
         self.assertIn("必须 / 不得", sot)

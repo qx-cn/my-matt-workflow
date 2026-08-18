@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**，只综合已知内容。
 
-读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略与生效的 `humanizer_policy`。配置不存在时先运行 `my-setup`。
+读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略与生效的 `humanizer_policy`。配置不存在时先运行 `/my-setup`。
 
 ## 过程
 
