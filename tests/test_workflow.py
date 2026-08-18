@@ -855,15 +855,22 @@ class ReleaseTests(unittest.TestCase):
                 failures.append(f"{skill_dir.name}: implicit")
         self.assertEqual([], failures)
 
-    def test_tech_design_is_standalone_and_uses_a_fixed_html_template(self):
+    def test_tech_design_is_standalone_and_uses_dynamic_html_chapters(self):
         root = Path(__file__).resolve().parents[1]
         skill = root / "skills" / "my-tech-design"
         body = (skill / "SKILL.md").read_text()
         template = skill / "assets" / "TEMPLATE.html"
+        template_text = template.read_text()
         composition = json.loads((root / "composition" / "manifest.json").read_text())
 
         self.assertIn("assets/TEMPLATE.html", body)
+        self.assertIn("数据库设计章节", body)
+        self.assertIn("协议与接口设计章节", body)
         self.assertTrue(template.is_file())
+        self.assertIn("{{NAV_ITEMS}}", template_text)
+        self.assertIn("{{CHAPTER_SECTIONS}}", template_text)
+        self.assertNotIn("window.print", template_text)
+        self.assertNotIn("@media print", template_text)
         self.assertNotIn("my-tech-design", composition["callers"])
         self.assertTrue(
             all(

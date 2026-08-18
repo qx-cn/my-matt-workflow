@@ -62,7 +62,7 @@
       background: rgba(255, 255, 255, .1);
       color: white;
     }
-    .sidebar-actions { display: flex; gap: 8px; margin-top: 24px; }
+    .sidebar-actions { margin-top: 24px; }
     .sidebar button {
       padding: 7px 10px;
       border: 1px solid #4b5563;
@@ -136,31 +136,11 @@
     .callout.warn { border-left-color: #f79009; }
     .callout.danger { border-left-color: #f04438; }
 
-    .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px; }
-    .pager a {
-      padding: 9px 13px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--paper);
-      color: var(--accent);
-      text-decoration: none;
-    }
-
     @media (max-width: 860px) {
       .sidebar { position: static; width: auto; }
       .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       main { margin-left: 0; padding: 28px 18px; }
       .span-8, .span-6, .span-4 { grid-column: span 12; }
-    }
-
-    @media print {
-      body { background: white; font-size: 11pt; }
-      .sidebar, .pager { display: none !important; }
-      main { margin: 0; padding: 0; }
-      .page, .page[hidden] { display: block !important; max-width: none; break-after: page; }
-      .card { box-shadow: none; break-inside: avoid; }
-      details > * { display: block !important; }
-      summary { list-style: none; }
     }
   </style>
 </head>
@@ -172,21 +152,17 @@
       <p class="meta">{{DOCUMENT_META}}</p>
       <nav class="nav" aria-label="章节">
         <a href="#overview" data-page-link="overview">方案总览</a>
-        <a href="#architecture" data-page-link="architecture">架构与流程</a>
-        <a href="#decisions" data-page-link="decisions">关键决策</a>
-        <a href="#changes" data-page-link="changes">改动与接口</a>
-        <a href="#delivery" data-page-link="delivery">交付与风险</a>
+        {{NAV_ITEMS}}
       </nav>
       <div class="sidebar-actions">
         <button type="button" id="expand-all">展开细节</button>
-        <button type="button" onclick="window.print()">打印</button>
       </div>
     </aside>
 
     <main>
       <section class="page" id="overview" data-page="overview">
         <header class="page-header">
-          <p class="eyebrow">01 / Overview</p>
+          <p class="eyebrow">Overview</p>
           <h2>方案总览</h2>
           <p class="lede">{{ONE_SENTENCE_CONCLUSION}}</p>
         </header>
@@ -207,49 +183,12 @@
               <tbody>{{CHANGE_MAP_ROWS}}</tbody>
             </table>
           </article>
+          {{OVERVIEW_EXTRA}}
         </div>
-        <div class="pager"><span></span><a href="#architecture">下一章：架构与流程 →</a></div>
       </section>
 
-      <section class="page" id="architecture" data-page="architecture" hidden>
-        <header class="page-header">
-          <p class="eyebrow">02 / Architecture</p>
-          <h2>架构与流程</h2>
-          <p class="lede">{{ARCHITECTURE_SUMMARY}}</p>
-        </header>
-        <div class="grid">{{ARCHITECTURE_CONTENT}}</div>
-        <div class="pager"><a href="#overview">← 上一章</a><a href="#decisions">下一章：关键决策 →</a></div>
-      </section>
-
-      <section class="page" id="decisions" data-page="decisions" hidden>
-        <header class="page-header">
-          <p class="eyebrow">03 / Decisions</p>
-          <h2>关键决策</h2>
-          <p class="lede">只记录会改变架构、契约或交付风险的承重选择。</p>
-        </header>
-        <article class="card">{{DECISION_DETAILS}}</article>
-        <div class="pager"><a href="#architecture">← 上一章</a><a href="#changes">下一章：改动与接口 →</a></div>
-      </section>
-
-      <section class="page" id="changes" data-page="changes" hidden>
-        <header class="page-header">
-          <p class="eyebrow">04 / Changes</p>
-          <h2>改动与接口</h2>
-          <p class="lede">{{CHANGES_SUMMARY}}</p>
-        </header>
-        <div class="grid">{{CHANGES_CONTENT}}</div>
-        <div class="pager"><a href="#decisions">← 上一章</a><a href="#delivery">下一章：交付与风险 →</a></div>
-      </section>
-
-      <section class="page" id="delivery" data-page="delivery" hidden>
-        <header class="page-header">
-          <p class="eyebrow">05 / Delivery</p>
-          <h2>交付与风险</h2>
-          <p class="lede">{{DELIVERY_SUMMARY}}</p>
-        </header>
-        <div class="grid">{{DELIVERY_CONTENT}}</div>
-        <div class="pager"><a href="#changes">← 上一章</a><span></span></div>
-      </section>
+      <!-- Add one matching nav item and one page section per actual chapter. -->
+      {{CHAPTER_SECTIONS}}
     </main>
   </div>
 
