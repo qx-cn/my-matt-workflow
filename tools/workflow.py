@@ -64,7 +64,10 @@ def _discover_standards_sources(repo: Path, agent: str = "auto") -> list[str]:
         "CODING_STANDARDS.md",
     ]
     discovered = [path for path in candidates if (repo / path).is_file()]
-    if agent == "cursor":
+    if agent == "codex":
+        rule_dir = repo / ".agent" / "rules"
+        pattern = "*"
+    elif agent == "cursor":
         if (repo / ".cursorrules").is_file():
             discovered.append(".cursorrules")
         rule_dir = repo / ".cursor" / "rules"

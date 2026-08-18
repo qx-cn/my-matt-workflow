@@ -65,6 +65,13 @@ def _entry(repo: Path, source: Path, applies_by: str, scope: list[str]) -> dict[
     return {"source": source.relative_to(repo).as_posix(), "applies_by": applies_by, "scope": scope}
 
 
+def _files_under(directory: Path) -> list[Path]:
+    """Return regular files below a rule directory in stable order."""
+    if not directory.is_dir():
+        return []
+    return sorted(path for path in directory.rglob("*") if path.is_file())
+
+
 def resolve_rules(repo: Path, agent: str, paths: list[str]) -> list[dict[str, object]]:
     """Resolve shared and target-agent rules without mixing other agents' rules."""
     if agent not in EXECUTION_AGENTS:
@@ -77,6 +84,8 @@ def resolve_rules(repo: Path, agent: str, paths: list[str]) -> list[dict[str, ob
         if source.is_file():
             rules.append(_entry(root, source, "shared", ["**"]))
     if agent == "codex":
+        for source in _files_under(root / ".agent" / "rules"):
+            rules.append(_entry(root, source, "always", ["**"]))
         return rules
     if agent == "cursor":
         legacy = root / ".cursorrules"

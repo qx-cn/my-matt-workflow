@@ -6,7 +6,7 @@
 
 使用 `python3 tools/workflow.py resolve-rules --repo <repo> --agent <codex|cursor|claude> --path <影响路径>` 获取规则证据。解析器只读取该目标 Agent 的专属来源：
 
-- `codex`：共享规范与 Codex 的 `AGENTS*` 指令；
+- `codex`：共享规范、Codex 的 `AGENTS*` 指令与 `.agent/rules/**/*`；该目录中的普通文件按全局规则读取；
 - `cursor`：共享规范、`.cursorrules`、`.cursor/rules/**/*.mdc`；
 - `claude`：共享规范、`CLAUDE.md`、`.claude/CLAUDE.md`、`.claude/rules/**/*.md`。
 

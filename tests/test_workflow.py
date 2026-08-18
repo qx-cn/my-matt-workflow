@@ -68,6 +68,7 @@ class ProfileTests(unittest.TestCase):
         self.assertTrue(adapter.is_file())
         adapter_text = adapter.read_text()
         self.assertIn(".cursor/rules/**/*.mdc", adapter_text)
+        self.assertIn(".agent/rules/**/*", adapter_text)
         self.assertIn("execution_agent", adapter_text)
         self.assertIn("不得生成 `ready-for-agent`", adapter_text)
 
@@ -110,6 +111,37 @@ class ProfileTests(unittest.TestCase):
             self.assertIn(
                 '"detected_standards_sources": ["AGENTS.md", '
                 '".cursor/rules/backend.mdc"]',
+                result.stdout,
+            )
+
+    def test_setup_discovers_codex_agent_rule_candidates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "AGENTS.md").write_text("rules")
+            rules_dir = repo / ".agent" / "rules" / "backend"
+            rules_dir.mkdir(parents=True)
+            (rules_dir / "coding.mdc").write_text("coding rules")
+
+            workflow = Path(__file__).resolve().parents[1] / "tools/workflow.py"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(workflow),
+                    "setup",
+                    "--repo",
+                    str(repo),
+                    "--execution-agent",
+                    "codex",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn(
+                '"detected_standards_sources": ["AGENTS.md", '
+                '".agent/rules/backend/coding.mdc"]',
                 result.stdout,
             )
 
@@ -227,6 +259,9 @@ class ProfileTests(unittest.TestCase):
                 "---\nglobs: src/backend/**\nalwaysApply: false\n---\nbackend"
             )
             (cursor_rules / "manual.mdc").write_text("---\n---\nmanual")
+            codex_rules = repo / ".agent" / "rules" / "backend"
+            codex_rules.mkdir(parents=True)
+            (codex_rules / "coding.mdc").write_text("codex")
             claude_rules = repo / ".claude" / "rules"
             claude_rules.mkdir(parents=True)
             (claude_rules / "frontend.md").write_text(
@@ -239,7 +274,10 @@ class ProfileTests(unittest.TestCase):
                 [rule["source"] for rule in cursor],
             )
             codex = resolve_rules(repo, "codex", ["src/backend/api.py"])
-            self.assertEqual(["AGENTS.md"], [rule["source"] for rule in codex])
+            self.assertEqual(
+                ["AGENTS.md", ".agent/rules/backend/coding.mdc"],
+                [rule["source"] for rule in codex],
+            )
             claude = resolve_rules(repo, "claude", ["src/backend/api.py"])
             self.assertEqual(["AGENTS.md"], [rule["source"] for rule in claude])
 
