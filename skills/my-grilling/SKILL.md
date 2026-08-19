@@ -11,3 +11,5 @@ disable-model-invocation: true
 能通过探索环境（文件系统、工具等）找到的**事实**，应自行查证而非提问；但**决策**属于用户，应逐项提出并等待回答。
 
 在用户确认双方已达成共同理解前，不得执行该事项。
+
+确认后按[最终态写作](references/shared/final-state-writing.md)收束当前有效决定，供后续产物使用。

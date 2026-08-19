@@ -43,6 +43,41 @@ class SharedResourceTests(unittest.TestCase):
                 (other / "references/shared/humanizer.md").exists()
             )
 
+    def test_final_state_writing_is_bundled_only_for_consumers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        direct_consumers = (
+            "my-grilling",
+            "my-grill-with-docs",
+            "my-tech-design",
+            "my-to-spec",
+            "my-to-tickets",
+            "my-codebase-design",
+            "my-writing-great-skills",
+        )
+        consumers = direct_consumers + (
+            "my-grill-me",
+            "my-wayfinder",
+            "my-improve-codebase-architecture",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in consumers:
+                target = Path(tmp) / name
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, name, target)
+                reference = target / "references/shared/final-state-writing.md"
+                self.assertTrue(reference.is_file(), name)
+                self.assertIn("最终产物只陈述当前有效", reference.read_text())
+                if name in direct_consumers:
+                    body = (ROOT / "skills" / name / "SKILL.md").read_text()
+                    self.assertIn("references/shared/final-state-writing.md", body)
+
+            other = Path(tmp) / "my-install"
+            other.mkdir()
+            bundle_resources_for_skill(manifest, ROOT, "my-install", other)
+            self.assertFalse(
+                (other / "references/shared/final-state-writing.md").exists()
+            )
+
     def test_artifact_access_is_bundled_only_for_reader_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         with tempfile.TemporaryDirectory() as tmp:

@@ -4,7 +4,7 @@ description: 将当前对话整理为 Spec，并按项目配置保存或发布�
 disable-model-invocation: true
 ---
 
-本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**，只综合已知内容。
+本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
 
 读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略与生效的 `humanizer_policy`。配置不存在时先运行 `/my-setup`。
 
@@ -79,9 +79,9 @@ disable-model-invocation: true
 - execution_agent：
 - 未解决规则冲突：
 
-## 不在范围内
+## 范围边界（仅在需要防止误实现时保留）
 
-描述本 Spec 明确不做的内容。
+描述本 Spec 明确覆盖到哪里。
 
 ## 补充说明
 

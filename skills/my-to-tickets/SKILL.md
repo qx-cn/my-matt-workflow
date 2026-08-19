@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 ### 1. 收集上下文
 
-使用当前对话中已有的内容。若用户传入引用（Spec 路径、Issue 号或 URL），获取并阅读全文与评论。
+使用当前对话中已有的内容。若用户传入引用（Spec 路径、Issue 号或 URL），获取并阅读全文与评论。按[最终态写作](references/shared/final-state-writing.md)只将当前有效决定转成 Ticket。
 
 ### 2. 探索代码库（可选）
 

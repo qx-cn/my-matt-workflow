@@ -15,6 +15,22 @@
         "my-improve-codebase-architecture"
       ]
     },
+    "final-state-writing": {
+      "source": "resources/final-state-writing.md",
+      "release_path": "references/shared/final-state-writing.md",
+      "consumers": [
+        "my-grilling",
+        "my-grill-with-docs",
+        "my-tech-design",
+        "my-to-spec",
+        "my-to-tickets",
+        "my-codebase-design",
+        "my-writing-great-skills",
+        "my-grill-me",
+        "my-wayfinder",
+        "my-improve-codebase-architecture"
+      ]
+    },
     "adapter-composition": {
       "source": "resources/adapters/composition.md",
       "release_path": "references/shared/adapters/composition.md",
