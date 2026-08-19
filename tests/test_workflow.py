@@ -972,6 +972,16 @@ class ReleaseTests(unittest.TestCase):
         self.assertIn("comparison-card", body)
         self.assertIn("30～60 个中文字符", body)
         self.assertIn("实际渲染并检查每个章节", body)
+        self.assertIn("建立内部图形清单", body)
+        self.assertIn("先识别要表达的关系，再选择图形", body)
+        self.assertIn(
+            "凡是存在结构、关系、顺序、分支、状态或前后变化，默认用图表达",
+            body,
+        )
+        self.assertIn("不要用“正文已经说明”作为不画图的理由", body)
+        self.assertIn("方案总览必须包含一张", body)
+        self.assertIn("每个关键流程、复杂状态变化或跨模块协作", body)
+        self.assertIn("本来适合用图的关系没有滞留在长段落中", body)
         self.assertTrue(template.is_file())
         self.assertTrue(checker.is_file())
         self.assertIn("{{NAV_ITEMS}}", template_text)
