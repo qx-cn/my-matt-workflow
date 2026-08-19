@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Design"
+  short_description: "Review formed designs without rewriting them"
+  default_prompt: "Use $my-review-design to review this formed design without modifying it."
+policy:
+  allow_implicit_invocation: false

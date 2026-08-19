@@ -53,6 +53,7 @@ class SharedResourceTests(unittest.TestCase):
             "my-to-tickets",
             "my-codebase-design",
             "my-writing-great-skills",
+            "my-review-design",
         )
         consumers = direct_consumers + (
             "my-grill-me",
@@ -83,6 +84,7 @@ class SharedResourceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             for skill in (
                 "my-code-review",
+                "my-review-design",
                 "my-wayfinder",
                 "my-implement",
                 "my-domain-modeling",

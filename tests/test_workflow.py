@@ -1075,6 +1075,11 @@ class ReleaseTests(unittest.TestCase):
                 "不要改动 `STAGES` 标记上方的库",
             ],
             "my-edit-article": ["articles", "默认生成新稿", "原地修改"],
+            "my-review-design": [
+                "只评审，不修改文档，不重新展开访谈",
+                "references/shared/final-state-writing.md",
+                "未发现影响方案成立或实施的实质问题",
+            ],
         }
 
         for skill, required_text in expected.items():
@@ -1091,7 +1096,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(28, len(validate_skills(root)))
+        self.assertEqual(29, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
