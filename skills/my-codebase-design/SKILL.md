@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 设计**深模块**：把大量行为置于小接口之后，放在清晰的 Seam 上，并通过该接口测试。无论何时设计或重构代码，都使用这套语言和原则。目标是让调用者获得杠杆，让维护者获得局部性，并让所有人都能测试。
 
+输出设计时遵循[最终态写作](references/shared/final-state-writing.md)。
+
 ## 术语表
 
 严格使用这些术语——不要用“组件”、“服务”、“API”或“边界”替代它们。一致的语言正是关键所在。
@@ -102,12 +104,6 @@ disable-model-invocation: true
 - **Seam** 是 **Module** 的 **Interface** 所在之处。
 - **Adapter** 位于 **Seam**，并满足 **Interface**。
 - **Depth** 为调用者带来 **Leverage**，为维护者带来 **Locality**。
-
-## 被否决的表述
-
-- **Depth 是 Implementation 行数与 Interface 行数的比率**（Ousterhout）：这会鼓励给 Implementation 注水。我们改用“Depth 即 Leverage”。
-- **“Interface”是 TypeScript 的 `interface` 关键字或类的 public methods**：过于狭窄——这里的 Interface 包含调用者必须知道的每一项事实。
-- **“Boundary”**：与 DDD 的 bounded context 含义重叠。请说 **Seam** 或 **Interface**。
 
 ## 继续深入
 
