@@ -168,6 +168,45 @@
     .comparison-card ol { margin: 0; padding-left: 1.25em; }
     .comparison-card li + li { margin-top: 8px; }
 
+
+    .decision-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0 0 24px;
+    }
+    .decision-card {
+      min-width: 0;
+      padding: 17px 18px;
+      border: 1px solid;
+      border-radius: 12px;
+    }
+    .decision-card p { margin: 6px 0 0; }
+    .decision-card strong { display: block; line-height: 1.4; }
+    .decision-card code { overflow-wrap: anywhere; }
+    .decision-card.confirmed { border-color: #9bb0ff; background: var(--accent-soft); }
+    .decision-card.rule { border-color: #f5bd72; background: #fef0c7; }
+    .decision-card.risk { border-color: #f7a29b; background: #fee4e2; }
+    .decision-card .badge { color: white; }
+    .decision-card.confirmed .badge { background: var(--accent); }
+    .decision-card.rule .badge { background: var(--warn); }
+    .decision-card.risk .badge { background: var(--danger); }
+    .decision-index {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .decision-index a {
+      padding: 12px 14px;
+      border: 1px solid #c7d2fe;
+      border-radius: 9px;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .decision-index a:hover { border-color: var(--accent); color: var(--accent); }
+
     .review-notes {
       margin-top: 30px;
       padding: 18px 20px;
@@ -207,6 +246,7 @@
       main { margin-left: 0; padding: 28px 18px; }
       .span-8, .span-6, .span-4 { grid-column: span 12; }
       .comparison { grid-template-columns: 1fr; }
+      .decision-strip, .decision-index { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -233,7 +273,9 @@
           <h2>方案总览</h2>
           <p class="lede">{{ONE_SENTENCE_CONCLUSION}}</p>
         </header>
+        {{OVERVIEW_DECISION_STRIP}}
         <div class="grid">
+          {{DECISION_INDEX}}
           <article class="card span-4"><h3>为什么改</h3><p>{{WHY}}</p></article>
           <article class="card span-4"><h3>怎么改</h3><p>{{HOW}}</p></article>
           <article class="card span-4 callout warn"><h3>最大风险</h3><p>{{TOP_RISK}}</p></article>
