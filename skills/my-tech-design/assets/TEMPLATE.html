@@ -71,6 +71,16 @@
       color: #e5e7eb;
       cursor: pointer;
     }
+    .sidebar-actions { display: grid; gap: 9px; }
+    .nav a { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .note-indicator {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, .16);
+    }
 
     main { margin-left: var(--sidebar); padding: 48px; }
     .page { max-width: 1120px; margin: 0 auto; }
@@ -158,6 +168,39 @@
     .comparison-card ol { margin: 0; padding-left: 1.25em; }
     .comparison-card li + li { margin-top: 8px; }
 
+    .review-notes {
+      margin-top: 30px;
+      padding: 18px 20px;
+      border: 1px solid #c7d2fe;
+      border-radius: 12px;
+      background: #f8faff;
+    }
+    .review-notes h3 { margin: 0 0 5px; font-size: 16px; }
+    .review-notes p { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .review-notes textarea {
+      display: block;
+      width: 100%;
+      min-height: 104px;
+      padding: 10px 12px;
+      resize: vertical;
+      border: 1px solid #b9c4d8;
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      font: inherit;
+    }
+    .review-notes textarea:focus { outline: 2px solid #a5b4fc; outline-offset: 1px; }
+    .review-notes-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+    .review-notes button {
+      padding: 7px 11px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+    .review-notes-status { color: var(--muted); font-size: 13px; }
+
     @media (max-width: 860px) {
       .sidebar { position: static; width: auto; }
       .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -179,6 +222,7 @@
       </nav>
       <div class="sidebar-actions">
         <button type="button" id="expand-all">展开细节</button>
+        <button type="button" id="export-notes">导出评审注释</button>
       </div>
     </aside>
 
@@ -220,6 +264,68 @@
       const pages = [...document.querySelectorAll('[data-page]')];
       const links = [...document.querySelectorAll('[data-page-link]')];
       const ids = pages.map((page) => page.id);
+      const storageKey = `my-tech-design:review-notes:${location.pathname}:${document.title}`;
+      let notes = {};
+
+      try { notes = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (_) { notes = {}; }
+
+      function pageTitle(page) {
+        return page.querySelector('h2')?.textContent.trim() || page.id;
+      }
+
+      function saveNotes() {
+        localStorage.setItem(storageKey, JSON.stringify(notes));
+        links.forEach((link) => {
+          const hasNote = Boolean(notes[link.dataset.pageLink]?.trim());
+          link.querySelector('.note-indicator')?.remove();
+          if (hasNote) {
+            const indicator = document.createElement('span');
+            indicator.className = 'note-indicator';
+            indicator.title = '有评审注释';
+            indicator.setAttribute('aria-label', '有评审注释');
+            link.append(indicator);
+          }
+        });
+      }
+
+      pages.forEach((page) => {
+        const section = document.createElement('section');
+        section.className = 'review-notes';
+        section.innerHTML = `
+          <h3>本页评审注释</h3>
+          <p>记录本页需要讨论、补充或调整的内容；注释仅保存在当前浏览器。</p>
+          <textarea aria-label="${pageTitle(page)} 的评审注释" placeholder="例如：补充异常场景的处理策略；明确上线灰度条件。"></textarea>
+          <div class="review-notes-footer">
+            <button type="button">保存注释</button>
+            <span class="review-notes-status" aria-live="polite"></span>
+          </div>`;
+        const textarea = section.querySelector('textarea');
+        const status = section.querySelector('.review-notes-status');
+        textarea.value = notes[page.id] || '';
+        const persist = () => {
+          notes[page.id] = textarea.value.trim();
+          saveNotes();
+          status.textContent = '已保存到本地';
+        };
+        section.querySelector('button').addEventListener('click', persist);
+        textarea.addEventListener('input', persist);
+        page.append(section);
+      });
+
+      document.getElementById('export-notes').addEventListener('click', () => {
+        const content = pages
+          .filter((page) => notes[page.id]?.trim())
+          .map((page) => `## ${pageTitle(page)}\n\n${notes[page.id].trim()}`)
+          .join('\n\n');
+        const blob = new Blob([content || '暂无评审注释。\n'], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'design-review-notes.md';
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+      saveNotes();
 
       function showPage() {
         const requested = location.hash.slice(1);
