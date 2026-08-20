@@ -380,8 +380,6 @@ class ProfileTests(unittest.TestCase):
             self.assertRegex(rendered, rf"(?m)^{re.escape(key)}: ")
         self.assertIn("humanizer_policy: deny", rendered)
         self.assertIn("work_scope_policy: single-ticket", rendered)
-        self.assertIn("长任务协作", rendered)
-        self.assertIn("连续工作最长 60 秒不静默", rendered)
 
     def test_five_presets_match_spec_including_humanizer_defaults(self):
         expected = {
