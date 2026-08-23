@@ -623,20 +623,117 @@ class GitIgnoreRepositoryTests(unittest.TestCase):
             self.assertFalse((project / ".gitignore").exists())
 
 
+class RefreshProjectTests(unittest.TestCase):
+    def _run(self, *arguments: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(Path(__file__).resolve().parents[1] / "tools/workflow.py"),
+                *arguments,
+            ],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    def test_setup_previews_and_refresh_migrates_artifacts_without_gitignore_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+            gitignore = repo / ".gitignore"
+            gitignore.write_text(".cache/\n")
+            profile = repo / ".agent" / "matt-workflow.md"
+            legacy = repo / ".agent" / "work" / "checkout" / "spec.md"
+            profile.parent.mkdir(parents=True)
+            profile.write_text(render_profile({"schema_version": 1, "task_backend": "local"}))
+            legacy.parent.mkdir(parents=True)
+            legacy.write_text("# Old spec\n")
+
+            preview = self._run("setup", "--repo", str(repo))
+
+            self.assertEqual(0, preview.returncode, preview.stderr)
+            self.assertIn('"from": ".agent/work/checkout/spec.md"', preview.stdout)
+            self.assertTrue(legacy.exists())
+            self.assertEqual(".cache/\n", gitignore.read_text())
+
+            refreshed = self._run(
+                "refresh-project",
+                "--repo",
+                str(repo),
+                "--migrate-work-artifacts",
+            )
+
+            self.assertEqual(0, refreshed.returncode, refreshed.stderr)
+            self.assertFalse(legacy.exists())
+            self.assertTrue(
+                (repo / ".agent/work/checkout/specs/specs-checkout-01.md").is_file()
+            )
+            self.assertEqual(".cache/\n", gitignore.read_text())
+            nested_git = repo / ".agent" / ".git"
+            self.assertTrue(nested_git.exists())
+            remote = subprocess.run(
+                ["git", "remote"], cwd=repo / ".agent", capture_output=True, text=True, check=True
+            )
+            self.assertEqual("", remote.stdout)
+
+    def test_refresh_refuses_tracked_agent_directory_without_writing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+            profile = repo / ".agent" / "matt-workflow.md"
+            profile.parent.mkdir(parents=True)
+            profile.write_text("tracked profile\n")
+            subprocess.run(["git", "add", ".agent/matt-workflow.md"], cwd=repo, check=True)
+
+            result = self._run("refresh-project", "--repo", str(repo))
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertIn("已跟踪", result.stderr)
+            self.assertEqual("tracked profile\n", profile.read_text())
+            self.assertFalse((repo / ".agent/.git").exists())
+
+    def test_refresh_rewrites_only_explicitly_confirmed_candidate_links(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            profile = repo / ".agent" / "matt-workflow.md"
+            handoff = repo / ".agent" / "handoffs" / "checkout" / "2026-07-29.md"
+            profile.parent.mkdir(parents=True)
+            profile.write_text(render_profile({"schema_version": 1, "task_backend": "local"}))
+            handoff.parent.mkdir(parents=True)
+            handoff.write_text("[workflow](../../tools/workflow.py)\n")
+            tool = repo / "tools" / "workflow.py"
+            tool.parent.mkdir()
+            tool.write_text("#!/usr/bin/env python3\n")
+
+            result = self._run(
+                "refresh-project",
+                "--repo",
+                str(repo),
+                "--migrate-work-artifacts",
+                "--confirm-candidate-link-repair",
+                ".agent/handoffs/checkout/2026-07-29.md",
+                "../../tools/workflow.py",
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            migrated = repo / ".agent/work/checkout/handoffs/handoffs-checkout-20260729.md"
+            self.assertEqual("[workflow](../../../../tools/workflow.py)\n", migrated.read_text())
+
+
 class GitIgnoreTests(unittest.TestCase):
-    def test_adds_personal_directories_when_untracked(self):
+    def test_never_modifies_gitignore_when_agent_directory_is_untracked(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
             subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
 
+            (repo / ".gitignore").write_text(".cache/\n")
+
             added, conflicts = apply_personal_ignores(repo)
 
-            self.assertEqual([".agent/"], added)
+            self.assertEqual([], added)
             self.assertEqual([], conflicts)
-            self.assertEqual(
-                ".agent/\n",
-                (repo / ".gitignore").read_text(),
-            )
+            self.assertEqual(".cache/\n", (repo / ".gitignore").read_text())
 
     def test_does_not_ignore_directory_with_tracked_team_file(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -648,7 +745,7 @@ class GitIgnoreTests(unittest.TestCase):
 
             added, conflicts = apply_personal_ignores(repo)
 
-            self.assertEqual([".agent/"], added)
+            self.assertEqual([], added)
             self.assertEqual([], conflicts)
 
 

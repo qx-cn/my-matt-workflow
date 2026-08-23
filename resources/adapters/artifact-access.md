@@ -1,5 +1,5 @@
 # 工作产物访问适配
 
-工作产物位于 `.agent/work/<topic>/<type>/`。`.agent/` 保持 Git 忽略，默认 `@` 补全不承担发现或读取这些产物的职责；reader Skill 直接读这些路径，不要在写入侧复制访问逻辑。
+工作产物位于 `.agent/work/<topic>/<type>/`。`.agent/` 是个人嵌套 Git 工作区，主仓库不应为它修改 `.gitignore`；reader Skill 直接读这些路径，不要在写入侧复制访问逻辑。
 
 写入前只确认目标 topic、type 与文件名约定；不要把临时访谈、未确认草稿或运行时策略复制进上游核心流程。

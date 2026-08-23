@@ -17,12 +17,17 @@ from workflow_lib.installer import install_release
 from workflow_lib.check import CheckError, run_check
 from workflow_lib.evals import EvalError, run_scenario, validate_evals, validate_scenario_evidence
 from workflow_lib.profile import (
-    apply_personal_ignores,
     get_policy_preset,
+    is_git_repository,
     merge_profile,
     parse_profile,
     preset_cli_choices,
     render_profile,
+)
+from workflow_lib.work_artifacts import (
+    WorkArtifactError,
+    analyze_work_artifacts,
+    apply_work_artifact_migration,
 )
 from workflow_lib.release import build_release, release_matches_source
 from workflow_lib.smoke_registry import (
@@ -111,10 +116,54 @@ def _installed_agent(agent_home: str | None) -> str | None:
     return value if value in EXECUTION_AGENTS else None
 
 
+def _agent_directory_is_tracked(repo: Path) -> bool:
+    """Whether the parent repository owns files below `.agent/`."""
+    if not is_git_repository(repo):
+        return False
+    result = subprocess.run(
+        ["git", "ls-files", "--", ".agent"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return bool(result.stdout.strip())
+
+
+def _initialize_agent_repository(repo: Path) -> dict[str, object]:
+    """Create the private nested repository without touching parent Git config."""
+    if not is_git_repository(repo):
+        return {"git_project": False, "initialized": False, "has_remote": False}
+    agent_dir = repo / ".agent"
+    nested_git = agent_dir / ".git"
+    initialized = False
+    if not nested_git.exists():
+        subprocess.run(
+            ["git", "init", "--initial-branch=main", ".agent"],
+            cwd=repo,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        initialized = True
+    remotes = subprocess.run(
+        ["git", "remote"], cwd=agent_dir, check=True, capture_output=True, text=True
+    ).stdout.splitlines()
+    return {"git_project": True, "initialized": initialized, "has_remote": bool(remotes)}
+
+
 def command_setup(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve()
     profile_path = repo / ".agent" / "matt-workflow.md"
     has_existing_profile = profile_path.exists()
+    if args.confirm_candidate_link_repair and not args.migrate_work_artifacts:
+        raise SystemExit("候选链接修复需要同时指定 --migrate-work-artifacts")
+    if args.migrate_work_artifacts and not args.apply:
+        raise SystemExit("迁移工作产物需要 --apply 作为明确确认")
+    if args.migrate_work_artifacts and not has_existing_profile:
+        raise SystemExit("仅已配置项目可以迁移工作产物")
+    if args.apply and _agent_directory_is_tracked(repo):
+        raise SystemExit("主仓库已跟踪 .agent/；拒绝初始化、迁移或写入配置")
     existing: dict = {}
     notes = "# 项目工作流说明\n\n仓库规则始终优先。"
     if has_existing_profile:
@@ -172,13 +221,26 @@ def command_setup(args: argparse.Namespace) -> None:
     )
     rendered = render_profile(config, notes)
     print(rendered)
+    work_artifacts = analyze_work_artifacts(repo) if has_existing_profile else None
+    if work_artifacts is not None:
+        print(json.dumps(work_artifacts, ensure_ascii=False, indent=2))
     if not args.apply:
         return
     agent_dir = repo / ".agent"
     agent_dir.mkdir(exist_ok=True)
     (agent_dir / "matt-workflow.md").write_text(rendered)
-    added, conflicts = apply_personal_ignores(repo)
-    print(json.dumps({"added": added, "conflicts": conflicts}, ensure_ascii=False))
+    if args.migrate_work_artifacts:
+        try:
+            apply_work_artifact_migration(
+                repo,
+                confirmed_candidate_link_repairs={
+                    tuple(candidate) for candidate in args.confirm_candidate_link_repair
+                },
+            )
+        except WorkArtifactError as exc:
+            raise SystemExit(str(exc)) from exc
+        print("MIGRATED work artifacts")
+    print(json.dumps(_initialize_agent_repository(repo), ensure_ascii=False))
 
 
 def command_validate(_: argparse.Namespace) -> None:
@@ -350,6 +412,13 @@ def command_deploy(args: argparse.Namespace) -> None:
     command_install(argparse.Namespace(release=None, target=args.target, agent_home=args.agent_home))
 
 
+def command_refresh_project(args: argparse.Namespace) -> None:
+    """Apply a confirmed project refresh without repeating setup switches."""
+    args.refresh = True
+    args.apply = True
+    command_setup(args)
+
+
 def _release_ids_referenced_by(agent_homes: set[Path]) -> set[str]:
     referenced = {_current_release().name}
     for agent_home in agent_homes:
@@ -457,7 +526,47 @@ def parser() -> argparse.ArgumentParser:
     setup.add_argument("--domain-source", action="append")
     setup.add_argument("--apply", action="store_true")
     setup.add_argument("--refresh", action="store_true")
+    setup.add_argument("--migrate-work-artifacts", action="store_true")
+    setup.add_argument(
+        "--confirm-candidate-link-repair",
+        action="append",
+        nargs=2,
+        metavar=("SOURCE", "LINK"),
+        default=[],
+    )
     setup.set_defaults(func=command_setup)
+
+    refresh_project = sub.add_parser("refresh-project")
+    refresh_project.add_argument("--repo", default=".")
+    refresh_project.add_argument("--preset", choices=preset_cli_choices(), metavar="PRESET")
+    refresh_project.add_argument(
+        "--task-backend", choices=["local", "external", "project-docs", "none"]
+    )
+    refresh_project.add_argument("--base-branch")
+    refresh_project.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
+    refresh_project.add_argument("--commit-policy", choices=["confirm", "allow", "deny"])
+    refresh_project.add_argument("--external-write-policy", choices=["confirm", "allow", "deny"])
+    refresh_project.add_argument("--docs-writeback", choices=["confirm", "allow", "deny"])
+    refresh_project.add_argument("--humanizer-policy", choices=["confirm", "allow", "deny"])
+    refresh_project.add_argument("--composition-policy", choices=["manual", "automatic"])
+    refresh_project.add_argument(
+        "--work-scope-policy", choices=["single-ticket", "ready-frontier", "approved-plan"]
+    )
+    refresh_project.add_argument("--decision-policy", choices=["ask", "autonomous", "halt"])
+    refresh_project.add_argument("--execution-agent", choices=["auto", *sorted(EXECUTION_AGENTS)])
+    refresh_project.add_argument("--agent-home")
+    refresh_project.add_argument("--test-command", action="append")
+    refresh_project.add_argument("--standards-source", action="append")
+    refresh_project.add_argument("--domain-source", action="append")
+    refresh_project.add_argument("--migrate-work-artifacts", action="store_true")
+    refresh_project.add_argument(
+        "--confirm-candidate-link-repair",
+        action="append",
+        nargs=2,
+        metavar=("SOURCE", "LINK"),
+        default=[],
+    )
+    refresh_project.set_defaults(func=command_refresh_project)
 
     validate = sub.add_parser("validate")
     validate.set_defaults(func=command_validate)

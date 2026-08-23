@@ -169,11 +169,6 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
     },
 }
 
-# Only workflow artefacts belong in a repository. Agent configuration directories
-# are often checked in by teams, so they must never be added to .gitignore here.
-PERSONAL_IGNORES = (".agent/",)
-
-
 def _is_empty(value: Any) -> bool:
     return value is None or value == ""
 
@@ -435,17 +430,6 @@ def merge_profile(
     return merged
 
 
-def _tracked_under(repo: Path, directory: str) -> bool:
-    result = subprocess.run(
-        ["git", "ls-files", "--", directory],
-        cwd=repo,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return bool(result.stdout.strip())
-
-
 def is_git_repository(repo: Path) -> bool:
     """Return whether the project is backed by a Git work tree."""
     result = subprocess.run(
@@ -458,34 +442,6 @@ def is_git_repository(repo: Path) -> bool:
 
 
 def apply_personal_ignores(repo: Path) -> tuple[list[str], list[str]]:
-    """Append safe personal ignores without hiding tracked team files.
-
-    Non-Git projects still use `.agent/` as their workflow directory, but have
-    no `.gitignore` to maintain.
-    """
-    if not is_git_repository(repo):
-        return [], []
-
-    gitignore = repo / ".gitignore"
-    existing_text = gitignore.read_text() if gitignore.exists() else ""
-    existing = {line.strip() for line in existing_text.splitlines()}
-    added: list[str] = []
-    conflicts: list[str] = []
-
-    for entry in PERSONAL_IGNORES:
-        if entry in existing:
-            continue
-        if _tracked_under(repo, entry.rstrip("/")):
-            conflicts.append(entry)
-            continue
-        added.append(entry)
-
-    if added:
-        prefix = existing_text
-        if prefix and not prefix.endswith("\n"):
-            prefix += "\n"
-        gitignore.write_text(prefix + "".join(f"{entry}\n" for entry in added))
-    elif not gitignore.exists():
-        gitignore.write_text("")
-
-    return added, conflicts
+    """Compatibility shim: workflow setup never edits the parent `.gitignore`."""
+    del repo
+    return [], []
