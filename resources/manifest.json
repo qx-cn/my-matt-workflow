@@ -57,7 +57,19 @@
       "source": "resources/adapters/work-scope.md",
       "release_path": "references/shared/adapters/work-scope.md",
       "consumers": [
-        "my-implement"
+        "my-implement",
+        "my-tdd"
+      ]
+    },
+    "adapter-write-actions": {
+      "source": "resources/adapters/write-actions.md",
+      "release_path": "references/shared/adapters/write-actions.md",
+      "consumers": [
+        "my-implement",
+        "my-to-spec",
+        "my-to-tickets",
+        "my-wayfinder",
+        "my-resolving-merge-conflicts"
       ]
     },
     "adapter-artifact-access": {

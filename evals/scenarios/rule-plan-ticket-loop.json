@@ -19,8 +19,8 @@
     "scenario": "rule-plan-ticket-loop",
     "sources": [
       {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:7c8312faceeba3c1f6fb52e198cb815d831a48e759bb7a8bd600b877cb58189f"},
-      {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:685b9b9996c284833a06d947d9a51588e64110dbdca199a68ded0f2e2ba2614d"},
-      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:df752ace2def6082983c4510c20201e25ec0bdbbaf4ec2809bbb254a625879b4"}
+      {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:7af59e38b90cb3c80d3ba9fe63d5a7518babbe8c4f90084f48bdcf5108c3098d"},
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:27c469d2155666f3e16a175e242a421459bbf1d714875b29d1277267cca7e2dd"}
     ]
   }
 }

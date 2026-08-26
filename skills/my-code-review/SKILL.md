@@ -18,7 +18,7 @@ disable-model-invocation: true
 
 ### 1. 固定基线
 
-用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`；仍无法确定时按 `decision_policy` 询问、自治判断并记录证据，或停止。
+用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`；仍无法确定时按 `decision_policy` 询问、自治判断并记录证据，或停止。作为 `my-implement` 的阶段时，将暂停原因交回宿主的 Ticket transition；不得因审查已结束而终止可继续的 workflow。
 
 只记录一次 diff 命令：`git diff <fixed-point>...HEAD`（三点比较，因此以 merge-base 为基准）；同时记录 `git log <fixed-point>..HEAD --oneline`。
 

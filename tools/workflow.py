@@ -17,6 +17,8 @@ from workflow_lib.installer import install_release
 from workflow_lib.check import CheckError, run_check
 from workflow_lib.evals import EvalError, run_scenario, validate_evals, validate_scenario_evidence
 from workflow_lib.profile import (
+    ProfileError,
+    effective_profile,
     get_policy_preset,
     is_git_repository,
     merge_profile,
@@ -37,7 +39,9 @@ from workflow_lib.smoke_registry import (
 )
 from workflow_lib.validator import ValidationError, validate_repository
 from workflow_lib.rules import EXECUTION_AGENTS, RuleError, resolve_rules
-from workflow_lib.tickets import TicketError, validate_ready_ticket
+from workflow_lib.tickets import TicketError, implementation_ticket_ids, validate_ready_ticket
+from workflow_lib.transitions import ticket_transition
+from workflow_lib.write_gates import resolve_write_gate
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -391,6 +395,58 @@ def command_validate_ticket(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False))
 
 
+def command_next_ticket(args: argparse.Namespace) -> None:
+    """Return the next local Ticket action for an already-completed Ticket."""
+    repo = Path(args.repo).resolve()
+    if not args.tickets_dir and not args.feature:
+        raise SystemExit("next-ticket 需要 --tickets-dir 或 --feature")
+    tickets_dir = Path(args.tickets_dir).resolve() if args.tickets_dir else repo / ".agent" / "work" / args.feature / "tickets"
+    try:
+        profile, _ = parse_profile((repo / ".agent" / "matt-workflow.md").read_text())
+        effective = effective_profile(profile)
+        allowed_ids = set(args.allowed_id) if args.allowed_id else None
+        transition = ticket_transition(
+            tickets_dir,
+            work_scope_policy=effective["work_scope_policy"],
+            allowed_ids=allowed_ids,
+            blocker=args.blocker,
+        )
+    except (OSError, ProfileError, TicketError) as exc:
+        raise SystemExit(str(exc)) from exc
+    report = {"status": transition.status, "reason": transition.reason}
+    if transition.next_ticket:
+        report["next_ticket"] = {
+            "id": transition.next_ticket.identifier,
+            "path": str(transition.next_ticket.path),
+            "sequence": transition.next_ticket.sequence,
+        }
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_write_gate(args: argparse.Namespace) -> None:
+    repo = Path(args.repo).resolve()
+    try:
+        profile, _ = parse_profile((repo / ".agent" / "matt-workflow.md").read_text())
+        gate = resolve_write_gate(
+            effective_profile(profile), kind=args.kind, approved_scope=args.approved_scope
+        )
+    except (OSError, ProfileError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(gate.__dict__, ensure_ascii=False, sort_keys=True))
+
+
+def command_ticket_scope(args: argparse.Namespace) -> None:
+    repo = Path(args.repo).resolve()
+    if not args.tickets_dir and not args.feature:
+        raise SystemExit("ticket-scope 需要 --tickets-dir 或 --feature")
+    tickets_dir = Path(args.tickets_dir).resolve() if args.tickets_dir else repo / ".agent" / "work" / args.feature / "tickets"
+    try:
+        identifiers = implementation_ticket_ids(tickets_dir)
+    except TicketError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps({"ticket_ids": identifiers}, ensure_ascii=False, sort_keys=True))
+
+
 def command_deploy(args: argparse.Namespace) -> None:
     """Install the current content, creating a release only when it changed."""
     command_validate(args)
@@ -604,6 +660,26 @@ def parser() -> argparse.ArgumentParser:
     validate_ticket = sub.add_parser("validate-ticket")
     validate_ticket.add_argument("path")
     validate_ticket.set_defaults(func=command_validate_ticket)
+
+    next_ticket = sub.add_parser("next-ticket")
+    next_ticket.add_argument("--repo", default=".")
+    next_ticket.add_argument("--feature")
+    next_ticket.add_argument("--tickets-dir")
+    next_ticket.add_argument("--allowed-id", action="append", default=[])
+    next_ticket.add_argument("--blocker")
+    next_ticket.set_defaults(func=command_next_ticket)
+
+    write_gate = sub.add_parser("write-gate")
+    write_gate.add_argument("--repo", default=".")
+    write_gate.add_argument("--kind", choices=["branch", "commit", "external", "docs"], required=True)
+    write_gate.add_argument("--approved-scope", action="store_true")
+    write_gate.set_defaults(func=command_write_gate)
+
+    ticket_scope = sub.add_parser("ticket-scope")
+    ticket_scope.add_argument("--repo", default=".")
+    ticket_scope.add_argument("--feature")
+    ticket_scope.add_argument("--tickets-dir")
+    ticket_scope.set_defaults(func=command_ticket_scope)
 
     deploy = sub.add_parser("deploy")
     deploy.add_argument("--release-id")

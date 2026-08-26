@@ -153,8 +153,8 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
     },
     "work_scope_policy": {
         "single-ticket": "完成当前 Ticket 后停止",
-        "ready-frontier": "可连做阻塞者已完成的 Ticket",
-        "approved-plan": "可按依赖完成同一已批准计划的全部 Ticket",
+        "ready-frontier": "完成后自动选择当前 feature 的下一个就绪 frontier Ticket",
+        "approved-plan": "按启动时批准的 Ticket 快照完成同一计划的依赖链",
     },
     "decision_policy": {
         "ask": "遇到决策时询问",

@@ -34,6 +34,111 @@ from tools.workflow_lib.profile import (
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
 from tools.workflow_lib.rules import resolve_rules
 from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
+from tools.workflow_lib.transitions import ticket_transition
+from tools.workflow_lib.write_gates import resolve_write_gate
+
+
+class TicketTransitionTests(unittest.TestCase):
+    def _ticket(
+        self, directory: Path, identifier: str, sequence: int, *, status: str = "ready-for-agent", blocked_by: str = "[]"
+    ) -> None:
+        (directory / f"tickets-feature-{sequence:02d}-{identifier}.md").write_text(
+            "---\n"
+            f"id: {identifier}\n"
+            "title: Test ticket\n"
+            "ticket_kind: implementation\n"
+            f"status: {status}\n"
+            f"blocked_by: {blocked_by}\n"
+            "claimed_by:\n"
+            "rule_sources: [AGENTS.md]\n"
+            "rule_scope: [src]\n"
+            "rule_constraints: [test]\n"
+            "rule_conflicts: []\n"
+            "execution_agent: codex\n"
+            f"sequence: {sequence}\n"
+            "---\n\n## 验收标准\n\n- [ ] works\n"
+        )
+
+    def test_semi_auto_selects_stable_ready_frontier(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self._ticket(directory, "feature-b", 2)
+            self._ticket(directory, "feature-a", 2)
+            result = ticket_transition(directory, work_scope_policy="ready-frontier")
+            self.assertEqual("continue", result.status)
+            self.assertEqual("feature-a", result.next_ticket.identifier)
+
+    def test_semi_auto_pauses_at_critical_decision(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = ticket_transition(
+                Path(tmp), work_scope_policy="ready-frontier", blocker="critical-tdd-seam"
+            )
+            self.assertEqual(("pause", "critical-tdd-seam"), (result.status, result.reason))
+
+    def test_full_auto_uses_initial_scope_and_dependency_order(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self._ticket(directory, "feature-a", 1, status="complete")
+            self._ticket(directory, "feature-b", 2, blocked_by='["feature-a"]')
+            self._ticket(directory, "feature-later", 3)
+            result = ticket_transition(
+                directory,
+                work_scope_policy="approved-plan",
+                allowed_ids={"feature-a", "feature-b"},
+            )
+            self.assertEqual("continue", result.status)
+            self.assertEqual("feature-b", result.next_ticket.identifier)
+
+    def test_full_auto_reports_hard_blocker(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = ticket_transition(
+                Path(tmp), work_scope_policy="approved-plan", blocker="new-external-authorization"
+            )
+            self.assertEqual(("pause", "new-external-authorization"), (result.status, result.reason))
+
+    def test_single_ticket_stops_even_with_ready_candidate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self._ticket(directory, "feature-b", 2)
+            result = ticket_transition(directory, work_scope_policy="single-ticket")
+            self.assertEqual(("complete", "single-ticket"), (result.status, result.reason))
+
+    def test_next_ticket_cli_reads_project_profile(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            tickets = repo / ".agent" / "work" / "feature" / "tickets"
+            tickets.mkdir(parents=True)
+            (repo / ".agent" / "matt-workflow.md").write_text(
+                render_profile({"schema_version": 1, "task_backend": "local", "work_scope_policy": "ready-frontier"})
+            )
+            self._ticket(tickets, "feature-b", 2)
+            result = subprocess.run(
+                [sys.executable, "tools/workflow.py", "next-ticket", "--repo", str(repo), "--feature", "feature"],
+                cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual("feature-b", json.loads(result.stdout)["next_ticket"]["id"])
+            scope = subprocess.run(
+                [sys.executable, "tools/workflow.py", "ticket-scope", "--repo", str(repo), "--feature", "feature"],
+                cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(0, scope.returncode, scope.stderr)
+            self.assertEqual(["feature-b"], json.loads(scope.stdout)["ticket_ids"])
+
+
+class WriteGateTests(unittest.TestCase):
+    def test_every_configured_write_policy_has_a_runtime_gate(self):
+        profile = {
+            "branch_policy": "allow",
+            "commit_policy": "confirm",
+            "external_write_policy": "allow",
+            "docs_writeback": "deny",
+        }
+        self.assertEqual("allow", resolve_write_gate(profile, kind="branch").status)
+        self.assertEqual("confirm", resolve_write_gate(profile, kind="commit").status)
+        self.assertEqual("pause", resolve_write_gate(profile, kind="external").status)
+        self.assertEqual("allow", resolve_write_gate(profile, kind="external", approved_scope=True).status)
+        self.assertEqual("deny", resolve_write_gate(profile, kind="docs").status)
 
 
 class ProfileTests(unittest.TestCase):
@@ -151,10 +256,10 @@ class ProfileTests(unittest.TestCase):
             "my-implement": {
                 "core": [
                     "实施用户在 Spec 或 Ticket 中描述的工作。",
-                    "在预先约定的 seam 上进入 `my-tdd` 阶段。",
+                    "在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段",
                     "定期运行类型检查和单个测试文件；结束时运行一次完整测试套件。",
                     "完成后进入 `my-code-review` 阶段审查工作。",
-                    "将工作提交到当前分支。",
+                    "按[写操作 Gate]",
                 ],
                 "adapters": [
                     "ticket-selection.md",
