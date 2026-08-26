@@ -1,0 +1,6 @@
+interface:
+  display_name: "Test Report"
+  short_description: "Create evidence-based Markdown test reports"
+  default_prompt: "Use $my-test-report to create a structured, evidence-based test report for this work."
+policy:
+  allow_implicit_invocation: false
