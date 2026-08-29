@@ -2,6 +2,8 @@
 
 个人使用的 Matt Pocock 工作流适配包。
 
+支持 Python 3.10+。
+
 ## 原则
 
 - Matt 原生 Skills 只用于升级比较，不作为运行时依赖。
@@ -29,7 +31,9 @@ python3 tools/workflow.py resolve-rules --repo <project> --agent codex
 python3 tools/workflow.py validate-ticket <ticket-path>
 ```
 
-`workflow.py check` 是源树的权威本地检查：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试，并在存在 `current.json` 时验证当前 release 与源树一致。尚未构建首个 release 时会明确报告 release 验证不适用；`build` 会在创建 release 前运行同一套完整检查，只跳过旧 current release 的一致性比较，以便用新 release 替换已过期的旧 release。
+`workflow.py check` 是源树的权威本地检查：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试；存在 `current.json` 时还会先校验 release 的校验和、缺失文件和额外文件，再比较其与源树是否一致。尚未构建首个 release 时会明确报告 release 验证不适用。
+
+`build` 与 `deploy` 都会先运行同一套完整源树门禁，但跳过旧 `current.json` 的一致性比较，因此可用新 release 替换已过期或损坏的 current release。`build` 仅构建并更新 current 指针；`deploy` 会在当前 release 完整且与源树一致时复用它，否则保留损坏 release 供排查、构建新 release 后再安装。
 
 项目首次使用时手动运行 `/my-setup`。日常通过 `/my-ask-matt` 查询下一条命令，再手动调用推荐的 `/my-*`。
 
