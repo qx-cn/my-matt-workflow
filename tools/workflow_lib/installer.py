@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -13,6 +15,48 @@ from uuid import uuid4
 
 class InstallError(RuntimeError):
     """Raised when a release cannot be verified or installed safely."""
+
+
+_MANAGED_SKILL = re.compile(r"my-[a-z0-9-]+")
+
+
+def _atomic_json_write(path: Path, value: dict) -> None:
+    """Persist a recovery record before any user Skill is moved."""
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=path.parent,
+            prefix=f".{path.name}.", suffix=".tmp", delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            json.dump(value, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None and temporary.exists():
+            temporary.unlink()
+
+
+def _validated_journal(journal: object) -> tuple[int, list[str], set[str]]:
+    if not isinstance(journal, dict):
+        raise InstallError("安装事务日志损坏，需要人工检查")
+    version = journal.get("version", 1)
+    if version not in {1, 2}:
+        raise InstallError("安装事务日志版本无效，需要人工检查")
+    skills = journal.get("skills")
+    old_present = journal.get("old_present")
+    if (
+        not isinstance(skills, list)
+        or not isinstance(old_present, list)
+        or any(not isinstance(name, str) or not _MANAGED_SKILL.fullmatch(name) for name in skills)
+        or len(set(skills)) != len(skills)
+        or any(not isinstance(name, str) for name in old_present)
+        or not set(old_present).issubset(skills)
+    ):
+        raise InstallError("安装事务日志包含非法 Skill，需要人工检查")
+    return version, sorted(skills), set(old_present)
 
 
 def sha256_file(path: Path) -> str:
@@ -137,27 +181,53 @@ def recover_interrupted_install(
     journal_path = transaction / "journal.json"
     if not journal_path.exists():
         if transaction.exists():
-            shutil.rmtree(transaction)
+            raise InstallError("安装事务日志缺失，需要人工检查")
         return
     try:
         journal = json.loads(journal_path.read_text())
     except json.JSONDecodeError as exc:
         raise InstallError("安装事务日志损坏，需要人工检查") from exc
 
-    skills_home = skills_home or state_home / "skills"
     state_path = state_home / "my-matt-workflow" / "install-state.json"
+    state: dict = {}
     if state_path.exists():
         try:
             state = json.loads(state_path.read_text())
         except json.JSONDecodeError as exc:
             raise InstallError("安装状态损坏，需要人工检查") from exc
-        transaction_id = journal.get("transaction_id")
-        if transaction_id and state.get("transaction_id") == transaction_id:
-            shutil.rmtree(transaction)
-            return
+        if not isinstance(state, dict):
+            raise InstallError("安装状态损坏，需要人工检查")
+    version, skills, old_present = _validated_journal(journal)
+    if version == 2:
+        recorded = journal.get("skills_home")
+        if (
+            not isinstance(recorded, str)
+            or not Path(recorded).is_absolute()
+            or not isinstance(journal.get("new_release_id"), str)
+            or not isinstance(journal.get("transaction_id"), str)
+        ):
+            raise InstallError("安装事务日志 v2 无效，需要人工检查")
+        recorded_home = Path(recorded).resolve()
+        if skills_home is not None and skills_home.resolve() != recorded_home:
+            raise InstallError("恢复目录与安装事务不一致，拒绝操作")
+        skills_home = recorded_home
+    else:
+        recorded = state.get("skills_home")
+        if isinstance(recorded, str) and Path(recorded).is_absolute():
+            recorded_home = Path(recorded).resolve()
+            if skills_home is not None and skills_home.resolve() != recorded_home:
+                raise InstallError("恢复目录与安装状态不一致，拒绝操作")
+            skills_home = recorded_home
+        elif skills_home is None:
+            raise InstallError("旧安装事务缺少 skills_home；请明确指定恢复目录")
 
-    old_present = set(journal.get("old_present", []))
-    for skill_name in journal.get("skills", []):
+    assert skills_home is not None
+    transaction_id = journal.get("transaction_id")
+    if transaction_id and state.get("transaction_id") == transaction_id:
+        shutil.rmtree(transaction)
+        return
+
+    for skill_name in skills:
         target = skills_home / skill_name
         backup = transaction / "backup" / skill_name
         if backup.exists():
@@ -219,18 +289,16 @@ def install_release(
     old_present = [
         skill_name for skill_name in sorted(managed) if (skills_home / skill_name).exists()
     ]
-    (transaction / "journal.json").write_text(
-        json.dumps(
-            {
-                "skills": sorted(managed),
-                "old_present": old_present,
-                "new_release_id": manifest["release_id"],
-                "transaction_id": transaction_id,
-            },
-            ensure_ascii=False,
-            indent=2,
-        )
-        + "\n"
+    _atomic_json_write(
+        transaction / "journal.json",
+        {
+            "version": 2,
+            "skills_home": str(skills_home.resolve()),
+            "skills": sorted(managed),
+            "old_present": old_present,
+            "new_release_id": manifest["release_id"],
+            "transaction_id": transaction_id,
+        },
     )
 
     try:
