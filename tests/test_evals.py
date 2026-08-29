@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
 import json
+import importlib.util
 import os
 import shutil
 import subprocess
@@ -180,6 +182,20 @@ class EvalCliTests(unittest.TestCase):
 
 
 class CheckGateTests(unittest.TestCase):
+    @staticmethod
+    def _load_workflow_module():
+        spec = importlib.util.spec_from_file_location(
+            "workflow_gate_under_test", ROOT / "tools/workflow.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, str(ROOT / "tools"))
+        try:
+            assert spec.loader is not None
+            spec.loader.exec_module(module)
+        finally:
+            sys.path.pop(0)
+        return module
+
     def _source_copy(self, destination: Path) -> None:
         shutil.copytree(
             ROOT,
@@ -281,7 +297,7 @@ class CheckGateTests(unittest.TestCase):
                     )
                 self.assertFalse((root / "releases" / f"missing-{name}").exists())
 
-    def test_workflow_build_does_not_repeat_the_unit_gate(self):
+    def test_workflow_build_stops_before_writing_release_when_unit_gate_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "repository"
             self._source_copy(root)
@@ -292,27 +308,16 @@ class CheckGateTests(unittest.TestCase):
                 "        self.fail('intentional unit gate failure')\n"
             )
 
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "tools/workflow.py",
-                    "build",
-                    "--release-id",
-                    "blocked-v1",
-                ],
-                cwd=root,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=os.environ | {"MY_MATT_NESTED_BUILD_GATE": "1"},
-            )
-
-            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
-            self.assertTrue((root / "releases" / "blocked-v1").is_dir())
-            self.assertEqual(
-                {"release_id": "blocked-v1"},
-                json.loads((root / "current.json").read_text()),
-            )
+            module = self._load_workflow_module()
+            with mock.patch.object(module, "ROOT", root), mock.patch.object(
+                module, "_run_all_up_gate", side_effect=SystemExit(1)
+            ):
+                with self.assertRaises(SystemExit):
+                    module.command_build(
+                        argparse.Namespace(release_id="blocked-v1", upstream_id="local-matt-skills")
+                    )
+            self.assertFalse((root / "releases" / "blocked-v1").exists())
+            self.assertFalse((root / "current.json").exists())
 
     def test_workflow_build_can_replace_a_stale_current_release(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -329,22 +334,13 @@ class CheckGateTests(unittest.TestCase):
             skill = root / "skills" / "my-humanizer" / "SKILL.md"
             skill.write_text(skill.read_text() + "\nReplacement release fixture.\n")
 
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "tools/workflow.py",
-                    "build",
-                    "--release-id",
-                    "replacement-v2",
-                ],
-                cwd=root,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=os.environ | {"MY_MATT_NESTED_BUILD_GATE": "1"},
-            )
-
-            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            module = self._load_workflow_module()
+            with mock.patch.object(module, "ROOT", root), mock.patch.object(
+                module, "_run_all_up_gate", return_value={"status": "valid"}
+            ):
+                module.command_build(
+                    argparse.Namespace(release_id="replacement-v2", upstream_id="local-matt-skills")
+                )
             self.assertTrue((root / "releases" / "stale-v1").is_dir())
             self.assertTrue((root / "releases" / "replacement-v2").is_dir())
             self.assertEqual(
@@ -352,6 +348,33 @@ class CheckGateTests(unittest.TestCase):
                 json.loads((root / "current.json").read_text()),
             )
             self.assertEqual("valid", verify_current_release(root)["status"])
+
+    def test_check_rejects_corrupt_or_extra_current_release_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repository"
+            self._source_copy(root)
+            release = build_release(
+                root / "skills", root / "releases", release_id="intact-v1",
+                upstream_id="local-matt-skills", repo_root=root,
+            )
+            (root / "current.json").write_text('{"release_id": "intact-v1"}\n')
+            completed = subprocess.CompletedProcess([], 0, "", "")
+            skill_file = next((release / "skills").rglob("SKILL.md"))
+            skill_file.write_text("tampered")
+            with mock.patch("tools.workflow_lib.check.subprocess.run", return_value=completed):
+                with self.assertRaisesRegex(CheckError, "current release validation failed"):
+                    run_check(root)
+
+            # Repair the tree from a fresh release, then add an undeclared file.
+            shutil.rmtree(release)
+            release = build_release(
+                root / "skills", root / "releases", release_id="intact-v1",
+                upstream_id="local-matt-skills", repo_root=root,
+            )
+            (release / "skills" / "my-humanizer" / "EXTRA.md").write_text("extra")
+            with mock.patch("tools.workflow_lib.check.subprocess.run", return_value=completed):
+                with self.assertRaisesRegex(CheckError, "current release validation failed"):
+                    run_check(root)
 
     def test_workflow_check_succeeds_from_complete_non_git_copy(self):
         if os.environ.get("MY_MATT_NESTED_CHECK"):
@@ -405,7 +428,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    29, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    30, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
                 original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
@@ -429,5 +452,5 @@ class FullReleaseE2ETests(unittest.TestCase):
                     original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    29, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    30, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )

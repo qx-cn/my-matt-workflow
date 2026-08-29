@@ -36,6 +36,7 @@ from tools.workflow_lib.rules import resolve_rules
 from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
 from tools.workflow_lib.transitions import ticket_transition
 from tools.workflow_lib.write_gates import resolve_write_gate
+from tools.workflow_lib.work_artifacts import WorkArtifactError, apply_work_artifact_migration
 
 
 class TicketTransitionTests(unittest.TestCase):
@@ -826,6 +827,65 @@ class RefreshProjectTests(unittest.TestCase):
             self.assertEqual("[workflow](../../../../tools/workflow.py)\n", migrated.read_text())
 
 
+class WorkArtifactTransactionTests(unittest.TestCase):
+    def _legacy(self, repo: Path) -> Path:
+        legacy = repo / ".agent/work/topic/spec.md"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text("# legacy\n")
+        return legacy
+
+    def test_preflight_conflict_writes_nothing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            legacy = self._legacy(repo)
+            target = repo / ".agent/work/topic/specs/specs-topic-01.md"
+            target.parent.mkdir()
+            target.write_text("existing")
+            with self.assertRaises(WorkArtifactError):
+                apply_work_artifact_migration(repo)
+            self.assertEqual("# legacy\n", legacy.read_text())
+            self.assertEqual("existing", target.read_text())
+            self.assertFalse((repo / ".agent/.work-artifact-transaction").exists())
+
+    def test_commit_failure_rolls_back_first_moved_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            legacy = self._legacy(repo)
+            original_rename = Path.rename
+
+            def fail_staged_rename(path: Path, destination: Path):
+                if path.name == "0" and path.parent.name == "staged":
+                    raise OSError("injected destination failure")
+                return original_rename(path, destination)
+
+            with mock.patch.object(Path, "rename", fail_staged_rename):
+                with self.assertRaisesRegex(WorkArtifactError, "已恢复"):
+                    apply_work_artifact_migration(repo)
+            self.assertEqual("# legacy\n", legacy.read_text())
+            self.assertFalse((repo / ".agent/work/topic/specs/specs-topic-01.md").exists())
+            self.assertFalse((repo / ".agent/.work-artifact-transaction").exists())
+
+    def test_leftover_transaction_is_rolled_back_before_next_migration(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            legacy = self._legacy(repo)
+            target = repo / ".agent/work/topic/specs/specs-topic-01.md"
+            target.parent.mkdir()
+            target.write_text("partial")
+            transaction = repo / ".agent/.work-artifact-transaction"
+            backup = transaction / "backup/0"
+            backup.parent.mkdir(parents=True)
+            backup.write_text("# legacy\n")
+            (transaction / "journal.json").write_text(json.dumps({
+                "version": 1,
+                "moves": [{"from": ".agent/work/topic/spec.md", "to": ".agent/work/topic/specs/specs-topic-01.md"}],
+            }))
+            apply_work_artifact_migration(repo)
+            self.assertFalse(legacy.exists())
+            self.assertEqual("# legacy\n", target.read_text())
+            self.assertFalse(transaction.exists())
+
+
 class GitIgnoreTests(unittest.TestCase):
     def test_never_modifies_gitignore_when_agent_directory_is_untracked(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1054,7 +1114,7 @@ class InstallerTests(unittest.TestCase):
                 )
             )
 
-            recover_interrupted_install(cursor_home)
+            recover_interrupted_install(cursor_home, skills_home=cursor_home / "skills")
 
             self.assertEqual("old", (target / "SKILL.md").read_text())
             self.assertFalse(transaction.exists())
@@ -1087,6 +1147,7 @@ class InstallerTests(unittest.TestCase):
                         "release_id": "v2",
                         "skills": ["my-demo"],
                         "transaction_id": "tx-2",
+                        "skills_home": str((cursor_home / "skills").resolve()),
                     }
                 )
             )
@@ -1124,6 +1185,7 @@ class InstallerTests(unittest.TestCase):
                         "release_id": "v2",
                         "skills": ["my-demo"],
                         "transaction_id": "tx-1",
+                        "skills_home": str((cursor_home / "skills").resolve()),
                     }
                 )
             )
@@ -1131,6 +1193,80 @@ class InstallerTests(unittest.TestCase):
             recover_interrupted_install(cursor_home)
 
             self.assertEqual("stable-old", (target / "SKILL.md").read_text())
+
+    def test_v2_recovery_uses_recorded_split_skills_home_and_rejects_mismatch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state_home = root / ".codex"
+            skills_home = root / ".agents" / "skills"
+            target = skills_home / "my-demo"
+            target.mkdir(parents=True)
+            (target / "SKILL.md").write_text("partial-new")
+            transaction = state_home / "my-matt-workflow" / "transaction"
+            backup = transaction / "backup" / "my-demo"
+            backup.mkdir(parents=True)
+            (backup / "SKILL.md").write_text("original")
+            (transaction / "journal.json").write_text(json.dumps({
+                "version": 2,
+                "skills_home": str(skills_home.resolve()),
+                "skills": ["my-demo"],
+                "old_present": ["my-demo"],
+                "new_release_id": "v2",
+                "transaction_id": "tx-2",
+            }))
+            wrong_home = root / ".wrong" / "skills"
+            wrong_target = wrong_home / "my-demo"
+            wrong_target.mkdir(parents=True)
+            (wrong_target / "SKILL.md").write_text("untouched")
+
+            with self.assertRaisesRegex(InstallError, "不一致"):
+                recover_interrupted_install(state_home, skills_home=wrong_home)
+            self.assertEqual("partial-new", (target / "SKILL.md").read_text())
+            self.assertEqual("untouched", (wrong_target / "SKILL.md").read_text())
+
+            recover_interrupted_install(state_home)
+            self.assertEqual("original", (target / "SKILL.md").read_text())
+
+    def test_invalid_recovery_journal_does_not_touch_skills(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            home = root / ".cursor"
+            target = home / "skills" / "my-demo"
+            target.mkdir(parents=True)
+            (target / "SKILL.md").write_text("new")
+            transaction = home / "my-matt-workflow" / "transaction"
+            backup = transaction / "backup" / "my-demo"
+            backup.mkdir(parents=True)
+            (backup / "SKILL.md").write_text("old")
+            (transaction / "journal.json").write_text(json.dumps({
+                "version": 2, "skills_home": str((home / "skills").resolve()),
+                "skills": ["not-managed"], "old_present": ["not-managed"],
+                "new_release_id": "v2", "transaction_id": "tx-2",
+            }))
+            with self.assertRaises(InstallError):
+                recover_interrupted_install(home)
+            self.assertEqual("new", (target / "SKILL.md").read_text())
+            self.assertTrue(transaction.exists())
+
+    def test_v1_recovery_uses_install_state_split_skills_home(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state_home = root / ".codex"
+            skills_home = root / ".agents" / "skills"
+            target = skills_home / "my-demo"
+            target.mkdir(parents=True)
+            (target / "SKILL.md").write_text("partial")
+            transaction = state_home / "my-matt-workflow" / "transaction"
+            backup = transaction / "backup" / "my-demo"
+            backup.mkdir(parents=True)
+            (backup / "SKILL.md").write_text("old")
+            (transaction / "journal.json").write_text(json.dumps({
+                "skills": ["my-demo"], "old_present": ["my-demo"],
+            }))
+            state = state_home / "my-matt-workflow" / "install-state.json"
+            state.write_text(json.dumps({"skills_home": str(skills_home.resolve())}))
+            recover_interrupted_install(state_home)
+            self.assertEqual("old", (target / "SKILL.md").read_text())
 
 
 class ReleaseTests(unittest.TestCase):
@@ -1308,7 +1444,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(29, len(validate_skills(root)))
+        self.assertEqual(30, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
@@ -1600,19 +1736,19 @@ class WorkflowCliTests(unittest.TestCase):
             )
             (workflow / "current.json").write_text('{"release_id": "v1"}\n')
 
-            deployed = self._run(
-                workflow,
-                "deploy",
-                "--agent-home",
-                str(Path(tmp) / "agent"),
-            )
-
-            self.assertEqual(0, deployed.returncode, deployed.stderr)
+            module = self._load_workflow_module()
+            with mock.patch.object(module, "ROOT", workflow), mock.patch.object(
+                module, "_run_all_up_gate", return_value={"status": "valid"}
+            ):
+                module.command_deploy(argparse.Namespace(
+                    release_id=None, upstream_id="local-matt-skills", target="auto",
+                    agent_home=str(Path(tmp) / "agent"),
+                ))
             self.assertEqual(
                 ["v1"],
                 sorted(path.name for path in (workflow / "releases").iterdir()),
             )
-            self.assertIn("INSTALLED v1", deployed.stdout)
+            self.assertTrue((Path(tmp) / "agent/skills/my-demo/SKILL.md").is_file())
 
     def test_current_release_pointer_uses_fsync_and_atomic_replace(self):
         module = self._load_workflow_module()
@@ -1679,7 +1815,9 @@ class WorkflowCliTests(unittest.TestCase):
                 target="auto",
                 agent_home=str(agent_home),
             )
-            with mock.patch.object(module, "ROOT", workflow):
+            with mock.patch.object(module, "ROOT", workflow), mock.patch.object(
+                module, "_run_all_up_gate", return_value={"status": "valid"}
+            ):
                 module.command_deploy(args)
 
             self.assertEqual(
@@ -1690,6 +1828,27 @@ class WorkflowCliTests(unittest.TestCase):
                 {"release_id": "v1"},
                 json.loads((workflow / "current.json").read_text()),
             )
+
+    def test_deploy_does_not_reuse_a_corrupt_current_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workflow = self._workflow(Path(tmp))
+            current = build_release(
+                workflow / "skills", workflow / "releases", release_id="v1",
+                upstream_id="local-matt-skills", repo_root=workflow,
+            )
+            (workflow / "current.json").write_text('{"release_id": "v1"}\n')
+            (current / "skills/my-demo/SKILL.md").write_text("tampered")
+            module = self._load_workflow_module()
+            with mock.patch.object(module, "ROOT", workflow), mock.patch.object(
+                module, "_run_all_up_gate", return_value={"status": "valid"}
+            ):
+                module.command_deploy(argparse.Namespace(
+                    release_id="v2", upstream_id="local-matt-skills", target="auto",
+                    agent_home=str(Path(tmp) / "agent"),
+                ))
+            self.assertTrue((workflow / "releases/v1").is_dir())
+            self.assertTrue((workflow / "releases/v2").is_dir())
+            self.assertEqual({"release_id": "v2"}, json.loads((workflow / "current.json").read_text()))
 
     def test_prune_releases_keeps_current_and_agent_referenced_releases(self):
         with tempfile.TemporaryDirectory() as tmp:
