@@ -344,6 +344,12 @@ def _write_current_release(path: Path, release_id: str) -> None:
 
 
 def command_build(args: argparse.Namespace) -> None:
+    _run_all_up_gate(check_current_release=False)
+    _build_release(args)
+
+
+def _build_release(args: argparse.Namespace) -> Path:
+    """Build and select a release after the caller has passed its gate."""
     release_id = args.release_id or datetime.now().strftime("%Y%m%d-%H%M%S")
     release = build_release(
         ROOT / "skills",
@@ -354,6 +360,7 @@ def command_build(args: argparse.Namespace) -> None:
     )
     _write_current_release(ROOT / "current.json", release_id)
     print(release)
+    return release
 
 
 def _current_release() -> Path:
@@ -449,19 +456,27 @@ def command_ticket_scope(args: argparse.Namespace) -> None:
 
 def command_deploy(args: argparse.Namespace) -> None:
     """Install the current content, creating a release only when it changed."""
-    command_validate(args)
+    _run_all_up_gate(check_current_release=False)
     current = _current_release() if (ROOT / "current.json").exists() else None
-    if args.release_id or current is None or not release_matches_source(
-        current,
-        ROOT / "skills",
-        upstream_id=args.upstream_id,
-        repo_root=ROOT,
-    ):
-        command_build(
-            argparse.Namespace(
-                release_id=args.release_id,
+    reusable = False
+    if not args.release_id and current is not None:
+        try:
+            # A release can be source-equivalent while being corrupt on disk;
+            # check integrity before deciding it is safe to reuse.
+            from workflow_lib.installer import verify_release
+
+            verify_release(current)
+            reusable = release_matches_source(
+                current,
+                ROOT / "skills",
                 upstream_id=args.upstream_id,
+                repo_root=ROOT,
             )
+        except Exception:
+            reusable = False
+    if not reusable:
+        _build_release(
+            argparse.Namespace(release_id=args.release_id, upstream_id=args.upstream_id)
         )
     else:
         print(f"REUSED {current}")
@@ -543,85 +558,46 @@ def _resolve_agent_layout(
     raise SystemExit("检测到多个 Agent Skill 目录；请指定 --target 或 --agent-home")
 
 
+def _add_profile_arguments(command: argparse.ArgumentParser) -> None:
+    """Register the shared setup/refresh-project profile surface."""
+    command.add_argument("--repo", default=".")
+    command.add_argument(
+        "--preset", choices=preset_cli_choices(), metavar="PRESET",
+        help=("策略预设：strict-control|light-control|review|semi-auto|full-auto"
+              "（兼容别名 supervised|unattended）"),
+    )
+    command.add_argument("--task-backend", choices=["local", "external", "project-docs", "none"])
+    command.add_argument("--base-branch")
+    command.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
+    command.add_argument("--commit-policy", choices=["confirm", "allow", "deny"])
+    command.add_argument("--external-write-policy", choices=["confirm", "allow", "deny"])
+    command.add_argument("--docs-writeback", choices=["confirm", "allow", "deny"])
+    command.add_argument("--humanizer-policy", choices=["confirm", "allow", "deny"])
+    command.add_argument("--composition-policy", choices=["manual", "automatic"])
+    command.add_argument("--work-scope-policy", choices=["single-ticket", "ready-frontier", "approved-plan"])
+    command.add_argument("--decision-policy", choices=["ask", "autonomous", "halt"])
+    command.add_argument("--execution-agent", choices=["auto", *sorted(EXECUTION_AGENTS)])
+    command.add_argument("--agent-home")
+    command.add_argument("--test-command", action="append")
+    command.add_argument("--standards-source", action="append")
+    command.add_argument("--domain-source", action="append")
+    command.add_argument("--migrate-work-artifacts", action="store_true")
+    command.add_argument("--confirm-candidate-link-repair", action="append", nargs=2,
+                         metavar=("SOURCE", "LINK"), default=[])
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser()
     sub = result.add_subparsers(dest="command", required=True)
 
     setup = sub.add_parser("setup")
-    setup.add_argument("--repo", default=".")
-    setup.add_argument(
-        "--preset",
-        choices=preset_cli_choices(),
-        metavar="PRESET",
-        help=(
-            "策略预设："
-            "strict-control|light-control|review|semi-auto|full-auto"
-            "（兼容别名 supervised|unattended）"
-        ),
-    )
-    setup.add_argument(
-        "--task-backend",
-        choices=["local", "external", "project-docs", "none"],
-    )
-    setup.add_argument("--base-branch")
-    setup.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
-    setup.add_argument("--commit-policy", choices=["confirm", "allow", "deny"])
-    setup.add_argument("--external-write-policy", choices=["confirm", "allow", "deny"])
-    setup.add_argument("--docs-writeback", choices=["confirm", "allow", "deny"])
-    setup.add_argument("--humanizer-policy", choices=["confirm", "allow", "deny"])
-    setup.add_argument("--composition-policy", choices=["manual", "automatic"])
-    setup.add_argument(
-        "--work-scope-policy",
-        choices=["single-ticket", "ready-frontier", "approved-plan"],
-    )
-    setup.add_argument("--decision-policy", choices=["ask", "autonomous", "halt"])
-    setup.add_argument("--execution-agent", choices=["auto", *sorted(EXECUTION_AGENTS)])
-    setup.add_argument("--agent-home")
-    setup.add_argument("--test-command", action="append")
-    setup.add_argument("--standards-source", action="append")
-    setup.add_argument("--domain-source", action="append")
+    _add_profile_arguments(setup)
     setup.add_argument("--apply", action="store_true")
     setup.add_argument("--refresh", action="store_true")
-    setup.add_argument("--migrate-work-artifacts", action="store_true")
-    setup.add_argument(
-        "--confirm-candidate-link-repair",
-        action="append",
-        nargs=2,
-        metavar=("SOURCE", "LINK"),
-        default=[],
-    )
     setup.set_defaults(func=command_setup)
 
     refresh_project = sub.add_parser("refresh-project")
-    refresh_project.add_argument("--repo", default=".")
-    refresh_project.add_argument("--preset", choices=preset_cli_choices(), metavar="PRESET")
-    refresh_project.add_argument(
-        "--task-backend", choices=["local", "external", "project-docs", "none"]
-    )
-    refresh_project.add_argument("--base-branch")
-    refresh_project.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--commit-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--external-write-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--docs-writeback", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--humanizer-policy", choices=["confirm", "allow", "deny"])
-    refresh_project.add_argument("--composition-policy", choices=["manual", "automatic"])
-    refresh_project.add_argument(
-        "--work-scope-policy", choices=["single-ticket", "ready-frontier", "approved-plan"]
-    )
-    refresh_project.add_argument("--decision-policy", choices=["ask", "autonomous", "halt"])
-    refresh_project.add_argument("--execution-agent", choices=["auto", *sorted(EXECUTION_AGENTS)])
-    refresh_project.add_argument("--agent-home")
-    refresh_project.add_argument("--test-command", action="append")
-    refresh_project.add_argument("--standards-source", action="append")
-    refresh_project.add_argument("--domain-source", action="append")
-    refresh_project.add_argument("--migrate-work-artifacts", action="store_true")
-    refresh_project.add_argument(
-        "--confirm-candidate-link-repair",
-        action="append",
-        nargs=2,
-        metavar=("SOURCE", "LINK"),
-        default=[],
-    )
+    _add_profile_arguments(refresh_project)
     refresh_project.set_defaults(func=command_refresh_project)
 
     validate = sub.add_parser("validate")

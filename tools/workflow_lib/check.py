@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from .evals import EvalError, validate_evals
+from .installer import verify_release
 from .release import release_matches_source
 from .smoke_registry import SmokeRegistryError, validate_smoke_registry
 from .validator import ValidationError, validate_repository
@@ -43,6 +44,10 @@ def verify_current_release(root: Path) -> dict[str, object]:
             "reason": "release verification is not applicable: no current release",
         }
     try:
+        # Verify the immutable tree before generating an expected source tree.
+        # Otherwise a damaged release can be reported merely as "stale", which
+        # makes corruption easy to miss and lets deploy incorrectly reuse it.
+        verify_release(release)
         matches = release_matches_source(
             release,
             root / "skills",

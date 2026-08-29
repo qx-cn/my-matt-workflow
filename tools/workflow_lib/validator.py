@@ -13,7 +13,7 @@ class ValidationError(RuntimeError):
     """Raised when a source-tree gate has an actionable failure."""
 
 
-EXPECTED_MANUAL_SKILLS = 29
+EXPECTED_MANUAL_SKILLS = 30
 _PLACEHOLDER = re.compile(r"(<[^>]+>|\{\{.+?\}\}|^\s*link\s*$)", re.IGNORECASE)
 _SCRIPT_SUFFIXES = {".sh", ".bash"}
 
