@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import json
+import os
 import posixpath
 import re
+import shutil
+import tempfile
 from pathlib import Path
 
 
@@ -22,6 +26,65 @@ _LEGACY_FILE_TYPES = {
 
 class WorkArtifactError(RuntimeError):
     """Raised when a requested artifact migration cannot be applied safely."""
+
+
+_TRANSACTION = ".work-artifact-transaction"
+
+
+def _atomic_json(path: Path, value: dict[str, object]) -> None:
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+                                         prefix=f".{path.name}.", suffix=".tmp", delete=False) as handle:
+            temporary = Path(handle.name)
+            json.dump(value, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None and temporary.exists():
+            temporary.unlink()
+
+
+def _load_transaction(repo: Path) -> tuple[Path, list[tuple[Path, Path]]] | None:
+    transaction = repo / ".agent" / _TRANSACTION
+    if not transaction.exists():
+        return None
+    journal = transaction / "journal.json"
+    try:
+        value = json.loads(journal.read_text())
+        moves = value["moves"]
+        if value.get("version") != 1 or not isinstance(moves, list):
+            raise ValueError
+        parsed = []
+        for move in moves:
+            if not isinstance(move, dict) or not isinstance(move.get("from"), str) or not isinstance(move.get("to"), str):
+                raise ValueError
+            source, destination = repo / move["from"], repo / move["to"]
+            if not source.is_relative_to(repo / ".agent") or not destination.is_relative_to(repo / ".agent"):
+                raise ValueError
+            parsed.append((source, destination))
+    except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+        raise WorkArtifactError("工作产物迁移事务日志损坏，已保留现场") from exc
+    return transaction, parsed
+
+
+def _rollback_transaction(repo: Path) -> None:
+    loaded = _load_transaction(repo)
+    if loaded is None:
+        return
+    transaction, moves = loaded
+    for index, (source, destination) in reversed(list(enumerate(moves))):
+        backup = transaction / "backup" / str(index)
+        if backup.exists():
+            if destination.exists():
+                destination.unlink()
+            source.parent.mkdir(parents=True, exist_ok=True)
+            backup.rename(source)
+        elif destination.exists():
+            destination.unlink()
+    shutil.rmtree(transaction)
 
 
 def _relative(repo: Path, path: Path) -> str:
@@ -177,6 +240,10 @@ def analyze_work_artifacts(repo: Path) -> dict[str, object]:
 def apply_work_artifact_migration(repo: Path, *, confirmed_candidate_link_repairs: set[tuple[str, str]] | None = None) -> dict[str, object]:
     """Apply a reviewed layout plan, preserving unconfirmed broken links."""
     repo = repo.resolve()
+    # A previous process may have died mid-commit.  Recover that exact plan
+    # before inspecting the live layout again; a malformed journal is left in
+    # place for manual diagnosis.
+    _rollback_transaction(repo)
     report = analyze_work_artifacts(repo)
     if report["conflicts"]:
         raise WorkArtifactError(f"迁移目标冲突：{report['conflicts']}")
@@ -196,11 +263,46 @@ def apply_work_artifact_migration(repo: Path, *, confirmed_candidate_link_repair
     replacements_by_source: dict[str, dict[str, str]] = {}
     for rewrite in rewrites:
         replacements_by_source.setdefault(rewrite["new_source"], {})[rewrite["link"]] = rewrite["replacement"]
-    for source, destination in move_paths:
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        source.rename(destination)
-        if replacements := replacements_by_source.get(_relative(repo, destination)):
-            destination.write_text(_rewrite_markdown_links(destination.read_text(), replacements))
+    # Full preflight: calculate every final link against the final layout
+    # before creating any directory or moving any source file.
+    for rewrite in rewrites:
+        final_source = repo / rewrite["new_source"]
+        final_target = repo / rewrite.get("new_target", rewrite.get("candidate_target", ""))
+        parsed = _link_target(final_source, rewrite["replacement"])
+        if parsed is None or parsed[0] != final_target.resolve() or not final_target.is_file():
+            raise WorkArtifactError(
+                f"迁移后的链接目标不存在：{rewrite['new_source']} -> {rewrite['replacement']}"
+            )
+
+    transaction = repo / ".agent" / _TRANSACTION
+    transaction.mkdir()
+    try:
+        _atomic_json(transaction / "journal.json", {
+            "version": 1,
+            "moves": [{"from": _relative(repo, source), "to": _relative(repo, destination)} for source, destination in move_paths],
+        })
+        staged = transaction / "staged"
+        backup_root = transaction / "backup"
+        staged.mkdir()
+        backup_root.mkdir()
+        # Stage all rewrites before modifying live files.
+        for index, (source, destination) in enumerate(move_paths):
+            staged_file = staged / str(index)
+            shutil.copy2(source, staged_file)
+            if replacements := replacements_by_source.get(_relative(repo, destination)):
+                staged_file.write_text(_rewrite_markdown_links(staged_file.read_text(), replacements))
+        for index, (source, destination) in enumerate(move_paths):
+            backup = backup_root / str(index)
+            source.rename(backup)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            (staged / str(index)).rename(destination)
+    except Exception as exc:
+        try:
+            _rollback_transaction(repo)
+        except WorkArtifactError:
+            pass
+        raise WorkArtifactError("工作产物迁移中断，已恢复原布局") from exc
+    for source, _ in move_paths:
         _remove_empty_ancestors(source.parent, repo / ".agent")
-    _validate_rewritten_links(repo, rewrites)
+    shutil.rmtree(transaction)
     return report
