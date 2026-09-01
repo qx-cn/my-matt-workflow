@@ -1,0 +1,6 @@
+interface:
+  display_name: "Final-State Writing"
+  short_description: "Write documents around current confirmed state"
+  default_prompt: "Use $my-final-state-writing to write this document around the current confirmed state."
+policy:
+  allow_implicit_invocation: false
