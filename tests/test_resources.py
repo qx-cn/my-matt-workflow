@@ -79,6 +79,33 @@ class SharedResourceTests(unittest.TestCase):
                 (other / "references/shared/final-state-writing.md").exists()
             )
 
+
+    def test_visual_communication_is_bundled_only_for_human_facing_consumers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        consumers = (
+            "my-visual-communication",
+            "my-teach",
+            "my-test-report",
+            "my-review-design",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in consumers:
+                target = Path(tmp) / name
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, name, target)
+                reference = target / "references/shared/visual-communication.md"
+                self.assertTrue(reference.is_file(), name)
+                self.assertIn("图只回答一个核心问题", reference.read_text())
+                body = (ROOT / "skills" / name / "SKILL.md").read_text()
+                self.assertIn("references/shared/visual-communication.md", body)
+
+            other = Path(tmp) / "my-install"
+            other.mkdir()
+            bundle_resources_for_skill(manifest, ROOT, "my-install", other)
+            self.assertFalse(
+                (other / "references/shared/visual-communication.md").exists()
+            )
+
     def test_artifact_access_is_bundled_only_for_reader_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         with tempfile.TemporaryDirectory() as tmp:

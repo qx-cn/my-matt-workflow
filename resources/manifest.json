@@ -34,6 +34,16 @@
         "my-final-state-writing"
       ]
     },
+    "visual-communication": {
+      "source": "resources/visual-communication.md",
+      "release_path": "references/shared/visual-communication.md",
+      "consumers": [
+        "my-visual-communication",
+        "my-teach",
+        "my-test-report",
+        "my-review-design"
+      ]
+    },
     "adapter-composition": {
       "source": "resources/adapters/composition.md",
       "release_path": "references/shared/adapters/composition.md",
