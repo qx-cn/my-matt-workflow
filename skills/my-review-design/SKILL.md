@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # 评审已形成方案
 
+向人类决策者说明复杂影响范围、依赖关系或设计缺口时，遵循[图示表达规则](references/shared/visual-communication.md)。
+
 读取用户指定的方案。若当前上下文只有一份明确方案，直接评审；若存在多个候选且目标不明，只确认要评审哪一份。本地方案按[工作产物访问](references/shared/adapters/artifact-access.md)读取。
 
 必要时查阅方案引用的代码、规则、ADR 和关联文档。能查证的事实自行查证；无法查证时标为信息缺失，不得补全为事实。
