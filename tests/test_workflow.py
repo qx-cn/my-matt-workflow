@@ -292,6 +292,7 @@ class ProfileTests(unittest.TestCase):
         config = {
             "schema_version": 1,
             "task_backend": "local",
+            "agent_directory_mode": "private",
             "default_base_branch": "main",
             "branch_policy": "confirm",
             "commit_policy": "confirm",
@@ -798,6 +799,61 @@ class RefreshProjectTests(unittest.TestCase):
             self.assertIn("已跟踪", result.stderr)
             self.assertEqual("tracked profile\n", profile.read_text())
             self.assertFalse((repo / ".agent/.git").exists())
+
+    def test_shared_mode_allows_parent_repository_to_track_agent_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+
+            result = self._run(
+                "setup",
+                "--repo",
+                str(repo),
+                "--agent-directory-mode",
+                "shared",
+                "--apply",
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn('"mode": "shared"', result.stdout)
+            self.assertFalse((repo / ".agent/.git").exists())
+            subprocess.run(["git", "add", ".agent/matt-workflow.md"], cwd=repo, check=True)
+            refreshed = self._run("refresh-project", "--repo", str(repo))
+            self.assertEqual(0, refreshed.returncode, refreshed.stderr)
+
+    def test_shared_mode_requires_explicit_migration_before_removing_nested_git(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+            private = self._run("setup", "--repo", str(repo), "--apply")
+            self.assertEqual(0, private.returncode, private.stderr)
+            self.assertTrue((repo / ".agent/.git").exists())
+
+            preview = self._run(
+                "setup", "--repo", str(repo), "--refresh", "--agent-directory-mode", "shared"
+            )
+            self.assertEqual(0, preview.returncode, preview.stderr)
+            self.assertIn("remove_nested_git_requires_migrate_agent_directory_mode", preview.stdout)
+
+            refused = self._run(
+                "refresh-project", "--repo", str(repo), "--agent-directory-mode", "shared"
+            )
+            self.assertNotEqual(0, refused.returncode)
+            self.assertIn("--migrate-agent-directory-mode", refused.stderr)
+            self.assertTrue((repo / ".agent/.git").exists())
+
+            migrated = self._run(
+                "refresh-project",
+                "--repo",
+                str(repo),
+                "--agent-directory-mode",
+                "shared",
+                "--migrate-agent-directory-mode",
+            )
+            self.assertEqual(0, migrated.returncode, migrated.stderr)
+            self.assertFalse((repo / ".agent/.git").exists())
+            profile, _ = parse_profile((repo / ".agent/matt-workflow.md").read_text())
+            self.assertEqual("shared", profile["agent_directory_mode"])
 
     def test_refresh_rewrites_only_explicitly_confirmed_candidate_links(self):
         with tempfile.TemporaryDirectory() as tmp:

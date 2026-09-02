@@ -16,6 +16,7 @@ class ProfileError(ValueError):
 
 SUPPORTED_SCHEMA_VERSION = 1
 TASK_BACKENDS = {"local", "external", "project-docs", "none"}
+AGENT_DIRECTORY_MODES = {"private", "shared"}
 POLICIES = {"confirm", "allow", "deny"}
 COMPOSITION_POLICIES = {"manual", "automatic"}
 WORK_SCOPE_POLICIES = {"single-ticket", "ready-frontier", "approved-plan"}
@@ -24,6 +25,7 @@ DECISION_POLICIES = {"ask", "autonomous", "halt"}
 PROFILE_FIELD_ORDER = (
     "schema_version",
     "task_backend",
+    "agent_directory_mode",
     "default_base_branch",
     "branch_policy",
     "commit_policy",
@@ -42,6 +44,7 @@ PROFILE_FIELD_ORDER = (
 BASE_DEFAULTS: dict[str, Any] = {
     "schema_version": 1,
     "task_backend": "local",
+    "agent_directory_mode": "private",
     "default_base_branch": "main",
     "default_execution_agent": "auto",
     "test_commands": [],
@@ -121,6 +124,10 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
         "external": "外部 Tracker",
         "project-docs": "项目文档后端",
         "none": "不使用任务后端",
+    },
+    "agent_directory_mode": {
+        "private": "`.agent/` 为无 remote 的嵌套 Git 工作区，主仓库不跟踪它",
+        "shared": "`.agent/` 由主仓库跟踪和推送，不创建嵌套 Git",
     },
     "branch_policy": {
         "confirm": "分支写操作前确认",
@@ -236,6 +243,8 @@ def format_policy_catalog() -> str:
         meanings = POLICY_VALUE_MEANINGS.get(key, {})
         if key == "task_backend":
             allowed = sorted(TASK_BACKENDS)
+        elif key == "agent_directory_mode":
+            allowed = sorted(AGENT_DIRECTORY_MODES)
         elif key in {
             "branch_policy",
             "commit_policy",
@@ -299,6 +308,14 @@ def _validate(config: dict[str, Any]) -> None:
     if backend not in TASK_BACKENDS:
         raise ProfileError(
             f"task_backend 必须是：{', '.join(sorted(TASK_BACKENDS))}"
+        )
+    agent_directory_mode = _coalesce(
+        config, "agent_directory_mode", BASE_DEFAULTS["agent_directory_mode"]
+    )
+    if agent_directory_mode not in AGENT_DIRECTORY_MODES:
+        raise ProfileError(
+            "agent_directory_mode 必须是："
+            f"{', '.join(sorted(AGENT_DIRECTORY_MODES))}"
         )
     composition = _coalesce(
         config, "composition_policy", POLICY_PRESETS["strict-control"]["composition_policy"]

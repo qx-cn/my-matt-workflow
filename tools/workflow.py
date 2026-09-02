@@ -134,12 +134,56 @@ def _agent_directory_is_tracked(repo: Path) -> bool:
     return bool(result.stdout.strip())
 
 
-def _initialize_agent_repository(repo: Path) -> dict[str, object]:
-    """Create the private nested repository without touching parent Git config."""
-    if not is_git_repository(repo):
-        return {"git_project": False, "initialized": False, "has_remote": False}
+def _agent_directory_status(repo: Path, mode: str) -> dict[str, object]:
+    """Describe the selected `.agent/` ownership mode without writing."""
     agent_dir = repo / ".agent"
     nested_git = agent_dir / ".git"
+    git_project = is_git_repository(repo)
+    status: dict[str, object] = {
+        "git_project": git_project,
+        "mode": mode,
+        "parent_tracks_agent": _agent_directory_is_tracked(repo),
+        "nested_git_exists": nested_git.exists(),
+    }
+    if not git_project:
+        status["action"] = "keep_directory"
+    elif mode == "private":
+        status["action"] = "initialize_nested_git" if not nested_git.exists() else "keep_nested_git"
+    elif nested_git.exists():
+        status["action"] = "remove_nested_git_requires_migrate_agent_directory_mode"
+    else:
+        status["action"] = "keep_shared_directory"
+    return status
+
+
+def _initialize_agent_repository(
+    repo: Path, mode: str, *, migrate_agent_directory_mode: bool = False
+) -> dict[str, object]:
+    """Apply the selected `.agent/` ownership mode without touching `.gitignore`."""
+    if not is_git_repository(repo):
+        return {"git_project": False, "mode": mode, "initialized": False, "has_remote": False}
+    agent_dir = repo / ".agent"
+    nested_git = agent_dir / ".git"
+    if mode == "shared":
+        removed_nested_git = False
+        if nested_git.exists():
+            if not migrate_agent_directory_mode:
+                raise SystemExit(
+                    "共享模式检测到 .agent/.git；请先审阅预览，再附加 "
+                    "--migrate-agent-directory-mode 明确移除嵌套仓库"
+                )
+            if nested_git.is_dir():
+                shutil.rmtree(nested_git)
+            else:
+                nested_git.unlink()
+            removed_nested_git = True
+        return {
+            "git_project": True,
+            "mode": "shared",
+            "initialized": False,
+            "has_remote": False,
+            "removed_nested_git": removed_nested_git,
+        }
     initialized = False
     if not nested_git.exists():
         subprocess.run(
@@ -153,7 +197,12 @@ def _initialize_agent_repository(repo: Path) -> dict[str, object]:
     remotes = subprocess.run(
         ["git", "remote"], cwd=agent_dir, check=True, capture_output=True, text=True
     ).stdout.splitlines()
-    return {"git_project": True, "initialized": initialized, "has_remote": bool(remotes)}
+    return {
+        "git_project": True,
+        "mode": "private",
+        "initialized": initialized,
+        "has_remote": bool(remotes),
+    }
 
 
 def command_setup(args: argparse.Namespace) -> None:
@@ -166,8 +215,16 @@ def command_setup(args: argparse.Namespace) -> None:
         raise SystemExit("迁移工作产物需要 --apply 作为明确确认")
     if args.migrate_work_artifacts and not has_existing_profile:
         raise SystemExit("仅已配置项目可以迁移工作产物")
-    if args.apply and _agent_directory_is_tracked(repo):
-        raise SystemExit("主仓库已跟踪 .agent/；拒绝初始化、迁移或写入配置")
+    if args.apply and _agent_directory_is_tracked(repo) and args.agent_directory_mode != "shared":
+        existing_requests_shared_mode = has_existing_profile and bool(
+            re.search(
+                r"^agent_directory_mode:\s*shared\s*$",
+                profile_path.read_text(),
+                flags=re.MULTILINE,
+            )
+        )
+        if not existing_requests_shared_mode:
+            raise SystemExit("主仓库已跟踪 .agent/；private 模式拒绝初始化、迁移或写入配置")
     existing: dict = {}
     notes = "# 项目工作流说明\n\n仓库规则始终优先。"
     if has_existing_profile:
@@ -178,6 +235,7 @@ def command_setup(args: argparse.Namespace) -> None:
     defaults = {
         "schema_version": 1,
         "task_backend": "local",
+        "agent_directory_mode": "private",
         "default_base_branch": _default_branch(repo),
         "branch_policy": "confirm",
         "commit_policy": "confirm",
@@ -194,6 +252,7 @@ def command_setup(args: argparse.Namespace) -> None:
     }
     overrides = {
             "task_backend": args.task_backend,
+            "agent_directory_mode": args.agent_directory_mode,
             "default_base_branch": args.base_branch,
             "branch_policy": args.branch_policy,
             "commit_policy": args.commit_policy,
@@ -225,11 +284,24 @@ def command_setup(args: argparse.Namespace) -> None:
     )
     rendered = render_profile(config, notes)
     print(rendered)
+    agent_directory = _agent_directory_status(repo, config["agent_directory_mode"])
+    print(json.dumps({"agent_directory": agent_directory}, ensure_ascii=False))
     work_artifacts = analyze_work_artifacts(repo) if has_existing_profile else None
     if work_artifacts is not None:
         print(json.dumps(work_artifacts, ensure_ascii=False, indent=2))
     if not args.apply:
         return
+    if config["agent_directory_mode"] == "private" and agent_directory["parent_tracks_agent"]:
+        raise SystemExit("主仓库已跟踪 .agent/；private 模式拒绝初始化、迁移或写入配置")
+    if (
+        config["agent_directory_mode"] == "shared"
+        and agent_directory["nested_git_exists"]
+        and not args.migrate_agent_directory_mode
+    ):
+        raise SystemExit(
+            "共享模式检测到 .agent/.git；请先审阅预览，再附加 "
+            "--migrate-agent-directory-mode 明确移除嵌套仓库"
+        )
     agent_dir = repo / ".agent"
     agent_dir.mkdir(exist_ok=True)
     (agent_dir / "matt-workflow.md").write_text(rendered)
@@ -244,7 +316,16 @@ def command_setup(args: argparse.Namespace) -> None:
         except WorkArtifactError as exc:
             raise SystemExit(str(exc)) from exc
         print("MIGRATED work artifacts")
-    print(json.dumps(_initialize_agent_repository(repo), ensure_ascii=False))
+    print(
+        json.dumps(
+            _initialize_agent_repository(
+                repo,
+                config["agent_directory_mode"],
+                migrate_agent_directory_mode=args.migrate_agent_directory_mode,
+            ),
+            ensure_ascii=False,
+        )
+    )
 
 
 def command_validate(_: argparse.Namespace) -> None:
@@ -567,6 +648,7 @@ def _add_profile_arguments(command: argparse.ArgumentParser) -> None:
               "（兼容别名 supervised|unattended）"),
     )
     command.add_argument("--task-backend", choices=["local", "external", "project-docs", "none"])
+    command.add_argument("--agent-directory-mode", choices=["private", "shared"])
     command.add_argument("--base-branch")
     command.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
     command.add_argument("--commit-policy", choices=["confirm", "allow", "deny"])
@@ -582,6 +664,7 @@ def _add_profile_arguments(command: argparse.ArgumentParser) -> None:
     command.add_argument("--standards-source", action="append")
     command.add_argument("--domain-source", action="append")
     command.add_argument("--migrate-work-artifacts", action="store_true")
+    command.add_argument("--migrate-agent-directory-mode", action="store_true")
     command.add_argument("--confirm-candidate-link-repair", action="append", nargs=2,
                          metavar=("SOURCE", "LINK"), default=[])
 
