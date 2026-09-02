@@ -428,7 +428,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    31, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    32, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
                 original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
@@ -452,5 +452,5 @@ class FullReleaseE2ETests(unittest.TestCase):
                     original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    31, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    32, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
