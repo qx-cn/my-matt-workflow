@@ -1423,6 +1423,11 @@ class ReleaseTests(unittest.TestCase):
                 "不要改动 `STAGES` 标记上方的库",
             ],
             "my-edit-article": ["articles", "默认生成新稿", "原地修改"],
+            "my-teach": [
+                "TEACHING-WRITING-CHECKS.md",
+                "/Users/admin/.agents/skills/humanizer/SKILL.md",
+                "humanizer 不是压缩器",
+            ],
             "my-review-design": [
                 "只评审，不修改文档，不重新展开访谈",
                 "references/shared/final-state-writing.md",
