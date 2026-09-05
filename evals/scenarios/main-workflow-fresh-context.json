@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "id": "main-workflow-fresh-context",
+  "type": "main-workflow-contract",
+  "skills": [
+    "my-grill-with-docs",
+    "my-to-spec",
+    "my-to-tickets",
+    "my-implement",
+    "my-test-report"
+  ],
+  "input": {
+    "fresh_context": true,
+    "finalization_gates": true,
+    "spec_lineage": true,
+    "ticket_lineage": true,
+    "review_snapshot": true,
+    "evidence_report": true
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "fresh-context-main-workflow",
+    "next": "report-evidence"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "main-workflow-fresh-context",
+    "sources": [
+      {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:1b6127ab4befc06f8e0d37c013724249d8804c8b02f82206b12d5f61615572fd"},
+      {"path": "skills/my-to-spec/SKILL.md", "sha256": "sha256:ec1c24a7bcf97eacf687ed17bfbace0483a9a1ae91c3f1431f899359542e1fb4"},
+      {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:efb264993ad5e6e527c057db031b52bb91a55363795a6ed58552668e83ee54ec"},
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:ceb09da330a6fa95038cad5888f437d99721578e9f724e5189e6cba25f59cc9f"},
+      {"path": "skills/my-test-report/SKILL.md", "sha256": "sha256:b352a74a16b1fb8be1482458831100addc643220f3304c803f4a6c9404de2709"}
+    ]
+  }
+}

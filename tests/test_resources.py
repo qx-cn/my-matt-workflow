@@ -14,6 +14,27 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class SharedResourceTests(unittest.TestCase):
+    def test_artifact_finalization_gate_is_shared_by_spec_handoff_and_review(self):
+        manifest = json.loads((ROOT / "resources/manifest.json").read_text())
+        entry = manifest["resources"]["artifact-finalization"]
+        self.assertEqual(
+            "resources/artifact-finalization.md",
+            entry["source"],
+        )
+        self.assertEqual(
+            {
+                "my-to-spec",
+                "my-handoff",
+                "my-review-design",
+                "my-final-state-writing",
+                "my-wayfinder",
+            },
+            set(entry["consumers"]),
+        )
+        text = (ROOT / entry["source"]).read_text()
+        for gate in ("来源账本", "内部一致性", "读者重建", "事实正确性"):
+            self.assertIn(gate, text)
+
     def test_humanizer_has_one_source(self):
         self.assertTrue((ROOT / "resources/humanizer.md").is_file())
         self.assertFalse((ROOT / "skills/my-to-spec/humanizer.md").exists())
@@ -105,6 +126,22 @@ class SharedResourceTests(unittest.TestCase):
             self.assertFalse(
                 (other / "references/shared/visual-communication.md").exists()
             )
+
+    def test_reader_first_and_document_rendering_resources_are_scoped(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in ("my-edit-article", "my-research", "my-test-report"):
+                target = Path(tmp) / name
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, name, target)
+                self.assertTrue((target / "references/shared/reader-first-writing.md").is_file())
+                self.assertFalse((target / "references/shared/document-rendering.md").exists())
+            for name in ("my-tech-design", "my-improve-codebase-architecture", "my-teach"):
+                target = Path(tmp) / f"render-{name}"
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, name, target)
+                self.assertTrue((target / "references/shared/reader-first-writing.md").is_file())
+                self.assertTrue((target / "references/shared/document-rendering.md").is_file())
 
     def test_artifact_access_is_bundled_only_for_reader_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")

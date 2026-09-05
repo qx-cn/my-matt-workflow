@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # 测试报告
 
+先按[面向读者写作](references/shared/reader-first-writing.md)确定评审者或发布决策者要据此判断什么；内部 reader brief 不作为固定报告章节。
+
 面向评审者撰写复杂验证范围、跨系统链路或状态对照时，遵循[图示表达规则](references/shared/visual-communication.md)。
 
 生成面向评审者的 Markdown 测试报告。报告说明本次改动已验证什么、仍缺少什么，以及现有证据能支持到什么程度。它是最终态说明，不是测试执行流水账或文件清单。

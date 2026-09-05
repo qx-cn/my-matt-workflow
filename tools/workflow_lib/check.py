@@ -82,11 +82,12 @@ def run_check(
     if tests.returncode:
         output = (tests.stdout + tests.stderr).strip()
         raise CheckError("unit tests failed:\n" + output)
+    static["evidence_level"] = "static"
     report = {
         "status": "valid",
         "static": static,
         "evals": evals,
-        "tests": {"status": "valid"},
+        "tests": {"status": "valid", "evidence_level": "unit"},
     }
     if check_current_release:
         report["release"] = verify_current_release(root)

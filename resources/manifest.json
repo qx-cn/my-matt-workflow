@@ -34,6 +34,17 @@
         "my-final-state-writing"
       ]
     },
+    "artifact-finalization": {
+      "source": "resources/artifact-finalization.md",
+      "release_path": "references/shared/artifact-finalization.md",
+      "consumers": [
+        "my-to-spec",
+        "my-handoff",
+        "my-review-design",
+        "my-final-state-writing",
+        "my-wayfinder"
+      ]
+    },
     "visual-communication": {
       "source": "resources/visual-communication.md",
       "release_path": "references/shared/visual-communication.md",
@@ -42,6 +53,39 @@
         "my-teach",
         "my-test-report",
         "my-review-design"
+      ]
+    },
+    "reader-first-writing": {
+      "source": "resources/reader-first-writing.md",
+      "release_path": "references/shared/reader-first-writing.md",
+      "consumers": [
+        "my-code-review",
+        "my-diagnosing-bugs",
+        "my-domain-modeling",
+        "my-edit-article",
+        "my-final-state-writing",
+        "my-grill-with-docs",
+        "my-implement",
+        "my-improve-codebase-architecture",
+        "my-prototype",
+        "my-research",
+        "my-review-design",
+        "my-teach",
+        "my-tech-design",
+        "my-test-report",
+        "my-to-questionnaire",
+        "my-triage",
+        "my-wayfinder",
+        "my-wizard"
+      ]
+    },
+    "document-rendering": {
+      "source": "resources/document-rendering.md",
+      "release_path": "references/shared/document-rendering.md",
+      "consumers": [
+        "my-improve-codebase-architecture",
+        "my-teach",
+        "my-tech-design"
       ]
     },
     "adapter-composition": {

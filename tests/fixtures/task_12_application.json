@@ -174,7 +174,7 @@
           "id": "edit-article-primary-rule",
           "document": "SKILL.md",
           "source_section": "SKILL.md#编辑文章",
-          "text": "每段不超过 240 个字符"
+          "text": "段落长度服从载体和论证需要"
         }
       ],
       "rules": [
@@ -186,7 +186,7 @@
           "requires_constraints": [
             "edit-article-primary-rule"
           ],
-          "outcome": "rewrite-with-paragraph-limit"
+          "outcome": "rewrite-for-reader-and-medium"
         }
       ],
       "scenarios": [
@@ -200,10 +200,10 @@
               "id": "edit-article-primary-rule",
               "document": "SKILL.md",
               "source_section": "SKILL.md#编辑文章",
-              "text": "每段不超过 240 个字符"
+              "text": "段落长度服从载体和论证需要"
             }
           ],
-          "expected": "rewrite-with-paragraph-limit"
+          "expected": "rewrite-for-reader-and-medium"
         }
       ]
     },

@@ -16,6 +16,8 @@ disable-model-invocation: true
 
 使用当前对话中已有的内容。若用户传入引用（Spec 路径、Issue 号或 URL），获取并阅读全文与评论。按[最终态写作](references/shared/final-state-writing.md)只将当前有效决定转成 Ticket。
 
+记录源 Spec 的 `spec_id`、`revision` 与路径/URL。没有正式 Spec 时，为已批准计划分配等价的稳定 id、revision 与可定位引用；不得创建无来源血缘的 `ready-for-agent` Ticket。
+
 ### 2. 探索代码库（可选）
 
 若尚未探索代码库，则探索以理解当前状态。Ticket 标题和描述应使用项目领域术语，并遵守相关 ADR。起草前按 [项目规则解析](references/shared/adapters/project-rules.md) 为 `execution_agent` 解析规则；未解决的规则冲突不得生成 `ready-for-agent` Ticket。
@@ -52,6 +54,8 @@ disable-model-invocation: true
 
 ### 5. 保存或发布已批准 Ticket
 
+输入是修订版 Spec 时，先做影响映射：已完成 Ticket 保持 `complete` 且不改正文；需要撤销或迁移其结果时新增补偿 Ticket。受影响的未完成 Ticket 进入 `revising`，更新来源、验收和阻塞边，通过 `validate-ticket` 后标为 `revalidated`；不受影响的 Ticket 保留原血缘。不得删除历史 Ticket 或把完成记录改写成“未发生”。
+
 **写入前**：按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，再按配置后端保存：
 
 - **`local`** → 每张文件写入 `.agent/work/<feature-slug>/tickets/tickets-<feature-slug>-<NN>.md`，按依赖顺序从 `01` 编号（阻塞者优先）。每张的“被谁阻塞”列出依赖的编号/标题；使用下方每 Ticket 模板，绝不合成一个总文件。
@@ -70,6 +74,11 @@ disable-model-invocation: true
 id: <feature-slug>-<NN>
 title: <Ticket 标题>
 ticket_kind: implementation
+spec_id: <源 Spec 的稳定 id>
+spec_revision: <源 Spec revision>
+spec_ref: <源 Spec 路径或 URL>
+supersedes_ticket: []
+compensates: []
 status: ready-for-agent
 blocked_by: []
 claimed_by:
@@ -96,6 +105,8 @@ execution_agent: <codex|cursor|claude>
 
 `blocked_by` 必须填 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取时仅填写 `claimed_by`，完成阻塞 Ticket 时将其 `status` 设为 `complete`。不要依靠正文状态行或猜测旧 Ticket 的类型。
 
+`spec_id`、`spec_revision` 与 `spec_ref` 是实施准入字段。修订既有 Ticket 时，`supersedes_ticket` 指向被替代的未完成 Ticket；补偿已完成工作时用 `compensates` 指向历史 Ticket，新 Ticket 自身仍绑定当前 Spec revision。
+
 ## 验收标准
 
 - [ ] 验收标准 1
@@ -110,6 +121,13 @@ execution_agent: <codex|cursor|claude>
 ## 父项
 
 对 Tracker 父 Issue 的引用（源是现有 Issue 时才保留；否则省略本节）。
+
+## Spec 血缘
+
+- Spec id：
+- Revision：
+- 来源：
+- 替代或补偿的 Ticket（如有）：
 
 ## 要构建什么
 

@@ -136,13 +136,13 @@
           "id": "fresh-temp-report",
           "document": "SKILL.md",
           "source_section": "SKILL.md#2. 将候选项呈现为 HTML 报告",
-          "text": "写入 `<tmpdir>/architecture-review-<timestamp>.html`，使每次运行都有新文件。"
+          "text": "先写入 `<tmpdir>/architecture-review-<timestamp>.content.md`，再由 frontend 阶段渲染同名 HTML。"
         },
         {
-          "id": "before-after-visual",
+          "id": "conditional-visual",
           "document": "SKILL.md",
           "source_section": "SKILL.md#2. 将候选项呈现为 HTML 报告",
-          "text": "每个候选项都要有前后对比图。"
+          "text": "只有图示明显降低理解成本时才记录并渲染 visual_intent。"
         },
         {
           "id": "ask-after-writing",
@@ -152,8 +152,9 @@
         }
       ],
       "expected": {
+        "content_path": "tmpdir/architecture-review-<timestamp>.content.md",
         "report_path": "tmpdir/architecture-review-<timestamp>.html",
-        "includes_before_after_visual": true,
+        "visual_is_conditional": true,
         "next_action": "ask-user-to-pick-candidate",
         "propose_interfaces": false
       }

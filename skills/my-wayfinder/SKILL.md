@@ -118,10 +118,10 @@ sequence: <NN>
 
 有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。依赖调用和地图完成后的交接遵循 [组合调用](references/shared/adapters/composition.md)。
 
-需要 `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 或 `my-to-spec` 时，读取 `.agent/matt-workflow.md` 的 `composition_policy`：
+需要 `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 或 `my-to-spec` 时，读取 `.agent/matt-workflow.md` 的 `composition_policy`，先区分内部方法与阶段交接：
 
-- `automatic`：只加载当前阶段对应的 [my-grilling](references/composed/my-grilling/COMPOSED.md)、[my-domain-modeling](references/composed/my-domain-modeling/COMPOSED.md)、[my-research](references/composed/my-research/COMPOSED.md)、[my-prototype](references/composed/my-prototype/COMPOSED.md) 或 [my-to-spec](references/composed/my-to-spec/COMPOSED.md) 正文。
-- `manual`：输出对应的 `/my-<skill>`（Cursor / Claude）或 `$my-<skill>`（Codex）后停止。
+- `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 是内部方法：两种策略都只加载当前阶段对应的已打包正文，执行后返回宿主，不输出另一条 Skill 调用。
+- `my-to-spec` 是阶段交接：`automatic` 只在地图已完成且 Spec 阶段已获授权时读取其正文；`manual` 输出 `/my-to-spec`（Cursor / Claude）或 `$my-to-spec`（Codex）后停止。
 
 ### 绘制地图
 
@@ -146,4 +146,4 @@ sequence: <NN>
 
 多个会话可以并行处理未受阻塞的 Ticket，预期其他会话会同时更新 Tracker 或本地地图；在写入前重新读取相关状态，避免覆盖他人结论。
 
-地图清晰且当前已批准流程包含 Spec 阶段时，`automatic` 读取并遵守已打包的 `my-to-spec` 参考继续；`manual` 按上述方式提示显式调用并停止。当前流程未批准下一阶段时只建议，不扩展范围；不得直接跳到实现。
+地图清晰且当前已批准流程包含 Spec 阶段时，按上述阶段交接规则处理 `my-to-spec`。当前流程未批准下一阶段时只建议，不扩展范围；不得直接跳到实现。

@@ -31,13 +31,25 @@ class CompositionManifestTests(unittest.TestCase):
             {"my-tdd", "my-code-review"},
             {edge.skill for edge in manifest.callers["my-implement"]},
         )
+        self.assertEqual(
+            {"method"},
+            {edge.kind for edge in manifest.callers["my-implement"]},
+        )
+        self.assertEqual(
+            "handoff",
+            next(
+                edge.kind
+                for edge in manifest.callers["my-wayfinder"]
+                if edge.skill == "my-to-spec"
+            ),
+        )
 
     def test_cycle_is_rejected_with_path(self):
         manifest = CompositionManifest(
-            version=1,
+            version=2,
             callers={
-                "my-a": (DependencyEdge("my-b", "always"),),
-                "my-b": (DependencyEdge("my-a", "always"),),
+                "my-a": (DependencyEdge("my-b", "always", "method"),),
+                "my-b": (DependencyEdge("my-a", "always", "method"),),
             },
             routable_entries={},
         )
@@ -53,9 +65,9 @@ class CompositionManifestTests(unittest.TestCase):
     def test_routable_entry_cycle_is_rejected_with_path(self):
         """Router A → entry B via routable_entries, B → A via callers."""
         manifest = CompositionManifest(
-            version=1,
+            version=2,
             callers={
-                "my-b": (DependencyEdge("my-a", "always"),),
+                "my-b": (DependencyEdge("my-a", "always", "method"),),
             },
             routable_entries={
                 "my-a": ("my-b",),
@@ -72,9 +84,9 @@ class CompositionManifestTests(unittest.TestCase):
 
     def test_unknown_dependency_reports_caller_and_target(self):
         manifest = CompositionManifest(
-            version=1,
+            version=2,
             callers={
-                "my-a": (DependencyEdge("my-missing", "always"),),
+                "my-a": (DependencyEdge("my-missing", "always", "method"),),
             },
             routable_entries={},
         )
@@ -99,6 +111,25 @@ class CompositionManifestTests(unittest.TestCase):
                 manifest, "my-improve-codebase-architecture"
             ),
         )
+
+    def test_manifest_rejects_unknown_dependency_kind(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "version": 2,
+                        "callers": {
+                            "my-a": [
+                                {"skill": "my-b", "when": "always", "kind": "magic"}
+                            ]
+                        },
+                        "routable_entries": {},
+                    }
+                )
+            )
+            with self.assertRaisesRegex(CompositionError, "kind"):
+                load_composition_manifest(path)
 
 
 class CompositionMaterializationTests(unittest.TestCase):
@@ -210,7 +241,7 @@ class CompositionValidationTests(unittest.TestCase):
             (composition / "manifest.json").write_text(
                 json.dumps(
                     {
-                        "version": 1,
+                        "version": 2,
                         "callers": {},
                         "routable_entries": {},
                     }
@@ -281,7 +312,7 @@ class CompositionValidationTests(unittest.TestCase):
             (composition / "manifest.json").write_text(
                 json.dumps(
                     {
-                        "version": 1,
+                        "version": 2,
                         "callers": {},
                         "routable_entries": {},
                     }
@@ -316,10 +347,10 @@ class CompositionValidationTests(unittest.TestCase):
             (composition / "manifest.json").write_text(
                 json.dumps(
                     {
-                        "version": 1,
+                        "version": 2,
                         "callers": {
                             "my-a": [
-                                {"skill": "my-b", "when": "always"}
+                                {"skill": "my-b", "when": "always", "kind": "method"}
                             ]
                         },
                         "routable_entries": {},
@@ -387,9 +418,11 @@ class CompositionValidationTests(unittest.TestCase):
             (composition / "manifest.json").write_text(
                 json.dumps(
                     {
-                        "version": 1,
+                        "version": 2,
                         "callers": {
-                            "my-a": [{"skill": "my-b", "when": "always"}]
+                            "my-a": [
+                                {"skill": "my-b", "when": "always", "kind": "method"}
+                            ]
                         },
                         "routable_entries": {},
                     }

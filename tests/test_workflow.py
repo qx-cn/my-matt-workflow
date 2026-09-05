@@ -33,7 +33,12 @@ from tools.workflow_lib.profile import (
 )
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
 from tools.workflow_lib.rules import resolve_rules
-from tools.workflow_lib.tickets import TicketError, validate_ready_ticket
+from tools.workflow_lib.tickets import (
+    TicketError,
+    frontmatter,
+    validate_ready_ticket,
+    validate_ticket_transition,
+)
 from tools.workflow_lib.transitions import ticket_transition
 from tools.workflow_lib.write_gates import resolve_write_gate
 from tools.workflow_lib.work_artifacts import WorkArtifactError, apply_work_artifact_migration
@@ -41,13 +46,25 @@ from tools.workflow_lib.work_artifacts import WorkArtifactError, apply_work_arti
 
 class TicketTransitionTests(unittest.TestCase):
     def _ticket(
-        self, directory: Path, identifier: str, sequence: int, *, status: str = "ready-for-agent", blocked_by: str = "[]"
-    ) -> None:
-        (directory / f"tickets-feature-{sequence:02d}-{identifier}.md").write_text(
+        self,
+        directory: Path,
+        identifier: str,
+        sequence: int,
+        *,
+        status: str = "ready-for-agent",
+        blocked_by: str = "[]",
+        spec_revision: int = 1,
+        accepted: bool = False,
+    ) -> Path:
+        path = directory / f"tickets-feature-{sequence:02d}-{identifier}.md"
+        path.write_text(
             "---\n"
             f"id: {identifier}\n"
             "title: Test ticket\n"
             "ticket_kind: implementation\n"
+            "spec_id: feature\n"
+            f"spec_revision: {spec_revision}\n"
+            "spec_ref: specs/specs-feature-01.md\n"
             f"status: {status}\n"
             f"blocked_by: {blocked_by}\n"
             "claimed_by:\n"
@@ -57,8 +74,10 @@ class TicketTransitionTests(unittest.TestCase):
             "rule_conflicts: []\n"
             "execution_agent: codex\n"
             f"sequence: {sequence}\n"
-            "---\n\n## 验收标准\n\n- [ ] works\n"
+            "---\n\n## 验收标准\n\n"
+            f"- [{'x' if accepted else ' '}] works\n"
         )
+        return path
 
     def test_semi_auto_selects_stable_ready_frontier(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -103,6 +122,92 @@ class TicketTransitionTests(unittest.TestCase):
             self._ticket(directory, "feature-b", 2)
             result = ticket_transition(directory, work_scope_policy="single-ticket")
             self.assertEqual(("complete", "single-ticket"), (result.status, result.reason))
+
+    def test_revalidated_ticket_can_reenter_implementation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            ticket = self._ticket(
+                directory,
+                "feature-a",
+                1,
+                status="revalidated",
+                spec_revision=2,
+            )
+            self.assertEqual("ready", validate_ready_ticket(ticket)["status"])
+            result = ticket_transition(directory, work_scope_policy="ready-frontier")
+            self.assertEqual("feature-a", result.next_ticket.identifier)
+
+    def test_design_revision_state_machine_is_explicit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            states = (
+                ("ready-for-agent", "implementing"),
+                ("implementing", "blocked-by-design"),
+                ("blocked-by-design", "revising"),
+                ("revising", "revalidated"),
+                ("revalidated", "implementing"),
+                ("implementing", "complete"),
+            )
+            for current, target in states:
+                ticket = self._ticket(
+                    directory,
+                    f"{current}-{target}",
+                    1,
+                    status=current,
+                    accepted=target == "complete",
+                )
+                report = validate_ticket_transition(ticket, target)
+                self.assertEqual("allow", report["status"])
+            completed = self._ticket(directory, "done", 2, status="complete")
+            with self.assertRaisesRegex(TicketError, "complete"):
+                validate_ticket_transition(completed, "revising")
+
+    def test_complete_transition_requires_checked_acceptance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ticket = self._ticket(Path(tmp), "feature-a", 1, status="implementing")
+            with self.assertRaisesRegex(TicketError, "验收标准"):
+                validate_ticket_transition(ticket, "complete")
+
+    def test_frontmatter_accepts_yaml_block_lists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ticket.md"
+            path.write_text(
+                "---\n"
+                "id: feature-a\n"
+                "rule_sources:\n"
+                "  - requirements.md\n"
+                "  - AGENTS.md\n"
+                "rule_scope:\n"
+                "  - app.py\n"
+                "claimed_by:\n"
+                "---\n",
+                encoding="utf-8",
+            )
+            ticket = frontmatter(path)
+            self.assertEqual(["requirements.md", "AGENTS.md"], ticket["rule_sources"])
+            self.assertEqual(["app.py"], ticket["rule_scope"])
+            self.assertEqual("", ticket["claimed_by"])
+
+    def test_ticket_transition_cli_is_a_read_only_gate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ticket = self._ticket(Path(tmp), "feature-a", 1)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "ticket-transition",
+                    str(ticket),
+                    "--to",
+                    "implementing",
+                ],
+                cwd=Path(__file__).resolve().parents[1],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual("allow", json.loads(result.stdout)["status"])
+            self.assertEqual("ready-for-agent", frontmatter(ticket)["status"])
 
     def test_next_ticket_cli_reads_project_profile(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -259,7 +364,7 @@ class ProfileTests(unittest.TestCase):
                     "实施用户在 Spec 或 Ticket 中描述的工作。",
                     "在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段",
                     "定期运行类型检查和单个测试文件；结束时运行一次完整测试套件。",
-                    "完成后进入 `my-code-review` 阶段审查工作。",
+                    "再进入 `my-code-review` 阶段审查该 `content_id` 的完整工作树。",
                     "按[写操作 Gate]",
                 ],
                 "adapters": [
@@ -268,9 +373,16 @@ class ProfileTests(unittest.TestCase):
                     "composition.md",
                 ],
             },
-            "my-grill-me": {"core": ["composition_policy", "随后停止"], "adapters": ["composition.md"]},
+            "my-grill-me": {
+                "core": [
+                    "composition_policy",
+                    "执行后返回宿主",
+                    "立即提出第一个问题",
+                ],
+                "adapters": ["composition.md"],
+            },
             "my-grill-with-docs": {
-                "core": ["composition_policy", "随后停止"],
+                "core": ["composition_policy", "执行后返回宿主"],
                 "adapters": ["composition.md", "artifact-access.md"],
             },
         }
@@ -287,6 +399,33 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn("automatic", text)
                 self.assertIn("manual", text)
                 self.assertNotIn("项目策略优先", text)
+
+    def test_internal_composition_methods_return_in_manual_mode(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        for skill in (
+            "my-grill-me",
+            "my-grill-with-docs",
+            "my-implement",
+            "my-improve-codebase-architecture",
+        ):
+            text = (root / skill / "SKILL.md").read_text()
+            with self.subTest(skill=skill):
+                self.assertIn("执行后返回宿主", text)
+                self.assertNotRegex(text, r"manual`：输出对应的.*随后停止")
+
+        wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
+        self.assertIn("内部方法", wayfinder)
+        self.assertIn("阶段交接", wayfinder)
+        self.assertIn("my-to-spec", wayfinder)
+
+    def test_grill_me_manual_entry_executes_composed_interview_in_same_turn(self):
+        root = Path(__file__).resolve().parents[1]
+        text = (root / "skills/my-grill-me/SKILL.md").read_text()
+
+        self.assertIn("references/composed/my-grilling/COMPOSED.md", text)
+        self.assertIn("立即提出第一个问题", text)
+        self.assertNotIn("输出 `/my-grilling`", text)
+        self.assertNotIn("输出 `$my-grilling`", text)
 
     def test_round_trips_supported_profile(self):
         config = {
@@ -401,9 +540,22 @@ class ProfileTests(unittest.TestCase):
             ticket.write_text(
                 "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
                 'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
-                'rule_constraints: ["run tests"]\nrule_conflicts: []\n---\n'
+                'rule_constraints: ["run tests"]\nrule_conflicts: []\n'
+                "spec_id: feature\nspec_revision: 1\n"
+                "spec_ref: specs/specs-feature-01.md\n---\n"
             )
             self.assertEqual("ready", validate_ready_ticket(ticket)["status"])
+
+    def test_ready_ticket_requires_spec_lineage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ticket = Path(tmp) / "ticket.md"
+            ticket.write_text(
+                "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
+                'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
+                'rule_constraints: ["run tests"]\nrule_conflicts: []\n---\n'
+            )
+            with self.assertRaisesRegex(TicketError, "Spec 血缘"):
+                validate_ready_ticket(ticket)
 
     def test_refresh_can_switch_composition_without_losing_other_settings(self):
         existing = {
@@ -716,6 +868,74 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("函数", text)
         self.assertIn("变量", text)
         self.assertIn("Mysterious Name", text)
+        self.assertIn("发现契约", text)
+        self.assertIn("P0", text)
+        self.assertIn("失败场景/不变量", text)
+        self.assertIn("证据与置信度", text)
+        self.assertIn("影响与验证", text)
+        self.assertIn("低风险变更不为并行而增加 reviewer", text)
+        self.assertIn("manual` 或 `automatic` 都必须", text)
+        self.assertNotIn("少于 400 字", text)
+        self.assertNotIn("提示用户分别启动审查", text)
+
+    def test_humanizer_avoids_neologisms_without_banning_normal_grammar(self):
+        text = (
+            Path(__file__).resolve().parents[1]
+            / "skills/my-humanizer/SKILL.md"
+        ).read_text()
+        self.assertIn("不用造词换风格", text)
+        self.assertIn("专业术语首次出现时用白话解释", text)
+        self.assertIn("不能仅因“动词＋宾语”形式", text)
+
+    def test_implement_review_uses_content_snapshot_and_commit_equivalence(self):
+        root = Path(__file__).resolve().parents[1]
+        review = (root / "skills/my-code-review/SKILL.md").read_text()
+        implement = (root / "skills/my-implement/SKILL.md").read_text()
+
+        for source in ("committed", "staged", "unstaged", "untracked"):
+            self.assertIn(source, review)
+        self.assertIn("Review-Snapshot: <content_id>", review)
+        self.assertIn("旧 receipt 立即失效", review)
+        self.assertIn("review-snapshot --repo <repo> --base", implement)
+        self.assertIn("--expect-content-id", implement)
+        self.assertIn("--require-clean", implement)
+        self.assertIn("run-start --repo <repo>", implement)
+        self.assertIn("run-record <journal>", implement)
+        self.assertIn("context receipt", implement)
+        self.assertIn("run-<ticket-id>-spec-r<revision>.json", implement)
+        self.assertIn("Commit 与已审查内容等价", implement)
+
+    def test_spec_handoff_and_design_review_apply_finalization_gate(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        for skill in ("my-to-spec", "my-handoff", "my-review-design"):
+            text = (root / skill / "SKILL.md").read_text()
+            with self.subTest(skill=skill):
+                self.assertIn(
+                    "references/shared/artifact-finalization.md",
+                    text,
+                )
+                self.assertIn("最终校验", text)
+
+        spec = (root / "my-to-spec/SKILL.md").read_text()
+        self.assertIn("依据与未知", spec)
+        handoff = (root / "my-handoff/SKILL.md").read_text()
+        self.assertIn("fresh-context", handoff)
+
+    def test_spec_and_tickets_preserve_revision_lineage_without_overdesign(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        spec = (root / "my-to-spec/SKILL.md").read_text()
+        tickets = (root / "my-to-tickets/SKILL.md").read_text()
+        implement = (root / "my-implement/SKILL.md").read_text()
+
+        for field in ("spec_id", "revision", "supersedes"):
+            self.assertIn(field, spec)
+        for field in ("spec_id", "spec_revision", "spec_ref"):
+            self.assertIn(field, tickets)
+        self.assertNotIn("很长、带编号", spec)
+        self.assertNotIn("理想数量是一个", spec)
+        self.assertIn("pause-for-revision", implement)
+        self.assertIn("blocked-by-design", implement)
+        self.assertIn("补偿", implement)
 
 
 class GitIgnoreRepositoryTests(unittest.TestCase):
@@ -1341,41 +1561,31 @@ class ReleaseTests(unittest.TestCase):
                 failures.append(f"{skill_dir.name}: implicit")
         self.assertEqual([], failures)
 
-    def test_tech_design_is_standalone_and_uses_dynamic_html_chapters(self):
+    def test_tech_design_splits_content_and_frontend_with_dynamic_html(self):
         root = Path(__file__).resolve().parents[1]
         skill = root / "skills" / "my-tech-design"
         body = (skill / "SKILL.md").read_text()
+        content = (skill / "CONTENT.md").read_text()
+        frontend = (skill / "FRONTEND.md").read_text()
         template = skill / "assets" / "TEMPLATE.html"
         template_text = template.read_text()
         checker = skill / "scripts" / "check_html.py"
         composition = json.loads((root / "composition" / "manifest.json").read_text())
 
-        self.assertIn("assets/TEMPLATE.html", body)
-        self.assertIn("数据库设计章节", body)
-        self.assertIn("协议与接口设计章节", body)
-        self.assertIn("建立改动面清单", body)
-        self.assertIn("迁移数据库表、状态或其他事实来源", body)
-        self.assertIn("Kafka、消息队列、事件、回调", body)
-        self.assertIn("rerun、backfill、恢复脚本", body)
-        self.assertIn("只在描述 Proto、API、消息格式等可观察接口时使用“契约”", body)
-        self.assertIn("source_sync: confirm", body)
-        self.assertIn("章节标题下的导语不写复合键", body)
-        self.assertIn("指代离开上下文后不明确", body)
-        self.assertIn("出现两个以上独立事实、规则、动作或约束时必须拆点", body)
-        self.assertIn("范围边界以及“改动前/改动后”“支持/不支持”", body)
-        self.assertIn("comparison-card", body)
-        self.assertIn("30～60 个中文字符", body)
-        self.assertIn("实际渲染并检查每个章节", body)
-        self.assertIn("建立内部图形清单", body)
-        self.assertIn("先识别要表达的关系，再选择图形", body)
-        self.assertIn(
-            "凡是存在结构、关系、顺序、分支、状态或前后变化，默认用图表达",
-            body,
-        )
-        self.assertIn("不要用“正文已经说明”作为不画图的理由", body)
-        self.assertIn("方案总览必须包含一张", body)
-        self.assertIn("每个关键流程、复杂状态变化或跨模块协作", body)
-        self.assertIn("本来适合用图的关系没有滞留在长段落中", body)
+        self.assertIn("CONTENT.md", body)
+        self.assertIn("FRONTEND.md", body)
+        self.assertIn("document-rendering.md", body)
+        self.assertIn("frontend <artifact>", body)
+        self.assertIn("后停止", body)
+        self.assertIn("不构成内容模型与前端模型已隔离的证据", body)
+        self.assertRegex(content, r"不(?:得)?生成 HTML、CSS、JavaScript")
+        self.assertIn("关键改动面", content)
+        self.assertIn("明显降低理解成本", content)
+        self.assertIn("不得默认要求总览图", content)
+        self.assertIn("语义工件是内容权威来源", frontend)
+        self.assertIn("blocked-by-content", frontend)
+        self.assertIn("comparison-card", frontend)
+        self.assertIn("实际渲染每个章节", frontend)
         self.assertTrue(template.is_file())
         self.assertTrue(checker.is_file())
         self.assertIn("{{NAV_ITEMS}}", template_text)
@@ -1393,6 +1603,22 @@ class ReleaseTests(unittest.TestCase):
                 for entries in composition["routable_entries"].values()
             )
         )
+
+    def test_rendered_document_skills_have_independent_stage_contracts(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        for name in ("my-tech-design", "my-improve-codebase-architecture", "my-teach"):
+            with self.subTest(skill=name):
+                skill = root / name
+                body = (skill / "SKILL.md").read_text()
+                content = (skill / "CONTENT.md").read_text()
+                frontend = (skill / "FRONTEND.md").read_text()
+                self.assertIn("content", body)
+                self.assertIn("frontend <artifact>", body)
+                self.assertIn("full", body)
+                self.assertIn("document-rendering.md", body)
+                self.assertRegex(content, r"不(?:得)?(?:生成|写) HTML")
+                self.assertIn("blocked-by-content", frontend)
+                self.assertRegex(frontend, r"不(?:得)?(?:改变|改写)")
 
     def test_tech_design_html_checker_rejects_table_in_narrow_card(self):
         root = Path(__file__).resolve().parents[1]

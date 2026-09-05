@@ -8,4 +8,6 @@
 
 `next-ticket` 是只读选择器。领取、验收勾选、状态设为 `complete` 和提交仍由宿主按 Ticket 生命周期完成；在这些步骤完成前不得解锁下游 Ticket。
 
+实现发现设计不成立时，向 `next-ticket` 传入 `pause-for-revision` 并停止自动选择。只修订受影响的 Spec 决定和未完成 Ticket；已完成 Ticket 留作历史，需要改变其结果时新增补偿或迁移 Ticket。只有受影响 Ticket 更新到当前有效血缘、验收和阻塞边并通过准入，才从 `revalidated` 回到 `implementing`。根目标失效时才由用户决定是否重走完整访谈。
+
 用户说「继续」或「提交并继续」只表示在当前已生效范围内推进；不升档、不改写 `work_scope_policy`，也不放宽为全自动连续执行。

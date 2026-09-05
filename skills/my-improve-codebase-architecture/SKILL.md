@@ -1,76 +1,28 @@
 ---
 name: my-improve-codebase-architecture
-description: 扫描代码库中的深化机会，以可视化 HTML 报告呈现，并深挖用户选择的候选项。
+description: 扫描代码库中的深化机会，分阶段生成候选内容与 HTML 报告，并深挖用户选择的候选项；内容与前端可使用不同模型。
 disable-model-invocation: true
 ---
 
 # 改进代码库架构
 
-找出架构摩擦，并提出**深化机会**——将浅模块转为深模块的重构。目标是可测试性和 AI 可导航性。
+找出能把浅模块变为深模块的架构机会，帮助维护者按证据、收益、成本和风险选择值得深入的候选项。
 
-此命令由项目的领域模型提供信息，并建立在共享的设计词汇之上：
+先读取[面向读者写作](references/shared/reader-first-writing.md)与[内容/前端交接](references/shared/document-rendering.md)，再选择阶段：
 
-- `my-codebase-design` 提供架构词汇（**模块**、**接口**、**深度**、**接缝**、**适配器**、**杠杆**、**局部性**）和原则（删除测试、“接口就是测试面”、“一个适配器是假设接缝，两个才是真实接缝”）。每条建议都必须严格使用这些术语——不要漂移为“组件”、“服务”、“API”或“边界”。
-- `CONTEXT.md` 中的领域语言为好的接缝命名；`docs/adr/` 中的 ADR 记录了此命令不应重新争论的决策。
+- 未指定阶段：执行 `content`，读取 [CONTENT.md](CONTENT.md)，将 `architecture-review-<timestamp>.content.md` 写入操作系统临时目录，报告绝对路径与 `/my-improve-codebase-architecture frontend <artifact>` 后停止。
+- `frontend <artifact>`：只读取语义工件、[FRONTEND.md](FRONTEND.md)和 [HTML-REPORT.md](HTML-REPORT.md)，渲染同名 `.html`；不得重新扫描代码库或改变候选结论。
+- `full`：顺序完成内容与前端，保留中间工件，并说明没有形成模型隔离证据。
+- `deepen <candidate>`：用户选定候选后进入下述深化循环，不重新生成候选报告。
 
-## 流程
+内容与前端阶段可由不同模型独立运行；前端发现内容缺口时返回 `blocked-by-content`。
 
-### 1. 探索
+## 深化循环
 
-**范围先于扫描——YAGNI。**深化模块的价值在于让未来对它的变更更容易，因此要额外关注代码库中近期变动的部分。先决定*看哪里*，再开始看：
+用户选择候选后，读取 `.agent/matt-workflow.md` 的 `composition_policy`，按[组合调用](references/shared/adapters/composition.md)将 `my-grill-with-docs` 与 `my-codebase-design` 作为内部方法：读取当前所需的 [my-grill-with-docs 正文](references/composed/my-grill-with-docs/COMPOSED.md) 或 [my-codebase-design 正文](references/composed/my-codebase-design/COMPOSED.md)，执行后返回宿主，不输出另一条 Skill 调用。
 
-- 如果用户给出了方向——某个模块、子系统或痛点——就采用它，并跳过下面的推断。
-- 否则，回溯一段足够长的提交历史（`git log --oneline`），找出代码库的热点——反复出现的文件和区域——并让这些路径优先引导你的注意力。若变更分散且没有明显热点，就扩大范围。
+- 用访谈确认约束、依赖、深化模块形状、接缝内外和能存活的测试。
+- 新领域概念或澄清后的术语更新到项目配置指定的领域模型；承重拒绝理由确实值得未来避免重提时，才建议记录 ADR。
+- 需要比较深化模块接口时，执行 `my-codebase-design` 的设计两次方法。
 
-先阅读项目的领域词汇表（`CONTEXT.md`）以及所触及区域中的所有 ADR。
-
-然后使用 Agent 工具的 `subagent_type=Explore` 探索代码库。不要遵循僵化的启发式规则——自然地探索，并记录你在哪里感到理解摩擦：
-
-- 理解一个概念是否需要在许多小模块之间来回跳转？
-- 哪些模块是**浅的**——接口几乎和实现一样复杂？
-- 哪些纯函数只是为了可测试性而被抽取，但真正的 Bug 藏在调用方式中（没有**局部性**）？
-- 哪些紧密耦合的模块跨接缝泄漏？
-- 代码库的哪些部分没有测试，或难以通过当前接口测试？
-
-对任何疑似浅薄的对象应用**删除测试**：删除它会集中复杂度，还是只会移动复杂度？“是，会集中”才是你要找的信号。
-
-### 2. 将候选项呈现为 HTML 报告
-
-将单个自包含 HTML 文件写入操作系统临时目录，避免任何内容落入仓库。通过 `$TMPDIR` 解析临时目录，回退到 `/tmp`（Windows 上为 `%TEMP%`），并写入 `<tmpdir>/architecture-review-<timestamp>.html`，使每次运行都有新文件。为用户打开它——Linux 使用 `xdg-open <path>`、macOS 使用 `open <path>`、Windows 使用 `start <path>`——并告知其绝对路径。
-
-报告使用内联 CSS 进行布局和样式，并在图形、流程或时序最能可靠表达结构时使用内联 SVG 静态图示。将手工 div 与内联 SVG 图示混用——关系呈图状时使用流程或关系 SVG（调用图、依赖、时序）；需要更具编辑感的视觉效果时使用手工 div/SVG（面积图、横截面、折叠动画）。每个候选项都要有前后对比图。要有视觉表达。
-
-每个候选项都要渲染一张卡片，包含：
-
-- **文件**——涉及哪些文件/模块
-- **问题**——当前架构为何造成摩擦
-- **方案**——会改变什么的通俗说明
-- **收益**——以局部性、杠杆及测试如何改善来说明
-- **前后对比图**——并排的手工绘制图示，展示浅薄性与深化结果
-- **推荐强度**——`Strong`、`Worth exploring`、`Speculative` 之一，并渲染为徽章
-
-在报告末尾添加**首要推荐**部分：最先应处理哪个候选项，以及原因。
-
-**领域使用 `CONTEXT.md` 词汇，架构使用 `my-codebase-design` 词汇。**若 `CONTEXT.md` 定义了“Order”，应说“Order 接入模块”，不要说“FooBarHandler”，也不要说“Order 服务”。
-
-**ADR 冲突**：只有当候选项的摩擦真实到值得重开 ADR 时，才将它与现有 ADR 的矛盾呈现出来。要在卡片中清晰标记（例如警告提示：*“与 ADR-0007 矛盾——但因……值得重新讨论”*）。不要列出每一种被 ADR 禁止的理论性重构。
-
-完整的 HTML 骨架、图示模式和样式指引见 [HTML-REPORT.md](HTML-REPORT.md)。
-
-不要先提出接口。文件写好后，询问用户：“你想探索其中哪一个？”
-
-### 3. 深挖循环
-
-用户选择候选项后，进入 `my-grill-with-docs` 阶段，与其一起走过决策树——约束、依赖、深化模块的形状、接缝后放什么、哪些测试仍能存活。
-
-当决策逐步明确时，由 `my-grill-with-docs` 的组合链路保持领域模型最新：
-
-- **要以 `CONTEXT.md` 中没有的概念为深化模块命名？**添加该术语到 `CONTEXT.md`。若文件不存在，按需创建。
-- **在对话中明确了一个模糊术语？**立刻在 `CONTEXT.md` 中更新它。
-- **用户以承重理由拒绝了候选项？**提出 ADR，表述为：“要我把它记录为 ADR 吗？这样未来的架构审查不再重新建议它。”只在该理由确实会让未来探索者避免重新提出同一建议时才提出；跳过短暂理由（“现在不值得做”）和不言自明的理由。
-- **想探索深化模块的替代接口？**进入 `my-codebase-design` 阶段，并使用其设计两次的并行子代理模式。
-
-依赖阶段读取 `.agent/matt-workflow.md` 的 `composition_policy` 并遵循[组合调用](references/shared/adapters/composition.md)：
-
-- `automatic`：只读取当前阶段需要的 [my-codebase-design 正文](references/composed/my-codebase-design/COMPOSED.md) 或 [my-grill-with-docs 正文](references/composed/my-grill-with-docs/COMPOSED.md)。
-- `manual`：输出对应的 `/my-<skill>`（Cursor / Claude）或 `$my-<skill>`（Codex）后停止。
+未经用户选择，不先提出候选模块的具体接口，也不进入实现。

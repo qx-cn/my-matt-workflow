@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 这是一套用于处理棘手 Bug 的纪律。除非明确说明理由，否则不得跳过阶段。
 
+向报告者或修复者输出诊断结论前，按[面向读者写作](references/shared/reader-first-writing.md)组织症状、根因证据、复现/验证方式和剩余未知；不要把过程日志冒充结论。
+
 探索代码库时，读取已有的项目领域术语与 ADR，建立所涉模块的清晰心智模型；优先使用仓库已记录的术语和约定，不假设存在固定名称或固定位置的 `CONTEXT.md`。
 
 读取本地术语表或 ADR 工作产物时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。

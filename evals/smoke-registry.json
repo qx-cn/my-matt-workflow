@@ -6,7 +6,9 @@
     "my-tdd": ["tdd-seam-pressure"],
     "my-writing-great-skills": ["writing-great-skills-baseline-discipline"],
     "my-grill-with-docs": ["rule-plan-ticket-loop"],
-    "my-to-tickets": ["rule-plan-ticket-loop"],
-    "my-implement": ["rule-plan-ticket-loop"]
+    "my-to-spec": ["main-workflow-fresh-context"],
+    "my-to-tickets": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
+    "my-implement": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
+    "my-test-report": ["main-workflow-fresh-context"]
   }
 }

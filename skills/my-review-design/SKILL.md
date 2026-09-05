@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # 评审已形成方案
 
+先按[面向读者写作](references/shared/reader-first-writing.md)确定方案 owner 或决策者要据此批准、退回或补充什么。
+
 向人类决策者说明复杂影响范围、依赖关系或设计缺口时，遵循[图示表达规则](references/shared/visual-communication.md)。
 
 读取用户指定的方案。若当前上下文只有一份明确方案，直接评审；若存在多个候选且目标不明，只确认要评审哪一份。本地方案按[工作产物访问](references/shared/adapters/artifact-access.md)读取。
@@ -13,6 +15,10 @@ disable-model-invocation: true
 必要时查阅方案引用的代码、规则、ADR 和关联文档。能查证的事实自行查证；无法查证时标为信息缺失，不得补全为事实。
 
 本 Skill **只评审，不修改文档，不重新展开访谈**。不要替用户补齐决策，也不要把普通实现细节升级为待决策项。
+
+## 最终校验
+
+以[产物最终校验](references/shared/artifact-finalization.md)的来源账本、内部一致性、读者重建和事实正确性 gate 组织证据。此处是只读评审：发现 `blocked` 时报告具体主张、来源与影响，不替作者修正文档；四项 gate 都通过，才可给出“未发现实质问题”的结论。
 
 ## 检查
 

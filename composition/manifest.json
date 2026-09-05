@@ -1,27 +1,27 @@
 {
-  "version": 1,
+  "version": 2,
   "callers": {
     "my-grill-me": [
-      {"skill": "my-grilling", "when": "always"}
+      {"skill": "my-grilling", "when": "always", "kind": "method"}
     ],
     "my-grill-with-docs": [
-      {"skill": "my-grilling", "when": "always"},
-      {"skill": "my-domain-modeling", "when": "domain-vocabulary"}
+      {"skill": "my-grilling", "when": "always", "kind": "method"},
+      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"}
     ],
     "my-implement": [
-      {"skill": "my-tdd", "when": "tdd-phase"},
-      {"skill": "my-code-review", "when": "review-phase"}
+      {"skill": "my-tdd", "when": "tdd-phase", "kind": "method"},
+      {"skill": "my-code-review", "when": "review-phase", "kind": "method"}
     ],
     "my-wayfinder": [
-      {"skill": "my-grilling", "when": "grilling-decision"},
-      {"skill": "my-domain-modeling", "when": "domain-decision"},
-      {"skill": "my-research", "when": "research-ticket"},
-      {"skill": "my-prototype", "when": "prototype-ticket"},
-      {"skill": "my-to-spec", "when": "handoff-to-spec"}
+      {"skill": "my-grilling", "when": "grilling-decision", "kind": "method"},
+      {"skill": "my-domain-modeling", "when": "domain-decision", "kind": "method"},
+      {"skill": "my-research", "when": "research-ticket", "kind": "method"},
+      {"skill": "my-prototype", "when": "prototype-ticket", "kind": "method"},
+      {"skill": "my-to-spec", "when": "handoff-to-spec", "kind": "handoff"}
     ],
     "my-improve-codebase-architecture": [
-      {"skill": "my-codebase-design", "when": "design-vocabulary"},
-      {"skill": "my-grill-with-docs", "when": "selected-candidate"}
+      {"skill": "my-codebase-design", "when": "design-vocabulary", "kind": "method"},
+      {"skill": "my-grill-with-docs", "when": "selected-candidate", "kind": "method"}
     ]
   },
   "routable_entries": {

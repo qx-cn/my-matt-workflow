@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 原型是**回答一个问题的可抛弃代码**，问题决定原型形状。
 
+向设计决策者输出结论时，按[面向读者写作](references/shared/reader-first-writing.md)说明假设、实验边界、观察、结论和不能外推的内容。
+
 ## 选择分支
 
 从用户请求、周边代码判断，或在用户可联系时询问：

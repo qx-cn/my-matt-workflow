@@ -8,4 +8,4 @@ disable-model-invocation: true
 
 用于撰写或修订交付文档、设计说明、实施计划、报告和用户可见的总结，使正文准确反映当前已确认的状态。
 
-撰写前阅读并遵循[最终态写作规则](references/shared/final-state-writing.md)。该共享规则是唯一权威来源；不要在本 Skill 或产物中重复维护规则文本。
+撰写前先按[面向读者写作](references/shared/reader-first-writing.md)确定人类读者的决定或动作，再阅读并遵循[最终态写作规则](references/shared/final-state-writing.md)。该共享规则是唯一权威来源；不要在本 Skill 或产物中重复维护规则文本。若产物将进入实施、评审或跨会话交接，写入前再执行[产物最终校验](references/shared/artifact-finalization.md)。

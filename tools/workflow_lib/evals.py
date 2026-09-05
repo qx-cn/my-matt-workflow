@@ -21,6 +21,7 @@ REQUIRED_SCENARIOS = frozenset(
         "grilling-one-question-hitl",
         "diagnosing-bugs-no-red-loop",
         "writing-great-skills-baseline-discipline",
+        "main-workflow-fresh-context",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -32,6 +33,7 @@ _SCENARIO_TYPES = frozenset(
         "diagnosing-contract",
         "skill-writing-contract",
         "rule-contract",
+        "main-workflow-contract",
     }
 )
 
@@ -275,6 +277,36 @@ def _evaluate_rule_contract(input_value: dict[str, object]) -> dict[str, object]
     return {"status": "valid", "rule": "rule-plan-ticket-implementation-loop", "next": "implement"}
 
 
+def _evaluate_main_workflow_contract(input_value: dict[str, object]) -> dict[str, object]:
+    fields = {
+        "fresh_context",
+        "finalization_gates",
+        "spec_lineage",
+        "ticket_lineage",
+        "review_snapshot",
+        "evidence_report",
+    }
+    case = _require_fields(input_value, fields, "main-workflow-contract.input")
+    if not all(isinstance(case[field], bool) for field in fields):
+        raise EvalError("main-workflow-contract.input: all fields must be booleans")
+    ordered_gates = (
+        ("fresh_context", "fresh-context-reconstruction"),
+        ("finalization_gates", "artifact-finalization"),
+        ("spec_lineage", "spec-revision-lineage"),
+        ("ticket_lineage", "ticket-spec-lineage"),
+        ("review_snapshot", "review-content-snapshot"),
+        ("evidence_report", "test-evidence-report"),
+    )
+    for field, rule in ordered_gates:
+        if not case[field]:
+            return {"status": "stop", "rule": rule, "next": "repair-handoff"}
+    return {
+        "status": "valid",
+        "rule": "fresh-context-main-workflow",
+        "next": "report-evidence",
+    }
+
+
 def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
     """Execute one structured deterministic scenario and assert its exact outcome."""
     evaluators = {
@@ -283,6 +315,7 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "diagnosing-contract": _evaluate_diagnosing_contract,
         "skill-writing-contract": _evaluate_skill_writing_contract,
         "rule-contract": _evaluate_rule_contract,
+        "main-workflow-contract": _evaluate_main_workflow_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:
@@ -317,6 +350,7 @@ def validate_evals(repo_root: Path, *, allow_missing: bool = False) -> dict[str,
             raise
     return {
         "status": "valid",
+        "evidence_level": "deterministic-contract",
         "scenarios": len(scenarios),
         "required_scenarios": len(REQUIRED_SCENARIOS),
     }

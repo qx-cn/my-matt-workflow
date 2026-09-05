@@ -15,6 +15,15 @@ class TicketError(ValueError):
 
 
 _CHECKBOX = re.compile(r"^\s*- \[(?P<state>[ xX])\]\s+.+$", re.MULTILINE)
+IMPLEMENTATION_ENTRY_STATUSES = {"ready-for-agent", "revalidated"}
+TICKET_STATUS_TRANSITIONS = {
+    "ready-for-agent": {"implementing"},
+    "implementing": {"complete", "blocked-by-design"},
+    "blocked-by-design": {"revising"},
+    "revising": {"revalidated"},
+    "revalidated": {"implementing"},
+    "complete": set(),
+}
 
 
 @dataclass(frozen=True)
@@ -48,20 +57,40 @@ def frontmatter(path: Path) -> dict[str, object]:
     except ValueError as exc:
         raise TicketError("Ticket frontmatter 未结束") from exc
     result: dict[str, object] = {}
-    for line in lines[1:end]:
+    body = lines[1:end]
+    index = 0
+    while index < len(body):
+        line = body[index]
         if not line.strip() or line.lstrip().startswith("#"):
+            index += 1
             continue
         if ":" not in line:
             raise TicketError(f"无效 Ticket 配置行：{line}")
         key, raw = line.split(":", 1)
-        result[key.strip()] = _value(raw)
+        key = key.strip()
+        if not raw.strip():
+            items: list[object] = []
+            cursor = index + 1
+            while cursor < len(body):
+                candidate = body[cursor]
+                if not candidate.strip() or candidate.lstrip().startswith("#"):
+                    cursor += 1
+                    continue
+                if candidate[:1].isspace() and candidate.lstrip().startswith("- "):
+                    items.append(_value(candidate.lstrip()[2:]))
+                    cursor += 1
+                    continue
+                break
+            if items:
+                result[key] = items
+                index = cursor
+                continue
+        result[key] = _value(raw)
+        index += 1
     return result
 
 
-def validate_ready_ticket(path: Path) -> dict[str, object]:
-    ticket = frontmatter(path)
-    if ticket.get("status") != "ready-for-agent":
-        return {"status": "not-ready", "path": str(path)}
+def _admission_fields(ticket: dict[str, object], path: Path) -> dict[str, object]:
     agent = ticket.get("execution_agent")
     if agent not in EXECUTION_AGENTS:
         raise TicketError("ready-for-agent Ticket 必须指定 execution_agent")
@@ -72,7 +101,59 @@ def validate_ready_ticket(path: Path) -> dict[str, object]:
         raise TicketError("ready-for-agent Ticket 必须具备规则来源、作用范围和派生约束")
     if ticket["rule_conflicts"]:
         raise TicketError("存在未解决 rule_conflicts，Ticket 不得进入实施")
-    return {"status": "ready", "path": str(path), "execution_agent": agent}
+    spec_id = ticket.get("spec_id")
+    spec_ref = ticket.get("spec_ref")
+    revision = ticket.get("spec_revision")
+    if not isinstance(spec_id, str) or not spec_id.strip():
+        raise TicketError("ready-for-agent Ticket 必须声明 Spec 血缘：spec_id")
+    if not isinstance(spec_ref, str) or not spec_ref.strip():
+        raise TicketError("ready-for-agent Ticket 必须声明 Spec 血缘：spec_ref")
+    if not (
+        (isinstance(revision, int) and revision > 0)
+        or (isinstance(revision, str) and revision.isdigit() and int(revision) > 0)
+    ):
+        raise TicketError("ready-for-agent Ticket 必须声明 Spec 血缘：正整数 spec_revision")
+    return {
+        "execution_agent": agent,
+        "spec_id": spec_id,
+        "spec_revision": int(revision),
+        "spec_ref": spec_ref,
+    }
+
+
+def validate_ready_ticket(path: Path) -> dict[str, object]:
+    ticket = frontmatter(path)
+    if ticket.get("status") not in IMPLEMENTATION_ENTRY_STATUSES:
+        return {"status": "not-ready", "path": str(path)}
+    return {
+        "status": "ready",
+        "path": str(path),
+        **_admission_fields(ticket, path),
+    }
+
+
+def validate_ticket_transition(path: Path, target_status: str) -> dict[str, object]:
+    """Validate one explicit implementation Ticket state change without writing it."""
+    ticket = frontmatter(path)
+    if ticket.get("ticket_kind") != "implementation":
+        raise TicketError("只有 implementation Ticket 可使用实施状态迁移")
+    current = ticket.get("status")
+    if current not in TICKET_STATUS_TRANSITIONS:
+        raise TicketError(f"未知 implementation Ticket 状态：{current}")
+    if target_status not in TICKET_STATUS_TRANSITIONS[current]:
+        raise TicketError(f"非法 Ticket 状态迁移：{current} -> {target_status}")
+    if target_status == "implementing" and current in IMPLEMENTATION_ENTRY_STATUSES:
+        validate_ready_ticket(path)
+    if target_status == "revalidated":
+        _admission_fields(ticket, path)
+    if target_status == "complete" and _unchecked_acceptance(path):
+        raise TicketError("验收标准尚未全部勾选，Ticket 不得进入 complete")
+    return {
+        "status": "allow",
+        "path": str(path),
+        "from": current,
+        "to": target_status,
+    }
 
 
 def _sequence(ticket: dict[str, object], path: Path) -> int:
@@ -110,7 +191,10 @@ def eligible_local_tickets(tickets_dir: Path, *, allowed_ids: set[str] | None = 
     for identifier, (path, ticket) in records.items():
         if allowed_ids is not None and identifier not in allowed_ids:
             continue
-        if ticket.get("ticket_kind") != "implementation" or ticket.get("status") != "ready-for-agent":
+        if (
+            ticket.get("ticket_kind") != "implementation"
+            or ticket.get("status") not in IMPLEMENTATION_ENTRY_STATUSES
+        ):
             continue
         if ticket.get("claimed_by") not in {None, ""}:
             continue

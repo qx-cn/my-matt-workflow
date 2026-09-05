@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 通过一小组分诊角色构成的状态机，推进项目 Issue 跟踪器中的事项。
 
+面向报告者或维护者写评论时，按[面向读者写作](references/shared/reader-first-writing.md)先给已确认事实、具体缺口、需要它的原因和下一动作；Agent 简报继续按自身格式编写。
+
 如果此仓库将外部 Pull Request 视为请求入口（见 Issue 跟踪器配置），分诊也涵盖它们：**PR 是附带代码的 Issue**——使用相同的角色、状态和状态机，只在下文标注“针对 PR”的地方有所差异。依据跟踪器配置，将裸 `#42` 解析为 Issue 或 PR。
 
 分诊期间发布到 Issue 跟踪器的每一条评论或 Issue **都必须**以以下免责声明开头：

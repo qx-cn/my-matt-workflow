@@ -81,6 +81,7 @@ def _rewrite_relative_skill_links(text: str) -> str:
 class DependencyEdge:
     skill: str
     when: str
+    kind: str
 
 
 @dataclass(frozen=True)
@@ -97,7 +98,7 @@ def _skill_name(value: object, location: str) -> str:
 
 
 def load_composition_manifest(path: Path) -> CompositionManifest:
-    """Load a strict version-1 composition manifest."""
+    """Load a strict version-2 composition manifest."""
     try:
         raw = json.loads(path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
@@ -108,7 +109,7 @@ def load_composition_manifest(path: Path) -> CompositionManifest:
         "routable_entries",
     }:
         raise CompositionError("组合清单字段必须为 version、callers、routable_entries")
-    if raw["version"] != 1:
+    if raw["version"] != 2:
         raise CompositionError(f"不支持的组合清单版本：{raw['version']!r}")
     if not isinstance(raw["callers"], dict):
         raise CompositionError("callers 必须是对象")
@@ -123,16 +124,21 @@ def load_composition_manifest(path: Path) -> CompositionManifest:
         edges: list[DependencyEdge] = []
         seen: set[str] = set()
         for index, edge_value in enumerate(edge_values):
-            if not isinstance(edge_value, dict) or set(edge_value) != {"skill", "when"}:
-                raise CompositionError(f"{caller}[{index}]: 依赖字段必须为 skill、when")
+            if not isinstance(edge_value, dict) or set(edge_value) != {"skill", "when", "kind"}:
+                raise CompositionError(f"{caller}[{index}]: 依赖字段必须为 skill、when、kind")
             skill = _skill_name(edge_value["skill"], f"{caller}[{index}]")
             when = edge_value["when"]
             if not isinstance(when, str) or not when.strip():
                 raise CompositionError(f"{caller}[{index}]: when 不能为空")
+            kind = edge_value["kind"]
+            if kind not in {"method", "handoff"}:
+                raise CompositionError(
+                    f"{caller}[{index}]: kind 必须为 method 或 handoff"
+                )
             if skill in seen:
                 raise CompositionError(f"{caller}: 重复依赖 {skill}")
             seen.add(skill)
-            edges.append(DependencyEdge(skill, when))
+            edges.append(DependencyEdge(skill, when, kind))
         callers[caller] = tuple(edges)
 
     routable_entries: dict[str, tuple[str, ...]] = {}
@@ -148,14 +154,14 @@ def load_composition_manifest(path: Path) -> CompositionManifest:
             raise CompositionError(f"{router}: 路由入口重复")
         routable_entries[router] = entries
 
-    return CompositionManifest(1, callers, routable_entries)
+    return CompositionManifest(2, callers, routable_entries)
 
 
 def validate_composition_manifest(
     manifest: CompositionManifest, skills_dir: Path
 ) -> None:
     """Validate declared Skills and reject every graph cycle."""
-    if manifest.version != 1:
+    if manifest.version != 2:
         raise CompositionError(f"不支持的组合清单版本：{manifest.version}")
     for caller, edges in sorted(manifest.callers.items()):
         if not (skills_dir / caller).is_dir():

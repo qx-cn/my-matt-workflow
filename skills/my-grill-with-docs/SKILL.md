@@ -6,8 +6,7 @@ disable-model-invocation: true
 
 本流程依赖 `my-grilling` 与 `my-domain-modeling`。读取 `.agent/matt-workflow.md` 的 `composition_policy` 并遵循[组合调用](references/shared/adapters/composition.md)：
 
-- `automatic`：只读取当前阶段需要的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 和 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)。
-- `manual`：输出对应的 `/my-<skill>`（Cursor / Claude）或 `$my-<skill>`（Codex），随后停止。
+- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都只读取当前阶段需要的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 和 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，执行后返回宿主；不要输出另一条 Skill 调用。
 
 访谈结束后、输出可执行计划前，按 [项目规则解析](references/shared/adapters/project-rules.md) 为目标 `execution_agent` 解析规则。计划项必须逐项给出影响区域、规则、约束和验证；未解决的规则冲突或路径匹配不得伪装成已可执行计划。
 

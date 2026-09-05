@@ -32,6 +32,14 @@ from workflow_lib.work_artifacts import (
     apply_work_artifact_migration,
 )
 from workflow_lib.release import build_release, release_matches_source
+from workflow_lib.review_snapshot import ReviewSnapshotError, build_review_snapshot
+from workflow_lib.run_journal import (
+    RUN_PHASE_TRANSITIONS,
+    RunJournalError,
+    build_run_context,
+    record_run,
+    start_run,
+)
 from workflow_lib.smoke_registry import (
     SmokeRegistryError,
     load_smoke_registry,
@@ -39,7 +47,13 @@ from workflow_lib.smoke_registry import (
 )
 from workflow_lib.validator import ValidationError, validate_repository
 from workflow_lib.rules import EXECUTION_AGENTS, RuleError, resolve_rules
-from workflow_lib.tickets import TicketError, implementation_ticket_ids, validate_ready_ticket
+from workflow_lib.tickets import (
+    TICKET_STATUS_TRANSITIONS,
+    TicketError,
+    implementation_ticket_ids,
+    validate_ready_ticket,
+    validate_ticket_transition,
+)
 from workflow_lib.transitions import ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
 
@@ -355,6 +369,7 @@ def command_smoke(args: argparse.Namespace) -> None:
                 json.dumps(
                     {
                         "status": "valid",
+                        "evidence_level": "deterministic-contract",
                         "skills": [],
                         "registered_skills": sorted(load_smoke_registry(ROOT)),
                         "scenarios": [],
@@ -374,6 +389,7 @@ def command_smoke(args: argparse.Namespace) -> None:
         json.dumps(
             {
                 "status": "valid",
+                "evidence_level": "deterministic-contract",
                 "skills": sorted(set(args.skills)),
                 "scenarios": [scenario.identifier for scenario in scenarios],
             },
@@ -483,6 +499,14 @@ def command_validate_ticket(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False))
 
 
+def command_ticket_transition(args: argparse.Namespace) -> None:
+    try:
+        report = validate_ticket_transition(Path(args.path), args.to)
+    except TicketError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_next_ticket(args: argparse.Namespace) -> None:
     """Return the next local Ticket action for an already-completed Ticket."""
     repo = Path(args.repo).resolve()
@@ -533,6 +557,65 @@ def command_ticket_scope(args: argparse.Namespace) -> None:
     except TicketError as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps({"ticket_ids": identifiers}, ensure_ascii=False, sort_keys=True))
+
+
+def command_review_snapshot(args: argparse.Namespace) -> None:
+    try:
+        report = build_review_snapshot(Path(args.repo), args.base)
+    except ReviewSnapshotError as exc:
+        raise SystemExit(str(exc)) from exc
+
+    exit_code = 0
+    if args.expect_content_id:
+        if report["content_id"] != args.expect_content_id:
+            report["status"] = "stale"
+            exit_code = 2
+        elif args.require_clean and not report["clean"]:
+            report["status"] = "dirty"
+            exit_code = 2
+        else:
+            report["status"] = "match"
+    elif args.require_clean:
+        raise SystemExit("--require-clean 必须与 --expect-content-id 同时使用")
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    if exit_code:
+        raise SystemExit(exit_code)
+
+
+def command_run_context(args: argparse.Namespace) -> None:
+    try:
+        context = build_run_context(Path(args.repo), Path(args.ticket), args.base, args.path)
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(context, ensure_ascii=False, sort_keys=True))
+
+
+def command_run_start(args: argparse.Namespace) -> None:
+    try:
+        path, journal = start_run(Path(args.repo), Path(args.ticket), args.base, args.path)
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(
+        json.dumps(
+            {"status": "ready", "journal": str(path), "run": journal},
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    )
+
+
+def command_run_record(args: argparse.Namespace) -> None:
+    try:
+        journal = record_run(
+            Path(args.journal),
+            args.phase,
+            test_receipt=args.test_receipt,
+            review_receipt=args.review_receipt,
+            blocker=args.blocker,
+        )
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps({"status": "recorded", "run": journal}, ensure_ascii=False, sort_keys=True))
 
 
 def command_deploy(args: argparse.Namespace) -> None:
@@ -720,6 +803,15 @@ def parser() -> argparse.ArgumentParser:
     validate_ticket.add_argument("path")
     validate_ticket.set_defaults(func=command_validate_ticket)
 
+    ticket_transition_cmd = sub.add_parser("ticket-transition")
+    ticket_transition_cmd.add_argument("path")
+    ticket_transition_cmd.add_argument(
+        "--to",
+        choices=sorted(TICKET_STATUS_TRANSITIONS),
+        required=True,
+    )
+    ticket_transition_cmd.set_defaults(func=command_ticket_transition)
+
     next_ticket = sub.add_parser("next-ticket")
     next_ticket.add_argument("--repo", default=".")
     next_ticket.add_argument("--feature")
@@ -739,6 +831,35 @@ def parser() -> argparse.ArgumentParser:
     ticket_scope.add_argument("--feature")
     ticket_scope.add_argument("--tickets-dir")
     ticket_scope.set_defaults(func=command_ticket_scope)
+
+    review_snapshot = sub.add_parser("review-snapshot")
+    review_snapshot.add_argument("--repo", default=".")
+    review_snapshot.add_argument("--base", required=True)
+    review_snapshot.add_argument("--expect-content-id")
+    review_snapshot.add_argument("--require-clean", action="store_true")
+    review_snapshot.set_defaults(func=command_review_snapshot)
+
+    run_context = sub.add_parser("run-context")
+    run_context.add_argument("--repo", default=".")
+    run_context.add_argument("--ticket", required=True)
+    run_context.add_argument("--base", required=True)
+    run_context.add_argument("--path", action="append", default=[])
+    run_context.set_defaults(func=command_run_context)
+
+    run_start = sub.add_parser("run-start")
+    run_start.add_argument("--repo", default=".")
+    run_start.add_argument("--ticket", required=True)
+    run_start.add_argument("--base", required=True)
+    run_start.add_argument("--path", action="append", default=[])
+    run_start.set_defaults(func=command_run_start)
+
+    run_record = sub.add_parser("run-record")
+    run_record.add_argument("journal")
+    run_record.add_argument("--phase", choices=sorted(RUN_PHASE_TRANSITIONS), required=True)
+    run_record.add_argument("--test-receipt")
+    run_record.add_argument("--review-receipt")
+    run_record.add_argument("--blocker")
+    run_record.set_defaults(func=command_run_record)
 
     deploy = sub.add_parser("deploy")
     deploy.add_argument("--release-id")

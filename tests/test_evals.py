@@ -41,7 +41,12 @@ ROOT = Path(__file__).resolve().parents[1]
 class EvalValidationTests(unittest.TestCase):
     def test_checked_in_scenarios_and_evidence_are_strictly_valid(self):
         self.assertEqual(
-            {"status": "valid", "scenarios": 5, "required_scenarios": 4},
+            {
+                "status": "valid",
+                "evidence_level": "deterministic-contract",
+                "scenarios": 6,
+                "required_scenarios": 5,
+            },
             validate_evals(ROOT),
         )
 
@@ -126,6 +131,7 @@ class EvalValidationTests(unittest.TestCase):
         registry = validate_smoke_registry(ROOT, scenarios)
         registered = {identifier for identifiers in registry.values() for identifier in identifiers}
         self.assertEqual({scenario.identifier for scenario in scenarios}, registered)
+        self.assertIn("main-workflow-fresh-context", registered)
 
     def test_smoke_registry_rejects_unknown_requested_skill(self):
         with self.assertRaisesRegex(SmokeRegistryError, "not registered"):
@@ -157,6 +163,10 @@ class EvalCliTests(unittest.TestCase):
         )
         self.assertEqual(0, valid.returncode, valid.stderr)
         self.assertEqual("valid", json.loads(valid.stdout)["status"])
+        self.assertEqual(
+            "deterministic-contract",
+            json.loads(valid.stdout)["evidence_level"],
+        )
 
         unknown = subprocess.run(
             [sys.executable, "tools/workflow.py", "smoke", "--skills", "my-unknown"],
@@ -178,7 +188,18 @@ class EvalCliTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(0, registry.returncode, registry.stderr)
-        self.assertEqual("valid", json.loads(registry.stdout)["status"])
+        registry_report = json.loads(registry.stdout)
+        self.assertEqual("valid", registry_report["status"])
+        self.assertEqual(
+            "deterministic-contract",
+            registry_report["evidence_level"],
+        )
+
+    def test_validation_guide_separates_contracts_from_real_agent_smoke(self):
+        text = (ROOT / "evals/VALIDATION.md").read_text()
+        self.assertIn("deterministic-contract", text)
+        self.assertIn("fresh-agent-smoke", text)
+        self.assertIn("不能", text)
 
 
 class CheckGateTests(unittest.TestCase):
@@ -246,7 +267,10 @@ class CheckGateTests(unittest.TestCase):
             ):
                 replacement_gate = run_check(root, check_current_release=False)
             self.assertEqual("valid", replacement_gate["status"])
-            self.assertEqual({"status": "valid"}, replacement_gate["tests"])
+            self.assertEqual(
+                {"status": "valid", "evidence_level": "unit"},
+                replacement_gate["tests"],
+            )
             self.assertNotIn("release", replacement_gate)
             self.assertTrue(release.is_dir())
 
@@ -383,6 +407,16 @@ class CheckGateTests(unittest.TestCase):
             root = Path(tmp) / "repository"
             self._source_copy(root)
             self.assertFalse((root / ".git").exists())
+            build_release(
+                root / "skills",
+                root / "releases",
+                release_id="non-git-current",
+                upstream_id="local-matt-skills",
+                repo_root=root,
+            )
+            (root / "current.json").write_text(
+                json.dumps({"release_id": "non-git-current"}) + "\n"
+            )
             environment = os.environ | {"MY_MATT_NESTED_CHECK": "1"}
             result = subprocess.run(
                 [sys.executable, "tools/workflow.py", "check"],
