@@ -41,7 +41,7 @@ disable-model-invocation: true
 
 **大范围重构是纵向切片的例外。** 大范围重构是一次机械变更——如改列名、重定共享符号——其 blast radius 覆盖整个代码库，单次编辑会同时破坏数千调用点，无法让任何纵向切片保持 green。不要强行改成 tracer bullet；使用 **expand–contract**：先 expand，在旧形式旁加入新形式而不破坏任何内容；再按 blast radius 分批迁移调用点（按 package 或目录），每批一张被 expand 阻塞的 Ticket。旧形式仍在，因此批次之间 CI 保持 green；最后在所有迁移批次完成后 contract，删除旧形式。若连批次都无法单独 green，仍保留顺序，但让它们共享集成分支，并让所有批次阻塞最后的 integrate-and-verify Ticket；只有最后一张承诺 green。
 
-### 4. 询问用户
+### 4. 审阅拆分并按需确认
 
 将建议拆分以编号列表展示。每张 Ticket 都展示：
 
@@ -50,9 +50,11 @@ disable-model-invocation: true
 - **交付什么**：该 Ticket 端到端实现的行为。
 - **适用规则与影响区域**：规则来源、影响模块/目录/glob，以及由规则推出的实施约束。
 
-询问用户：粒度是否合适（太粗/太细）；阻塞边是否正确且只依赖真正的门槛；是否要合并或再拆分。反复迭代直至用户批准。
+先自检粒度是否过粗或过细、阻塞边是否只依赖真正门槛，以及是否有应合并或再拆分的 Ticket。若这些都能从已批准 Spec、项目规则和代码推断，分类为 `routine`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)继续保存可审阅草稿，不要求用户再次批准机械拆分。
 
-### 5. 保存或发布已批准 Ticket
+只有拆分暴露出会改变目标、范围、公开接口、数据语义、测试投入或风险承担的未知时，才分类为 `consequential` 并执行 `decision-gate`；`confirm` 时连同编号方案和具体分歧询问，`allow` 时记录依据后继续，`pause` 时停止。用户专属产品取舍分类为 `user-exclusive`，不得由自动策略决定。
+
+### 5. 保存或发布 Ticket
 
 输入是修订版 Spec 时，先做影响映射：已完成 Ticket 保持 `complete` 且不改正文；需要撤销或迁移其结果时新增补偿 Ticket。受影响的未完成 Ticket 进入 `revising`，更新来源、验收和阻塞边，通过 `validate-ticket` 后标为 `revalidated`；不受影响的 Ticket 保留原血缘。不得删除历史 Ticket 或把完成记录改写成“未发生”。
 

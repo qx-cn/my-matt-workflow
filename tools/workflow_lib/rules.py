@@ -61,32 +61,109 @@ def _matches(path: str, patterns: list[str]) -> bool:
     return any(candidate.match(pattern) or fnmatch.fnmatch(path, pattern) for pattern in patterns)
 
 
-def _entry(repo: Path, source: Path, applies_by: str, scope: list[str]) -> dict[str, object]:
-    return {"source": source.relative_to(repo).as_posix(), "applies_by": applies_by, "scope": scope}
+def _entry(repo: Path, source: Path, applies_by: str, scope: list[str], **details: object) -> dict[str, object]:
+    return {
+        "source": source.relative_to(repo).as_posix(),
+        "applies_by": applies_by,
+        "scope": scope,
+        **details,
+    }
 
 
-def _files_under(directory: Path) -> list[Path]:
-    """Return regular files below a rule directory in stable order."""
-    if not directory.is_dir():
-        return []
-    return sorted(path for path in directory.rglob("*") if path.is_file())
+def _normalize_paths(paths: list[str]) -> list[str]:
+    normalized: list[str] = []
+    for raw in paths:
+        value = raw.replace("\\", "/").rstrip("/")
+        candidate = PurePosixPath(value)
+        if not value or candidate.is_absolute() or ".." in candidate.parts:
+            raise RuleError(f"规则目标路径必须是仓库内相对路径：{raw!r}")
+        normalized.append(candidate.as_posix())
+    return normalized
 
 
-def resolve_rules(repo: Path, agent: str, paths: list[str]) -> list[dict[str, object]]:
+def _codex_directories(root: Path, path: str) -> list[Path]:
+    target = root / path
+    parent = target if target.is_dir() else target.parent
+    directories = [parent]
+    while directories[-1] != root:
+        next_parent = directories[-1].parent
+        if not next_parent.is_relative_to(root):
+            raise RuleError(f"规则目标路径越界：{path!r}")
+        directories.append(next_parent)
+    return list(reversed(directories))
+
+
+def _codex_rules(
+    root: Path, paths: list[str], fallback_filenames: list[str]
+) -> list[dict[str, object]]:
+    candidates: list[tuple[str, str]] = [
+        ("AGENTS.override.md", "override"),
+        ("AGENTS.md", "agents"),
+    ]
+    for name in fallback_filenames:
+        fallback = PurePosixPath(name)
+        if fallback.name != name or name in {item[0] for item in candidates}:
+            raise RuleError(f"Codex fallback 必须是唯一的文件名：{name!r}")
+        candidates.append((name, "fallback"))
+
+    scopes: dict[Path, set[str]] = {}
+    selected_by: dict[Path, str] = {}
+    targets = paths or ["**"]
+    for target in targets:
+        directories = [root] if target == "**" else _codex_directories(root, target)
+        for directory in directories:
+            for filename, selector in candidates:
+                source = directory / filename
+                if source.is_file() and source.read_text(encoding="utf-8").strip():
+                    scopes.setdefault(source, set()).add(target)
+                    selected_by[source] = selector
+                    break
+
+    entries: list[dict[str, object]] = []
+    for source in sorted(
+        scopes,
+        key=lambda item: (len(item.parent.relative_to(root).parts), item.as_posix()),
+    ):
+        directory = source.parent.relative_to(root).as_posix() or "."
+        entries.append(
+            _entry(
+                root,
+                source,
+                "codex-native",
+                sorted(scopes[source]),
+                directory=directory,
+                selected_by=selected_by[source],
+                precedence_index=len(source.parent.relative_to(root).parts),
+            )
+        )
+    return entries
+
+
+def resolve_rules(
+    repo: Path,
+    agent: str,
+    paths: list[str],
+    *,
+    codex_fallback_filenames: list[str] | None = None,
+) -> list[dict[str, object]]:
     """Resolve shared and target-agent rules without mixing other agents' rules."""
     if agent not in EXECUTION_AGENTS:
         raise RuleError(f"未知 execution agent: {agent}")
     root = repo.resolve()
-    normalized_paths = [path.replace("\\", "/").lstrip("/") for path in paths]
+    normalized_paths = _normalize_paths(paths)
     rules: list[dict[str, object]] = []
-    for relative in ("AGENTS.override.md", "AGENTS.md", "CONTRIBUTING.md", "CODING_STANDARDS.md"):
+    for relative in ("CONTRIBUTING.md", "CODING_STANDARDS.md"):
         source = root / relative
         if source.is_file():
-            rules.append(_entry(root, source, "shared", ["**"]))
+            rules.append(_entry(root, source, "shared-standard", ["**"]))
     if agent == "codex":
-        for source in _files_under(root / ".agent" / "rules"):
-            rules.append(_entry(root, source, "always", ["**"]))
+        rules.extend(
+            _codex_rules(root, normalized_paths, codex_fallback_filenames or [])
+        )
         return rules
+    agents = root / "AGENTS.md"
+    if agents.is_file():
+        rules.insert(0, _entry(root, agents, "shared", ["**"]))
     if agent == "cursor":
         legacy = root / ".cursorrules"
         if legacy.is_file():

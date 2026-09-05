@@ -1,6 +1,6 @@
 ---
 name: my-edit-article
-description: 在确认结构方案后重组并润色文章，默认保留原稿
+description: 按读者用途重组并润色文章，默认保留原稿
 disable-model-invocation: true
 ---
 
@@ -8,8 +8,8 @@ disable-model-invocation: true
 
 先按[面向读者写作](references/shared/reader-first-writing.md)确认文章的目标读者、载体、用途、前置知识和作者希望读者采取的动作；这些信息会改变结构且无法推断时再询问。
 
-1. 先按标题划分文章章节，梳理每章的核心论点与信息依赖，确保章节顺序尊重前置知识；向用户展示章节重组方案并等待确认。
-2. 确认后逐节改写以改善清晰度、连贯性与节奏；段落长度服从载体和论证需要，不改变未经确认的事实立场。
+1. 先按标题划分文章章节，梳理每章的核心论点与信息依赖，确保章节顺序尊重前置知识；把结构方案作为可审阅的新稿依据，不为普通、可逆的重排单独等待确认。若重排必须改变未经确认的立场、范围或事实含义，按[指令权威与决策 Gate](references/shared/instruction-authority.md)分类为 `consequential` 后执行唯一 gate 动作。
+2. 逐节改写以改善清晰度、连贯性与节奏；段落长度服从载体和论证需要，不改变未经确认的事实立场。
 3. 默认生成新稿，保存到 `.agent/work/<topic>/articles/articles-<topic>-<time-or-sequence>.md`，并报告与原稿的关系。
 4. 只有用户明确要求时才能原地修改原文；原地修改前展示影响范围并再次确认。不得因“更方便”覆盖原稿。
 

@@ -210,6 +210,23 @@ class SharedResourceTests(unittest.TestCase):
                     for reference in references:
                         self.assertTrue((target / reference).is_file())
 
+    def test_instruction_authority_is_bundled_for_decision_callers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        with tempfile.TemporaryDirectory() as tmp:
+            for skill in (
+                "my-code-review",
+                "my-diagnosing-bugs",
+                "my-domain-modeling",
+                "my-edit-article",
+                "my-to-tickets",
+            ):
+                target = Path(tmp) / skill
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, skill, target)
+                authority = target / "references/shared/instruction-authority.md"
+                self.assertTrue(authority.is_file(), skill)
+                self.assertIn("decision-gate", authority.read_text())
+
     def test_policies_are_bundled_only_for_explicit_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         with tempfile.TemporaryDirectory() as tmp:

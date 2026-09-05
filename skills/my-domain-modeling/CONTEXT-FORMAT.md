@@ -59,4 +59,4 @@ _避免使用_：Client、买方、账户
 - 只有一份正式或个人术语表时，视作单一上下文；
 - 两者都没有时，在第一个术语解决后按需创建 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`。
 
-多个上下文并存时，判断当前议题属于哪个上下文；不明确时，按项目 `decision_policy` 询问或在获准的无人值守计划中记录假设。
+多个上下文并存时，判断当前议题属于哪个上下文；仍不明确时将归属选择分类为 `consequential`，执行 runtime `decision-gate` 的唯一结果，不自行列出多种动作。

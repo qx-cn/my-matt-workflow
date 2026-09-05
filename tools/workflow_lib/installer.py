@@ -166,6 +166,26 @@ def validate_skill_metadata_for_target(
         )
 
 
+def _project_skill_metadata_for_target(skill_dir: Path, target: str | None) -> None:
+    """Remove invocation metadata that the selected host does not consume."""
+    if target == "codex":
+        skill_file = skill_dir / "SKILL.md"
+        text = skill_file.read_text(encoding="utf-8")
+        projected = re.sub(
+            r"(?m)^disable-model-invocation:\s*true\s*\n?", "", text, count=1
+        )
+        skill_file.write_text(projected, encoding="utf-8")
+        return
+    if target in {"cursor", "claude"}:
+        metadata = skill_dir / "agents" / "openai.yaml"
+        if metadata.is_file():
+            metadata.unlink()
+            try:
+                metadata.parent.rmdir()
+            except OSError:
+                pass
+
+
 def _remove_path(path: Path) -> None:
     if path.is_dir():
         shutil.rmtree(path)
@@ -281,6 +301,7 @@ def install_release(
     backup.mkdir()
     for skill_name in manifest["skills"]:
         shutil.copytree(release / "skills" / skill_name, staged / skill_name)
+        _project_skill_metadata_for_target(staged / skill_name, install_target)
     staged_runtime = transaction / "staged-runtime"
     shutil.copytree(release / "runtime", staged_runtime)
 
@@ -330,6 +351,7 @@ def install_release(
             "installed_at": datetime.now(timezone.utc).isoformat(),
             "transaction_id": transaction_id,
             "installed_agent": install_target,
+            "metadata_projection": install_target or "portable",
             "skills_home": str(skills_home.resolve()),
             "runtime_entry": str(runtime_entry.resolve()),
         }

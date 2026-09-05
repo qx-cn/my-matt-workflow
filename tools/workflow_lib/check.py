@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from .behavior_evidence import BehaviorEvidenceError, validate_behavior_suite
 from .evals import EvalError, validate_evals
 from .installer import verify_release
 from .release import release_matches_source
@@ -70,7 +71,10 @@ def run_check(
         static = validate_repository(root)
         evals = validate_evals(root)
         validate_smoke_registry(root)
-    except (ValidationError, EvalError, SmokeRegistryError) as exc:
+        validate_behavior_suite(
+            root / "evals" / "agent-smokes" / "astra-behavior-suite.json"
+        )
+    except (ValidationError, EvalError, SmokeRegistryError, BehaviorEvidenceError) as exc:
         raise CheckError(str(exc)) from exc
     tests = subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", "tests"],

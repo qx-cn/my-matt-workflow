@@ -25,7 +25,7 @@ run-start --repo <repo> --ticket <ticket-path> --base <HEAD> --path <planned-pat
 
 在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段；只有[工作范围](references/shared/adapters/work-scope.md)定义的关键 seam 才暂停等待确认。
 
-进入测试、实施、审查、提交和完成阶段时，用 `run-record <journal> --phase <phase>` 更新磁盘状态；实际测试摘要用 `--test-receipt`，通过审查的 `content_id` 用 `--review-receipt`。定期运行类型检查和单个测试文件；结束时运行一次完整测试套件。
+进入测试、实施、审查、提交和完成阶段时，用 `run-record <journal> --phase <phase>` 更新磁盘状态；实际测试摘要用 `--test-receipt`，通过审查的 `content_id` 用 `--review-receipt`。改动中运行能最快证明当前行为的最小针对性测试；Ticket 完成时运行受影响模块或链路的测试。只有整份计划完成、发布或合并前、项目规则明确要求，或者失败与风险证据表明影响面扩大时，才运行完整测试套件。相关验证通过后，没有新改动、新失败或未解决风险就不重复或扩大测试。
 
 对预计无法在单次工具调用内完成的测试、构建、迁移等命令，应以可续接的执行会话启动，并通过同一会话持续轮询至进程退出；不得将单次返回、等待超时或输出截断视为命令终止。完成后必须检查实际退出码；命令如提供最终结果摘要，也应一并核对。
 

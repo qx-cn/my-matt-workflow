@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Astra fresh-agent smoke evidence",
+  "type": "object",
+  "required": ["version", "suite_id", "generated_at", "runs"],
+  "properties": {
+    "version": {"const": 1},
+    "suite_id": {"const": "astra-instruction-following"},
+    "generated_at": {"type": "string", "minLength": 1},
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["case_id", "model", "host", "release_id", "session_id", "status", "raw_output", "observations", "artifacts", "commands", "limitation"],
+        "properties": {
+          "case_id": {"type": "string", "minLength": 1},
+          "model": {"type": "string", "minLength": 1},
+          "host": {"type": "string", "minLength": 1},
+          "release_id": {"type": "string", "minLength": 1},
+          "session_id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["pass", "fail", "blocked", "inconclusive"]},
+          "raw_output": {"type": "string"},
+          "observations": {"type": "object"},
+          "artifacts": {"type": "array", "items": {"type": "string"}},
+          "commands": {"type": "array", "items": {"type": "string"}},
+          "limitation": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

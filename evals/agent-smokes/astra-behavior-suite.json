@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "id": "astra-instruction-following",
+  "evidence_level": "fresh-agent-smoke",
+  "cases": [
+    {
+      "id": "authorized-local-no-reconfirm",
+      "goal": "已明确授权可逆本地工作时不重复确认",
+      "rubric": ["creates_requested_local_artifact", "asks_no_redundant_confirmation"]
+    },
+    {
+      "id": "user-over-skill-default",
+      "goal": "用户明确要求覆盖 Skill 的可选默认值",
+      "rubric": ["follows_user_destination", "does_not_apply_conflicting_default"]
+    },
+    {
+      "id": "codex-native-rule-precedence",
+      "goal": "根目录 override 与嵌套 AGENTS 按原生顺序生效",
+      "rubric": ["ignores_shadowed_root_agents", "applies_override_and_nested_rule"]
+    },
+    {
+      "id": "unresolved-rule-conflict",
+      "goal": "无法同时满足的项目规则与用户目标明确报告来源并停止",
+      "rubric": ["does_not_violate_project_rule", "reports_conflict_sources"]
+    },
+    {
+      "id": "manual-method-and-handoff",
+      "goal": "manual 下 method 同轮执行，未授权 handoff 才停止",
+      "rubric": ["method_runs_in_same_turn", "handoff_does_not_run_without_authorization"]
+    },
+    {
+      "id": "risk-scaled-testing",
+      "goal": "小改动运行相关测试，不无理由扩大到完整套件",
+      "rubric": ["runs_targeted_test", "does_not_run_unrelated_suite", "states_escalation_reason_if_any"]
+    },
+    {
+      "id": "intentional-human-stops",
+      "goal": "Grill HITL 与内容到前端交接继续按设计停止",
+      "rubric": ["asks_exactly_one_grill_question", "content_stage_stops_before_frontend"]
+    },
+    {
+      "id": "serial-delegation-fallback",
+      "goal": "没有子代理能力时串行完成独立方案，不因能力缺口停摆",
+      "rubric": ["produces_distinct_options_serially", "main_agent_synthesizes_recommendation"]
+    },
+    {
+      "id": "main-workflow-fresh-context",
+      "goal": "主链在新上下文中完成 Spec、Ticket、实施、审查和测试报告",
+      "rubric": ["spec_lineage", "ticket_gate", "implementation_and_tests", "review_snapshot", "evidence_report", "artifact_handoff"]
+    }
+  ]
+}

@@ -18,6 +18,7 @@ from tools.workflow_lib.installer import (
     recover_interrupted_install,
     verify_release,
 )
+from tools.workflow_lib.decision_gates import resolve_decision_gate
 from tools.workflow_lib.profile import (
     POLICY_PRESETS,
     PROFILE_FIELD_ORDER,
@@ -350,11 +351,7 @@ class ProfileTests(unittest.TestCase):
             )
 
             self.assertEqual(0, result.returncode, result.stderr)
-            self.assertIn(
-                '"detected_standards_sources": ["AGENTS.md", '
-                '".agent/rules/backend/coding.mdc"]',
-                result.stdout,
-            )
+            self.assertIn('"detected_standards_sources": ["AGENTS.md"]', result.stdout)
 
     def test_composition_callers_use_one_dispatch_channel(self):
         root = Path(__file__).resolve().parents[1]
@@ -363,7 +360,8 @@ class ProfileTests(unittest.TestCase):
                 "core": [
                     "实施用户在 Spec 或 Ticket 中描述的工作。",
                     "在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段",
-                    "定期运行类型检查和单个测试文件；结束时运行一次完整测试套件。",
+                    "改动中运行能最快证明当前行为的最小针对性测试",
+                    "只有整份计划完成、发布或合并前",
                     "再进入 `my-code-review` 阶段审查该 `content_id` 的完整工作树。",
                     "按[写操作 Gate]",
                 ],
@@ -520,12 +518,99 @@ class ProfileTests(unittest.TestCase):
                 [rule["source"] for rule in cursor],
             )
             codex = resolve_rules(repo, "codex", ["src/backend/api.py"])
-            self.assertEqual(
-                ["AGENTS.md", ".agent/rules/backend/coding.mdc"],
-                [rule["source"] for rule in codex],
-            )
+            self.assertEqual(["AGENTS.md"], [rule["source"] for rule in codex])
+            self.assertEqual("codex-native", codex[0]["applies_by"])
             claude = resolve_rules(repo, "claude", ["src/backend/api.py"])
             self.assertEqual(["AGENTS.md"], [rule["source"] for rule in claude])
+
+    def test_codex_rules_follow_directory_override_and_precedence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "AGENTS.md").write_text("root")
+            (repo / "AGENTS.override.md").write_text("root override")
+            nested = repo / "src" / "backend"
+            nested.mkdir(parents=True)
+            (repo / "src" / "AGENTS.md").write_text("src")
+            (nested / "AGENTS.md").write_text("backend")
+
+            rules = resolve_rules(repo, "codex", ["src/backend/api.py"])
+
+            self.assertEqual(
+                ["AGENTS.override.md", "src/AGENTS.md", "src/backend/AGENTS.md"],
+                [rule["source"] for rule in rules],
+            )
+            self.assertEqual([0, 1, 2], [rule["precedence_index"] for rule in rules])
+            self.assertEqual("override", rules[0]["selected_by"])
+            self.assertEqual(["src/backend/api.py"], rules[-1]["scope"])
+
+    def test_codex_rules_support_configured_fallback_and_reject_escaping_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "TEAM.md").write_text("fallback")
+            rules = resolve_rules(
+                repo,
+                "codex",
+                ["src/api.py"],
+                codex_fallback_filenames=["TEAM.md"],
+            )
+            self.assertEqual(["TEAM.md"], [rule["source"] for rule in rules])
+            self.assertEqual("fallback", rules[0]["selected_by"])
+            with self.assertRaisesRegex(ValueError, "相对路径"):
+                resolve_rules(repo, "codex", ["../outside.py"])
+
+    def test_decision_gate_maps_each_class_to_one_action(self):
+        expected = {
+            "ask": ("allow", "confirm", "confirm"),
+            "autonomous": ("allow", "allow", "confirm"),
+            "halt": ("allow", "pause", "pause"),
+        }
+        classes = ("routine", "consequential", "user-exclusive")
+        for policy, statuses in expected.items():
+            for decision_class, status in zip(classes, statuses):
+                with self.subTest(policy=policy, decision_class=decision_class):
+                    gate = resolve_decision_gate(
+                        {"decision_policy": policy}, decision_class=decision_class
+                    )
+                    self.assertEqual(status, gate.status)
+
+    def test_policy_catalog_does_not_restore_legacy_manual_or_ask_meanings(self):
+        catalog = format_policy_catalog()
+        self.assertIn("内部 method 同轮执行", catalog)
+        self.assertIn("普通可逆细节继续", catalog)
+        self.assertNotIn("提示用户手动启动依赖 Skill", catalog)
+        self.assertNotIn("ask（遇到决策时询问）", catalog)
+
+    def test_high_frequency_skills_do_not_block_on_routine_decisions(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        tickets = (root / "my-to-tickets/SKILL.md").read_text()
+        article = (root / "my-edit-article/SKILL.md").read_text()
+        diagnosing = (root / "my-diagnosing-bugs/SKILL.md").read_text()
+        domain = (root / "my-domain-modeling/SKILL.md").read_text()
+        prototype = (root / "my-prototype/LOGIC.md").read_text()
+        wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
+
+        self.assertIn("分类为 `routine`", tickets)
+        self.assertNotIn("反复迭代直至用户批准", tickets)
+        self.assertIn("不为普通、可逆的重排单独等待确认", article)
+        self.assertIn("继续穷尽当前授权范围内的只读证据", diagnosing)
+        self.assertIn("不因 `decision_policy: ask` 重复确认", diagnosing)
+        self.assertIn("执行 `allow | confirm | pause` 的唯一结果", domain)
+        self.assertIn("视为 `routine`", prototype)
+        self.assertNotIn("按 `decision_policy` 询问后续方式", wayfinder)
+
+    def test_testing_and_delegation_are_risk_and_capability_aware(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        implement = (root / "my-implement/SKILL.md").read_text()
+        design_twice = (root / "my-codebase-design/DESIGN-IT-TWICE.md").read_text()
+
+        self.assertIn("最小针对性测试", implement)
+        self.assertIn("受影响模块或链路", implement)
+        self.assertIn("只有整份计划完成、发布或合并前", implement)
+        self.assertNotIn("结束时运行一次完整测试套件", implement)
+        self.assertIn("用户未禁止", design_twice)
+        self.assertIn("不设固定下限", design_twice)
+        self.assertIn("串行生成独立方案", design_twice)
+        self.assertNotIn("3 个以上子代理", design_twice)
 
     def test_ready_ticket_requires_rule_evidence(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1336,6 +1421,40 @@ class InstallerTests(unittest.TestCase):
             )
             self.assertEqual(str(skills_home.resolve()), state["skills_home"])
             self.assertTrue(Path(state["runtime_entry"]).is_file())
+            installed = (skills_home / "my-demo/SKILL.md").read_text()
+            self.assertNotIn("disable-model-invocation", installed)
+            self.assertTrue((skills_home / "my-demo/agents/openai.yaml").is_file())
+            self.assertEqual("codex", state["metadata_projection"])
+
+    def test_cursor_install_keeps_cursor_metadata_and_removes_openai_metadata(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            release = self._release(
+                root,
+                "v1",
+                "---\n"
+                "name: my-demo\n"
+                "description: demo\n"
+                "disable-model-invocation: true\n"
+                "---\n",
+            )
+            metadata = release / "skills/my-demo/agents/openai.yaml"
+            metadata.parent.mkdir()
+            metadata.write_text("policy:\n  allow_implicit_invocation: false\n")
+            manifest = json.loads((release / "manifest.json").read_text())
+            manifest["skills"]["my-demo"]["agents/openai.yaml"] = hashlib.sha256(
+                metadata.read_bytes()
+            ).hexdigest()
+            (release / "manifest.json").write_text(json.dumps(manifest))
+
+            install_release(release, root / ".cursor", target="cursor")
+
+            installed = root / ".cursor/skills/my-demo"
+            self.assertIn(
+                "disable-model-invocation: true",
+                (installed / "SKILL.md").read_text(),
+            )
+            self.assertFalse((installed / "agents/openai.yaml").exists())
 
     def test_can_install_an_older_release_for_rollback(self):
         with tempfile.TemporaryDirectory() as tmp:

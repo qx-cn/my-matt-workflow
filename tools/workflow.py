@@ -15,6 +15,11 @@ from pathlib import Path
 
 from workflow_lib.installer import install_release
 from workflow_lib.check import CheckError, run_check
+from workflow_lib.behavior_evidence import (
+    BehaviorEvidenceError,
+    validate_behavior_evidence,
+)
+from workflow_lib.decision_gates import DECISION_CLASSES, resolve_decision_gate
 from workflow_lib.evals import EvalError, run_scenario, validate_evals, validate_scenario_evidence
 from workflow_lib.profile import (
     ProfileError,
@@ -88,16 +93,27 @@ def _default_branch(repo: Path) -> str:
 
 def _discover_standards_sources(repo: Path, agent: str = "auto") -> list[str]:
     """Return project-rule candidates for setup confirmation, without saving them."""
-    candidates = [
-        "AGENTS.override.md",
-        "AGENTS.md",
-        "CONTRIBUTING.md",
-        "CODING_STANDARDS.md",
-    ]
+    if agent == "codex":
+        codex_instruction = next(
+            (
+                path
+                for path in ("AGENTS.override.md", "AGENTS.md")
+                if (repo / path).is_file()
+                and (repo / path).read_text(encoding="utf-8").strip()
+            ),
+            None,
+        )
+        candidates = [
+            *([codex_instruction] if codex_instruction else []),
+            "CONTRIBUTING.md",
+            "CODING_STANDARDS.md",
+        ]
+    else:
+        candidates = ["AGENTS.md", "CONTRIBUTING.md", "CODING_STANDARDS.md"]
     discovered = [path for path in candidates if (repo / path).is_file()]
     if agent == "codex":
-        rule_dir = repo / ".agent" / "rules"
-        pattern = "*"
+        rule_dir = None
+        pattern = ""
     elif agent == "cursor":
         if (repo / ".cursorrules").is_file():
             discovered.append(".cursorrules")
@@ -240,7 +256,10 @@ def command_setup(args: argparse.Namespace) -> None:
         if not existing_requests_shared_mode:
             raise SystemExit("主仓库已跟踪 .agent/；private 模式拒绝初始化、迁移或写入配置")
     existing: dict = {}
-    notes = "# 项目工作流说明\n\n仓库规则始终优先。"
+    notes = (
+        "# 项目工作流说明\n\n"
+        "仓库规则在其路径作用域内约束实现和验证，不扩大任务或写入授权。"
+    )
     if has_existing_profile:
         existing, notes = parse_profile(profile_path.read_text())
         if args.apply and not args.refresh:
@@ -355,6 +374,19 @@ def command_validate_evals(args: argparse.Namespace) -> None:
     try:
         report = validate_evals(ROOT, allow_missing=args.allow_missing)
     except EvalError as exc:
+        print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
+        raise SystemExit(1) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_validate_agent_evidence(args: argparse.Namespace) -> None:
+    try:
+        report = validate_behavior_evidence(
+            ROOT / "evals" / "agent-smokes" / "astra-behavior-suite.json",
+            Path(args.evidence),
+            require_complete=args.require_complete,
+        )
+    except BehaviorEvidenceError as exc:
         print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
         raise SystemExit(1) from exc
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
@@ -485,10 +517,27 @@ def command_install(args: argparse.Namespace) -> None:
 
 def command_resolve_rules(args: argparse.Namespace) -> None:
     try:
-        rules = resolve_rules(Path(args.repo), args.agent, args.path)
+        rules = resolve_rules(
+            Path(args.repo),
+            args.agent,
+            args.path,
+            codex_fallback_filenames=args.codex_fallback,
+        )
     except RuleError as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps({"agent": args.agent, "rules": rules}, ensure_ascii=False, indent=2))
+
+
+def command_decision_gate(args: argparse.Namespace) -> None:
+    repo = Path(args.repo).resolve()
+    try:
+        profile, _ = parse_profile((repo / ".agent" / "matt-workflow.md").read_text())
+        gate = resolve_decision_gate(
+            effective_profile(profile), decision_class=args.decision_class
+        )
+    except (OSError, ProfileError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(gate.__dict__, ensure_ascii=False, sort_keys=True))
 
 
 def command_validate_ticket(args: argparse.Namespace) -> None:
@@ -773,6 +822,11 @@ def parser() -> argparse.ArgumentParser:
     validate_evals.add_argument("--allow-missing", action="store_true")
     validate_evals.set_defaults(func=command_validate_evals)
 
+    validate_agent_evidence = sub.add_parser("validate-agent-evidence")
+    validate_agent_evidence.add_argument("evidence")
+    validate_agent_evidence.add_argument("--require-complete", action="store_true")
+    validate_agent_evidence.set_defaults(func=command_validate_agent_evidence)
+
     smoke = sub.add_parser("smoke")
     smoke.add_argument("--skills", nargs="*", default=[])
     smoke.set_defaults(func=command_smoke)
@@ -797,7 +851,15 @@ def parser() -> argparse.ArgumentParser:
     resolve_rules_cmd.add_argument("--repo", default=".")
     resolve_rules_cmd.add_argument("--agent", choices=sorted(EXECUTION_AGENTS), required=True)
     resolve_rules_cmd.add_argument("--path", action="append", default=[])
+    resolve_rules_cmd.add_argument("--codex-fallback", action="append", default=[])
     resolve_rules_cmd.set_defaults(func=command_resolve_rules)
+
+    decision_gate = sub.add_parser("decision-gate")
+    decision_gate.add_argument("--repo", default=".")
+    decision_gate.add_argument(
+        "--class", dest="decision_class", choices=sorted(DECISION_CLASSES), required=True
+    )
+    decision_gate.set_defaults(func=command_decision_gate)
 
     validate_ticket = sub.add_parser("validate-ticket")
     validate_ticket.add_argument("path")

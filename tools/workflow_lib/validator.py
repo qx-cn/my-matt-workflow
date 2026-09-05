@@ -181,6 +181,7 @@ def preflight_build(repo_root: Path, skills_dir: Path) -> None:
 
     validate_repository(root)
     from .evals import EvalError, validate_evals
+    from .behavior_evidence import BehaviorEvidenceError, validate_behavior_suite
     from .smoke_registry import SmokeRegistryError, validate_smoke_registry
 
     try:
@@ -190,4 +191,10 @@ def preflight_build(repo_root: Path, skills_dir: Path) -> None:
     try:
         validate_smoke_registry(root)
     except SmokeRegistryError as exc:
+        raise ValidationError(str(exc)) from exc
+    try:
+        validate_behavior_suite(
+            root / "evals" / "agent-smokes" / "astra-behavior-suite.json"
+        )
+    except BehaviorEvidenceError as exc:
         raise ValidationError(str(exc)) from exc

@@ -21,7 +21,7 @@ disable-model-invocation: true
 
 ### 1. 固定审查对象
 
-用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`；仍无法确定时按 `decision_policy` 询问、自治判断并记录证据，或停止。作为 `my-implement` 的阶段时，将暂停原因交回宿主的 Ticket transition；不得因审查已结束而终止可继续的 workflow。
+用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时，把选择审查基线分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)运行 `decision-gate`：`allow` 时采用 profile 的 `default_base_branch` 并记录依据，`confirm` 时询问固定点，`pause` 时停止。作为 `my-implement` 的阶段时，将暂停原因交回宿主的 Ticket transition；不得因审查已结束而终止可继续的 workflow。
 
 通过安装状态记录的 `runtime_entry` 运行 `review-snapshot --repo <repo> --base <fixed-point>`。记录其 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`；`content_id` 是本轮 review receipt，绑定实际文件内容，不绑定暂存位置。
 
@@ -41,7 +41,7 @@ disable-model-invocation: true
 1. Commit 信息中的 Issue 引用（`#123`、`Closes #45`、GitLab `!67` 等）；按项目配置的 Tracker 工作流获取；
 2. 用户传入的路径；
 3. 与分支或功能匹配的 `.agent/work/`、`docs/`、`specs/` 下的 PRD/Spec；
-4. 若都没有，按 `decision_policy` 询问、报告“无 Spec 可用”，或停止。
+4. 若都没有，把“是否在缺少 Spec 的情况下继续”分类为 `consequential` 并运行 `decision-gate`：`allow` 时将 Spec 轴明确标记为“未评估：无来源”，继续 Standards 轴；`confirm` 时请求 Spec 或继续授权；`pause` 时停止。
 
 读取 `.agent/work/` 产物时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
 

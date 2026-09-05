@@ -16,6 +16,6 @@
   "evidence": {
     "version": 1,
     "scenario": "diagnosing-bugs-no-red-loop",
-    "sources": [{"path": "skills/my-diagnosing-bugs/SKILL.md", "sha256": "sha256:f0a32771946598aedeed4078b598d03d3efbdfb1090792bb54a9a9f9cecd36fe"}]
+    "sources": [{"path": "skills/my-diagnosing-bugs/SKILL.md", "sha256": "sha256:57bc5ea994cfc811de356ec53ea2e4bd9d7b3f55f39ec79bd64ab7eef89cd28d"}]
   }
 }

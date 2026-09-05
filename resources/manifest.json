@@ -88,6 +88,23 @@
         "my-tech-design"
       ]
     },
+    "instruction-authority": {
+      "source": "resources/instruction-authority.md",
+      "release_path": "references/shared/instruction-authority.md",
+      "consumers": [
+        "my-code-review",
+        "my-diagnosing-bugs",
+        "my-domain-modeling",
+        "my-edit-article",
+        "my-grill-with-docs",
+        "my-implement",
+        "my-improve-codebase-architecture",
+        "my-prototype",
+        "my-to-spec",
+        "my-to-tickets",
+        "my-wayfinder"
+      ]
+    },
     "adapter-composition": {
       "source": "resources/adapters/composition.md",
       "release_path": "references/shared/adapters/composition.md",

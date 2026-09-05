@@ -128,7 +128,7 @@ sequence: <NN>
 用户带着一个松散想法调用时：
 
 1. **命名目的地。** 使用 `my-grilling` 与 `my-domain-modeling` 澄清本地图要找到的 Spec、决定或变更；目的地决定范围，必须最先确定。
-2. **绘制 frontier。** 再做一次访谈，这次按**广度优先**：展开整个空间，而非深挖某条线，找出开放决定与现在可做的第一步。若完全没有迷雾，意味着目的地路径已清晰且可在一会话内完成；不必创建地图，按 `decision_policy` 询问后续方式或在无人值守计划中记录建议。
+2. **绘制 frontier。** 再做一次访谈，这次按**广度优先**：展开整个空间，而非深挖某条线，找出开放决定与现在可做的第一步。若完全没有迷雾，意味着目的地路径已清晰且可在一会话内完成；不必创建地图，报告结论并建议下一入口。下一阶段已在当前授权范围内时按 handoff 规则继续，否则停止在建议，不用为结束一个已完成阶段再询问一次。
 3. **创建地图**：Tracker 模式加 `wayfinder:map` 标签；本地模式创建 `wayfinders-<initiative>-<time-or-sequence>.md`。填写目的地与备注，“已作决定”留空，在“尚未明确”勾勒迷雾。外部 Tracker 写入按项目写入策略处理。
 4. **创建现已可表述的 Tickets**：作为地图子 Issue 或本地 Ticket 文件；再进行**第二轮**连接阻塞边，因为 Ticket 要先有 ID / 路径才能互相引用。其余不能表述的内容仍留在“尚未明确”。
 5. **启动研究。** 对每个新建 `research` Ticket，按 `composition_policy` 选择串行执行 `my-research`，或启动研究子 Agent 并行解决；将其发现链接回 Ticket，原始研究工件存放于 `.agent/work/<initiative>/researches/researches-<initiative>-<time-or-sequence>.md`。不得自动建分支、Commit 或外传资料。

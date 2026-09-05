@@ -10,6 +10,12 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+COMPOSITION_POLICY_MEANINGS = {
+    "manual": "内部 method 同轮执行；已授权 handoff 输出显式调用后停止",
+    "automatic": "内部 method 同轮执行；已授权 handoff 同轮继续",
+}
+
+
 class CompositionError(RuntimeError):
     """Raised when Skill composition declarations are invalid."""
 

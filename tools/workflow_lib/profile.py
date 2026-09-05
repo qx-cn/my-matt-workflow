@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from .composition import COMPOSITION_POLICY_MEANINGS
 from .rules import EXECUTION_AGENTS
 
 
@@ -154,19 +155,16 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
         "confirm": "调用 /my-humanizer 并先确认再落笔",
         "allow": "叙述段可自动 /my-humanizer 落笔；契约段仍冻结",
     },
-    "composition_policy": {
-        "manual": "提示用户手动启动依赖 Skill",
-        "automatic": "可在流程内自动加载依赖 Skill",
-    },
+    "composition_policy": COMPOSITION_POLICY_MEANINGS,
     "work_scope_policy": {
         "single-ticket": "完成当前 Ticket 后停止",
         "ready-frontier": "完成后自动选择当前 feature 的下一个就绪 frontier Ticket",
         "approved-plan": "按启动时批准的 Ticket 快照完成同一计划的依赖链",
     },
     "decision_policy": {
-        "ask": "遇到决策时询问",
-        "autonomous": "记录证据后自行判断",
-        "halt": "遇决策停止",
+        "ask": "承重决定请求用户确认；普通可逆细节继续",
+        "autonomous": "承重决定在已批准范围内记录证据后继续",
+        "halt": "遇到承重决定暂停；普通可逆细节继续",
     },
     "default_execution_agent": {
         "auto": "由安装状态或当前执行环境解析",
