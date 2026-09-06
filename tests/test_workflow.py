@@ -1739,6 +1739,77 @@ class ReleaseTests(unittest.TestCase):
                 self.assertIn("blocked-by-content", frontend)
                 self.assertRegex(frontend, r"不(?:得)?(?:改变|改写)")
 
+    def test_teach_uses_one_continuous_searchable_course_template(self):
+        root = Path(__file__).resolve().parents[1]
+        skill = root / "skills/my-teach"
+        body = (skill / "SKILL.md").read_text()
+        content = (skill / "CONTENT.md").read_text()
+        frontend = (skill / "FRONTEND.md").read_text()
+        template = (skill / "assets/TEMPLATE.html").read_text()
+        css = (skill / "assets/course.css").read_text()
+        script = (skill / "assets/course.js").read_text()
+
+        self.assertIn("assets/TEMPLATE.html", body)
+        self.assertIn("无需写页面、卡片或配色提示", content)
+        self.assertIn("同一条连续文档流", frontend)
+        self.assertIn("浏览器搜索和锚点应直接作用于全文", frontend)
+        self.assertIn("打印包含答案解释与来源", frontend)
+        self.assertIn("最后由 Agent 同时阅读语义工件与成品 HTML", frontend)
+        self.assertIn("前端可以为阅读体验调整表达形式", frontend)
+        self.assertIn("data-learning-outcome", template)
+        self.assertIn("{{NAV_ITEMS}}", template)
+        self.assertIn("{{LESSON_SECTIONS}}", template)
+        self.assertNotIn("data-page", template)
+        self.assertNotIn("hidden", template)
+        self.assertIn("@media print", css)
+        self.assertIn("scroll-margin-top", css)
+        self.assertNotRegex(css, r"\.lesson-section[^{}]*\{[^{}]*display\s*:\s*none")
+        self.assertIn("IntersectionObserver", script)
+        self.assertIn("beforeprint", script)
+        self.assertIn("print-answer", script)
+        self.assertRegex(css, r"@media print[\s\S]*\.print-answer\s*\{\s*display:\s*block")
+
+    def test_teach_html_checker_accepts_complete_lesson_and_rejects_hidden_sections(self):
+        root = Path(__file__).resolve().parents[1]
+        skill = root / "skills/my-teach"
+        checker = skill / "scripts/check_html.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            lessons = workspace / "lessons"
+            assets = workspace / "assets"
+            lessons.mkdir()
+            assets.mkdir()
+            shutil.copy(skill / "assets/course.css", assets / "course.css")
+            shutil.copy(skill / "assets/course.js", assets / "course.js")
+            lesson = lessons / "0001-test.html"
+            lesson.write_text(
+                '<!doctype html><html><head><link rel="stylesheet" '
+                'href="../assets/course.css"></head><body>'
+                '<header><h1>测试课程</h1><div data-learning-outcome>掌握一件事</div></header>'
+                '<nav><a href="#model">模型</a></nav><main>'
+                '<section class="lesson-section" id="model">正文</section>'
+                '<section class="lesson-section quiz" id="practice" data-quiz '
+                'data-answer="a"><h2>练习</h2>'
+                '<button class="choice" data-value="a">A</button>'
+                '<p class="feedback"></p><p class="print-answer">答案：A</p>'
+                '<a href="https://example.com/source">来源</a></section></main>'
+                '<script src="../assets/course.js"></script></body></html>'
+            )
+            checked = subprocess.run(
+                [sys.executable, checker, lesson], capture_output=True, text=True, check=False
+            )
+            self.assertEqual(0, checked.returncode, checked.stdout)
+
+            lesson.write_text(lesson.read_text().replace(
+                'class="lesson-section" id="model"',
+                'class="lesson-section" id="model" hidden',
+            ))
+            checked = subprocess.run(
+                [sys.executable, checker, lesson], capture_output=True, text=True, check=False
+            )
+            self.assertNotEqual(0, checked.returncode)
+            self.assertIn("被隐藏的 lesson-section", checked.stdout)
+
     def test_tech_design_html_checker_rejects_table_in_narrow_card(self):
         root = Path(__file__).resolve().parents[1]
         checker = root / "skills/my-tech-design/scripts/check_html.py"

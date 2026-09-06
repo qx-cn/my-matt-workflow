@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{DOCUMENT_TITLE}}</title>
+  <link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+  <a class="skip-link" href="#lesson-content">跳到课程正文</a>
+  <header class="lesson-hero">
+    <div class="hero-inner">
+      <p class="kicker">{{LESSON_META}}</p>
+      <h1>{{DOCUMENT_TITLE}}</h1>
+      <section class="learning-outcome" data-learning-outcome aria-labelledby="learning-outcome-title">
+        <p class="eyebrow" id="learning-outcome-title">这节课要学会</p>
+        <p class="outcome-text">{{LEARNING_OUTCOME}}</p>
+      </section>
+      {{HERO_SUPPORTING_CONTENT}}
+    </div>
+  </header>
+
+  <nav class="lesson-rail" aria-label="本课章节">
+    <div class="rail-inner">
+      <span class="rail-label">本课路径</span>
+      <div class="rail-links">{{NAV_ITEMS}}</div>
+    </div>
+  </nav>
+
+  <main id="lesson-content" class="lesson-shell">
+    {{LESSON_SECTIONS}}
+  </main>
+
+  <footer class="lesson-footer">
+    <div>{{FOOTER_CONTENT}}</div>
+  </footer>
+  <script src="../assets/course.js"></script>
+</body>
+</html>

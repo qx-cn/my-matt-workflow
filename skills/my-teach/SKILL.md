@@ -12,7 +12,7 @@ argument-hint: "你想学习什么？可选：content、frontend <artifact> 或 
 先读取[面向读者写作](references/shared/reader-first-writing.md)、[图示表达](references/shared/visual-communication.md)与[内容/前端交接](references/shared/document-rendering.md)，再选择阶段：
 
 - 未指定阶段且没有语义工件：执行 `content`，读取 [CONTENT.md](CONTENT.md)，写入 `lesson-drafts/<sequence>-<slug>.content.md`，报告绝对路径与 `/my-teach frontend <artifact>` 后停止。
-- `frontend <artifact>`：只读取该语义工件、[FRONTEND.md](FRONTEND.md)和教学工作区现有 `assets/`；不得凭记忆补写教学事实或改变练习答案。
+- `frontend <artifact>`：只读取该语义工件、[FRONTEND.md](FRONTEND.md)、[课程模板](assets/TEMPLATE.html)、配套样式与脚本、校验脚本和教学工作区现有 `assets/`；不得凭记忆补写教学事实或改变练习答案。
 - `full`：先落盘内容工件再渲染，并说明同一运行不构成模型隔离证据。
 
 内容阶段与前端阶段可由不同模型独立执行。前端发现解释、来源、练习反馈或正确答案缺失时返回 `blocked-by-content`。
@@ -32,4 +32,4 @@ argument-hint: "你想学习什么？可选：content、frontend <artifact> 或 
 - `GLOSSARY.md`：已掌握术语的复习资料；格式见 [GLOSSARY-FORMAT.md](GLOSSARY-FORMAT.md)，不能替代课程首次解释。
 - `lessons/` 与 `reference/`：渲染后的 HTML；`assets/` 保存共享样式、测验和确有复用价值的组件；`NOTES.md` 保存用户教学偏好。
 
-完成 HTML 后，如环境允许则打开文件，并邀请学习者针对不清楚处继续提问。
+完成 HTML 后先运行教学 HTML 校验器检查机械结构，再由 Agent 对照语义工件完成最终内容一致性校验，并实际检查桌面、窄屏和打印效果；如环境允许则打开文件，并邀请学习者针对不清楚处继续提问。
