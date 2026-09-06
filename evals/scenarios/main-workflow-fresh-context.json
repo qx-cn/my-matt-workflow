@@ -29,7 +29,7 @@
       {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:1b6127ab4befc06f8e0d37c013724249d8804c8b02f82206b12d5f61615572fd"},
       {"path": "skills/my-to-spec/SKILL.md", "sha256": "sha256:ec1c24a7bcf97eacf687ed17bfbace0483a9a1ae91c3f1431f899359542e1fb4"},
       {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:3b040596a2ea9e9a8686df1841cbb6f76e81e13d9200af89b5185a5afa4cac5f"},
-      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:9703ad1bb93b03bfbe58bc65c79ea49a82f5821d4e97044df59794a4ca7d0287"},
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:094032c2a30197a39ecec8e440df624822e5c93e6bd58e7eef1561c7cf8dcfb1"},
       {"path": "skills/my-test-report/SKILL.md", "sha256": "sha256:b352a74a16b1fb8be1482458831100addc643220f3304c803f4a6c9404de2709"}
     ]
   }

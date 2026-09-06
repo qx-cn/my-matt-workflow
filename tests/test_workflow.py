@@ -1036,6 +1036,22 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("blocked-by-design", implement)
         self.assertIn("补偿", implement)
 
+    def test_implement_writes_back_confirmed_spec_before_resume(self):
+        root = Path(__file__).resolve().parents[1]
+        implement = (root / "skills/my-implement/SKILL.md").read_text()
+        write_actions = (root / "resources/adapters/write-actions.md").read_text()
+        work_scope = (root / "resources/adapters/work-scope.md").read_text()
+
+        self.assertIn("定向 Spec", implement)
+        self.assertIn("写回", implement)
+        self.assertIn("写回与准入完成前不得恢复实施", implement)
+        self.assertIn("补偿 Ticket", implement)
+        self.assertIn("docs_writeback", implement)
+        self.assertIn("文件写权限", write_actions)
+        self.assertIn("确认修订后立即写回", write_actions)
+        self.assertIn("写回", work_scope)
+        self.assertIn("pause-for-revision", work_scope)
+
 
 class GitIgnoreRepositoryTests(unittest.TestCase):
     def test_non_git_project_keeps_agent_directory_without_gitignore(self):

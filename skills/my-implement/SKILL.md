@@ -18,10 +18,10 @@ run-start --repo <repo> --ticket <ticket-path> --base <HEAD> --agent <installed_
 
 - 可逆实现细节仍能满足 Spec：在当前 Ticket 内调整并补证据。
 - Ticket 拆分或依赖边错误，但 Spec 仍成立：暂停当前 Ticket，只修订受影响的 Ticket 图并重新准入。
-- 目标、范围、公开接口、数据语义、验收或风险承担中的承重假设失效：用 `run-record <journal> --phase blocked-by-design --blocker pause-for-revision` 落盘，再校验 Ticket 的 `implementing → blocked-by-design → revising`；记录失败证据和影响范围，只对受影响决定进行定向访谈。新 Spec revision 确认后，重建受影响的未完成 Ticket，并在准入通过后校验 `revising → revalidated → implementing`，为新 revision 建立新的 run journal。
+- 目标、范围、公开接口、数据语义、验收或风险承担中的承重假设失效：用 `run-record <journal> --phase blocked-by-design --blocker pause-for-revision` 落盘，再校验 Ticket 的 `implementing → blocked-by-design → revising`；记录失败证据和影响范围，只对受影响决定进行定向访谈。先说明这是需要写回的新增设计，展示定向 Spec 修订并请求确认；确认后按 [写操作 Gate](references/shared/adapters/write-actions.md) 已解析的 `docs_writeback` 写回新 Spec revision（新建文件，递增 `revision`，`supersedes` 上一版），再重建未完成 Ticket，并为新增公开能力或已 `complete` 结果创建引用原 Ticket 的补偿 Ticket。写回与准入完成前不得恢复实施。准入通过后校验 `revising → revalidated → implementing`，为新 revision 建立新的 run journal。
 - 根目标本身失效：停止，由用户决定是否重新进行完整访谈。
 
-已经 `complete` 的 Ticket 保持历史不变；若新 Spec 需要撤销、迁移或修正其结果，创建引用原 Ticket 的补偿 Ticket，不重开或改写完成记录。
+已经 `complete` 的 Ticket 保持历史不变；不重开、不改写、不追加验收项。若新 Spec 需要撤销、迁移、修正其结果，或补其未覆盖的公开能力，创建引用原 Ticket 的补偿 Ticket。
 
 在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段；只有[工作范围](references/shared/adapters/work-scope.md)定义的关键 seam 才暂停等待确认。
 
