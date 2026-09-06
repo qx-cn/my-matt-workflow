@@ -6,13 +6,13 @@ disable-model-invocation: true
 
 实施用户在 Spec 或 Ticket 中描述的工作。`my-implement` 是唯一可跨 Ticket 继续的宿主：每张 Ticket 的验收、测试、审查和提交完成后，按 runtime 的 `next-ticket` 结果继续、完成或暂停。
 
-开始每个 Ticket 时记录当前 `HEAD`。若 `.agent/work/<topic>/runs/run-<ticket-id>-spec-r<revision>.json` 已存在，先从它恢复 phase、固定点、Spec 血缘、规则、策略、test/review receipt 和 blocker，不重复初始化。否则通过安装状态记录的 `runtime_entry` 运行：
+开始每个 Ticket 时记录当前 `HEAD`，并从安装状态读取 `installed_agent`。若 `.agent/work/<topic>/runs/run-<ticket-id>-spec-r<revision>.json` 已存在，恢复其中的运行事实；执行 Agent 与当前环境不一致时停止。否则通过安装状态记录的 `runtime_entry` 运行：
 
 ```text
-run-start --repo <repo> --ticket <ticket-path> --base <HEAD> --path <planned-path> [...]
+run-start --repo <repo> --ticket <ticket-path> --base <HEAD> --agent <installed_agent> --path <planned-path> [...]
 ```
 
-该命令一次解析 Ticket/Spec 血缘、实际路径规则、测试命令、composition/work-scope/decision/humanizer 策略与四类写操作 gate，并把 context receipt 写入 run journal。以该 receipt 为当前运行事实，不再从多个 adapter 重复拼装同一上下文。随后用 `ticket-transition <ticket-path> --to implementing` 校验状态变化，再认领并进入实施。新规则若改变架构、范围、接口或验收，回到计划确认；不得静默偏离已批准计划。
+该命令将 `execution_agent: auto` 绑定到当前 Agent，并一次解析 Ticket/Spec 血缘、实际路径规则、测试命令、composition/work-scope/decision/humanizer 策略与四类写操作 gate，把 context receipt 写入 run journal。以该 receipt 为当前运行事实，不再从多个 adapter 重复拼装同一上下文。随后用 `ticket-transition <ticket-path> --to implementing` 校验状态变化，再认领并进入实施。新规则若改变架构、范围、接口或验收，回到计划确认；不得静默偏离已批准计划。
 
 实施中发现计划行不通时，按影响回退，不默认重走完整访谈：
 

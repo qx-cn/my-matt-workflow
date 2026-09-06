@@ -49,7 +49,7 @@ disable-model-invocation: true
 
 ### 3. 定位 Standards 来源
 
-按 [项目规则解析](references/shared/adapters/project-rules.md) 为该变更的 `execution_agent` 发现并匹配 Standards 来源；必须按 diff 中实际文件路径判定规则是否适用。
+按 [项目规则解析](references/shared/adapters/project-rules.md) 为该变更发现并匹配 Standards 来源；存在 run context 时使用其中已固定的 `execution_agent`，并按 diff 中实际文件路径判定规则是否适用。
 
 无论仓库是否有文档，Standards 轴都带以下 Fowler code smell 基线。它是按需诊断词汇，不是逐项打勾清单。三条规则约束它：
 

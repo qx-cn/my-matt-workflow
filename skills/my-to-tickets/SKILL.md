@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
 
-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `/my-setup`。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `/my-setup`。Ticket 默认沿用项目的 `default_execution_agent`；`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
 
 ## 过程
 
@@ -90,7 +90,7 @@ rule_sources: []
 rule_scope: []
 rule_constraints: []
 rule_conflicts: []
-execution_agent: <codex|cursor|claude>
+execution_agent: <auto|codex|cursor|claude>
 ---
 ```
 

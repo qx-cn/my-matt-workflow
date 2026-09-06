@@ -67,6 +67,14 @@ class RunJournalTests(unittest.TestCase):
         ).stdout.strip()
         return repo, ticket, sha
 
+    @staticmethod
+    def _set_ticket_agent(ticket: Path, agent: str) -> None:
+        text = ticket.read_text(encoding="utf-8")
+        ticket.write_text(
+            text.replace("execution_agent: codex", f"execution_agent: {agent}"),
+            encoding="utf-8",
+        )
+
     def test_context_resolves_lineage_policies_gates_and_rules_once(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
@@ -78,6 +86,49 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual(["python3 -m unittest"], context["test_commands"])
             self.assertIn("rule_map", context)
             self.assertRegex(context["context_id"], r"^[0-9a-f]{64}$")
+            explicit_context = build_run_context(
+                repo, ticket, sha, ["app.py"], execution_agent="codex"
+            )
+            self.assertEqual(context["context_id"], explicit_context["context_id"])
+            self.assertNotIn("requested_execution_agent", explicit_context["ticket"])
+
+    def test_auto_agent_binds_to_current_environment_for_rules_and_journal(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            self._set_ticket_agent(ticket, "auto")
+            (repo / "CLAUDE.md").write_text("Claude rules\n", encoding="utf-8")
+
+            context = build_run_context(
+                repo, ticket, sha, ["app.py"], execution_agent="claude"
+            )
+
+            self.assertEqual("claude", context["ticket"]["execution_agent"])
+            self.assertEqual("auto", context["ticket"]["requested_execution_agent"])
+            self.assertIn("CLAUDE.md", [rule["source"] for rule in context["rule_map"]])
+
+    def test_auto_agent_requires_current_environment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            self._set_ticket_agent(ticket, "auto")
+
+            with self.assertRaisesRegex(RunJournalError, "需要传入当前执行 Agent"):
+                build_run_context(repo, ticket, sha)
+
+    def test_fixed_agent_rejects_a_different_current_environment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+
+            with self.assertRaisesRegex(RunJournalError, "当前 Agent 是 claude"):
+                build_run_context(repo, ticket, sha, execution_agent="claude")
+
+    def test_existing_auto_run_stays_bound_to_its_original_agent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            self._set_ticket_agent(ticket, "auto")
+            start_run(repo, ticket, sha, execution_agent="codex")
+
+            with self.assertRaisesRegex(RunJournalError, "已固定由 codex 执行"):
+                start_run(repo, ticket, sha, execution_agent="claude")
 
     def test_journal_persists_phase_receipts_and_blocker_history(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -135,6 +186,33 @@ class RunJournalTests(unittest.TestCase):
             report = json.loads(result.stdout)
             self.assertEqual("ready", report["status"])
             self.assertTrue(Path(report["journal"]).is_file())
+
+    def test_run_start_cli_resolves_auto_agent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            self._set_ticket_agent(ticket, "auto")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "run-start",
+                    "--repo",
+                    str(repo),
+                    "--ticket",
+                    str(ticket),
+                    "--base",
+                    sha,
+                    "--agent",
+                    "claude",
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            run = json.loads(result.stdout)["run"]
+            self.assertEqual("claude", run["context"]["ticket"]["execution_agent"])
 
 
 if __name__ == "__main__":

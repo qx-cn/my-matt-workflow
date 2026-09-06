@@ -2,7 +2,7 @@
 
 规则的权力边界与冲突处理遵循[指令权威](../instruction-authority.md)。
 
-规则解析以当前计划或 Ticket 的 `execution_agent` 为输入；优先级是本次显式指定、项目 `default_execution_agent`、安装状态的 `installed_agent`。三者都无法确定时停止，不得混读多个 Agent 的专属规则。
+计划或 Ticket 的 `execution_agent` 可固定为具体 Agent，也可沿用项目的 `auto`。规划时 `auto` 用当前安装状态的 `installed_agent` 收集规则证据但保持原值；实施开始时由 `run-start` 绑定，并在 run context 中固定为具体 Agent。后续实施和审查只使用该值；明确指定的 Agent 与当前环境不一致时停止，不得混读多个 Agent 的专属规则。
 
 共享标准来自贡献规范、编码规范与相关 ADR。跨 Agent 约束若维护在 `AGENTS.md`，非 Codex Agent 只能把它作为 workflow 约定读取；这不改变各宿主自身的原生规则发现方式。
 
@@ -29,4 +29,4 @@ Cursor 规则必须按原生语义处理：`alwaysApply: true` 全局适用；`g
 
 ## 实施与审查
 
-开始每个 Ticket 前，按真实将修改的路径重新执行 `resolve-rules`，再运行 `python3 <runtime_entry> validate-ticket <ticket-path>`。新规则若改变架构、接口、范围或验收，回到计划确认；审查发现必须引用规则来源与匹配依据。
+开始每个 Ticket 前，按真实将修改的路径和 run context 固定的 Agent 重新执行 `resolve-rules`，再运行 `python3 <runtime_entry> validate-ticket <ticket-path>`。新规则若改变架构、接口、范围或验收，回到计划确认；审查发现必须引用规则来源与匹配依据。

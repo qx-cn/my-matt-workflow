@@ -8,6 +8,7 @@ from pathlib import Path, PurePosixPath
 
 
 EXECUTION_AGENTS = {"codex", "cursor", "claude"}
+EXECUTION_AGENT_POLICIES = {"auto", *EXECUTION_AGENTS}
 
 
 class RuleError(ValueError):

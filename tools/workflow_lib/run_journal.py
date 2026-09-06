@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .profile import ProfileError, effective_profile, parse_profile
-from .rules import RuleError, resolve_rules
+from .rules import EXECUTION_AGENTS, RuleError, resolve_rules
 from .tickets import TicketError, frontmatter, validate_ready_ticket
 from .write_gates import resolve_write_gate
 
@@ -59,8 +59,29 @@ def _ticket_location(repo: Path, ticket_path: Path) -> tuple[Path, str]:
     return resolved, parts[2]
 
 
+def _resolve_execution_agent(requested: object, current: str | None) -> tuple[str, str | None]:
+    if current is not None and current not in EXECUTION_AGENTS:
+        raise RunJournalError(f"未知当前执行 Agent：{current}")
+    if requested == "auto":
+        if current is None:
+            raise RunJournalError("execution_agent: auto 需要传入当前执行 Agent")
+        return current, "auto"
+    if requested not in EXECUTION_AGENTS:
+        raise RunJournalError(f"未知 execution_agent：{requested}")
+    if current is not None and current != requested:
+        raise RunJournalError(
+            f"Ticket 指定由 {requested} 执行，当前 Agent 是 {current}"
+        )
+    assert isinstance(requested, str)
+    return requested, None
+
+
 def build_run_context(
-    repo: Path, ticket_path: Path, base: str, paths: list[str] | None = None
+    repo: Path,
+    ticket_path: Path,
+    base: str,
+    paths: list[str] | None = None,
+    execution_agent: str | None = None,
 ) -> dict[str, object]:
     """Resolve profile, lineage and write gates once without mutating the repo."""
     repo = repo.resolve()
@@ -86,20 +107,26 @@ def build_run_context(
         kind: resolve_write_gate(profile, kind=kind).__dict__
         for kind in ("branch", "commit", "external", "docs")
     }
+    effective_agent, requested_agent = _resolve_execution_agent(
+        ticket["execution_agent"], execution_agent
+    )
     try:
-        rule_map = resolve_rules(repo, str(ticket["execution_agent"]), paths or [])
+        rule_map = resolve_rules(repo, effective_agent, paths or [])
     except RuleError as exc:
         raise RunJournalError(str(exc)) from exc
+    ticket_context: dict[str, object] = {
+        "id": ticket_id,
+        "path": str(ticket_path),
+        "status": ticket["status"],
+        "execution_agent": effective_agent,
+    }
+    if requested_agent is not None:
+        ticket_context["requested_execution_agent"] = requested_agent
     context: dict[str, object] = {
         "schema_version": 1,
         "repo": str(repo),
         "topic": topic,
-        "ticket": {
-            "id": ticket_id,
-            "path": str(ticket_path),
-            "status": ticket["status"],
-            "execution_agent": ticket["execution_agent"],
-        },
+        "ticket": ticket_context,
         "spec": {
             "id": ticket["spec_id"],
             "revision": int(ticket["spec_revision"]),
@@ -145,7 +172,11 @@ def _write_json_atomic(path: Path, value: dict[str, object]) -> None:
 
 
 def start_run(
-    repo: Path, ticket_path: Path, base: str, paths: list[str] | None = None
+    repo: Path,
+    ticket_path: Path,
+    base: str,
+    paths: list[str] | None = None,
+    execution_agent: str | None = None,
 ) -> tuple[Path, dict[str, object]]:
     try:
         admission = validate_ready_ticket(ticket_path)
@@ -153,7 +184,7 @@ def start_run(
         raise RunJournalError(str(exc)) from exc
     if admission["status"] != "ready":
         raise RunJournalError("run-start 只接受 ready-for-agent 或 revalidated Ticket")
-    context = build_run_context(repo, ticket_path, base, paths)
+    context = build_run_context(repo, ticket_path, base, paths, execution_agent)
     ticket = context["ticket"]
     assert isinstance(ticket, dict)
     spec = context["spec"]
@@ -168,6 +199,12 @@ def start_run(
     )
     if path.exists():
         existing = json.loads(path.read_text(encoding="utf-8"))
+        existing_agent = existing.get("context", {}).get("ticket", {}).get("execution_agent")
+        if execution_agent is not None and existing_agent != execution_agent:
+            raise RunJournalError(
+                "run journal 已固定由 "
+                f"{existing_agent} 执行，当前 Agent 是 {execution_agent}"
+            )
         if existing.get("context", {}).get("context_id") != context["context_id"]:
             raise RunJournalError(f"run journal 已存在且上下文不同：{path}")
         return path, existing

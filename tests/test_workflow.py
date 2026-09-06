@@ -631,6 +631,20 @@ class ProfileTests(unittest.TestCase):
             )
             self.assertEqual("ready", validate_ready_ticket(ticket)["status"])
 
+    def test_ready_ticket_accepts_deferred_execution_agent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ticket = Path(tmp) / "ticket.md"
+            ticket.write_text(
+                "---\nstatus: ready-for-agent\nexecution_agent: auto\n"
+                'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
+                'rule_constraints: ["run tests"]\nrule_conflicts: []\n'
+                "spec_id: feature\nspec_revision: 1\n"
+                "spec_ref: specs/specs-feature-01.md\n---\n"
+            )
+            admission = validate_ready_ticket(ticket)
+            self.assertEqual("ready", admission["status"])
+            self.assertEqual("auto", admission["execution_agent"])
+
     def test_ready_ticket_requires_spec_lineage(self):
         with tempfile.TemporaryDirectory() as tmp:
             ticket = Path(tmp) / "ticket.md"

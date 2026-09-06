@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .rules import EXECUTION_AGENTS
+from .rules import EXECUTION_AGENT_POLICIES
 
 
 class TicketError(ValueError):
@@ -92,8 +92,10 @@ def frontmatter(path: Path) -> dict[str, object]:
 
 def _admission_fields(ticket: dict[str, object], path: Path) -> dict[str, object]:
     agent = ticket.get("execution_agent")
-    if agent not in EXECUTION_AGENTS:
-        raise TicketError("ready-for-agent Ticket 必须指定 execution_agent")
+    if agent not in EXECUTION_AGENT_POLICIES:
+        raise TicketError(
+            "ready-for-agent Ticket 的 execution_agent 必须是 auto、codex、cursor 或 claude"
+        )
     for field in ("rule_sources", "rule_scope", "rule_constraints", "rule_conflicts"):
         if not isinstance(ticket.get(field), list):
             raise TicketError(f"ready-for-agent Ticket 必须声明 {field} 列表")

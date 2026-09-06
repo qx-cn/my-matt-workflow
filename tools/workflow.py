@@ -633,7 +633,9 @@ def command_review_snapshot(args: argparse.Namespace) -> None:
 
 def command_run_context(args: argparse.Namespace) -> None:
     try:
-        context = build_run_context(Path(args.repo), Path(args.ticket), args.base, args.path)
+        context = build_run_context(
+            Path(args.repo), Path(args.ticket), args.base, args.path, args.agent
+        )
     except RunJournalError as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(context, ensure_ascii=False, sort_keys=True))
@@ -641,7 +643,9 @@ def command_run_context(args: argparse.Namespace) -> None:
 
 def command_run_start(args: argparse.Namespace) -> None:
     try:
-        path, journal = start_run(Path(args.repo), Path(args.ticket), args.base, args.path)
+        path, journal = start_run(
+            Path(args.repo), Path(args.ticket), args.base, args.path, args.agent
+        )
     except RunJournalError as exc:
         raise SystemExit(str(exc)) from exc
     print(
@@ -905,6 +909,7 @@ def parser() -> argparse.ArgumentParser:
     run_context.add_argument("--repo", default=".")
     run_context.add_argument("--ticket", required=True)
     run_context.add_argument("--base", required=True)
+    run_context.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
     run_context.add_argument("--path", action="append", default=[])
     run_context.set_defaults(func=command_run_context)
 
@@ -912,6 +917,7 @@ def parser() -> argparse.ArgumentParser:
     run_start.add_argument("--repo", default=".")
     run_start.add_argument("--ticket", required=True)
     run_start.add_argument("--base", required=True)
+    run_start.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
     run_start.add_argument("--path", action="append", default=[])
     run_start.set_defaults(func=command_run_start)
 
