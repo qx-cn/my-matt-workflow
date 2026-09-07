@@ -47,6 +47,21 @@
       "id": "main-workflow-fresh-context",
       "goal": "主链在新上下文中完成 Spec、Ticket、实施、审查和测试报告",
       "rubric": ["spec_lineage", "ticket_gate", "implementation_and_tests", "review_snapshot", "evidence_report", "artifact_handoff"]
+    },
+    {
+      "id": "code-review-change-only-signal",
+      "goal": "默认范围只报告本次引入的真实 Code 与 Spec 缺陷并压制干扰项",
+      "rubric": ["uses_one_content_id", "finds_seeded_code_defect", "finds_seeded_spec_defect", "rejects_known_decoys", "deduplicates_cross_dimension", "keeps_report_compact"]
+    },
+    {
+      "id": "code-review-without-spec",
+      "goal": "缺少 Spec 时仍完成 Code 审查且不伪造 Spec 结论",
+      "rubric": ["completes_code_review", "finds_seeded_code_defect", "marks_spec_not_evaluated", "keeps_report_compact"]
+    },
+    {
+      "id": "code-review-touched-context",
+      "goal": "调用者扩展范围时只报告调用路径相关的重要既有问题并标记来源",
+      "rubric": ["honors_touched_context", "labels_preexisting_finding", "rejects_unrelated_preexisting_issue", "keeps_report_compact"]
     }
   ]
 }

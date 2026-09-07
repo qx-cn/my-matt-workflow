@@ -96,8 +96,6 @@ def validate_behavior_evidence(
         for field in ("model", "host", "release_id", "session_id"):
             if not isinstance(run[field], str) or not run[field]:
                 raise BehaviorEvidenceError(f"{evidence_path}: {case_id}.{field} 不能为空")
-        if status in {"pass", "fail"} and run["model"] != "gpt-6-astra":
-            raise BehaviorEvidenceError(f"{evidence_path}: {case_id} 不是 Astra 行为证据")
         if status in {"pass", "fail"} and not run["raw_output"]:
             raise BehaviorEvidenceError(f"{evidence_path}: {case_id} 缺少原始输出")
         if not isinstance(run["observations"], dict) or set(run["observations"]) != set(cases[case_id]):

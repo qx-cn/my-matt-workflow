@@ -947,15 +947,15 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn(timing, text)
                 self.assertNotIn("## humanizer", text)
 
-    def test_code_review_skill_covers_comments_naming_and_humanizer_policy(self):
+    def test_code_review_skill_is_compact_and_signal_first(self):
         text = (
             Path(__file__).resolve().parents[1]
             / "skills"
             / "my-code-review"
             / "SKILL.md"
         ).read_text()
-        self.assertIn("### 注释", text)
-        self.assertIn("### 命名", text)
+        self.assertIn("注释", text)
+        self.assertIn("命名", text)
         self.assertIn("代码行为", text)
         self.assertIn("Spec", text)
         self.assertRegex(text, r"ADR|相关文档")
@@ -966,14 +966,58 @@ class ProfileTests(unittest.TestCase):
         self.assertRegex(text, r"领域用语|简短")
         self.assertIn("函数", text)
         self.assertIn("变量", text)
-        self.assertIn("Mysterious Name", text)
-        self.assertIn("发现契约", text)
+        self.assertLessEqual(len(text.splitlines()), 141)
+        self.assertIn("Finding 准入与归类", text)
         self.assertIn("P0", text)
-        self.assertIn("失败场景/不变量", text)
-        self.assertIn("证据与置信度", text)
-        self.assertIn("影响与验证", text)
+        self.assertIn("失败场景或不变量", text)
+        self.assertIn("证据", text)
+        self.assertIn("影响及最小验证方式", text)
         self.assertIn("低风险变更不为并行而增加 reviewer", text)
         self.assertIn("manual` 或 `automatic` 都必须", text)
+        self.assertIn("## Code", text)
+        self.assertIn("## Spec", text)
+        self.assertNotIn("## Standards", text)
+        for concern in (
+            "逻辑正确性",
+            "边界条件",
+            "错误处理",
+            "资源生命周期",
+            "并发与一致性",
+            "安全",
+            "性能",
+            "兼容性",
+            "测试充分性",
+            "可维护性",
+            "仓库 Standards",
+            "Fowler code smell",
+        ):
+            self.assertIn(concern, text)
+        self.assertIn("两个上下文只共享同一快照", text)
+        self.assertIn("不共享推理、候选发现或结论", text)
+        self.assertIn("每条规范性要求映射到实现与测试证据", text)
+        self.assertIn("不输出这份检查清单", text)
+        self.assertIn("同一失败链只保留", text)
+        self.assertIn("按主要原因归类", text)
+        self.assertIn("未评估：未找到可用 Spec", text)
+        self.assertIn("不得暂停或缩减 Code 审查", text)
+        self.assertIn("review_scope=change-only|touched-context", text)
+        self.assertIn("默认 `change-only`", text)
+        self.assertIn("既有/非本次引入", text)
+        self.assertIn("作者知道后大概率会修复", text)
+        self.assertIn("低置信度候选不进入 findings", text)
+        self.assertIn("No findings.", text)
+        self.assertIn("Review-Scope: <scope>", text)
+        self.assertIn("无内容的注释、命名或统计子节不生成", text)
+        self.assertIn("用户显式指定的任何 fixed-point", text)
+        self.assertIn("不得替换", text)
+        self.assertIn("仅在用户未指定而采用默认基线分支时", text)
+        self.assertIn("安全越权、数据丢失或破坏、不可恢复故障", text)
+        self.assertIn("不伪造通过结论或 P0/P1/P2 零计数", text)
+        self.assertIn("未评估时只写状态", text)
+        self.assertNotIn("### 注释", text)
+        self.assertNotIn("### 命名", text)
+        self.assertNotIn("Mysterious Name", text)
+        self.assertNotIn("## 为什么是两维", text)
         self.assertNotIn("少于 400 字", text)
         self.assertNotIn("提示用户分别启动审查", text)
 

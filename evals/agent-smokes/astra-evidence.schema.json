@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Astra fresh-agent smoke evidence",
+  "title": "Fresh-agent smoke evidence",
   "type": "object",
   "required": ["version", "suite_id", "generated_at", "runs"],
   "properties": {

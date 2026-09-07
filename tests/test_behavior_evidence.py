@@ -15,7 +15,7 @@ SUITE = ROOT / "evals/agent-smokes/astra-behavior-suite.json"
 
 
 class BehaviorEvidenceTests(unittest.TestCase):
-    def _record(self, model: str = "gpt-6-astra") -> dict[str, object]:
+    def _record(self, model: str = "default-test-model") -> dict[str, object]:
         cases = validate_behavior_suite(SUITE)
         case_id = "authorized-local-no-reconfirm"
         return {
@@ -41,11 +41,27 @@ class BehaviorEvidenceTests(unittest.TestCase):
 
     def test_checked_in_suite_and_schema_are_valid(self):
         cases = validate_behavior_suite(SUITE)
-        self.assertEqual(9, len(cases))
+        self.assertEqual(12, len(cases))
         schema = json.loads(
             (ROOT / "evals/agent-smokes/astra-evidence.schema.json").read_text()
         )
         self.assertEqual(1, schema["properties"]["version"]["const"])
+
+    def test_code_review_signal_fixtures_have_a_runbook(self):
+        runbook = (
+            ROOT / "evals/agent-smokes/code-review-signal-quality.md"
+        ).read_text()
+        for case in (
+            "code-review-change-only-signal",
+            "code-review-without-spec",
+            "code-review-touched-context",
+        ):
+            self.assertIn(case, validate_behavior_suite(SUITE))
+            self.assertIn(case, runbook)
+        fixture_root = ROOT / "evals/fixtures/code-review"
+        for fixture in ("change-only", "without-spec", "touched-context"):
+            self.assertTrue((fixture_root / fixture / "baseline").is_dir())
+            self.assertTrue((fixture_root / fixture / "candidate").is_dir())
 
     def test_partial_real_evidence_is_valid_but_not_complete(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -53,16 +69,16 @@ class BehaviorEvidenceTests(unittest.TestCase):
             evidence.write_text(json.dumps(self._record()))
             report = validate_behavior_evidence(SUITE, evidence)
             self.assertEqual(1, report["runs"])
-            self.assertEqual(8, len(report["missing"]))
+            self.assertEqual(11, len(report["missing"]))
             with self.assertRaisesRegex(BehaviorEvidenceError, "缺少行为场景"):
                 validate_behavior_evidence(SUITE, evidence, require_complete=True)
 
-    def test_non_astra_run_cannot_be_marked_pass(self):
+    def test_pass_is_not_bound_to_one_model(self):
         with tempfile.TemporaryDirectory() as tmp:
             evidence = Path(tmp) / "evidence.json"
-            evidence.write_text(json.dumps(self._record(model="gpt-5.6-sol")))
-            with self.assertRaisesRegex(BehaviorEvidenceError, "不是 Astra"):
-                validate_behavior_evidence(SUITE, evidence)
+            evidence.write_text(json.dumps(self._record(model="another-model")))
+            report = validate_behavior_evidence(SUITE, evidence)
+            self.assertEqual(1, report["statuses"]["pass"])
 
     def test_pass_requires_every_rubric_observation(self):
         with tempfile.TemporaryDirectory() as tmp:
