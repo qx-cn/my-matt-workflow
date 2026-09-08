@@ -1,0 +1,6 @@
+interface:
+  display_name: "Implement in Parallel"
+  short_description: "Implement safe independent Tickets in isolated worktrees"
+  default_prompt: "Use $my-implement-in-parallel to plan and implement the safe parallel Ticket frontier."
+policy:
+  allow_implicit_invocation: false

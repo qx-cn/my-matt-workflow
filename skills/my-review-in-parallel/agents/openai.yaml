@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review in Parallel"
+  short_description: "Run every shared-rule reviewer on one frozen artifact"
+  default_prompt: "Use $my-review-in-parallel to review this artifact against all governed shared rules."
+policy:
+  allow_implicit_invocation: false

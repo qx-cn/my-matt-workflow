@@ -12,6 +12,16 @@
       {"skill": "my-tdd", "when": "tdd-phase", "kind": "method"},
       {"skill": "my-code-review", "when": "review-phase", "kind": "method"}
     ],
+    "my-implement-in-parallel": [
+      {"skill": "my-implement", "when": "worker", "kind": "method"}
+    ],
+    "my-review-in-parallel": [
+      {"skill": "my-final-state-writing", "when": "governed-rule", "kind": "method"},
+      {"skill": "my-visual-communication", "when": "governed-rule", "kind": "method"},
+      {"skill": "my-humanizer", "when": "governed-rule", "kind": "method"},
+      {"skill": "my-reader-first-writing", "when": "governed-rule", "kind": "method"},
+      {"skill": "my-artifact-finalization", "when": "governed-rule", "kind": "method"}
+    ],
     "my-wayfinder": [
       {"skill": "my-grilling", "when": "grilling-decision", "kind": "method"},
       {"skill": "my-domain-modeling", "when": "domain-decision", "kind": "method"},
@@ -31,6 +41,8 @@
       "my-review-design",
       "my-triage",
       "my-implement",
+      "my-implement-in-parallel",
+      "my-review-in-parallel",
       "my-wayfinder",
       "my-diagnosing-bugs"
     ]

@@ -33,6 +33,7 @@ class SharedResourceTests(unittest.TestCase):
                 "my-review-design",
                 "my-final-state-writing",
                 "my-artifact-finalization",
+                "my-review-in-parallel",
                 "my-wayfinder",
             },
             set(entry["consumers"]),

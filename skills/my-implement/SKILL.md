@@ -4,7 +4,7 @@ description: 根据 Spec 或一组 Ticket 实施工作。
 disable-model-invocation: true
 ---
 
-实施用户在 Spec 或 Ticket 中描述的工作。`my-implement` 是唯一可跨 Ticket 继续的宿主：每张 Ticket 的验收、测试、审查和提交完成后，按 runtime 的 `next-ticket` 结果继续、完成或暂停。
+实施用户在 Spec 或 Ticket 中描述的工作。普通模式下，`my-implement` 是串行跨 Ticket 继续的宿主：每张 Ticket 的验收、测试、审查和提交完成后，按 runtime 的 `next-ticket` 结果继续、完成或暂停。由 `my-implement-in-parallel` 组合调用时进入 `worker mode`，强制只实施分配的单张 Ticket；完成或阻塞后返回协调器，不运行 `next-ticket`。
 
 开始每个 Ticket 时记录当前 `HEAD`，并从安装状态读取 `installed_agent`。若 `.agent/work/<topic>/runs/run-<ticket-id>-spec-r<revision>.json` 已存在，恢复其中的运行事实；执行 Agent 与当前环境不一致时停止。否则通过安装状态记录的 `runtime_entry` 运行：
 

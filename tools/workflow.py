@@ -38,6 +38,7 @@ from workflow_lib.work_artifacts import (
 )
 from workflow_lib.release import build_release, release_matches_source
 from workflow_lib.review_snapshot import ReviewSnapshotError, build_review_snapshot
+from workflow_lib.parallel_review import ParallelReviewError, build_parallel_review_plan
 from workflow_lib.run_journal import (
     RUN_PHASE_TRANSITIONS,
     RunJournalError,
@@ -629,6 +630,22 @@ def command_review_snapshot(args: argparse.Namespace) -> None:
         raise SystemExit(exit_code)
 
 
+def command_parallel_review_plan(args: argparse.Namespace) -> None:
+    governance_candidates = (
+        ROOT / "resources" / "governance.json",
+        ROOT.parent / "skills" / "my-review-in-parallel" / "references" / "shared" / "governance.json",
+    )
+    governance_path = next((path for path in governance_candidates if path.is_file()), governance_candidates[0])
+    try:
+        report = build_parallel_review_plan(
+            governance_path,
+            [Path(path) for path in args.artifact],
+        )
+    except ParallelReviewError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_run_context(args: argparse.Namespace) -> None:
     try:
         context = build_run_context(
@@ -902,6 +919,10 @@ def parser() -> argparse.ArgumentParser:
     review_snapshot.add_argument("--expect-content-id")
     review_snapshot.add_argument("--require-clean", action="store_true")
     review_snapshot.set_defaults(func=command_review_snapshot)
+
+    parallel_review = sub.add_parser("parallel-review-plan")
+    parallel_review.add_argument("--artifact", action="append", required=True)
+    parallel_review.set_defaults(func=command_parallel_review_plan)
 
     run_context = sub.add_parser("run-context")
     run_context.add_argument("--repo", default=".")

@@ -40,6 +40,7 @@ from tools.workflow_lib.tickets import (
     validate_ready_ticket,
     validate_ticket_transition,
 )
+from tools.workflow_lib.parallel_review import build_parallel_review_plan
 from tools.workflow_lib.transitions import ticket_transition
 from tools.workflow_lib.write_gates import resolve_write_gate
 from tools.workflow_lib.work_artifacts import WorkArtifactError, apply_work_artifact_migration
@@ -231,6 +232,46 @@ class TicketTransitionTests(unittest.TestCase):
             )
             self.assertEqual(0, scope.returncode, scope.stderr)
             self.assertEqual(["feature-b"], json.loads(scope.stdout)["ticket_ids"])
+
+
+class ParallelWorkflowTests(unittest.TestCase):
+    def test_parallel_review_discovers_all_governed_reviewers_on_one_content_id(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            artifact = Path(tmp) / "artifact.md"
+            artifact.write_text("current state", encoding="utf-8")
+            result = build_parallel_review_plan(
+                Path(__file__).resolve().parents[1] / "resources/governance.json",
+                [artifact],
+            )
+            self.assertEqual("ready", result["status"])
+            reviewers = {lane["review_skill"] for lane in result["lanes"]}
+            self.assertEqual(
+                {"my-humanizer", "my-final-state-writing", "my-artifact-finalization", "my-visual-communication", "my-reader-first-writing"},
+                reviewers,
+            )
+            self.assertEqual({result["content_id"]}, {lane["content_id"] for lane in result["lanes"]})
+
+    def test_parallel_implement_keeps_only_outcome_and_safety_constraints(self):
+        root = Path(__file__).resolve().parents[1]
+        text = (root / "skills/my-implement-in-parallel/SKILL.md").read_text()
+        for required in (
+            "工程判断",
+            "独立 `agent/<topic>/<ticket-id>` 分支",
+            "只实施分配的单张 Ticket",
+            "workers 不互相决定全局设计",
+            "只重新规划真正受影响的工作",
+            "重新运行适当的测试和一次代码 review",
+            "等待明确确认",
+        ):
+            self.assertIn(required, text)
+        for mechanical in (
+            "parallel_readiness",
+            "architecture_impact",
+            "execution_mode",
+            "basis_id",
+            "parallel-implement-plan",
+        ):
+            self.assertNotIn(mechanical, text)
 
 
 class WriteGateTests(unittest.TestCase):
@@ -2057,7 +2098,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(34, len(validate_skills(root)))
+        self.assertEqual(36, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
