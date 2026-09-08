@@ -37,4 +37,4 @@ python3 tools/workflow.py validate-ticket <ticket-path>
 
 项目首次使用时手动运行 `/my-setup`。日常通过 `/my-ask-matt` 查询下一条命令，再手动调用推荐的 `/my-*`。
 
-Codex 默认把 Skills 安装到 `~/.agents/skills`，把安装状态和版本化 runtime 保存到 `${CODEX_HOME:-~/.codex}/my-matt-workflow`。安装后的 `install-state.json` 会记录绝对 `runtime_entry`，因此项目内命令不依赖当前工作目录中存在本仓库的 `tools/`。
+Codex 默认把 Skills 安装到 `${CODEX_HOME:-~/.codex}/skills`，把安装状态和版本化 runtime 保存到 `${CODEX_HOME:-~/.codex}/my-matt-workflow`。旧版安装状态仍指向 `.agents/skills` 时，下一次安装会在同一事务中迁移已托管的 `my-*` Skills。安装后的 `install-state.json` 会记录绝对 `runtime_entry`，因此项目内命令不依赖当前工作目录中存在本仓库的 `tools/`。

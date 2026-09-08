@@ -1459,7 +1459,7 @@ class InstallerTests(unittest.TestCase):
             self.assertEqual("claude", state["installed_agent"])
             self.assertTrue(Path(state["runtime_entry"]).is_file())
 
-    def test_codex_can_split_state_and_skill_roots(self):
+    def test_codex_migrates_previously_split_skill_root(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             release = self._release(
@@ -1499,6 +1499,23 @@ class InstallerTests(unittest.TestCase):
             self.assertNotIn("disable-model-invocation", installed)
             self.assertTrue((skills_home / "my-demo/agents/openai.yaml").is_file())
             self.assertEqual("codex", state["metadata_projection"])
+
+            codex_skills_home = state_home / "skills"
+            install_release(
+                release,
+                state_home,
+                target="codex",
+                skills_home=codex_skills_home,
+            )
+
+            self.assertFalse((skills_home / "my-demo").exists())
+            self.assertTrue((codex_skills_home / "my-demo/SKILL.md").is_file())
+            migrated_state = json.loads(
+                (state_home / "my-matt-workflow/install-state.json").read_text()
+            )
+            self.assertEqual(
+                str(codex_skills_home.resolve()), migrated_state["skills_home"]
+            )
 
     def test_cursor_install_keeps_cursor_metadata_and_removes_openai_metadata(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1695,6 +1712,46 @@ class InstallerTests(unittest.TestCase):
 
             recover_interrupted_install(state_home)
             self.assertEqual("original", (target / "SKILL.md").read_text())
+
+    def test_v3_recovery_restores_legacy_skill_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state_home = root / ".codex"
+            skills_home = state_home / "skills"
+            migrated = skills_home / "my-demo"
+            migrated.mkdir(parents=True)
+            (migrated / "SKILL.md").write_text("partial-new")
+            previous_skills_home = root / ".agents" / "skills"
+            transaction = state_home / "my-matt-workflow" / "transaction"
+            legacy_backup = transaction / "legacy-backup" / "my-demo"
+            legacy_backup.mkdir(parents=True)
+            (legacy_backup / "SKILL.md").write_text("original")
+            (transaction / "journal.json").write_text(json.dumps({
+                "version": 3,
+                "skills_home": str(skills_home.resolve()),
+                "previous_skills_home": str(previous_skills_home.resolve()),
+                "skills": ["my-demo"],
+                "old_present": [],
+                "legacy_old_present": ["my-demo"],
+                "new_release_id": "v2",
+                "transaction_id": "tx-2",
+            }))
+            state_dir = state_home / "my-matt-workflow"
+            state_dir.mkdir(parents=True, exist_ok=True)
+            (state_dir / "install-state.json").write_text(json.dumps({
+                "release_id": "v1",
+                "transaction_id": "tx-1",
+                "skills_home": str(previous_skills_home.resolve()),
+            }))
+
+            recover_interrupted_install(state_home)
+
+            self.assertFalse(migrated.exists())
+            self.assertEqual(
+                "original",
+                (previous_skills_home / "my-demo/SKILL.md").read_text(),
+            )
+            self.assertFalse(transaction.exists())
 
     def test_invalid_recovery_journal_does_not_touch_skills(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -2268,6 +2325,14 @@ class WorkflowCliTests(unittest.TestCase):
             capture_output=True,
             text=True,
             check=False,
+        )
+
+    def test_codex_skills_share_the_codex_home(self):
+        module = self._load_workflow_module()
+
+        self.assertEqual(
+            module.AGENT_STATE_HOMES["codex"] / "skills",
+            module._agent_skills_home("codex"),
         )
 
     def test_deploy_reuses_the_current_release_when_skills_are_unchanged(self):

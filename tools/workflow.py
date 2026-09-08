@@ -74,8 +74,6 @@ AGENT_STATE_HOMES = {
 
 
 def _agent_skills_home(agent: str) -> Path:
-    if agent == "codex":
-        return Path.home() / ".agents" / "skills"
     return AGENT_STATE_HOMES[agent] / "skills"
 
 

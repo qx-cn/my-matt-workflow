@@ -43,7 +43,7 @@ def _validated_journal(journal: object) -> tuple[int, list[str], set[str]]:
     if not isinstance(journal, dict):
         raise InstallError("安装事务日志损坏，需要人工检查")
     version = journal.get("version", 1)
-    if version not in {1, 2}:
+    if version not in {1, 2, 3}:
         raise InstallError("安装事务日志版本无效，需要人工检查")
     skills = journal.get("skills")
     old_present = journal.get("old_present")
@@ -218,7 +218,7 @@ def recover_interrupted_install(
         if not isinstance(state, dict):
             raise InstallError("安装状态损坏，需要人工检查")
     version, skills, old_present = _validated_journal(journal)
-    if version == 2:
+    if version in {2, 3}:
         recorded = journal.get("skills_home")
         if (
             not isinstance(recorded, str)
@@ -226,7 +226,7 @@ def recover_interrupted_install(
             or not isinstance(journal.get("new_release_id"), str)
             or not isinstance(journal.get("transaction_id"), str)
         ):
-            raise InstallError("安装事务日志 v2 无效，需要人工检查")
+            raise InstallError(f"安装事务日志 v{version} 无效，需要人工检查")
         recorded_home = Path(recorded).resolve()
         if skills_home is not None and skills_home.resolve() != recorded_home:
             raise InstallError("恢复目录与安装事务不一致，拒绝操作")
@@ -242,6 +242,20 @@ def recover_interrupted_install(
             raise InstallError("旧安装事务缺少 skills_home；请明确指定恢复目录")
 
     assert skills_home is not None
+    previous_skills_home: Path | None = None
+    legacy_old_present: list[str] = []
+    if version == 3:
+        recorded_previous = journal.get("previous_skills_home")
+        legacy_old_present = journal.get("legacy_old_present")
+        if (
+            not isinstance(recorded_previous, str)
+            or not Path(recorded_previous).is_absolute()
+            or not isinstance(legacy_old_present, list)
+            or any(not isinstance(name, str) for name in legacy_old_present)
+            or not set(legacy_old_present).issubset(skills)
+        ):
+            raise InstallError("安装事务日志 v3 迁移信息无效，需要人工检查")
+        previous_skills_home = Path(recorded_previous).resolve()
     transaction_id = journal.get("transaction_id")
     if transaction_id and state.get("transaction_id") == transaction_id:
         shutil.rmtree(transaction)
@@ -255,6 +269,15 @@ def recover_interrupted_install(
             backup.rename(target)
         elif skill_name not in old_present:
             _remove_path(target)
+    if previous_skills_home is not None:
+        legacy_backup = transaction / "legacy-backup"
+        for skill_name in legacy_old_present:
+            backup = legacy_backup / skill_name
+            if backup.exists():
+                target = previous_skills_home / skill_name
+                _remove_path(target)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                backup.rename(target)
     shutil.rmtree(transaction)
 
 
@@ -289,6 +312,12 @@ def install_release(
             previous_state = {}
 
     previous_managed = set(previous_state.get("skills", []))
+    previous_skills_home: Path | None = None
+    recorded_previous_home = previous_state.get("skills_home")
+    if isinstance(recorded_previous_home, str) and Path(recorded_previous_home).is_absolute():
+        candidate = Path(recorded_previous_home).resolve()
+        if candidate != skills_home.resolve():
+            previous_skills_home = candidate
     for skill_name in manifest["skills"]:
         destination = skills_home / skill_name
         if destination.exists() and skill_name not in previous_managed:
@@ -310,17 +339,29 @@ def install_release(
     old_present = [
         skill_name for skill_name in sorted(managed) if (skills_home / skill_name).exists()
     ]
-    _atomic_json_write(
-        transaction / "journal.json",
-        {
-            "version": 2,
-            "skills_home": str(skills_home.resolve()),
-            "skills": sorted(managed),
-            "old_present": old_present,
-            "new_release_id": manifest["release_id"],
-            "transaction_id": transaction_id,
-        },
-    )
+    journal = {
+        "version": 2,
+        "skills_home": str(skills_home.resolve()),
+        "skills": sorted(managed),
+        "old_present": old_present,
+        "new_release_id": manifest["release_id"],
+        "transaction_id": transaction_id,
+    }
+    legacy_old_present: list[str] = []
+    if previous_skills_home is not None:
+        legacy_old_present = [
+            skill_name
+            for skill_name in sorted(previous_managed)
+            if (previous_skills_home / skill_name).exists()
+        ]
+        journal.update(
+            {
+                "version": 3,
+                "previous_skills_home": str(previous_skills_home),
+                "legacy_old_present": legacy_old_present,
+            }
+        )
+    _atomic_json_write(transaction / "journal.json", journal)
 
     try:
         for skill_name in sorted(managed):
@@ -329,6 +370,12 @@ def install_release(
                 destination.rename(backup / skill_name)
             if skill_name in manifest["skills"]:
                 (staged / skill_name).rename(destination)
+
+        if previous_skills_home is not None:
+            legacy_backup = transaction / "legacy-backup"
+            legacy_backup.mkdir()
+            for skill_name in legacy_old_present:
+                (previous_skills_home / skill_name).rename(legacy_backup / skill_name)
 
         runtime_dir = state_dir / "runtime" / manifest["release_id"]
         if runtime_dir.exists():
