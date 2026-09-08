@@ -7,13 +7,18 @@ import subprocess
 from pathlib import Path
 
 from .release import LINK_PATTERN, ReleaseError, _prose_markdown, validate_skills
+from .resource_governance import (
+    ResourceGovernanceError,
+    validate_resource_governance,
+)
+from .resources import ResourceError, load_resource_manifest
 
 
 class ValidationError(RuntimeError):
     """Raised when a source-tree gate has an actionable failure."""
 
 
-EXPECTED_MANUAL_SKILLS = 32
+EXPECTED_MANUAL_SKILLS = 34
 _PLACEHOLDER = re.compile(r"(<[^>]+>|\{\{.+?\}\}|^\s*link\s*$)", re.IGNORECASE)
 _SCRIPT_SUFFIXES = {".sh", ".bash"}
 
@@ -155,6 +160,18 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
     except ReleaseError as exc:
         raise ValidationError(str(exc)) from exc
     canonical = (root / "composition" / "manifest.json").is_file()
+    if canonical:
+        try:
+            resource_manifest = load_resource_manifest(
+                root / "resources" / "manifest.json"
+            )
+            validate_resource_governance(
+                root,
+                resource_manifest,
+                root / "resources" / "governance.json",
+            )
+        except (OSError, ResourceError, ResourceGovernanceError) as exc:
+            raise ValidationError(str(exc)) from exc
     validate_manual_metadata(
         skills_dir, expected_count=EXPECTED_MANUAL_SKILLS if canonical else None
     )

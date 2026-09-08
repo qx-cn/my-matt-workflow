@@ -1,4 +1,5 @@
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -6,6 +7,10 @@ from pathlib import Path
 from tools.workflow_lib.resources import (
     bundle_resources_for_skill,
     load_resource_manifest,
+)
+from tools.workflow_lib.resource_governance import (
+    ResourceGovernanceError,
+    validate_resource_governance,
 )
 from tools.workflow_lib.release import ReleaseError, validate_skills
 
@@ -27,6 +32,7 @@ class SharedResourceTests(unittest.TestCase):
                 "my-handoff",
                 "my-review-design",
                 "my-final-state-writing",
+                "my-artifact-finalization",
                 "my-wayfinder",
             },
             set(entry["consumers"]),
@@ -34,6 +40,51 @@ class SharedResourceTests(unittest.TestCase):
         text = (ROOT / entry["source"]).read_text()
         for gate in ("来源账本", "内部一致性", "读者重建", "事实正确性"):
             self.assertIn(gate, text)
+
+    def test_every_shared_document_has_a_reviewer_or_validation(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        validate_resource_governance(
+            ROOT,
+            manifest,
+            ROOT / "resources/governance.json",
+        )
+
+    def test_unregistered_shared_markdown_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(ROOT / "resources", root / "resources")
+            shutil.copytree(ROOT / "policies", root / "policies")
+            shutil.copytree(ROOT / "skills", root / "skills")
+            (root / "resources/new-rule.md").write_text("# New rule\n")
+            manifest = load_resource_manifest(root / "resources/manifest.json")
+            with self.assertRaisesRegex(
+                ResourceGovernanceError,
+                "resources/new-rule.md",
+            ):
+                validate_resource_governance(
+                    root,
+                    manifest,
+                    root / "resources/governance.json",
+                )
+
+    def test_write_only_skill_cannot_satisfy_review_governance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(ROOT / "resources", root / "resources")
+            shutil.copytree(ROOT / "policies", root / "policies")
+            shutil.copytree(ROOT / "skills", root / "skills")
+            skill = root / "skills/my-final-state-writing/SKILL.md"
+            skill.write_text(skill.read_text().replace("只读", "读取"))
+            manifest = load_resource_manifest(root / "resources/manifest.json")
+            with self.assertRaisesRegex(
+                ResourceGovernanceError,
+                "未声明只读 review 能力",
+            ):
+                validate_resource_governance(
+                    root,
+                    manifest,
+                    root / "resources/governance.json",
+                )
 
     def test_humanizer_has_one_source(self):
         self.assertTrue((ROOT / "resources/humanizer.md").is_file())

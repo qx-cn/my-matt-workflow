@@ -68,6 +68,7 @@ disable-model-invocation: true
 
 - **`/my-grill-me`**——与 `/my-grill-with-docs` 相同的高强度访谈，但用于**没有代码库**的场景。它无状态、不保存本地内容；适合打磨任何不属于仓库的计划或设计。
 - **`/my-review-design`**——对已形成的方案做一次性只读评审，检查待决策项、逻辑完整性、内部一致性、设计闭环和最终态表达；不修改文档，也不重新展开访谈。
+- **规则专项评审**——用 **`/my-reader-first-writing`** 检查文档是否服务目标读者，用 **`/my-final-state-writing review`** 检查是否只保留当前有效状态，用 **`/my-visual-communication review`** 检查图示选择与表达，用 **`/my-humanizer review`** 只读识别 AI 写作痕迹；写入、发布或交接承重文档前，用 **`/my-artifact-finalization`** 执行四项证据 gate。专项评审只报告有依据的问题，不修改原文。
 - **`/my-prototype`**——回答一个设计问题的小型一次性程序：这个状态模型是否合理，或 UI 应该是什么样。第一天起就把它视为可丢弃物：保留答案，删除代码。它是主流程第 2 步的绕行，也可用于任何难以在纸面定论的设计问题。
 - **`/my-research`**——把阅读工作委托给后台 Agent：它查阅一手来源，再在仓库留下带引用的 Markdown。阅读期间继续工作。其结果应带回 `/my-grill-with-docs` 主流程；研究为思考提供材料，不取代思考。
 - **`/my-teach`**——围绕当前目录这个有状态学习工作区跨会话学习概念。

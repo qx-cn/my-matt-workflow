@@ -1,6 +1,6 @@
 interface:
   display_name: "Visual Communication"
-  short_description: "Explain complex ideas with the right visuals"
-  default_prompt: "Use $my-visual-communication to make this human-facing document easier to understand with appropriate visuals."
+  short_description: "Review or create appropriate document visuals"
+  default_prompt: "Use $my-visual-communication to review whether this document uses the right visual form."
 policy:
   allow_implicit_invocation: false

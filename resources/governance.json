@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "documents": {
+    "resources/humanizer.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-humanizer"
+    },
+    "resources/final-state-writing.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-final-state-writing"
+    },
+    "resources/artifact-finalization.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-artifact-finalization"
+    },
+    "resources/visual-communication.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-visual-communication"
+    },
+    "resources/reader-first-writing.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-reader-first-writing"
+    },
+    "resources/document-rendering.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ReleaseTests.test_rendered_document_skills_have_independent_stage_contracts"
+    },
+    "resources/instruction-authority.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_decision_gate_maps_each_class_to_one_action"
+    },
+    "resources/adapters/composition.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_composition_callers_use_one_dispatch_channel"
+    },
+    "resources/adapters/ticket-selection.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_ready_ticket_requires_rule_evidence"
+    },
+    "resources/adapters/work-scope.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_continue_semantics_do_not_widen_work_scope_in_skills"
+    },
+    "resources/adapters/write-actions.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::WriteGateTests.test_every_configured_write_policy_has_a_runtime_gate"
+    },
+    "resources/adapters/artifact-access.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_artifact_access_is_bundled_only_for_reader_consumers"
+    },
+    "resources/adapters/project-rules.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_plan_skills_use_project_rule_adapter"
+    },
+    "policies/context-hygiene.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_workflow_control_pointers_are_bundled_for_consumers"
+    },
+    "policies/decision-taxonomy.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_workflow_control_pointers_are_bundled_for_consumers"
+    },
+    "policies/enterprise-safety.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
+    },
+    "policies/merge-conflict-approval.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
+    },
+    "policies/project-discovery.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
+    },
+    "policies/project-storage.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
+    },
+    "policies/write-boundaries.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::WriteGateTests.test_every_configured_write_policy_has_a_runtime_gate"
+    }
+  }
+}

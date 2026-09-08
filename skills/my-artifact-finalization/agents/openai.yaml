@@ -1,0 +1,6 @@
+interface:
+  display_name: "Artifact Finalization Review"
+  short_description: "Run four evidence gates on critical documents"
+  default_prompt: "Use $my-artifact-finalization to review this document before it is published or handed off."
+policy:
+  allow_implicit_invocation: false

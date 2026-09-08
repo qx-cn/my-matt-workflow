@@ -2031,6 +2031,16 @@ class ReleaseTests(unittest.TestCase):
                 "references/shared/final-state-writing.md",
                 "未发现影响方案成立或实施的实质问题",
             ],
+            "my-reader-first-writing": [
+                "只读评审",
+                "references/shared/reader-first-writing.md",
+                "No findings.",
+            ],
+            "my-artifact-finalization": [
+                "只读评审",
+                "references/shared/artifact-finalization.md",
+                "No findings.",
+            ],
         }
 
         for skill, required_text in expected.items():
@@ -2047,7 +2057,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(32, len(validate_skills(root)))
+        self.assertEqual(34, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"

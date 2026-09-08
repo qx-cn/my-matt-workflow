@@ -1,0 +1,6 @@
+interface:
+  display_name: "Reader-First Writing Review"
+  short_description: "Review documents around the reader's real task"
+  default_prompt: "Use $my-reader-first-writing to review whether this document serves its intended reader."
+policy:
+  allow_implicit_invocation: false
