@@ -169,6 +169,7 @@ class SharedResourceTests(unittest.TestCase):
                 reference = target / "references/shared/visual-communication.md"
                 self.assertTrue(reference.is_file(), name)
                 self.assertIn("图只回答一个核心问题", reference.read_text())
+                self.assertIn("字溢出、叠字、遮挡", reference.read_text())
                 body = (ROOT / "skills" / name / "SKILL.md").read_text()
                 self.assertIn("references/shared/visual-communication.md", body)
 
@@ -194,6 +195,14 @@ class SharedResourceTests(unittest.TestCase):
                 bundle_resources_for_skill(manifest, ROOT, name, target)
                 self.assertTrue((target / "references/shared/reader-first-writing.md").is_file())
                 self.assertTrue((target / "references/shared/document-rendering.md").is_file())
+
+        reader_rule = (ROOT / "resources/reader-first-writing.md").read_text()
+        self.assertIn("用户与 AI 的讨论", reader_rule)
+        self.assertIn("主要读者是人、Agent 还是两者", reader_rule)
+        self.assertIn("不得仅为记录制作过程而原样残留", reader_rule)
+        self.assertIn("面向 Agent 的工件可以保留可执行状态", reader_rule)
+        self.assertIn("原始提示词只有本身就是目标 Agent 必须执行的指令", reader_rule)
+        self.assertIn("结构化元数据或独立交接工件", reader_rule)
 
     def test_artifact_access_is_bundled_only_for_reader_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")

@@ -1921,6 +1921,20 @@ class ReleaseTests(unittest.TestCase):
         css = (skill / "assets/course.css").read_text()
         script = (skill / "assets/course.js").read_text()
 
+        for phrase in (
+            "行业通行术语",
+            "不得发展成另一套课内正式名称",
+            "是什么、输入、输出",
+            "精确对照用表格意图",
+        ):
+            self.assertIn(phrase, content)
+        for phrase in (
+            "行业通行主名称",
+            "不把解释性白话提升为另一套正式术语",
+            "简单内容不为套格式而扩张",
+        ):
+            self.assertIn(phrase, frontend)
+
         self.assertIn("assets/TEMPLATE.html", body)
         self.assertIn("无需写页面、卡片或配色提示", content)
         self.assertIn("同一条连续文档流", frontend)
