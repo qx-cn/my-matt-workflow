@@ -5,6 +5,7 @@
   "skills": ["my-review-artifact"],
   "input": {
     "fixed_review_unit": true,
+    "artifact_kind": "general",
     "required_checks": [
       "my-final-state-writing",
       "my-reader-first-writing",
@@ -35,7 +36,7 @@
     "sources": [
       {
         "path": "skills/my-review-artifact/SKILL.md",
-        "sha256": "sha256:f3a5b08f7fd7c0a6783426297f955b49f4db28213562e305ba2fbb5365212f7a"
+        "sha256": "sha256:f7c83ae206a0caf992e522808568822f12a20c9348788b6897fd99609e45c08d"
       }
     ]
   }

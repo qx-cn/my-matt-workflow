@@ -43,6 +43,13 @@ class CompositionManifestTests(unittest.TestCase):
                 if edge.skill == "my-to-spec"
             ),
         )
+        design_edge = next(
+            edge
+            for edge in manifest.callers["my-review-artifact"]
+            if edge.skill == "my-review-design"
+        )
+        self.assertEqual("method", design_edge.kind)
+        self.assertEqual("design-artifact", design_edge.when)
 
     def test_cycle_is_rejected_with_path(self):
         manifest = CompositionManifest(

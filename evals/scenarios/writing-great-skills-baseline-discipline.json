@@ -18,6 +18,6 @@
   "evidence": {
     "version": 1,
     "scenario": "writing-great-skills-baseline-discipline",
-    "sources": [{"path": "skills/my-writing-great-skills/SKILL.md", "sha256": "sha256:2c59292dac81a167b0bb333f22d66e637dd40a06fb70a3cad1dee2078a1f048b"}]
+    "sources": [{"path": "skills/my-writing-great-skills/SKILL.md", "sha256": "sha256:ed469891f7ae7a0cc9bf8ed71359b2f27ec9dd5415749f774ff710f4e797005f"}]
   }
 }

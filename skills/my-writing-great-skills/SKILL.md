@@ -1,10 +1,12 @@
 ---
 name: my-writing-great-skills
-description: 为任意 Agent 编写或改进可预测、精简且可验证的个人 Skill
+description: 编写或从指令设计角度改进可预测、精简且可验证的个人 Skill。
 disable-model-invocation: true
 ---
 
 # My Writing Great Skills
+
+本 Skill 只负责 Skill 的调用描述、信息层级、完成条件、措辞和可验证性。它不判断 Skill 是否应存在、是否职责重叠、是否应迁入 runtime，也不凭静态文字证明行为有效；这些属于 `my-review-skill`。直接以 `review` 使用时，只输出这一层的指令设计发现，不扩张为根本性审查。
 
 Skill 的存在，是为了从随机系统中驯服出确定性。根本美德是 **可预测性**：每一次运行采用相同的**过程**，而不是产出相同的结果；下列每个杠杆都服务于它。
 

@@ -12,4 +12,4 @@ disable-model-invocation: true
 
 计划内容按[最终态写作](references/shared/final-state-writing.md)从已确认决定生成。
 
-本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)，项目规范遵循 [项目规则解析](references/shared/adapters/project-rules.md)，最终确认后、写入前按 [humanizer](references/shared/humanizer.md) 的 `humanizer_policy` 执行。
+本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)，项目规范遵循 [项目规则解析](references/shared/adapters/project-rules.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失；这不代表整体方案已最终确认，也不触发最终文档的 humanizer。团队文档、最终 Spec 与最终计划只在整体最终确认后写入，并在写入前按 [humanizer](references/shared/humanizer.md) 的 `humanizer_policy` 执行。

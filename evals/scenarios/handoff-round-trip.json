@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "id": "handoff-round-trip",
+  "type": "handoff-contract",
+  "skills": ["my-handoff"],
+  "input": {
+    "source_fields": ["goal", "out_of_scope", "decisions", "evidence", "risks", "references", "first_step"],
+    "reconstructed_fields": ["goal", "out_of_scope", "decisions", "evidence", "risks", "references", "first_step"],
+    "references_valid": true,
+    "sensitive_data_removed": true,
+    "independent_context": true
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "handoff-round-trip",
+    "next": "resume-first-step"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "handoff-round-trip",
+    "sources": [
+      {"path": "skills/my-handoff/SKILL.md", "sha256": "sha256:4e333124c67588eb6436730481b8c003919a308325d07cd07cb9f11df0a6d952"}
+    ]
+  }
+}

@@ -17,7 +17,7 @@ class PortfolioError(RuntimeError):
 _SKILL_NAME = re.compile(r"my-[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 _CALL_MACRO = re.compile(r"\{\{skill-call:(my-[a-z0-9]+(?:-[a-z0-9]+)*)\}\}")
 _RAW_HOST_CALL = re.compile(r"(?<![A-Za-z0-9_-])(?:/|\$)my-[a-z0-9-]+")
-_DISCOVERABILITY = {"routed", "specialist", "administrative"}
+_DISCOVERABILITY = {"routed", "specialist", "administrative", "internal"}
 _ROLES = {"entry", "method", "handoff", "review", "admin"}
 _CRITICALITY = {"critical", "standard"}
 _EVIDENCE_LAYERS = {"static", "deterministic", "fresh_agent", "real_project"}
@@ -118,6 +118,8 @@ def load_portfolio_manifest(path: Path) -> PortfolioManifest:
             or len(roles) != len(set(roles))
         ):
             raise _fail(f"{name}.roles", "必须是非空且不重复的合法 role 数组")
+        if discoverability == "internal" and set(roles) != {"method"}:
+            raise _fail(f"{name}.roles", "internal Skill 必须且只能具有 method role")
         if criticality not in _CRITICALITY:
             raise _fail(f"{name}.criticality", "必须是 critical 或 standard")
         entries[name] = PortfolioEntry(

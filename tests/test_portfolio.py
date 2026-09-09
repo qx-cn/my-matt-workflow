@@ -43,6 +43,30 @@ class PortfolioContractTests(unittest.TestCase):
             ):
                 validate_portfolio(root)
 
+    def test_internal_skills_are_method_only_and_not_routed(self):
+        manifest = validate_portfolio(ROOT)
+        grilling = manifest.skills["my-grilling"]
+        self.assertEqual("internal", grilling.discoverability)
+        self.assertEqual(frozenset({"method"}), grilling.roles)
+
+        composition = json.loads((ROOT / "composition/manifest.json").read_text())
+        self.assertNotIn(
+            "my-grilling",
+            composition["routable_entries"]["my-ask-matt"],
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._fixture(root)
+            path = root / "portfolio/manifest.json"
+            data = json.loads(path.read_text())
+            data["skills"]["my-grilling"]["roles"] = ["entry", "method"]
+            path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(
+                PortfolioError, r"my-grilling.roles.*只能具有 method role"
+            ):
+                validate_portfolio(root)
+
     def test_unknown_evidence_case_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -75,6 +99,7 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertEqual(
             {
                 "my-edit-article",
+                "my-handoff",
                 "my-test-report",
                 "my-to-questionnaire",
             },
@@ -129,6 +154,8 @@ class PortfolioContractTests(unittest.TestCase):
         writing = (ROOT / "skills/my-writing-great-skills/SKILL.md").read_text()
         glossary = (ROOT / "skills/my-writing-great-skills/GLOSSARY.md").read_text()
         self.assertIn("调用能力由**宿主 policy**决定", writing)
+        self.assertIn("只负责 Skill 的调用描述、信息层级", writing)
+        self.assertIn("不扩张为根本性审查", writing)
         self.assertNotIn("存在本身*就是*调用轴", glossary)
 
         tdd = (ROOT / "skills/my-tdd/SKILL.md").read_text()
@@ -153,6 +180,26 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn("references/reviewer-brief.md", skill)
         self.assertIn("independence evidence gap", skill)
         self.assertIn("简单请求", skill)
+        self.assertIn("不意味着每次都要启动独立 reviewer", skill)
+
+    def test_design_review_is_both_standalone_entry_and_artifact_method(self):
+        manifest = validate_portfolio(ROOT)
+        self.assertEqual(
+            frozenset({"entry", "review", "method"}),
+            manifest.skills["my-review-design"].roles,
+        )
+        artifact = (ROOT / "skills/my-review-artifact/SKILL.md").read_text()
+        design = (ROOT / "skills/my-review-design/SKILL.md").read_text()
+        self.assertIn("references/composed/my-review-design/COMPOSED.md", artifact)
+        self.assertIn("review_unit", design)
+        self.assertIn("组合模式", design)
+
+    def test_skill_review_requires_an_authorized_dispute_before_comparative(self):
+        review = (ROOT / "skills/my-review-skill/SKILL.md").read_text()
+        self.assertIn("不自动授权 Deep Review 或 comparative", review)
+        self.assertIn("争议命题", review)
+        self.assertIn("预计成本", review)
+        self.assertIn("用户明确授权", review)
 
     def test_ticket_templates_are_progressively_disclosed_by_backend(self):
         skill = (ROOT / "skills/my-to-tickets/SKILL.md").read_text()

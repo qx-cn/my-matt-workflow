@@ -24,6 +24,10 @@ REQUIRED_SCENARIOS = frozenset(
         "main-workflow-fresh-context",
         "artifact-review-method-boundary",
         "skill-review-root-before-wording",
+        "handoff-round-trip",
+        "requirement-analysis-clear-request",
+        "requirement-analysis-misleading-analogy",
+        "artifact-review-design-method-boundary",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -38,6 +42,8 @@ _SCENARIO_TYPES = frozenset(
         "main-workflow-contract",
         "artifact-review-contract",
         "skill-review-contract",
+        "handoff-contract",
+        "requirement-analysis-contract",
     }
 )
 
@@ -262,6 +268,110 @@ def _evaluate_skill_writing_contract(input_value: dict[str, object]) -> dict[str
     }
 
 
+def _evaluate_handoff_contract(input_value: dict[str, object]) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "source_fields",
+            "reconstructed_fields",
+            "references_valid",
+            "sensitive_data_removed",
+            "independent_context",
+        },
+        "handoff-contract.input",
+    )
+    required = {
+        "goal",
+        "out_of_scope",
+        "decisions",
+        "evidence",
+        "risks",
+        "references",
+        "first_step",
+    }
+    source = case["source_fields"]
+    reconstructed = case["reconstructed_fields"]
+    if not isinstance(source, list) or not all(isinstance(item, str) for item in source):
+        raise EvalError("handoff-contract.input.source_fields: must be strings")
+    if not isinstance(reconstructed, list) or not all(
+        isinstance(item, str) for item in reconstructed
+    ):
+        raise EvalError("handoff-contract.input.reconstructed_fields: must be strings")
+    for field in ("references_valid", "sensitive_data_removed", "independent_context"):
+        if not isinstance(case[field], bool):
+            raise EvalError(f"handoff-contract.input.{field}: must be boolean")
+    if not case["sensitive_data_removed"]:
+        return {"status": "stop", "rule": "redact-sensitive-data", "next": "repair-handoff"}
+    if not case["references_valid"]:
+        return {"status": "stop", "rule": "verify-references", "next": "repair-handoff"}
+    if set(source) != required or set(reconstructed) != required:
+        return {"status": "stop", "rule": "reader-reconstruction", "next": "repair-handoff"}
+    if not case["independent_context"]:
+        return {
+            "status": "inconclusive",
+            "rule": "reader-reconstruction-evidence-gap",
+            "next": "deliver-draft-with-gap",
+        }
+    return {"status": "valid", "rule": "handoff-round-trip", "next": "resume-first-step"}
+
+
+def _evaluate_requirement_analysis_contract(
+    input_value: dict[str, object],
+) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "request_shape",
+            "traceable_fields",
+            "summary_matches_input",
+            "result_changing_ambiguity",
+        },
+        "requirement-analysis-contract.input",
+    )
+    if case["request_shape"] not in {"clear", "complex", "implicit", "analogy"}:
+        raise EvalError("requirement-analysis-contract.input.request_shape: invalid shape")
+    traceable = case["traceable_fields"]
+    if not isinstance(traceable, list) or not all(
+        isinstance(item, str) for item in traceable
+    ):
+        raise EvalError(
+            "requirement-analysis-contract.input.traceable_fields: must be strings"
+        )
+    for field in ("summary_matches_input", "result_changing_ambiguity"):
+        if not isinstance(case[field], bool):
+            raise EvalError(
+                f"requirement-analysis-contract.input.{field}: must be boolean"
+            )
+    review_mode = "quick-pass" if case["request_shape"] == "clear" else "independent"
+    if set(traceable) != {"goal", "scope", "constraints", "acceptance"}:
+        return {
+            "verdict": "NEEDS_CLARIFICATION",
+            "rule": "traceable-requirement-contract",
+            "review_mode": review_mode,
+            "next": "complete-summary",
+        }
+    if not case["summary_matches_input"]:
+        return {
+            "verdict": "MISUNDERSTANDING",
+            "rule": "preserve-user-intent",
+            "review_mode": review_mode,
+            "next": "correct-summary",
+        }
+    if case["result_changing_ambiguity"]:
+        return {
+            "verdict": "NEEDS_CLARIFICATION",
+            "rule": "result-changing-ambiguity",
+            "review_mode": review_mode,
+            "next": "ask-minimal-question",
+        }
+    return {
+        "verdict": "PASS",
+        "rule": "traceable-requirement-contract",
+        "review_mode": review_mode,
+        "next": "plan",
+    }
+
+
 def _evaluate_rule_contract(input_value: dict[str, object]) -> dict[str, object]:
     case = _require_fields(
         input_value,
@@ -316,6 +426,7 @@ def _evaluate_artifact_review_contract(input_value: dict[str, object]) -> dict[s
         input_value,
         {
             "fixed_review_unit",
+            "artifact_kind",
             "required_checks",
             "completed_checks",
             "material_root_causes",
@@ -325,6 +436,8 @@ def _evaluate_artifact_review_contract(input_value: dict[str, object]) -> dict[s
     )
     if not isinstance(case["fixed_review_unit"], bool):
         raise EvalError("artifact-review-contract.input.fixed_review_unit: must be boolean")
+    if case["artifact_kind"] not in {"general", "design"}:
+        raise EvalError("artifact-review-contract.input.artifact_kind: invalid kind")
     required_checks = case["required_checks"]
     completed_checks = case["completed_checks"]
     if (
@@ -356,6 +469,21 @@ def _evaluate_artifact_review_contract(input_value: dict[str, object]) -> dict[s
             "rule": "fixed-review-unit",
             "next": "prepare-review-unit",
         }
+    expected_checks = {
+        "my-final-state-writing",
+        "my-reader-first-writing",
+        "my-visual-communication",
+        "my-humanizer",
+        "my-artifact-finalization",
+    }
+    if case["artifact_kind"] == "design":
+        expected_checks.add("my-review-design")
+    if set(required_checks) != expected_checks:
+        return {
+            "status": "stop",
+            "rule": "artifact-kind-method-set",
+            "next": "rebuild-review-unit",
+        }
     if set(completed_checks) != set(required_checks):
         return {
             "status": "stop",
@@ -382,6 +510,8 @@ def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str,
             "walkthrough_coverage_complete",
             "snapshot_verified",
             "evidence_level",
+            "comparative_dispute",
+            "user_authorized_comparative",
             "root_causes",
             "editorial_candidates",
         },
@@ -399,6 +529,10 @@ def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str,
         raise EvalError("skill-review-contract.input: gate fields must be booleans")
     if case["evidence_level"] not in {"static", "observed", "comparative"}:
         raise EvalError("skill-review-contract.input.evidence_level: invalid level")
+    if not isinstance(case["comparative_dispute"], bool) or not isinstance(
+        case["user_authorized_comparative"], bool
+    ):
+        raise EvalError("skill-review-contract.input: comparative gates must be booleans")
     roots = case["root_causes"]
     if not isinstance(roots, list) or not all(
         isinstance(root, str) and root for root in roots
@@ -441,6 +575,14 @@ def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str,
             "rule": "verify-review-snapshot",
             "next": "finalize-review-unit",
         }
+    if case["evidence_level"] == "comparative" and not (
+        case["comparative_dispute"] and case["user_authorized_comparative"]
+    ):
+        return {
+            "status": "stop",
+            "rule": "authorized-disputed-comparative",
+            "next": "report-current-evidence",
+        }
     comparative = case["evidence_level"] == "comparative"
     return {
         "status": "valid",
@@ -448,7 +590,7 @@ def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str,
         "findings": len(set(roots)),
         "suppressed_editorial": editorial if roots else 0,
         "verdict": "EVIDENCE_BACKED" if comparative else "INCONCLUSIVE",
-        "next": "report" if comparative else "comparative-forward-test",
+        "next": "report",
     }
 
 
@@ -463,6 +605,8 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "main-workflow-contract": _evaluate_main_workflow_contract,
         "artifact-review-contract": _evaluate_artifact_review_contract,
         "skill-review-contract": _evaluate_skill_review_contract,
+        "handoff-contract": _evaluate_handoff_contract,
+        "requirement-analysis-contract": _evaluate_requirement_analysis_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:

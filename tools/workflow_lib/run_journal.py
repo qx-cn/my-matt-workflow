@@ -57,6 +57,7 @@ RUN_PHASE_TRANSITIONS = {
 IMPLEMENTATION_OUTCOMES = frozenset(
     {"completed", "blocked-by-design", "blocked-by-evidence"}
 )
+REVIEW_METHOD = "my-code-review"
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
@@ -613,6 +614,7 @@ def open_review_evidence(path: Path) -> dict[str, object]:
             })
         unit = {
             "kind": "code-review-snapshot",
+            "method": REVIEW_METHOD,
             "review_id": review_id,
             "journal": str(path.resolve()),
             "code_content_id": code["content_id"],
@@ -635,6 +637,7 @@ def open_review_evidence(path: Path) -> dict[str, object]:
         raise
     return {
         "status": "ready",
+        "method": REVIEW_METHOD,
         "review_id": review_id,
         "snapshot_dir": str(snapshot_dir),
         "code_content_id": code["content_id"],
@@ -676,9 +679,10 @@ def record_review_evidence(
     if (
         not isinstance(unit, dict)
         or set(unit) != {
-            "kind", "review_id", "journal", "code_content_id", "artifacts"
+            "kind", "method", "review_id", "journal", "code_content_id", "artifacts"
         }
         or unit.get("kind") != "code-review-snapshot"
+        or unit.get("method") != REVIEW_METHOD
         or unit.get("journal") != str(path.resolve())
         or not isinstance(unit.get("artifacts"), list)
     ):
@@ -691,6 +695,7 @@ def record_review_evidence(
         "MY_MATT_REVIEW_ID": str(unit["review_id"]),
         "MY_MATT_REVIEW_SNAPSHOT": str(snapshot_dir),
         "MY_MATT_CODE_CONTENT_ID": str(code["content_id"]),
+        "MY_MATT_REVIEW_METHOD": REVIEW_METHOD,
     })
     completed = subprocess.run(
         argv, cwd=repo, env=environment, capture_output=True, check=False
@@ -741,6 +746,7 @@ def record_review_evidence(
     )
     record = {
         "kind": "review",
+        "method": REVIEW_METHOD,
         "status": "pass",
         "code_content_id": code["content_id"],
         "review_id": unit["review_id"],
@@ -819,6 +825,7 @@ def _validate_completion_receipts(
     review_evidence = _load_evidence(path, review, "review")
     if not (
         review_evidence.get("status") == "pass"
+        and review_evidence.get("method") == REVIEW_METHOD
         and review_evidence.get("exit_code") == 0
         and review_evidence.get("code_content_id") == content_id
         and isinstance(review_evidence.get("review_id"), str)

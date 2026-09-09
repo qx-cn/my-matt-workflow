@@ -13,4 +13,4 @@ Reviewer 独立形成理解，再按四项对比：
 3. 明确约束是否完整，约束之间是否冲突；
 4. 是否存在会改变结果的多种合理解释。
 
-输出 `PASS | NEEDS_CLARIFICATION | MISUNDERSTANDING`，并对非 PASS 项列出原文证据、偏差和最小澄清问题。只评审需求理解，不评判实现方案。需求清晰时直接 PASS，不为显示价值制造歧义。
+输出 `PASS | NEEDS_CLARIFICATION | MISUNDERSTANDING`。`PASS` 只需一行；非 PASS 只列会改变目标、范围、约束或验收的原文证据、偏差和最小澄清问题，不复述原始输入或逐项输出无问题维度。只评审需求理解，不评判实现方案。需求清晰时直接 PASS，不为显示价值制造歧义。

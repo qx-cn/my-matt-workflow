@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "id": "artifact-review-design-method-boundary",
+  "type": "artifact-review-contract",
+  "skills": ["my-review-artifact", "my-review-design"],
+  "input": {
+    "fixed_review_unit": true,
+    "artifact_kind": "design",
+    "required_checks": [
+      "my-final-state-writing",
+      "my-reader-first-writing",
+      "my-visual-communication",
+      "my-humanizer",
+      "my-artifact-finalization",
+      "my-review-design"
+    ],
+    "completed_checks": [
+      "my-final-state-writing",
+      "my-reader-first-writing",
+      "my-visual-communication",
+      "my-humanizer",
+      "my-artifact-finalization",
+      "my-review-design"
+    ],
+    "material_root_causes": ["unresolved-load-bearing-decision"],
+    "inconclusive_count": 0
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "semantic-evidence-review",
+    "findings": 1,
+    "inconclusive": 0,
+    "next": "verify-content-id"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "artifact-review-design-method-boundary",
+    "sources": [
+      {"path": "skills/my-review-artifact/SKILL.md", "sha256": "sha256:f7c83ae206a0caf992e522808568822f12a20c9348788b6897fd99609e45c08d"},
+      {"path": "skills/my-review-design/SKILL.md", "sha256": "sha256:1e49535d246d43e5fb8ebb3be05f31e5fb288513d61917b05fe3c4b99c30b305"}
+    ]
+  }
+}

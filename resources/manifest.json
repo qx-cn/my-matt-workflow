@@ -145,6 +145,7 @@
       "release_path": "references/shared/adapters/artifact-storage.md",
       "consumers": [
         "my-edit-article",
+        "my-handoff",
         "my-test-report",
         "my-to-questionnaire"
       ]
@@ -168,11 +169,17 @@
         "my-code-review"
       ]
     },
-    "adapter-runtime-sessions": {
-      "source": "resources/adapters/runtime-sessions.md",
-      "release_path": "references/shared/adapters/runtime-sessions.md",
+    "adapter-implementation-session": {
+      "source": "resources/adapters/implementation-session.md",
+      "release_path": "references/shared/adapters/implementation-session.md",
       "consumers": [
-        "my-implement",
+        "my-implement"
+      ]
+    },
+    "adapter-artifact-review-session": {
+      "source": "resources/adapters/artifact-review-session.md",
+      "release_path": "references/shared/adapters/artifact-review-session.md",
+      "consumers": [
         "my-review-artifact"
       ]
     },

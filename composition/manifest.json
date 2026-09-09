@@ -20,7 +20,8 @@
       {"skill": "my-visual-communication", "when": "complex-human-facing", "kind": "method"},
       {"skill": "my-humanizer", "when": "human-facing-prose", "kind": "method"},
       {"skill": "my-reader-first-writing", "when": "reader-facing", "kind": "method"},
-      {"skill": "my-artifact-finalization", "when": "load-bearing-deliverable", "kind": "method"}
+      {"skill": "my-artifact-finalization", "when": "load-bearing-deliverable", "kind": "method"},
+      {"skill": "my-review-design", "when": "design-artifact", "kind": "method"}
     ],
     "my-review-skill": [
       {"skill": "my-writing-great-skills", "when": "instruction-design-after-existence-gate", "kind": "method"}
@@ -53,7 +54,6 @@
       "my-final-state-writing",
       "my-grill-with-docs",
       "my-grill-me",
-      "my-grilling",
       "my-handoff",
       "my-humanizer",
       "my-implement",

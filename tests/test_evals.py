@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 8,
-                "required_scenarios": 7,
+                "scenarios": 12,
+                "required_scenarios": 11,
             },
             validate_evals(ROOT),
         )
@@ -97,6 +97,61 @@ class EvalValidationTests(unittest.TestCase):
                 input_value = {**scenario.input, field: False}
                 blocked = replace(scenario, input=input_value, expected=expected)
                 self.assertEqual(expected, run_scenario(ROOT, blocked))
+
+    def test_handoff_contract_does_not_fake_fresh_context(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "handoff-round-trip"
+        )
+        expected = {
+            "status": "inconclusive",
+            "rule": "reader-reconstruction-evidence-gap",
+            "next": "deliver-draft-with-gap",
+        }
+        blocked = replace(
+            scenario,
+            input={**scenario.input, "independent_context": False},
+            expected=expected,
+        )
+        self.assertEqual(expected, run_scenario(ROOT, blocked))
+
+    def test_skill_review_comparative_requires_dispute_and_authorization(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "skill-review-root-before-wording"
+        )
+        expected = {
+            "status": "stop",
+            "rule": "authorized-disputed-comparative",
+            "next": "report-current-evidence",
+        }
+        unauthorized = replace(
+            scenario,
+            input={
+                **scenario.input,
+                "evidence_level": "comparative",
+                "comparative_dispute": True,
+                "user_authorized_comparative": False,
+            },
+            expected=expected,
+        )
+        self.assertEqual(expected, run_scenario(ROOT, unauthorized))
+
+    def test_requirement_analysis_cases_choose_cost_by_request_shape(self):
+        scenarios = {
+            item.identifier: item for item in load_scenarios(ROOT / "evals")
+        }
+        clear = run_scenario(
+            ROOT, scenarios["requirement-analysis-clear-request"]
+        )
+        self.assertEqual("quick-pass", clear["review_mode"])
+        analogy = run_scenario(
+            ROOT, scenarios["requirement-analysis-misleading-analogy"]
+        )
+        self.assertEqual("independent", analogy["review_mode"])
+        self.assertEqual("MISUNDERSTANDING", analogy["verdict"])
 
     def test_tampered_structured_expected_outcome_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

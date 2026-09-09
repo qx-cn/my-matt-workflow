@@ -358,6 +358,35 @@ class ArtifactReviewWorkflowTests(unittest.TestCase):
                 [artifact], result["content_id"], Path(result["snapshot_dir"])
             )
 
+    def test_design_artifact_adds_only_the_design_review_method(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            artifact = root / "design.md"
+            artifact.write_text("# Design\n", encoding="utf-8")
+
+            general = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots", artifact_kind="general"
+            )
+            design = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots", artifact_kind="design"
+            )
+
+            self.assertEqual("general", general["review_unit"]["artifact_kind"])
+            self.assertNotIn(
+                "my-review-design", general["review_unit"]["required_checks"]
+            )
+            self.assertEqual("design", design["review_unit"]["artifact_kind"])
+            self.assertEqual(
+                [*REQUIRED_REVIEW_CHECKS, "my-review-design"],
+                design["review_unit"]["required_checks"],
+            )
+            finalize_artifact_review_snapshot(
+                [artifact], general["content_id"], Path(general["snapshot_dir"])
+            )
+            finalize_artifact_review_snapshot(
+                [artifact], design["content_id"], Path(design["snapshot_dir"])
+            )
+
     def test_artifact_review_submit_requires_complete_check_closure(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -1186,6 +1215,15 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn(timing, text)
                 self.assertNotIn("## humanizer", text)
 
+        grill = (root / "my-grill-with-docs/SKILL.md").read_text()
+        domain = (root / "my-domain-modeling/SKILL.md").read_text()
+        self.assertIn("单个术语", grill)
+        self.assertIn("ADR 候选可在访谈中写入个人工作区", grill)
+        self.assertIn("不触发最终文档的 humanizer", grill)
+        self.assertIn("团队文档、最终 Spec 与最终计划", grill)
+        self.assertIn("立即", domain)
+        self.assertIn("不需要执行最终文档的 humanizer", domain)
+
     def test_code_review_skill_is_compact_and_signal_first(self):
         text = (
             Path(__file__).resolve().parents[1]
@@ -1231,8 +1269,11 @@ class ProfileTests(unittest.TestCase):
             "Fowler code smell",
         ):
             self.assertIn(concern, text)
-        self.assertIn("两个上下文只共享同一快照", text)
-        self.assertIn("不共享推理、候选发现或结论", text)
+        self.assertIn("两个顺序独立的审查 pass", text)
+        self.assertIn("不把第一遍的候选清单或结论作为输入", text)
+        self.assertIn("不声称上下文隔离", text)
+        self.assertIn("**Code pass**", text)
+        self.assertIn("**Spec pass**", text)
         self.assertIn("每条规范性要求映射到实现与测试证据", text)
         self.assertIn("不输出这份检查清单", text)
         self.assertIn("同一失败链只保留", text)
@@ -1248,6 +1289,8 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("Review-Scope: <scope>", text)
         self.assertIn("无内容的注释、命名或统计子节不生成", text)
         self.assertIn("用户显式指定的任何 fixed-point", text)
+        self.assertIn("method=my-code-review", text)
+        self.assertIn("组合模式不得另建 snapshot", text)
         self.assertIn("不得替换", text)
         self.assertIn("仅在用户未指定而采用默认基线分支时", text)
         self.assertIn("安全越权、数据丢失或破坏、不可恢复故障", text)
@@ -1357,9 +1400,14 @@ class ProfileTests(unittest.TestCase):
         ):
             self.assertNotIn(runtime_detail, review)
 
-    def test_runtime_session_bridge_is_shared_and_skills_remain_semantic(self):
+    def test_runtime_sessions_are_split_and_skills_remain_semantic(self):
         root = Path(__file__).resolve().parents[1]
-        bridge = (root / "resources/adapters/runtime-sessions.md").read_text()
+        implementation_session = (
+            root / "resources/adapters/implementation-session.md"
+        ).read_text()
+        artifact_review_session = (
+            root / "resources/adapters/artifact-review-session.md"
+        ).read_text()
         implement = (root / "skills/my-implement/SKILL.md").read_text()
         review = (root / "skills/my-review-artifact/SKILL.md").read_text()
 
@@ -1367,16 +1415,28 @@ class ProfileTests(unittest.TestCase):
             "implementation-open",
             "implementation-submit",
             "implementation-close",
+        ):
+            self.assertIn(command, implementation_session)
+            self.assertNotIn(command, artifact_review_session)
+            self.assertNotIn(command, implement)
+            self.assertNotIn(command, review)
+        for command in (
             "artifact-review-open",
             "artifact-review-submit",
         ):
-            self.assertIn(command, bridge)
+            self.assertIn(command, artifact_review_session)
+            self.assertNotIn(command, implementation_session)
             self.assertNotIn(command, implement)
             self.assertNotIn(command, review)
-        self.assertIn("默认是串行", bridge)
-        self.assertIn("用户明确要求并行", bridge)
-        self.assertIn("references/shared/adapters/runtime-sessions.md", implement)
-        self.assertIn("references/shared/adapters/runtime-sessions.md", review)
+        self.assertIn("默认是串行", implementation_session)
+        self.assertIn("用户明确要求并行", implementation_session)
+        self.assertIn("默认串行", artifact_review_session)
+        self.assertIn("用户明确要求并行", artifact_review_session)
+        self.assertIn("references/shared/adapters/implementation-session.md", implement)
+        self.assertIn("references/shared/adapters/artifact-review-session.md", review)
+        self.assertIn("MY_MATT_REVIEW_METHOD", implementation_session)
+        self.assertIn("语义方法由 runtime 固定", implementation_session)
+        self.assertIn("不要再生成另一份未绑定快照", implement)
         self.assertIn("required_checks", review)
         self.assertIn("未全部闭合时不得输出 `No findings.`", review)
 
@@ -2599,9 +2659,9 @@ render_root: 学生课程
             expected = {
                 "my-implement": {
                     "work-scope.md",
-                    "runtime-sessions.md",
+                    "implementation-session.md",
                 },
-                "my-review-artifact": {"runtime-sessions.md"},
+                "my-review-artifact": {"artifact-review-session.md"},
                 "my-grill-me": {"composition.md"},
                 "my-grill-with-docs": {
                     "composition.md",

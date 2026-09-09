@@ -21,6 +21,6 @@ disable-model-invocation: true
 
 ## 最终校验
 
-保存或交给下一会话前，按[产物最终校验](references/shared/artifact-finalization.md)执行四项 gate。尤其要用 fresh-context 阅读仅凭交接重建下一会话目标、范围外、已确认决定、剩余风险、证据和第一步，并逐一验证引用路径、URL、Commit 与当前状态。承重事实无法确认时标为未知并说明解除方式；会改变下一步的未知未解除时，不得把交接写成可直接继续。
+保存或交给下一会话前，按[产物最终校验](references/shared/artifact-finalization.md)执行四项 gate。尤其要让未参与撰写的可用上下文仅凭交接重建下一会话目标、范围外、已确认决定、剩余风险、证据和第一步，并逐一验证引用路径、URL、Commit 与当前状态。没有独立上下文能力时只做结构化自检，明确记录 `reader-reconstruction: inconclusive`，不得把它冒充 fresh-context 通过或把草稿写成已可直接继续。承重事实无法确认时标为未知并说明解除方式；会改变下一步的未知未解除时同样不得标记为可直接继续。
 
-`my-handoff` 是项目交接目录的唯一管理者。项目内按需求 topic 分目录保存：`.agent/work/<topic>/handoffs/handoffs-<topic>-<time-or-sequence>.md`；`<topic>` 使用简短的 kebab-case 名称，例如 `requirements-reset`。同一需求的后续交接只新增新文件，不覆盖历史记录，不同需求不得混放。没有项目时保存到操作系统临时目录，而非当前工作区。不要自动删除旧交接；只创建新文档并在新文档中引用前序交接。
+`my-handoff` 是项目交接目录的唯一管理者。需要保存时读取[工作产物存储](references/shared/adapters/artifact-storage.md)，使用 `type=handoffs` 和文件名 `handoffs-<topic>-<time-or-sequence>.md`；`<topic>` 使用简短的 kebab-case 名称，例如 `requirements-reset`。同一需求的后续交接只新增新文件，不覆盖历史记录，不同需求不得混放。没有项目时保存到操作系统临时目录并报告绝对路径，而非写入当前工作区。不要自动删除旧交接；只创建新文档并在新文档中引用前序交接。

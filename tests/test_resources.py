@@ -273,10 +273,10 @@ class SharedResourceTests(unittest.TestCase):
                 "references/shared/adapters/ticket-selection.md",
             ),
             "my-implement": (
-                "references/shared/adapters/runtime-sessions.md",
+                "references/shared/adapters/implementation-session.md",
             ),
             "my-review-artifact": (
-                "references/shared/adapters/runtime-sessions.md",
+                "references/shared/adapters/artifact-review-session.md",
             ),
             "my-wayfinder": (
                 "references/shared/adapters/composition.md",

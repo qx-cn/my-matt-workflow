@@ -29,6 +29,7 @@ REQUIRED_REVIEW_CHECKS = (
     "my-humanizer",
     "my-artifact-finalization",
 )
+ARTIFACT_KINDS = frozenset({"general", "design"})
 REVIEW_CHECK_STATUSES = frozenset(
     {"pass", "finding", "inconclusive", "not-applicable"}
 )
@@ -60,8 +61,11 @@ def build_artifact_review_snapshot(
     *,
     snapshot_root: Path | None = None,
     parallel: bool = False,
+    artifact_kind: str = "general",
 ) -> dict[str, object]:
     """Capture one immutable byte copy for every reviewer to consume."""
+    if artifact_kind not in ARTIFACT_KINDS:
+        raise ArtifactReviewError(f"未知 artifact kind：{artifact_kind}")
     content_id, captured = _read_artifacts(artifacts)
     snapshot_root = (
         snapshot_root.resolve()
@@ -94,19 +98,23 @@ def build_artifact_review_snapshot(
                 "size": len(content),
             }
         )
+    required_checks = REQUIRED_REVIEW_CHECKS + (
+        ("my-review-design",) if artifact_kind == "design" else ()
+    )
     lanes = [
         {
             "lane_id": check,
             "method": check,
-            "depends_on": [] if parallel or index == 0 else [REQUIRED_REVIEW_CHECKS[index - 1]],
+            "depends_on": [] if parallel or index == 0 else [required_checks[index - 1]],
         }
-        for index, check in enumerate(REQUIRED_REVIEW_CHECKS)
+        for index, check in enumerate(required_checks)
     ]
     unit = {
         "content_id": content_id,
+        "artifact_kind": artifact_kind,
         "artifacts": frozen,
         "execution_mode": "parallel" if parallel else "serial",
-        "required_checks": list(REQUIRED_REVIEW_CHECKS),
+        "required_checks": list(required_checks),
         "dispatch": {"mode": "parallel" if parallel else "serial", "lanes": lanes},
     }
     try:

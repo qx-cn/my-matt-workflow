@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Requirement Analysis
 
-仅在用户明确调用 `{{skill-call:my-requirement-analysis}}` 时运行。它验证“理解是否正确”，不评判方案优劣。
+仅在用户明确调用 `{{skill-call:my-requirement-analysis}}` 时运行。显式调用授权本次需求核对，但不意味着每次都要启动独立 reviewer。它验证“理解是否正确”，不评判方案优劣。
 
 先形成主 Agent 摘要：目标、范围、用户明确约束和可观察验收标准。每一项都标出来自用户原文、仓库事实还是尚未确认的推断。
 
@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 ## 独立审查
 
-复杂、隐含或类比驱动的请求，读取[独立需求 Reviewer Brief](references/reviewer-brief.md)，让一个未参与主摘要的 reviewer 独立对比原始输入与摘要。Reviewer 可读取用户点名的最小仓库上下文，但不能看到主 Agent 的疑点或预期答案。
+只有复杂、隐含、类比驱动，或确有会改变结果的第二种合理理解时，才读取[独立需求 Reviewer Brief](references/reviewer-brief.md)，让一个未参与主摘要的 reviewer 独立对比原始输入与摘要。Reviewer 可读取用户点名的最小仓库上下文，但不能看到主 Agent 的疑点或预期答案。
 
 没有 sub-agent 能力时，主 Agent 仍完成四维自检并继续，但必须把结果标记为 `independence evidence gap`；不得把串行自审写成独立审查。
 

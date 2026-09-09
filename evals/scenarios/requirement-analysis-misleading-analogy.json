@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "id": "requirement-analysis-misleading-analogy",
+  "type": "requirement-analysis-contract",
+  "skills": ["my-requirement-analysis"],
+  "input": {
+    "request_shape": "analogy",
+    "traceable_fields": ["goal", "scope", "constraints", "acceptance"],
+    "summary_matches_input": false,
+    "result_changing_ambiguity": true
+  },
+  "expected": {
+    "verdict": "MISUNDERSTANDING",
+    "rule": "preserve-user-intent",
+    "review_mode": "independent",
+    "next": "correct-summary"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "requirement-analysis-misleading-analogy",
+    "sources": [
+      {"path": "skills/my-requirement-analysis/SKILL.md", "sha256": "sha256:c3605315c5bd12aae36e250b370b15dba93d8659e1daffa95236864dac779fc4"}
+    ]
+  }
+}

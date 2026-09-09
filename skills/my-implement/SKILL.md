@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # 实施
 
-把 runtime 提供的当前工作单元实现为可验证、可审查的代码。工作单元中的 Ticket、Spec、适用规则和允许范围是本次实施边界；调度、状态、恢复、写操作 gate 与内容快照由 runtime 管理，不在本 Skill 中重新编排。开始与交付遵循 [runtime session bridge](references/shared/adapters/runtime-sessions.md)。
+把 runtime 提供的当前工作单元实现为可验证、可审查的代码。工作单元中的 Ticket、Spec、适用规则和允许范围是本次实施边界；调度、状态、恢复、写操作 gate 与内容快照由 runtime 管理，不在本 Skill 中重新编排。开始与交付遵循 [implementation session](references/shared/adapters/implementation-session.md)。
 
 ## 实施方法
 
@@ -25,4 +25,4 @@ disable-model-invocation: true
 
 ## 完成标准
 
-提交结果前按照 [代码审查方法](references/composed/my-code-review/COMPOSED.md)审查当前工作单元。只有验收标准全部满足、必要测试通过、审查没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
+提交结果前，只在 runtime `run-review-open` 固定的审查单元上应用[代码审查方法](references/composed/my-code-review/COMPOSED.md)，并由声明的 review adapter 把同一结果交回 runtime 登记；不要再生成另一份未绑定快照的“自审通过”结论。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。

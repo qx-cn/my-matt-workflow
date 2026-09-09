@@ -709,7 +709,9 @@ def command_review_snapshot(args: argparse.Namespace) -> None:
 def command_artifact_review_snapshot(args: argparse.Namespace) -> None:
     try:
         report = build_artifact_review_snapshot(
-            [Path(path) for path in args.artifact], parallel=args.parallel
+            [Path(path) for path in args.artifact],
+            parallel=args.parallel,
+            artifact_kind=args.kind,
         )
     except ArtifactReviewError as exc:
         raise SystemExit(str(exc)) from exc
@@ -1129,11 +1131,13 @@ def parser() -> argparse.ArgumentParser:
 
     artifact_snapshot = sub.add_parser("artifact-review-snapshot")
     artifact_snapshot.add_argument("--artifact", action="append", required=True)
+    artifact_snapshot.add_argument("--kind", choices=("general", "design"), default="general")
     artifact_snapshot.add_argument("--parallel", action="store_true")
     artifact_snapshot.set_defaults(func=command_artifact_review_snapshot)
 
     artifact_open = sub.add_parser("artifact-review-open")
     artifact_open.add_argument("--artifact", action="append", required=True)
+    artifact_open.add_argument("--kind", choices=("general", "design"), default="general")
     artifact_open.add_argument("--parallel", action="store_true")
     artifact_open.set_defaults(func=command_artifact_review_snapshot)
 

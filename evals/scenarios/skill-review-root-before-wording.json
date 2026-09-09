@@ -11,6 +11,8 @@
     "walkthrough_coverage_complete": true,
     "snapshot_verified": true,
     "evidence_level": "static",
+    "comparative_dispute": false,
+    "user_authorized_comparative": false,
     "root_causes": ["deterministic-policy-in-prose", "deterministic-policy-in-prose"],
     "editorial_candidates": 3
   },
@@ -20,7 +22,7 @@
     "findings": 1,
     "suppressed_editorial": 3,
     "verdict": "INCONCLUSIVE",
-    "next": "comparative-forward-test"
+    "next": "report"
   },
   "evidence": {
     "version": 1,
@@ -28,7 +30,7 @@
     "sources": [
       {
         "path": "skills/my-review-skill/SKILL.md",
-        "sha256": "sha256:692298f53a16b648fea908916f66871e345b999f184487c1dc02f79445e76bad"
+        "sha256": "sha256:7d25fe6290c62b8a37602349c4480b8eee479d2f70b11a71163971984b865134"
       }
     ]
   }

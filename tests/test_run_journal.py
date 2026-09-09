@@ -445,6 +445,28 @@ class RunJournalTests(unittest.TestCase):
                     ["python3", "-c", "print('pass')"],
                 )
 
+    def test_review_unit_and_receipt_bind_the_semantic_review_method(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            unit = open_review_evidence(path)
+            self.assertEqual("my-code-review", unit["method"])
+            marker = json.loads(
+                (Path(str(unit["snapshot_dir"])) / ".review-unit.json").read_text()
+            )
+            self.assertEqual("my-code-review", marker["method"])
+            receipt = record_review_evidence(
+                path, Path(str(unit["snapshot_dir"])), REVIEW_ARGV
+            )
+            evidence = json.loads(
+                (
+                    path.parent
+                    / f"{path.stem}.evidence"
+                    / f"{receipt['evidence_id']}.json"
+                ).read_text()
+            )
+            self.assertEqual("my-code-review", evidence["method"])
+
     def test_review_evidence_rejects_tampered_owned_snapshot(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))

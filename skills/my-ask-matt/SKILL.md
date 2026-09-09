@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 多数工程工作沿以下阶段推进：
 
-1. 有代码库的想法用 `{{skill-call:my-grill-with-docs}}`；没有代码库用 `{{skill-call:my-grill-me}}`。两者共享 `{{skill-call:my-grilling}}`，需要澄清领域语言时使用 `{{skill-call:my-domain-modeling}}`。
+1. 有代码库的想法用 `{{skill-call:my-grill-with-docs}}`；没有代码库用 `{{skill-call:my-grill-me}}`。两者共享内部访谈方法，需要澄清领域语言时使用 `{{skill-call:my-domain-modeling}}`。
 2. 纸面讨论无法回答逻辑或界面问题时，用 `{{skill-call:my-handoff}}` 跨会话保存上下文，再用 `{{skill-call:my-prototype}}` 得出可运行证据。
 3. 跨会话构建先用 `{{skill-call:my-to-spec}}`，再用 `{{skill-call:my-to-tickets}}`；实施阶段由 `{{skill-call:my-implement}}` 在当前已批准范围内实施。明确要求测试先行时可直接进入 `{{skill-call:my-tdd}}`。
 4. 交付需要证据报告时，以 `{{skill-call:my-test-report}}` 收束需求、改动、测试与缺口。它是按需尾段，不把未执行测试写成通过。

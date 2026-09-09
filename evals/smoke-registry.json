@@ -6,10 +6,13 @@
     "my-tdd": ["tdd-seam-pressure"],
     "my-writing-great-skills": ["writing-great-skills-baseline-discipline"],
     "my-grill-with-docs": ["rule-plan-ticket-loop"],
+    "my-handoff": ["handoff-round-trip"],
     "my-to-spec": ["main-workflow-fresh-context"],
     "my-to-tickets": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
     "my-implement": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
-    "my-review-artifact": ["artifact-review-method-boundary"],
+    "my-review-artifact": ["artifact-review-method-boundary", "artifact-review-design-method-boundary"],
+    "my-review-design": ["artifact-review-design-method-boundary"],
+    "my-requirement-analysis": ["requirement-analysis-clear-request", "requirement-analysis-misleading-analogy"],
     "my-review-skill": ["skill-review-root-before-wording"],
     "my-test-report": ["main-workflow-fresh-context"]
   }

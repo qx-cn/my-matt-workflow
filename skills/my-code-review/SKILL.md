@@ -1,6 +1,6 @@
 ---
 name: my-code-review
-description: 从固定基线开始，沿 Code 与 Spec 两个独立维度审查代码变更。
+description: 从固定基线开始，沿 Code 与 Spec 两个顺序独立的审查 pass 检查代码变更。
 disable-model-invocation: true
 ---
 
@@ -8,18 +8,20 @@ disable-model-invocation: true
 
 只读审查用户指定的变更并返回作者会实际修复的发现；不修改文件、提交代码或发布评论。输出前按[面向读者写作](references/shared/reader-first-writing.md)确定实现者和合并决策者要据此做什么。
 
-对固定点与当前完整工作树之间的同一内容快照做两个独立维度的审查：
+本 Skill 有两个输入入口：独立调用时从用户指定的固定点创建 review snapshot；作为 `my-implement` 方法时，只消费 runtime `run-review-open` 提供且 `method=my-code-review` 的只读审查单元。组合模式不得另建 snapshot、另选基线或生成第二份未绑定的审查结论。
+
+对固定点与当前完整工作树之间的同一内容快照做两个顺序独立的审查 pass：
 
 - **Code**——实现本身是否正确、稳健、安全、高效、兼容、可测试且易维护，并符合仓库 Standards？
 - **Spec**——实现是否完整、准确地满足原始 Issue、PRD 或 Spec，且没有范围蔓延？
 
-两个上下文只共享同一快照和必要来源，不共享推理、候选发现或结论；完成后并列汇总。它们是一次 review 的内部方法，不是新 Skill 入口：`composition_policy` 为 `manual` 或 `automatic` 都必须在同一次调用中完成。
+在同一次调用中依次完成 Code pass 与 Spec pass。第二遍重新从同一快照和必要来源建立候选，不把第一遍的候选清单或结论作为输入；这是一种顺序复核，不声称上下文隔离。完成后并列汇总。它们是一次 review 的内部方法，不是新 Skill 入口：`composition_policy` 为 `manual` 或 `automatic` 都必须在同一次调用中完成。
 
 ## 审查对象
 
-用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时，把选择审查基线分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)运行 `decision-gate`：`allow` 时采用 profile 的 `default_base_branch` 并记录依据，`confirm` 时询问固定点，`pause` 时停止。作为 `my-implement` 的阶段时，将暂停原因交回宿主的 Ticket transition；不得因审查已结束而终止可继续的 workflow。
+独立调用时，用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时，把选择审查基线分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)运行 `decision-gate`：`allow` 时采用 profile 的 `default_base_branch` 并记录依据，`confirm` 时询问固定点，`pause` 时停止。组合模式直接采用审查单元中已固定的代码范围和 `code_content_id`，不运行这项基线选择。
 
-用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。
+独立调用时，用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。组合模式改为验证审查单元的 `method`、`review_id`、`code_content_id` 与 artifacts，并从只读 snapshot 取证。
 
 快照必须覆盖 committed、staged、unstaged 与 untracked 内容：以 `git diff --binary <merge_base>` 读取所有 tracked 最终内容，以 `git log <merge_base>..HEAD --oneline` 读取 Commit 上下文，并读取 `change_sources.untracked` 中每个路径的完整内容。二进制或无法直接阅读的文件记录类型、大小与可用检查结果，不得静默跳过。
 
@@ -40,11 +42,11 @@ disable-model-invocation: true
 
 读取 `.agent/work/` 产物时遵循[工作产物访问](references/shared/adapters/artifact-access.md)。没有 Spec 时只跳过 Spec；Code 仍完整执行。
 
-## 隔离审查
+## 双遍审查
 
-**Code** 上下文获得完整快照、Commit 上下文和规则地图。检查完整 diff 及理解变更所需的周边代码、调用方和测试；发现首个问题后继续检查全部变更。系统检查逻辑正确性、边界条件、错误处理、资源生命周期、并发与一致性、安全、性能、兼容性、测试充分性、代码设计与可维护性，同时检查仓库 Standards、Fowler code smells、函数/变量/类型命名和注释。仓库 Standards 优先；smell、命名或注释只有造成可观察风险时才报告。注释还要与代码行为一致，并按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，保留简短领域用语。
+**Code pass** 从完整快照、Commit 上下文和规则地图开始。检查完整 diff 及理解变更所需的周边代码、调用方和测试；发现首个问题后继续检查全部变更。系统检查逻辑正确性、边界条件、错误处理、资源生命周期、并发与一致性、安全、性能、兼容性、测试充分性、代码设计与可维护性，同时检查仓库 Standards、Fowler code smells、函数/变量/类型命名和注释。仓库 Standards 优先；smell、命名或注释只有造成可观察风险时才报告。注释还要与代码行为一致，并按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，保留简短领域用语。
 
-**Spec** 上下文获得同一 `content_id` 的完整快照、Commit 上下文和 Spec，不获得 Code 结论。先在内部把每条规范性要求映射到实现与测试证据；缺少或冲突的证据成为候选 finding，但不输出这份检查清单。由此检查遗漏、部分实现、错误行为和范围蔓延；每项引用 Spec 位置，并检查注释是否与 Spec、ADR 或相关文档一致。
+**Spec pass** 重新从同一 `content_id` 的完整快照、Commit 上下文和 Spec 开始，不读取 Code pass 的候选清单或结论。先在内部把每条规范性要求映射到实现与测试证据；缺少或冲突的证据成为候选 finding，但不输出这份检查清单。由此检查遗漏、部分实现、错误行为和范围蔓延；每项引用 Spec 位置，并检查注释是否与 Spec、ADR 或相关文档一致。
 
 高风险变更按实际风险加深对应检查；低风险变更不为并行而增加 reviewer。
 
@@ -60,7 +62,7 @@ disable-model-invocation: true
 
 严重度使用 `P0`（安全越权、数据丢失或破坏、不可恢复故障或核心路径普遍失败）、`P1`（合并前应修复的真实 Bug 或需求偏差）、`P2`（值得修复的局部缺陷或维护/测试风险）；P0/P1 是 blocker。置信度只用 `high` / `medium`，低置信度候选不进入 findings；仅当证据缺口影响合并判断时，才在结尾写简短 residual risk。
 
-隔离审查完成后按主要原因归类：没有 Spec 也成立的实现或工程问题归 Code；必须依据 Spec 才成立的遗漏、错误需求行为或范围蔓延归 Spec。同一失败链只保留最接近根因的一项，另一维不重复。
+双遍审查完成后按主要原因归类：没有 Spec 也成立的实现或工程问题归 Code；必须依据 Spec 才成立的遗漏、错误需求行为或范围蔓延归 Spec。同一失败链只保留最接近根因的一项，另一维不重复。
 
 ## 输出
 

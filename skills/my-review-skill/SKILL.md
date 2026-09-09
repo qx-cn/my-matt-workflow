@@ -15,6 +15,8 @@ disable-model-invocation: true
 
 Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inventory；其声明的调用者、被调用项、组合关系、共享材料和 runtime 边均已解析，或被逐项标记为证据缺口；每个 Deep Review 候选都有一条可定位的影响路径。任何未归档的范围内 Skill 或悬空关系都会阻止 Survey 完成。
 
+`critical`、近期修改或缺少行为证据只是排序信号，不自动授权 Deep Review 或 comparative。实际使用频率只接受可定位 trace 或用户确认；Git 修改次数不得冒充调用频率。
+
 ## Deep Review
 
 ### 1. 固定审查对象
@@ -49,7 +51,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 - **observed**：有真实运行或失败记录；
 - **comparative**：相同模型、reasoning、请求、快照和权限下，对比无 Skill、当前 Skill，以及需要时的候选修订版。
 
-只有 comparative 证据才能证明 Skill 相对 baseline 有效或无效；其余等级只陈述可证明的结构问题与风险。需要独立 forward test 时，仅在该能力可用且已获授权时运行，并不给评估者预置怀疑点或期望答案。
+只有 comparative 证据才能证明 Skill 相对 baseline 有效或无效；其余等级只陈述可证明的结构问题与风险。普通 Evidence Gap 不自动触发 comparative：只有观察证据互相冲突，或某项“Skill 相对 baseline 是否增值”的争议会实质改变 Verdict 时，Agent 才可提名。提名必须说明争议命题、对 Verdict 的影响、最小案例和预计成本；取得用户明确授权后才能运行，并且不给评估者预置怀疑点或期望答案。
 
 完成条件：正常、边界、失败三类请求均至少有一个代表 case；每条实际分支以及材料读取、权限、暂停和完成路径都映射到 case 与证据等级，或被明确列为会限制对应结论的 Evidence Gap。存在未映射路径时，不得进入该路径所影响的 Verdict。
 
@@ -71,4 +73,4 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 
 先写 `Review-Unit`、`Target-Host`、`Evidence-Level` 与一个 Verdict。每个 finding 用一个短段落说明根因、失败路径或不变量、证据、影响及最小干预方向。只列会改变 Verdict 的 `Evidence Gaps`，并给出取得最终判断的最小 `Next Validation`。
 
-没有合格发现写 `No findings.`；缺少足以判断有效性的行为证据时用 `INCONCLUSIVE`，不得把静态检查通过写成“Skill 已验证有效”。不复述完整审查过程、逐项通过清单、被拒绝候选或未经请求的改写稿。
+没有合格发现写 `No findings.`；缺少足以判断有效性的行为证据时用 `INCONCLUSIVE` 并报告当前可证明结论，不得把静态检查通过写成“Skill 已验证有效”，也不得默认要求 comparative。只有满足上述争议门槛时，才把授权请求作为 `Next Validation`。不复述完整审查过程、逐项通过清单、被拒绝候选或未经请求的改写稿。

@@ -6,11 +6,13 @@ disable-model-invocation: true
 
 # 评审已形成方案
 
+本 Skill 有两个入口：用户独立调用时读取其指定方案；作为 `my-review-artifact` 的设计方法时，只读取宿主固定的 `review_unit`，把 findings 归入 `my-review-design` check 后返回宿主。组合模式不重新选择文件、不另建快照，也不单独给整份产物下最终结论。
+
 先按[面向读者写作](references/shared/reader-first-writing.md)确定方案 owner 或决策者要据此批准、退回或补充什么。
 
 向人类决策者说明复杂影响范围、依赖关系或设计缺口时，遵循[图示表达规则](references/shared/visual-communication.md)。
 
-读取用户指定的方案。若当前上下文只有一份明确方案，直接评审；若存在多个候选且目标不明，只确认要评审哪一份。本地方案按[工作产物访问](references/shared/adapters/artifact-access.md)读取。
+独立调用时读取用户指定的方案。若当前上下文只有一份明确方案，直接评审；若存在多个候选且目标不明，只确认要评审哪一份。本地方案按[工作产物访问](references/shared/adapters/artifact-access.md)读取。组合模式跳过这一步。
 
 必要时查阅方案引用的代码、规则、ADR 和关联文档。能查证的事实自行查证；无法查证时标为信息缺失，不得补全为事实。
 
@@ -18,7 +20,7 @@ disable-model-invocation: true
 
 ## 最终校验
 
-以[产物最终校验](references/shared/artifact-finalization.md)的来源账本、内部一致性、读者重建和事实正确性 gate 组织证据。此处是只读评审：发现 `blocked` 时报告具体主张、来源与影响，不替作者修正文档；四项 gate 都通过，才可给出“未发现实质问题”的结论。
+独立调用时，以[产物最终校验](references/shared/artifact-finalization.md)的来源账本、内部一致性、读者重建和事实正确性 gate 组织证据。此处是只读评审：发现 `blocked` 时报告具体主张、来源与影响，不替作者修正文档；四项 gate 都通过，才可给出“未发现实质问题”的结论。组合模式由宿主的 `my-artifact-finalization` check 负责这组 gate，本方法不重复执行。
 
 ## 检查
 
@@ -39,4 +41,4 @@ disable-model-invocation: true
 - 每个问题说明：**问题、依据、影响**，并标注文档位置；有代码依据时同时给出代码位置。
 - 不机械输出没有问题的分类，也不直接改写或修复原文。
 
-未发现实质问题时，直接说明：**未发现影响方案成立或实施的实质问题。**
+独立调用且未发现实质问题时，直接说明：**未发现影响方案成立或实施的实质问题。** 组合模式只向宿主返回本 check 的 `pass`，不替其他 checks 生成总 Verdict。
