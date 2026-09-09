@@ -8,17 +8,30 @@ from tools.workflow_lib.resources import (
     bundle_resources_for_skill,
     load_resource_manifest,
 )
+from tools.workflow_lib.composition import load_composition_manifest
 from tools.workflow_lib.resource_governance import (
     ResourceGovernanceError,
     validate_resource_governance,
 )
-from tools.workflow_lib.release import ReleaseError, validate_skills
+from tools.workflow_lib.release import (
+    ReleaseError,
+    resource_consumer_maps,
+    validate_skills,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class SharedResourceTests(unittest.TestCase):
+    def _effective_consumers(self):
+        resources = load_resource_manifest(ROOT / "resources/manifest.json")
+        composition = load_composition_manifest(
+            ROOT / "composition/manifest.json"
+        )
+        skills = {path.name for path in (ROOT / "skills").iterdir() if path.is_dir()}
+        return resource_consumer_maps(resources, skills, composition, ROOT)[1]
+
     def test_artifact_finalization_gate_is_shared_by_spec_handoff_and_review(self):
         manifest = json.loads((ROOT / "resources/manifest.json").read_text())
         entry = manifest["resources"]["artifact-finalization"]
@@ -33,8 +46,6 @@ class SharedResourceTests(unittest.TestCase):
                 "my-review-design",
                 "my-final-state-writing",
                 "my-artifact-finalization",
-                "my-review-artifact",
-                "my-wayfinder",
             },
             set(entry["consumers"]),
         )
@@ -118,26 +129,22 @@ class SharedResourceTests(unittest.TestCase):
 
     def test_final_state_writing_is_bundled_only_for_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
-        direct_consumers = (
-            "my-grilling",
-            "my-grill-with-docs",
-            "my-tech-design",
-            "my-to-spec",
-            "my-to-tickets",
-            "my-codebase-design",
-            "my-writing-great-skills",
-            "my-review-design",
+        direct_consumers = tuple(
+            manifest.resources["final-state-writing"].consumers
         )
-        consumers = direct_consumers + (
-            "my-grill-me",
-            "my-wayfinder",
-            "my-improve-codebase-architecture",
-        )
+        effective = self._effective_consumers()
+        consumers = tuple(sorted(effective["final-state-writing"]))
         with tempfile.TemporaryDirectory() as tmp:
             for name in consumers:
                 target = Path(tmp) / name
                 target.mkdir()
-                bundle_resources_for_skill(manifest, ROOT, name, target)
+                bundle_resources_for_skill(
+                    manifest,
+                    ROOT,
+                    name,
+                    target,
+                    effective_consumers=effective,
+                )
                 reference = target / "references/shared/final-state-writing.md"
                 self.assertTrue(reference.is_file(), name)
                 self.assertIn("最终产物只陈述当前有效", reference.read_text())
@@ -210,6 +217,7 @@ class SharedResourceTests(unittest.TestCase):
 
     def test_artifact_access_is_bundled_only_for_reader_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        effective = self._effective_consumers()
         with tempfile.TemporaryDirectory() as tmp:
             for skill in (
                 "my-code-review",
@@ -224,7 +232,11 @@ class SharedResourceTests(unittest.TestCase):
                     reader = Path(tmp) / skill
                     reader.mkdir()
                     bundle_resources_for_skill(
-                        manifest, ROOT, skill, reader
+                        manifest,
+                        ROOT,
+                        skill,
+                        reader,
+                        effective_consumers=effective,
                     )
                     self.assertTrue(
                         (
@@ -300,6 +312,7 @@ class SharedResourceTests(unittest.TestCase):
 
     def test_policies_are_bundled_only_for_explicit_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        effective = self._effective_consumers()
         with tempfile.TemporaryDirectory() as tmp:
             for skill, policy in {
                 "my-ask-matt": "context-hygiene.md",
@@ -309,7 +322,13 @@ class SharedResourceTests(unittest.TestCase):
             }.items():
                 target = Path(tmp) / skill
                 target.mkdir()
-                bundle_resources_for_skill(manifest, ROOT, skill, target)
+                bundle_resources_for_skill(
+                    manifest,
+                    ROOT,
+                    skill,
+                    target,
+                    effective_consumers=effective,
+                )
                 self.assertTrue((target / "references/policies" / policy).is_file())
 
             for skill in ("my-install", "my-grilling", "my-grill-me"):
@@ -317,6 +336,72 @@ class SharedResourceTests(unittest.TestCase):
                 target.mkdir()
                 bundle_resources_for_skill(manifest, ROOT, skill, target)
                 self.assertFalse((target / "references/policies").exists(), skill)
+
+    def test_direct_consumers_are_exact_and_effective_consumers_are_derived(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        composition = load_composition_manifest(
+            ROOT / "composition/manifest.json"
+        )
+        skills = {path.name for path in (ROOT / "skills").iterdir() if path.is_dir()}
+        direct, effective = resource_consumer_maps(
+            manifest, skills, composition, ROOT
+        )
+
+        self.assertEqual({"my-tdd"}, direct["adapter-work-scope"])
+        self.assertTrue(
+            {"my-implement", "my-prototype", "my-wayfinder"}
+            <= effective["adapter-work-scope"]
+        )
+        self.assertNotIn("my-triage", direct["adapter-write-actions"])
+        self.assertIn("my-triage", effective["adapter-write-actions"])
+        self.assertIn("my-to-spec", effective["instruction-authority"])
+
+        validate_skills(ROOT / "skills", repo_root=ROOT)
+
+    def test_direct_consumer_without_source_reference_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(ROOT / "skills", root / "skills")
+            shutil.copytree(ROOT / "resources", root / "resources")
+            shutil.copytree(ROOT / "policies", root / "policies")
+            shutil.copytree(ROOT / "composition", root / "composition")
+            raw = json.loads((root / "resources/manifest.json").read_text())
+            raw["resources"]["adapter-work-scope"]["consumers"].append(
+                "my-install"
+            )
+            (root / "resources/manifest.json").write_text(json.dumps(raw))
+
+            with self.assertRaisesRegex(ReleaseError, "无直接引用.*my-install"):
+                validate_skills(root / "skills", repo_root=root)
+
+    def test_resource_dependency_parser_supports_titles_angles_and_fragments(self):
+        for link in ('[B](b.md "details")', '[B](<b.md#section>)'):
+            with self.subTest(link=link), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                resources = root / "resources"
+                resources.mkdir()
+                (resources / "a.md").write_text(link + "\n")
+                (resources / "b.md").write_text("# B\n")
+                (resources / "manifest.json").write_text(json.dumps({
+                    "version": 1,
+                    "resources": {
+                        "a": {
+                            "source": "resources/a.md",
+                            "release_path": "references/shared/a.md",
+                            "consumers": ["my-a"],
+                        },
+                        "b": {
+                            "source": "resources/b.md",
+                            "release_path": "references/shared/b.md",
+                            "consumers": ["my-b"],
+                        },
+                    },
+                }))
+                manifest = load_resource_manifest(resources / "manifest.json")
+                _, effective = resource_consumer_maps(
+                    manifest, {"my-a", "my-b"}, None, root
+                )
+                self.assertIn("my-a", effective["b"])
 
     def test_missing_resource_consumer_reports_source_and_target(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -362,7 +447,7 @@ class SharedResourceTests(unittest.TestCase):
 
             with self.assertRaisesRegex(
                 ReleaseError,
-                r"my-a.*SKILL\.md.*references/shared/shared\.md",
+                r"shared.*未声明.*my-a.*无直接引用.*my-other",
             ):
                 validate_skills(root / "skills", repo_root=root)
 

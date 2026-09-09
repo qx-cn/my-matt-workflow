@@ -1,6 +1,6 @@
 ---
 name: my-code-review
-description: 从固定基线开始，沿 Code 与 Spec 两个独立维度审查变更；适用于分支、PR 或进行中的修改。
+description: 从固定基线开始，沿 Code 与 Spec 两个独立维度审查代码变更。
 disable-model-invocation: true
 ---
 

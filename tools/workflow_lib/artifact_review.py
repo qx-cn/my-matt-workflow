@@ -4,9 +4,16 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
 import tempfile
 from pathlib import Path
+
+from .fs_safety import (
+    FilesystemSafetyError,
+    exclusive_lock,
+    quarantine_and_remove,
+    register_owned_directory,
+    verify_owned_directory,
+)
 
 
 class ArtifactReviewError(ValueError):
@@ -56,13 +63,17 @@ def build_artifact_review_snapshot(
 ) -> dict[str, object]:
     """Capture one immutable byte copy for every reviewer to consume."""
     content_id, captured = _read_artifacts(artifacts)
-    if snapshot_root is not None:
-        snapshot_root.mkdir(parents=True, exist_ok=True)
+    snapshot_root = (
+        snapshot_root.resolve()
+        if snapshot_root is not None
+        else Path(tempfile.gettempdir()) / "my-matt-review-snapshots"
+    )
+    snapshot_root.mkdir(parents=True, exist_ok=True)
     try:
         directory = Path(
             tempfile.mkdtemp(
                 prefix=f"{_SNAPSHOT_PREFIX}{content_id[:12]}-",
-                dir=snapshot_root,
+                dir=str(snapshot_root),
             )
         )
     except OSError as exc:
@@ -103,7 +114,10 @@ def build_artifact_review_snapshot(
         marker.write_text(json.dumps(unit, ensure_ascii=False, sort_keys=True), encoding="utf-8")
         marker.chmod(0o400)
         directory.chmod(0o500)
-    except OSError as exc:
+        register_owned_directory(
+            snapshot_root, directory, purpose="artifact-review-snapshot"
+        )
+    except (OSError, FilesystemSafetyError) as exc:
         raise ArtifactReviewError(f"无法保护 review snapshot：{directory}") from exc
     return {
         "status": "ready",
@@ -133,6 +147,13 @@ def finalize_artifact_review_snapshot(
     directory = snapshot_dir.resolve()
     if not directory.is_dir() or not directory.name.startswith(_SNAPSHOT_PREFIX):
         raise ArtifactReviewError("无效的 review snapshot 目录")
+    snapshot_root = directory.parent
+    try:
+        verify_owned_directory(
+            snapshot_root, directory, purpose="artifact-review-snapshot"
+        )
+    except FilesystemSafetyError as exc:
+        raise ArtifactReviewError("review snapshot 缺少可信 ownership capability") from exc
     marker = directory / _UNIT_FILE
     try:
         unit = json.loads(marker.read_text(encoding="utf-8"))
@@ -140,6 +161,26 @@ def finalize_artifact_review_snapshot(
         raise ArtifactReviewError("review snapshot 缺少有效生命周期标记") from exc
     if not isinstance(unit, dict) or unit.get("content_id") != expected_content_id:
         raise ArtifactReviewError("review snapshot 与 content_id 不匹配")
+    frozen = unit.get("artifacts")
+    if not isinstance(frozen, list) or not frozen:
+        raise ArtifactReviewError("review snapshot inventory 无效")
+    try:
+        for entry in frozen:
+            if not isinstance(entry, dict) or set(entry) != {
+                "source_path", "snapshot_path", "sha256", "size"
+            }:
+                raise ArtifactReviewError("review snapshot inventory 无效")
+            snapshot = Path(str(entry["snapshot_path"]))
+            if snapshot.parent.resolve() != directory or not snapshot.is_file():
+                raise ArtifactReviewError("review snapshot inventory 路径无效")
+            content = snapshot.read_bytes()
+            if (
+                len(content) != entry["size"]
+                or hashlib.sha256(content).hexdigest() != entry["sha256"]
+            ):
+                raise ArtifactReviewError("review snapshot bytes 已漂移")
+    except OSError as exc:
+        raise ArtifactReviewError("无法验证 review snapshot bytes") from exc
     verification: dict[str, object] | None = None
     verification_error: ArtifactReviewError | None = None
     try:
@@ -147,9 +188,12 @@ def finalize_artifact_review_snapshot(
     except ArtifactReviewError as exc:
         verification_error = exc
     try:
-        directory.chmod(0o700)
-        shutil.rmtree(directory)
-    except OSError as exc:
+        with exclusive_lock(snapshot_root, "artifact-review"):
+            directory.chmod(0o700)
+            quarantine_and_remove(
+                snapshot_root, directory, purpose="artifact-review-snapshot"
+            )
+    except (OSError, FilesystemSafetyError) as exc:
         raise ArtifactReviewError("无法释放 review snapshot") from exc
     if verification_error is not None:
         raise ArtifactReviewError(f"{verification_error}；review snapshot 已释放")

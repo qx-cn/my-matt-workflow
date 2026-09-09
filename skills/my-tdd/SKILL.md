@@ -1,12 +1,12 @@
 ---
 name: my-tdd
-description: 测试驱动开发；适用于测试先行构建功能或修复、提及 red-green-refactor 或需要集成测试时。
+description: 以 red-green-refactor 循环进行测试驱动开发。
 disable-model-invocation: true
 ---
 
 # 测试驱动开发
 
-TDD 是 red → green 循环。本 Skill 是让这个循环产出值得保留测试的参考：什么是好测试、测试放在哪里、反模式以及循环规则。每一节都适用于每一次循环——在循环前和循环中查阅，而不是完成后。
+TDD 是 red → green → refactor 循环。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。
 
 探索代码库时，读取已有的项目领域术语与 ADR，使测试名称和接口词汇匹配项目语言，并尊重所涉及区域的 ADR。
 
@@ -16,15 +16,11 @@ TDD 是 red → green 循环。本 Skill 是让这个循环产出值得保留测
 
 测试通过公共接口验证行为，而非实现细节。代码可以完全改变，测试不应随之改变。好测试读起来像规格：“用户可用有效购物车结账”准确说出能力；它不关心内部结构，因此可穿越重构。
 
-参见 [tests.md](tests.md) 中的例子，以及 [mocking.md](mocking.md) 的 mock 指南。
+参见 [tests.md](tests.md) 中的例子；需要替身时读取 [mocking.md](mocking.md)，它指向共享 seam 合同。
 
 ## Seam——测试放在哪里
 
-**seam** 是测试公共边界：在不窥探内部的情况下观察行为的接口。测试只存在于 seam，绝不直接针对内部实现。
-
-**只在预先约定或可从 Ticket、计划和代码推断的 seam 测试。** 无法推断且会改变公开接口、范围或测试投资的关键 seam，交回宿主按[工作范围](references/shared/adapters/work-scope.md)暂停确认。普通 seam 不得因重复确认阻断自动流程。
-
-问：“公共接口是什么？我们应测试哪些 seam？”
+按[测试 Seam 合同](references/shared/testing-seams.md)选择公共或模块内部 seam。**只在预先约定或可从 Ticket、计划和代码推断的 seam 测试。** 无法推断且会改变公开接口、范围或测试投资的关键 seam，交回宿主按[工作范围](references/shared/adapters/work-scope.md)暂停确认；普通、既有 seam 继续执行。
 
 ## 反模式
 
@@ -36,4 +32,6 @@ TDD 是 red → green 循环。本 Skill 是让这个循环产出值得保留测
 
 - **先 red，后 green。** 先写失败测试，再只写足以通过的代码。不要预判未来测试或加入推测性功能。
 - **一次一个切片。** 每轮一个 seam、一个测试、一个最小实现。
-- **重构不属于循环。** 它属于审查阶段（见 `my-code-review`），而不是 red → green 实现循环。
+- **再 refactor。** green 后在同一行为 seam 下消除重复、改善名称与内部结构；每次小步重跑测试，保持 green。重构不增加新行为，新行为回到下一轮 red。
+
+完成条件：每项验收行为都经历可观察 red、最小 green 与保持 green 的必要 refactor；测试通过稳定 seam，且没有把未验证行为或推测性抽象带入当前切片。

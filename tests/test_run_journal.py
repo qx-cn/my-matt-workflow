@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -10,19 +11,53 @@ from pathlib import Path
 from tools.workflow_lib.profile import render_profile
 from tools.workflow_lib.run_journal import (
     RunJournalError,
+    build_code_receipt,
     build_run_context,
     close_implementation_session,
     open_implementation_session,
+    open_review_evidence,
+    record_review_evidence,
     record_run,
+    run_test_evidence,
     start_run,
     submit_run_outcome,
 )
 
 
 ROOT = Path(__file__).resolve().parents[1]
+REVIEW_COMMAND = (
+    "python3 -c \"import json,os; print(json.dumps({"
+    "'review_id': os.environ['MY_MATT_REVIEW_ID'], "
+    "'status': 'pass', "
+    "'code_content_id': os.environ['MY_MATT_CODE_CONTENT_ID'], "
+    "'findings': []}))\""
+)
+REVIEW_ARGV = shlex.split(REVIEW_COMMAND)
 
 
 class RunJournalTests(unittest.TestCase):
+    @staticmethod
+    def _completed_result(path: Path) -> dict[str, object]:
+        code = build_code_receipt(path)
+        test = run_test_evidence(path, ["python3", "-c", "pass"])
+        review_unit = open_review_evidence(path)
+        review = record_review_evidence(
+            path, Path(str(review_unit["snapshot_dir"])), REVIEW_ARGV
+        )
+        return {
+            "outcome": "completed",
+            "test_receipt": test,
+            "review_receipt": review,
+            "code_receipt": code,
+            "blocker": None,
+        }
+
+    @staticmethod
+    def _advance_to_committing(path: Path) -> None:
+        record_run(path, "implementing")
+        record_run(path, "reviewing")
+        record_run(path, "committing")
+
     def _repo(self, directory: Path) -> tuple[Path, Path, str]:
         repo = directory / "repo"
         ticket = repo / ".agent/work/feature/tickets/tickets-feature-01.md"
@@ -33,7 +68,8 @@ class RunJournalTests(unittest.TestCase):
                     "schema_version": 1,
                     "commit_policy": "allow",
                     "external_write_policy": "deny",
-                    "test_commands": ["python3 -m unittest"],
+                    "test_commands": ["python3 -c pass"],
+                    "review_commands": [REVIEW_COMMAND],
                 }
             ),
             encoding="utf-8",
@@ -61,7 +97,10 @@ class RunJournalTests(unittest.TestCase):
         )
         spec = repo / ".agent/work/feature/specs/specs-feature-02.md"
         spec.parent.mkdir(parents=True)
-        spec.write_text("# Feature spec\n", encoding="utf-8")
+        spec.write_text(
+            "---\nspec_id: feature\nrevision: 2\n---\n\n# Feature spec\n",
+            encoding="utf-8",
+        )
         (repo / "app.py").write_text("print('ok')\n", encoding="utf-8")
         subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
         subprocess.run(["git", "config", "user.email", "smoke@example.com"], cwd=repo, check=True)
@@ -89,9 +128,10 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual(2, context["spec"]["revision"])
             self.assertEqual("allow", context["write_gates"]["commit"]["status"])
             self.assertEqual("deny", context["write_gates"]["external"]["status"])
-            self.assertEqual(["python3 -m unittest"], context["test_commands"])
+            self.assertEqual(["python3 -c pass"], context["test_commands"])
+            self.assertEqual([REVIEW_COMMAND], context["review_commands"])
             self.assertIn("rule_map", context)
-            self.assertRegex(context["ticket"]["content"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertRegex(context["ticket"]["definition"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertRegex(context["spec"]["content"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertRegex(context["context_id"], r"^[0-9a-f]{64}$")
             explicit_context = build_run_context(
@@ -293,16 +333,11 @@ class RunJournalTests(unittest.TestCase):
             open_report = json.loads(opened.stdout)
             self.assertEqual("serial", open_report["execution_mode"])
             journal = open_report["lanes"][0]["work_unit"]["journal"]
+            journal_path = Path(journal)
+            self._advance_to_committing(journal_path)
             result_file = root / "result.json"
             result_file.write_text(
-                json.dumps(
-                    {
-                        "outcome": "completed",
-                        "test_receipt": "tests: pass",
-                        "review_receipt": "review: clean",
-                        "blocker": None,
-                    }
-                ),
+                json.dumps(self._completed_result(journal_path)),
                 encoding="utf-8",
             )
             submitted = subprocess.run(
@@ -354,6 +389,7 @@ class RunJournalTests(unittest.TestCase):
                             "outcome": "completed",
                             "test_receipt": "tests: pass",
                             "review_receipt": "review: clean",
+                            "code_receipt": None,
                             "blocker": None,
                         },
                     )
@@ -362,6 +398,7 @@ class RunJournalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
             path, _ = start_run(repo, ticket, sha)
+            self._advance_to_committing(path)
             with self.assertRaisesRegex(RunJournalError, "test_receipt"):
                 submit_run_outcome(
                     path,
@@ -369,19 +406,57 @@ class RunJournalTests(unittest.TestCase):
                         "outcome": "completed",
                         "test_receipt": None,
                         "review_receipt": "review: clean",
+                        "code_receipt": build_code_receipt(path),
                         "blocker": None,
                     },
                 )
             report = submit_run_outcome(
                 path,
                 {
-                    "outcome": "blocked-by-evidence",
+                    "outcome": "blocked-by-design",
                     "test_receipt": None,
                     "review_receipt": None,
+                    "code_receipt": None,
                     "blocker": "missing service credentials",
                 },
             )
             self.assertEqual("pause", report["next_action"])
+
+    def test_review_evidence_rejects_caller_created_snapshot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            fake = path.parent / f"{path.stem}.evidence/review-snapshots/fake-review"
+            fake.mkdir(parents=True)
+
+            with self.assertRaisesRegex(RunJournalError, "无法验证"):
+                record_review_evidence(path, fake, REVIEW_ARGV)
+
+    def test_review_evidence_rejects_undeclared_self_asserted_pass_command(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            unit = open_review_evidence(path)
+
+            with self.assertRaisesRegex(RunJournalError, "未在 work unit 中声明"):
+                record_review_evidence(
+                    path,
+                    Path(str(unit["snapshot_dir"])),
+                    ["python3", "-c", "print('pass')"],
+                )
+
+    def test_review_evidence_rejects_tampered_owned_snapshot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            unit = open_review_evidence(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            marker = snapshot / ".review-unit.json"
+            snapshot.chmod(0o700)
+            marker.chmod(0o600)
+            marker.write_text(marker.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(RunJournalError, "无法验证"):
+                record_review_evidence(path, snapshot, REVIEW_ARGV)
 
     def test_parallel_session_has_disjoint_lanes_and_aggregate_close(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -404,15 +479,8 @@ class RunJournalTests(unittest.TestCase):
             for lane in report["lanes"]:
                 journal = Path(lane["work_unit"]["journal"])
                 journals.append(journal)
-                submit_run_outcome(
-                    journal,
-                    {
-                        "outcome": "completed",
-                        "test_receipt": "tests: pass",
-                        "review_receipt": "review: clean",
-                        "blocker": None,
-                    },
-                )
+                self._advance_to_committing(journal)
+                submit_run_outcome(journal, self._completed_result(journal))
             closed = close_implementation_session(journals)
             self.assertEqual("ready-for-integration", closed["status"])
             self.assertEqual(report["session_id"], closed["session_id"])

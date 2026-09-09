@@ -11,19 +11,6 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 
-REVIEW_TERMS = (
-    "发布闸门",
-    "事实来源切换",
-    "记录身份",
-    "执行身份",
-    "发布依赖严格排空",
-    "验收矩阵",
-    "领域服务",
-    "身份",
-    "两套",
-)
-
-
 class DesignParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
@@ -93,9 +80,6 @@ def main() -> int:
             f"发现 {missing_comparison_lists} 个 comparison-card 未使用列表"
         )
 
-    for term in REVIEW_TERMS:
-        if term in text:
-            warnings.append(f"复核可能生硬或误译的术语：{term}")
     for match in re.finditer(r"<(p|td)[^>]*>(.*?)</\1>", text, re.S | re.I):
         tag, inner = match.groups()
         plain = html.unescape(re.sub(r"<[^>]+>", "", inner))

@@ -38,6 +38,7 @@ PROFILE_FIELD_ORDER = (
     "decision_policy",
     "default_execution_agent",
     "test_commands",
+    "review_commands",
     "standards_sources",
     "domain_sources",
 )
@@ -49,6 +50,7 @@ BASE_DEFAULTS: dict[str, Any] = {
     "default_base_branch": "main",
     "default_execution_agent": "auto",
     "test_commands": [],
+    "review_commands": [],
     "standards_sources": [],
     "domain_sources": [],
 }
@@ -234,7 +236,7 @@ def format_policy_catalog() -> str:
     ]
     defaults = effective_profile({})
     for key in PROFILE_FIELD_ORDER:
-        if key in {"schema_version", "default_base_branch", "default_execution_agent", "test_commands",
+        if key in {"schema_version", "default_base_branch", "default_execution_agent", "test_commands", "review_commands",
                    "standards_sources", "domain_sources"}:
             lines.append(f"- {key}: 默认 {defaults[key]!r}")
             continue
@@ -283,9 +285,12 @@ def _parse_value(raw: str) -> Any:
     value = raw.strip()
     if value.startswith("[") and value.endswith("]"):
         try:
-            parsed = json.loads(value.replace("'", '"'))
-        except json.JSONDecodeError as exc:
-            raise ProfileError(f"无效列表：{value}") from exc
+            parsed = json.loads(value)
+        except json.JSONDecodeError:
+            try:
+                parsed = json.loads(value.replace("'", '"'))
+            except json.JSONDecodeError as exc:
+                raise ProfileError(f"无效列表：{value}") from exc
         if not isinstance(parsed, list):
             raise ProfileError(f"预期列表：{value}")
         return parsed
@@ -297,8 +302,35 @@ def _parse_value(raw: str) -> Any:
 
 
 def _validate(config: dict[str, Any]) -> None:
+    unknown = sorted(set(config) - set(PROFILE_FIELD_ORDER))
+    if unknown:
+        raise ProfileError(f"未知配置字段：{', '.join(unknown)}")
+    for field in (
+        "task_backend",
+        "agent_directory_mode",
+        "default_base_branch",
+        "branch_policy",
+        "commit_policy",
+        "external_write_policy",
+        "docs_writeback",
+        "humanizer_policy",
+        "composition_policy",
+        "work_scope_policy",
+        "decision_policy",
+        "default_execution_agent",
+    ):
+        if field in config and not _is_empty(config[field]) and not isinstance(config[field], str):
+            raise ProfileError(f"{field} 必须是字符串")
+    for field in ("test_commands", "review_commands", "standards_sources", "domain_sources"):
+        if field not in config or _is_empty(config[field]):
+            continue
+        value = config[field]
+        if not isinstance(value, list) or any(
+            not isinstance(item, str) or not item.strip() for item in value
+        ):
+            raise ProfileError(f"{field} 必须是非空字符串列表")
     version = _coalesce(config, "schema_version", BASE_DEFAULTS["schema_version"])
-    if version != SUPPORTED_SCHEMA_VERSION:
+    if not isinstance(version, int) or isinstance(version, bool) or version != SUPPORTED_SCHEMA_VERSION:
         raise ProfileError(
             f"不支持 schema_version={version!r}，当前仅支持 {SUPPORTED_SCHEMA_VERSION}"
         )
@@ -372,7 +404,10 @@ def parse_profile(text: str) -> tuple[dict[str, Any], str]:
         if ":" not in line:
             raise ProfileError(f"无效配置行：{line}")
         key, raw = line.split(":", 1)
-        config[key.strip()] = _parse_value(raw)
+        key = key.strip()
+        if key in config:
+            raise ProfileError(f"重复配置字段：{key}")
+        config[key] = _parse_value(raw)
 
     _validate(config)
     notes = "\n".join(lines[end + 1 :]).strip()

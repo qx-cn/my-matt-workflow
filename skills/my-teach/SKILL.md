@@ -14,7 +14,7 @@ argument-hint: "你想学习什么？可选：content <topic>、frontend <artifa
 先选择教学工作区，再执行用户指定的阶段：
 
 - 普通调用或 `full <topic>`：依次完成 [CONTENT.md](CONTENT.md) 和 [FRONTEND.md](FRONTEND.md)，交付 `lessons/` 中的课程 HTML。
-- `content <topic>`：只完成内容阶段；交付通过校验的语义工件绝对路径和 `/my-teach frontend <artifact>`。
+- `content <topic>`：只完成内容阶段；交付通过校验的语义工件绝对路径和 `{{skill-call:my-teach}} frontend <artifact>`。
 - `frontend <artifact>`：只完成前端阶段；教学事实、理解顺序、练习答案和反馈标准以该语义工件为准。
 
 `content` 是唯一允许停在内部工件的显式模式。`full` 在同一运行内连续执行，不构成模型隔离证据；该状态只在对话中报告。

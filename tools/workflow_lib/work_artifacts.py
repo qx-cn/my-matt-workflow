@@ -10,6 +10,17 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from .fs_safety import (
+    FilesystemSafetyError,
+    exclusive_lock,
+    quarantine_and_remove,
+    refresh_owned_directory,
+    register_owned_directory,
+    strict_relative_path,
+    verify_owned_directory,
+    verify_owned_directory_identity,
+)
+
 
 _NAME_PART = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 _SORT_KEY = r"(?:\d{8}(?:-\d{6})?|\d{2,})(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?"
@@ -55,17 +66,34 @@ def _load_transaction(repo: Path) -> tuple[Path, list[tuple[Path, Path]]] | None
     try:
         value = json.loads(journal.read_text())
         moves = value["moves"]
-        if value.get("version") != 1 or not isinstance(moves, list):
+        if set(value) != {"version", "moves"} or value.get("version") != 1 or not isinstance(moves, list):
             raise ValueError
         parsed = []
         for move in moves:
-            if not isinstance(move, dict) or not isinstance(move.get("from"), str) or not isinstance(move.get("to"), str):
+            if (
+                not isinstance(move, dict)
+                or set(move) != {"from", "to"}
+                or not isinstance(move.get("from"), str)
+                or not isinstance(move.get("to"), str)
+            ):
                 raise ValueError
-            source, destination = repo / move["from"], repo / move["to"]
-            if not source.is_relative_to(repo / ".agent") or not destination.is_relative_to(repo / ".agent"):
+            source = strict_relative_path(repo, move["from"])
+            destination = strict_relative_path(repo, move["to"])
+            agent_root = (repo / ".agent").resolve()
+            if (
+                not source.resolve(strict=False).is_relative_to(agent_root)
+                or not destination.resolve(strict=False).is_relative_to(agent_root)
+                or _destination(repo, source) != destination
+            ):
                 raise ValueError
             parsed.append((source, destination))
-    except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+        verify_owned_directory_identity(
+            repo / ".agent",
+            transaction,
+            purpose="work-artifact-transaction",
+            required_controls=("journal.json",),
+        )
+    except (OSError, ValueError, KeyError, json.JSONDecodeError, FilesystemSafetyError) as exc:
         raise WorkArtifactError("工作产物迁移事务日志损坏，已保留现场") from exc
     return transaction, parsed
 
@@ -84,7 +112,12 @@ def _rollback_transaction(repo: Path) -> None:
             backup.rename(source)
         elif destination.exists():
             destination.unlink()
-    shutil.rmtree(transaction)
+    refresh_owned_directory(
+        repo / ".agent", transaction, purpose="work-artifact-transaction"
+    )
+    quarantine_and_remove(
+        repo / ".agent", transaction, purpose="work-artifact-transaction"
+    )
 
 
 def _relative(repo: Path, path: Path) -> str:
@@ -237,7 +270,23 @@ def analyze_work_artifacts(repo: Path) -> dict[str, object]:
     return {"compliant": not moves and not conflicts and not unclassified, "moves": moves, "deletions": [move["from"] for move in moves], "link_rewrites": link_rewrites, "candidate_link_repairs": candidate_repairs, "conflicts": conflicts, "unclassified": unclassified}
 
 
-def apply_work_artifact_migration(repo: Path, *, confirmed_candidate_link_repairs: set[tuple[str, str]] | None = None) -> dict[str, object]:
+def apply_work_artifact_migration(
+    repo: Path,
+    *,
+    confirmed_candidate_link_repairs: set[tuple[str, str]] | None = None,
+) -> dict[str, object]:
+    """Apply one migration while excluding concurrent recovery or planning."""
+    try:
+        with exclusive_lock(repo.resolve() / ".agent", "work-artifact-migration"):
+            return _apply_work_artifact_migration(
+                repo,
+                confirmed_candidate_link_repairs=confirmed_candidate_link_repairs,
+            )
+    except FilesystemSafetyError as exc:
+        raise WorkArtifactError(str(exc)) from exc
+
+
+def _apply_work_artifact_migration(repo: Path, *, confirmed_candidate_link_repairs: set[tuple[str, str]] | None = None) -> dict[str, object]:
     """Apply a reviewed layout plan, preserving unconfirmed broken links."""
     repo = repo.resolve()
     # A previous process may have died mid-commit.  Recover that exact plan
@@ -285,6 +334,12 @@ def apply_work_artifact_migration(repo: Path, *, confirmed_candidate_link_repair
         backup_root = transaction / "backup"
         staged.mkdir()
         backup_root.mkdir()
+        register_owned_directory(
+            repo / ".agent",
+            transaction,
+            purpose="work-artifact-transaction",
+            control_paths=("journal.json",),
+        )
         # Stage all rewrites before modifying live files.
         for index, (source, destination) in enumerate(move_paths):
             staged_file = staged / str(index)
@@ -298,11 +353,19 @@ def apply_work_artifact_migration(repo: Path, *, confirmed_candidate_link_repair
             (staged / str(index)).rename(destination)
     except Exception as exc:
         try:
+            refresh_owned_directory(
+                repo / ".agent", transaction, purpose="work-artifact-transaction"
+            )
             _rollback_transaction(repo)
-        except WorkArtifactError:
+        except (WorkArtifactError, FilesystemSafetyError):
             pass
         raise WorkArtifactError("工作产物迁移中断，已恢复原布局") from exc
     for source, _ in move_paths:
         _remove_empty_ancestors(source.parent, repo / ".agent")
-    shutil.rmtree(transaction)
+    refresh_owned_directory(
+        repo / ".agent", transaction, purpose="work-artifact-transaction"
+    )
+    quarantine_and_remove(
+        repo / ".agent", transaction, purpose="work-artifact-transaction"
+    )
     return report

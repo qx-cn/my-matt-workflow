@@ -49,6 +49,14 @@
       "kind": "execution-protocol",
       "validation": "tests/test_resources.py::SharedResourceTests.test_artifact_access_is_bundled_only_for_reader_consumers"
     },
+    "resources/adapters/artifact-storage.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_portfolio.py::PortfolioContractTests.test_artifact_storage_adapter_is_declared_for_writers"
+    },
+    "resources/testing-seams.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_portfolio.py::PortfolioContractTests.test_testing_seam_contract_is_shared"
+    },
     "resources/adapters/project-rules.md": {
       "kind": "execution-protocol",
       "validation": "tests/test_workflow.py::ProfileTests.test_plan_skills_use_project_rule_adapter"

@@ -9,11 +9,7 @@
         "my-to-tickets",
         "my-grill-with-docs",
         "my-code-review",
-        "my-humanizer",
-        "my-implement",
-        "my-review-artifact",
-        "my-wayfinder",
-        "my-improve-codebase-architecture"
+        "my-humanizer"
       ]
     },
     "final-state-writing": {
@@ -28,13 +24,8 @@
         "my-codebase-design",
         "my-writing-great-skills",
         "my-review-design",
-        "my-grill-me",
-        "my-wayfinder",
-        "my-improve-codebase-architecture",
         "my-test-report",
-        "my-final-state-writing",
-        "my-review-artifact",
-        "my-review-skill"
+        "my-final-state-writing"
       ]
     },
     "artifact-finalization": {
@@ -45,9 +36,7 @@
         "my-handoff",
         "my-review-design",
         "my-final-state-writing",
-        "my-artifact-finalization",
-        "my-wayfinder",
-        "my-review-artifact"
+        "my-artifact-finalization"
       ]
     },
     "visual-communication": {
@@ -57,8 +46,7 @@
         "my-visual-communication",
         "my-teach",
         "my-test-report",
-        "my-review-design",
-        "my-review-artifact"
+        "my-review-design"
       ]
     },
     "reader-first-writing": {
@@ -71,9 +59,6 @@
         "my-edit-article",
         "my-reader-first-writing",
         "my-final-state-writing",
-        "my-review-artifact",
-        "my-grill-with-docs",
-        "my-implement",
         "my-improve-codebase-architecture",
         "my-prototype",
         "my-research",
@@ -83,7 +68,6 @@
         "my-test-report",
         "my-to-questionnaire",
         "my-triage",
-        "my-wayfinder",
         "my-wizard"
       ]
     },
@@ -104,13 +88,7 @@
         "my-diagnosing-bugs",
         "my-domain-modeling",
         "my-edit-article",
-        "my-grill-with-docs",
-        "my-implement",
-        "my-improve-codebase-architecture",
-        "my-prototype",
-        "my-to-spec",
-        "my-to-tickets",
-        "my-wayfinder"
+        "my-to-tickets"
       ]
     },
     "adapter-composition": {
@@ -136,7 +114,6 @@
       "source": "resources/adapters/work-scope.md",
       "release_path": "references/shared/adapters/work-scope.md",
       "consumers": [
-        "my-implement",
         "my-tdd"
       ]
     },
@@ -157,12 +134,28 @@
         "my-grill-with-docs",
         "my-code-review",
         "my-review-design",
-        "my-wayfinder",
-        "my-implement",
         "my-domain-modeling",
         "my-tdd",
         "my-diagnosing-bugs",
-        "my-improve-codebase-architecture"
+        "my-wayfinder"
+      ]
+    },
+    "adapter-artifact-storage": {
+      "source": "resources/adapters/artifact-storage.md",
+      "release_path": "references/shared/adapters/artifact-storage.md",
+      "consumers": [
+        "my-edit-article",
+        "my-test-report",
+        "my-to-questionnaire"
+      ]
+    },
+    "testing-seams": {
+      "source": "resources/testing-seams.md",
+      "release_path": "references/shared/testing-seams.md",
+      "consumers": [
+        "my-codebase-design",
+        "my-diagnosing-bugs",
+        "my-tdd"
       ]
     },
     "adapter-project-rules": {
@@ -172,10 +165,7 @@
         "my-grill-with-docs",
         "my-to-spec",
         "my-to-tickets",
-        "my-implement",
-        "my-code-review",
-        "my-wayfinder",
-        "my-improve-codebase-architecture"
+        "my-code-review"
       ]
     },
     "adapter-runtime-sessions": {

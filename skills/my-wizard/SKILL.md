@@ -39,6 +39,8 @@ disable-model-invocation: true
 
 遵守模板设定的标准：在请求值之前打开 URL，对所有秘密使用 `ask_secret`，写入的每个持久化值都用 `write_env`，仅对 CI 实际需要的值使用 `set_secret`，并在任何不可逆操作之前使用 `confirm`。每个 `stage` 都会清屏，因此只有当前步骤可见——让一个阶段只处理一个聚焦任务，使人类所需内容不会滚出屏幕。不要改动 `STAGES` 标记上方的库。
 
+任何 secret 落盘前，先解析实际目标：仓库内目标必须同时通过 `git ls-files --error-unmatch <target>` 的“未跟踪”检查与 `git check-ignore <target>` 的“已忽略”检查；写入后立即 `chmod 0600 <target>` 并验证权限。检查不满足时停止，或改用用户明确批准、位于仓库外且权限可收紧到 `0600` 的安全目标。不得把默认 `.env` 当成天然安全位置。
+
 ### 4. 验证并交付
 
 - `bash -n <script>`；若可用则运行 `shellcheck`。

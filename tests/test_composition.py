@@ -306,6 +306,9 @@ class CompositionValidationTests(unittest.TestCase):
             (skill / "SUPPORT.md").write_text(
                 "[undeclared](references/composed/my-b/SKILL.md)\n"
             )
+            (skill / "SKILL.md").write_text(
+                (skill / "SKILL.md").read_text() + "[support](SUPPORT.md)\n"
+            )
             self._skill(root, "my-b")
             composition = root / "composition"
             composition.mkdir()
@@ -341,6 +344,10 @@ class CompositionValidationTests(unittest.TestCase):
             leaked.parent.mkdir(parents=True)
             leaked.write_text(
                 "policy:\n  allow_implicit_invocation: false\n"
+            )
+            (dependency / "SKILL.md").write_text(
+                (dependency / "SKILL.md").read_text()
+                + "Use references/composed/my-leak/agents/openai.yaml.\n"
             )
             composition = root / "composition"
             composition.mkdir()
@@ -412,6 +419,10 @@ class CompositionValidationTests(unittest.TestCase):
             leaked.parent.mkdir(parents=True)
             leaked.write_text(
                 "---\nname: leaked\n---\nreference body\n"
+            )
+            (dependency / "SKILL.md").write_text(
+                (dependency / "SKILL.md").read_text()
+                + "[leak](references/composed/my-leak/COMPOSED.md)\n"
             )
             composition = root / "composition"
             composition.mkdir()

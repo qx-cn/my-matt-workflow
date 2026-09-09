@@ -1,6 +1,6 @@
 ---
 name: my-final-state-writing
-description: 审查、撰写或修订文档的最终态表达；用于发现正文仍保留已被取代的方案或遗漏当前有效决定时。
+description: 审查、撰写或修订文档，使正文只保留当前有效状态。
 disable-model-invocation: true
 ---
 

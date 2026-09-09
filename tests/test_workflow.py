@@ -33,6 +33,7 @@ from tools.workflow_lib.profile import (
     resolve_preset_name,
 )
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
+from tools.workflow_lib.fs_safety import register_owned_directory
 from tools.workflow_lib.rules import resolve_rules
 from tools.workflow_lib.tickets import (
     TicketError,
@@ -48,7 +49,7 @@ from tools.workflow_lib.artifact_review import (
     submit_artifact_review_result,
     verify_artifact_review_snapshot,
 )
-from tools.workflow_lib.transitions import ticket_transition
+from tools.workflow_lib.transitions import create_approved_scope, ticket_transition
 from tools.workflow_lib.write_gates import resolve_write_gate
 from tools.workflow_lib.work_artifacts import WorkArtifactError, apply_work_artifact_migration
 
@@ -66,6 +67,16 @@ class TicketTransitionTests(unittest.TestCase):
         accepted: bool = False,
     ) -> Path:
         path = directory / f"tickets-feature-{sequence:02d}-{identifier}.md"
+        spec_ref = "specs/specs-feature-01.md"
+        parts = directory.parts
+        if len(parts) >= 4 and parts[-4:] == (".agent", "work", "feature", "tickets"):
+            spec = directory.parent / "specs/specs-feature-01.md"
+            spec.parent.mkdir(exist_ok=True)
+            spec.write_text(
+                "---\nspec_id: feature\n"
+                f"revision: {spec_revision}\n---\n\n# Feature spec\n"
+            )
+            spec_ref = ".agent/work/feature/specs/specs-feature-01.md"
         path.write_text(
             "---\n"
             f"id: {identifier}\n"
@@ -73,7 +84,7 @@ class TicketTransitionTests(unittest.TestCase):
             "ticket_kind: implementation\n"
             "spec_id: feature\n"
             f"spec_revision: {spec_revision}\n"
-            "spec_ref: specs/specs-feature-01.md\n"
+            f"spec_ref: {spec_ref}\n"
             f"status: {status}\n"
             f"blocked_by: {blocked_by}\n"
             "claimed_by:\n"
@@ -102,7 +113,7 @@ class TicketTransitionTests(unittest.TestCase):
             result = ticket_transition(
                 Path(tmp), work_scope_policy="ready-frontier", blocker="critical-tdd-seam"
             )
-            self.assertEqual(("pause", "critical-tdd-seam"), (result.status, result.reason))
+            self.assertEqual(("blocked", "critical-tdd-seam"), (result.status, result.reason))
 
     def test_full_auto_uses_initial_scope_and_dependency_order(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -113,7 +124,9 @@ class TicketTransitionTests(unittest.TestCase):
             result = ticket_transition(
                 directory,
                 work_scope_policy="approved-plan",
-                allowed_ids={"feature-a", "feature-b"},
+                approved_scope=create_approved_scope(
+                    directory, {"feature-a", "feature-b"}
+                ),
             )
             self.assertEqual("continue", result.status)
             self.assertEqual("feature-b", result.next_ticket.identifier)
@@ -123,7 +136,7 @@ class TicketTransitionTests(unittest.TestCase):
             result = ticket_transition(
                 Path(tmp), work_scope_policy="approved-plan", blocker="new-external-authorization"
             )
-            self.assertEqual(("pause", "new-external-authorization"), (result.status, result.reason))
+            self.assertEqual(("blocked", "new-external-authorization"), (result.status, result.reason))
 
     def test_single_ticket_stops_even_with_ready_candidate(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -217,6 +230,30 @@ class TicketTransitionTests(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertEqual("allow", json.loads(result.stdout)["status"])
             self.assertEqual("ready-for-agent", frontmatter(ticket)["status"])
+
+    def test_ticket_transition_cli_accepts_completed_sibling_dependency(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self._ticket(directory, "feature-a", 1, status="complete", accepted=True)
+            ticket = self._ticket(
+                directory, "feature-b", 2, blocked_by='["feature-a"]'
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "ticket-transition",
+                    str(ticket),
+                    "--to",
+                    "implementing",
+                ],
+                cwd=Path(__file__).resolve().parents[1],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual("allow", json.loads(result.stdout)["status"])
 
     def test_next_ticket_cli_reads_project_profile(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -412,7 +449,29 @@ class WriteGateTests(unittest.TestCase):
         self.assertEqual("allow", resolve_write_gate(profile, kind="branch").status)
         self.assertEqual("confirm", resolve_write_gate(profile, kind="commit").status)
         self.assertEqual("pause", resolve_write_gate(profile, kind="external").status)
-        self.assertEqual("allow", resolve_write_gate(profile, kind="external", approved_scope=True).status)
+        legacy = resolve_write_gate(profile, kind="external", approved_scope=True)
+        self.assertEqual("pause", legacy.status)
+        self.assertEqual("boolean-approved-scope-is-not-authorization", legacy.reason)
+        receipt = {
+            "receipt_kind": "host-confirmation",
+            "trusted_by": "host",
+            "confirmation_id": "confirm-1",
+            "kind": "external",
+            "target": "origin",
+            "operation": "push",
+            "scope_id": "scope-1",
+        }
+        self.assertEqual(
+            "allow",
+            resolve_write_gate(
+                profile,
+                kind="external",
+                confirmation_receipt=receipt,
+                target="origin",
+                operation="push",
+                scope_id="scope-1",
+            ).status,
+        )
         self.assertEqual("deny", resolve_write_gate(profile, kind="docs").status)
 
 
@@ -597,6 +656,7 @@ class ProfileTests(unittest.TestCase):
             "decision_policy": "ask",
             "default_execution_agent": "auto",
             "test_commands": ["python3 -m unittest"],
+            "review_commands": [],
             "standards_sources": [],
             "domain_sources": [],
         }
@@ -624,6 +684,23 @@ class ProfileTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ProfileError, "branch_policy"):
             parse_profile(text)
+
+    def test_rejects_unknown_duplicate_and_wrong_typed_profile_fields(self):
+        invalid_profiles = (
+            ("---\nschema_version: 1\ncommit_polciy: allow\n---\n", "未知配置字段"),
+            (
+                "---\nschema_version: 1\ntask_backend: local\ntask_backend: none\n---\n",
+                "重复配置字段",
+            ),
+            (
+                "---\nschema_version: 1\nstandards_sources: [\"AGENTS.md\", 2]\n---\n",
+                "standards_sources",
+            ),
+            ("---\nschema_version: true\n---\n", "schema_version"),
+        )
+        for text, error in invalid_profiles:
+            with self.subTest(error=error), self.assertRaisesRegex(ProfileError, error):
+                parse_profile(text)
 
     def test_refresh_preserves_existing_values_without_override(self):
         existing = {
@@ -772,18 +849,20 @@ class ProfileTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             ticket = Path(tmp) / "ticket.md"
             ticket.write_text(
-                "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
+                "---\nticket_kind: implementation\nstatus: ready-for-agent\n"
+                "claimed_by:\nblocked_by: []\nexecution_agent: codex\n"
                 "rule_sources: []\nrule_scope: []\nrule_constraints: []\n"
-                "rule_conflicts: []\n---\n"
+                "rule_conflicts: []\n---\n- [ ] acceptance\n"
             )
             with self.assertRaisesRegex(TicketError, "规则来源"):
                 validate_ready_ticket(ticket)
             ticket.write_text(
-                "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
+                "---\nticket_kind: implementation\nstatus: ready-for-agent\n"
+                "claimed_by:\nblocked_by: []\nexecution_agent: codex\n"
                 'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
                 'rule_constraints: ["run tests"]\nrule_conflicts: []\n'
                 "spec_id: feature\nspec_revision: 1\n"
-                "spec_ref: specs/specs-feature-01.md\n---\n"
+                "spec_ref: specs/specs-feature-01.md\n---\n- [ ] acceptance\n"
             )
             self.assertEqual("ready", validate_ready_ticket(ticket)["status"])
 
@@ -791,11 +870,12 @@ class ProfileTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             ticket = Path(tmp) / "ticket.md"
             ticket.write_text(
-                "---\nstatus: ready-for-agent\nexecution_agent: auto\n"
+                "---\nticket_kind: implementation\nstatus: ready-for-agent\n"
+                "claimed_by:\nblocked_by: []\nexecution_agent: auto\n"
                 'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
                 'rule_constraints: ["run tests"]\nrule_conflicts: []\n'
                 "spec_id: feature\nspec_revision: 1\n"
-                "spec_ref: specs/specs-feature-01.md\n---\n"
+                "spec_ref: specs/specs-feature-01.md\n---\n- [ ] acceptance\n"
             )
             admission = validate_ready_ticket(ticket)
             self.assertEqual("ready", admission["status"])
@@ -805,9 +885,10 @@ class ProfileTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             ticket = Path(tmp) / "ticket.md"
             ticket.write_text(
-                "---\nstatus: ready-for-agent\nexecution_agent: codex\n"
+                "---\nticket_kind: implementation\nstatus: ready-for-agent\n"
+                "claimed_by:\nblocked_by: []\nexecution_agent: codex\n"
                 'rule_sources: ["AGENTS.md"]\nrule_scope: ["src/**"]\n'
-                'rule_constraints: ["run tests"]\nrule_conflicts: []\n---\n'
+                'rule_constraints: ["run tests"]\nrule_conflicts: []\n---\n- [ ] acceptance\n'
             )
             with self.assertRaisesRegex(TicketError, "Spec 血缘"):
                 validate_ready_ticket(ticket)
@@ -1518,8 +1599,42 @@ class WorkArtifactTransactionTests(unittest.TestCase):
                 "version": 1,
                 "moves": [{"from": ".agent/work/topic/spec.md", "to": ".agent/work/topic/specs/specs-topic-01.md"}],
             }))
+            with self.assertRaisesRegex(WorkArtifactError, "日志损坏"):
+                apply_work_artifact_migration(repo)
+            self.assertEqual("# legacy\n", legacy.read_text())
+            self.assertEqual("partial", target.read_text())
+            self.assertTrue(transaction.exists())
+
+    def test_owned_leftover_transaction_recovers_after_content_drift(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            legacy = self._legacy(repo)
+            target = repo / ".agent/work/topic/specs/specs-topic-01.md"
+            transaction = repo / ".agent/.work-artifact-transaction"
+            staged = transaction / "staged/0"
+            backup = transaction / "backup/0"
+            staged.parent.mkdir(parents=True)
+            backup.parent.mkdir()
+            staged.write_text("# legacy\n")
+            (transaction / "journal.json").write_text(json.dumps({
+                "version": 1,
+                "moves": [{
+                    "from": ".agent/work/topic/spec.md",
+                    "to": ".agent/work/topic/specs/specs-topic-01.md",
+                }],
+            }))
+            register_owned_directory(
+                repo / ".agent",
+                transaction,
+                purpose="work-artifact-transaction",
+                control_paths=("journal.json",),
+            )
+            legacy.rename(backup)
+            target.parent.mkdir()
+            staged.rename(target)
+
             apply_work_artifact_migration(repo)
-            self.assertFalse(legacy.exists())
+
             self.assertEqual("# legacy\n", target.read_text())
             self.assertFalse(transaction.exists())
 
@@ -1803,10 +1918,13 @@ class InstallerTests(unittest.TestCase):
                 )
             )
 
-            recover_interrupted_install(cursor_home, skills_home=cursor_home / "skills")
+            with self.assertRaisesRegex(InstallError, "可验证 install-state"):
+                recover_interrupted_install(
+                    cursor_home, skills_home=cursor_home / "skills"
+                )
 
-            self.assertEqual("old", (target / "SKILL.md").read_text())
-            self.assertFalse(transaction.exists())
+            self.assertEqual("new", (target / "SKILL.md").read_text())
+            self.assertTrue(transaction.exists())
 
     def test_committed_transaction_cleanup_keeps_new_install(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1841,10 +1959,11 @@ class InstallerTests(unittest.TestCase):
                 )
             )
 
-            recover_interrupted_install(cursor_home)
+            with self.assertRaisesRegex(InstallError, "schema"):
+                recover_interrupted_install(cursor_home)
 
             self.assertEqual("new", (target / "SKILL.md").read_text())
-            self.assertFalse(transaction.exists())
+            self.assertTrue(transaction.exists())
 
     def test_same_release_stale_state_does_not_fake_commit(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1879,9 +1998,10 @@ class InstallerTests(unittest.TestCase):
                 )
             )
 
-            recover_interrupted_install(cursor_home)
+            with self.assertRaisesRegex(InstallError, "schema"):
+                recover_interrupted_install(cursor_home)
 
-            self.assertEqual("stable-old", (target / "SKILL.md").read_text())
+            self.assertEqual("partial-new", (target / "SKILL.md").read_text())
 
     def test_v2_recovery_uses_recorded_split_skills_home_and_rejects_mismatch(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1913,8 +2033,9 @@ class InstallerTests(unittest.TestCase):
             self.assertEqual("partial-new", (target / "SKILL.md").read_text())
             self.assertEqual("untouched", (wrong_target / "SKILL.md").read_text())
 
-            recover_interrupted_install(state_home)
-            self.assertEqual("original", (target / "SKILL.md").read_text())
+            with self.assertRaisesRegex(InstallError, "可验证 install-state"):
+                recover_interrupted_install(state_home)
+            self.assertEqual("partial-new", (target / "SKILL.md").read_text())
 
     def test_v3_recovery_restores_legacy_skill_root(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1947,14 +2068,12 @@ class InstallerTests(unittest.TestCase):
                 "skills_home": str(previous_skills_home.resolve()),
             }))
 
-            recover_interrupted_install(state_home)
+            with self.assertRaisesRegex(InstallError, "schema"):
+                recover_interrupted_install(state_home)
 
-            self.assertFalse(migrated.exists())
-            self.assertEqual(
-                "original",
-                (previous_skills_home / "my-demo/SKILL.md").read_text(),
-            )
-            self.assertFalse(transaction.exists())
+            self.assertEqual("partial-new", (migrated / "SKILL.md").read_text())
+            self.assertEqual("original", (legacy_backup / "SKILL.md").read_text())
+            self.assertTrue(transaction.exists())
 
     def test_invalid_recovery_journal_does_not_touch_skills(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1994,8 +2113,9 @@ class InstallerTests(unittest.TestCase):
             }))
             state = state_home / "my-matt-workflow" / "install-state.json"
             state.write_text(json.dumps({"skills_home": str(skills_home.resolve())}))
-            recover_interrupted_install(state_home)
-            self.assertEqual("old", (target / "SKILL.md").read_text())
+            with self.assertRaisesRegex(InstallError, "schema"):
+                recover_interrupted_install(state_home)
+            self.assertEqual("partial", (target / "SKILL.md").read_text())
 
 
 class ReleaseTests(unittest.TestCase):
@@ -2277,7 +2397,7 @@ render_root: 学生课程
                 "references/policies/merge-conflict-approval.md",
             ],
             "my-to-questionnaire": [
-                "to-questionnaire-<slug>.md",
+                "questionnaires-<topic>-<time-or-sequence>.md",
                 "只就“发送”采访用户，而不要就主题采访用户",
             ],
             "my-wizard": [
@@ -2425,6 +2545,18 @@ render_root: 学生课程
             self.assertEqual(
                 ["my-code-review", "my-tdd"],
                 manifest["composed"]["my-implement"],
+            )
+            self.assertEqual(
+                ["my-tdd"],
+                manifest["resource_consumers"]["direct"]["adapter-work-scope"],
+            )
+            self.assertIn(
+                "my-implement",
+                manifest["resource_consumers"]["effective"]["adapter-work-scope"],
+            )
+            self.assertIn(
+                "my-to-spec",
+                manifest["resource_consumers"]["effective"]["instruction-authority"],
             )
 
     def test_release_bundles_policies_only_for_explicit_consumers(self):
@@ -2627,7 +2759,11 @@ class WorkflowCliTests(unittest.TestCase):
                 ))
             self.assertEqual(
                 ["v1"],
-                sorted(path.name for path in (workflow / "releases").iterdir()),
+                sorted(
+                    path.name
+                    for path in (workflow / "releases").iterdir()
+                    if path.is_dir() and not path.name.startswith(".")
+                ),
             )
             self.assertTrue((Path(tmp) / "agent/skills/my-demo/SKILL.md").is_file())
 
@@ -2780,5 +2916,9 @@ class WorkflowCliTests(unittest.TestCase):
             self.assertEqual(0, pruned.returncode, pruned.stderr)
             self.assertEqual(
                 ["v1", "v3"],
-                sorted(path.name for path in (workflow / "releases").iterdir()),
+                sorted(
+                    path.name
+                    for path in (workflow / "releases").iterdir()
+                    if path.is_dir() and not path.name.startswith(".")
+                ),
             )

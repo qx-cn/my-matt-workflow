@@ -1,6 +1,6 @@
 ---
 name: my-grilling
-description: 对计划、决策或想法进行高强度逐项访谈；用于希望压力测试思考或使用“grill”类触发语时。
+description: 对计划、决策或想法进行高强度逐项访谈。
 disable-model-invocation: true
 ---
 

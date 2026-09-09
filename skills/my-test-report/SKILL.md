@@ -87,13 +87,13 @@ disable-model-invocation: true
 
 删除或脱敏真实业务数据、账号、完整报文、凭证、密钥和其他不应进入报告的敏感信息。必要时以字段结构、匿名样例或聚合结果替代。
 
-写入或覆盖报告前，以嵌入模式使用 `$my-humanizer`。先按其规则区分冻结内容与可改叙述：技能名、Frontmatter、报告标题与章节锚点、验收标准、测试状态、Ticket 字段、命令、代码块、路径、链接和数据表保持不变；仅润色面向读者的结论、背景、范围说明和用例解释。
+写入或覆盖报告前，以嵌入模式使用 `{{skill-call:my-humanizer}}`。先按其规则区分冻结内容与可改叙述：技能名、Frontmatter、报告标题与章节锚点、验收标准、测试状态、Ticket 字段、命令、代码块、路径、链接和数据表保持不变；仅润色面向读者的结论、背景、范围说明和用例解释。
 
 若 `.agent/matt-workflow.md` 定义 `humanizer_policy`，按该策略执行：`deny` 不自动润色，`confirm` 先展示可改叙述的修改建议并等待确认，`allow` 才自动润色。项目未定义该策略时，也只可在完成冻结分类后润色叙述，且不得新增事实或改变证据含义。
 
 ## 6. 输出与检查
 
-默认输出到 `<topic>/tests/test-report.md`。写入前检查：
+按[工作产物存储](references/shared/adapters/artifact-storage.md)默认输出到 `.agent/work/<topic>/tests/test-report-<topic>-<time-or-sequence>.md`。写入前检查：
 
 - 每项结论都有对应验收标准和可追溯证据；
 - 每项“通过”均由本次已执行的运行记录支持；否则改为历史记录、静态代码证据、测试设计或人工待测；

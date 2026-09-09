@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 先读取[面向读者写作](references/shared/reader-first-writing.md)、[最终态写作](references/shared/final-state-writing.md)与[内容/前端交接](references/shared/document-rendering.md)，再选择阶段：
 
-- 未指定阶段且没有语义工件：执行 `content`，读取 [CONTENT.md](CONTENT.md)，写入 `.agent/work/<topic>/designs/design-content-<topic>-<time-or-sequence>.md`，报告绝对路径与 `/my-tech-design frontend <artifact>` 后停止。
+- 未指定阶段且没有语义工件：执行 `content`，读取 [CONTENT.md](CONTENT.md)，写入 `.agent/work/<topic>/designs/design-content-<topic>-<time-or-sequence>.md`，报告绝对路径与 `{{skill-call:my-tech-design}} frontend <artifact>` 后停止。
 - `frontend <artifact>`：只读取该语义工件、[FRONTEND.md](FRONTEND.md)、[HTML 模板](assets/TEMPLATE.html)及校验脚本；不得重读源材料来改写内容。
 - `full`：按顺序完成两阶段，仍保留语义工件。明确说明这是同一运行，不构成内容模型与前端模型已隔离的证据。
 

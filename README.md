@@ -23,17 +23,26 @@ python3 tools/workflow.py validate
 python3 tools/workflow.py validate-evals
 python3 tools/workflow.py smoke
 python3 tools/workflow.py check
+python3 tools/workflow.py doctor
 python3 tools/workflow.py build --release-id <release-id>
 python3 tools/workflow.py install --target codex
 python3 tools/workflow.py deploy --target codex
 python3 tools/workflow.py prune-releases
 python3 tools/workflow.py resolve-rules --repo <project> --agent codex
 python3 tools/workflow.py validate-ticket <ticket-path>
+python3 tools/workflow.py run-code-receipt --journal <run-journal>
+python3 tools/workflow.py run-review-open --journal <run-journal>
+python3 tools/workflow.py run-test-evidence --journal <run-journal> -- <declared test argv...>
+python3 tools/workflow.py run-review-evidence --journal <run-journal> --snapshot-dir <review-snapshot-dir> -- <declared-review-command>
 ```
+
+测试和审查命令分别来自项目 profile 的 `test_commands` 与 `review_commands`。runtime 只执行 work unit 建立时已冻结的精确 argv；审查命令从 `MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID` 读取当前审查单元，并在 stdout 输出结果 JSON。
 
 `workflow.py check` 是源树的权威本地检查：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试；存在 `current.json` 时还会先校验 release 的校验和、缺失文件和额外文件，再比较其与源树是否一致。尚未构建首个 release 时会明确报告 release 验证不适用。
 
-`build` 与 `deploy` 都会先运行同一套完整源树门禁，但跳过旧 `current.json` 的一致性比较，因此可用新 release 替换已过期或损坏的 current release。`build` 仅构建并更新 current 指针；`deploy` 会在当前 release 完整且与源树一致时复用它，否则保留损坏 release 供排查、构建新 release 后再安装。
+`workflow.py doctor` 是只读部署诊断：它分别报告源树、current release 与 Codex/Cursor/Claude 安装状态，明确区分 `valid`、`drift`、`invalid` 和 `not-installed`，不会自动安装或修复。
+
+`build` 会先取得 byte-exact 源码快照；若复制期间工作树发生变化则重试，完整源树门禁与打包都只读取同一快照。它跳过旧 `current.json` 的一致性比较，因此可用新 release 替换已过期或损坏的 current release。`build` 仅构建并更新 current 指针；`deploy` 会在当前 release 完整且与源树一致时复用它，否则保留损坏 release 供排查、构建新 release 后再安装。
 
 项目首次使用时手动运行 `/my-setup`。日常通过 `/my-ask-matt` 查询下一条命令，再手动调用推荐的 `/my-*`。
 

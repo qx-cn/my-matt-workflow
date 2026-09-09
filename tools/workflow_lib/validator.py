@@ -12,13 +12,13 @@ from .resource_governance import (
     validate_resource_governance,
 )
 from .resources import ResourceError, load_resource_manifest
+from .portfolio import PortfolioError, validate_portfolio
 
 
 class ValidationError(RuntimeError):
     """Raised when a source-tree gate has an actionable failure."""
 
 
-EXPECTED_MANUAL_SKILLS = 37
 _PLACEHOLDER = re.compile(r"(<[^>]+>|\{\{.+?\}\}|^\s*link\s*$)", re.IGNORECASE)
 _SCRIPT_SUFFIXES = {".sh", ".bash"}
 
@@ -160,8 +160,10 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
     except ReleaseError as exc:
         raise ValidationError(str(exc)) from exc
     canonical = (root / "composition" / "manifest.json").is_file()
+    portfolio = None
     if canonical:
         try:
+            portfolio = validate_portfolio(root)
             resource_manifest = load_resource_manifest(
                 root / "resources" / "manifest.json"
             )
@@ -170,10 +172,10 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
                 resource_manifest,
                 root / "resources" / "governance.json",
             )
-        except (OSError, ResourceError, ResourceGovernanceError) as exc:
+        except (OSError, PortfolioError, ResourceError, ResourceGovernanceError) as exc:
             raise ValidationError(str(exc)) from exc
     validate_manual_metadata(
-        skills_dir, expected_count=EXPECTED_MANUAL_SKILLS if canonical else None
+        skills_dir, expected_count=len(portfolio.skills) if portfolio else None
     )
     validate_markdown_references(root)
     validate_scripts(root)

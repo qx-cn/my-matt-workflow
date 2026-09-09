@@ -14,6 +14,8 @@ disable-model-invocation: true
 
 读取本地术语表或 ADR 工作产物时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
 
+选择回归测试边界与替身时，遵循[测试 Seam 合同](references/shared/testing-seams.md)。
+
 ## 阶段 1 —— 建立反馈循环
 
 **这就是本 Skill 的核心。** 如果能得到针对这个 Bug 的**紧凑**通过/失败信号——它会因这个 Bug 变红——就能找到根因；二分、假设检验和埋点都只是消耗这个信号。若没有它，再多盯着代码也无济于事。

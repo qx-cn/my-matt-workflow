@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 先读取[面向读者写作](references/shared/reader-first-writing.md)与[内容/前端交接](references/shared/document-rendering.md)，再选择阶段：
 
-- 未指定阶段：执行 `content`，读取 [CONTENT.md](CONTENT.md)，将 `architecture-review-<timestamp>.content.md` 写入操作系统临时目录，报告绝对路径与 `/my-improve-codebase-architecture frontend <artifact>` 后停止。
+- 未指定阶段：执行 `content`，读取 [CONTENT.md](CONTENT.md)，将 `architecture-review-<timestamp>.content.md` 写入操作系统临时目录，报告绝对路径与 `{{skill-call:my-improve-codebase-architecture}} frontend <artifact>` 后停止。
 - `frontend <artifact>`：只读取语义工件、[FRONTEND.md](FRONTEND.md)和 [HTML-REPORT.md](HTML-REPORT.md)，渲染同名 `.html`；不得重新扫描代码库或改变候选结论。
 - `full`：顺序完成内容与前端，保留中间工件，并说明没有形成模型隔离证据。
 - `deepen <candidate>`：用户选定候选后进入下述深化循环，不重新生成候选报告。

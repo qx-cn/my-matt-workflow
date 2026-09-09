@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
 
-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `/my-setup`。Ticket 默认沿用项目的 `default_execution_agent`；`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `{{skill-call:my-setup}}`。Ticket 默认沿用项目的 `default_execution_agent`；`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
 
 ## 过程
 
@@ -60,7 +60,7 @@ disable-model-invocation: true
 
 **写入前**：按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，再按配置后端保存：
 
-- **`local`** → 每张文件写入 `.agent/work/<feature-slug>/tickets/tickets-<feature-slug>-<NN>.md`，按依赖顺序从 `01` 编号（阻塞者优先）。每张的“被谁阻塞”列出依赖的编号/标题；使用下方每 Ticket 模板，绝不合成一个总文件。
+- **`local`** → 每张文件写入 `.agent/work/<feature-slug>/tickets/tickets-<feature-slug>-<NN>.md`，按依赖顺序从 `01` 编号（阻塞者优先）。每张的“被谁阻塞”列出依赖的编号/标题；使用 [Ticket 格式](TICKET-FORMATS.md) 的 `local` 小节，绝不合成一个总文件。
 - **`external`** → 先按依赖顺序预览每张 Ticket；得到明确确认后依次创建，以便阻塞边引用真实标识。若平台支持，使用原生 blocking/sub-issue 关系；否则写入阻塞 Issue。只使用项目配置的标签。
 - **`project-docs`** → 先展示符合项目既有格式的补丁，确认后写入。
 - **`none`** → 只在会话中输出。
@@ -69,87 +69,6 @@ disable-model-invocation: true
 
 不要关闭或修改任何父 Issue。
 
-<local-ticket-template>
-
-```yaml
----
-id: <feature-slug>-<NN>
-title: <Ticket 标题>
-ticket_kind: implementation
-spec_id: <源 Spec 的稳定 id>
-spec_revision: <源 Spec revision>
-spec_ref: <源 Spec 路径或 URL>
-supersedes_ticket: []
-compensates: []
-status: ready-for-agent
-blocked_by: []
-claimed_by:
-tags: []
-sequence: <NN>
-rule_sources: []
-rule_scope: []
-rule_constraints: []
-rule_conflicts: []
-execution_agent: <auto|codex|cursor|claude>
----
-```
-
-# <NN> — <Ticket 标题>
-
-**要构建什么：** 从用户视角描述该 Ticket 端到端实现的行为，而非逐层实现清单。
-
-## 适用规则与影响区域
-
-- 规则来源：
-- 影响区域：
-- 实施约束：
-- 验证：
-
-`blocked_by` 必须填 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取时仅填写 `claimed_by`，完成阻塞 Ticket 时将其 `status` 设为 `complete`。不要依靠正文状态行或猜测旧 Ticket 的类型。
-
-`spec_id`、`spec_revision` 与 `spec_ref` 是实施准入字段。修订既有 Ticket 时，`supersedes_ticket` 指向被替代的未完成 Ticket；补偿已完成工作时用 `compensates` 指向历史 Ticket，新 Ticket 自身仍绑定当前 Spec revision。
-
-## 验收标准
-
-- [ ] 验收标准 1
-- [ ] 验收标准 2
-
-关闭前勾选全部验收项；进入实施前必须通过安装状态记录的 `runtime_entry` 运行 `validate-ticket <ticket-path>`。本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
-
-</local-ticket-template>
-
-<issue-template>
-
-## 父项
-
-对 Tracker 父 Issue 的引用（源是现有 Issue 时才保留；否则省略本节）。
-
-## Spec 血缘
-
-- Spec id：
-- Revision：
-- 来源：
-- 替代或补偿的 Ticket（如有）：
-
-## 要构建什么
-
-从用户视角描述该 Ticket 端到端实现的行为，而非逐层实现。
-
-## 验收标准
-
-- [ ] 标准 1
-- [ ] 标准 2
-
-## 被谁阻塞
-
-- 每张阻塞 Ticket 的引用，或“无——可立即开始”。
-
-## 适用规则与影响区域
-
-- 规则来源：
-- 影响区域：
-- 实施约束：
-
-</issue-template>
+确定 backend 后读取 [Ticket 格式](TICKET-FORMATS.md) 中对应的一节，不加载其他 backend 的模板。本地格式必须保留实施准入字段 `spec_id`、`spec_revision` 与 `spec_ref`，以及历史字段 `supersedes_ticket` 与 `compensates`；进入实施前通过安装状态记录的 `runtime_entry` 运行 `validate-ticket <ticket-path>`。本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
 
 无论采用何种形式，都避免具体文件路径和代码片段，它们很快会过期。例外是原型产生了比文字更精确的决策片段（状态机、reducer、schema、类型形状）：可内嵌并简要标注来自原型，但只保留决策丰富部分，而非可运行 demo。

@@ -29,9 +29,6 @@
 - **一个 Adapter 只意味着假设的 Seam；两个 Adapter 才意味着真实的 Seam。** 只有至少两个 Adapter 有充分理由时（通常是生产和测试），才引入 port。单 Adapter 的 Seam 只是间接层。
 - **内部 Seam 与外部 Seam。** 深 Module 可以有内部 Seam（其 Implementation 私有，供自身测试使用），也可以有位于其 Interface 的外部 Seam。不要仅因为测试使用内部 Seam，就通过 Interface 暴露它。
 
-## 测试策略：替换，而不是叠加
+## 测试策略
 
-- 一旦深化 Module 的 Interface 上已有测试，浅 Module 上的旧单元测试就成了浪费——删掉它们。
-- 在深化 Module 的 Interface 上编写新测试。**Interface 就是测试面。**
-- 测试应断言经由 Interface 可观察的结果，而不是内部状态。
-- 测试应能经受内部重构——它们描述行为，而不是 Implementation。若 Implementation 改动时测试也必须改动，它测试的就越过了 Interface。
+测试面、内部/外部 seam、Adapter 与 mock 统一遵循[测试 Seam 合同](references/shared/testing-seams.md)。深化后只移除已被新测试面完整替代、且不再证明独立行为的旧测试；保留仍覆盖不同风险或契约的测试。

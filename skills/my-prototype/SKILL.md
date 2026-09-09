@@ -26,4 +26,6 @@ disable-model-invocation: true
 3. **默认不持久化。** 状态只存在内存中。若问题明确涉及数据库，只能使用有“PROTOTYPE — 可清除”清晰标记的 scratch DB 或本地文件；接入真实数据库、路由或生产代码旁文件须遵守项目写入策略。
 4. **跳过打磨。** 不写测试，不写使其可运行以外的错误处理，不做抽象；目标是快速获得结论。
 5. **展示状态。** 每次操作后（逻辑）或每次变体切换时（UI），打印或渲染完整相关状态，让用户看见变化。
-6. **结束时捕获结论。** 在 `.agent/work/<feature>/prototypes/prototypes-<feature>-<time-or-sequence>.md` 记录问题、结论、依据和被否定的方案；正式实现只吸收已验证的决定。若项目策略允许保留原型作为一手证据，可预览后将其保存到一次性分支或项目约定位置；绝不自动创建分支、Commit 或将原型直接合入主线。
+6. **以结论和交接结束。** 在 `.agent/work/<feature>/prototypes/prototypes-<feature>-<time-or-sequence>.md` 记录问题、结论、观察依据、不能外推的范围和被否定方案。保留结论后删除一次性代码；项目策略明确要求保留一手证据时，才把原型存入批准的位置。
+
+原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才读取 [my-implement handoff 正文](references/composed/my-implement/COMPOSED.md)；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。

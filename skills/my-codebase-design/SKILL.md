@@ -1,6 +1,6 @@
 ---
 name: my-codebase-design
-description: 用于设计深模块的共享词汇。当用户想设计或改进模块接口、寻找深化机会、确定 Seam 位置、让代码更易测试或更便于 AI 导航，或其他 Skill 需要深模块词汇时使用。
+description: 用深模块、Interface、Seam 与 Adapter 的共享词汇设计代码库。
 disable-model-invocation: true
 ---
 
@@ -61,6 +61,8 @@ disable-model-invocation: true
 - 我能把更多复杂度隐藏在内部吗？
 
 ## 原则
+
+测试面、内部/外部 seam、adapter 与 mock 统一遵循[测试 Seam 合同](references/shared/testing-seams.md)。
 
 - **Depth 是 Interface 的属性，不是 Implementation 的属性。** 深 Module 的内部可以由小型、可 mock、可替换的部件组成——只是它们不属于 Interface。Module 可以同时具有**内部 Seam**（仅供 Implementation 私有使用，并由其自身测试使用）和位于 Interface 上的**外部 Seam**。
 - **删除测试。** 想象删掉这个 Module。若复杂度随之消失，它只是直通；若复杂度在 N 个调用者中重新出现，它就在创造价值。

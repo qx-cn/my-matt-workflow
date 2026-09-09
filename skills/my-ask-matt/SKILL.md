@@ -6,76 +6,41 @@ disable-model-invocation: true
 
 # 询问 Matt
 
-不必记住每个 Skill；不确定时就问。
+这是 portfolio 的路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy` 与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
 
-**工作流**是穿过多个 Skill 的路径。大部分路径沿着一条**主流程**前进，另有两个入口汇入它；其余要么独立，要么是下层共用词汇。
+## 主流程
 
-本 Skill 是路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy`，并遵循[组合调用](references/shared/adapters/composition.md)：选出下一跳后，Cursor / Claude 输出 `/my-<skill>`，Codex 输出 `$my-<skill>`，随后停止。不要在本 Skill 内执行被选 Skill 的方法正文；路由入口只命名，不打包。
+多数工程工作沿以下阶段推进：
 
-## 主流程：想法 → 交付
+1. 有代码库的想法用 `{{skill-call:my-grill-with-docs}}`；没有代码库用 `{{skill-call:my-grill-me}}`。两者共享 `{{skill-call:my-grilling}}`，需要澄清领域语言时使用 `{{skill-call:my-domain-modeling}}`。
+2. 纸面讨论无法回答逻辑或界面问题时，用 `{{skill-call:my-handoff}}` 跨会话保存上下文，再用 `{{skill-call:my-prototype}}` 得出可运行证据。
+3. 跨会话构建先用 `{{skill-call:my-to-spec}}`，再用 `{{skill-call:my-to-tickets}}`；实施阶段由 `{{skill-call:my-implement}}` 在当前已批准范围内实施。明确要求测试先行时可直接进入 `{{skill-call:my-tdd}}`。
+4. 交付需要证据报告时，以 `{{skill-call:my-test-report}}` 收束需求、改动、测试与缺口。它是按需尾段，不把未执行测试写成通过。
 
-这是多数工作经过的路线：你有一个想法，想把它做出来。
+阶段边界遵循[上下文卫生](references/policies/context-hygiene.md)。上下文接近限制时用 `{{skill-call:my-handoff}}`，在新会话继续。
 
-1. **`/my-grill-with-docs`**——通过访谈把想法打磨清楚。有**代码库**时从这里开始：它会保留在领域术语和 ADR 中学到的内容。（没有代码库？使用 `/my-grill-me`——见“独立使用”。两者都使用同一个 `/my-grilling` 基础流程；前者会留下可追溯记录。）
-2. **分支——所有问题都能靠对话解决吗？** 如果一个问题需要可运行的答案（状态、业务逻辑、必须亲眼看到的 UI），先绕到原型；两个方向都由 **`/my-handoff`** 衔接（见“跨会话”）：
-   - 用 **`/my-handoff`** 导出，然后针对该文件开启新会话；
-   - 用 **`/my-prototype`** 以一次性代码回答问题；
-   - 再用 **`/my-handoff`** 带回学到的内容，并从原想法线程引用它。
-3. **分支——这是跨多个会话的构建吗？**
-   - **是** → 使用 **`/my-to-spec`** 将当前线程变成 Spec，再用 **`/my-to-tickets`** 拆成 tracer-bullet Ticket；每张 Ticket 都声明其**阻塞边**。本地后端时每张 Ticket 保存在 `.agent/work/<feature>/tickets/tickets-<feature>-<NN>.md`，按阻塞优先完成；真实 Tracker 时使用原生阻塞链接，因此任何已解除阻塞的 Ticket 都可领取。由 `/my-implement` 在当前已批准范围内实施。
-   - **否** → 在当前上下文直接使用 **`/my-implement`**。
+## 情境入口
 
-通常直接选择 **`/my-implement`**；只有目标本身限定为练习一个明确行为的测试先行过程，或针对固定基线做只读代码审查时，才分别选择 **`/my-tdd`** 或 **`/my-code-review`**。
+- 外部 Bug、需求或外部 PR 堆积：`{{skill-call:my-triage}}`。
+- 难解、间歇性或回归故障：`{{skill-call:my-diagnosing-bugs}}`；若根因是缺少稳定 seam，转到 `{{skill-call:my-improve-codebase-architecture}}`。
+- merge 或 rebase 冲突：`{{skill-call:my-resolving-merge-conflicts}}`。
+- 答案只掌握在外部知情人手中：`{{skill-call:my-to-questionnaire}}`。
+- 需要人工完成第三方配置或一次性迁移：`{{skill-call:my-wizard}}`。
+- 重组或润色文章：`{{skill-call:my-edit-article}}`；只去除 AI 写作痕迹时用 `{{skill-call:my-humanizer}}`。
+- 巨大且迷雾重重、超出单会话的工作：`{{skill-call:my-wayfinder}}`。地图完成后交接到 Spec，不直接跳到实现。
+- 首次使用工程流程：`{{skill-call:my-setup}}`。
 
-### 上下文卫生
+## 评审与维护
 
-访谈、Spec、Ticket 与交接的阶段边界遵循[上下文卫生](references/policies/context-hygiene.md)。若会话在 `/my-to-tickets` 前接近该限制，不要在降级状态硬撑；使用 `/my-handoff` 并在新线程继续。
+- 固定基线的代码审查：`{{skill-call:my-code-review}}`。
+- 方案只读审查：`{{skill-call:my-review-design}}`。
+- 综合产物审查：`{{skill-call:my-review-artifact}}`；专项方法包括 `{{skill-call:my-reader-first-writing}}`、`{{skill-call:my-final-state-writing}}`、`{{skill-call:my-visual-communication}}`、`{{skill-call:my-humanizer}}` 和 `{{skill-call:my-artifact-finalization}}`。
+- Skill 组合、职责或文本审查：`{{skill-call:my-review-skill}}`；编写方法参考 `{{skill-call:my-writing-great-skills}}`。
+- 代码库健康巡检：`{{skill-call:my-improve-codebase-architecture}}`；模块形状与 seam 词汇参考 `{{skill-call:my-codebase-design}}`。
 
-## 入口
+## 独立工具
 
-入口是会产生工作、随后汇入主流程的起始情境。
+- 有来源约束的阅读与综合：`{{skill-call:my-research}}`。
+- 围绕有状态学习工作区学习概念：`{{skill-call:my-teach}}`。
 
-- **Bug 和需求堆积** → **`/my-triage`**。它让请求经过分诊角色，产出以后由 **`/my-implement`** 接手的 agent-ready Ticket。Triage 只处理**不是你创建的**请求：外部 Bug 报告、进入的功能需求与一切原始请求。`/my-to-tickets` 生成的 Ticket 已是 agent-ready，**不要**再 triage。
-- **某件事坏了** → **`/my-diagnosing-bugs`**。用于难解问题、间歇性故障和回归。它在拥有一个能让**此 Bug**变红的紧密反馈循环前拒绝空想；随后用回归测试修复。若事后发现没有可锁定 Bug 的合适 seam，则交给 **`/my-improve-codebase-architecture`**。
-- **正在解决 merge 或 rebase 冲突** → **`/my-resolving-merge-conflicts`**。先审阅各方意图、逐项解决方案、验证和回滚路径，明确批准后才修改本地冲突。
-- **答案只能由外部知情人提供** → **`/my-to-questionnaire`**。它把澄清流程中的知识缺口写成可异步填写的发现问卷；生成问卷不等于发送，外发仍需确认。
-- **需要人工完成第三方配置或一次性迁移** → **`/my-wizard`**。它生成逐步确认、秘密不回显的本地向导。
-- **需要重组或润色文章** → **`/my-edit-article`**。先确认章节方案，默认生成新稿并保留原稿。
-- **叙述读起来像 AI** → **`/my-humanizer`**。先区分可改叙述与冻结契约，再去 AI 腔；不影响 Agent 执行。
-- **巨大且迷雾重重的工作**——绿地项目或超出单会话的大功能 → **`/my-wayfinder`**。它在 Tracker 上绘制共享的**决策 Ticket**地图，每次解决一个，产出的是**决策而不是交付物**，直到道路清晰。它比 `/my-grill-with-docs` 更慢、更密，后者适合单会话可把握的想法；不要把 well-scoped 功能送进 wayfinder。
-
-  地图清晰后，它**交接而不构建**：在 `/my-to-spec` 汇入主流程，将关联决策压缩成可构建计划，再照常 `/my-to-tickets` 与 `/my-implement`。直接从地图跳到 `/my-implement` 会丢弃关联细节；只有工作实际很小时才可直接实现。
-
-## 代码库健康
-
-这不是功能工作，而是维护。
-
-- **`/my-improve-codebase-architecture`**——有空就运行，让代码库持续适合 Agent 操作。它找出可加深的机会；选中一个会产生可带回 `/my-grill-with-docs` 主流程的想法。这是发现候选的巡检；下面的 **`/my-codebase-design`** 才是设计该候选的工作台。
-
-## 下层词汇
-
-两个可作为共用参考的 Skill 在其他 Skill 下方运行，各自是其词汇的唯一真相来源。当问题是**用词**而非流程时直接使用；否则由上层 Skill 拉入。
-
-- **`/my-domain-modeling`**——打磨项目的领域语言：挑战模糊术语、解决一词多义（如 “account” 承担三个含义），并把难以逆转的决策记录为 ADR。`/my-grill-with-docs` 用它维持干净术语表。
-- **`/my-codebase-design`**——深模块词汇（module、interface、depth、seam、adapter、leverage、locality），用于设计模块形状：在干净 seam 后以小接口隐藏大量行为。`/my-tdd` 与 `/my-improve-codebase-architecture` 都使用这些词。
-
-## 跨会话
-
-- **`/my-handoff`**——当线程已满或必须分支（例如进入 `/my-prototype` 会话）时，将当前对话压缩为 Markdown。不要原地继续；开启新会话并引用该文件来携带上下文。它是两个上下文窗口之间、两个方向均可用的桥梁。
-- **`/compact`**（内置）——留在**同一对话**，让较早回合被总结。只在阶段间的有意断点使用，并接受丢失逐字历史；不要在阶段中间 compact，否则 Agent 可能迷失。`/my-handoff` 是分叉；`/compact` 是延续。
-
-## 独立使用
-
-- **`/my-grill-me`**——与 `/my-grill-with-docs` 相同的高强度访谈，但用于**没有代码库**的场景。它无状态、不保存本地内容；适合打磨任何不属于仓库的计划或设计。
-- **`/my-review-design`**——对已形成的方案做一次性只读评审，检查待决策项、逻辑完整性、内部一致性、设计闭环和最终态表达；不修改文档，也不重新展开访谈。
-- **规则专项评审**——用 **`/my-reader-first-writing`** 检查文档是否服务目标读者，用 **`/my-final-state-writing review`** 检查是否只保留当前有效状态，用 **`/my-visual-communication review`** 检查图示选择与表达，用 **`/my-humanizer review`** 只读识别 AI 写作痕迹；写入、发布或交接承重文档前，用 **`/my-artifact-finalization`** 执行四项证据 gate。专项评审只报告有依据的问题，不修改原文。
-- **`/my-review-artifact`**——对同一固定版本的交付产物运行适用的质量方法，并把证据合并成一次综合只读审查。
-- **`/my-review-skill`**——先分诊一组 Skill，或对单个 Skill 做根本性只读审查；判断它应保留、重构、合并、外置、改由 runtime 执行还是退役。
-- **`/my-prototype`**——回答一个设计问题的小型一次性程序：这个状态模型是否合理，或 UI 应该是什么样。第一天起就把它视为可丢弃物：保留答案，删除代码。它是主流程第 2 步的绕行，也可用于任何难以在纸面定论的设计问题。
-- **`/my-research`**——把阅读工作委托给后台 Agent：它查阅一手来源，再在仓库留下带引用的 Markdown。阅读期间继续工作。其结果应带回 `/my-grill-with-docs` 主流程；研究为思考提供材料，不取代思考。
-- **`/my-teach`**——围绕当前目录这个有状态学习工作区跨会话学习概念。
-- **`/my-writing-great-skills`**——编写和编辑优秀 Skill 的参考。
-
-## 前置条件
-
-在首次工程流程前运行 **`/my-setup`**，配置其他工程 Skill 假设存在的 Tracker、triage 标签与文档布局。也支持自定义 Tracker。
+portfolio 还明确保留三个非路由入口：`my-install` 是行政入口，`my-requirement-analysis` 与 `my-tech-design` 是仅在用户明确选择时使用的 specialist。它们不会由本路由器暗中跳转。

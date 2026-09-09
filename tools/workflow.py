@@ -13,13 +13,19 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-from workflow_lib.installer import install_release
+from workflow_lib.installer import (
+    InstallError,
+    install_release,
+    load_install_state,
+    remove_verified_release,
+)
 from workflow_lib.check import CheckError, run_check
 from workflow_lib.behavior_evidence import (
     BehaviorEvidenceError,
     validate_behavior_evidence,
 )
 from workflow_lib.decision_gates import DECISION_CLASSES, resolve_decision_gate
+from workflow_lib.doctor import diagnose_repository
 from workflow_lib.evals import EvalError, run_scenario, validate_evals, validate_scenario_evidence
 from workflow_lib.profile import (
     ProfileError,
@@ -48,11 +54,15 @@ from workflow_lib.artifact_review import (
 from workflow_lib.run_journal import (
     RUN_PHASE_TRANSITIONS,
     RunJournalError,
+    build_code_receipt,
     build_run_context,
     close_implementation_session,
     implementation_work_unit,
+    open_review_evidence,
     open_implementation_session,
+    record_review_evidence,
     record_run,
+    run_test_evidence,
     start_run,
     submit_run_outcome,
 )
@@ -67,10 +77,11 @@ from workflow_lib.tickets import (
     TICKET_STATUS_TRANSITIONS,
     TicketError,
     implementation_ticket_ids,
+    ticket_scope_state,
     validate_ready_ticket,
     validate_ticket_transition,
 )
-from workflow_lib.transitions import ticket_transition
+from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
 
 
@@ -440,10 +451,14 @@ def command_smoke(args: argparse.Namespace) -> None:
     )
 
 
-def _run_all_up_gate(*, check_current_release: bool) -> dict[str, object]:
+def _run_all_up_gate(
+    *, check_current_release: bool, root: Path | None = None
+) -> dict[str, object]:
     """Run the authoritative source gate and render failures consistently."""
     try:
-        return run_check(ROOT, check_current_release=check_current_release)
+        return run_check(
+            (root or ROOT), check_current_release=check_current_release
+        )
     except CheckError as exc:
         print(json.dumps({"status": "invalid", "error": str(exc)}, ensure_ascii=False))
         raise SystemExit(1) from exc
@@ -453,6 +468,25 @@ def command_check(_: argparse.Namespace) -> None:
     """Run the one local all-up gate without depending on Git."""
     report = _run_all_up_gate(check_current_release=True)
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_doctor(args: argparse.Namespace) -> None:
+    """Report source, current release, and host deployment health independently."""
+    homes = (
+        {
+            f"custom-{index + 1}": Path(value).expanduser()
+            for index, value in enumerate(args.agent_home)
+        }
+        if args.agent_home
+        else dict(AGENT_STATE_HOMES)
+    )
+    print(
+        json.dumps(
+            diagnose_repository(ROOT, homes),
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    )
 
 
 def _write_current_release(path: Path, release_id: str) -> None:
@@ -482,7 +516,6 @@ def _write_current_release(path: Path, release_id: str) -> None:
 
 
 def command_build(args: argparse.Namespace) -> None:
-    _run_all_up_gate(check_current_release=False)
     _build_release(args)
 
 
@@ -495,8 +528,11 @@ def _build_release(args: argparse.Namespace) -> Path:
         release_id=release_id,
         upstream_id=args.upstream_id,
         repo_root=ROOT,
+        source_gate=lambda snapshot_root: _run_all_up_gate(
+            check_current_release=False, root=snapshot_root
+        ),
+        current_pointer=ROOT / "current.json",
     )
-    _write_current_release(ROOT / "current.json", release_id)
     print(release)
     return release
 
@@ -551,7 +587,13 @@ def command_decision_gate(args: argparse.Namespace) -> None:
 
 def command_validate_ticket(args: argparse.Namespace) -> None:
     try:
-        report = validate_ready_ticket(Path(args.path))
+        path = Path(args.path).resolve()
+        records, _ = ticket_scope_state(path.parent)
+        statuses = {
+            identifier: str(ticket.get("status"))
+            for identifier, (_, ticket) in records.items()
+        }
+        report = validate_ready_ticket(path, dependency_statuses=statuses)
     except TicketError as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(report, ensure_ascii=False))
@@ -575,10 +617,16 @@ def command_next_ticket(args: argparse.Namespace) -> None:
         profile, _ = parse_profile((repo / ".agent" / "matt-workflow.md").read_text())
         effective = effective_profile(profile)
         allowed_ids = set(args.allowed_id) if args.allowed_id else None
+        approved_scope = None
+        if args.scope_file:
+            scope_document = _read_result_object(args.scope_file, "approved scope")
+            embedded = scope_document.get("approved_scope")
+            approved_scope = embedded if isinstance(embedded, dict) else scope_document
         transition = ticket_transition(
             tickets_dir,
             work_scope_policy=effective["work_scope_policy"],
             allowed_ids=allowed_ids,
+            approved_scope=approved_scope,
             blocker=args.blocker,
         )
     except (OSError, ProfileError, TicketError) as exc:
@@ -598,7 +646,12 @@ def command_write_gate(args: argparse.Namespace) -> None:
     try:
         profile, _ = parse_profile((repo / ".agent" / "matt-workflow.md").read_text())
         gate = resolve_write_gate(
-            effective_profile(profile), kind=args.kind, approved_scope=args.approved_scope
+            effective_profile(profile),
+            kind=args.kind,
+            approved_scope=args.approved_scope,
+            target=args.target,
+            operation=args.operation,
+            scope_id=args.scope_id,
         )
     except (OSError, ProfileError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
@@ -612,9 +665,17 @@ def command_ticket_scope(args: argparse.Namespace) -> None:
     tickets_dir = Path(args.tickets_dir).resolve() if args.tickets_dir else repo / ".agent" / "work" / args.feature / "tickets"
     try:
         identifiers = implementation_ticket_ids(tickets_dir)
+        allowed = set(args.allowed_id) if args.allowed_id else set(identifiers)
+        scope = create_approved_scope(tickets_dir, allowed)
     except TicketError as exc:
         raise SystemExit(str(exc)) from exc
-    print(json.dumps({"ticket_ids": identifiers}, ensure_ascii=False, sort_keys=True))
+    print(
+        json.dumps(
+            {"ticket_ids": sorted(allowed), "approved_scope": scope},
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    )
 
 
 def command_review_snapshot(args: argparse.Namespace) -> None:
@@ -778,6 +839,46 @@ def command_run_record(args: argparse.Namespace) -> None:
     print(json.dumps({"status": "recorded", "run": journal}, ensure_ascii=False, sort_keys=True))
 
 
+def command_run_code_receipt(args: argparse.Namespace) -> None:
+    try:
+        receipt = build_code_receipt(Path(args.journal))
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
+
+
+def command_run_test_evidence(args: argparse.Namespace) -> None:
+    argv = list(args.command)
+    if argv[:1] == ["--"]:
+        argv = argv[1:]
+    try:
+        receipt = run_test_evidence(Path(args.journal), argv)
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
+
+
+def command_run_review_evidence(args: argparse.Namespace) -> None:
+    argv = list(args.command)
+    if argv[:1] == ["--"]:
+        argv = argv[1:]
+    try:
+        receipt = record_review_evidence(
+            Path(args.journal), Path(args.snapshot_dir), argv
+        )
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
+
+
+def command_run_review_open(args: argparse.Namespace) -> None:
+    try:
+        report = open_review_evidence(Path(args.journal))
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_deploy(args: argparse.Namespace) -> None:
     """Install the current content, creating a release only when it changed."""
     _run_all_up_gate(check_current_release=False)
@@ -818,17 +919,14 @@ def _release_ids_referenced_by(agent_homes: set[Path]) -> set[str]:
     referenced = {_current_release().name}
     for agent_home in agent_homes:
         state_path = agent_home / "my-matt-workflow" / "install-state.json"
-        if not state_path.exists():
-            continue
         try:
-            state = json.loads(state_path.read_text())
-        except json.JSONDecodeError as exc:
-            raise SystemExit(f"拒绝清理：安装状态无法读取：{state_path}") from exc
+            state = load_install_state(state_path)
+        except InstallError as exc:
+            raise SystemExit(f"拒绝清理：安装状态无效：{state_path}: {exc}") from exc
+        if state is None:
+            continue
         release_id = state.get("release_id")
-        if not isinstance(release_id, str) or not re.fullmatch(
-            r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", release_id
-        ):
-            raise SystemExit(f"拒绝清理：安装状态 release_id 无效：{state_path}")
+        assert isinstance(release_id, str)
         referenced.add(release_id)
     return referenced
 
@@ -853,7 +951,10 @@ def command_prune_releases(args: argparse.Namespace) -> None:
     }
     if args.apply:
         for path in candidates:
-            shutil.rmtree(path)
+            try:
+                remove_verified_release(ROOT / "releases", path)
+            except InstallError as exc:
+                raise SystemExit(f"拒绝清理 release {path.name}：{exc}") from exc
             report["deleted"].append(path.name)
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
@@ -945,6 +1046,10 @@ def parser() -> argparse.ArgumentParser:
     check = sub.add_parser("check")
     check.set_defaults(func=command_check)
 
+    doctor = sub.add_parser("doctor")
+    doctor.add_argument("--agent-home", action="append", default=[])
+    doctor.set_defaults(func=command_doctor)
+
     build = sub.add_parser("build")
     build.add_argument("--release-id")
     build.add_argument("--upstream-id", default="local-matt-skills")
@@ -990,6 +1095,7 @@ def parser() -> argparse.ArgumentParser:
     next_ticket.add_argument("--feature")
     next_ticket.add_argument("--tickets-dir")
     next_ticket.add_argument("--allowed-id", action="append", default=[])
+    next_ticket.add_argument("--scope-file")
     next_ticket.add_argument("--blocker")
     next_ticket.set_defaults(func=command_next_ticket)
 
@@ -997,12 +1103,16 @@ def parser() -> argparse.ArgumentParser:
     write_gate.add_argument("--repo", default=".")
     write_gate.add_argument("--kind", choices=["branch", "commit", "external", "docs"], required=True)
     write_gate.add_argument("--approved-scope", action="store_true")
+    write_gate.add_argument("--target")
+    write_gate.add_argument("--operation")
+    write_gate.add_argument("--scope-id")
     write_gate.set_defaults(func=command_write_gate)
 
     ticket_scope = sub.add_parser("ticket-scope")
     ticket_scope.add_argument("--repo", default=".")
     ticket_scope.add_argument("--feature")
     ticket_scope.add_argument("--tickets-dir")
+    ticket_scope.add_argument("--allowed-id", action="append", default=[])
     ticket_scope.set_defaults(func=command_ticket_scope)
 
     review_snapshot = sub.add_parser("review-snapshot")
@@ -1082,6 +1192,25 @@ def parser() -> argparse.ArgumentParser:
     run_record.add_argument("--review-receipt")
     run_record.add_argument("--blocker")
     run_record.set_defaults(func=command_run_record)
+
+    run_code_receipt = sub.add_parser("run-code-receipt")
+    run_code_receipt.add_argument("--journal", required=True)
+    run_code_receipt.set_defaults(func=command_run_code_receipt)
+
+    run_test_receipt = sub.add_parser("run-test-evidence")
+    run_test_receipt.add_argument("--journal", required=True)
+    run_test_receipt.add_argument("command", nargs=argparse.REMAINDER)
+    run_test_receipt.set_defaults(func=command_run_test_evidence)
+
+    run_review_receipt = sub.add_parser("run-review-evidence")
+    run_review_receipt.add_argument("--journal", required=True)
+    run_review_receipt.add_argument("--snapshot-dir", required=True)
+    run_review_receipt.add_argument("command", nargs=argparse.REMAINDER)
+    run_review_receipt.set_defaults(func=command_run_review_evidence)
+
+    run_review_open = sub.add_parser("run-review-open")
+    run_review_open.add_argument("--journal", required=True)
+    run_review_open.set_defaults(func=command_run_review_open)
 
     deploy = sub.add_parser("deploy")
     deploy.add_argument("--release-id")

@@ -99,13 +99,19 @@ def bundle_resources_for_skill(
     repo_root: Path,
     skill_name: str,
     target_skill_dir: Path,
+    *,
+    effective_consumers: dict[str, set[str]] | None = None,
 ) -> list[str]:
     """Bundle resources declared for one Skill into its staged directory."""
     root = repo_root.resolve()
     selected = [
         resource
-        for _, resource in sorted(manifest.resources.items())
-        if resource.consumers == "*" or skill_name in resource.consumers
+        for name, resource in sorted(manifest.resources.items())
+        if (
+            skill_name in effective_consumers[name]
+            if effective_consumers is not None
+            else resource.consumers == "*" or skill_name in resource.consumers
+        )
     ]
     operations: list[tuple[Path, Path]] = []
     for resource in selected:

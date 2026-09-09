@@ -16,6 +16,6 @@
   "evidence": {
     "version": 1,
     "scenario": "tdd-seam-pressure",
-    "sources": [{"path": "skills/my-tdd/SKILL.md", "sha256": "sha256:6ee40cc51cbdcef67e680d6fbee33e9583edd318467de3c0fb35f13db7575374"}]
+    "sources": [{"path": "skills/my-tdd/SKILL.md", "sha256": "sha256:a8ee3bfd8f045d710e8ecc63dae760699d057a9b15d014b2681e05a33adb3e6b"}]
   }
 }

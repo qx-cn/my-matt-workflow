@@ -16,6 +16,6 @@
   "evidence": {
     "version": 1,
     "scenario": "grilling-one-question-hitl",
-    "sources": [{"path": "skills/my-grilling/SKILL.md", "sha256": "sha256:a30f0ffe938a3e4bb67d6f239e36d01891a5ccab79970a3a0dec25fa5bc717c3"}]
+    "sources": [{"path": "skills/my-grilling/SKILL.md", "sha256": "sha256:65937b7496755f0bb5f10e1d5b089d3ade22185e49bb7438e714c6279dab5302"}]
   }
 }

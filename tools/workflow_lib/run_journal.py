@@ -6,6 +6,9 @@ import hashlib
 import json
 import os
 import re
+import secrets
+import shlex
+import shutil
 import subprocess
 import tempfile
 from datetime import datetime, timezone
@@ -13,8 +16,27 @@ from pathlib import Path
 
 from .profile import ProfileError, effective_profile, parse_profile
 from .rules import EXECUTION_AGENTS, RuleError, resolve_rules
-from .tickets import TicketError, eligible_local_tickets, frontmatter, validate_ready_ticket
+from .lifecycle import (
+    LifecycleError,
+    coordinate_lifecycle_update,
+    project_ticket,
+    recover_lifecycle_transactions,
+    ticket_lock,
+)
+from .tickets import (
+    TicketError,
+    eligible_local_tickets,
+    frontmatter,
+    ticket_definition_receipt,
+    validate_spec_lineage,
+)
 from .write_gates import resolve_write_gate
+from .fs_safety import (
+    FilesystemSafetyError,
+    quarantine_and_remove,
+    register_owned_directory,
+    verify_owned_directory,
+)
 
 
 class RunJournalError(ValueError):
@@ -38,7 +60,9 @@ IMPLEMENTATION_OUTCOMES = frozenset(
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
-def _source_receipt(repo: Path, path: Path, label: str) -> dict[str, object]:
+def _source_receipt(
+    repo: Path, path: Path, label: str, *, kind: str = "source"
+) -> dict[str, object]:
     resolved = path.resolve()
     try:
         relative = resolved.relative_to(repo)
@@ -49,11 +73,42 @@ def _source_receipt(repo: Path, path: Path, label: str) -> dict[str, object]:
     except OSError as exc:
         raise RunJournalError(f"无法读取 {label}：{resolved}") from exc
     return {
+        "kind": kind,
         "path": str(resolved),
         "repo_path": relative.as_posix(),
         "sha256": hashlib.sha256(content).hexdigest(),
         "size": len(content),
     }
+
+
+def _profile_sources(
+    repo: Path, profile_path: Path, profile: dict[str, object], rule_map: list[dict[str, object]]
+) -> list[dict[str, object]]:
+    receipts = [_source_receipt(repo, profile_path, "Profile", kind="profile")]
+    seen = {profile_path.resolve()}
+    inputs: list[tuple[str, object]] = [
+        ("rule", entry.get("source")) for entry in rule_map
+    ]
+    inputs.extend(
+        (kind, raw)
+        for kind, field in (
+            ("standard", "standards_sources"),
+            ("domain", "domain_sources"),
+        )
+        for raw in profile.get(field, [])
+    )
+    for kind, raw in inputs:
+        if not isinstance(raw, str) or not raw.strip():
+            raise RunJournalError(f"{kind} source 必须是非空仓库相对路径")
+        source = Path(raw)
+        if not source.is_absolute():
+            source = repo / source
+        resolved = source.resolve()
+        if resolved in seen:
+            continue
+        receipts.append(_source_receipt(repo, resolved, f"{kind} source", kind=kind))
+        seen.add(resolved)
+    return receipts
 
 
 def _git_sha(repo: Path, value: str) -> str:
@@ -110,9 +165,8 @@ def build_run_context(
     repo = repo.resolve()
     ticket_path, topic = _ticket_location(repo, ticket_path)
     try:
-        raw_profile, _ = parse_profile(
-            (repo / ".agent" / "matt-workflow.md").read_text(encoding="utf-8")
-        )
+        profile_path = repo / ".agent" / "matt-workflow.md"
+        raw_profile, _ = parse_profile(profile_path.read_text(encoding="utf-8"))
         profile = effective_profile(raw_profile)
         ticket = frontmatter(ticket_path)
     except (OSError, ProfileError, TicketError) as exc:
@@ -125,6 +179,12 @@ def build_run_context(
     missing = [field for field in required if ticket.get(field) in {None, ""}]
     if missing:
         raise RunJournalError(f"Ticket 缺少运行上下文字段：{', '.join(missing)}")
+    try:
+        lineage = validate_spec_lineage(ticket_path, ticket)
+    except TicketError as exc:
+        raise RunJournalError(str(exc)) from exc
+    if lineage is None:
+        raise RunJournalError("本地 Ticket 缺少可验证的 Spec lineage")
 
     gates = {
         kind: resolve_write_gate(profile, kind=kind).__dict__
@@ -143,14 +203,12 @@ def build_run_context(
         "path": str(ticket_path),
         "status": ticket["status"],
         "execution_agent": effective_agent,
-        "content": _source_receipt(repo, ticket_path, "Ticket"),
+        "definition": ticket_definition_receipt(ticket_path),
         "declared_scope": ticket.get("rule_scope", []),
     }
     if requested_agent is not None:
         ticket_context["requested_execution_agent"] = requested_agent
-    spec_path = Path(str(ticket["spec_ref"]))
-    if not spec_path.is_absolute():
-        spec_path = repo / spec_path
+    spec_path = Path(str(lineage["path"]))
     context: dict[str, object] = {
         "schema_version": 1,
         "repo": str(repo),
@@ -160,7 +218,7 @@ def build_run_context(
             "id": ticket["spec_id"],
             "revision": int(ticket["spec_revision"]),
             "ref": ticket["spec_ref"],
-            "content": _source_receipt(repo, spec_path, "Spec"),
+            "content": _source_receipt(repo, spec_path, "Spec", kind="spec"),
         },
         "base_sha": _git_sha(repo, base),
         "policies": {
@@ -174,9 +232,11 @@ def build_run_context(
         },
         "write_gates": gates,
         "test_commands": profile["test_commands"],
+        "review_commands": profile["review_commands"],
         "standards_sources": profile["standards_sources"],
         "domain_sources": profile["domain_sources"],
         "rule_map": rule_map,
+        "source_receipts": _profile_sources(repo, profile_path, profile, rule_map),
     }
     if parallel:
         context["parallel_mode"] = True
@@ -203,18 +263,45 @@ def _write_json_atomic(path: Path, value: dict[str, object]) -> None:
             temporary.unlink()
 
 
-def _journal_path(repo: Path, context: dict[str, object]) -> Path:
+def _journal_path(
+    repo: Path, context: dict[str, object], *, attempt_id: str | None = None
+) -> Path:
     ticket = context["ticket"]
     spec = context["spec"]
     assert isinstance(ticket, dict) and isinstance(spec, dict)
+    stem = f"run-{ticket['id']}-spec-r{spec['revision']}"
+    if attempt_id is not None:
+        stem += f"-attempt-{attempt_id}"
     return (
         repo.resolve()
         / ".agent"
         / "work"
         / str(context["topic"])
         / "runs"
-        / f"run-{ticket['id']}-spec-r{spec['revision']}.json"
+        / f"{stem}.json"
     )
+
+
+def _json_text(value: dict[str, object]) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+
+
+def _active_attempt(ticket_path: Path, ticket: dict[str, object]) -> tuple[Path, dict[str, object]] | None:
+    claimed_by = ticket.get("claimed_by")
+    identifier = ticket.get("id")
+    revision = ticket.get("spec_revision")
+    if not isinstance(claimed_by, str) or not claimed_by:
+        return None
+    runs = ticket_path.parent.parent / "runs"
+    pattern = f"run-{identifier}-spec-r{revision}*.json"
+    matches: list[tuple[Path, dict[str, object]]] = []
+    for path in sorted(runs.glob(pattern)) if runs.is_dir() else []:
+        journal = _load_journal(path)
+        if journal.get("attempt_id") == claimed_by and journal.get("submission") is None:
+            matches.append((path, journal))
+    if len(matches) > 1:
+        raise RunJournalError("同一 Ticket claim 对应多个活动 journal")
+    return matches[0] if matches else None
 
 
 def start_run(
@@ -224,45 +311,76 @@ def start_run(
     paths: list[str] | None = None,
     execution_agent: str | None = None,
     parallel: bool = False,
+    fail_after_claim_writes: int | None = None,
 ) -> tuple[Path, dict[str, object]]:
+    repo = repo.resolve()
+    ticket_path, topic = _ticket_location(repo, ticket_path)
     try:
-        admission = validate_ready_ticket(ticket_path)
-    except TicketError as exc:
-        raise RunJournalError(str(exc)) from exc
-    if admission["status"] != "ready":
-        raise RunJournalError("run-start 只接受 ready-for-agent 或 revalidated Ticket")
-    context = build_run_context(
-        repo, ticket_path, base, paths,
-        execution_agent=execution_agent, parallel=parallel,
-    )
-    ticket = context["ticket"]
-    assert isinstance(ticket, dict)
-    spec = context["spec"]
-    assert isinstance(spec, dict)
-    path = _journal_path(repo, context)
-    if path.exists():
-        existing = _load_journal(path)
-        existing_agent = existing.get("context", {}).get("ticket", {}).get("execution_agent")
-        if execution_agent is not None and existing_agent != execution_agent:
-            raise RunJournalError(
-                "run journal 已固定由 "
-                f"{existing_agent} 执行，当前 Agent 是 {execution_agent}"
+        with ticket_lock(repo, topic, str(frontmatter(ticket_path).get("id", ""))):
+            recover_lifecycle_transactions(
+                repo, topic=topic, ticket_id=str(frontmatter(ticket_path).get("id", ""))
             )
-        if existing.get("context", {}).get("context_id") != context["context_id"]:
-            raise RunJournalError(f"run journal 已存在且上下文不同：{path}")
-        return path, existing
-    now = datetime.now(timezone.utc).isoformat()
-    journal: dict[str, object] = {
-        "schema_version": 1,
-        "run_id": ticket["id"],
-        "phase": "admitted",
-        "context": context,
-        "receipts": {"test": None, "review": None},
-        "blocker": None,
-        "events": [{"phase": "admitted", "at": now}],
-    }
-    _write_json_atomic(path, journal)
-    return path, journal
+            ticket_metadata = frontmatter(ticket_path)
+            active = _active_attempt(ticket_path, ticket_metadata)
+            if active is not None:
+                existing_agent = active[1].get("context", {}).get("ticket", {}).get("execution_agent")
+                if execution_agent is not None and existing_agent != execution_agent:
+                    raise RunJournalError(
+                        "run journal 已固定由 "
+                        f"{existing_agent} 执行，当前 Agent 是 {execution_agent}"
+                    )
+                return active
+            eligible = {
+                candidate.path.resolve()
+                for candidate in eligible_local_tickets(ticket_path.parent)
+            }
+            if ticket_path not in eligible:
+                raise RunJournalError(
+                    "run-start Ticket 尚未解除阻塞、已被认领或没有未完成验收"
+                )
+            context = build_run_context(
+                repo, ticket_path, base, paths,
+                execution_agent=execution_agent, parallel=parallel,
+            )
+            ticket = context["ticket"]
+            assert isinstance(ticket, dict)
+            attempt_id = secrets.token_hex(16)
+            legacy_path = _journal_path(repo, context)
+            path = (
+                legacy_path if not legacy_path.exists()
+                else _journal_path(repo, context, attempt_id=attempt_id)
+            )
+            now = datetime.now(timezone.utc).isoformat()
+            journal: dict[str, object] = {
+                "schema_version": 2,
+                "run_id": ticket["id"],
+                "attempt_id": attempt_id,
+                "phase": "admitted",
+                "context": context,
+                "receipts": {"test": None, "review": None, "code": None},
+                "evidence": [],
+                "blocker": None,
+                "events": [{"phase": "admitted", "at": now}],
+            }
+            before_ticket = ticket_path.read_text(encoding="utf-8")
+            after_ticket = project_ticket(
+                before_ticket, status="implementing", claimed_by=attempt_id
+            )
+            coordinate_lifecycle_update(
+                repo,
+                topic=topic,
+                ticket_id=str(ticket["id"]),
+                attempt_id=attempt_id,
+                operation="claim",
+                updates=[
+                    (ticket_path, before_ticket, after_ticket),
+                    (path, "", _json_text(journal)),
+                ],
+                fail_after_writes=fail_after_claim_writes,
+            )
+            return path, journal
+    except (LifecycleError, TicketError) as exc:
+        raise RunJournalError(str(exc)) from exc
 
 
 def implementation_work_unit(
@@ -287,9 +405,11 @@ def implementation_work_unit(
         "base_sha": context.get("base_sha"),
         "rule_map": context.get("rule_map", []),
         "test_commands": context.get("test_commands", []),
+        "review_commands": context.get("review_commands", []),
         "source_receipts": {
-            "ticket": ticket.get("content"),
+            "ticket_definition": ticket.get("definition"),
             "spec": spec.get("content"),
+            "stable_sources": context.get("source_receipts", []),
         },
         "allowed_scope": {
             "paths": ticket.get("declared_scope", []),
@@ -319,75 +439,552 @@ def _load_journal(path: Path) -> dict[str, object]:
 
 
 def verify_run_sources(journal: dict[str, object]) -> None:
-    """Reject a submission when its fixed Ticket or Spec bytes changed."""
+    """Reject a submission when any stable work-unit source changed."""
     context = journal.get("context")
     if not isinstance(context, dict):
         raise RunJournalError("run journal context 无效")
     repo = Path(str(context.get("repo", ""))).resolve()
-    for label, key in (("Ticket", "ticket"), ("Spec", "spec")):
-        value = context.get(key)
-        receipt = value.get("content") if isinstance(value, dict) else None
-        if not isinstance(receipt, dict) or not isinstance(receipt.get("path"), str):
-            raise RunJournalError(f"run journal 缺少固定 {label} receipt")
-        current = _source_receipt(repo, Path(receipt["path"]), label)
-        if current.get("sha256") != receipt.get("sha256"):
-            raise RunJournalError(f"{label} 内容已变化；当前 work unit 已失效")
+    ticket = context.get("ticket")
+    receipt = ticket.get("definition") if isinstance(ticket, dict) else None
+    if not isinstance(receipt, dict) or not isinstance(receipt.get("path"), str):
+        raise RunJournalError("run journal 缺少固定 Ticket definition receipt")
+    current_definition = ticket_definition_receipt(Path(receipt["path"]))
+    if current_definition.get("sha256") != receipt.get("sha256"):
+        raise RunJournalError("Ticket definition 内容已变化；当前 work unit 已失效")
+
+    spec = context.get("spec")
+    spec_receipt = spec.get("content") if isinstance(spec, dict) else None
+    stable = context.get("source_receipts")
+    receipts = [spec_receipt, *(stable if isinstance(stable, list) else [])]
+    for source in receipts:
+        if not isinstance(source, dict) or not isinstance(source.get("path"), str):
+            raise RunJournalError("run journal 缺少固定 source receipt")
+        kind = str(source.get("kind", "source"))
+        current = _source_receipt(repo, Path(source["path"]), kind, kind=kind)
+        if current.get("sha256") != source.get("sha256") or current.get("size") != source.get("size"):
+            raise RunJournalError(f"{kind} 内容已变化；当前 work unit 已失效")
 
 
-def submit_run_outcome(path: Path, result: dict[str, object]) -> dict[str, object]:
+def _scope_files(repo: Path, paths: list[object]) -> list[Path]:
+    files: set[Path] = set()
+    for raw in paths:
+        if not isinstance(raw, str) or not raw:
+            raise RunJournalError("code scope 必须是非空仓库相对路径")
+        candidate = (repo / raw).resolve()
+        try:
+            candidate.relative_to(repo)
+        except ValueError as exc:
+            raise RunJournalError("code scope 越出仓库") from exc
+        if candidate.is_file():
+            files.add(candidate)
+        elif candidate.is_dir():
+            files.update(path for path in candidate.rglob("*") if path.is_file() and not path.is_symlink())
+        else:
+            raise RunJournalError(f"code scope 不存在：{raw}")
+    return sorted(files)
+
+
+def build_code_receipt(path: Path) -> dict[str, object]:
+    """Hash the current declared code scope for test/review binding."""
+    journal = _load_journal(path)
+    context = journal.get("context")
+    ticket = context.get("ticket") if isinstance(context, dict) else None
+    if not isinstance(context, dict) or not isinstance(ticket, dict):
+        raise RunJournalError("run journal context 无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    scope = ticket.get("declared_scope")
+    if not isinstance(scope, list) or not scope:
+        raise RunJournalError("Ticket 缺少 code scope")
+    sources = [
+        _source_receipt(repo, source, "code source", kind="code-source")
+        for source in _scope_files(repo, scope)
+    ]
+    encoded = json.dumps(sources, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return {
+        "kind": "code",
+        "content_id": hashlib.sha256(encoded.encode("utf-8")).hexdigest(),
+        "sources": sources,
+    }
+
+
+def _evidence_directory(path: Path) -> Path:
+    return path.parent / f"{path.stem}.evidence"
+
+
+def _persist_evidence(path: Path, record: dict[str, object]) -> dict[str, str]:
+    encoded = json.dumps(
+        record, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    evidence_id = hashlib.sha256(encoded).hexdigest()
+    destination = _evidence_directory(path) / f"{evidence_id}.json"
+    if destination.exists():
+        if destination.read_bytes() != encoded + b"\n":
+            raise RunJournalError("evidence id 冲突")
+    else:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        temporary = destination.parent / f".{evidence_id}.{secrets.token_hex(8)}.tmp"
+        try:
+            temporary.write_bytes(encoded + b"\n")
+            with temporary.open("rb") as handle:
+                os.fsync(handle.fileno())
+            os.replace(temporary, destination)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
+    receipt = {"kind": str(record["kind"]), "evidence_id": evidence_id}
+    journal = _load_journal(path)
+    context = journal.get("context")
+    topic = context.get("topic") if isinstance(context, dict) else None
+    ticket_id = journal.get("run_id")
+    if not isinstance(context, dict) or not isinstance(topic, str) or not isinstance(ticket_id, str):
+        raise RunJournalError("run journal evidence context 无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    try:
+        with ticket_lock(repo, topic, ticket_id):
+            journal = _load_journal(path)
+            registered = journal.get("evidence")
+            if not isinstance(registered, list):
+                raise RunJournalError("run journal evidence registry 无效")
+            if receipt not in registered:
+                registered.append(receipt)
+                _write_json_atomic(path, journal)
+    except LifecycleError as exc:
+        raise RunJournalError(str(exc)) from exc
+    return receipt
+
+
+def run_test_evidence(path: Path, argv: list[str]) -> dict[str, str]:
+    """Execute one declared test command and persist its runtime evidence."""
+    if not argv or any(not isinstance(value, str) or not value for value in argv):
+        raise RunJournalError("test evidence command 必须是非空 argv")
+    journal = _load_journal(path)
+    context = journal.get("context")
+    if not isinstance(context, dict):
+        raise RunJournalError("run journal context 无效")
+    allowed = context.get("test_commands")
+    if not isinstance(allowed, list) or argv not in [
+        shlex.split(command)
+        for command in allowed
+        if isinstance(command, str) and command.strip()
+    ]:
+        raise RunJournalError("test evidence command 未在 work unit 中声明")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    code = build_code_receipt(path)
+    completed = subprocess.run(argv, cwd=repo, capture_output=True, check=False)
+    record: dict[str, object] = {
+        "kind": "test",
+        "status": "pass" if completed.returncode == 0 else "fail",
+        "code_content_id": code["content_id"],
+        "argv": argv,
+        "exit_code": completed.returncode,
+        "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+        "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
+    }
+    return _persist_evidence(path, record)
+
+
+def open_review_evidence(path: Path) -> dict[str, object]:
+    """Create an owned immutable snapshot for an external code reviewer."""
+    journal = _load_journal(path)
+    context = journal.get("context")
+    if not isinstance(context, dict):
+        raise RunJournalError("run journal context 无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    code = build_code_receipt(path)
+    review_id = secrets.token_hex(16)
+    snapshot_root = _evidence_directory(path) / "review-snapshots"
+    snapshot_root.mkdir(parents=True, exist_ok=True)
+    snapshot_dir = Path(
+        tempfile.mkdtemp(prefix=f"review-{review_id}-", dir=snapshot_root)
+    )
+    frozen: list[dict[str, object]] = []
+    try:
+        for index, source in enumerate(code["sources"]):
+            if not isinstance(source, dict):
+                raise RunJournalError("code snapshot source 无效")
+            source_path = Path(str(source.get("path", "")))
+            target = snapshot_dir / f"{index:04d}-{source_path.name}"
+            shutil.copy2(source_path, target)
+            frozen.append({
+                "repo_path": source["repo_path"],
+                "snapshot_path": str(target),
+                "sha256": source["sha256"],
+                "size": source["size"],
+            })
+        unit = {
+            "kind": "code-review-snapshot",
+            "review_id": review_id,
+            "journal": str(path.resolve()),
+            "code_content_id": code["content_id"],
+            "artifacts": frozen,
+        }
+        marker = snapshot_dir / ".review-unit.json"
+        marker.write_text(
+            json.dumps(unit, ensure_ascii=False, sort_keys=True) + "\n"
+        )
+        for file in snapshot_dir.iterdir():
+            file.chmod(0o400)
+        snapshot_dir.chmod(0o500)
+        register_owned_directory(
+            snapshot_root, snapshot_dir, purpose="run-review-snapshot"
+        )
+    except Exception:
+        if snapshot_dir.exists():
+            snapshot_dir.chmod(0o700)
+            shutil.rmtree(snapshot_dir)
+        raise
+    return {
+        "status": "ready",
+        "review_id": review_id,
+        "snapshot_dir": str(snapshot_dir),
+        "code_content_id": code["content_id"],
+        "artifacts": frozen,
+    }
+
+
+def record_review_evidence(
+    path: Path, snapshot_dir: Path, argv: list[str]
+) -> dict[str, str]:
+    """Run a declared reviewer against an owned snapshot and register evidence."""
+    if not argv or any(not isinstance(value, str) or not value for value in argv):
+        raise RunJournalError("review evidence command 必须是非空 argv")
+    journal = _load_journal(path)
+    context = journal.get("context")
+    if not isinstance(context, dict):
+        raise RunJournalError("run journal context 无效")
+    allowed = context.get("review_commands")
+    if not isinstance(allowed, list) or argv not in [
+        shlex.split(command)
+        for command in allowed
+        if isinstance(command, str) and command.strip()
+    ]:
+        raise RunJournalError("review evidence command 未在 work unit 中声明")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    expected_root = (_evidence_directory(path) / "review-snapshots").resolve()
+    snapshot_dir = snapshot_dir.resolve()
+    if snapshot_dir.parent != expected_root:
+        raise RunJournalError("review snapshot 不属于当前 run")
+    try:
+        verify_owned_directory(
+            expected_root, snapshot_dir, purpose="run-review-snapshot"
+        )
+        unit = json.loads(
+            (snapshot_dir / ".review-unit.json").read_text()
+        )
+    except (OSError, json.JSONDecodeError, FilesystemSafetyError) as exc:
+        raise RunJournalError("review snapshot 无法验证") from exc
+    if (
+        not isinstance(unit, dict)
+        or set(unit) != {
+            "kind", "review_id", "journal", "code_content_id", "artifacts"
+        }
+        or unit.get("kind") != "code-review-snapshot"
+        or unit.get("journal") != str(path.resolve())
+        or not isinstance(unit.get("artifacts"), list)
+    ):
+        raise RunJournalError("review snapshot schema 无效")
+    code = build_code_receipt(path)
+    if unit.get("code_content_id") != code["content_id"]:
+        raise RunJournalError("review snapshot 与当前代码不匹配")
+    environment = os.environ.copy()
+    environment.update({
+        "MY_MATT_REVIEW_ID": str(unit["review_id"]),
+        "MY_MATT_REVIEW_SNAPSHOT": str(snapshot_dir),
+        "MY_MATT_CODE_CONTENT_ID": str(code["content_id"]),
+    })
+    completed = subprocess.run(
+        argv, cwd=repo, env=environment, capture_output=True, check=False
+    )
+    try:
+        result = json.loads(completed.stdout.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RunJournalError("review command 未输出有效 JSON") from exc
+    if (
+        not isinstance(result, dict)
+        or set(result) != {
+            "review_id", "status", "code_content_id", "findings"
+        }
+        or not isinstance(result.get("review_id"), str)
+        or not result["review_id"].strip()
+        or result.get("status") != "pass"
+        or result.get("findings") != []
+        or completed.returncode != 0
+    ):
+        raise RunJournalError("review command 结果或通过条件无效")
+    current_code = build_code_receipt(path)
+    if (
+        current_code["content_id"] != code["content_id"]
+        or result.get("code_content_id") != code["content_id"]
+        or result.get("review_id") != unit.get("review_id")
+    ):
+        raise RunJournalError("review result 与当前 review snapshot 不匹配")
+    for artifact in unit["artifacts"]:
+        if not isinstance(artifact, dict) or set(artifact) != {
+            "repo_path", "snapshot_path", "sha256", "size"
+        }:
+            raise RunJournalError("review snapshot inventory 无效")
+        frozen = Path(str(artifact["snapshot_path"]))
+        if frozen.parent.resolve() != snapshot_dir or not frozen.is_file():
+            raise RunJournalError("review snapshot 文件路径无效")
+        content = frozen.read_bytes()
+        if (
+            len(content) != artifact["size"]
+            or hashlib.sha256(content).hexdigest() != artifact["sha256"]
+        ):
+            raise RunJournalError("review snapshot bytes 已漂移")
+    result_path = _evidence_directory(path) / "review-results" / f"{unit['review_id']}.json"
+    if result_path.exists() or result_path.is_symlink():
+        raise RunJournalError("review result 目标已存在")
+    _write_json_atomic(result_path, result)
+    result_receipt = _source_receipt(
+        repo, result_path, "review result", kind="review-result"
+    )
+    record = {
+        "kind": "review",
+        "status": "pass",
+        "code_content_id": code["content_id"],
+        "review_id": unit["review_id"],
+        "snapshot_content_id": unit["code_content_id"],
+        "snapshot": unit,
+        "result": result_receipt,
+        "argv": argv,
+        "exit_code": completed.returncode,
+        "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+        "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
+    }
+    receipt = _persist_evidence(path, record)
+    try:
+        snapshot_dir.chmod(0o700)
+        quarantine_and_remove(
+            expected_root, snapshot_dir, purpose="run-review-snapshot"
+        )
+    except FilesystemSafetyError as exc:
+        raise RunJournalError("review snapshot 无法安全释放") from exc
+    return receipt
+
+
+def _load_evidence(path: Path, receipt: object, kind: str) -> dict[str, object]:
+    if (
+        not isinstance(receipt, dict)
+        or set(receipt) != {"kind", "evidence_id"}
+        or receipt.get("kind") != kind
+        or not isinstance(receipt.get("evidence_id"), str)
+        or not re.fullmatch(r"[0-9a-f]{64}", str(receipt["evidence_id"]))
+    ):
+        raise RunJournalError(
+            f"completed outcome 必须引用 runtime 生成的 {kind}_receipt"
+        )
+    evidence_id = str(receipt["evidence_id"])
+    journal = _load_journal(path)
+    registered = journal.get("evidence")
+    if not isinstance(registered, list) or receipt not in registered:
+        raise RunJournalError(f"{kind} evidence 未由 runtime 登记")
+    evidence_path = _evidence_directory(path) / f"{evidence_id}.json"
+    try:
+        raw = evidence_path.read_bytes()
+        record = json.loads(raw)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RunJournalError(f"{kind} evidence record 无法读取") from exc
+    canonical = json.dumps(
+        record, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    if raw != canonical + b"\n" or hashlib.sha256(canonical).hexdigest() != evidence_id:
+        raise RunJournalError(f"{kind} evidence record 已漂移")
+    return record
+
+
+def _validate_completion_receipts(
+    path: Path, test: object, review: object, code: object
+) -> None:
+    if not isinstance(code, dict) or code.get("kind") != "code":
+        raise RunJournalError("completed outcome 必须包含结构化 code_receipt")
+    current = build_code_receipt(path)
+    if code != current:
+        raise RunJournalError("code receipt 与当前声明范围不匹配")
+    content_id = current["content_id"]
+    test_evidence = _load_evidence(path, test, "test")
+    if not (
+        test_evidence.get("status") == "pass"
+        and test_evidence.get("exit_code") == 0
+        and test_evidence.get("code_content_id") == content_id
+        and isinstance(test_evidence.get("argv"), list)
+        and all(isinstance(value, str) and value for value in test_evidence["argv"])
+        and all(
+            isinstance(test_evidence.get(field), str)
+            and re.fullmatch(r"[0-9a-f]{64}", str(test_evidence[field]))
+            for field in ("stdout_sha256", "stderr_sha256")
+        )
+    ):
+        raise RunJournalError("completed outcome 必须包含与当前代码绑定的结构化 test_receipt")
+    review_evidence = _load_evidence(path, review, "review")
+    if not (
+        review_evidence.get("status") == "pass"
+        and review_evidence.get("exit_code") == 0
+        and review_evidence.get("code_content_id") == content_id
+        and isinstance(review_evidence.get("review_id"), str)
+        and bool(str(review_evidence.get("review_id")).strip())
+        and isinstance(review_evidence.get("snapshot_content_id"), str)
+        and isinstance(review_evidence.get("result"), dict)
+        and isinstance(review_evidence.get("argv"), list)
+        and all(
+            isinstance(review_evidence.get(field), str)
+            and re.fullmatch(r"[0-9a-f]{64}", str(review_evidence[field]))
+            for field in ("stdout_sha256", "stderr_sha256")
+        )
+    ):
+        raise RunJournalError("completed outcome 必须包含与当前代码绑定的结构化 review_receipt")
+    journal = _load_journal(path)
+    context = journal.get("context")
+    result_receipt = review_evidence["result"]
+    if not isinstance(context, dict) or not isinstance(result_receipt, dict):
+        raise RunJournalError("review evidence context 无效")
+    allowed = context.get("review_commands")
+    if not isinstance(allowed, list) or review_evidence["argv"] not in [
+        shlex.split(command)
+        for command in allowed
+        if isinstance(command, str) and command.strip()
+    ]:
+        raise RunJournalError("review evidence command 未由当前 work unit 声明")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    current_result = _source_receipt(
+        repo,
+        Path(str(result_receipt.get("path", ""))),
+        "review result",
+        kind="review-result",
+    )
+    if current_result != result_receipt:
+        raise RunJournalError("review result 内容已变化")
+    try:
+        result = json.loads(Path(str(result_receipt["path"])).read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RunJournalError("review result 无法重验") from exc
+    if (
+        not isinstance(result, dict)
+        or set(result) != {"review_id", "status", "code_content_id", "findings"}
+        or result.get("review_id") != review_evidence.get("review_id")
+        or result.get("status") != "pass"
+        or result.get("code_content_id") != content_id
+        or result.get("findings") != []
+    ):
+        raise RunJournalError("review result 与 evidence 不匹配")
+    if current["content_id"] != review_evidence["snapshot_content_id"]:
+        raise RunJournalError("review snapshot 内容已变化")
+
+
+def submit_run_outcome(
+    path: Path,
+    result: dict[str, object],
+    *,
+    fail_after_writes: int | None = None,
+) -> dict[str, object]:
     """Validate and persist the semantic outcome returned by my-implement."""
-    expected_fields = {"outcome", "test_receipt", "review_receipt", "blocker"}
+    expected_fields = {"outcome", "test_receipt", "review_receipt", "code_receipt", "blocker"}
     if set(result) != expected_fields:
         raise RunJournalError("implementation result 字段无效")
     outcome = result.get("outcome")
     if outcome not in IMPLEMENTATION_OUTCOMES:
         raise RunJournalError(f"未知 implementation outcome：{outcome}")
-    journal = _load_journal(path)
-    if journal.get("submission") is not None:
-        raise RunJournalError("run journal 已提交 outcome")
-    verify_run_sources(journal)
+    initial = _load_journal(path)
+    context = initial.get("context")
+    ticket_context = context.get("ticket") if isinstance(context, dict) else None
+    if not isinstance(context, dict) or not isinstance(ticket_context, dict):
+        raise RunJournalError("run journal context 无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    ticket_path = Path(str(ticket_context.get("path", ""))).resolve()
+    ticket_path, topic = _ticket_location(repo, ticket_path)
+    attempt_id = initial.get("attempt_id")
+    ticket_id = initial.get("run_id")
+    if not isinstance(attempt_id, str) or not _SAFE_ID.fullmatch(attempt_id):
+        raise RunJournalError("run journal attempt_id 无效")
+    if not isinstance(ticket_id, str) or not _SAFE_ID.fullmatch(ticket_id):
+        raise RunJournalError("run journal run_id 无效")
 
-    test_receipt = result.get("test_receipt")
-    review_receipt = result.get("review_receipt")
-    blocker = result.get("blocker")
-    if outcome == "completed":
-        if not isinstance(test_receipt, str) or not test_receipt.strip():
-            raise RunJournalError("completed outcome 必须包含 test_receipt")
-        if not isinstance(review_receipt, str) or not review_receipt.strip():
-            raise RunJournalError("completed outcome 必须包含 review_receipt")
-        if blocker not in {None, ""}:
-            raise RunJournalError("completed outcome 不得包含 blocker")
-    else:
-        if not isinstance(blocker, str) or not blocker.strip():
-            raise RunJournalError(f"{outcome} 必须包含 blocker")
+    try:
+        with ticket_lock(repo, topic, ticket_id):
+            recover_lifecycle_transactions(repo, topic=topic, ticket_id=ticket_id)
+            journal = _load_journal(path)
+            if journal.get("submission") is not None:
+                raise RunJournalError("run journal 已提交 outcome")
+            verify_run_sources(journal)
 
-    now = datetime.now(timezone.utc).isoformat()
-    submission = {
-        "outcome": outcome,
-        "test_receipt": test_receipt,
-        "review_receipt": review_receipt,
-        "blocker": blocker,
-        "at": now,
-    }
-    journal["submission"] = submission
-    journal["phase"] = "complete" if outcome == "completed" else outcome
-    receipts = journal.get("receipts")
-    if not isinstance(receipts, dict):
-        raise RunJournalError("run journal receipts 无效")
-    receipts["test"] = test_receipt
-    receipts["review"] = review_receipt
-    journal["blocker"] = blocker
-    events = journal.get("events")
-    if not isinstance(events, list):
-        raise RunJournalError("run journal events 无效")
-    events.append({"phase": journal["phase"], "outcome": outcome, "at": now})
-    _write_json_atomic(path, journal)
-    return {
-        "status": "accepted",
-        "outcome": outcome,
-        "next_action": "complete" if outcome == "completed" else "pause",
-        "run": journal,
-    }
+            test_receipt = result.get("test_receipt")
+            review_receipt = result.get("review_receipt")
+            code_receipt = result.get("code_receipt")
+            blocker = result.get("blocker")
+            current_phase = journal.get("phase")
+            terminal_phase = "complete" if outcome == "completed" else outcome
+            if outcome == "completed" and current_phase != "committing":
+                raise RunJournalError("completed outcome 只能从 committing phase 提交")
+            if current_phase not in RUN_PHASE_TRANSITIONS or terminal_phase not in RUN_PHASE_TRANSITIONS[current_phase]:
+                raise RunJournalError(
+                    f"非法 run outcome phase 迁移：{current_phase} -> {terminal_phase}"
+                )
+            if outcome == "completed":
+                _validate_completion_receipts(path, test_receipt, review_receipt, code_receipt)
+                if blocker not in {None, ""}:
+                    raise RunJournalError("completed outcome 不得包含 blocker")
+            elif not isinstance(blocker, str) or not blocker.strip():
+                raise RunJournalError(f"{outcome} 必须包含 blocker")
+
+            metadata = frontmatter(ticket_path)
+            if metadata.get("status") != "implementing" or metadata.get("claimed_by") != attempt_id:
+                raise RunJournalError("Ticket mutable projection 与当前 attempt 不匹配")
+            now = datetime.now(timezone.utc).isoformat()
+            submission = {
+                "outcome": outcome,
+                "test_receipt": test_receipt,
+                "review_receipt": review_receipt,
+                "code_receipt": code_receipt,
+                "blocker": blocker,
+                "at": now,
+            }
+            updated = json.loads(json.dumps(journal))
+            updated["submission"] = submission
+            updated["phase"] = terminal_phase
+            receipts = updated.get("receipts")
+            if not isinstance(receipts, dict):
+                raise RunJournalError("run journal receipts 无效")
+            receipts.update(
+                {"test": test_receipt, "review": review_receipt, "code": code_receipt}
+            )
+            updated["blocker"] = blocker
+            events = updated.get("events")
+            if not isinstance(events, list):
+                raise RunJournalError("run journal events 无效")
+            events.append({"phase": terminal_phase, "outcome": outcome, "at": now})
+
+            before_ticket = ticket_path.read_text(encoding="utf-8")
+            ticket_status = {
+                "completed": "complete",
+                "blocked-by-design": "blocked-by-design",
+                "blocked-by-evidence": "ready-for-agent",
+            }[str(outcome)]
+            after_ticket = project_ticket(
+                before_ticket,
+                status=ticket_status,
+                claimed_by="",
+                complete_acceptance=outcome == "completed",
+            )
+            coordinate_lifecycle_update(
+                repo,
+                topic=topic,
+                ticket_id=ticket_id,
+                attempt_id=attempt_id,
+                operation="submit",
+                updates=[
+                    (ticket_path, before_ticket, after_ticket),
+                    (path, _json_text(journal), _json_text(updated)),
+                ],
+                fail_after_writes=fail_after_writes,
+            )
+            return {
+                "status": "accepted",
+                "outcome": outcome,
+                "next_action": "complete" if outcome == "completed" else "pause",
+                "run": updated,
+            }
+    except LifecycleError as exc:
+        raise RunJournalError(str(exc)) from exc
 
 
 def _concrete_scope(ticket: dict[str, object]) -> tuple[str, ...]:
@@ -465,12 +1062,6 @@ def open_implementation_session(
 
     preflight: list[tuple[Path, dict[str, object]]] = []
     for ticket_path in resolved_paths:
-        try:
-            admission = validate_ready_ticket(ticket_path)
-        except TicketError as exc:
-            raise RunJournalError(str(exc)) from exc
-        if admission["status"] != "ready":
-            raise RunJournalError("implementation-open 只接受 ready-for-agent 或 revalidated Ticket")
         context = build_run_context(
             repo,
             ticket_path,
@@ -479,13 +1070,6 @@ def open_implementation_session(
             execution_agent=execution_agent,
             parallel=parallel,
         )
-        existing_path = _journal_path(repo, context)
-        if existing_path.exists():
-            existing = _load_journal(existing_path)
-            if existing.get("context", {}).get("context_id") != context["context_id"]:
-                raise RunJournalError(f"run journal 已存在且上下文不同：{existing_path}")
-            if existing.get("submission") is not None:
-                raise RunJournalError(f"implementation lane 已提交：{existing_path}")
         preflight.append((ticket_path, context))
 
     lanes: list[dict[str, object]] = []
@@ -577,34 +1161,48 @@ def record_run(
     blocker: str | None = None,
 ) -> dict[str, object]:
     """Record one validated phase transition and optional evidence receipts."""
-    journal = _load_journal(path)
-    current = journal.get("phase")
-    if current not in RUN_PHASE_TRANSITIONS or phase not in RUN_PHASE_TRANSITIONS[current]:
-        raise RunJournalError(f"非法 run phase 迁移：{current} -> {phase}")
-    if phase == "blocked-by-design" and not blocker:
-        raise RunJournalError("进入 blocked-by-design 必须记录 blocker")
-    receipts = journal.get("receipts")
-    if not isinstance(receipts, dict):
-        raise RunJournalError("run journal receipts 无效")
-    if test_receipt is not None:
-        receipts["test"] = test_receipt
-    if review_receipt is not None:
-        receipts["review"] = review_receipt
-    journal["phase"] = phase
-    journal["blocker"] = blocker if phase == "blocked-by-design" else None
-    events = journal.get("events")
-    if not isinstance(events, list):
-        raise RunJournalError("run journal events 无效")
-    event: dict[str, object] = {
-        "phase": phase,
-        "at": datetime.now(timezone.utc).isoformat(),
-    }
-    if blocker:
-        event["blocker"] = blocker
-    if test_receipt is not None:
-        event["test_receipt"] = test_receipt
-    if review_receipt is not None:
-        event["review_receipt"] = review_receipt
-    events.append(event)
-    _write_json_atomic(path, journal)
-    return journal
+    initial = _load_journal(path)
+    context = initial.get("context")
+    if not isinstance(context, dict):
+        raise RunJournalError("run journal context 无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    topic = context.get("topic")
+    ticket_id = initial.get("run_id")
+    if not isinstance(topic, str) or not isinstance(ticket_id, str):
+        raise RunJournalError("run journal topic 或 run_id 无效")
+    try:
+        with ticket_lock(repo, topic, ticket_id):
+            recover_lifecycle_transactions(repo, topic=topic, ticket_id=ticket_id)
+            journal = _load_journal(path)
+            current = journal.get("phase")
+            if current not in RUN_PHASE_TRANSITIONS or phase not in RUN_PHASE_TRANSITIONS[current]:
+                raise RunJournalError(f"非法 run phase 迁移：{current} -> {phase}")
+            if phase == "blocked-by-design" and not blocker:
+                raise RunJournalError("进入 blocked-by-design 必须记录 blocker")
+            receipts = journal.get("receipts")
+            if not isinstance(receipts, dict):
+                raise RunJournalError("run journal receipts 无效")
+            if test_receipt is not None:
+                receipts["test"] = test_receipt
+            if review_receipt is not None:
+                receipts["review"] = review_receipt
+            journal["phase"] = phase
+            journal["blocker"] = blocker if phase == "blocked-by-design" else None
+            events = journal.get("events")
+            if not isinstance(events, list):
+                raise RunJournalError("run journal events 无效")
+            event: dict[str, object] = {
+                "phase": phase,
+                "at": datetime.now(timezone.utc).isoformat(),
+            }
+            if blocker:
+                event["blocker"] = blocker
+            if test_receipt is not None:
+                event["test_receipt"] = test_receipt
+            if review_receipt is not None:
+                event["review_receipt"] = review_receipt
+            events.append(event)
+            _write_json_atomic(path, journal)
+            return journal
+    except LifecycleError as exc:
+        raise RunJournalError(str(exc)) from exc

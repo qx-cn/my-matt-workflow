@@ -1,6 +1,6 @@
 ---
 name: my-review-design
-description: 对已形成的技术方案或设计文档进行一次性只读评审；用于要求 review 已完成方案，检查待决策项、逻辑缺口、内部冲突、设计闭环或最终态表达时。不用于访谈、改写文档或代码 diff review。
+description: 对已形成的技术方案或设计文档进行一次性只读评审。
 disable-model-invocation: true
 ---
 

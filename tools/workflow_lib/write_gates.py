@@ -21,7 +21,14 @@ class WriteGate:
 
 
 def resolve_write_gate(
-    profile: dict[str, object], *, kind: str, approved_scope: bool = False
+    profile: dict[str, object],
+    *,
+    kind: str,
+    approved_scope: bool = False,
+    confirmation_receipt: dict[str, object] | None = None,
+    target: str | None = None,
+    operation: str | None = None,
+    scope_id: str | None = None,
 ) -> WriteGate:
     """Resolve one write without performing it.
 
@@ -37,8 +44,29 @@ def resolve_write_gate(
         raise ValueError(f"{field} 无效：{policy!r}")
     if policy == "deny":
         return WriteGate("deny", field, "policy-deny")
-    if kind == "external" and policy == "allow" and not approved_scope:
-        return WriteGate("pause", field, "new-external-authorization")
+    if kind == "external" and policy == "allow":
+        expected = {
+            "kind": "external",
+            "target": target,
+            "operation": operation,
+            "scope_id": scope_id,
+        }
+        trusted = (
+            isinstance(confirmation_receipt, dict)
+            and confirmation_receipt.get("receipt_kind") == "host-confirmation"
+            and confirmation_receipt.get("trusted_by") == "host"
+            and all(expected[key] is not None for key in expected)
+            and all(confirmation_receipt.get(key) == value for key, value in expected.items())
+            and isinstance(confirmation_receipt.get("confirmation_id"), str)
+            and bool(str(confirmation_receipt.get("confirmation_id")).strip())
+        )
+        if not trusted:
+            reason = (
+                "boolean-approved-scope-is-not-authorization"
+                if approved_scope
+                else "new-external-authorization"
+            )
+            return WriteGate("pause", field, reason)
     if policy == "confirm":
         return WriteGate("confirm", field, "policy-confirm")
     return WriteGate("allow", field, "policy-allow")

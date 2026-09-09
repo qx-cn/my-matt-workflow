@@ -1,6 +1,6 @@
 ---
 name: my-reader-first-writing
-description: 只读审查面向人类的文档是否围绕目标读者的决定或动作组织；用于发现背景失焦、关键信息难找或表达形式不匹配。
+description: 只读审查面向人类的文档是否围绕目标读者的决定或动作组织。
 disable-model-invocation: true
 ---
 

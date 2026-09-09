@@ -2,7 +2,7 @@
 
 ## Good Tests
 
-**Integration-style**: Test through real interfaces, not mocks of internal parts.
+**Integration-style**: Test through a stable behavior seam, not private implementation details.
 
 ```typescript
 // GOOD: Tests observable behavior
@@ -17,7 +17,7 @@ test("user can checkout with valid cart", async () => {
 Characteristics:
 
 - Tests behavior users/callers care about
-- Uses public API only
+- Uses a public interface or the module boundary under test
 - Survives internal refactors
 - Describes WHAT, not HOW
 - One logical assertion per test

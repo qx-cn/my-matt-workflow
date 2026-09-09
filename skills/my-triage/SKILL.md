@@ -42,28 +42,18 @@ disable-model-invocation: true
 
 每个已分诊的 Issue 都应恰好带有一个类别角色和一个状态角色。如果状态角色冲突，先标出冲突并询问维护者，不得执行其他操作。
 
-这些是规范角色名称——Issue 跟踪器中实际使用的标签字符串可能不同。映射应已提供给你；若未提供，请运行 `/setup-matt-pocock-skills`。
+这些是规范角色名称——Issue 跟踪器中实际使用的标签字符串可能不同。映射应已提供给你；若未提供，请运行 `{{skill-call:my-setup}}`。
 
 状态转换：未标记的 Issue 通常先进入 `needs-triage`；随后可转为 `needs-info`、`ready-for-agent`、`ready-for-human` 或 `wontfix`。报告者回复后，`needs-info` 返回 `needs-triage`。维护者可随时覆盖——标出看起来异常的转换，并在继续前询问。
 
-## 本地 Ticket 门卫
+## 后端边界
 
-`my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 只保留为用户决策，也不进入 triage。若分诊结果需要保存到本地，使用以下 `ready-for-agent` 模板，且只在维护者确认分类和状态后写入：
+`my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 也不进入 triage。
 
-```yaml
----
-id: <topic>-<NN>
-title: <可执行标题>
-ticket_kind: implementation
-status: ready-for-agent
-blocked_by: []
-claimed_by:
-tags: []
-sequence: <NN>
----
-```
+- **外部 Tracker**：保留 Tracker 原生的类别、状态、评论与 Agent brief；`ready-for-agent` 仍表示该外部事项已附上可执行简报。
+- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。随后读取 [my-to-tickets handoff 正文](references/composed/my-to-tickets/COMPOSED.md)；需要跨会话时输出 `{{skill-call:my-to-tickets}}` 并停止。`my-to-tickets` 负责生成具有完整 Spec/rules/agent/acceptance lineage 的 Ticket。
 
-`blocked_by` 必须是 YAML 列表；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。可实现性、引用与完成门槛均由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断。
+读取既有本地 Ticket 时按 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。
 
 ## 调用
 
@@ -91,7 +81,7 @@ sequence: <NN>
 1. **收集上下文。** 阅读完整的 Issue 或 PR（正文、评论、标签、作者、日期；PR 还要读 diff）。解析既有分诊记录，避免重新询问已解决的问题。借助项目的领域词汇表探索代码库，遵循该区域的 ADR。对代码库执行两项检查：(a) **冗余性**——按领域概念（而不只是请求的措辞）搜索是否已有请求行为的实现，并报告搜索位置。若已存在，它是“已实现”的 `wontfix`（步骤 5）。(b) **既往拒绝**——阅读 `.out-of-scope/*.md`，并找出与本请求相似的记录。
 2. **提出建议。** 告知维护者类别和状态建议及理由，并给出与请求相关的简要代码库摘要——包括是否已实现。等待指示。
 3. **验证主张。** 在追问前，先检查主张是否成立。对于 Bug，按报告者的步骤复现。对于 PR，确认 diff 是否实现其声称的内容——检出它，并运行相关测试或命令。报告结果：已确认（附代码路径）、失败，或细节不足（这是强烈的 `needs-info` 信号）。已确认的验证会形成更有力的 Agent 简报。
-4. **追问（如需要）。** 若请求还需充实，同时运行 `/grilling` 与 `/domain-modeling` Skill——每次提出一个问题以将其打磨清楚，明确领域术语，并在决策达成时内联更新 `CONTEXT.md`/ADR。
+4. **追问（如需要）。** 若请求还需充实，读取 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 与 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
 5. **应用结果：**
    - `ready-for-agent` —— 发布 Agent 简报评论（[AGENT-BRIEF.md](AGENT-BRIEF.md)）。
    - `ready-for-human` —— 使用与 Agent 简报相同的结构，但说明为何不可委派（判断调用、外部访问、设计决策、手动测试）。

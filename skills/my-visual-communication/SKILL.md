@@ -1,6 +1,6 @@
 ---
 name: my-visual-communication
-description: 审查或改进面向人类文档的视觉表达；用于判断复杂关系是否需要图示，以及现有图表是否恰当、必要且可理解。
+description: 审查或改进面向人类文档中的视觉表达与图示。
 disable-model-invocation: true
 ---
 
