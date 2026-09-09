@@ -60,6 +60,8 @@ disable-model-invocation: true
 - 不是猜测、无影响的 style nit、工具已覆盖事项或明确的有意行为；
 - 作者知道后大概率会修复。
 
+`change-only` finding 还必须证明失败场景能从 review unit 的正式 `base_sha` 到当前快照到达；不得把同一未提交工作树的中间 schema、临时迁移或已被替换的施工状态当作受支持来源。无法证明正式基线可达时降为 `inconclusive`，不下 blocker 结论。
+
 严重度使用 `P0`（安全越权、数据丢失或破坏、不可恢复故障或核心路径普遍失败）、`P1`（合并前应修复的真实 Bug 或需求偏差）、`P2`（值得修复的局部缺陷或维护/测试风险）；P0/P1 是 blocker。置信度只用 `high` / `medium`，低置信度候选不进入 findings；仅当证据缺口影响合并判断时，才在结尾写简短 residual risk。
 
 双遍审查完成后按主要原因归类：没有 Spec 也成立的实现或工程问题归 Code；必须依据 Spec 才成立的遗漏、错误需求行为或范围蔓延归 Spec。同一失败链只保留最接近根因的一项，另一维不重复。
@@ -78,4 +80,4 @@ disable-model-invocation: true
 一个短段落，包含失败场景或不变量、Spec 证据、影响及最小验证方式。
 ```
 
-无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。
+无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。作为 `my-implement` 方法时，同时返回 runtime 要求的结构化条目：稳定 `id`、根因、severity、摘要与正式基线可达性；证据不足项使用 `inconclusive`。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。

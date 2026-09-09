@@ -18,11 +18,17 @@ python3 <runtime_entry> run-record <journal> --phase reviewing
 python3 <runtime_entry> run-code-receipt --journal <journal>
 python3 <runtime_entry> run-review-open --journal <journal>
 python3 <runtime_entry> run-test-evidence --journal <journal> -- <declared test argv...>
+python3 <runtime_entry> run-review-submit --journal <journal> --snapshot-dir <review-snapshot-dir> --result-file <json>
+# 或由已配置的独立执行适配器完成：
 python3 <runtime_entry> run-review-evidence --journal <journal> --snapshot-dir <review-snapshot-dir> -- <declared-review-command>
 python3 <runtime_entry> run-record <journal> --phase committing
 ```
 
-`run-code-receipt` 对 Ticket 声明的 `rule_scope` 生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope，固定语义方法为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。`run-review-evidence` 不接受调用者提供的结果文件，只执行 profile 的 `review_commands` 中预先声明的执行适配器，并通过环境变量 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID` 传入审查单元。命令 stdout 继续使用兼容协议，只精确包含 `review_id/status/code_content_id/findings`；语义方法由 runtime 固定并写入 review unit 与 evidence record，不由命令自报。只有 ownership、snapshot bytes、真实进程退出码、随机 review id、当前代码、`status: pass` 与空 findings 全部匹配时才登记并释放 snapshot。代码、runtime 保存的结果或 evidence record 再次变化都会使提交失效。
+`run-code-receipt` 对 Ticket 声明的 `rule_scope`（含 `**` 等 glob）生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope 及其固定基线副本，语义方法由 runtime 固定为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。
+
+宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT` 和 `MY_MATT_CODE_CONTENT_ID` 传递固定单元。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive`；非 pass 的 `findings` 条目包含 `id/root_cause/severity/summary/baseline_reachable`，其中确定 finding 必须能从固定基线到当前快照证明，无法证明时用 `inconclusive` 且不声明 severity。
+
+runtime 登记每轮结果并在所有终态释放 snapshot。`findings` 自动把 journal 返回 `implementing`；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design` 建议，要求先检查设计不变量；`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。代码、结果或 evidence record 再次变化都会使提交失效。
 
 每个 lane 结束时，把下面的 JSON 保存为文件并提交：
 

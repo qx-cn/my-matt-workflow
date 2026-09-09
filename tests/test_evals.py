@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 12,
-                "required_scenarios": 11,
+                "scenarios": 14,
+                "required_scenarios": 13,
             },
             validate_evals(ROOT),
         )

@@ -20,6 +20,7 @@ from tools.workflow_lib.run_journal import (
     record_run,
     run_test_evidence,
     start_run,
+    submit_review_result,
     submit_run_outcome,
 )
 
@@ -41,13 +42,13 @@ class RunJournalTests(unittest.TestCase):
         code = build_code_receipt(path)
         test = run_test_evidence(path, ["python3", "-c", "pass"])
         review_unit = open_review_evidence(path)
-        review = record_review_evidence(
+        review_report = record_review_evidence(
             path, Path(str(review_unit["snapshot_dir"])), REVIEW_ARGV
         )
         return {
             "outcome": "completed",
             "test_receipt": test,
-            "review_receipt": review,
+            "review_receipt": review_report["review_receipt"],
             "code_receipt": code,
             "blocker": None,
         }
@@ -436,6 +437,8 @@ class RunJournalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
             path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
             unit = open_review_evidence(path)
 
             with self.assertRaisesRegex(RunJournalError, "未在 work unit 中声明"):
@@ -449,15 +452,19 @@ class RunJournalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
             path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
             unit = open_review_evidence(path)
             self.assertEqual("my-code-review", unit["method"])
             marker = json.loads(
                 (Path(str(unit["snapshot_dir"])) / ".review-unit.json").read_text()
             )
             self.assertEqual("my-code-review", marker["method"])
-            receipt = record_review_evidence(
+            report = record_review_evidence(
                 path, Path(str(unit["snapshot_dir"])), REVIEW_ARGV
             )
+            receipt = report["review_receipt"]
+            self.assertIsNotNone(receipt)
             evidence = json.loads(
                 (
                     path.parent
@@ -466,6 +473,137 @@ class RunJournalTests(unittest.TestCase):
                 ).read_text()
             )
             self.assertEqual("my-code-review", evidence["method"])
+
+    def test_host_review_findings_are_persisted_release_snapshot_and_return_to_implementation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            result = {
+                "review_id": unit["review_id"],
+                "status": "findings",
+                "code_content_id": unit["code_content_id"],
+                "findings": [{
+                    "id": "state-fence-1",
+                    "root_cause": "missing-state-fence",
+                    "severity": "P1",
+                    "summary": "abort can pass an in-flight write",
+                    "baseline_reachable": True,
+                }],
+            }
+            report = submit_review_result(path, snapshot, result)
+            self.assertEqual("findings", report["status"])
+            self.assertEqual("fix-findings", report["next_action"])
+            self.assertFalse(snapshot.exists())
+            self.assertEqual("implementing", json.loads(path.read_text())["phase"])
+            evidence = json.loads(
+                (
+                    path.parent
+                    / f"{path.stem}.evidence"
+                    / f"{report['evidence_receipt']['evidence_id']}.json"
+                ).read_text()
+            )
+            self.assertEqual("findings", evidence["status"])
+
+    def test_repeated_review_root_cause_escalates_design_and_inconclusive_is_not_a_finding(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            for attempt in range(2):
+                record_run(path, "reviewing")
+                unit = open_review_evidence(path)
+                report = submit_review_result(
+                    path,
+                    Path(str(unit["snapshot_dir"])),
+                    {
+                        "review_id": unit["review_id"],
+                        "status": "findings",
+                        "code_content_id": unit["code_content_id"],
+                        "findings": [{
+                            "id": f"state-fence-{attempt}",
+                            "root_cause": "missing-state-fence",
+                            "severity": "P1",
+                            "summary": "same invariant remains open",
+                            "baseline_reachable": True,
+                        }],
+                    },
+                )
+            self.assertEqual("blocked-by-design", report["next_action"])
+            self.assertEqual(["missing-state-fence"], report["repeated_root_causes"])
+
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            report = submit_review_result(
+                path,
+                Path(str(unit["snapshot_dir"])),
+                {
+                    "review_id": unit["review_id"],
+                    "status": "inconclusive",
+                    "code_content_id": unit["code_content_id"],
+                    "findings": [{
+                        "id": "schema-source-unknown",
+                        "root_cause": "unsupported-intermediate-schema",
+                        "severity": None,
+                        "summary": "cannot prove schema state is reachable from the release baseline",
+                        "baseline_reachable": None,
+                    }],
+                },
+            )
+            self.assertEqual("blocked-by-evidence", report["next_action"])
+            self.assertIsNone(report["review_receipt"])
+
+    def test_review_rejects_unreachable_blocker_and_releases_snapshot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            with self.assertRaisesRegex(RunJournalError, "固定基线"):
+                submit_review_result(
+                    path,
+                    snapshot,
+                    {
+                        "review_id": unit["review_id"],
+                        "status": "findings",
+                        "code_content_id": unit["code_content_id"],
+                        "findings": [{
+                            "id": "schema-8-to-9",
+                            "root_cause": "unsupported-intermediate-schema",
+                            "severity": "P1",
+                            "summary": "assumes an unpublished schema version",
+                            "baseline_reachable": False,
+                        }],
+                    },
+                )
+            self.assertFalse(snapshot.exists())
+
+    def test_glob_code_scope_matches_real_ticket_shape_and_freezes_baseline(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            source = repo / "internal/domain/model.py"
+            source.parent.mkdir(parents=True)
+            source.write_text("value = 1\n")
+            subprocess.run(["git", "add", "."], cwd=repo, check=True)
+            subprocess.run(["git", "commit", "-qm", "add scoped source"], cwd=repo, check=True)
+            sha = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True, check=True
+            ).stdout.strip()
+            ticket.write_text(
+                ticket.read_text().replace("rule_scope: [app.py]", "rule_scope: [internal/domain/**]")
+            )
+            path, _ = start_run(repo, ticket, sha, ["internal/domain/**"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            artifact = unit["artifacts"][0]
+            self.assertEqual("internal/domain/model.py", artifact["repo_path"])
+            self.assertIsNotNone(artifact["baseline_snapshot_path"])
 
     def test_review_evidence_rejects_tampered_owned_snapshot(self):
         with tempfile.TemporaryDirectory() as tmp:

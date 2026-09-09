@@ -15,6 +15,7 @@ class EvalError(RuntimeError):
 
 SCENARIO_VERSION = 2
 EVIDENCE_VERSION = 1
+IMPLEMENTATION_REVIEW_STATUSES = frozenset({"pass", "findings", "inconclusive"})
 REQUIRED_SCENARIOS = frozenset(
     {
         "tdd-seam-pressure",
@@ -28,6 +29,8 @@ REQUIRED_SCENARIOS = frozenset(
         "requirement-analysis-clear-request",
         "requirement-analysis-misleading-analogy",
         "artifact-review-design-method-boundary",
+        "implementation-review-baseline-reachability",
+        "implementation-review-repeated-root-cause",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -44,6 +47,7 @@ _SCENARIO_TYPES = frozenset(
         "skill-review-contract",
         "handoff-contract",
         "requirement-analysis-contract",
+        "implementation-review-contract",
     }
 )
 
@@ -372,6 +376,53 @@ def _evaluate_requirement_analysis_contract(
     }
 
 
+def _evaluate_implementation_review_contract(
+    input_value: dict[str, object],
+) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "outcome",
+            "baseline_reachable",
+            "previous_root_causes",
+            "current_root_causes",
+            "snapshot_released",
+        },
+        "implementation-review-contract.input",
+    )
+    if case["outcome"] not in IMPLEMENTATION_REVIEW_STATUSES:
+        raise EvalError("implementation-review-contract.input.outcome: invalid status")
+    if case["baseline_reachable"] not in {True, False, None}:
+        raise EvalError("implementation-review-contract.input.baseline_reachable: invalid value")
+    for field in ("previous_root_causes", "current_root_causes"):
+        if not isinstance(case[field], list) or not all(
+            isinstance(item, str) and item for item in case[field]
+        ):
+            raise EvalError(f"implementation-review-contract.input.{field}: invalid roots")
+    if not isinstance(case["snapshot_released"], bool):
+        raise EvalError("implementation-review-contract.input.snapshot_released: must be boolean")
+    if not case["snapshot_released"]:
+        return {"status": "stop", "rule": "release-review-snapshot", "next": "cleanup"}
+    if case["outcome"] == "findings" and case["baseline_reachable"] is not True:
+        return {
+            "status": "inconclusive",
+            "rule": "formal-baseline-reachability",
+            "next": "blocked-by-evidence",
+        }
+    repeated = set(case["previous_root_causes"]) & set(case["current_root_causes"])
+    if case["outcome"] == "findings" and repeated:
+        return {
+            "status": "stop",
+            "rule": "repeated-review-root-cause",
+            "next": "blocked-by-design",
+        }
+    if case["outcome"] == "findings":
+        return {"status": "proceed", "rule": "persist-review-attempt", "next": "fix-findings"}
+    if case["outcome"] == "inconclusive":
+        return {"status": "stop", "rule": "persist-review-attempt", "next": "blocked-by-evidence"}
+    return {"status": "valid", "rule": "code-bound-review-receipt", "next": "submit-completed"}
+
+
 def _evaluate_rule_contract(input_value: dict[str, object]) -> dict[str, object]:
     case = _require_fields(
         input_value,
@@ -607,6 +658,7 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "skill-review-contract": _evaluate_skill_review_contract,
         "handoff-contract": _evaluate_handoff_contract,
         "requirement-analysis-contract": _evaluate_requirement_analysis_contract,
+        "implementation-review-contract": _evaluate_implementation_review_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:

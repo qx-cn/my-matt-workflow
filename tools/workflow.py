@@ -69,6 +69,7 @@ from workflow_lib.run_journal import (
     record_run,
     run_test_evidence,
     start_run,
+    submit_review_result,
     submit_run_outcome,
 )
 from workflow_lib.smoke_registry import (
@@ -878,6 +879,17 @@ def command_run_review_evidence(args: argparse.Namespace) -> None:
     print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
 
 
+def command_run_review_submit(args: argparse.Namespace) -> None:
+    result = _read_result_object(args.result_file, "code review")
+    try:
+        report = submit_review_result(
+            Path(args.journal), Path(args.snapshot_dir), result
+        )
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_run_review_open(args: argparse.Namespace) -> None:
     try:
         report = open_review_evidence(Path(args.journal))
@@ -1216,6 +1228,12 @@ def parser() -> argparse.ArgumentParser:
     run_review_receipt.add_argument("--snapshot-dir", required=True)
     run_review_receipt.add_argument("command", nargs=argparse.REMAINDER)
     run_review_receipt.set_defaults(func=command_run_review_evidence)
+
+    run_review_submit = sub.add_parser("run-review-submit")
+    run_review_submit.add_argument("--journal", required=True)
+    run_review_submit.add_argument("--snapshot-dir", required=True)
+    run_review_submit.add_argument("--result-file", required=True)
+    run_review_submit.set_defaults(func=command_run_review_submit)
 
     run_review_open = sub.add_parser("run-review-open")
     run_review_open.add_argument("--journal", required=True)

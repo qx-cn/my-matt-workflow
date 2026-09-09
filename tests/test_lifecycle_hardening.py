@@ -102,7 +102,7 @@ class LifecycleHardeningTests(unittest.TestCase):
         code = build_code_receipt(journal)
         test = run_test_evidence(journal, ["python3", "-c", "pass"])
         review_unit = open_review_evidence(journal)
-        review = record_review_evidence(
+        review_report = record_review_evidence(
             journal,
             Path(str(review_unit["snapshot_dir"])),
             REVIEW_ARGV,
@@ -110,7 +110,7 @@ class LifecycleHardeningTests(unittest.TestCase):
         return {
             "outcome": "completed",
             "test_receipt": test,
-            "review_receipt": review,
+            "review_receipt": review_report["review_receipt"],
             "code_receipt": code,
             "blocker": None,
         }

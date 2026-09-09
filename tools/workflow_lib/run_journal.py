@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import glob as globlib
 import hashlib
 import json
 import os
@@ -58,6 +59,8 @@ IMPLEMENTATION_OUTCOMES = frozenset(
     {"completed", "blocked-by-design", "blocked-by-evidence"}
 )
 REVIEW_METHOD = "my-code-review"
+REVIEW_STATUSES = frozenset({"pass", "findings", "inconclusive"})
+REVIEW_SEVERITIES = frozenset({"P0", "P1", "P2"})
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
@@ -471,16 +474,30 @@ def _scope_files(repo: Path, paths: list[object]) -> list[Path]:
     for raw in paths:
         if not isinstance(raw, str) or not raw:
             raise RunJournalError("code scope 必须是非空仓库相对路径")
-        candidate = (repo / raw).resolve()
-        try:
-            candidate.relative_to(repo)
-        except ValueError as exc:
-            raise RunJournalError("code scope 越出仓库") from exc
-        if candidate.is_file():
-            files.add(candidate)
-        elif candidate.is_dir():
-            files.update(path for path in candidate.rglob("*") if path.is_file() and not path.is_symlink())
-        else:
+        relative = Path(raw)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RunJournalError("code scope 越出仓库")
+        candidates = (
+            list(repo.glob(raw)) if globlib.has_magic(raw) else [repo / relative]
+        )
+        matched = False
+        for candidate in candidates:
+            resolved = candidate.resolve()
+            try:
+                resolved.relative_to(repo)
+            except ValueError as exc:
+                raise RunJournalError("code scope 越出仓库") from exc
+            if resolved.is_file() and not resolved.is_symlink():
+                files.add(resolved)
+                matched = True
+            elif resolved.is_dir() and not resolved.is_symlink():
+                files.update(
+                    path
+                    for path in resolved.rglob("*")
+                    if path.is_file() and not path.is_symlink()
+                )
+                matched = True
+        if not matched:
             raise RunJournalError(f"code scope 不存在：{raw}")
     return sorted(files)
 
@@ -591,6 +608,9 @@ def open_review_evidence(path: Path) -> dict[str, object]:
     if not isinstance(context, dict):
         raise RunJournalError("run journal context 无效")
     repo = Path(str(context.get("repo", ""))).resolve()
+    base_sha = context.get("base_sha")
+    if not isinstance(base_sha, str) or not base_sha:
+        raise RunJournalError("run journal 缺少固定 review baseline")
     code = build_code_receipt(path)
     review_id = secrets.token_hex(16)
     snapshot_root = _evidence_directory(path) / "review-snapshots"
@@ -604,19 +624,39 @@ def open_review_evidence(path: Path) -> dict[str, object]:
             if not isinstance(source, dict):
                 raise RunJournalError("code snapshot source 无效")
             source_path = Path(str(source.get("path", "")))
-            target = snapshot_dir / f"{index:04d}-{source_path.name}"
+            target = snapshot_dir / f"current-{index:04d}-{source_path.name}"
             shutil.copy2(source_path, target)
+            baseline = subprocess.run(
+                ["git", "show", f"{base_sha}:{source['repo_path']}"],
+                cwd=repo,
+                capture_output=True,
+                check=False,
+            )
+            baseline_path: str | None = None
+            baseline_sha256: str | None = None
+            baseline_size: int | None = None
+            if baseline.returncode == 0:
+                baseline_target = snapshot_dir / f"baseline-{index:04d}-{source_path.name}"
+                baseline_target.write_bytes(baseline.stdout)
+                baseline_path = str(baseline_target)
+                baseline_sha256 = hashlib.sha256(baseline.stdout).hexdigest()
+                baseline_size = len(baseline.stdout)
             frozen.append({
                 "repo_path": source["repo_path"],
                 "snapshot_path": str(target),
                 "sha256": source["sha256"],
                 "size": source["size"],
+                "baseline_snapshot_path": baseline_path,
+                "baseline_sha256": baseline_sha256,
+                "baseline_size": baseline_size,
             })
         unit = {
             "kind": "code-review-snapshot",
             "method": REVIEW_METHOD,
             "review_id": review_id,
             "journal": str(path.resolve()),
+            "base_sha": base_sha,
+            "review_scope": "change-only",
             "code_content_id": code["content_id"],
             "artifacts": frozen,
         }
@@ -639,29 +679,21 @@ def open_review_evidence(path: Path) -> dict[str, object]:
         "status": "ready",
         "method": REVIEW_METHOD,
         "review_id": review_id,
+        "base_sha": base_sha,
+        "review_scope": "change-only",
         "snapshot_dir": str(snapshot_dir),
         "code_content_id": code["content_id"],
         "artifacts": frozen,
     }
 
 
-def record_review_evidence(
-    path: Path, snapshot_dir: Path, argv: list[str]
-) -> dict[str, str]:
-    """Run a declared reviewer against an owned snapshot and register evidence."""
-    if not argv or any(not isinstance(value, str) or not value for value in argv):
-        raise RunJournalError("review evidence command 必须是非空 argv")
+def _owned_review_unit(
+    path: Path, snapshot_dir: Path
+) -> tuple[dict[str, object], dict[str, object], Path, Path, dict[str, object], dict[str, object]]:
     journal = _load_journal(path)
     context = journal.get("context")
     if not isinstance(context, dict):
         raise RunJournalError("run journal context 无效")
-    allowed = context.get("review_commands")
-    if not isinstance(allowed, list) or argv not in [
-        shlex.split(command)
-        for command in allowed
-        if isinstance(command, str) and command.strip()
-    ]:
-        raise RunJournalError("review evidence command 未在 work unit 中声明")
     repo = Path(str(context.get("repo", ""))).resolve()
     expected_root = (_evidence_directory(path) / "review-snapshots").resolve()
     snapshot_dir = snapshot_dir.resolve()
@@ -679,17 +711,225 @@ def record_review_evidence(
     if (
         not isinstance(unit, dict)
         or set(unit) != {
-            "kind", "method", "review_id", "journal", "code_content_id", "artifacts"
+            "kind", "method", "review_id", "journal", "base_sha", "review_scope",
+            "code_content_id", "artifacts"
         }
         or unit.get("kind") != "code-review-snapshot"
         or unit.get("method") != REVIEW_METHOD
         or unit.get("journal") != str(path.resolve())
+        or unit.get("base_sha") != context.get("base_sha")
+        or unit.get("review_scope") != "change-only"
         or not isinstance(unit.get("artifacts"), list)
     ):
         raise RunJournalError("review snapshot schema 无效")
     code = build_code_receipt(path)
     if unit.get("code_content_id") != code["content_id"]:
         raise RunJournalError("review snapshot 与当前代码不匹配")
+    return journal, context, repo, expected_root, unit, code
+
+
+def _release_review_snapshot(expected_root: Path, snapshot_dir: Path) -> None:
+    try:
+        snapshot_dir.chmod(0o700)
+        quarantine_and_remove(
+            expected_root, snapshot_dir, purpose="run-review-snapshot"
+        )
+    except FilesystemSafetyError as exc:
+        raise RunJournalError("review snapshot 无法安全释放") from exc
+
+
+def _validate_review_result(
+    result: dict[str, object], unit: dict[str, object], code: dict[str, object]
+) -> tuple[str, set[str]]:
+    if set(result) != {"review_id", "status", "code_content_id", "findings"}:
+        raise RunJournalError("review result 字段无效")
+    status = result.get("status")
+    findings = result.get("findings")
+    if (
+        status not in REVIEW_STATUSES
+        or result.get("review_id") != unit.get("review_id")
+        or result.get("code_content_id") != code.get("content_id")
+        or not isinstance(findings, list)
+    ):
+        raise RunJournalError("review result 与当前 review snapshot 不匹配")
+    if status == "pass":
+        if findings:
+            raise RunJournalError("pass review 不得包含 findings")
+        return str(status), set()
+    if not findings:
+        raise RunJournalError(f"{status} review 必须包含结构化条目")
+    roots: set[str] = set()
+    for item in findings:
+        if not isinstance(item, dict) or set(item) != {
+            "id", "root_cause", "severity", "summary", "baseline_reachable"
+        }:
+            raise RunJournalError("review finding schema 无效")
+        if not all(
+            isinstance(item.get(field), str) and str(item[field]).strip()
+            for field in ("id", "root_cause", "summary")
+        ):
+            raise RunJournalError("review finding 缺少 id、root_cause 或 summary")
+        if status == "findings":
+            if item.get("severity") not in REVIEW_SEVERITIES:
+                raise RunJournalError("review finding severity 无效")
+            if item.get("baseline_reachable") is not True:
+                raise RunJournalError(
+                    "review finding 必须能从固定基线到当前快照证明；否则标记 inconclusive"
+                )
+        elif item.get("severity") is not None or item.get("baseline_reachable") not in {None, False}:
+            raise RunJournalError("inconclusive 条目不得伪造 severity 或基线可达性")
+        roots.add(str(item["root_cause"]))
+    return str(status), roots
+
+
+def _verify_review_snapshot_bytes(unit: dict[str, object], snapshot_dir: Path) -> None:
+    for artifact in unit["artifacts"]:
+        expected = {
+            "repo_path", "snapshot_path", "sha256", "size",
+            "baseline_snapshot_path", "baseline_sha256", "baseline_size",
+        }
+        if not isinstance(artifact, dict) or set(artifact) != expected:
+            raise RunJournalError("review snapshot inventory 无效")
+        for prefix in ("", "baseline_"):
+            raw_path = artifact[f"{prefix}snapshot_path"]
+            digest = artifact[f"{prefix}sha256"]
+            size = artifact[f"{prefix}size"]
+            if raw_path is None and digest is None and size is None:
+                continue
+            frozen = Path(str(raw_path))
+            if frozen.parent.resolve() != snapshot_dir or not frozen.is_file():
+                raise RunJournalError("review snapshot 文件路径无效")
+            content = frozen.read_bytes()
+            if len(content) != size or hashlib.sha256(content).hexdigest() != digest:
+                raise RunJournalError("review snapshot bytes 已漂移")
+
+
+def _previous_review_roots(path: Path) -> set[str]:
+    journal = _load_journal(path)
+    evidence = journal.get("evidence")
+    if not isinstance(evidence, list):
+        return set()
+    for receipt in reversed(evidence):
+        try:
+            record = _load_evidence(path, receipt, "review")
+        except RunJournalError:
+            continue
+        if record.get("status") != "findings":
+            continue
+        roots = record.get("root_causes")
+        return set(roots) if isinstance(roots, list) else set()
+    return set()
+
+
+def _return_review_to_implementation(
+    path: Path, receipt: dict[str, str], roots: set[str], *, repeated: bool
+) -> None:
+    journal = _load_journal(path)
+    if journal.get("phase") not in {"reviewing", "committing"}:
+        raise RunJournalError("带 finding 的 review 只能从 review 阶段返回实施")
+    journal["phase"] = "implementing"
+    events = journal.get("events")
+    if not isinstance(events, list):
+        raise RunJournalError("run journal events 无效")
+    events.append({
+        "phase": "implementing",
+        "review_attempt": receipt,
+        "root_causes": sorted(roots),
+        "repeated_root_cause": repeated,
+        "at": datetime.now(timezone.utc).isoformat(),
+    })
+    _write_json_atomic(path, journal)
+
+
+def submit_review_result(
+    path: Path,
+    snapshot_dir: Path,
+    result: dict[str, object],
+    *,
+    execution: str = "host-method",
+    argv: list[str] | None = None,
+    completed: subprocess.CompletedProcess[bytes] | None = None,
+) -> dict[str, object]:
+    """Persist every terminal review outcome and release its owned snapshot."""
+    journal, context, repo, expected_root, unit, code = _owned_review_unit(
+        path, snapshot_dir
+    )
+    snapshot_dir = snapshot_dir.resolve()
+    try:
+        if journal.get("phase") not in {"reviewing", "committing"}:
+            raise RunJournalError("review result 只能在 review 阶段提交")
+        status, roots = _validate_review_result(result, unit, code)
+        _verify_review_snapshot_bytes(unit, snapshot_dir)
+        current_code = build_code_receipt(path)
+        if current_code["content_id"] != code["content_id"]:
+            raise RunJournalError("review result 与当前 review snapshot 不匹配")
+        previous_roots = _previous_review_roots(path)
+        result_path = _evidence_directory(path) / "review-results" / f"{unit['review_id']}.json"
+        if result_path.exists() or result_path.is_symlink():
+            raise RunJournalError("review result 目标已存在")
+        _write_json_atomic(result_path, result)
+        result_receipt = _source_receipt(
+            repo, result_path, "review result", kind="review-result"
+        )
+        record: dict[str, object] = {
+            "kind": "review",
+            "method": REVIEW_METHOD,
+            "status": status,
+            "execution": execution,
+            "code_content_id": code["content_id"],
+            "review_id": unit["review_id"],
+            "snapshot_content_id": unit["code_content_id"],
+            "snapshot": unit,
+            "result": result_receipt,
+            "root_causes": sorted(roots),
+        }
+        if execution == "declared-command":
+            if completed is None or argv is None:
+                raise RunJournalError("declared-command review 缺少进程证据")
+            record.update({
+                "argv": argv,
+                "exit_code": completed.returncode,
+                "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+                "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
+            })
+        elif execution != "host-method":
+            raise RunJournalError("未知 review execution")
+        receipt = _persist_evidence(path, record)
+        repeated = bool(roots & previous_roots)
+        if status == "findings":
+            _return_review_to_implementation(path, receipt, roots, repeated=repeated)
+        next_action = {
+            "pass": "submit-completed",
+            "findings": "blocked-by-design" if repeated else "fix-findings",
+            "inconclusive": "blocked-by-evidence",
+        }[status]
+        return {
+            "status": status,
+            "next_action": next_action,
+            "evidence_receipt": receipt,
+            "review_receipt": receipt if status == "pass" else None,
+            "repeated_root_causes": sorted(roots & previous_roots),
+        }
+    finally:
+        _release_review_snapshot(expected_root, snapshot_dir)
+
+
+def record_review_evidence(
+    path: Path, snapshot_dir: Path, argv: list[str]
+) -> dict[str, object]:
+    """Run a declared reviewer and persist its pass, findings or inconclusive result."""
+    if not argv or any(not isinstance(value, str) or not value for value in argv):
+        raise RunJournalError("review evidence command 必须是非空 argv")
+    journal, context, repo, expected_root, unit, code = _owned_review_unit(
+        path, snapshot_dir
+    )
+    allowed = context.get("review_commands")
+    if not isinstance(allowed, list) or argv not in [
+        shlex.split(command)
+        for command in allowed
+        if isinstance(command, str) and command.strip()
+    ]:
+        raise RunJournalError("review evidence command 未在 work unit 中声明")
     environment = os.environ.copy()
     environment.update({
         "MY_MATT_REVIEW_ID": str(unit["review_id"]),
@@ -703,70 +943,19 @@ def record_review_evidence(
     try:
         result = json.loads(completed.stdout.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        _release_review_snapshot(expected_root, snapshot_dir.resolve())
         raise RunJournalError("review command 未输出有效 JSON") from exc
-    if (
-        not isinstance(result, dict)
-        or set(result) != {
-            "review_id", "status", "code_content_id", "findings"
-        }
-        or not isinstance(result.get("review_id"), str)
-        or not result["review_id"].strip()
-        or result.get("status") != "pass"
-        or result.get("findings") != []
-        or completed.returncode != 0
-    ):
-        raise RunJournalError("review command 结果或通过条件无效")
-    current_code = build_code_receipt(path)
-    if (
-        current_code["content_id"] != code["content_id"]
-        or result.get("code_content_id") != code["content_id"]
-        or result.get("review_id") != unit.get("review_id")
-    ):
-        raise RunJournalError("review result 与当前 review snapshot 不匹配")
-    for artifact in unit["artifacts"]:
-        if not isinstance(artifact, dict) or set(artifact) != {
-            "repo_path", "snapshot_path", "sha256", "size"
-        }:
-            raise RunJournalError("review snapshot inventory 无效")
-        frozen = Path(str(artifact["snapshot_path"]))
-        if frozen.parent.resolve() != snapshot_dir or not frozen.is_file():
-            raise RunJournalError("review snapshot 文件路径无效")
-        content = frozen.read_bytes()
-        if (
-            len(content) != artifact["size"]
-            or hashlib.sha256(content).hexdigest() != artifact["sha256"]
-        ):
-            raise RunJournalError("review snapshot bytes 已漂移")
-    result_path = _evidence_directory(path) / "review-results" / f"{unit['review_id']}.json"
-    if result_path.exists() or result_path.is_symlink():
-        raise RunJournalError("review result 目标已存在")
-    _write_json_atomic(result_path, result)
-    result_receipt = _source_receipt(
-        repo, result_path, "review result", kind="review-result"
+    if not isinstance(result, dict) or completed.returncode != 0:
+        _release_review_snapshot(expected_root, snapshot_dir.resolve())
+        raise RunJournalError("review command 结果或退出状态无效")
+    return submit_review_result(
+        path,
+        snapshot_dir,
+        result,
+        execution="declared-command",
+        argv=argv,
+        completed=completed,
     )
-    record = {
-        "kind": "review",
-        "method": REVIEW_METHOD,
-        "status": "pass",
-        "code_content_id": code["content_id"],
-        "review_id": unit["review_id"],
-        "snapshot_content_id": unit["code_content_id"],
-        "snapshot": unit,
-        "result": result_receipt,
-        "argv": argv,
-        "exit_code": completed.returncode,
-        "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
-        "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
-    }
-    receipt = _persist_evidence(path, record)
-    try:
-        snapshot_dir.chmod(0o700)
-        quarantine_and_remove(
-            expected_root, snapshot_dir, purpose="run-review-snapshot"
-        )
-    except FilesystemSafetyError as exc:
-        raise RunJournalError("review snapshot 无法安全释放") from exc
-    return receipt
 
 
 def _load_evidence(path: Path, receipt: object, kind: str) -> dict[str, object]:
@@ -826,18 +1015,12 @@ def _validate_completion_receipts(
     if not (
         review_evidence.get("status") == "pass"
         and review_evidence.get("method") == REVIEW_METHOD
-        and review_evidence.get("exit_code") == 0
+        and review_evidence.get("execution") in {"host-method", "declared-command"}
         and review_evidence.get("code_content_id") == content_id
         and isinstance(review_evidence.get("review_id"), str)
         and bool(str(review_evidence.get("review_id")).strip())
         and isinstance(review_evidence.get("snapshot_content_id"), str)
         and isinstance(review_evidence.get("result"), dict)
-        and isinstance(review_evidence.get("argv"), list)
-        and all(
-            isinstance(review_evidence.get(field), str)
-            and re.fullmatch(r"[0-9a-f]{64}", str(review_evidence[field]))
-            for field in ("stdout_sha256", "stderr_sha256")
-        )
     ):
         raise RunJournalError("completed outcome 必须包含与当前代码绑定的结构化 review_receipt")
     journal = _load_journal(path)
@@ -845,13 +1028,24 @@ def _validate_completion_receipts(
     result_receipt = review_evidence["result"]
     if not isinstance(context, dict) or not isinstance(result_receipt, dict):
         raise RunJournalError("review evidence context 无效")
-    allowed = context.get("review_commands")
-    if not isinstance(allowed, list) or review_evidence["argv"] not in [
-        shlex.split(command)
-        for command in allowed
-        if isinstance(command, str) and command.strip()
-    ]:
-        raise RunJournalError("review evidence command 未由当前 work unit 声明")
+    if review_evidence.get("execution") == "declared-command":
+        allowed = context.get("review_commands")
+        if (
+            review_evidence.get("exit_code") != 0
+            or not isinstance(review_evidence.get("argv"), list)
+            or not isinstance(allowed, list)
+            or review_evidence["argv"] not in [
+                shlex.split(command)
+                for command in allowed
+                if isinstance(command, str) and command.strip()
+            ]
+            or not all(
+                isinstance(review_evidence.get(field), str)
+                and re.fullmatch(r"[0-9a-f]{64}", str(review_evidence[field]))
+                for field in ("stdout_sha256", "stderr_sha256")
+            )
+        ):
+            raise RunJournalError("review evidence command 未由当前 work unit 声明或执行失败")
     repo = Path(str(context.get("repo", ""))).resolve()
     current_result = _source_receipt(
         repo,
