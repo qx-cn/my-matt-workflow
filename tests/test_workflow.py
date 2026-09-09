@@ -40,7 +40,14 @@ from tools.workflow_lib.tickets import (
     validate_ready_ticket,
     validate_ticket_transition,
 )
-from tools.workflow_lib.parallel_review import build_parallel_review_plan
+from tools.workflow_lib.artifact_review import (
+    ArtifactReviewError,
+    REQUIRED_REVIEW_CHECKS,
+    build_artifact_review_snapshot,
+    finalize_artifact_review_snapshot,
+    submit_artifact_review_result,
+    verify_artifact_review_snapshot,
+)
 from tools.workflow_lib.transitions import ticket_transition
 from tools.workflow_lib.write_gates import resolve_write_gate
 from tools.workflow_lib.work_artifacts import WorkArtifactError, apply_work_artifact_migration
@@ -234,44 +241,164 @@ class TicketTransitionTests(unittest.TestCase):
             self.assertEqual(["feature-b"], json.loads(scope.stdout)["ticket_ids"])
 
 
-class ParallelWorkflowTests(unittest.TestCase):
-    def test_parallel_review_discovers_all_governed_reviewers_on_one_content_id(self):
+class ArtifactReviewWorkflowTests(unittest.TestCase):
+    def test_artifact_review_content_id_is_stable_for_set_order_and_duplicates(self):
         with tempfile.TemporaryDirectory() as tmp:
-            artifact = Path(tmp) / "artifact.md"
+            root = Path(tmp)
+            first = root / "first.md"
+            second = root / "second.md"
+            first.write_text("first", encoding="utf-8")
+            second.write_text("second", encoding="utf-8")
+
+            forward = build_artifact_review_snapshot(
+                [first, second], snapshot_root=root / "snapshots"
+            )
+            reverse = build_artifact_review_snapshot(
+                [second, first, first], snapshot_root=root / "snapshots"
+            )
+
+            self.assertEqual(forward["content_id"], reverse["content_id"])
+            self.assertEqual(2, len(reverse["artifacts"]))
+            finalize_artifact_review_snapshot(
+                [first, second], forward["content_id"], Path(forward["snapshot_dir"])
+            )
+            finalize_artifact_review_snapshot(
+                [second, first, first],
+                reverse["content_id"],
+                Path(reverse["snapshot_dir"]),
+            )
+
+    def test_reviewers_consume_one_immutable_snapshot_and_detect_stale_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            artifact = root / "artifact.md"
             artifact.write_text("current state", encoding="utf-8")
-            result = build_parallel_review_plan(
-                Path(__file__).resolve().parents[1] / "resources/governance.json",
-                [artifact],
+            result = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots"
             )
             self.assertEqual("ready", result["status"])
-            reviewers = {lane["review_skill"] for lane in result["lanes"]}
-            self.assertEqual(
-                {"my-humanizer", "my-final-state-writing", "my-artifact-finalization", "my-visual-communication", "my-reader-first-writing"},
-                reviewers,
-            )
-            self.assertEqual({result["content_id"]}, {lane["content_id"] for lane in result["lanes"]})
+            self.assertEqual(result["content_id"], result["review_unit"]["content_id"])
+            self.assertEqual("serial", result["review_unit"]["execution_mode"])
+            snapshot = Path(result["artifacts"][0]["snapshot_path"])
+            snapshot_dir = Path(result["snapshot_dir"])
+            self.assertEqual("current state", snapshot.read_text(encoding="utf-8"))
+            self.assertEqual(0, snapshot.stat().st_mode & 0o222)
+            self.assertEqual(0, snapshot_dir.stat().st_mode & 0o077)
 
-    def test_parallel_implement_keeps_only_outcome_and_safety_constraints(self):
+            artifact.write_text("changed state", encoding="utf-8")
+            verification = verify_artifact_review_snapshot(
+                [artifact], result["content_id"]
+            )
+            self.assertEqual("stale", verification["status"])
+            self.assertEqual("current state", snapshot.read_text(encoding="utf-8"))
+            finalized = finalize_artifact_review_snapshot(
+                [artifact], result["content_id"], snapshot_dir
+            )
+            self.assertEqual("stale", finalized["status"])
+            self.assertTrue(finalized["released"])
+            self.assertFalse(snapshot_dir.exists())
+
+    def test_artifact_review_parallel_mode_requires_explicit_opt_in(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            artifact = root / "artifact.md"
+            artifact.write_text("current state", encoding="utf-8")
+
+            result = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots", parallel=True
+            )
+
+            self.assertEqual("parallel", result["review_unit"]["execution_mode"])
+            self.assertEqual("parallel", result["review_unit"]["dispatch"]["mode"])
+            self.assertEqual(
+                len(REQUIRED_REVIEW_CHECKS),
+                len(result["review_unit"]["dispatch"]["lanes"]),
+            )
+            self.assertTrue(
+                all(not lane["depends_on"] for lane in result["review_unit"]["dispatch"]["lanes"])
+            )
+            finalize_artifact_review_snapshot(
+                [artifact], result["content_id"], Path(result["snapshot_dir"])
+            )
+
+    def test_artifact_review_submit_requires_complete_check_closure(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            artifact = root / "artifact.md"
+            artifact.write_text("current state", encoding="utf-8")
+            opened = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots"
+            )
+            snapshot_dir = Path(opened["snapshot_dir"])
+            incomplete = {
+                "content_id": opened["content_id"],
+                "checks": {},
+                "findings": [],
+                "inconclusive": [],
+            }
+            with self.assertRaisesRegex(ArtifactReviewError, "完整覆盖"):
+                submit_artifact_review_result([artifact], snapshot_dir, incomplete)
+            self.assertTrue(snapshot_dir.exists())
+
+            checks = {
+                check: {"status": "pass", "reason": None}
+                for check in REQUIRED_REVIEW_CHECKS
+            }
+            checks["my-visual-communication"] = {
+                "status": "not-applicable",
+                "reason": "产物没有复杂关系、流程或状态",
+            }
+            accepted = submit_artifact_review_result(
+                [artifact],
+                snapshot_dir,
+                {
+                    "content_id": opened["content_id"],
+                    "checks": checks,
+                    "findings": [],
+                    "inconclusive": [],
+                },
+            )
+            self.assertEqual("accepted", accepted["status"])
+            self.assertFalse(snapshot_dir.exists())
+
+    def test_artifact_review_submit_rejects_unexplained_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            artifact = root / "artifact.md"
+            artifact.write_text("current state", encoding="utf-8")
+            opened = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots"
+            )
+            checks = {
+                check: {"status": "pass", "reason": None}
+                for check in REQUIRED_REVIEW_CHECKS
+            }
+            checks["my-humanizer"] = {"status": "inconclusive", "reason": None}
+            with self.assertRaisesRegex(ArtifactReviewError, "完整解释"):
+                submit_artifact_review_result(
+                    [artifact],
+                    Path(opened["snapshot_dir"]),
+                    {
+                        "content_id": opened["content_id"],
+                        "checks": checks,
+                        "findings": [],
+                        "inconclusive": [],
+                    },
+                )
+
+    def test_parallelism_is_not_a_separate_user_skill(self):
         root = Path(__file__).resolve().parents[1]
-        text = (root / "skills/my-implement-in-parallel/SKILL.md").read_text()
-        for required in (
-            "工程判断",
-            "独立 `agent/<topic>/<ticket-id>` 分支",
-            "只实施分配的单张 Ticket",
-            "workers 不互相决定全局设计",
-            "只重新规划真正受影响的工作",
-            "重新运行适当的测试和一次代码 review",
-            "等待明确确认",
-        ):
-            self.assertIn(required, text)
-        for mechanical in (
-            "parallel_readiness",
-            "architecture_impact",
-            "execution_mode",
-            "basis_id",
-            "parallel-implement-plan",
-        ):
-            self.assertNotIn(mechanical, text)
+        skill_names = {
+            path.name for path in (root / "skills").iterdir() if path.is_dir()
+        }
+        self.assertIn("my-review-artifact", skill_names)
+        self.assertNotIn("my-review-in-parallel", skill_names)
+        self.assertNotIn("my-implement-in-parallel", skill_names)
+        manifest = json.loads((root / "composition/manifest.json").read_text())
+        entries = manifest["routable_entries"]["my-ask-matt"]
+        self.assertIn("my-review-artifact", entries)
+        self.assertNotIn("my-review-in-parallel", entries)
+        self.assertNotIn("my-implement-in-parallel", entries)
 
 
 class WriteGateTests(unittest.TestCase):
@@ -329,7 +456,6 @@ class ProfileTests(unittest.TestCase):
             "my-grill-with-docs",
             "my-to-spec",
             "my-to-tickets",
-            "my-implement",
             "my-code-review",
         ):
             text = (root / "skills" / skill / "SKILL.md").read_text()
@@ -397,21 +523,6 @@ class ProfileTests(unittest.TestCase):
     def test_composition_callers_use_one_dispatch_channel(self):
         root = Path(__file__).resolve().parents[1]
         expectations = {
-            "my-implement": {
-                "core": [
-                    "实施用户在 Spec 或 Ticket 中描述的工作。",
-                    "在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段",
-                    "改动中运行能最快证明当前行为的最小针对性测试",
-                    "只有整份计划完成、发布或合并前",
-                    "再进入 `my-code-review` 阶段审查该 `content_id` 的完整工作树。",
-                    "按[写操作 Gate]",
-                ],
-                "adapters": [
-                    "ticket-selection.md",
-                    "work-scope.md",
-                    "composition.md",
-                ],
-            },
             "my-grill-me": {
                 "core": [
                     "composition_policy",
@@ -444,13 +555,17 @@ class ProfileTests(unittest.TestCase):
         for skill in (
             "my-grill-me",
             "my-grill-with-docs",
-            "my-implement",
             "my-improve-codebase-architecture",
         ):
             text = (root / skill / "SKILL.md").read_text()
             with self.subTest(skill=skill):
                 self.assertIn("执行后返回宿主", text)
                 self.assertNotRegex(text, r"manual`：输出对应的.*随后停止")
+
+        implement = (root / "my-implement/SKILL.md").read_text()
+        self.assertIn("references/composed/my-tdd/COMPOSED.md", implement)
+        self.assertIn("references/composed/my-code-review/COMPOSED.md", implement)
+        self.assertNotIn("composition_policy", implement)
 
         wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
         self.assertIn("内部方法", wayfinder)
@@ -646,7 +761,7 @@ class ProfileTests(unittest.TestCase):
 
         self.assertIn("最小针对性测试", implement)
         self.assertIn("受影响模块或链路", implement)
-        self.assertIn("只有整份计划完成、发布或合并前", implement)
+        self.assertIn("只有整份计划结束、发布或合并前", implement)
         self.assertNotIn("结束时运行一次完整测试套件", implement)
         self.assertIn("用户未禁止", design_twice)
         self.assertIn("不设固定下限", design_twice)
@@ -755,19 +870,21 @@ class ProfileTests(unittest.TestCase):
 
     def test_continue_semantics_do_not_widen_work_scope_in_skills(self):
         root = Path(__file__).resolve().parents[1] / "skills"
-        sources = {
-            "my-implement": (
+        implement_contract = "\n".join(
+            path.read_text()
+            for path in (
                 root / "my-implement" / "SKILL.md",
                 root.parent / "resources/adapters/work-scope.md",
-            ),
-            "my-ask-matt": (root / "my-ask-matt" / "SKILL.md",),
-        }
-        for skill, paths in sources.items():
-            text = "\n".join(path.read_text() for path in paths)
-            with self.subTest(skill=skill):
-                self.assertIn("继续", text)
-                self.assertIn("不升档", text)
-                self.assertIn("work_scope_policy", text)
+            )
+        )
+        self.assertIn("继续", implement_contract)
+        self.assertIn("不升档", implement_contract)
+        self.assertIn("work_scope_policy", implement_contract)
+
+        router = (root / "my-ask-matt" / "SKILL.md").read_text()
+        self.assertIn("当前已批准范围内实施", router)
+        self.assertNotIn("parallel_mode", router)
+        self.assertNotIn("execution wave", router)
         # Restored upstream skills preserve their source method without a local policy footer.
         teach = (root / "my-teach" / "SKILL.md").read_text()
         self.assertNotIn("项目策略优先", teach)
@@ -1071,7 +1188,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("专业术语首次出现时用白话解释", text)
         self.assertIn("不能仅因“动词＋宾语”形式", text)
 
-    def test_implement_review_uses_content_snapshot_and_commit_equivalence(self):
+    def test_implementation_method_defers_snapshot_and_journal_mechanics_to_runtime(self):
         root = Path(__file__).resolve().parents[1]
         review = (root / "skills/my-code-review/SKILL.md").read_text()
         implement = (root / "skills/my-implement/SKILL.md").read_text()
@@ -1080,14 +1197,17 @@ class ProfileTests(unittest.TestCase):
             self.assertIn(source, review)
         self.assertIn("Review-Snapshot: <content_id>", review)
         self.assertIn("旧 receipt 立即失效", review)
-        self.assertIn("review-snapshot --repo <repo> --base", implement)
-        self.assertIn("--expect-content-id", implement)
-        self.assertIn("--require-clean", implement)
-        self.assertIn("run-start --repo <repo>", implement)
-        self.assertIn("run-record <journal>", implement)
-        self.assertIn("context receipt", implement)
-        self.assertIn("run-<ticket-id>-spec-r<revision>.json", implement)
-        self.assertIn("Commit 与已审查内容等价", implement)
+        self.assertIn("内容快照由 runtime 管理", implement)
+        self.assertIn("代码审查方法", implement)
+        for runtime_detail in (
+            "run-start",
+            "run-record",
+            "review-snapshot",
+            "ticket-transition",
+            "worktree",
+            "parallel_mode",
+        ):
+            self.assertNotIn(runtime_detail, implement)
 
     def test_spec_handoff_and_design_review_apply_finalization_gate(self):
         root = Path(__file__).resolve().parents[1] / "skills"
@@ -1121,21 +1241,63 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("blocked-by-design", implement)
         self.assertIn("补偿", implement)
 
-    def test_implement_writes_back_confirmed_spec_before_resume(self):
+    def test_runtime_adapters_own_spec_writeback_and_resume_policy(self):
         root = Path(__file__).resolve().parents[1]
         implement = (root / "skills/my-implement/SKILL.md").read_text()
         write_actions = (root / "resources/adapters/write-actions.md").read_text()
         work_scope = (root / "resources/adapters/work-scope.md").read_text()
 
-        self.assertIn("定向 Spec", implement)
-        self.assertIn("写回", implement)
-        self.assertIn("写回与准入完成前不得恢复实施", implement)
-        self.assertIn("补偿 Ticket", implement)
-        self.assertIn("docs_writeback", implement)
+        self.assertIn("最小 Spec 修订范围", implement)
+        self.assertIn("补偿", implement)
+        self.assertNotIn("docs_writeback", implement)
+        self.assertNotIn("写回与准入完成前不得恢复实施", implement)
         self.assertIn("文件写权限", write_actions)
         self.assertIn("确认修订后立即写回", write_actions)
         self.assertIn("写回", work_scope)
         self.assertIn("pause-for-revision", work_scope)
+
+    def test_artifact_review_skill_contains_method_not_runtime_runbook(self):
+        root = Path(__file__).resolve().parents[1]
+        review = (root / "skills/my-review-artifact/SKILL.md").read_text()
+
+        for method_signal in (
+            "目标读者",
+            "承重决策",
+            "同一根因",
+            "inconclusive",
+            "No findings.",
+        ):
+            self.assertIn(method_signal, review)
+        for runtime_detail in (
+            "artifact-review-snapshot",
+            "artifact-review-verify",
+            "并行",
+            "Agent",
+        ):
+            self.assertNotIn(runtime_detail, review)
+
+    def test_runtime_session_bridge_is_shared_and_skills_remain_semantic(self):
+        root = Path(__file__).resolve().parents[1]
+        bridge = (root / "resources/adapters/runtime-sessions.md").read_text()
+        implement = (root / "skills/my-implement/SKILL.md").read_text()
+        review = (root / "skills/my-review-artifact/SKILL.md").read_text()
+
+        for command in (
+            "implementation-open",
+            "implementation-submit",
+            "implementation-close",
+            "artifact-review-open",
+            "artifact-review-submit",
+        ):
+            self.assertIn(command, bridge)
+            self.assertNotIn(command, implement)
+            self.assertNotIn(command, review)
+        self.assertIn("默认是串行", bridge)
+        self.assertIn("用户明确要求并行", bridge)
+        self.assertIn("references/shared/adapters/runtime-sessions.md", implement)
+        self.assertIn("references/shared/adapters/runtime-sessions.md", review)
+        self.assertIn("required_checks", review)
+        self.assertIn("未全部闭合时不得输出 `No findings.`", review)
 
 
 class GitIgnoreRepositoryTests(unittest.TestCase):
@@ -1906,10 +2068,14 @@ class ReleaseTests(unittest.TestCase):
                 self.assertIn("content", body)
                 self.assertIn("frontend <artifact>", body)
                 self.assertIn("full", body)
-                self.assertIn("document-rendering.md", body)
-                self.assertRegex(content, r"不(?:得)?(?:生成|写) HTML")
+                self.assertIn("document-rendering.md", body + content + frontend)
                 self.assertIn("blocked-by-content", frontend)
-                self.assertRegex(frontend, r"不(?:得)?(?:改变|改写)")
+                if name == "my-teach":
+                    self.assertIn("写入 `lesson-drafts/", content)
+                    self.assertIn("把通过内容校验的课程语义工件渲染", frontend)
+                else:
+                    self.assertRegex(content, r"不(?:得)?(?:生成|写) HTML")
+                    self.assertRegex(frontend, r"不(?:得)?(?:改变|改写)")
 
     def test_teach_uses_one_continuous_searchable_course_template(self):
         root = Path(__file__).resolve().parents[1]
@@ -1922,26 +2088,25 @@ class ReleaseTests(unittest.TestCase):
         script = (skill / "assets/course.js").read_text()
 
         for phrase in (
-            "行业通行术语",
-            "不得发展成另一套课内正式名称",
-            "是什么、输入、输出",
-            "精确对照用表格意图",
+            "行业通行术语作为主名称",
+            "白话含义",
+            "visual_intent",
+            "多项精确对照",
         ):
             self.assertIn(phrase, content)
         for phrase in (
-            "行业通行主名称",
-            "不把解释性白话提升为另一套正式术语",
-            "简单内容不为套格式而扩张",
+            "行业主名称",
+            "同一内容表达清楚",
+            "一条连续文档流",
         ):
             self.assertIn(phrase, frontend)
 
-        self.assertIn("assets/TEMPLATE.html", body)
-        self.assertIn("无需写页面、卡片或配色提示", content)
-        self.assertIn("同一条连续文档流", frontend)
-        self.assertIn("浏览器搜索和锚点应直接作用于全文", frontend)
-        self.assertIn("打印包含答案解释与来源", frontend)
-        self.assertIn("最后由 Agent 同时阅读语义工件与成品 HTML", frontend)
-        self.assertIn("前端可以为阅读体验调整表达形式", frontend)
+        self.assertIn("assets/TEMPLATE.html", frontend)
+        self.assertIn("最近发展区", content)
+        self.assertIn("全文搜索", frontend)
+        self.assertIn("打印时直接可见的答案解释与来源", frontend)
+        self.assertIn("对照学生课程", frontend)
+        self.assertIn("可以调整段落、列表、表格", frontend)
         self.assertIn("data-learning-outcome", template)
         self.assertIn("{{NAV_ITEMS}}", template)
         self.assertIn("{{LESSON_SECTIONS}}", template)
@@ -1967,6 +2132,42 @@ class ReleaseTests(unittest.TestCase):
             assets.mkdir()
             shutil.copy(skill / "assets/course.css", assets / "course.css")
             shutil.copy(skill / "assets/course.js", assets / "course.js")
+            artifact = workspace / "lesson.content.md"
+            artifact.write_text(
+                """---
+document_kind: lesson
+content_revision: 1
+status: content-ready
+reader: 测试学生
+purpose: 掌握一件事
+output_path: lessons/0001-test.html
+template_ref: assets/TEMPLATE.html
+source_refs: [https://example.com/source]
+render_root: 学生课程
+---
+
+# 学生课程
+
+## 模型
+正文。
+
+## 练习
+完成一道判断题并理解答案。
+
+## 迁移
+把方法用于新情境。
+
+# 制作记录（不得渲染）
+
+```json render-map
+[
+  {"section_id":"model","heading":"模型","visual_intent":"none","visual_reason":"短解释适合文字"},
+  {"section_id":"practice","heading":"练习","visual_intent":"none","visual_reason":"短判断题适合文字"},
+  {"section_id":"transfer","heading":"迁移","visual_intent":"none","visual_reason":"短迁移题适合文字"}
+]
+```
+"""
+            )
             lesson = lessons / "0001-test.html"
             lesson.write_text(
                 '<!doctype html><html><head><link rel="stylesheet" '
@@ -1978,11 +2179,14 @@ class ReleaseTests(unittest.TestCase):
                 'data-answer="a"><h2>练习</h2>'
                 '<button class="choice" data-value="a">A</button>'
                 '<p class="feedback"></p><p class="print-answer">答案：A</p>'
-                '<a href="https://example.com/source">来源</a></section></main>'
+                '<a href="https://example.com/source">来源</a></section>'
+                '<section class="lesson-section" id="transfer" data-transfer>'
+                '<h2>迁移</h2><p>把方法用于新情境。</p></section></main>'
                 '<script src="../assets/course.js"></script></body></html>'
             )
             checked = subprocess.run(
-                [sys.executable, checker, lesson], capture_output=True, text=True, check=False
+                [sys.executable, checker, lesson, "--artifact", artifact],
+                capture_output=True, text=True, check=False
             )
             self.assertEqual(0, checked.returncode, checked.stdout)
 
@@ -1991,7 +2195,8 @@ class ReleaseTests(unittest.TestCase):
                 'class="lesson-section" id="model" hidden',
             ))
             checked = subprocess.run(
-                [sys.executable, checker, lesson], capture_output=True, text=True, check=False
+                [sys.executable, checker, lesson, "--artifact", artifact],
+                capture_output=True, text=True, check=False
             )
             self.assertNotEqual(0, checked.returncode)
             self.assertIn("被隐藏的 lesson-section", checked.stdout)
@@ -2112,7 +2317,7 @@ class ReleaseTests(unittest.TestCase):
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(36, len(validate_skills(root)))
+        self.assertEqual(37, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
@@ -2261,10 +2466,10 @@ class ReleaseTests(unittest.TestCase):
 
             expected = {
                 "my-implement": {
-                    "ticket-selection.md",
                     "work-scope.md",
-                    "composition.md",
+                    "runtime-sessions.md",
                 },
+                "my-review-artifact": {"runtime-sessions.md"},
                 "my-grill-me": {"composition.md"},
                 "my-grill-with-docs": {
                     "composition.md",

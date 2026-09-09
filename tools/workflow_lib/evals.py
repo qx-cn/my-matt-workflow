@@ -22,6 +22,8 @@ REQUIRED_SCENARIOS = frozenset(
         "diagnosing-bugs-no-red-loop",
         "writing-great-skills-baseline-discipline",
         "main-workflow-fresh-context",
+        "artifact-review-method-boundary",
+        "skill-review-root-before-wording",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -34,6 +36,8 @@ _SCENARIO_TYPES = frozenset(
         "skill-writing-contract",
         "rule-contract",
         "main-workflow-contract",
+        "artifact-review-contract",
+        "skill-review-contract",
     }
 )
 
@@ -307,6 +311,147 @@ def _evaluate_main_workflow_contract(input_value: dict[str, object]) -> dict[str
     }
 
 
+def _evaluate_artifact_review_contract(input_value: dict[str, object]) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "fixed_review_unit",
+            "required_checks",
+            "completed_checks",
+            "material_root_causes",
+            "inconclusive_count",
+        },
+        "artifact-review-contract.input",
+    )
+    if not isinstance(case["fixed_review_unit"], bool):
+        raise EvalError("artifact-review-contract.input.fixed_review_unit: must be boolean")
+    required_checks = case["required_checks"]
+    completed_checks = case["completed_checks"]
+    if (
+        not isinstance(required_checks, list)
+        or not required_checks
+        or not all(isinstance(check, str) and check for check in required_checks)
+        or len(required_checks) != len(set(required_checks))
+    ):
+        raise EvalError("artifact-review-contract.input.required_checks: must be unique strings")
+    if not isinstance(completed_checks, list) or not all(
+        isinstance(check, str) and check for check in completed_checks
+    ):
+        raise EvalError("artifact-review-contract.input.completed_checks: must be strings")
+    roots = case["material_root_causes"]
+    if not isinstance(roots, list) or not all(
+        isinstance(root, str) and root for root in roots
+    ):
+        raise EvalError(
+            "artifact-review-contract.input.material_root_causes: must be a string list"
+        )
+    inconclusive = case["inconclusive_count"]
+    if not isinstance(inconclusive, int) or inconclusive < 0:
+        raise EvalError(
+            "artifact-review-contract.input.inconclusive_count: must be non-negative"
+        )
+    if not case["fixed_review_unit"]:
+        return {
+            "status": "stop",
+            "rule": "fixed-review-unit",
+            "next": "prepare-review-unit",
+        }
+    if set(completed_checks) != set(required_checks):
+        return {
+            "status": "stop",
+            "rule": "complete-required-review-checks",
+            "next": "finish-review-methods",
+        }
+    return {
+        "status": "valid",
+        "rule": "semantic-evidence-review",
+        "findings": len(set(roots)),
+        "inconclusive": inconclusive,
+        "next": "verify-content-id",
+    }
+
+
+def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "fixed_review_unit",
+            "runtime_snapshot_ready",
+            "scope_inventory_complete",
+            "existence_gate_complete",
+            "walkthrough_coverage_complete",
+            "snapshot_verified",
+            "evidence_level",
+            "root_causes",
+            "editorial_candidates",
+        },
+        "skill-review-contract.input",
+    )
+    gate_fields = (
+        "fixed_review_unit",
+        "runtime_snapshot_ready",
+        "scope_inventory_complete",
+        "existence_gate_complete",
+        "walkthrough_coverage_complete",
+        "snapshot_verified",
+    )
+    if not all(isinstance(case[field], bool) for field in gate_fields):
+        raise EvalError("skill-review-contract.input: gate fields must be booleans")
+    if case["evidence_level"] not in {"static", "observed", "comparative"}:
+        raise EvalError("skill-review-contract.input.evidence_level: invalid level")
+    roots = case["root_causes"]
+    if not isinstance(roots, list) or not all(
+        isinstance(root, str) and root for root in roots
+    ):
+        raise EvalError(
+            "skill-review-contract.input.root_causes: must be a string list"
+        )
+    editorial = case["editorial_candidates"]
+    if not isinstance(editorial, int) or editorial < 0:
+        raise EvalError(
+            "skill-review-contract.input.editorial_candidates: must be non-negative"
+        )
+    if not case["fixed_review_unit"] or not case["runtime_snapshot_ready"]:
+        return {
+            "status": "stop",
+            "rule": "fixed-review-unit",
+            "next": "build-runtime-snapshot",
+        }
+    if not case["scope_inventory_complete"]:
+        return {
+            "status": "stop",
+            "rule": "complete-scope-inventory",
+            "next": "resolve-skill-relations",
+        }
+    if not case["existence_gate_complete"]:
+        return {
+            "status": "stop",
+            "rule": "existence-before-instruction-design",
+            "next": "evaluate-skill-destination",
+        }
+    if not case["walkthrough_coverage_complete"]:
+        return {
+            "status": "stop",
+            "rule": "complete-walkthrough-coverage",
+            "next": "map-uncovered-paths",
+        }
+    if not case["snapshot_verified"]:
+        return {
+            "status": "stop",
+            "rule": "verify-review-snapshot",
+            "next": "finalize-review-unit",
+        }
+    comparative = case["evidence_level"] == "comparative"
+    return {
+        "status": "valid",
+        "rule": "root-before-wording",
+        "findings": len(set(roots)),
+        "suppressed_editorial": editorial if roots else 0,
+        "verdict": "EVIDENCE_BACKED" if comparative else "INCONCLUSIVE",
+        "next": "report" if comparative else "comparative-forward-test",
+    }
+
+
 def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
     """Execute one structured deterministic scenario and assert its exact outcome."""
     evaluators = {
@@ -316,6 +461,8 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "skill-writing-contract": _evaluate_skill_writing_contract,
         "rule-contract": _evaluate_rule_contract,
         "main-workflow-contract": _evaluate_main_workflow_contract,
+        "artifact-review-contract": _evaluate_artifact_review_contract,
+        "skill-review-contract": _evaluate_skill_review_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:

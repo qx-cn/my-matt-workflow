@@ -11,8 +11,7 @@
         "my-code-review",
         "my-humanizer",
         "my-implement",
-        "my-implement-in-parallel",
-        "my-review-in-parallel",
+        "my-review-artifact",
         "my-wayfinder",
         "my-improve-codebase-architecture"
       ]
@@ -34,7 +33,8 @@
         "my-improve-codebase-architecture",
         "my-test-report",
         "my-final-state-writing",
-        "my-review-in-parallel"
+        "my-review-artifact",
+        "my-review-skill"
       ]
     },
     "artifact-finalization": {
@@ -47,7 +47,7 @@
         "my-final-state-writing",
         "my-artifact-finalization",
         "my-wayfinder",
-        "my-review-in-parallel"
+        "my-review-artifact"
       ]
     },
     "visual-communication": {
@@ -58,7 +58,7 @@
         "my-teach",
         "my-test-report",
         "my-review-design",
-        "my-review-in-parallel"
+        "my-review-artifact"
       ]
     },
     "reader-first-writing": {
@@ -71,10 +71,9 @@
         "my-edit-article",
         "my-reader-first-writing",
         "my-final-state-writing",
-        "my-review-in-parallel",
+        "my-review-artifact",
         "my-grill-with-docs",
         "my-implement",
-        "my-implement-in-parallel",
         "my-improve-codebase-architecture",
         "my-prototype",
         "my-research",
@@ -107,7 +106,6 @@
         "my-edit-article",
         "my-grill-with-docs",
         "my-implement",
-        "my-implement-in-parallel",
         "my-improve-codebase-architecture",
         "my-prototype",
         "my-to-spec",
@@ -121,8 +119,6 @@
       "consumers": [
         "my-grill-me",
         "my-grill-with-docs",
-        "my-implement",
-        "my-implement-in-parallel",
         "my-ask-matt",
         "my-wayfinder",
         "my-improve-codebase-architecture"
@@ -132,10 +128,8 @@
       "source": "resources/adapters/ticket-selection.md",
       "release_path": "references/shared/adapters/ticket-selection.md",
       "consumers": [
-        "my-implement",
         "my-to-tickets",
-        "my-triage",
-        "my-implement-in-parallel"
+        "my-triage"
       ]
     },
     "adapter-work-scope": {
@@ -143,20 +137,17 @@
       "release_path": "references/shared/adapters/work-scope.md",
       "consumers": [
         "my-implement",
-        "my-tdd",
-        "my-implement-in-parallel"
+        "my-tdd"
       ]
     },
     "adapter-write-actions": {
       "source": "resources/adapters/write-actions.md",
       "release_path": "references/shared/adapters/write-actions.md",
       "consumers": [
-        "my-implement",
         "my-to-spec",
         "my-to-tickets",
         "my-wayfinder",
-        "my-resolving-merge-conflicts",
-        "my-implement-in-parallel"
+        "my-resolving-merge-conflicts"
       ]
     },
     "adapter-artifact-access": {
@@ -171,8 +162,7 @@
         "my-domain-modeling",
         "my-tdd",
         "my-diagnosing-bugs",
-        "my-improve-codebase-architecture",
-        "my-implement-in-parallel"
+        "my-improve-codebase-architecture"
       ]
     },
     "adapter-project-rules": {
@@ -185,15 +175,15 @@
         "my-implement",
         "my-code-review",
         "my-wayfinder",
-        "my-improve-codebase-architecture",
-        "my-implement-in-parallel"
+        "my-improve-codebase-architecture"
       ]
     },
-    "review-governance": {
-      "source": "resources/governance.json",
-      "release_path": "references/shared/governance.json",
+    "adapter-runtime-sessions": {
+      "source": "resources/adapters/runtime-sessions.md",
+      "release_path": "references/shared/adapters/runtime-sessions.md",
       "consumers": [
-        "my-review-in-parallel"
+        "my-implement",
+        "my-review-artifact"
       ]
     },
     "policies": {

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Requirement Analysis"
+  short_description: "Manually verify requirements before planning"
+  default_prompt: "Use $my-requirement-analysis to verify my requirements before planning."
+policy:
+  allow_implicit_invocation: false

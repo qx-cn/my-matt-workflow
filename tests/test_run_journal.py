@@ -11,8 +11,11 @@ from tools.workflow_lib.profile import render_profile
 from tools.workflow_lib.run_journal import (
     RunJournalError,
     build_run_context,
+    close_implementation_session,
+    open_implementation_session,
     record_run,
     start_run,
+    submit_run_outcome,
 )
 
 
@@ -56,6 +59,9 @@ class RunJournalTests(unittest.TestCase):
             "- [ ] acceptance\n",
             encoding="utf-8",
         )
+        spec = repo / ".agent/work/feature/specs/specs-feature-02.md"
+        spec.parent.mkdir(parents=True)
+        spec.write_text("# Feature spec\n", encoding="utf-8")
         (repo / "app.py").write_text("print('ok')\n", encoding="utf-8")
         subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
         subprocess.run(["git", "config", "user.email", "smoke@example.com"], cwd=repo, check=True)
@@ -85,12 +91,25 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual("deny", context["write_gates"]["external"]["status"])
             self.assertEqual(["python3 -m unittest"], context["test_commands"])
             self.assertIn("rule_map", context)
+            self.assertRegex(context["ticket"]["content"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertRegex(context["spec"]["content"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertRegex(context["context_id"], r"^[0-9a-f]{64}$")
             explicit_context = build_run_context(
                 repo, ticket, sha, ["app.py"], execution_agent="codex"
             )
             self.assertEqual(context["context_id"], explicit_context["context_id"])
             self.assertNotIn("requested_execution_agent", explicit_context["ticket"])
+
+    def test_parallel_mode_is_absent_by_default_and_recorded_only_on_opt_in(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            serial = build_run_context(repo, ticket, sha, ["app.py"])
+            parallel = build_run_context(
+                repo, ticket, sha, ["app.py"], parallel=True
+            )
+            self.assertNotIn("parallel_mode", serial)
+            self.assertIs(True, parallel["parallel_mode"])
+            self.assertNotEqual(serial["context_id"], parallel["context_id"])
 
     def test_auto_agent_binds_to_current_environment_for_rules_and_journal(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -186,6 +205,41 @@ class RunJournalTests(unittest.TestCase):
             report = json.loads(result.stdout)
             self.assertEqual("ready", report["status"])
             self.assertTrue(Path(report["journal"]).is_file())
+            self.assertNotIn("parallel_mode", report["run"]["context"])
+            self.assertEqual("implementation", report["work_unit"]["kind"])
+            self.assertEqual("serial", report["work_unit"]["execution_mode"])
+            self.assertEqual("feature-01", report["work_unit"]["ticket"]["id"])
+            self.assertEqual(
+                ["completed", "blocked-by-design", "blocked-by-evidence"],
+                report["work_unit"]["expected_outcomes"],
+            )
+
+    def test_run_start_cli_records_explicit_parallel_opt_in(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "run-start",
+                    "--repo",
+                    str(repo),
+                    "--ticket",
+                    str(ticket),
+                    "--base",
+                    sha,
+                    "--parallel",
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            report = json.loads(result.stdout)
+            context = report["run"]["context"]
+            self.assertIs(True, context["parallel_mode"])
+            self.assertEqual("parallel", report["work_unit"]["execution_mode"])
 
     def test_run_start_cli_resolves_auto_agent(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -213,6 +267,179 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stderr)
             run = json.loads(result.stdout)["run"]
             self.assertEqual("claude", run["context"]["ticket"]["execution_agent"])
+
+    def test_implementation_session_cli_round_trip(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            repo, ticket, sha = self._repo(root)
+            opened = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "implementation-open",
+                    "--repo",
+                    str(repo),
+                    "--ticket",
+                    str(ticket),
+                    "--base",
+                    sha,
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, opened.returncode, opened.stderr)
+            open_report = json.loads(opened.stdout)
+            self.assertEqual("serial", open_report["execution_mode"])
+            journal = open_report["lanes"][0]["work_unit"]["journal"]
+            result_file = root / "result.json"
+            result_file.write_text(
+                json.dumps(
+                    {
+                        "outcome": "completed",
+                        "test_receipt": "tests: pass",
+                        "review_receipt": "review: clean",
+                        "blocker": None,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            submitted = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "implementation-submit",
+                    "--journal",
+                    journal,
+                    "--result-file",
+                    str(result_file),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, submitted.returncode, submitted.stderr)
+            self.assertEqual("complete", json.loads(submitted.stdout)["run"]["phase"])
+            closed = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/workflow.py",
+                    "implementation-close",
+                    "--journal",
+                    journal,
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, closed.returncode, closed.stderr)
+            self.assertEqual("ready-for-integration", json.loads(closed.stdout)["status"])
+
+    def test_submission_rejects_changed_ticket_or_spec_content(self):
+        for changed in ("ticket", "spec"):
+            with self.subTest(changed=changed), tempfile.TemporaryDirectory() as tmp:
+                repo, ticket, sha = self._repo(Path(tmp))
+                path, journal = start_run(repo, ticket, sha)
+                source = ticket if changed == "ticket" else Path(
+                    journal["context"]["spec"]["content"]["path"]
+                )
+                source.write_text(source.read_text(encoding="utf-8") + "\nchanged\n", encoding="utf-8")
+                with self.assertRaisesRegex(RunJournalError, "内容已变化"):
+                    submit_run_outcome(
+                        path,
+                        {
+                            "outcome": "completed",
+                            "test_receipt": "tests: pass",
+                            "review_receipt": "review: clean",
+                            "blocker": None,
+                        },
+                    )
+
+    def test_completed_and_blocked_outcomes_require_their_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha)
+            with self.assertRaisesRegex(RunJournalError, "test_receipt"):
+                submit_run_outcome(
+                    path,
+                    {
+                        "outcome": "completed",
+                        "test_receipt": None,
+                        "review_receipt": "review: clean",
+                        "blocker": None,
+                    },
+                )
+            report = submit_run_outcome(
+                path,
+                {
+                    "outcome": "blocked-by-evidence",
+                    "test_receipt": None,
+                    "review_receipt": None,
+                    "blocker": "missing service credentials",
+                },
+            )
+            self.assertEqual("pause", report["next_action"])
+
+    def test_parallel_session_has_disjoint_lanes_and_aggregate_close(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, first, sha = self._repo(Path(tmp))
+            second = first.with_name("tickets-feature-02.md")
+            second.write_text(
+                first.read_text(encoding="utf-8")
+                .replace("feature-01", "feature-02")
+                .replace("sequence: 1", "sequence: 2")
+                .replace("rule_scope: [app.py]", "rule_scope: [lib.py]"),
+                encoding="utf-8",
+            )
+            (repo / "lib.py").write_text("value = 1\n", encoding="utf-8")
+            report = open_implementation_session(
+                repo, [first, second], sha, parallel=True
+            )
+            self.assertEqual("parallel", report["execution_mode"])
+            self.assertEqual(2, len(report["lanes"]))
+            journals = []
+            for lane in report["lanes"]:
+                journal = Path(lane["work_unit"]["journal"])
+                journals.append(journal)
+                submit_run_outcome(
+                    journal,
+                    {
+                        "outcome": "completed",
+                        "test_receipt": "tests: pass",
+                        "review_receipt": "review: clean",
+                        "blocker": None,
+                    },
+                )
+            closed = close_implementation_session(journals)
+            self.assertEqual("ready-for-integration", closed["status"])
+            self.assertEqual(report["session_id"], closed["session_id"])
+
+    def test_parallel_session_rejects_overlapping_or_implicit_multiple_tickets(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, first, sha = self._repo(Path(tmp))
+            second = first.with_name("tickets-feature-02.md")
+            second.write_text(
+                first.read_text(encoding="utf-8")
+                .replace("feature-01", "feature-02")
+                .replace("sequence: 1", "sequence: 2")
+                .replace("rule_scope: [app.py]", "rule_scope: [app.py/generated]"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RunJournalError, "串行"):
+                open_implementation_session(repo, [first, second], sha)
+            with self.assertRaisesRegex(RunJournalError, "写入范围重叠"):
+                open_implementation_session(repo, [first, second], sha, parallel=True)
+            second.write_text(
+                second.read_text(encoding="utf-8")
+                .replace("rule_scope: [app.py/generated]", "rule_scope: [lib.py]")
+                .replace("blocked_by: []", "blocked_by: [feature-01]"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RunJournalError, "尚未解除阻塞"):
+                open_implementation_session(repo, [first, second], sha, parallel=True)
 
 
 if __name__ == "__main__":

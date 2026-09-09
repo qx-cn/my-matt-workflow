@@ -22,10 +22,10 @@ disable-model-invocation: true
    - 用 **`/my-prototype`** 以一次性代码回答问题；
    - 再用 **`/my-handoff`** 带回学到的内容，并从原想法线程引用它。
 3. **分支——这是跨多个会话的构建吗？**
-   - **是** → 使用 **`/my-to-spec`** 将当前线程变成 Spec，再用 **`/my-to-tickets`** 拆成 tracer-bullet Ticket；每张 Ticket 都声明其**阻塞边**。本地后端时每张 Ticket 保存在 `.agent/work/<feature>/tickets/tickets-<feature>-<NN>.md`，按阻塞优先完成；真实 Tracker 时使用原生阻塞链接，因此任何已解除阻塞的 Ticket 都可领取。默认由 `/my-implement` 按已解析的 `work_scope_policy` 领取 frontier；只有多张 Ticket 已明确通过架构就绪和隔离写入门槛时，才使用 `/my-implement-in-parallel`。用户说「继续 / 提交并继续」不升档、不放宽该策略。
+   - **是** → 使用 **`/my-to-spec`** 将当前线程变成 Spec，再用 **`/my-to-tickets`** 拆成 tracer-bullet Ticket；每张 Ticket 都声明其**阻塞边**。本地后端时每张 Ticket 保存在 `.agent/work/<feature>/tickets/tickets-<feature>-<NN>.md`，按阻塞优先完成；真实 Tracker 时使用原生阻塞链接，因此任何已解除阻塞的 Ticket 都可领取。由 `/my-implement` 在当前已批准范围内实施。
    - **否** → 在当前上下文直接使用 **`/my-implement`**。
 
-无论哪种情况，**`/my-implement`** 都会按每次一个 red-green 切片驱动 **`/my-tdd`**，并在提交前运行 **`/my-code-review`**，从 Standards 与 Spec 两个轴审查 diff。只想以测试先行构建一个明确行为时，可单独使用 **`/my-tdd`**；想针对固定基线审查分支或 PR 时，可单独使用 **`/my-code-review`**。
+通常直接选择 **`/my-implement`**；只有目标本身限定为练习一个明确行为的测试先行过程，或针对固定基线做只读代码审查时，才分别选择 **`/my-tdd`** 或 **`/my-code-review`**。
 
 ### 上下文卫生
 
@@ -69,7 +69,8 @@ disable-model-invocation: true
 - **`/my-grill-me`**——与 `/my-grill-with-docs` 相同的高强度访谈，但用于**没有代码库**的场景。它无状态、不保存本地内容；适合打磨任何不属于仓库的计划或设计。
 - **`/my-review-design`**——对已形成的方案做一次性只读评审，检查待决策项、逻辑完整性、内部一致性、设计闭环和最终态表达；不修改文档，也不重新展开访谈。
 - **规则专项评审**——用 **`/my-reader-first-writing`** 检查文档是否服务目标读者，用 **`/my-final-state-writing review`** 检查是否只保留当前有效状态，用 **`/my-visual-communication review`** 检查图示选择与表达，用 **`/my-humanizer review`** 只读识别 AI 写作痕迹；写入、发布或交接承重文档前，用 **`/my-artifact-finalization`** 执行四项证据 gate。专项评审只报告有依据的问题，不修改原文。
-- **`/my-review-in-parallel`**——冻结同一产物，并行运行治理清单中的全部规则 reviewer；适合交付前综合检查。它只读、按根因去重；宿主无并行能力时明确串行降级。
+- **`/my-review-artifact`**——对同一固定版本的交付产物运行适用的质量方法，并把证据合并成一次综合只读审查。
+- **`/my-review-skill`**——先分诊一组 Skill，或对单个 Skill 做根本性只读审查；判断它应保留、重构、合并、外置、改由 runtime 执行还是退役。
 - **`/my-prototype`**——回答一个设计问题的小型一次性程序：这个状态模型是否合理，或 UI 应该是什么样。第一天起就把它视为可丢弃物：保留答案，删除代码。它是主流程第 2 步的绕行，也可用于任何难以在纸面定论的设计问题。
 - **`/my-research`**——把阅读工作委托给后台 Agent：它查阅一手来源，再在仓库留下带引用的 Markdown。阅读期间继续工作。其结果应带回 `/my-grill-with-docs` 主流程；研究为思考提供材料，不取代思考。
 - **`/my-teach`**——围绕当前目录这个有状态学习工作区跨会话学习概念。

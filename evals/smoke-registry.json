@@ -9,6 +9,8 @@
     "my-to-spec": ["main-workflow-fresh-context"],
     "my-to-tickets": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
     "my-implement": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
+    "my-review-artifact": ["artifact-review-method-boundary"],
+    "my-review-skill": ["skill-review-root-before-wording"],
     "my-test-report": ["main-workflow-fresh-context"]
   }
 }

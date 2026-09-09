@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 from unittest import mock
 
@@ -44,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 6,
-                "required_scenarios": 5,
+                "scenarios": 8,
+                "required_scenarios": 7,
             },
             validate_evals(ROOT),
         )
@@ -62,6 +63,40 @@ class EvalValidationTests(unittest.TestCase):
                 run_scenario(ROOT, scenario),
                 scenario.identifier,
             )
+
+    def test_skill_review_contract_blocks_incomplete_structural_gates(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "skill-review-root-before-wording"
+        )
+        gates = {
+            "runtime_snapshot_ready": {
+                "status": "stop",
+                "rule": "fixed-review-unit",
+                "next": "build-runtime-snapshot",
+            },
+            "scope_inventory_complete": {
+                "status": "stop",
+                "rule": "complete-scope-inventory",
+                "next": "resolve-skill-relations",
+            },
+            "walkthrough_coverage_complete": {
+                "status": "stop",
+                "rule": "complete-walkthrough-coverage",
+                "next": "map-uncovered-paths",
+            },
+            "snapshot_verified": {
+                "status": "stop",
+                "rule": "verify-review-snapshot",
+                "next": "finalize-review-unit",
+            },
+        }
+        for field, expected in gates.items():
+            with self.subTest(field=field):
+                input_value = {**scenario.input, field: False}
+                blocked = replace(scenario, input=input_value, expected=expected)
+                self.assertEqual(expected, run_scenario(ROOT, blocked))
 
     def test_tampered_structured_expected_outcome_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -462,7 +497,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    36, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    37, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
                 original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
@@ -486,5 +521,5 @@ class FullReleaseE2ETests(unittest.TestCase):
                     original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    36, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    37, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )

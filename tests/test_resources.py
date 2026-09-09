@@ -33,7 +33,7 @@ class SharedResourceTests(unittest.TestCase):
                 "my-review-design",
                 "my-final-state-writing",
                 "my-artifact-finalization",
-                "my-review-in-parallel",
+                "my-review-artifact",
                 "my-wayfinder",
             },
             set(entry["consumers"]),
@@ -170,7 +170,11 @@ class SharedResourceTests(unittest.TestCase):
                 self.assertTrue(reference.is_file(), name)
                 self.assertIn("图只回答一个核心问题", reference.read_text())
                 self.assertIn("字溢出、叠字、遮挡", reference.read_text())
-                body = (ROOT / "skills" / name / "SKILL.md").read_text()
+                skill = ROOT / "skills" / name
+                body = (skill / "SKILL.md").read_text()
+                if name == "my-teach":
+                    body += (skill / "CONTENT.md").read_text()
+                    body += (skill / "FRONTEND.md").read_text()
                 self.assertIn("references/shared/visual-communication.md", body)
 
             other = Path(tmp) / "my-install"
@@ -255,6 +259,12 @@ class SharedResourceTests(unittest.TestCase):
             ),
             "my-triage": (
                 "references/shared/adapters/ticket-selection.md",
+            ),
+            "my-implement": (
+                "references/shared/adapters/runtime-sessions.md",
+            ),
+            "my-review-artifact": (
+                "references/shared/adapters/runtime-sessions.md",
             ),
             "my-wayfinder": (
                 "references/shared/adapters/composition.md",

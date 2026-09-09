@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "id": "artifact-review-method-boundary",
+  "type": "artifact-review-contract",
+  "skills": ["my-review-artifact"],
+  "input": {
+    "fixed_review_unit": true,
+    "required_checks": [
+      "my-final-state-writing",
+      "my-reader-first-writing",
+      "my-visual-communication",
+      "my-humanizer",
+      "my-artifact-finalization"
+    ],
+    "completed_checks": [
+      "my-final-state-writing",
+      "my-reader-first-writing",
+      "my-visual-communication",
+      "my-humanizer",
+      "my-artifact-finalization"
+    ],
+    "material_root_causes": ["reader-cannot-act", "reader-cannot-act"],
+    "inconclusive_count": 1
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "semantic-evidence-review",
+    "findings": 1,
+    "inconclusive": 1,
+    "next": "verify-content-id"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "artifact-review-method-boundary",
+    "sources": [
+      {
+        "path": "skills/my-review-artifact/SKILL.md",
+        "sha256": "sha256:f3a5b08f7fd7c0a6783426297f955b49f4db28213562e305ba2fbb5365212f7a"
+      }
+    ]
+  }
+}

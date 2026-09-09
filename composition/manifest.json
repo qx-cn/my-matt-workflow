@@ -12,15 +12,15 @@
       {"skill": "my-tdd", "when": "tdd-phase", "kind": "method"},
       {"skill": "my-code-review", "when": "review-phase", "kind": "method"}
     ],
-    "my-implement-in-parallel": [
-      {"skill": "my-implement", "when": "worker", "kind": "method"}
+    "my-review-artifact": [
+      {"skill": "my-final-state-writing", "when": "final-deliverable", "kind": "method"},
+      {"skill": "my-visual-communication", "when": "complex-human-facing", "kind": "method"},
+      {"skill": "my-humanizer", "when": "human-facing-prose", "kind": "method"},
+      {"skill": "my-reader-first-writing", "when": "reader-facing", "kind": "method"},
+      {"skill": "my-artifact-finalization", "when": "load-bearing-deliverable", "kind": "method"}
     ],
-    "my-review-in-parallel": [
-      {"skill": "my-final-state-writing", "when": "governed-rule", "kind": "method"},
-      {"skill": "my-visual-communication", "when": "governed-rule", "kind": "method"},
-      {"skill": "my-humanizer", "when": "governed-rule", "kind": "method"},
-      {"skill": "my-reader-first-writing", "when": "governed-rule", "kind": "method"},
-      {"skill": "my-artifact-finalization", "when": "governed-rule", "kind": "method"}
+    "my-review-skill": [
+      {"skill": "my-writing-great-skills", "when": "instruction-design-after-existence-gate", "kind": "method"}
     ],
     "my-wayfinder": [
       {"skill": "my-grilling", "when": "grilling-decision", "kind": "method"},
@@ -41,8 +41,8 @@
       "my-review-design",
       "my-triage",
       "my-implement",
-      "my-implement-in-parallel",
-      "my-review-in-parallel",
+      "my-review-artifact",
+      "my-review-skill",
       "my-wayfinder",
       "my-diagnosing-bugs"
     ]

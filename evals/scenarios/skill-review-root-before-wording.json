@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "id": "skill-review-root-before-wording",
+  "type": "skill-review-contract",
+  "skills": ["my-review-skill"],
+  "input": {
+    "fixed_review_unit": true,
+    "runtime_snapshot_ready": true,
+    "scope_inventory_complete": true,
+    "existence_gate_complete": true,
+    "walkthrough_coverage_complete": true,
+    "snapshot_verified": true,
+    "evidence_level": "static",
+    "root_causes": ["deterministic-policy-in-prose", "deterministic-policy-in-prose"],
+    "editorial_candidates": 3
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "root-before-wording",
+    "findings": 1,
+    "suppressed_editorial": 3,
+    "verdict": "INCONCLUSIVE",
+    "next": "comparative-forward-test"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "skill-review-root-before-wording",
+    "sources": [
+      {
+        "path": "skills/my-review-skill/SKILL.md",
+        "sha256": "sha256:692298f53a16b648fea908916f66871e345b999f184487c1dc02f79445e76bad"
+      }
+    ]
+  }
+}

@@ -38,13 +38,23 @@ from workflow_lib.work_artifacts import (
 )
 from workflow_lib.release import build_release, release_matches_source
 from workflow_lib.review_snapshot import ReviewSnapshotError, build_review_snapshot
-from workflow_lib.parallel_review import ParallelReviewError, build_parallel_review_plan
+from workflow_lib.artifact_review import (
+    ArtifactReviewError,
+    build_artifact_review_snapshot,
+    finalize_artifact_review_snapshot,
+    submit_artifact_review_result,
+    verify_artifact_review_snapshot,
+)
 from workflow_lib.run_journal import (
     RUN_PHASE_TRANSITIONS,
     RunJournalError,
     build_run_context,
+    close_implementation_session,
+    implementation_work_unit,
+    open_implementation_session,
     record_run,
     start_run,
+    submit_run_outcome,
 )
 from workflow_lib.smoke_registry import (
     SmokeRegistryError,
@@ -630,26 +640,70 @@ def command_review_snapshot(args: argparse.Namespace) -> None:
         raise SystemExit(exit_code)
 
 
-def command_parallel_review_plan(args: argparse.Namespace) -> None:
-    governance_candidates = (
-        ROOT / "resources" / "governance.json",
-        ROOT.parent / "skills" / "my-review-in-parallel" / "references" / "shared" / "governance.json",
-    )
-    governance_path = next((path for path in governance_candidates if path.is_file()), governance_candidates[0])
+def command_artifact_review_snapshot(args: argparse.Namespace) -> None:
     try:
-        report = build_parallel_review_plan(
-            governance_path,
-            [Path(path) for path in args.artifact],
+        report = build_artifact_review_snapshot(
+            [Path(path) for path in args.artifact], parallel=args.parallel
         )
-    except ParallelReviewError as exc:
+    except ArtifactReviewError as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def _read_result_object(path: str, label: str) -> dict[str, object]:
+    try:
+        value = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"无法读取 {label} result：{path}") from exc
+    if not isinstance(value, dict):
+        raise SystemExit(f"{label} result 必须是 JSON object")
+    return value
+
+
+def command_artifact_review_submit(args: argparse.Namespace) -> None:
+    result = _read_result_object(args.result_file, "artifact review")
+    try:
+        report = submit_artifact_review_result(
+            [Path(path) for path in args.artifact], Path(args.snapshot_dir), result
+        )
+    except ArtifactReviewError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    if report["status"] == "stale":
+        raise SystemExit(2)
+
+
+def command_artifact_review_verify(args: argparse.Namespace) -> None:
+    try:
+        report = verify_artifact_review_snapshot(
+            [Path(path) for path in args.artifact], args.expect_content_id
+        )
+    except ArtifactReviewError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    if report["status"] == "stale":
+        raise SystemExit(2)
+
+
+def command_artifact_review_finalize(args: argparse.Namespace) -> None:
+    try:
+        report = finalize_artifact_review_snapshot(
+            [Path(path) for path in args.artifact],
+            args.expect_content_id,
+            Path(args.snapshot_dir),
+        )
+    except ArtifactReviewError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    if report["status"] == "stale":
+        raise SystemExit(2)
 
 
 def command_run_context(args: argparse.Namespace) -> None:
     try:
         context = build_run_context(
-            Path(args.repo), Path(args.ticket), args.base, args.path, args.agent
+            Path(args.repo), Path(args.ticket), args.base, args.path,
+            execution_agent=args.agent, parallel=args.parallel,
         )
     except RunJournalError as exc:
         raise SystemExit(str(exc)) from exc
@@ -659,17 +713,55 @@ def command_run_context(args: argparse.Namespace) -> None:
 def command_run_start(args: argparse.Namespace) -> None:
     try:
         path, journal = start_run(
-            Path(args.repo), Path(args.ticket), args.base, args.path, args.agent
+            Path(args.repo), Path(args.ticket), args.base, args.path,
+            execution_agent=args.agent, parallel=args.parallel,
         )
     except RunJournalError as exc:
         raise SystemExit(str(exc)) from exc
     print(
         json.dumps(
-            {"status": "ready", "journal": str(path), "run": journal},
+            {
+                "status": "ready",
+                "journal": str(path),
+                "run": journal,
+                "work_unit": implementation_work_unit(path, journal),
+            },
             ensure_ascii=False,
             sort_keys=True,
         )
     )
+
+
+def command_implementation_open(args: argparse.Namespace) -> None:
+    try:
+        report = open_implementation_session(
+            Path(args.repo),
+            [Path(ticket) for ticket in args.ticket],
+            args.base,
+            paths=args.path,
+            execution_agent=args.agent,
+            parallel=args.parallel,
+        )
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_implementation_submit(args: argparse.Namespace) -> None:
+    result = _read_result_object(args.result_file, "implementation")
+    try:
+        report = submit_run_outcome(Path(args.journal), result)
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_implementation_close(args: argparse.Namespace) -> None:
+    try:
+        report = close_implementation_session([Path(path) for path in args.journal])
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
 def command_run_record(args: argparse.Namespace) -> None:
@@ -920,9 +1012,32 @@ def parser() -> argparse.ArgumentParser:
     review_snapshot.add_argument("--require-clean", action="store_true")
     review_snapshot.set_defaults(func=command_review_snapshot)
 
-    parallel_review = sub.add_parser("parallel-review-plan")
-    parallel_review.add_argument("--artifact", action="append", required=True)
-    parallel_review.set_defaults(func=command_parallel_review_plan)
+    artifact_snapshot = sub.add_parser("artifact-review-snapshot")
+    artifact_snapshot.add_argument("--artifact", action="append", required=True)
+    artifact_snapshot.add_argument("--parallel", action="store_true")
+    artifact_snapshot.set_defaults(func=command_artifact_review_snapshot)
+
+    artifact_open = sub.add_parser("artifact-review-open")
+    artifact_open.add_argument("--artifact", action="append", required=True)
+    artifact_open.add_argument("--parallel", action="store_true")
+    artifact_open.set_defaults(func=command_artifact_review_snapshot)
+
+    artifact_submit = sub.add_parser("artifact-review-submit")
+    artifact_submit.add_argument("--artifact", action="append", required=True)
+    artifact_submit.add_argument("--snapshot-dir", required=True)
+    artifact_submit.add_argument("--result-file", required=True)
+    artifact_submit.set_defaults(func=command_artifact_review_submit)
+
+    artifact_verify = sub.add_parser("artifact-review-verify")
+    artifact_verify.add_argument("--artifact", action="append", required=True)
+    artifact_verify.add_argument("--expect-content-id", required=True)
+    artifact_verify.set_defaults(func=command_artifact_review_verify)
+
+    artifact_finalize = sub.add_parser("artifact-review-finalize")
+    artifact_finalize.add_argument("--artifact", action="append", required=True)
+    artifact_finalize.add_argument("--expect-content-id", required=True)
+    artifact_finalize.add_argument("--snapshot-dir", required=True)
+    artifact_finalize.set_defaults(func=command_artifact_review_finalize)
 
     run_context = sub.add_parser("run-context")
     run_context.add_argument("--repo", default=".")
@@ -930,6 +1045,7 @@ def parser() -> argparse.ArgumentParser:
     run_context.add_argument("--base", required=True)
     run_context.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
     run_context.add_argument("--path", action="append", default=[])
+    run_context.add_argument("--parallel", action="store_true")
     run_context.set_defaults(func=command_run_context)
 
     run_start = sub.add_parser("run-start")
@@ -938,7 +1054,26 @@ def parser() -> argparse.ArgumentParser:
     run_start.add_argument("--base", required=True)
     run_start.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
     run_start.add_argument("--path", action="append", default=[])
+    run_start.add_argument("--parallel", action="store_true")
     run_start.set_defaults(func=command_run_start)
+
+    implementation_open = sub.add_parser("implementation-open")
+    implementation_open.add_argument("--repo", default=".")
+    implementation_open.add_argument("--ticket", action="append", required=True)
+    implementation_open.add_argument("--base", required=True)
+    implementation_open.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
+    implementation_open.add_argument("--path", action="append", default=[])
+    implementation_open.add_argument("--parallel", action="store_true")
+    implementation_open.set_defaults(func=command_implementation_open)
+
+    implementation_submit = sub.add_parser("implementation-submit")
+    implementation_submit.add_argument("--journal", required=True)
+    implementation_submit.add_argument("--result-file", required=True)
+    implementation_submit.set_defaults(func=command_implementation_submit)
+
+    implementation_close = sub.add_parser("implementation-close")
+    implementation_close.add_argument("--journal", action="append", required=True)
+    implementation_close.set_defaults(func=command_implementation_close)
 
     run_record = sub.add_parser("run-record")
     run_record.add_argument("journal")

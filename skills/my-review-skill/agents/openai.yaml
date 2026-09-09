@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Skill"
+  short_description: "Root-cause review for Agent skills"
+  default_prompt: "Use $my-review-skill to run a root-cause Deep Review of this skill."
+policy:
+  allow_implicit_invocation: false

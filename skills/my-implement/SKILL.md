@@ -1,40 +1,28 @@
 ---
 name: my-implement
-description: 根据 Spec 或一组 Ticket 实施工作。
+description: 根据已批准的 Spec 或 implementation Ticket 编写并验证代码；不用于重新定义需求或只做代码审查。
 disable-model-invocation: true
 ---
 
-实施用户在 Spec 或 Ticket 中描述的工作。普通模式下，`my-implement` 是串行跨 Ticket 继续的宿主：每张 Ticket 的验收、测试、审查和提交完成后，按 runtime 的 `next-ticket` 结果继续、完成或暂停。由 `my-implement-in-parallel` 组合调用时进入 `worker mode`，强制只实施分配的单张 Ticket；完成或阻塞后返回协调器，不运行 `next-ticket`。
+# 实施
 
-开始每个 Ticket 时记录当前 `HEAD`，并从安装状态读取 `installed_agent`。若 `.agent/work/<topic>/runs/run-<ticket-id>-spec-r<revision>.json` 已存在，恢复其中的运行事实；执行 Agent 与当前环境不一致时停止。否则通过安装状态记录的 `runtime_entry` 运行：
+把 runtime 提供的当前工作单元实现为可验证、可审查的代码。工作单元中的 Ticket、Spec、适用规则和允许范围是本次实施边界；调度、状态、恢复、写操作 gate 与内容快照由 runtime 管理，不在本 Skill 中重新编排。开始与交付遵循 [runtime session bridge](references/shared/adapters/runtime-sessions.md)。
 
-```text
-run-start --repo <repo> --ticket <ticket-path> --base <HEAD> --agent <installed_agent> --path <planned-path> [...]
-```
+## 实施方法
 
-该命令将 `execution_agent: auto` 绑定到当前 Agent，并一次解析 Ticket/Spec 血缘、实际路径规则、测试命令、composition/work-scope/decision/humanizer 策略与四类写操作 gate，把 context receipt 写入 run journal。以该 receipt 为当前运行事实，不再从多个 adapter 重复拼装同一上下文。随后用 `ticket-transition <ticket-path> --to implementing` 校验状态变化，再认领并进入实施。新规则若改变架构、范围、接口或验收，回到计划确认；不得静默偏离已批准计划。
+先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。按照 [TDD 方法](references/composed/my-tdd/COMPOSED.md)逐个完成最小 red-green 切片；只实现当前行为所需内容，不预建尚未要求的抽象或能力。
 
-实施中发现计划行不通时，按影响回退，不默认重走完整访谈：
+每个切片运行能最快证明该行为的最小针对性测试。工作单元结束时验证受影响模块或链路；只有整份计划结束、发布或合并前、仓库规则要求，或者风险证据表明影响面扩大时，才运行完整测试套件。
 
-- 可逆实现细节仍能满足 Spec：在当前 Ticket 内调整并补证据。
-- Ticket 拆分或依赖边错误，但 Spec 仍成立：暂停当前 Ticket，只修订受影响的 Ticket 图并重新准入。
-- 目标、范围、公开接口、数据语义、验收或风险承担中的承重假设失效：用 `run-record <journal> --phase blocked-by-design --blocker pause-for-revision` 落盘，再校验 Ticket 的 `implementing → blocked-by-design → revising`；记录失败证据和影响范围，只对受影响决定进行定向访谈。先说明这是需要写回的新增设计，展示定向 Spec 修订并请求确认；确认后按 [写操作 Gate](references/shared/adapters/write-actions.md) 已解析的 `docs_writeback` 写回新 Spec revision（新建文件，递增 `revision`，`supersedes` 上一版），再重建未完成 Ticket，并为新增公开能力或已 `complete` 结果创建引用原 Ticket 的补偿 Ticket。写回与准入完成前不得恢复实施。准入通过后校验 `revising → revalidated → implementing`，为新 revision 建立新的 run journal。
-- 根目标本身失效：停止，由用户决定是否重新进行完整访谈。
+实现与计划出现偏差时，按语义影响处理：
 
-已经 `complete` 的 Ticket 保持历史不变；不重开、不改写、不追加验收项。若新 Spec 需要撤销、迁移、修正其结果，或补其未覆盖的公开能力，创建引用原 Ticket 的补偿 Ticket。
+- 可逆的局部实现细节仍满足 Spec：在当前工作单元内调整并补充证据。
+- Ticket 拆分或依赖不成立，但 Spec 仍成立：返回 `blocked-by-design`，说明需要调整的 Ticket 图及证据。
+- 目标、范围、公开接口、数据语义、验收或风险承担发生变化：返回 `blocked-by-design` 和 `pause-for-revision`，指出失效假设与最小 Spec 修订范围。
+- 缺少环境、权限或可判定证据：返回 `blocked-by-evidence`，不要猜测通过。
 
-在计划、Ticket 或代码可推断的 seam 上进入 `my-tdd` 阶段；只有[工作范围](references/shared/adapters/work-scope.md)定义的关键 seam 才暂停等待确认。
+已完成 Ticket 是历史事实；后续需要改变其结果时，提出引用原 Ticket 的补偿或迁移工作，不改写历史验收。
 
-进入测试、实施、审查、提交和完成阶段时，用 `run-record <journal> --phase <phase>` 更新磁盘状态；实际测试摘要用 `--test-receipt`，通过审查的 `content_id` 用 `--review-receipt`。改动中运行能最快证明当前行为的最小针对性测试；Ticket 完成时运行受影响模块或链路的测试。只有整份计划完成、发布或合并前、项目规则明确要求，或者失败与风险证据表明影响面扩大时，才运行完整测试套件。相关验证通过后，没有新改动、新失败或未解决风险就不重复或扩大测试。
+## 完成标准
 
-对预计无法在单次工具调用内完成的测试、构建、迁移等命令，应以可续接的执行会话启动，并通过同一会话持续轮询至进程退出；不得将单次返回、等待超时或输出截断视为命令终止。完成后必须检查实际退出码；命令如提供最终结果摘要，也应一并核对。
-
-完成后，通过安装状态记录的 `runtime_entry` 运行 `review-snapshot --repo <repo> --base <实施开始的 HEAD>`，再进入 `my-code-review` 阶段审查该 `content_id` 的完整工作树。审查必须覆盖 committed、staged、unstaged、untracked；不能因为实现尚未提交就得到空 diff。若 review 后修复了任何内容，生成新快照并重新执行完整双轴审查，旧 receipt 作废。
-
-按[写操作 Gate](references/shared/adapters/write-actions.md)已解析进 context receipt 的结果处理提交。提交后再次运行 `review-snapshot --repo <repo> --base <实施开始的 HEAD> --expect-content-id <已通过审查的 content_id> --require-clean`；只有返回 `match`，才证明 Commit 与已审查内容等价且没有遗留改动。完成 Ticket 前勾选验收项，用 `ticket-transition <ticket-path> --to complete` 校验状态变化，再更新状态、释放认领并将 journal 迁移到 `complete`；未完成这些步骤不得选择下游 Ticket。
-
-组合阶段读取 `.agent/matt-workflow.md` 的 `composition_policy` 并遵循[组合调用](references/shared/adapters/composition.md)：
-
-- `my-tdd` 与 `my-code-review` 都是内部方法：`automatic` 与 `manual` 都只读取当前阶段的 [my-tdd 正文](references/composed/my-tdd/COMPOSED.md) 或 [my-code-review 正文](references/composed/my-code-review/COMPOSED.md)，执行后返回宿主；不要输出另一条 Skill 调用。
-
-adapter 继续分别定义 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md)、[工作范围](references/shared/adapters/work-scope.md)、[工作产物访问](references/shared/adapters/artifact-access.md) 与 [项目规则解析](references/shared/adapters/project-rules.md) 的协议语义；当前值和路径只以 run context receipt 为准。
+提交结果前按照 [代码审查方法](references/composed/my-code-review/COMPOSED.md)审查当前工作单元。只有验收标准全部满足、必要测试通过、审查没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。

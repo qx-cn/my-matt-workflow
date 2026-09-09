@@ -41,7 +41,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
 
     def test_checked_in_suite_and_schema_are_valid(self):
         cases = validate_behavior_suite(SUITE)
-        self.assertEqual(12, len(cases))
+        self.assertEqual(15, len(cases))
         schema = json.loads(
             (ROOT / "evals/agent-smokes/astra-evidence.schema.json").read_text()
         )
@@ -63,13 +63,43 @@ class BehaviorEvidenceTests(unittest.TestCase):
             self.assertTrue((fixture_root / fixture / "baseline").is_dir())
             self.assertTrue((fixture_root / fixture / "candidate").is_dir())
 
+    def test_teach_quality_fixtures_have_a_runbook(self):
+        runbook = (
+            ROOT / "evals/agent-smokes/teach-course-quality.md"
+        ).read_text()
+        for case in (
+            "teach-reader-course-from-source-heavy-input",
+            "teach-frontend-blocks-author-centered-draft",
+        ):
+            self.assertIn(case, validate_behavior_suite(SUITE))
+            self.assertIn(case, runbook)
+        fixture_root = ROOT / "evals/fixtures/my-teach"
+        self.assertTrue((fixture_root / "source-heavy/MISSION.md").is_file())
+        self.assertTrue((fixture_root / "source-heavy/RESOURCES.md").is_file())
+        self.assertTrue((fixture_root / "source-heavy/source-notes.md").is_file())
+        self.assertTrue((fixture_root / "bad-author-centered.content.md").is_file())
+
+    def test_skill_review_root_cause_fixture_has_a_runbook(self):
+        cases = validate_behavior_suite(SUITE)
+        case = "skill-review-runtime-root-before-wording"
+        runbook = (
+            ROOT / "evals/agent-smokes/skill-review-root-cause.md"
+        ).read_text()
+        fixture = (
+            ROOT
+            / "evals/fixtures/skill-review/runtime-owned-safety/SKILL.md"
+        )
+        self.assertIn(case, cases)
+        self.assertIn(case, runbook)
+        self.assertTrue(fixture.is_file())
+
     def test_partial_real_evidence_is_valid_but_not_complete(self):
         with tempfile.TemporaryDirectory() as tmp:
             evidence = Path(tmp) / "evidence.json"
             evidence.write_text(json.dumps(self._record()))
             report = validate_behavior_evidence(SUITE, evidence)
             self.assertEqual(1, report["runs"])
-            self.assertEqual(11, len(report["missing"]))
+            self.assertEqual(14, len(report["missing"]))
             with self.assertRaisesRegex(BehaviorEvidenceError, "缺少行为场景"):
                 validate_behavior_evidence(SUITE, evidence, require_complete=True)
 

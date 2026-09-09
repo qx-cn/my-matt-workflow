@@ -53,6 +53,10 @@
       "kind": "execution-protocol",
       "validation": "tests/test_workflow.py::ProfileTests.test_plan_skills_use_project_rule_adapter"
     },
+    "resources/adapters/runtime-sessions.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_runtime_session_bridge_is_shared_and_skills_remain_semantic"
+    },
     "policies/context-hygiene.md": {
       "kind": "execution-protocol",
       "validation": "tests/test_resources.py::SharedResourceTests.test_workflow_control_pointers_are_bundled_for_consumers"

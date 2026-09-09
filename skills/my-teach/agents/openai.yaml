@@ -1,5 +1,5 @@
 interface:
   display_name: "Teach"
-  short_description: "Learn a concept in a guided workspace"
+  short_description: "将可信材料转化为帮助学生理解、练习并迁移的完整课程"
 policy:
   allow_implicit_invocation: false
