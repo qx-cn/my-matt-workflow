@@ -9,9 +9,14 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 from datetime import datetime
 from pathlib import Path
+
+# Managed runtime trees are verified by exact file inventory; bytecode caches
+# written next to workflow_lib would drift that inventory on every invocation.
+sys.dont_write_bytecode = True
 
 from workflow_lib.installer import (
     InstallError,

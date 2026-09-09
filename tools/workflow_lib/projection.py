@@ -50,12 +50,28 @@ def file_digest(path: Path) -> str:
     return digest.hexdigest()
 
 
+_EPHEMERAL_NAMES = {"__pycache__", ".DS_Store"}
+_EPHEMERAL_SUFFIXES = {".pyc", ".pyo"}
+
+
+def _is_ephemeral(relative: Path) -> bool:
+    return any(part in _EPHEMERAL_NAMES for part in relative.parts) or (
+        relative.suffix in _EPHEMERAL_SUFFIXES
+    )
+
+
 def directory_inventory(root: Path) -> dict[str, str]:
-    """Return the exact regular-file inventory under one directory."""
+    """Return the exact regular-file inventory under one directory.
+
+    Bytecode caches and Finder metadata are execution by-products, never
+    release content; they must not drift an inventory of a managed tree.
+    """
     return {
         path.relative_to(root).as_posix(): file_digest(path)
         for path in sorted(root.rglob("*"))
-        if path.is_file() and not path.is_symlink()
+        if path.is_file()
+        and not path.is_symlink()
+        and not _is_ephemeral(path.relative_to(root))
     }
 
 

@@ -454,6 +454,31 @@ class SecurityHardeningTests(unittest.TestCase):
                     )
                     verify_installed_state(state)
 
+    def test_installed_state_ignores_bytecode_and_finder_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._source_skill(root)
+            release = build_release(
+                root / "skills", root / "releases", release_id="v1", upstream_id="local"
+            )
+            home = root / "claude"
+            install_release(release, home, target="claude")
+            state = json.loads(
+                (home / "my-matt-workflow/install-state.json").read_text()
+            )
+
+            runtime = Path(str(state["runtime_entry"])).parent.parent
+            cache = runtime / "tools" / "workflow_lib" / "__pycache__"
+            cache.mkdir()
+            (cache / "installer.cpython-314.pyc").write_bytes(b"stale bytecode")
+            (runtime / "tools" / ".DS_Store").write_bytes(b"finder metadata")
+            skill_cache = home / "skills" / "my-demo" / "__pycache__"
+            skill_cache.mkdir()
+            (skill_cache / "helper.pyc").write_bytes(b"stale bytecode")
+
+            verify_installed_state(state)
+            install_release(release, home, target="claude")
+
     def test_install_rejects_tampered_target_manifest_and_cleans_staging(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
