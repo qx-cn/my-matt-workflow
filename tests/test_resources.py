@@ -43,7 +43,6 @@ class SharedResourceTests(unittest.TestCase):
             {
                 "my-to-spec",
                 "my-handoff",
-                "my-review-design",
                 "my-final-state-writing",
                 "my-artifact-finalization",
             },
@@ -166,7 +165,6 @@ class SharedResourceTests(unittest.TestCase):
             "my-visual-communication",
             "my-teach",
             "my-test-report",
-            "my-review-design",
         )
         with tempfile.TemporaryDirectory() as tmp:
             for name in consumers:
@@ -189,6 +187,13 @@ class SharedResourceTests(unittest.TestCase):
             bundle_resources_for_skill(manifest, ROOT, "my-install", other)
             self.assertFalse(
                 (other / "references/shared/visual-communication.md").exists()
+            )
+
+            design = Path(tmp) / "my-review-design"
+            design.mkdir()
+            bundle_resources_for_skill(manifest, ROOT, "my-review-design", design)
+            self.assertFalse(
+                (design / "references/shared/visual-communication.md").exists()
             )
 
     def test_reader_first_and_document_rendering_resources_are_scoped(self):

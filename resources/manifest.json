@@ -34,7 +34,6 @@
       "consumers": [
         "my-to-spec",
         "my-handoff",
-        "my-review-design",
         "my-final-state-writing",
         "my-artifact-finalization"
       ]
@@ -45,8 +44,7 @@
       "consumers": [
         "my-visual-communication",
         "my-teach",
-        "my-test-report",
-        "my-review-design"
+        "my-test-report"
       ]
     },
     "reader-first-writing": {

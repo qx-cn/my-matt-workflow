@@ -1333,9 +1333,9 @@ class ProfileTests(unittest.TestCase):
         ):
             self.assertNotIn(runtime_detail, implement)
 
-    def test_spec_handoff_and_design_review_apply_finalization_gate(self):
+    def test_spec_and_handoff_apply_finalization_gate(self):
         root = Path(__file__).resolve().parents[1] / "skills"
-        for skill in ("my-to-spec", "my-handoff", "my-review-design"):
+        for skill in ("my-to-spec", "my-handoff"):
             text = (root / skill / "SKILL.md").read_text()
             with self.subTest(skill=skill):
                 self.assertIn(
@@ -1348,6 +1348,14 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("依据与未知", spec)
         handoff = (root / "my-handoff/SKILL.md").read_text()
         self.assertIn("fresh-context", handoff)
+
+    def test_standalone_design_review_stays_focused(self):
+        root = Path(__file__).resolve().parents[1] / "skills"
+        design = (root / "my-review-design/SKILL.md").read_text()
+        self.assertIn("my-review-artifact", design)
+        self.assertIn("artifact_kind=design", design)
+        self.assertNotIn("references/shared/artifact-finalization.md", design)
+        self.assertNotIn("references/shared/visual-communication.md", design)
 
     def test_spec_and_tickets_preserve_revision_lineage_without_overdesign(self):
         root = Path(__file__).resolve().parents[1] / "skills"

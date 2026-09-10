@@ -37,7 +37,7 @@
     "scenario": "artifact-review-design-method-boundary",
     "sources": [
       {"path": "skills/my-review-artifact/SKILL.md", "sha256": "sha256:f7c83ae206a0caf992e522808568822f12a20c9348788b6897fd99609e45c08d"},
-      {"path": "skills/my-review-design/SKILL.md", "sha256": "sha256:1e49535d246d43e5fb8ebb3be05f31e5fb288513d61917b05fe3c4b99c30b305"}
+      {"path": "skills/my-review-design/SKILL.md", "sha256": "sha256:183ecdc3ef2f105f55f318c686c56e04ba94753c97a989a7573187929b80ef92"}
     ]
   }
 }

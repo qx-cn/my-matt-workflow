@@ -33,8 +33,8 @@ disable-model-invocation: true
 ## 评审与维护
 
 - 固定基线的代码审查：`{{skill-call:my-code-review}}`。
-- 方案只读审查：`{{skill-call:my-review-design}}`。
-- 综合产物审查：`{{skill-call:my-review-artifact}}`；专项方法包括 `{{skill-call:my-reader-first-writing}}`、`{{skill-call:my-final-state-writing}}`、`{{skill-call:my-visual-communication}}`、`{{skill-call:my-humanizer}}` 和 `{{skill-call:my-artifact-finalization}}`。
+- 只判断已形成方案的逻辑、承重决策、状态和责任边界是否闭环：`{{skill-call:my-review-design}}`。
+- 需要固定快照、跨质量维度检查或正式交付结论：`{{skill-call:my-review-artifact}}`；设计产物使用 `artifact_kind=design`，专项方法包括 `{{skill-call:my-reader-first-writing}}`、`{{skill-call:my-final-state-writing}}`、`{{skill-call:my-visual-communication}}`、`{{skill-call:my-humanizer}}` 和 `{{skill-call:my-artifact-finalization}}`。
 - Skill 组合、职责或文本审查：`{{skill-call:my-review-skill}}`；编写方法参考 `{{skill-call:my-writing-great-skills}}`。
 - 代码库健康巡检：`{{skill-call:my-improve-codebase-architecture}}`；模块形状与 seam 词汇参考 `{{skill-call:my-codebase-design}}`。
 
