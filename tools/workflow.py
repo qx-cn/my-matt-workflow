@@ -872,7 +872,8 @@ def command_run_review_evidence(args: argparse.Namespace) -> None:
         argv = argv[1:]
     try:
         receipt = record_review_evidence(
-            Path(args.journal), Path(args.snapshot_dir), argv
+            Path(args.journal), Path(args.snapshot_dir), argv,
+            reviewer_session_id=args.reviewer_session_id,
         )
     except RunJournalError as exc:
         raise SystemExit(str(exc)) from exc
@@ -1226,6 +1227,7 @@ def parser() -> argparse.ArgumentParser:
     run_review_receipt = sub.add_parser("run-review-evidence")
     run_review_receipt.add_argument("--journal", required=True)
     run_review_receipt.add_argument("--snapshot-dir", required=True)
+    run_review_receipt.add_argument("--reviewer-session-id")
     run_review_receipt.add_argument("command", nargs=argparse.REMAINDER)
     run_review_receipt.set_defaults(func=command_run_review_evidence)
 

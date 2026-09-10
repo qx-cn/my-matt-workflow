@@ -27,13 +27,53 @@ from tools.workflow_lib.run_journal import (
 
 ROOT = Path(__file__).resolve().parents[1]
 REVIEW_COMMAND = (
-    "python3 -c \"import json,os; print(json.dumps({"
-    "'review_id': os.environ['MY_MATT_REVIEW_ID'], "
-    "'status': 'pass', "
+    "python3 -c \"import json,os; b=json.loads(os.environ['MY_MATT_TICKET_BOUNDARY']); "
+    "p=b['current']['acceptance']; r='spec:'+os.environ['MY_MATT_SPEC_REF']; print(json.dumps({"
+    "'review_id': os.environ['MY_MATT_REVIEW_ID'], 'status': 'pass', "
     "'code_content_id': os.environ['MY_MATT_CODE_CONTENT_ID'], "
-    "'findings': []}))\""
+    "'reviewer_provenance': {'kind':'self','session_id':os.environ['MY_MATT_IMPLEMENTATION_SESSION_ID']}, "
+    "'findings': [], 'follow_ons': [], 'design_gap': None, "
+    "'self_review_coverage': {'acceptance':[{'acceptance_id':x['id'],'evidence_refs':[r]} for x in p], "
+    "'probes':[{'probe':x,'summary':'checked','evidence_refs':[r]} for x in b['required_probes']]} }))\""
 )
 REVIEW_ARGV = shlex.split(REVIEW_COMMAND)
+
+
+def self_review_result(unit: dict[str, object], status: str, findings: list[dict[str, object]] | None = None) -> dict[str, object]:
+    boundary = unit["ticket_boundary"]
+    assert isinstance(boundary, dict)
+    current = boundary["current"]
+    assert isinstance(current, dict)
+    artifact = unit["artifacts"][0]
+    assert isinstance(artifact, dict)
+    ref = f"snapshot:{artifact['repo_path']}"
+    acceptance = current["acceptance"]
+    assert isinstance(acceptance, list)
+    acceptance_id = acceptance[0]["id"]
+    normalized = []
+    for finding in findings or []:
+        normalized.append({**finding, "acceptance_ids": [acceptance_id]})
+    return {
+        "review_id": unit["review_id"],
+        "status": status,
+        "code_content_id": unit["code_content_id"],
+        "reviewer_provenance": {
+            "kind": "self", "session_id": unit["implementation_session_id"],
+        },
+        "findings": normalized,
+        "follow_ons": [],
+        "design_gap": None,
+        "self_review_coverage": {
+            "acceptance": [
+                {"acceptance_id": item["id"], "evidence_refs": [ref]}
+                for item in acceptance
+            ],
+            "probes": [
+                {"probe": probe, "summary": "checked", "evidence_refs": [ref]}
+                for probe in boundary["required_probes"]
+            ],
+        },
+    }
 
 
 class RunJournalTests(unittest.TestCase):
@@ -482,18 +522,13 @@ class RunJournalTests(unittest.TestCase):
             record_run(path, "reviewing")
             unit = open_review_evidence(path)
             snapshot = Path(str(unit["snapshot_dir"]))
-            result = {
-                "review_id": unit["review_id"],
-                "status": "findings",
-                "code_content_id": unit["code_content_id"],
-                "findings": [{
+            result = self_review_result(unit, "findings", [{
                     "id": "state-fence-1",
                     "root_cause": "missing-state-fence",
                     "severity": "P1",
                     "summary": "abort can pass an in-flight write",
                     "baseline_reachable": True,
-                }],
-            }
+                }])
             report = submit_review_result(path, snapshot, result)
             self.assertEqual("findings", report["status"])
             self.assertEqual("fix-findings", report["next_action"])
@@ -519,18 +554,13 @@ class RunJournalTests(unittest.TestCase):
                 report = submit_review_result(
                     path,
                     Path(str(unit["snapshot_dir"])),
-                    {
-                        "review_id": unit["review_id"],
-                        "status": "findings",
-                        "code_content_id": unit["code_content_id"],
-                        "findings": [{
+                    self_review_result(unit, "findings", [{
                             "id": f"state-fence-{attempt}",
                             "root_cause": "missing-state-fence",
                             "severity": "P1",
                             "summary": "same invariant remains open",
                             "baseline_reachable": True,
-                        }],
-                    },
+                        }]),
                 )
             self.assertEqual("blocked-by-design", report["next_action"])
             self.assertEqual(["missing-state-fence"], report["repeated_root_causes"])
@@ -540,18 +570,13 @@ class RunJournalTests(unittest.TestCase):
             report = submit_review_result(
                 path,
                 Path(str(unit["snapshot_dir"])),
-                {
-                    "review_id": unit["review_id"],
-                    "status": "inconclusive",
-                    "code_content_id": unit["code_content_id"],
-                    "findings": [{
+                self_review_result(unit, "inconclusive", [{
                         "id": "schema-source-unknown",
                         "root_cause": "unsupported-intermediate-schema",
                         "severity": None,
                         "summary": "cannot prove schema state is reachable from the release baseline",
                         "baseline_reachable": None,
-                    }],
-                },
+                    }]),
             )
             self.assertEqual("blocked-by-evidence", report["next_action"])
             self.assertIsNone(report["review_receipt"])
@@ -568,20 +593,107 @@ class RunJournalTests(unittest.TestCase):
                 submit_review_result(
                     path,
                     snapshot,
-                    {
-                        "review_id": unit["review_id"],
-                        "status": "findings",
-                        "code_content_id": unit["code_content_id"],
-                        "findings": [{
+                    self_review_result(unit, "findings", [{
                             "id": "schema-8-to-9",
                             "root_cause": "unsupported-intermediate-schema",
                             "severity": "P1",
                             "summary": "assumes an unpublished schema version",
                             "baseline_reachable": False,
-                        }],
-                    },
+                        }]),
                 )
             self.assertFalse(snapshot.exists())
+
+    def test_self_review_requires_complete_coverage_and_acceptance_owner(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            result = self_review_result(unit, "pass")
+            result["self_review_coverage"]["acceptance"] = []
+
+            with self.assertRaisesRegex(RunJournalError, "完整覆盖"):
+                submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+
+    def test_follow_on_is_nonblocking_and_must_target_direct_successor(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            successor = ticket.with_name("tickets-feature-02.md")
+            successor.write_text(
+                ticket.read_text()
+                .replace("feature-01", "feature-02")
+                .replace("status: ready-for-agent", "status: revalidated")
+                .replace("blocked_by: []", "blocked_by: [feature-01]")
+                .replace("claimed_by:\n", "claimed_by:\n")
+                .replace("sequence: 1", "sequence: 2"),
+                encoding="utf-8",
+            )
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            result = self_review_result(unit, "pass")
+            result["follow_ons"] = [{
+                "id": "grid-receipt",
+                "root_cause": "missing-grid-receipt",
+                "owner_ticket_id": "feature-02",
+                "acceptance_ids": ["feature-02#A1"],
+                "summary": "future consumer needs durable receipt",
+                "baseline_reachable": True,
+            }]
+            report = submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+            self.assertEqual("pass", report["status"])
+            self.assertEqual("reviewing", json.loads(path.read_text())["phase"])
+
+    def test_design_gap_blocks_and_independent_session_must_differ(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            result = self_review_result(unit, "blocked-by-design")
+            result.update({
+                "findings": [],
+                "follow_ons": [],
+                "design_gap": {
+                    "root_cause": "missing-owner",
+                    "summary": "no Ticket owns this external side effect",
+                    "evidence_refs": ["spec:.agent/work/feature/specs/specs-feature-02.md"],
+                },
+            })
+            report = submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+            self.assertEqual("blocked-by-design", report["next_action"])
+            self.assertEqual("blocked-by-design", json.loads(path.read_text())["phase"])
+
+
+    def test_independent_session_must_differ_from_implementation_session(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            result = self_review_result(unit, "pass")
+            result["reviewer_provenance"] = {
+                "kind": "independent_session",
+                "session_id": unit["implementation_session_id"],
+            }
+            result["self_review_coverage"] = None
+            with self.assertRaisesRegex(RunJournalError, "independent session"):
+                submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+
+            unit = open_review_evidence(path)
+            self.assertIn("review_inputs", unit)
+            self.assertIn("spec", [item["kind"] for item in unit["review_inputs"]])
+            result = self_review_result(unit, "pass")
+            result["reviewer_provenance"] = {
+                "kind": "independent_session", "session_id": "fresh-review-session",
+            }
+            result["self_review_coverage"] = None
+            report = submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+            self.assertEqual("pass", report["status"])
 
     def test_glob_code_scope_matches_real_ticket_shape_and_freezes_baseline(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -21,7 +21,7 @@ disable-model-invocation: true
 
 独立调用时，用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时，把选择审查基线分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)运行 `decision-gate`：`allow` 时采用 profile 的 `default_base_branch` 并记录依据，`confirm` 时询问固定点，`pause` 时停止。组合模式直接采用审查单元中已固定的代码范围和 `code_content_id`，不运行这项基线选择。
 
-独立调用时，用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。组合模式改为验证审查单元的 `method`、`review_id`、`code_content_id` 与 artifacts，并从只读 snapshot 取证。
+独立调用时，用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。组合模式改为验证审查单元的 `method`、`review_id`、`code_content_id`、`ticket_boundary` 与 artifacts，并从只读 snapshot 取证。
 
 快照必须覆盖 committed、staged、unstaged 与 untracked 内容：以 `git diff --binary <merge_base>` 读取所有 tracked 最终内容，以 `git log <merge_base>..HEAD --oneline` 读取 Commit 上下文，并读取 `change_sources.untracked` 中每个路径的完整内容。二进制或无法直接阅读的文件记录类型、大小与可用检查结果，不得静默跳过。
 
@@ -47,6 +47,8 @@ disable-model-invocation: true
 **Code pass** 从完整快照、Commit 上下文和规则地图开始。检查完整 diff 及理解变更所需的周边代码、调用方和测试；发现首个问题后继续检查全部变更。系统检查逻辑正确性、边界条件、错误处理、资源生命周期、并发与一致性、安全、性能、兼容性、测试充分性、代码设计与可维护性，同时检查仓库 Standards、Fowler code smells、函数/变量/类型命名和注释。仓库 Standards 优先；smell、命名或注释只有造成可观察风险时才报告。注释还要与代码行为一致，并按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，保留简短领域用语。
 
 **Spec pass** 重新从同一 `content_id` 的完整快照、Commit 上下文和 Spec 开始，不读取 Code pass 的候选清单或结论。先在内部把每条规范性要求映射到实现与测试证据；缺少或冲突的证据成为候选 finding，但不输出这份检查清单。由此检查遗漏、部分实现、错误行为和范围蔓延；每项引用 Spec 位置，并检查注释是否与 Spec、ADR 或相关文档一致。
+
+作为 implementation 方法时，先为每个候选确定 owner：当前 Ticket 未兑现的可观察保证才是 finding；直接下游 Ticket 拥有的未来消费者能力写为 follow-on；找不到既有 owner 的真实风险写为 design gap。不得因为当前 Ticket 产生资格而要求它实现后续消费者、coordinator、outbox 或回执。
 
 高风险变更按实际风险加深对应检查；低风险变更不为并行而增加 reviewer。
 
@@ -80,4 +82,4 @@ disable-model-invocation: true
 一个短段落，包含失败场景或不变量、Spec 证据、影响及最小验证方式。
 ```
 
-无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。作为 `my-implement` 方法时，同时返回 runtime 要求的结构化条目：稳定 `id`、根因、severity、摘要与正式基线可达性；证据不足项使用 `inconclusive`。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。
+无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。作为 `my-implement` 方法时，按 runtime schema 返回 finding、follow-on 或 design gap。finding 必须引用当前 `acceptance_id`；follow-on 必须引用 `ticket_boundary` 中直接下游 owner 的验收。默认 `reviewer_provenance.kind=self`：覆盖每一条当前验收与每个必需风险探针，证据只引用 snapshot、Spec 或已登记测试；这是增强自审，不称为独立审查。仅用户显式要求时，才由不携带实施对话、既有候选或自审结论的新 session 返回 `independent_session`。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。

@@ -26,8 +26,11 @@ from .lifecycle import (
 )
 from .tickets import (
     TicketError,
+    acceptance_items,
     eligible_local_tickets,
     frontmatter,
+    review_probes,
+    ticket_scope_state,
     ticket_definition_receipt,
     validate_spec_lineage,
 )
@@ -59,8 +62,9 @@ IMPLEMENTATION_OUTCOMES = frozenset(
     {"completed", "blocked-by-design", "blocked-by-evidence"}
 )
 REVIEW_METHOD = "my-code-review"
-REVIEW_STATUSES = frozenset({"pass", "findings", "inconclusive"})
+REVIEW_STATUSES = frozenset({"pass", "findings", "inconclusive", "blocked-by-design"})
 REVIEW_SEVERITIES = frozenset({"P0", "P1", "P2"})
+REVIEW_PROVENANCE_KINDS = frozenset({"self", "independent_session"})
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
@@ -157,6 +161,51 @@ def _resolve_execution_agent(requested: object, current: str | None) -> tuple[st
     return requested, None
 
 
+def _ticket_boundary_manifest(ticket_path: Path) -> dict[str, object]:
+    """Freeze the current Ticket's acceptance contract and direct consumers."""
+    records, _ = ticket_scope_state(ticket_path.parent)
+    current = frontmatter(ticket_path)
+    ticket_id = current.get("id")
+    if not isinstance(ticket_id, str) or ticket_id not in records:
+        raise RunJournalError("Ticket boundary 缺少当前 Ticket")
+    successors: list[dict[str, object]] = []
+    for identifier, (path, metadata) in sorted(records.items()):
+        blocked_by = metadata.get("blocked_by")
+        if isinstance(blocked_by, list) and ticket_id in blocked_by:
+            successors.append({
+                "id": identifier,
+                "definition": ticket_definition_receipt(path),
+                "acceptance": acceptance_items(path),
+                "blocked_by": sorted(blocked_by),
+            })
+    probes = review_probes(current, ticket_path)
+    if successors:
+        probes = sorted([*probes, "downstream-owner"])
+    return {
+        "current": {
+            "id": ticket_id,
+            "definition": ticket_definition_receipt(ticket_path),
+            "acceptance": acceptance_items(ticket_path),
+        },
+        "successors": successors,
+        "required_probes": probes,
+    }
+
+
+def _verify_ticket_boundary(context: dict[str, object], expected: object) -> dict[str, object]:
+    ticket = context.get("ticket")
+    if not isinstance(ticket, dict):
+        raise RunJournalError("run journal 缺少 Ticket 上下文")
+    path = Path(str(ticket.get("path", ""))).resolve()
+    try:
+        actual = _ticket_boundary_manifest(path)
+    except TicketError as exc:
+        raise RunJournalError(str(exc)) from exc
+    if actual != expected:
+        raise RunJournalError("review Ticket boundary 已变化")
+    return actual
+
+
 def build_run_context(
     repo: Path,
     ticket_path: Path,
@@ -202,6 +251,10 @@ def build_run_context(
         rule_map = resolve_rules(repo, effective_agent, rule_paths)
     except RuleError as exc:
         raise RunJournalError(str(exc)) from exc
+    try:
+        boundary = _ticket_boundary_manifest(ticket_path)
+    except TicketError as exc:
+        raise RunJournalError(str(exc)) from exc
     ticket_context: dict[str, object] = {
         "id": ticket_id,
         "path": str(ticket_path),
@@ -209,6 +262,7 @@ def build_run_context(
         "execution_agent": effective_agent,
         "definition": ticket_definition_receipt(ticket_path),
         "declared_scope": ticket.get("rule_scope", []),
+        "review_boundary": boundary,
     }
     if requested_agent is not None:
         ticket_context["requested_execution_agent"] = requested_agent
@@ -359,6 +413,7 @@ def start_run(
                 "schema_version": 2,
                 "run_id": ticket["id"],
                 "attempt_id": attempt_id,
+                "implementation_session_id": secrets.token_hex(16),
                 "phase": "admitted",
                 "context": context,
                 "receipts": {"test": None, "review": None, "code": None},
@@ -609,8 +664,14 @@ def open_review_evidence(path: Path) -> dict[str, object]:
         raise RunJournalError("run journal context 无效")
     repo = Path(str(context.get("repo", ""))).resolve()
     base_sha = context.get("base_sha")
+    ticket = context.get("ticket")
+    implementation_session_id = journal.get("implementation_session_id")
     if not isinstance(base_sha, str) or not base_sha:
         raise RunJournalError("run journal 缺少固定 review baseline")
+    if not isinstance(ticket, dict) or not isinstance(implementation_session_id, str):
+        raise RunJournalError("run journal 缺少 review session 上下文")
+    boundary = ticket.get("review_boundary")
+    _verify_ticket_boundary(context, boundary)
     code = build_code_receipt(path)
     review_id = secrets.token_hex(16)
     snapshot_root = _evidence_directory(path) / "review-snapshots"
@@ -619,6 +680,7 @@ def open_review_evidence(path: Path) -> dict[str, object]:
         tempfile.mkdtemp(prefix=f"review-{review_id}-", dir=snapshot_root)
     )
     frozen: list[dict[str, object]] = []
+    review_inputs: list[dict[str, object]] = []
     try:
         for index, source in enumerate(code["sources"]):
             if not isinstance(source, dict):
@@ -650,6 +712,30 @@ def open_review_evidence(path: Path) -> dict[str, object]:
                 "baseline_sha256": baseline_sha256,
                 "baseline_size": baseline_size,
             })
+        raw_inputs: list[dict[str, object]] = []
+        spec = context.get("spec")
+        if isinstance(spec, dict) and isinstance(spec.get("content"), dict):
+            raw_inputs.append(spec["content"])
+        sources = context.get("source_receipts")
+        if isinstance(sources, list):
+            raw_inputs.extend(item for item in sources if isinstance(item, dict))
+        seen_inputs: set[str] = set()
+        for index, source in enumerate(raw_inputs):
+            source_path = Path(str(source.get("path", ""))).resolve()
+            repo_path = source.get("repo_path")
+            if not isinstance(repo_path, str) or str(source_path) in seen_inputs:
+                continue
+            seen_inputs.add(str(source_path))
+            target = snapshot_dir / f"input-{index:04d}-{source_path.name}"
+            shutil.copy2(source_path, target)
+            content = target.read_bytes()
+            review_inputs.append({
+                "kind": str(source.get("kind", "source")),
+                "repo_path": repo_path,
+                "snapshot_path": str(target),
+                "sha256": hashlib.sha256(content).hexdigest(),
+                "size": len(content),
+            })
         unit = {
             "kind": "code-review-snapshot",
             "method": REVIEW_METHOD,
@@ -659,6 +745,9 @@ def open_review_evidence(path: Path) -> dict[str, object]:
             "review_scope": "change-only",
             "code_content_id": code["content_id"],
             "artifacts": frozen,
+            "review_inputs": review_inputs,
+            "ticket_boundary": boundary,
+            "implementation_session_id": implementation_session_id,
         }
         marker = snapshot_dir / ".review-unit.json"
         marker.write_text(
@@ -684,6 +773,9 @@ def open_review_evidence(path: Path) -> dict[str, object]:
         "snapshot_dir": str(snapshot_dir),
         "code_content_id": code["content_id"],
         "artifacts": frozen,
+        "review_inputs": review_inputs,
+        "ticket_boundary": boundary,
+        "implementation_session_id": implementation_session_id,
     }
 
 
@@ -712,7 +804,7 @@ def _owned_review_unit(
         not isinstance(unit, dict)
         or set(unit) != {
             "kind", "method", "review_id", "journal", "base_sha", "review_scope",
-            "code_content_id", "artifacts"
+            "code_content_id", "artifacts", "review_inputs", "ticket_boundary", "implementation_session_id"
         }
         or unit.get("kind") != "code-review-snapshot"
         or unit.get("method") != REVIEW_METHOD
@@ -720,8 +812,11 @@ def _owned_review_unit(
         or unit.get("base_sha") != context.get("base_sha")
         or unit.get("review_scope") != "change-only"
         or not isinstance(unit.get("artifacts"), list)
+        or not isinstance(unit.get("review_inputs"), list)
+        or not isinstance(unit.get("implementation_session_id"), str)
     ):
         raise RunJournalError("review snapshot schema 无效")
+    _verify_ticket_boundary(context, unit.get("ticket_boundary"))
     code = build_code_receipt(path)
     if unit.get("code_content_id") != code["content_id"]:
         raise RunJournalError("review snapshot 与当前代码不匹配")
@@ -738,20 +833,146 @@ def _release_review_snapshot(expected_root: Path, snapshot_dir: Path) -> None:
         raise RunJournalError("review snapshot 无法安全释放") from exc
 
 
+def _validate_evidence_refs(
+    path: Path, context: dict[str, object], unit: dict[str, object], refs: object
+) -> None:
+    if not isinstance(refs, list) or not refs or not all(
+        isinstance(ref, str) and ref for ref in refs
+    ):
+        raise RunJournalError("review coverage 必须包含证据引用")
+    artifacts = unit.get("artifacts")
+    spec = context.get("spec")
+    known_paths = {
+        str(artifact.get("repo_path")) for artifact in artifacts
+        if isinstance(artifact, dict)
+    } if isinstance(artifacts, list) else set()
+    spec_ref = str(spec.get("ref")) if isinstance(spec, dict) else ""
+    for ref in refs:
+        if ref.startswith("snapshot:") and ref.removeprefix("snapshot:") in known_paths:
+            continue
+        if ref == f"spec:{spec_ref}":
+            continue
+        if ref.startswith("test:"):
+            _load_evidence(path, {"kind": "test", "evidence_id": ref.removeprefix("test:")}, "test")
+            continue
+        raise RunJournalError("review coverage 证据引用不属于当前 work unit")
+
+
+def _validate_self_review_coverage(
+    path: Path, context: dict[str, object], unit: dict[str, object], coverage: object
+) -> None:
+    if not isinstance(coverage, dict) or set(coverage) != {"acceptance", "probes"}:
+        raise RunJournalError("self review coverage schema 无效")
+    boundary = unit.get("ticket_boundary")
+    if not isinstance(boundary, dict):
+        raise RunJournalError("review Ticket boundary 无效")
+    current = boundary.get("current")
+    expected_acceptance = {
+        item.get("id") for item in current.get("acceptance", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    } if isinstance(current, dict) else set()
+    acceptance = coverage.get("acceptance")
+    if not isinstance(acceptance, list):
+        raise RunJournalError("self review acceptance coverage 无效")
+    seen_acceptance: set[str] = set()
+    for item in acceptance:
+        if not isinstance(item, dict) or set(item) != {"acceptance_id", "evidence_refs"}:
+            raise RunJournalError("self review acceptance 条目无效")
+        identifier = item.get("acceptance_id")
+        if not isinstance(identifier, str) or identifier in seen_acceptance:
+            raise RunJournalError("self review acceptance_id 重复或无效")
+        seen_acceptance.add(identifier)
+        _validate_evidence_refs(path, context, unit, item.get("evidence_refs"))
+    if seen_acceptance != expected_acceptance:
+        raise RunJournalError("self review 未完整覆盖当前 Ticket 验收")
+    expected_probes = set(boundary.get("required_probes", []))
+    probes = coverage.get("probes")
+    if not isinstance(probes, list):
+        raise RunJournalError("self review probe coverage 无效")
+    seen_probes: set[str] = set()
+    for item in probes:
+        if not isinstance(item, dict) or set(item) != {"probe", "summary", "evidence_refs"}:
+            raise RunJournalError("self review probe 条目无效")
+        probe = item.get("probe")
+        if not isinstance(probe, str) or probe in seen_probes or not isinstance(item.get("summary"), str) or not item["summary"].strip():
+            raise RunJournalError("self review probe 重复或无效")
+        seen_probes.add(probe)
+        _validate_evidence_refs(path, context, unit, item.get("evidence_refs"))
+    if seen_probes != expected_probes:
+        raise RunJournalError("self review 未完整覆盖必需风险探针")
+
+
 def _validate_review_result(
-    result: dict[str, object], unit: dict[str, object], code: dict[str, object]
+    path: Path, result: dict[str, object], unit: dict[str, object], code: dict[str, object],
+    context: dict[str, object],
 ) -> tuple[str, set[str]]:
-    if set(result) != {"review_id", "status", "code_content_id", "findings"}:
+    if set(result) != {
+        "review_id", "status", "code_content_id", "reviewer_provenance", "findings",
+        "follow_ons", "design_gap", "self_review_coverage",
+    }:
         raise RunJournalError("review result 字段无效")
     status = result.get("status")
     findings = result.get("findings")
+    follow_ons = result.get("follow_ons")
+    provenance = result.get("reviewer_provenance")
     if (
         status not in REVIEW_STATUSES
         or result.get("review_id") != unit.get("review_id")
         or result.get("code_content_id") != code.get("content_id")
         or not isinstance(findings, list)
+        or not isinstance(follow_ons, list)
+        or not isinstance(provenance, dict)
+        or set(provenance) != {"kind", "session_id"}
+        or provenance.get("kind") not in REVIEW_PROVENANCE_KINDS
+        or not isinstance(provenance.get("session_id"), str)
+        or not _SAFE_ID.fullmatch(str(provenance.get("session_id")))
     ):
         raise RunJournalError("review result 与当前 review snapshot 不匹配")
+    if provenance["kind"] == "self":
+        if provenance["session_id"] != unit.get("implementation_session_id"):
+            raise RunJournalError("self review 必须使用当前 implementation session")
+        _validate_self_review_coverage(path, context, unit, result.get("self_review_coverage"))
+    elif provenance["session_id"] == unit.get("implementation_session_id") or result.get("self_review_coverage") is not None:
+        raise RunJournalError("independent session provenance 或 coverage 无效")
+    boundary = unit.get("ticket_boundary")
+    current = boundary.get("current") if isinstance(boundary, dict) else None
+    acceptance_ids = {
+        item.get("id") for item in current.get("acceptance", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    } if isinstance(current, dict) else set()
+    successors = {
+        item.get("id"): {
+            entry.get("id") for entry in item.get("acceptance", [])
+            if isinstance(entry, dict) and isinstance(entry.get("id"), str)
+        }
+        for item in boundary.get("successors", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    } if isinstance(boundary, dict) else {}
+    for item in follow_ons:
+        if not isinstance(item, dict) or set(item) != {
+            "id", "root_cause", "owner_ticket_id", "acceptance_ids", "summary", "baseline_reachable"
+        }:
+            raise RunJournalError("review follow-on schema 无效")
+        owner = item.get("owner_ticket_id")
+        refs = item.get("acceptance_ids")
+        if (
+            not all(isinstance(item.get(field), str) and str(item[field]).strip() for field in ("id", "root_cause", "summary"))
+            or owner not in successors
+            or not isinstance(refs, list) or not refs or not all(isinstance(ref, str) for ref in refs)
+            or not set(refs).issubset(successors[owner])
+            or item.get("baseline_reachable") not in {True, False}
+        ):
+            raise RunJournalError("review follow-on 不属于当前 Ticket 的直接下游")
+    design_gap = result.get("design_gap")
+    if status == "blocked-by-design":
+        if findings or follow_ons or not isinstance(design_gap, dict) or set(design_gap) != {"root_cause", "summary", "evidence_refs"}:
+            raise RunJournalError("design gap review result 无效")
+        if not all(isinstance(design_gap.get(field), str) and str(design_gap[field]).strip() for field in ("root_cause", "summary")):
+            raise RunJournalError("design gap 缺少根因或摘要")
+        _validate_evidence_refs(path, context, unit, design_gap.get("evidence_refs"))
+        return str(status), {str(design_gap["root_cause"])}
+    if design_gap is not None:
+        raise RunJournalError("仅 blocked-by-design review 可包含 design_gap")
     if status == "pass":
         if findings:
             raise RunJournalError("pass review 不得包含 findings")
@@ -761,7 +982,7 @@ def _validate_review_result(
     roots: set[str] = set()
     for item in findings:
         if not isinstance(item, dict) or set(item) != {
-            "id", "root_cause", "severity", "summary", "baseline_reachable"
+            "id", "root_cause", "severity", "summary", "baseline_reachable", "acceptance_ids"
         }:
             raise RunJournalError("review finding schema 无效")
         if not all(
@@ -769,6 +990,9 @@ def _validate_review_result(
             for field in ("id", "root_cause", "summary")
         ):
             raise RunJournalError("review finding 缺少 id、root_cause 或 summary")
+        item_acceptance = item.get("acceptance_ids")
+        if not isinstance(item_acceptance, list) or not item_acceptance or not all(isinstance(value, str) for value in item_acceptance) or not set(item_acceptance).issubset(acceptance_ids):
+            raise RunJournalError("review finding 必须引用当前 Ticket 验收")
         if status == "findings":
             if item.get("severity") not in REVIEW_SEVERITIES:
                 raise RunJournalError("review finding severity 无效")
@@ -802,6 +1026,19 @@ def _verify_review_snapshot_bytes(unit: dict[str, object], snapshot_dir: Path) -
             content = frozen.read_bytes()
             if len(content) != size or hashlib.sha256(content).hexdigest() != digest:
                 raise RunJournalError("review snapshot bytes 已漂移")
+    inputs = unit.get("review_inputs")
+    if not isinstance(inputs, list):
+        raise RunJournalError("review input inventory 无效")
+    for item in inputs:
+        expected = {"kind", "repo_path", "snapshot_path", "sha256", "size"}
+        if not isinstance(item, dict) or set(item) != expected:
+            raise RunJournalError("review input inventory 无效")
+        frozen = Path(str(item.get("snapshot_path", "")))
+        if frozen.parent.resolve() != snapshot_dir or not frozen.is_file():
+            raise RunJournalError("review input 文件路径无效")
+        content = frozen.read_bytes()
+        if len(content) != item.get("size") or hashlib.sha256(content).hexdigest() != item.get("sha256"):
+            raise RunJournalError("review input bytes 已漂移")
 
 
 def _previous_review_roots(path: Path) -> set[str]:
@@ -858,7 +1095,7 @@ def submit_review_result(
     try:
         if journal.get("phase") not in {"reviewing", "committing"}:
             raise RunJournalError("review result 只能在 review 阶段提交")
-        status, roots = _validate_review_result(result, unit, code)
+        status, roots = _validate_review_result(path, result, unit, code, context)
         _verify_review_snapshot_bytes(unit, snapshot_dir)
         current_code = build_code_receipt(path)
         if current_code["content_id"] != code["content_id"]:
@@ -882,6 +1119,7 @@ def submit_review_result(
             "snapshot": unit,
             "result": result_receipt,
             "root_causes": sorted(roots),
+            "reviewer_provenance": result["reviewer_provenance"],
         }
         if execution == "declared-command":
             if completed is None or argv is None:
@@ -898,10 +1136,17 @@ def submit_review_result(
         repeated = bool(roots & previous_roots)
         if status == "findings":
             _return_review_to_implementation(path, receipt, roots, repeated=repeated)
+        elif status == "blocked-by-design":
+            record_run(
+                path,
+                "blocked-by-design",
+                blocker=f"review design gap: {sorted(roots)[0]}",
+            )
         next_action = {
             "pass": "submit-completed",
             "findings": "blocked-by-design" if repeated else "fix-findings",
             "inconclusive": "blocked-by-evidence",
+            "blocked-by-design": "blocked-by-design",
         }[status]
         return {
             "status": status,
@@ -915,7 +1160,7 @@ def submit_review_result(
 
 
 def record_review_evidence(
-    path: Path, snapshot_dir: Path, argv: list[str]
+    path: Path, snapshot_dir: Path, argv: list[str], *, reviewer_session_id: str | None = None,
 ) -> dict[str, object]:
     """Run a declared reviewer and persist its pass, findings or inconclusive result."""
     if not argv or any(not isinstance(value, str) or not value for value in argv):
@@ -930,15 +1175,26 @@ def record_review_evidence(
         if isinstance(command, str) and command.strip()
     ]:
         raise RunJournalError("review evidence command 未在 work unit 中声明")
+    if reviewer_session_id is not None and (
+        not _SAFE_ID.fullmatch(reviewer_session_id)
+        or reviewer_session_id == unit.get("implementation_session_id")
+    ):
+        raise RunJournalError("independent reviewer session id 无效")
     environment = os.environ.copy()
     environment.update({
         "MY_MATT_REVIEW_ID": str(unit["review_id"]),
         "MY_MATT_REVIEW_SNAPSHOT": str(snapshot_dir),
         "MY_MATT_CODE_CONTENT_ID": str(code["content_id"]),
         "MY_MATT_REVIEW_METHOD": REVIEW_METHOD,
+        "MY_MATT_TICKET_BOUNDARY": json.dumps(unit["ticket_boundary"], ensure_ascii=False),
+        "MY_MATT_IMPLEMENTATION_SESSION_ID": str(unit["implementation_session_id"]),
+        "MY_MATT_SPEC_REF": str(context["spec"]["ref"]),
     })
+    if reviewer_session_id is not None:
+        environment["MY_MATT_REVIEWER_SESSION_ID"] = reviewer_session_id
     completed = subprocess.run(
-        argv, cwd=repo, env=environment, capture_output=True, check=False
+        argv, cwd=snapshot_dir if reviewer_session_id is not None else repo,
+        env=environment, capture_output=True, check=False,
     )
     try:
         result = json.loads(completed.stdout.decode("utf-8"))
@@ -1059,13 +1315,18 @@ def _validate_completion_receipts(
         result = json.loads(Path(str(result_receipt["path"])).read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise RunJournalError("review result 无法重验") from exc
+    unit = review_evidence.get("snapshot")
+    if not isinstance(unit, dict):
+        raise RunJournalError("review evidence snapshot 无效")
+    try:
+        _verify_ticket_boundary(context, unit.get("ticket_boundary"))
+        status, _ = _validate_review_result(path, result, unit, current, context)
+    except RunJournalError as exc:
+        raise RunJournalError("review result 与 evidence 不匹配") from exc
     if (
-        not isinstance(result, dict)
-        or set(result) != {"review_id", "status", "code_content_id", "findings"}
+        status != "pass"
         or result.get("review_id") != review_evidence.get("review_id")
-        or result.get("status") != "pass"
         or result.get("code_content_id") != content_id
-        or result.get("findings") != []
     ):
         raise RunJournalError("review result 与 evidence 不匹配")
     if current["content_id"] != review_evidence["snapshot_content_id"]:

@@ -29,11 +29,14 @@ from tools.workflow_lib.transitions import create_approved_scope, ticket_transit
 
 
 REVIEW_COMMAND = (
-    "python3 -c \"import json,os; print(json.dumps({"
-    "'review_id': os.environ['MY_MATT_REVIEW_ID'], "
-    "'status': 'pass', "
+    "python3 -c \"import json,os; b=json.loads(os.environ['MY_MATT_TICKET_BOUNDARY']); "
+    "p=b['current']['acceptance']; r='spec:'+os.environ['MY_MATT_SPEC_REF']; print(json.dumps({"
+    "'review_id': os.environ['MY_MATT_REVIEW_ID'], 'status': 'pass', "
     "'code_content_id': os.environ['MY_MATT_CODE_CONTENT_ID'], "
-    "'findings': []}))\""
+    "'reviewer_provenance': {'kind':'self','session_id':os.environ['MY_MATT_IMPLEMENTATION_SESSION_ID']}, "
+    "'findings': [], 'follow_ons': [], 'design_gap': None, "
+    "'self_review_coverage': {'acceptance':[{'acceptance_id':x['id'],'evidence_refs':[r]} for x in p], "
+    "'probes':[{'probe':x,'summary':'checked','evidence_refs':[r]} for x in b['required_probes']]} }))\""
 )
 REVIEW_ARGV = shlex.split(REVIEW_COMMAND)
 

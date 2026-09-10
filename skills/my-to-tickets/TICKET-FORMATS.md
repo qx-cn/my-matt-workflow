@@ -25,6 +25,7 @@ rule_sources: []
 rule_scope: []
 rule_constraints: []
 rule_conflicts: []
+review_probes: [] # 仅 recovery、unknown-response；按 Spec 声明
 execution_agent: <auto|codex|cursor|claude>
 ---
 

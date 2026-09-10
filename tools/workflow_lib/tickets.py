@@ -16,6 +16,10 @@ class TicketError(ValueError):
 
 
 _CHECKBOX = re.compile(r"^\s*- \[(?P<state>[ xX])\]\s+.+$", re.MULTILINE)
+_ACCEPTANCE = re.compile(
+    r"^\s*- \[(?P<state>[ xX])\]\s+(?P<text>.+)$", re.MULTILINE
+)
+REVIEW_PROBES = frozenset({"recovery", "unknown-response"})
 IMPLEMENTATION_ENTRY_STATUSES = {"ready-for-agent", "revalidated"}
 TICKET_STATUS_TRANSITIONS = {
     "ready-for-agent": {"implementing"},
@@ -115,6 +119,7 @@ def _admission_fields(ticket: dict[str, object], path: Path) -> dict[str, object
         raise TicketError("ready-for-agent Ticket 必须具备规则来源、作用范围和派生约束")
     if ticket["rule_conflicts"]:
         raise TicketError("存在未解决 rule_conflicts，Ticket 不得进入实施")
+    review_probes(ticket, path)
     spec_id = ticket.get("spec_id")
     spec_ref = ticket.get("spec_ref")
     revision = ticket.get("spec_revision")
@@ -238,6 +243,32 @@ def ticket_definition_receipt(path: Path) -> dict[str, object]:
         "sha256": hashlib.sha256(encoded).hexdigest(),
         "size": len(encoded),
     }
+
+
+def acceptance_items(path: Path) -> list[dict[str, str]]:
+    """Return stable acceptance identifiers for a Ticket's checkbox criteria."""
+    ticket = frontmatter(path)
+    identifier = ticket.get("id")
+    if not isinstance(identifier, str) or not identifier:
+        raise TicketError("Ticket 缺少有效 id")
+    return [
+        {"id": f"{identifier}#A{index}", "text": match["text"].strip()}
+        for index, match in enumerate(_ACCEPTANCE.finditer(path.read_text(encoding="utf-8")), start=1)
+    ]
+
+
+def review_probes(ticket: dict[str, object], path: Path) -> list[str]:
+    """Validate the optional, explicitly declared self-review risk probes."""
+    declared = ticket.get("review_probes", [])
+    if not isinstance(declared, list) or not all(
+        isinstance(item, str) and item in REVIEW_PROBES for item in declared
+    ):
+        raise TicketError(
+            f"Ticket review_probes 必须是 {', '.join(sorted(REVIEW_PROBES))} 的去重列表：{path}"
+        )
+    if len(set(declared)) != len(declared):
+        raise TicketError(f"Ticket review_probes 不得重复：{path}")
+    return sorted(declared)
 
 
 def validate_ticket_transition(path: Path, target_status: str) -> dict[str, object]:

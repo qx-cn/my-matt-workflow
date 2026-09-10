@@ -20,13 +20,13 @@ python3 <runtime_entry> run-review-open --journal <journal>
 python3 <runtime_entry> run-test-evidence --journal <journal> -- <declared test argv...>
 python3 <runtime_entry> run-review-submit --journal <journal> --snapshot-dir <review-snapshot-dir> --result-file <json>
 # 或由已配置的独立执行适配器完成：
-python3 <runtime_entry> run-review-evidence --journal <journal> --snapshot-dir <review-snapshot-dir> -- <declared-review-command>
+python3 <runtime_entry> run-review-evidence --journal <journal> --snapshot-dir <review-snapshot-dir> [--reviewer-session-id <new-session-id>] -- <declared-review-command>
 python3 <runtime_entry> run-record <journal> --phase committing
 ```
 
-`run-code-receipt` 对 Ticket 声明的 `rule_scope`（含 `**` 等 glob）生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope 及其固定基线副本，语义方法由 runtime 固定为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。
+`run-code-receipt` 对 Ticket 声明的 `rule_scope`（含 `**` 等 glob）生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope 及其固定基线副本，以及当前 Ticket 验收、直接下游 owner 和按 Ticket 声明的风险探针；语义方法由 runtime 固定为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。
 
-宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT` 和 `MY_MATT_CODE_CONTENT_ID` 传递固定单元。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive`；非 pass 的 `findings` 条目包含 `id/root_cause/severity/summary/baseline_reachable`，其中确定 finding 必须能从固定基线到当前快照证明，无法证明时用 `inconclusive` 且不声明 severity。
+宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID`、`MY_MATT_TICKET_BOUNDARY` 和 `MY_MATT_IMPLEMENTATION_SESSION_ID` 传递固定单元。传入 `--reviewer-session-id` 时，命令从只读 snapshot 目录运行，其中包含代码、基线、Spec、规则和 boundary manifest；结果必须使用同一不同的 ID 作为 `independent_session` provenance。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive | blocked-by-design`。默认 `reviewer_provenance=self`，并覆盖当前 Ticket 每个验收与必需风险探针；finding 必须引用当前验收，follow-on 只能引用直接下游 owner，design gap 才使用 `blocked-by-design`。用户显式要求独立审查时才使用不同的 `independent_session` provenance；这证明 session 区分和冻结输入，不证明不存在其他隐藏上下文。
 
 runtime 登记每轮结果并在所有终态释放 snapshot。`findings` 自动把 journal 返回 `implementing`；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design` 建议，要求先检查设计不变量；`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。代码、结果或 evidence record 再次变化都会使提交失效。
 

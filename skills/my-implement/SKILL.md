@@ -25,4 +25,4 @@ disable-model-invocation: true
 
 ## 完成标准
 
-提交结果前，自动在 runtime `run-review-open` 固定的审查单元上应用[代码审查方法](references/composed/my-code-review/COMPOSED.md)，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。把 `pass | findings | inconclusive` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。发现问题后按 runtime 返回继续修复；连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
+提交结果前，自动在 runtime `run-review-open` 固定的审查单元上应用[代码审查方法](references/composed/my-code-review/COMPOSED.md)，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。发现问题后按 runtime 返回继续修复；连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。

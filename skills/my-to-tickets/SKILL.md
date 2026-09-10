@@ -37,7 +37,7 @@ disable-model-invocation: true
 
 </vertical-slice-rules>
 
-为每张 Ticket 给出**阻塞边**：即开始它之前必须完成的其他 Ticket。没有阻塞者可立即开始。
+为每张 Ticket 给出**阻塞边**：即开始它之前必须完成的其他 Ticket。没有阻塞者可立即开始。若 Spec 要求持久化恢复或处理外部副作用的未知响应，在本地 Ticket 的 `review_probes` 分别声明 `recovery` 或 `unknown-response`；其他 Ticket 保持空列表，不猜测风险探针。
 
 **大范围重构是纵向切片的例外。** 大范围重构是一次机械变更——如改列名、重定共享符号——其 blast radius 覆盖整个代码库，单次编辑会同时破坏数千调用点，无法让任何纵向切片保持 green。不要强行改成 tracer bullet；使用 **expand–contract**：先 expand，在旧形式旁加入新形式而不破坏任何内容；再按 blast radius 分批迁移调用点（按 package 或目录），每批一张被 expand 阻塞的 Ticket。旧形式仍在，因此批次之间 CI 保持 green；最后在所有迁移批次完成后 contract，删除旧形式。若连批次都无法单独 green，仍保留顺序，但让它们共享集成分支，并让所有批次阻塞最后的 integrate-and-verify Ticket；只有最后一张承诺 green。
 
