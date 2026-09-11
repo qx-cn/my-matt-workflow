@@ -107,7 +107,7 @@ class SharedResourceTests(unittest.TestCase):
             for name in (
                 "my-to-spec",
                 "my-to-tickets",
-                "my-grill-with-docs",
+                "my-domain-modeling",
                 "my-code-review",
                 "my-humanizer",
             ):

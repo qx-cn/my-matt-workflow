@@ -4,7 +4,7 @@
 
 ## 何时加载
 
-写入或覆盖工作产物之前加载本文件；按 `.agent/matt-workflow.md` 已解析的 `humanizer_policy` 执行。访谈提问、草稿讨论阶段不调用。
+写入或覆盖面向读者的工作产物之前加载本文件；按 `.agent/matt-workflow.md` 已解析的 `humanizer_policy` 执行。访谈提问、草稿讨论，以及访谈中由 `my-domain-modeling` 增量记录的个人术语表和 ADR 候选不调用。
 
 ## 三档行为
 

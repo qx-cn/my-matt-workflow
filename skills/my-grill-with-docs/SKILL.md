@@ -1,6 +1,6 @@
 ---
 name: my-grill-with-docs
-description: 通过高强度访谈打磨计划或设计，并在过程中建立 ADR 与术语表。
+description: 通过高强度访谈澄清设计决定，并在过程中建立 ADR 与术语表。
 disable-model-invocation: true
 ---
 
@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 - `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都只读取当前阶段需要的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 和 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，执行后返回宿主；不要输出另一条 Skill 调用。
 
-访谈结束后、输出可执行计划前，按 [项目规则解析](references/shared/adapters/project-rules.md) 为目标 `execution_agent` 解析规则。计划项必须逐项给出影响区域、规则、约束和验证；未解决的规则冲突或路径匹配不得伪装成已可执行计划。
+本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失。
 
-计划内容按[最终态写作](references/shared/final-state-writing.md)从已确认决定生成。
-
-本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)，项目规范遵循 [项目规则解析](references/shared/adapters/project-rules.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失；这不代表整体方案已最终确认，也不触发最终文档的 humanizer。团队文档、最终 Spec 与最终计划只在整体最终确认后写入，并在写入前按 [humanizer](references/shared/humanizer.md) 的 `humanizer_policy` 执行。
+访谈结论经用户确认后，概括已确认决定与未决项，输出 `{{skill-call:my-to-spec}}` 作为下一步并结束。正式 Spec 与可执行计划由 `my-to-spec` 生成；本 Skill 不创建它们。

@@ -29,6 +29,11 @@
       "rubric": ["method_runs_in_same_turn", "handoff_does_not_run_without_authorization"]
     },
     {
+      "id": "grill-spec-boundary",
+      "goal": "Grill 收口保留领域记录并交给用户显式进入 Spec 阶段",
+      "rubric": ["keeps_domain_records_only", "does_not_write_formal_spec_or_plan", "outputs_explicit_to_spec_handoff", "does_not_start_design_review", "does_not_bypass_humanizer"]
+    },
+    {
       "id": "risk-scaled-testing",
       "goal": "小改动运行相关测试，不无理由扩大到完整套件",
       "rubric": ["runs_targeted_test", "does_not_run_unrelated_suite", "states_escalation_reason_if_any"]

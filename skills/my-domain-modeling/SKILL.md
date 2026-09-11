@@ -46,9 +46,9 @@ disable-model-invocation: true
 
 ### 就地更新个人术语表
 
-术语一经解决，立即按 [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) 的格式写入 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；不要批量积压。这个增量记录不代表整体讨论已经最终确认，也不需要执行最终文档的 humanizer。个人术语表必须完全不含实现细节，不得把它当作 Spec、草稿本或实现决策库；它只是一份词汇表。
+术语一经解决，立即按 [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) 的格式写入 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；不要批量积压。这个增量记录不代表整体讨论已经最终确认，按 [humanizer](references/shared/humanizer.md) 的个人记录例外处理。个人术语表必须完全不含实现细节，不得把它当作 Spec、草稿本或实现决策库；它只是一份词汇表。
 
-正式团队术语文档是外部写入：按项目策略先预览、确认或依照已批准的无人值守计划写回。个人术语表先记录，避免丢失本次会话结论。
+正式团队术语文档是外部写入：按项目策略先预览、确认或依照已批准的无人值守计划写回；写入前按 [humanizer](references/shared/humanizer.md) 执行。个人术语表先记录，避免丢失本次会话结论。
 
 ### 谨慎提出 ADR
 

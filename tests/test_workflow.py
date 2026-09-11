@@ -522,7 +522,7 @@ class ProfileTests(unittest.TestCase):
         for skill in (
             "my-to-spec",
             "my-to-tickets",
-            "my-grill-with-docs",
+            "my-domain-modeling",
             "my-code-review",
         ):
             text = (root / skill / "SKILL.md").read_text()
@@ -541,7 +541,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("不得生成 `ready-for-agent`", adapter_text)
 
         for skill in (
-            "my-grill-with-docs",
             "my-to-spec",
             "my-to-tickets",
             "my-code-review",
@@ -1202,10 +1201,6 @@ class ProfileTests(unittest.TestCase):
                 "[humanizer](references/shared/humanizer.md)",
                 "写入前",
             ),
-            "my-grill-with-docs": (
-                "[humanizer](references/shared/humanizer.md)",
-                "最终确认后",
-            ),
         }
         for skill, (pointer, timing) in expectations.items():
             text = (root / skill / "SKILL.md").read_text()
@@ -1219,10 +1214,13 @@ class ProfileTests(unittest.TestCase):
         domain = (root / "my-domain-modeling/SKILL.md").read_text()
         self.assertIn("单个术语", grill)
         self.assertIn("ADR 候选可在访谈中写入个人工作区", grill)
-        self.assertIn("不触发最终文档的 humanizer", grill)
-        self.assertIn("团队文档、最终 Spec 与最终计划", grill)
+        self.assertIn("{{skill-call:my-to-spec}}", grill)
+        self.assertIn("正式 Spec 与可执行计划由 `my-to-spec` 生成", grill)
+        self.assertNotIn("输出可执行计划", grill)
+        self.assertNotIn("团队文档、最终 Spec 与最终计划", grill)
         self.assertIn("立即", domain)
-        self.assertIn("不需要执行最终文档的 humanizer", domain)
+        self.assertIn("[humanizer](references/shared/humanizer.md)", domain)
+        self.assertIn("个人记录例外", domain)
 
     def test_code_review_skill_is_compact_and_signal_first(self):
         text = (

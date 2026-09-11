@@ -41,7 +41,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
 
     def test_checked_in_suite_and_schema_are_valid(self):
         cases = validate_behavior_suite(SUITE)
-        self.assertEqual(15, len(cases))
+        self.assertEqual(16, len(cases))
         schema = json.loads(
             (ROOT / "evals/agent-smokes/astra-evidence.schema.json").read_text()
         )
@@ -93,13 +93,22 @@ class BehaviorEvidenceTests(unittest.TestCase):
         self.assertIn(case, runbook)
         self.assertTrue(fixture.is_file())
 
+    def test_grill_spec_boundary_has_a_runbook(self):
+        cases = validate_behavior_suite(SUITE)
+        runbook = (
+            ROOT / "evals/agent-smokes/grill-spec-boundary.md"
+        ).read_text()
+        self.assertIn("grill-spec-boundary", cases)
+        self.assertIn("$my-to-spec", runbook)
+        self.assertIn("No formal Spec", runbook)
+
     def test_partial_real_evidence_is_valid_but_not_complete(self):
         with tempfile.TemporaryDirectory() as tmp:
             evidence = Path(tmp) / "evidence.json"
             evidence.write_text(json.dumps(self._record()))
             report = validate_behavior_evidence(SUITE, evidence)
             self.assertEqual(1, report["runs"])
-            self.assertEqual(14, len(report["missing"]))
+            self.assertEqual(15, len(report["missing"]))
             with self.assertRaisesRegex(BehaviorEvidenceError, "缺少行为场景"):
                 validate_behavior_evidence(SUITE, evidence, require_complete=True)
 

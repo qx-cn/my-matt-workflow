@@ -26,7 +26,7 @@
     "version": 1,
     "scenario": "main-workflow-fresh-context",
     "sources": [
-      {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:2c93e96c1fb1f15ae2aafa6263a568ecd22137c184db9a7ed40bd13f75c65e5a"},
+      {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:c4e72aa41412855f8932382bddbab921c1817d4df10893f5542da29928d5c0cb"},
       {"path": "skills/my-to-spec/SKILL.md", "sha256": "sha256:deb666956f3ea616452cf31925b7def3f92cb9d65f4819e98283d42edb792f1a"},
       {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:12c424cb4ca0b9d7b57d3547d99b1f1e4759c8f097a45fffd97425405d97b968"},
       {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:c9ae13f09bcbcf5e8b6039a64d156eea1132e979d405e6f75a0da1897bbc0a08"},

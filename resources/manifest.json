@@ -7,7 +7,7 @@
       "consumers": [
         "my-to-spec",
         "my-to-tickets",
-        "my-grill-with-docs",
+        "my-domain-modeling",
         "my-code-review",
         "my-humanizer"
       ]
@@ -17,7 +17,6 @@
       "release_path": "references/shared/final-state-writing.md",
       "consumers": [
         "my-grilling",
-        "my-grill-with-docs",
         "my-tech-design",
         "my-to-spec",
         "my-to-tickets",
@@ -161,7 +160,6 @@
       "source": "resources/adapters/project-rules.md",
       "release_path": "references/shared/adapters/project-rules.md",
       "consumers": [
-        "my-grill-with-docs",
         "my-to-spec",
         "my-to-tickets",
         "my-code-review"
