@@ -29,7 +29,7 @@ REQUIRED_REVIEW_CHECKS = (
     "my-humanizer",
     "my-artifact-finalization",
 )
-ARTIFACT_KINDS = frozenset({"general", "design"})
+ARTIFACT_KINDS = frozenset({"general", "design", "repair-plan"})
 REVIEW_CHECK_STATUSES = frozenset(
     {"pass", "finding", "inconclusive", "not-applicable"}
 )
@@ -98,9 +98,12 @@ def build_artifact_review_snapshot(
                 "size": len(content),
             }
         )
-    required_checks = REQUIRED_REVIEW_CHECKS + (
-        ("my-review-design",) if artifact_kind == "design" else ()
-    )
+    if artifact_kind == "repair-plan":
+        required_checks = ("my-review-design",)
+    else:
+        required_checks = REQUIRED_REVIEW_CHECKS + (
+            ("my-review-design",) if artifact_kind == "design" else ()
+        )
     lanes = [
         {
             "lane_id": check,

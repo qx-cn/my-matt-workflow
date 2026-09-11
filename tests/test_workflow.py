@@ -696,6 +696,7 @@ class ProfileTests(unittest.TestCase):
             "work_scope_policy": "single-ticket",
             "decision_policy": "ask",
             "default_execution_agent": "auto",
+            "max_repair_rounds": 1,
             "test_commands": ["python3 -m unittest"],
             "review_commands": [],
             "standards_sources": [],
@@ -2622,7 +2623,7 @@ render_root: 学生课程
             )
             manifest = json.loads((release / "manifest.json").read_text())
             self.assertEqual(
-                ["my-code-review", "my-tdd"],
+                ["my-code-review", "my-review-design", "my-tdd"],
                 manifest["composed"]["my-implement"],
             )
             self.assertEqual(

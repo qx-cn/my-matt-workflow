@@ -28,7 +28,7 @@ class CompositionManifestTests(unittest.TestCase):
     def test_manifest_declares_implement_dependencies(self):
         manifest = load_composition_manifest(ROOT / "composition/manifest.json")
         self.assertEqual(
-            {"my-tdd", "my-code-review"},
+            {"my-tdd", "my-code-review", "my-review-design"},
             {edge.skill for edge in manifest.callers["my-implement"]},
         )
         self.assertEqual(

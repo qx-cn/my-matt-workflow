@@ -41,6 +41,11 @@ from .fs_safety import (
     register_owned_directory,
     verify_owned_directory,
 )
+from .artifact_review import (
+    ArtifactReviewError,
+    build_artifact_review_snapshot,
+    submit_artifact_review_result,
+)
 
 
 class RunJournalError(ValueError):
@@ -48,18 +53,20 @@ class RunJournalError(ValueError):
 
 
 RUN_PHASE_TRANSITIONS = {
-    "admitted": {"testing", "implementing", "blocked-by-design", "blocked-by-evidence"},
-    "testing": {"implementing", "blocked-by-design", "blocked-by-evidence"},
-    "implementing": {"testing", "reviewing", "blocked-by-design", "blocked-by-evidence"},
+    "admitted": {"testing", "implementing", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"},
+    "testing": {"implementing", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"},
+    "implementing": {"testing", "reviewing", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"},
     "blocked-by-design": {"revising"},
     "blocked-by-evidence": {"testing", "implementing", "reviewing"},
     "revising": {"testing", "implementing", "blocked-by-design"},
-    "reviewing": {"implementing", "committing", "blocked-by-design", "blocked-by-evidence"},
+    "reviewing": {"planning", "committing", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"},
+    "planning": {"plan-reviewing", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"},
+    "plan-reviewing": {"implementing", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"},
     "committing": {"complete", "blocked-by-design"},
     "complete": set(),
 }
 IMPLEMENTATION_OUTCOMES = frozenset(
-    {"completed", "blocked-by-design", "blocked-by-evidence"}
+    {"completed", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"}
 )
 REVIEW_METHOD = "my-code-review"
 REVIEW_STATUSES = frozenset({"pass", "findings", "inconclusive", "blocked-by-design"})
@@ -286,6 +293,7 @@ def build_run_context(
                 "work_scope_policy",
                 "decision_policy",
                 "humanizer_policy",
+                "max_repair_rounds",
             )
         },
         "write_gates": gates,
@@ -410,13 +418,14 @@ def start_run(
             )
             now = datetime.now(timezone.utc).isoformat()
             journal: dict[str, object] = {
-                "schema_version": 2,
+                "schema_version": 3,
                 "run_id": ticket["id"],
                 "attempt_id": attempt_id,
                 "implementation_session_id": secrets.token_hex(16),
                 "phase": "admitted",
                 "context": context,
                 "receipts": {"test": None, "review": None, "code": None},
+                "repair_plan": None,
                 "evidence": [],
                 "blocker": None,
                 "events": [{"phase": "admitted", "at": now}],
@@ -483,6 +492,7 @@ def implementation_work_unit(
             "completed",
             "blocked-by-design",
             "blocked-by-evidence",
+            "blocked-by-review",
         ],
     }
 
@@ -1058,24 +1068,207 @@ def _previous_review_roots(path: Path) -> set[str]:
     return set()
 
 
-def _return_review_to_implementation(
-    path: Path, receipt: dict[str, str], roots: set[str], *, repeated: bool
-) -> None:
+def _repair_plan_path(path: Path, review_id: str) -> Path:
+    if not _SAFE_ID.fullmatch(review_id):
+        raise RunJournalError("repair plan review id 无效")
+    return _evidence_directory(path) / "repair-plans" / f"{review_id}.md"
+
+
+def _repair_round_limit(context: dict[str, object]) -> int:
+    policies = context.get("policies")
+    limit = policies.get("max_repair_rounds") if isinstance(policies, dict) else None
+    if not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= 5:
+        raise RunJournalError("run journal 缺少有效 max_repair_rounds")
+    return limit
+
+
+def _begin_repair_planning(
+    path: Path, receipt: dict[str, str], result: dict[str, object], roots: set[str]
+) -> tuple[int, int]:
+    """Persist the accepted code findings and close the code-write phase."""
     journal = _load_journal(path)
-    if journal.get("phase") not in {"reviewing", "committing"}:
-        raise RunJournalError("带 finding 的 review 只能从 review 阶段返回实施")
-    journal["phase"] = "implementing"
+    if journal.get("phase") != "reviewing":
+        raise RunJournalError("带 finding 的 review 只能从 reviewing 阶段进入 repair plan")
+    context = journal.get("context")
+    if not isinstance(context, dict):
+        raise RunJournalError("run journal context 无效")
+    prior = journal.get("repair_plan")
+    previous_round = prior.get("round", 0) if isinstance(prior, dict) else 0
+    if not isinstance(previous_round, int) or isinstance(previous_round, bool) or previous_round < 0:
+        raise RunJournalError("repair plan round 无效")
+    round_number = previous_round + 1
+    limit = _repair_round_limit(context)
+    if round_number > limit:
+        raise RunJournalError("repair round limit reached")
+    findings = result.get("findings")
+    if not isinstance(findings, list) or not findings:
+        raise RunJournalError("repair plan 缺少 findings")
+    identifiers = [item.get("id") for item in findings if isinstance(item, dict)]
+    if len(identifiers) != len(findings) or not all(isinstance(item, str) and _SAFE_ID.fullmatch(item) for item in identifiers):
+        raise RunJournalError("repair plan finding id 无效")
+    if len(set(identifiers)) != len(identifiers):
+        raise RunJournalError("repair plan finding id 重复")
+    code = build_code_receipt(path)
+    journal["phase"] = "planning"
+    journal["repair_plan"] = {
+        "round": round_number,
+        "limit": limit,
+        "code_content_id": code["content_id"],
+        "code_review_receipt": receipt,
+        "review_id": result["review_id"],
+        "finding_ids": sorted(identifiers),
+        "root_causes": sorted(roots),
+        "path": None,
+        "content_id": None,
+        "review_receipt": None,
+    }
     events = journal.get("events")
     if not isinstance(events, list):
         raise RunJournalError("run journal events 无效")
     events.append({
-        "phase": "implementing",
-        "review_attempt": receipt,
-        "root_causes": sorted(roots),
-        "repeated_root_cause": repeated,
-        "at": datetime.now(timezone.utc).isoformat(),
+        "phase": "planning", "review_attempt": receipt, "round": round_number,
+        "root_causes": sorted(roots), "at": datetime.now(timezone.utc).isoformat(),
     })
     _write_json_atomic(path, journal)
+    return round_number, limit
+
+
+def _repair_plan_state(path: Path, phase: str) -> tuple[dict[str, object], dict[str, object], Path]:
+    journal = _load_journal(path)
+    if journal.get("phase") != phase:
+        raise RunJournalError(f"repair plan 只能从 {phase} 阶段操作")
+    context = journal.get("context")
+    repair = journal.get("repair_plan")
+    if not isinstance(context, dict) or not isinstance(repair, dict):
+        raise RunJournalError("repair plan 状态无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    return journal, repair, repo
+
+
+def _repair_plan_template(repair: dict[str, object], findings: list[dict[str, object]]) -> str:
+    sections: list[str] = ["# Repair plan", "", "仅修复以下当前 Ticket findings。"]
+    for finding in findings:
+        identifier = finding["id"]
+        acceptance = ", ".join(finding["acceptance_ids"])
+        sections.extend([
+            "", f"## Finding {identifier}", f"- Acceptance IDs: {acceptance}",
+            f"- Root cause: {finding['root_cause']}", "- Change: ",
+            "- Verification: ", "- Out of scope: ",
+        ])
+    return "\n".join(sections) + "\n"
+
+
+def open_repair_plan(path: Path) -> dict[str, object]:
+    """Create the sole mutable planning artifact for the current review findings."""
+    journal, repair, repo = _repair_plan_state(path, "planning")
+    if repair.get("path") is not None:
+        raise RunJournalError("repair plan 已创建")
+    receipt = repair.get("code_review_receipt")
+    record = _load_evidence(path, receipt, "review")
+    result_receipt = record.get("result")
+    if not isinstance(result_receipt, dict) or not isinstance(result_receipt.get("path"), str):
+        raise RunJournalError("repair plan 缺少 code review result")
+    findings = json.loads(Path(result_receipt["path"]).read_text(encoding="utf-8")).get("findings")
+    if not isinstance(findings, list):
+        raise RunJournalError("repair plan findings 无效")
+    plan = _repair_plan_path(path, str(repair.get("review_id", "")))
+    if plan.exists() or plan.is_symlink():
+        raise RunJournalError("repair plan 目标已存在")
+    plan.parent.mkdir(parents=True, exist_ok=True)
+    plan.write_text(_repair_plan_template(repair, findings), encoding="utf-8")
+    repair["path"] = str(plan)
+    _write_json_atomic(path, journal)
+    return {"status": "ready", "path": str(plan), "round": repair["round"], "finding_ids": repair["finding_ids"]}
+
+
+def _validate_repair_plan(path: Path, repair: dict[str, object]) -> Path:
+    raw_path = repair.get("path")
+    if not isinstance(raw_path, str):
+        raise RunJournalError("repair plan 尚未创建")
+    plan = Path(raw_path).resolve()
+    if plan != _repair_plan_path(path, str(repair.get("review_id", ""))).resolve() or not plan.is_file() or plan.is_symlink():
+        raise RunJournalError("repair plan 路径无效")
+    text = plan.read_text(encoding="utf-8")
+    identifiers = re.findall(r"^## Finding ([A-Za-z0-9][A-Za-z0-9._-]{0,127})$", text, flags=re.MULTILINE)
+    expected = repair.get("finding_ids")
+    if not isinstance(expected, list) or sorted(identifiers) != sorted(expected) or len(identifiers) != len(set(identifiers)):
+        raise RunJournalError("repair plan 必须逐项覆盖且仅覆盖当前 findings")
+    for identifier in identifiers:
+        section = re.search(rf"^## Finding {re.escape(identifier)}$([\s\S]*?)(?=^## Finding |\Z)", text, flags=re.MULTILINE)
+        if section is None or any(not re.search(rf"^- {field}: .+", section.group(1), flags=re.MULTILINE) for field in ("Acceptance IDs", "Root cause", "Change", "Verification", "Out of scope")):
+            raise RunJournalError("repair plan finding 缺少必填决策")
+    return plan
+
+
+def open_repair_plan_review(path: Path) -> dict[str, object]:
+    """Freeze a complete repair plan for the design-only review method."""
+    journal, repair, _ = _repair_plan_state(path, "planning")
+    if build_code_receipt(path)["content_id"] != repair.get("code_content_id"):
+        raise RunJournalError("planning 期间代码内容已变化")
+    plan = _validate_repair_plan(path, repair)
+    try:
+        unit = build_artifact_review_snapshot(
+            [plan], snapshot_root=_evidence_directory(path) / "repair-plan-snapshots",
+            artifact_kind="repair-plan",
+        )
+    except ArtifactReviewError as exc:
+        raise RunJournalError(str(exc)) from exc
+    repair["content_id"] = unit["content_id"]
+    journal["phase"] = "plan-reviewing"
+    events = journal.get("events")
+    assert isinstance(events, list)
+    events.append({"phase": "plan-reviewing", "round": repair["round"], "content_id": unit["content_id"], "at": datetime.now(timezone.utc).isoformat()})
+    _write_json_atomic(path, journal)
+    return unit
+
+
+def submit_repair_plan_review(path: Path, snapshot_dir: Path, result: dict[str, object]) -> dict[str, object]:
+    """Close the plan-only review and permit code writes only on a clean pass."""
+    journal, repair, _ = _repair_plan_state(path, "plan-reviewing")
+    if build_code_receipt(path)["content_id"] != repair.get("code_content_id"):
+        raise RunJournalError("plan review 期间代码内容已变化")
+    plan = _validate_repair_plan(path, repair)
+    if result.get("content_id") != repair.get("content_id"):
+        raise RunJournalError("repair plan review content_id 不匹配")
+    try:
+        accepted = submit_artifact_review_result([plan], snapshot_dir, result)
+    except ArtifactReviewError as exc:
+        raise RunJournalError(str(exc)) from exc
+    if accepted["status"] != "accepted":
+        submit_run_outcome(path, {
+            "outcome": "blocked-by-review", "test_receipt": None,
+            "review_receipt": None, "code_receipt": None,
+            "blocker": "repair plan review snapshot stale",
+        })
+        return {"status": "stale", "next_action": "blocked-by-review"}
+    design_pass = accepted["checks"].get("my-review-design") == {"status": "pass", "reason": None}
+    plan_receipt = _persist_evidence(path, {
+        "kind": "repair-plan-review", "status": "pass" if design_pass else "findings",
+        "code_content_id": repair["code_content_id"], "plan_content_id": repair["content_id"],
+        "plan": _source_receipt(Path(str(journal["context"]["repo"])), plan, "repair plan", kind="repair-plan"),
+        "checks": accepted["checks"],
+    })
+    journal = _load_journal(path)
+    repair = journal["repair_plan"]
+    assert isinstance(repair, dict)
+    repair["review_receipt"] = plan_receipt
+    if not design_pass:
+        _write_json_atomic(path, journal)
+        submit_run_outcome(path, {
+            "outcome": "blocked-by-review", "test_receipt": None,
+            "review_receipt": None, "code_receipt": None,
+            "blocker": "repair plan requires revision",
+        })
+        return {"status": "findings", "next_action": "blocked-by-review", "repair_plan_receipt": plan_receipt}
+    else:
+        journal["phase"] = "implementing"
+        journal["blocker"] = None
+        next_action = "fix-findings"
+    events = journal.get("events")
+    assert isinstance(events, list)
+    events.append({"phase": journal["phase"], "repair_plan_receipt": plan_receipt, "at": datetime.now(timezone.utc).isoformat()})
+    _write_json_atomic(path, journal)
+    return {"status": "pass", "next_action": next_action, "repair_plan_receipt": plan_receipt}
 
 
 def submit_review_result(
@@ -1134,8 +1327,27 @@ def submit_review_result(
             raise RunJournalError("未知 review execution")
         receipt = _persist_evidence(path, record)
         repeated = bool(roots & previous_roots)
+        round_number: int | None = None
+        limit: int | None = None
         if status == "findings":
-            _return_review_to_implementation(path, receipt, roots, repeated=repeated)
+            if repeated:
+                submit_run_outcome(path, {
+                    "outcome": "blocked-by-design", "test_receipt": None,
+                    "review_receipt": None, "code_receipt": None,
+                    "blocker": f"repeated review root cause: {sorted(roots & previous_roots)[0]}",
+                })
+            else:
+                try:
+                    round_number, limit = _begin_repair_planning(path, receipt, result, roots)
+                except RunJournalError as exc:
+                    if str(exc) != "repair round limit reached":
+                        raise
+                    submit_run_outcome(path, {
+                        "outcome": "blocked-by-review", "test_receipt": None,
+                        "review_receipt": None, "code_receipt": None,
+                        "blocker": "repair round limit reached",
+                    })
+                    round_number, limit = None, _repair_round_limit(context)
         elif status == "blocked-by-design":
             record_run(
                 path,
@@ -1144,7 +1356,11 @@ def submit_review_result(
             )
         next_action = {
             "pass": "submit-completed",
-            "findings": "blocked-by-design" if repeated else "fix-findings",
+            "findings": (
+                "blocked-by-design" if repeated else
+                "blocked-by-review" if round_number is None else
+                "create-repair-plan"
+            ),
             "inconclusive": "blocked-by-evidence",
             "blocked-by-design": "blocked-by-design",
         }[status]
@@ -1154,6 +1370,8 @@ def submit_review_result(
             "evidence_receipt": receipt,
             "review_receipt": receipt if status == "pass" else None,
             "repeated_root_causes": sorted(roots & previous_roots),
+            "repair_round": round_number if status == "findings" and not repeated else None,
+            "repair_round_limit": limit if status == "findings" and not repeated else None,
         }
     finally:
         _release_review_snapshot(expected_root, snapshot_dir)
@@ -1420,6 +1638,7 @@ def submit_run_outcome(
                 "completed": "complete",
                 "blocked-by-design": "blocked-by-design",
                 "blocked-by-evidence": "ready-for-agent",
+                "blocked-by-review": "ready-for-agent",
             }[str(outcome)]
             after_ticket = project_ticket(
                 before_ticket,

@@ -37,6 +37,7 @@ PROFILE_FIELD_ORDER = (
     "work_scope_policy",
     "decision_policy",
     "default_execution_agent",
+    "max_repair_rounds",
     "test_commands",
     "review_commands",
     "standards_sources",
@@ -49,6 +50,7 @@ BASE_DEFAULTS: dict[str, Any] = {
     "agent_directory_mode": "private",
     "default_base_branch": "main",
     "default_execution_agent": "auto",
+    "max_repair_rounds": 1,
     "test_commands": [],
     "review_commands": [],
     "standards_sources": [],
@@ -105,6 +107,7 @@ POLICY_PRESETS: dict[str, dict[str, str]] = {
         "external_write_policy": "allow",
         "docs_writeback": "allow",
         "humanizer_policy": "allow",
+        "max_repair_rounds": 5,
     },
 }
 
@@ -174,6 +177,10 @@ POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
         "cursor": "默认由 Cursor 实施",
         "claude": "默认由 Claude 实施",
     },
+    "max_repair_rounds": {
+        1: "首次 review finding 后只允许一轮受审方案修复",
+        5: "最多五轮受审方案修复",
+    },
 }
 
 def _is_empty(value: Any) -> bool:
@@ -236,7 +243,7 @@ def format_policy_catalog() -> str:
     ]
     defaults = effective_profile({})
     for key in PROFILE_FIELD_ORDER:
-        if key in {"schema_version", "default_base_branch", "default_execution_agent", "test_commands", "review_commands",
+        if key in {"schema_version", "default_base_branch", "default_execution_agent", "max_repair_rounds", "test_commands", "review_commands",
                    "standards_sources", "domain_sources"}:
             lines.append(f"- {key}: 默认 {defaults[key]!r}")
             continue
@@ -321,6 +328,9 @@ def _validate(config: dict[str, Any]) -> None:
     ):
         if field in config and not _is_empty(config[field]) and not isinstance(config[field], str):
             raise ProfileError(f"{field} 必须是字符串")
+    rounds = _coalesce(config, "max_repair_rounds", BASE_DEFAULTS["max_repair_rounds"])
+    if not isinstance(rounds, int) or isinstance(rounds, bool) or rounds < 1 or rounds > 5:
+        raise ProfileError("max_repair_rounds 必须是 1 到 5 的整数")
     for field in ("test_commands", "review_commands", "standards_sources", "domain_sources"):
         if field not in config or _is_empty(config[field]):
             continue
@@ -371,6 +381,8 @@ def _validate(config: dict[str, Any]) -> None:
             "decision_policy 必须是："
             f"{', '.join(sorted(DECISION_POLICIES))}"
         )
+    if rounds > 1 and decision != "autonomous":
+        raise ProfileError("max_repair_rounds 大于 1 仅允许 full-auto 的 autonomous 决策策略")
     execution_agent = _coalesce(
         config, "default_execution_agent", BASE_DEFAULTS["default_execution_agent"]
     )

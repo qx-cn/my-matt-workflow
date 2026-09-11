@@ -19,7 +19,7 @@
     "version": 1,
     "scenario": "implementation-review-repeated-root-cause",
     "sources": [
-      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:c9ae13f09bcbcf5e8b6039a64d156eea1132e979d405e6f75a0da1897bbc0a08"},
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:b477ba752375287bf4d6824f20be4a5b1514eab5a981c533d4d1b695536a055e"},
       {"path": "skills/my-code-review/SKILL.md", "sha256": "sha256:457f0776f4372527433e248a208aec50999cbc258fa5316cd1d15a81b36eb630"}
     ]
   }

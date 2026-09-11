@@ -28,7 +28,7 @@ python3 <runtime_entry> run-record <journal> --phase committing
 
 宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID`、`MY_MATT_TICKET_BOUNDARY` 和 `MY_MATT_IMPLEMENTATION_SESSION_ID` 传递固定单元。传入 `--reviewer-session-id` 时，命令从只读 snapshot 目录运行，其中包含代码、基线、Spec、规则和 boundary manifest；结果必须使用同一不同的 ID 作为 `independent_session` provenance。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive | blocked-by-design`。默认 `reviewer_provenance=self`，并覆盖当前 Ticket 每个验收与必需风险探针；finding 必须引用当前验收，follow-on 只能引用直接下游 owner，design gap 才使用 `blocked-by-design`。用户显式要求独立审查时才使用不同的 `independent_session` provenance；这证明 session 区分和冻结输入，不证明不存在其他隐藏上下文。
 
-runtime 登记每轮结果并在所有终态释放 snapshot。`findings` 自动把 journal 返回 `implementing`；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design` 建议，要求先检查设计不变量；`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。代码、结果或 evidence record 再次变化都会使提交失效。
+runtime 登记每轮结果并在所有终态释放 snapshot。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`。默认只允许一轮修复；最终复审仍有 finding 时返回 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。代码、结果或 evidence record 再次变化都会使提交失效。
 
 每个 lane 结束时，把下面的 JSON 保存为文件并提交：
 

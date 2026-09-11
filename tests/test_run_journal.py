@@ -14,6 +14,8 @@ from tools.workflow_lib.run_journal import (
     build_code_receipt,
     build_run_context,
     close_implementation_session,
+    open_repair_plan,
+    open_repair_plan_review,
     open_implementation_session,
     open_review_evidence,
     record_review_evidence,
@@ -21,6 +23,7 @@ from tools.workflow_lib.run_journal import (
     run_test_evidence,
     start_run,
     submit_review_result,
+    submit_repair_plan_review,
     submit_run_outcome,
 )
 
@@ -291,7 +294,7 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual("serial", report["work_unit"]["execution_mode"])
             self.assertEqual("feature-01", report["work_unit"]["ticket"]["id"])
             self.assertEqual(
-                ["completed", "blocked-by-design", "blocked-by-evidence"],
+                ["completed", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"],
                 report["work_unit"]["expected_outcomes"],
             )
 
@@ -514,7 +517,24 @@ class RunJournalTests(unittest.TestCase):
             )
             self.assertEqual("my-code-review", evidence["method"])
 
-    def test_host_review_findings_are_persisted_release_snapshot_and_return_to_implementation(self):
+    def _approve_repair_plan(self, path: Path) -> None:
+        opened = open_repair_plan(path)
+        plan = Path(str(opened["path"]))
+        plan.write_text(
+            plan.read_text(encoding="utf-8")
+            .replace("- Change: \n", "- Change: add a state fence\n")
+            .replace("- Verification: \n", "- Verification: exercise abort during write\n")
+            .replace("- Out of scope: \n", "- Out of scope: downstream delivery\n"),
+            encoding="utf-8",
+        )
+        unit = open_repair_plan_review(path)
+        submit_repair_plan_review(path, Path(str(unit["snapshot_dir"])), {
+            "content_id": unit["content_id"],
+            "checks": {"my-review-design": {"status": "pass", "reason": None}},
+            "findings": [], "inconclusive": [],
+        })
+
+    def test_host_review_findings_are_persisted_then_require_an_approved_repair_plan(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
             path, _ = start_run(repo, ticket, sha, ["app.py"])
@@ -531,8 +551,10 @@ class RunJournalTests(unittest.TestCase):
                 }])
             report = submit_review_result(path, snapshot, result)
             self.assertEqual("findings", report["status"])
-            self.assertEqual("fix-findings", report["next_action"])
+            self.assertEqual("create-repair-plan", report["next_action"])
             self.assertFalse(snapshot.exists())
+            self.assertEqual("planning", json.loads(path.read_text())["phase"])
+            self._approve_repair_plan(path)
             self.assertEqual("implementing", json.loads(path.read_text())["phase"])
             evidence = json.loads(
                 (
@@ -543,9 +565,14 @@ class RunJournalTests(unittest.TestCase):
             )
             self.assertEqual("findings", evidence["status"])
 
-    def test_repeated_review_root_cause_escalates_design_and_inconclusive_is_not_a_finding(self):
+    def test_repeated_review_root_cause_escalates_design(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
+            (repo / ".agent/matt-workflow.md").write_text(render_profile({
+                "schema_version": 1, "commit_policy": "allow", "external_write_policy": "deny",
+                "test_commands": ["python3 -c pass"], "review_commands": [REVIEW_COMMAND],
+                "max_repair_rounds": 5, "decision_policy": "autonomous",
+            }), encoding="utf-8")
             path, _ = start_run(repo, ticket, sha, ["app.py"])
             record_run(path, "implementing")
             for attempt in range(2):
@@ -562,24 +589,72 @@ class RunJournalTests(unittest.TestCase):
                             "baseline_reachable": True,
                         }]),
                 )
+                if attempt == 0:
+                    self._approve_repair_plan(path)
             self.assertEqual("blocked-by-design", report["next_action"])
             self.assertEqual(["missing-state-fence"], report["repeated_root_causes"])
 
+    def test_default_stops_after_one_repair_round_and_releases_ticket(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            for attempt in range(2):
+                record_run(path, "reviewing")
+                unit = open_review_evidence(path)
+                report = submit_review_result(path, Path(str(unit["snapshot_dir"])), self_review_result(unit, "findings", [{
+                    "id": f"root-{attempt}", "root_cause": f"root-{attempt}",
+                    "severity": "P1", "summary": "must repair", "baseline_reachable": True,
+                }]))
+                if attempt == 0:
+                    self._approve_repair_plan(path)
+            self.assertEqual("blocked-by-review", report["next_action"])
+            self.assertEqual("blocked-by-review", json.loads(path.read_text())["submission"]["outcome"])
+            self.assertEqual("ready-for-agent", ticket.read_text().split("status: ")[1].splitlines()[0])
+
+    def test_full_auto_allows_at_most_five_repair_rounds(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            (repo / ".agent/matt-workflow.md").write_text(render_profile({
+                "schema_version": 1, "commit_policy": "allow", "external_write_policy": "deny",
+                "test_commands": ["python3 -c pass"], "review_commands": [REVIEW_COMMAND],
+                "max_repair_rounds": 5, "decision_policy": "autonomous",
+            }), encoding="utf-8")
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            for attempt in range(6):
+                record_run(path, "reviewing")
+                unit = open_review_evidence(path)
+                report = submit_review_result(path, Path(str(unit["snapshot_dir"])), self_review_result(unit, "findings", [{
+                    "id": f"root-{attempt}", "root_cause": f"root-{attempt}",
+                    "severity": "P1", "summary": "must repair", "baseline_reachable": True,
+                }]))
+                if attempt < 5:
+                    self.assertEqual("create-repair-plan", report["next_action"])
+                    self._approve_repair_plan(path)
+            self.assertEqual("blocked-by-review", report["next_action"])
+
+    def test_repair_plan_rejects_incomplete_plan_and_code_drift(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
             record_run(path, "reviewing")
             unit = open_review_evidence(path)
-            report = submit_review_result(
-                path,
-                Path(str(unit["snapshot_dir"])),
-                self_review_result(unit, "inconclusive", [{
-                        "id": "schema-source-unknown",
-                        "root_cause": "unsupported-intermediate-schema",
-                        "severity": None,
-                        "summary": "cannot prove schema state is reachable from the release baseline",
-                        "baseline_reachable": None,
-                    }]),
-            )
-            self.assertEqual("blocked-by-evidence", report["next_action"])
-            self.assertIsNone(report["review_receipt"])
+            submit_review_result(path, Path(str(unit["snapshot_dir"])), self_review_result(unit, "findings", [{
+                "id": "root-1", "root_cause": "root-1", "severity": "P1",
+                "summary": "must repair", "baseline_reachable": True,
+            }]))
+            opened = open_repair_plan(path)
+            with self.assertRaisesRegex(RunJournalError, "缺少必填"):
+                open_repair_plan_review(path)
+            plan = Path(str(opened["path"]))
+            plan.write_text(plan.read_text().replace("- Change: \n", "- Change: fix\n")
+                .replace("- Verification: \n", "- Verification: test\n")
+                .replace("- Out of scope: \n", "- Out of scope: none\n"), encoding="utf-8")
+            (repo / "app.py").write_text("print('drift')\n", encoding="utf-8")
+            with self.assertRaisesRegex(RunJournalError, "代码内容已变化"):
+                open_repair_plan_review(path)
 
     def test_review_rejects_unreachable_blocker_and_releases_snapshot(self):
         with tempfile.TemporaryDirectory() as tmp:

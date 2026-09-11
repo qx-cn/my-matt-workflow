@@ -63,6 +63,8 @@ from workflow_lib.run_journal import (
     build_run_context,
     close_implementation_session,
     implementation_work_unit,
+    open_repair_plan,
+    open_repair_plan_review,
     open_review_evidence,
     open_implementation_session,
     record_review_evidence,
@@ -70,6 +72,7 @@ from workflow_lib.run_journal import (
     run_test_evidence,
     start_run,
     submit_review_result,
+    submit_repair_plan_review,
     submit_run_outcome,
 )
 from workflow_lib.smoke_registry import (
@@ -899,6 +902,33 @@ def command_run_review_open(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def command_implementation_repair_plan_open(args: argparse.Namespace) -> None:
+    try:
+        report = open_repair_plan(Path(args.journal))
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_implementation_repair_plan_review_open(args: argparse.Namespace) -> None:
+    try:
+        report = open_repair_plan_review(Path(args.journal))
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_implementation_repair_plan_review_submit(args: argparse.Namespace) -> None:
+    result = _read_result_object(args.result_file, "repair plan review")
+    try:
+        report = submit_repair_plan_review(
+            Path(args.journal), Path(args.snapshot_dir), result
+        )
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_deploy(args: argparse.Namespace) -> None:
     """Install the current content, creating a release only when it changed."""
     _run_all_up_gate(check_current_release=False)
@@ -1144,13 +1174,13 @@ def parser() -> argparse.ArgumentParser:
 
     artifact_snapshot = sub.add_parser("artifact-review-snapshot")
     artifact_snapshot.add_argument("--artifact", action="append", required=True)
-    artifact_snapshot.add_argument("--kind", choices=("general", "design"), default="general")
+    artifact_snapshot.add_argument("--kind", choices=("general", "design", "repair-plan"), default="general")
     artifact_snapshot.add_argument("--parallel", action="store_true")
     artifact_snapshot.set_defaults(func=command_artifact_review_snapshot)
 
     artifact_open = sub.add_parser("artifact-review-open")
     artifact_open.add_argument("--artifact", action="append", required=True)
-    artifact_open.add_argument("--kind", choices=("general", "design"), default="general")
+    artifact_open.add_argument("--kind", choices=("general", "design", "repair-plan"), default="general")
     artifact_open.add_argument("--parallel", action="store_true")
     artifact_open.set_defaults(func=command_artifact_review_snapshot)
 
@@ -1240,6 +1270,20 @@ def parser() -> argparse.ArgumentParser:
     run_review_open = sub.add_parser("run-review-open")
     run_review_open.add_argument("--journal", required=True)
     run_review_open.set_defaults(func=command_run_review_open)
+
+    repair_plan_open = sub.add_parser("implementation-repair-plan-open")
+    repair_plan_open.add_argument("--journal", required=True)
+    repair_plan_open.set_defaults(func=command_implementation_repair_plan_open)
+
+    repair_plan_review_open = sub.add_parser("implementation-repair-plan-review-open")
+    repair_plan_review_open.add_argument("--journal", required=True)
+    repair_plan_review_open.set_defaults(func=command_implementation_repair_plan_review_open)
+
+    repair_plan_review_submit = sub.add_parser("implementation-repair-plan-review-submit")
+    repair_plan_review_submit.add_argument("--journal", required=True)
+    repair_plan_review_submit.add_argument("--snapshot-dir", required=True)
+    repair_plan_review_submit.add_argument("--result-file", required=True)
+    repair_plan_review_submit.set_defaults(func=command_implementation_repair_plan_review_submit)
 
     deploy = sub.add_parser("deploy")
     deploy.add_argument("--release-id")
