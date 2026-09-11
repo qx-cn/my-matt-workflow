@@ -6,13 +6,13 @@ disable-model-invocation: true
 
 本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
 
-读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略与生效的 `humanizer_policy`。配置不存在时先运行 `{{skill-call:my-setup}}`。写入团队文档或外部 Tracker 前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略与生效的 `humanizer_policy`。`default_execution_agent` 只用于后续 Ticket 的默认值，不为 Spec 分配执行 Agent。配置不存在时先运行 `{{skill-call:my-setup}}`。写入团队文档或外部 Tracker 前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
 
 ## 过程
 
 1. 确定 Spec 血缘。首次产出分配稳定的 `spec_id` 与 `revision: 1`；修订时沿用 `spec_id`、递增 `revision`，并让 `supersedes` 指向上一版。每版新建文件，不覆盖历史版本；正文只写当前有效状态。
 
-2. 若尚未探索，先探索仓库以理解当前代码状态。整个 Spec 使用项目领域术语，并遵守所触及区域的 ADR。输出前按 [项目规则解析](references/shared/adapters/project-rules.md) 为 `execution_agent` 解析规则；每个承重实施决策必须给出影响区域、规则、约束和验证。普通、可逆的实现细节留给实施阶段。
+2. 若尚未探索，先探索仓库以理解当前代码状态。整个 Spec 使用项目领域术语，并遵守所触及区域的 ADR。输出前按 [项目规则解析](references/shared/adapters/project-rules.md) 解析跨 Agent 的项目规则；每个承重实施决策必须给出影响区域、规则、约束和验证。每张 Ticket 的目标 Agent 及其原生规则留到 Ticket 阶段解析。普通、可逆的实现细节留给实施阶段。
 
 3. 从已确认讨论中提取目标、范围外、外部可观察行为、不变量、验收标准和未知。用户故事只在角色差异会改变行为或验收时使用，不为“全面”而枚举同义场景。
 
@@ -86,11 +86,6 @@ status: current
 - 什么构成好测试（只测试外部行为，而非实现）；
 - 将测试哪些模块；
 - 测试的先例（即代码库内相似测试）。
-
-## 执行环境
-
-- execution_agent：
-- 未解决规则冲突：
 
 ## 依据与未知
 

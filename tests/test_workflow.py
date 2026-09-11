@@ -549,6 +549,19 @@ class ProfileTests(unittest.TestCase):
             with self.subTest(skill=skill):
                 self.assertIn("references/shared/adapters/project-rules.md", text)
 
+    def test_execution_agent_is_ticket_scoped(self):
+        root = Path(__file__).resolve().parents[1]
+        adapter = (root / "resources/adapters/project-rules.md").read_text()
+        spec = (root / "skills/my-to-spec/SKILL.md").read_text()
+        tickets = (root / "skills/my-to-tickets/SKILL.md").read_text()
+
+        self.assertIn("只为未显式分配的 Ticket", adapter)
+        self.assertIn("只有 Ticket 的 `execution_agent`", adapter)
+        self.assertIn("不为 Spec 分配执行 Agent", spec)
+        self.assertNotIn("- execution_agent：", spec)
+        self.assertIn("用户或已批准材料明确分配", tickets)
+        self.assertIn("先为每张 Ticket 确定 `execution_agent`", tickets)
+
     def test_setup_discovers_cursor_rule_candidates_without_persisting_them(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)

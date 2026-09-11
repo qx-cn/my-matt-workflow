@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
 
-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `{{skill-call:my-setup}}`。Ticket 默认沿用项目的 `default_execution_agent`；`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `{{skill-call:my-setup}}`。用户或已批准材料明确分配执行 Agent 时，该 Ticket 使用该值；否则使用项目的 `default_execution_agent`。`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
 
 ## 过程
 
@@ -20,7 +20,7 @@ disable-model-invocation: true
 
 ### 2. 探索代码库（可选）
 
-若尚未探索代码库，则探索以理解当前状态。Ticket 标题和描述应使用项目领域术语，并遵守相关 ADR。起草前按 [项目规则解析](references/shared/adapters/project-rules.md) 为 `execution_agent` 解析规则；未解决的规则冲突不得生成 `ready-for-agent` Ticket。
+若尚未探索代码库，则探索以理解当前状态。Ticket 标题和描述应使用项目领域术语，并遵守相关 ADR。先为每张 Ticket 确定 `execution_agent`，再按 [项目规则解析](references/shared/adapters/project-rules.md) 解析该目标的规则；`auto` 保持原值，但可用当前安装 Agent 收集初步证据。未解决的规则冲突不得生成 `ready-for-agent` Ticket。
 
 寻找 prefactor 机会，让实施更容易：“先让变更容易，再做容易的变更。”
 
