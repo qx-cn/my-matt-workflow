@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "id": "implementation-turn-single-ticket-complete",
+  "type": "implementation-turn-closure-contract",
+  "skills": ["my-implement"],
+  "input": {
+    "journal_state": "completed",
+    "outcome": "completed",
+    "session_closed": true,
+    "next_ticket": "complete",
+    "user_stop_requested": false
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "closed-work-scope",
+    "next": "final"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "implementation-turn-single-ticket-complete",
+    "sources": [
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:def1a5dfa66fe7755930973f0502faeb165b7ab9fd1cb22f8d0051226064421e"}
+    ]
+  }
+}

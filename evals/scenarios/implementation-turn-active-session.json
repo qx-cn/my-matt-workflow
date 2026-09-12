@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "id": "implementation-turn-active-session",
+  "type": "implementation-turn-closure-contract",
+  "skills": ["my-implement"],
+  "input": {
+    "journal_state": "active",
+    "outcome": "none",
+    "session_closed": false,
+    "next_ticket": "not-run",
+    "user_stop_requested": false
+  },
+  "expected": {
+    "status": "proceed",
+    "rule": "active-implementation-session",
+    "next": "continue-work"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "implementation-turn-active-session",
+    "sources": [
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:def1a5dfa66fe7755930973f0502faeb165b7ab9fd1cb22f8d0051226064421e"}
+    ]
+  }
+}

@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 15,
-                "required_scenarios": 14,
+                "scenarios": 19,
+                "required_scenarios": 18,
             },
             validate_evals(ROOT),
         )
@@ -76,6 +76,19 @@ class EvalValidationTests(unittest.TestCase):
                 **repair_plan.input,
                 "required_checks": ["my-review-design", "my-humanizer"],
             },
+        )
+        with self.assertRaisesRegex(EvalError, "outcome mismatch"):
+            run_scenario(ROOT, malformed)
+
+    def test_implementation_turn_closure_rejects_final_before_scope_transition(self):
+        scenarios = {
+            scenario.identifier: scenario
+            for scenario in load_scenarios(ROOT / "evals")
+        }
+        completed = scenarios["implementation-turn-single-ticket-complete"]
+        malformed = replace(
+            completed,
+            input={**completed.input, "next_ticket": "not-run"},
         )
         with self.assertRaisesRegex(EvalError, "outcome mismatch"):
             run_scenario(ROOT, malformed)

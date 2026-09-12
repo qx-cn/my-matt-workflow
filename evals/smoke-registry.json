@@ -9,7 +9,7 @@
     "my-handoff": ["handoff-round-trip"],
     "my-to-spec": ["main-workflow-fresh-context"],
     "my-to-tickets": ["rule-plan-ticket-loop", "main-workflow-fresh-context"],
-    "my-implement": ["rule-plan-ticket-loop", "main-workflow-fresh-context", "implementation-review-baseline-reachability", "implementation-review-repeated-root-cause", "artifact-review-repair-plan-method-boundary"],
+    "my-implement": ["rule-plan-ticket-loop", "main-workflow-fresh-context", "implementation-review-baseline-reachability", "implementation-review-repeated-root-cause", "artifact-review-repair-plan-method-boundary", "implementation-turn-active-session", "implementation-turn-single-ticket-complete", "implementation-turn-ready-frontier-continue", "implementation-turn-repair-limit-blocked"],
     "my-code-review": ["implementation-review-baseline-reachability", "implementation-review-repeated-root-cause"],
     "my-review-artifact": ["artifact-review-method-boundary", "artifact-review-design-method-boundary"],
     "my-review-design": ["artifact-review-design-method-boundary", "artifact-review-repair-plan-method-boundary"],

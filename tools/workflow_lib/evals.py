@@ -34,6 +34,10 @@ REQUIRED_SCENARIOS = frozenset(
         "artifact-review-repair-plan-method-boundary",
         "implementation-review-baseline-reachability",
         "implementation-review-repeated-root-cause",
+        "implementation-turn-active-session",
+        "implementation-turn-single-ticket-complete",
+        "implementation-turn-ready-frontier-continue",
+        "implementation-turn-repair-limit-blocked",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -51,6 +55,7 @@ _SCENARIO_TYPES = frozenset(
         "handoff-contract",
         "requirement-analysis-contract",
         "implementation-review-contract",
+        "implementation-turn-closure-contract",
     }
 )
 
@@ -426,6 +431,40 @@ def _evaluate_implementation_review_contract(
     return {"status": "valid", "rule": "code-bound-review-receipt", "next": "submit-completed"}
 
 
+def _evaluate_implementation_turn_closure_contract(
+    input_value: dict[str, object],
+) -> dict[str, object]:
+    """Allow a final only after runtime closure or an explicit user stop."""
+    case = _require_fields(
+        input_value,
+        {"journal_state", "outcome", "session_closed", "next_ticket", "user_stop_requested"},
+        "implementation-turn-closure-contract.input",
+    )
+    if case["journal_state"] not in {"active", "completed", "blocked"}:
+        raise EvalError("implementation-turn-closure-contract.input.journal_state: invalid state")
+    if case["outcome"] not in {
+        "none", "completed", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"
+    }:
+        raise EvalError("implementation-turn-closure-contract.input.outcome: invalid outcome")
+    if not isinstance(case["session_closed"], bool) or not isinstance(case["user_stop_requested"], bool):
+        raise EvalError("implementation-turn-closure-contract.input: closure flags must be boolean")
+    if case["next_ticket"] not in {"not-run", "complete", "continue", "blocked", "invalid"}:
+        raise EvalError("implementation-turn-closure-contract.input.next_ticket: invalid transition")
+    if case["user_stop_requested"]:
+        return {"status": "valid", "rule": "explicit-user-stop", "next": "final-with-recovery"}
+    if case["journal_state"] == "active" or case["outcome"] == "none" or not case["session_closed"]:
+        return {"status": "proceed", "rule": "active-implementation-session", "next": "continue-work"}
+    if case["outcome"] == "completed":
+        if case["next_ticket"] == "complete":
+            return {"status": "valid", "rule": "closed-work-scope", "next": "final"}
+        if case["next_ticket"] == "continue":
+            return {"status": "proceed", "rule": "work-scope-transition", "next": "implement-next-ticket"}
+        return {"status": "stop", "rule": "resolve-work-scope-transition", "next": "report-runtime-state"}
+    if case["journal_state"] == "blocked" and case["next_ticket"] in {"blocked", "invalid"}:
+        return {"status": "valid", "rule": "registered-blocker", "next": "final-with-recovery"}
+    return {"status": "proceed", "rule": "register-blocker", "next": "submit-blocked-outcome"}
+
+
 def _evaluate_rule_contract(input_value: dict[str, object]) -> dict[str, object]:
     case = _require_fields(
         input_value,
@@ -657,6 +696,7 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "handoff-contract": _evaluate_handoff_contract,
         "requirement-analysis-contract": _evaluate_requirement_analysis_contract,
         "implementation-review-contract": _evaluate_implementation_review_contract,
+        "implementation-turn-closure-contract": _evaluate_implementation_turn_closure_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:

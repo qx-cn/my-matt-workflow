@@ -30,6 +30,18 @@ python3 <runtime_entry> run-record <journal> --phase committing
 
 runtime 登记每轮结果并在所有终态释放 snapshot。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`。默认只允许一轮修复；最终复审仍有 finding 时返回 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。repair-plan 审查的代码、方案或结果 content ID 再次变化时，runtime 释放其受管 snapshot、终止为 `blocked-by-review`；必须显式开启新会话，不能在原会话隐式重开。
 
+## 回合关闭
+
+runtime 不能观察或拦截宿主发送的聊天 final；宿主必须自行把 final 视为实施会话的终止动作。journal 处于 `admitted`、`testing`、`implementing`、`reviewing`、`committing` 或 repair-plan 流程时，只能继续工作或以 commentary 汇报进度，不得发送 final。局部测试通过、当前正在施工、尚待 receipt 或“下一步继续”均不是终止结果。
+
+只有以下任一条件成立才可发送 final：
+
+- 已提交并关闭实施会话，且按 [work scope](work-scope.md) 的 `next-ticket` transition 返回 `complete`；`ready-frontier` 或 `approved-plan` 返回下一张 Ticket 时，在同一实施任务继续。
+- runtime 已登记正式 blocked outcome；final 必须说明 blocker、已登记证据和最小恢复条件。
+- 用户明确要求暂停或停止；保留 journal 并如实说明未完成状态和恢复入口。
+
+`max_repair_rounds` 只限制同一审查 finding 的自动修复轮数，不限制正常 TDD 切片或 Ticket 推进。达到限制时登记 `blocked-by-review`，而不是以未提交的进度汇报结束回合。
+
 每个 lane 结束时，把下面的 JSON 保存为文件并提交：
 
 ```json

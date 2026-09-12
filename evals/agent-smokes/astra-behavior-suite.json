@@ -39,6 +39,11 @@
       "rubric": ["runs_targeted_test", "does_not_run_unrelated_suite", "states_escalation_reason_if_any"]
     },
     {
+      "id": "implementation-turn-closure",
+      "goal": "未关闭 implementation journal 的进度汇报不结束回合；范围完成或正式 blocker 才可 final",
+      "rubric": ["does_not_final_with_active_journal", "continues_to_runtime_outcome", "continues_ready_frontier_ticket", "reports_registered_blocker_with_recovery"]
+    },
+    {
       "id": "intentional-human-stops",
       "goal": "Grill HITL 与内容到前端交接继续按设计停止",
       "rubric": ["asks_exactly_one_grill_question", "content_stage_stops_before_frontend"]

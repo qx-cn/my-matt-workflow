@@ -20,7 +20,7 @@
     "sources": [
       {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:c4e72aa41412855f8932382bddbab921c1817d4df10893f5542da29928d5c0cb"},
       {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:9336278d9de6d07adcdb8bde394de159a328c41f9f40b2d6539769d233246ecd"},
-      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:b477ba752375287bf4d6824f20be4a5b1514eab5a981c533d4d1b695536a055e"}
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:def1a5dfa66fe7755930973f0502faeb165b7ab9fd1cb22f8d0051226064421e"}
     ]
   }
 }

@@ -14,6 +14,10 @@ disable-model-invocation: true
 
 每个切片运行能最快证明该行为的最小针对性测试。工作单元结束时验证受影响模块或链路；只有整份计划结束、发布或合并前、仓库规则要求，或者风险证据表明影响面扩大时，才运行完整测试套件。
 
+## 回合完成
+
+遵循[implementation session](references/shared/adapters/implementation-session.md)的回合关闭契约。已跑局部测试、正在施工或等待下一步都只是进度；可以用 commentary 汇报，但不得因此发送 final 或结束实施。只有 runtime 已登记可关闭的结果并完成适用的范围 transition，才可对用户结束回合。
+
 实现与计划出现偏差时，按语义影响处理：
 
 - 可逆的局部实现细节仍满足 Spec：在当前工作单元内调整并补充证据。

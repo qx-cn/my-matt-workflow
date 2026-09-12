@@ -1,4 +1,7 @@
 import json
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -41,7 +44,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
 
     def test_checked_in_suite_and_schema_are_valid(self):
         cases = validate_behavior_suite(SUITE)
-        self.assertEqual(16, len(cases))
+        self.assertEqual(17, len(cases))
         schema = json.loads(
             (ROOT / "evals/agent-smokes/astra-evidence.schema.json").read_text()
         )
@@ -102,13 +105,61 @@ class BehaviorEvidenceTests(unittest.TestCase):
         self.assertIn("$my-to-spec", runbook)
         self.assertIn("No formal Spec", runbook)
 
+    def test_implementation_turn_closure_has_an_isolated_runbook_and_fixture(self):
+        cases = validate_behavior_suite(SUITE)
+        case = "implementation-turn-closure"
+        runbook = (ROOT / "evals/agent-smokes/implementation-turn-closure.md").read_text()
+        fixture = ROOT / "evals/fixtures/my-implement/unfinished-session"
+        self.assertIn(case, cases)
+        self.assertIn("不得发送 final", runbook)
+        self.assertTrue((fixture / ".agent/matt-workflow.md").is_file())
+        self.assertTrue(
+            (fixture / ".agent/work/turn-closure/tickets/tickets-turn-closure-01.md").is_file()
+        )
+        self.assertTrue((fixture / "app.py").is_file())
+        self.assertTrue((fixture / "test_app.py").is_file())
+
+    def test_implementation_turn_closure_fixture_admits_an_active_journal(self):
+        fixture = ROOT / "evals/fixtures/my-implement/unfinished-session"
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            shutil.copytree(fixture, repo)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.email", "smoke@example.com"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.name", "Smoke"], cwd=repo, check=True)
+            subprocess.run(["git", "add", "."], cwd=repo, check=True)
+            subprocess.run(["git", "commit", "-qm", "baseline"], cwd=repo, check=True)
+            base = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True
+            ).stdout.strip()
+            ticket = repo / ".agent/work/turn-closure/tickets/tickets-turn-closure-01.md"
+            opened = subprocess.run(
+                [
+                    sys.executable, str(ROOT / "tools/workflow.py"), "implementation-open",
+                    "--repo", str(repo), "--ticket", str(ticket), "--base", base,
+                    "--path", "app.py", "--path", "review.py",
+                ],
+                cwd=ROOT, check=True, capture_output=True, text=True,
+            )
+            journal = json.loads(opened.stdout)["lanes"][0]["work_unit"]["journal"]
+            recorded = subprocess.run(
+                [sys.executable, str(ROOT / "tools/workflow.py"), "run-record", journal, "--phase", "implementing"],
+                cwd=ROOT, check=True, capture_output=True, text=True,
+            )
+            self.assertEqual("implementing", json.loads(recorded.stdout)["run"]["phase"])
+            focused = subprocess.run(
+                [sys.executable, "-m", "unittest", "test_app.GreetingTests.test_trimmed_name"],
+                cwd=repo, check=False, capture_output=True, text=True,
+            )
+            self.assertEqual(0, focused.returncode, focused.stderr)
+
     def test_partial_real_evidence_is_valid_but_not_complete(self):
         with tempfile.TemporaryDirectory() as tmp:
             evidence = Path(tmp) / "evidence.json"
             evidence.write_text(json.dumps(self._record()))
             report = validate_behavior_evidence(SUITE, evidence)
             self.assertEqual(1, report["runs"])
-            self.assertEqual(15, len(report["missing"]))
+            self.assertEqual(16, len(report["missing"]))
             with self.assertRaisesRegex(BehaviorEvidenceError, "缺少行为场景"):
                 validate_behavior_evidence(SUITE, evidence, require_complete=True)
 
