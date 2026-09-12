@@ -358,7 +358,7 @@ class ArtifactReviewWorkflowTests(unittest.TestCase):
                 [artifact], result["content_id"], Path(result["snapshot_dir"])
             )
 
-    def test_design_artifact_adds_only_the_design_review_method(self):
+    def test_artifact_kinds_select_their_declared_review_methods(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             artifact = root / "design.md"
@@ -370,6 +370,9 @@ class ArtifactReviewWorkflowTests(unittest.TestCase):
             design = build_artifact_review_snapshot(
                 [artifact], snapshot_root=root / "snapshots", artifact_kind="design"
             )
+            repair_plan = build_artifact_review_snapshot(
+                [artifact], snapshot_root=root / "snapshots", artifact_kind="repair-plan"
+            )
 
             self.assertEqual("general", general["review_unit"]["artifact_kind"])
             self.assertNotIn(
@@ -380,11 +383,17 @@ class ArtifactReviewWorkflowTests(unittest.TestCase):
                 [*REQUIRED_REVIEW_CHECKS, "my-review-design"],
                 design["review_unit"]["required_checks"],
             )
+            self.assertEqual(
+                ["my-review-design"], repair_plan["review_unit"]["required_checks"]
+            )
             finalize_artifact_review_snapshot(
                 [artifact], general["content_id"], Path(general["snapshot_dir"])
             )
             finalize_artifact_review_snapshot(
                 [artifact], design["content_id"], Path(design["snapshot_dir"])
+            )
+            finalize_artifact_review_snapshot(
+                [artifact], repair_plan["content_id"], Path(repair_plan["snapshot_dir"])
             )
 
     def test_artifact_review_submit_requires_complete_check_closure(self):

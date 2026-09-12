@@ -29,10 +29,23 @@ REQUIRED_REVIEW_CHECKS = (
     "my-humanizer",
     "my-artifact-finalization",
 )
-ARTIFACT_KINDS = frozenset({"general", "design", "repair-plan"})
+ARTIFACT_REQUIRED_CHECKS = {
+    "general": REQUIRED_REVIEW_CHECKS,
+    "design": REQUIRED_REVIEW_CHECKS + ("my-review-design",),
+    "repair-plan": ("my-review-design",),
+}
+ARTIFACT_KINDS = frozenset(ARTIFACT_REQUIRED_CHECKS)
 REVIEW_CHECK_STATUSES = frozenset(
     {"pass", "finding", "inconclusive", "not-applicable"}
 )
+
+
+def required_checks_for_artifact_kind(artifact_kind: str) -> tuple[str, ...]:
+    """Return the sole declared review-method set for one artifact kind."""
+    try:
+        return ARTIFACT_REQUIRED_CHECKS[artifact_kind]
+    except KeyError as exc:
+        raise ArtifactReviewError(f"未知 artifact kind：{artifact_kind}") from exc
 
 
 def _read_artifacts(artifacts: list[Path]) -> tuple[str, list[tuple[Path, bytes]]]:
@@ -64,8 +77,7 @@ def build_artifact_review_snapshot(
     artifact_kind: str = "general",
 ) -> dict[str, object]:
     """Capture one immutable byte copy for every reviewer to consume."""
-    if artifact_kind not in ARTIFACT_KINDS:
-        raise ArtifactReviewError(f"未知 artifact kind：{artifact_kind}")
+    required_checks = required_checks_for_artifact_kind(artifact_kind)
     content_id, captured = _read_artifacts(artifacts)
     snapshot_root = (
         snapshot_root.resolve()
@@ -97,12 +109,6 @@ def build_artifact_review_snapshot(
                 "sha256": hashlib.sha256(content).hexdigest(),
                 "size": len(content),
             }
-        )
-    if artifact_kind == "repair-plan":
-        required_checks = ("my-review-design",)
-    else:
-        required_checks = REQUIRED_REVIEW_CHECKS + (
-            ("my-review-design",) if artifact_kind == "design" else ()
         )
     lanes = [
         {

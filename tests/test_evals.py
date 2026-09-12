@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 14,
-                "required_scenarios": 13,
+                "scenarios": 15,
+                "required_scenarios": 14,
             },
             validate_evals(ROOT),
         )
@@ -63,6 +63,22 @@ class EvalValidationTests(unittest.TestCase):
                 run_scenario(ROOT, scenario),
                 scenario.identifier,
             )
+
+    def test_repair_plan_contract_rejects_a_broader_method_set(self):
+        scenarios = {
+            scenario.identifier: scenario
+            for scenario in load_scenarios(ROOT / "evals")
+        }
+        repair_plan = scenarios["artifact-review-repair-plan-method-boundary"]
+        malformed = replace(
+            repair_plan,
+            input={
+                **repair_plan.input,
+                "required_checks": ["my-review-design", "my-humanizer"],
+            },
+        )
+        with self.assertRaisesRegex(EvalError, "outcome mismatch"):
+            run_scenario(ROOT, malformed)
 
     def test_skill_review_contract_blocks_incomplete_structural_gates(self):
         scenario = next(

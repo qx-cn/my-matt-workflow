@@ -518,6 +518,14 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual("my-code-review", evidence["method"])
 
     def _approve_repair_plan(self, path: Path) -> None:
+        unit = self._open_approved_repair_plan_review(path)
+        submit_repair_plan_review(path, Path(str(unit["snapshot_dir"])), {
+            "content_id": unit["content_id"],
+            "checks": {"my-review-design": {"status": "pass", "reason": None}},
+            "findings": [], "inconclusive": [],
+        })
+
+    def _open_approved_repair_plan_review(self, path: Path) -> dict[str, object]:
         opened = open_repair_plan(path)
         plan = Path(str(opened["path"]))
         plan.write_text(
@@ -527,12 +535,7 @@ class RunJournalTests(unittest.TestCase):
             .replace("- Out of scope: \n", "- Out of scope: downstream delivery\n"),
             encoding="utf-8",
         )
-        unit = open_repair_plan_review(path)
-        submit_repair_plan_review(path, Path(str(unit["snapshot_dir"])), {
-            "content_id": unit["content_id"],
-            "checks": {"my-review-design": {"status": "pass", "reason": None}},
-            "findings": [], "inconclusive": [],
-        })
+        return open_repair_plan_review(path)
 
     def test_host_review_findings_are_persisted_then_require_an_approved_repair_plan(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -655,6 +658,70 @@ class RunJournalTests(unittest.TestCase):
             (repo / "app.py").write_text("print('drift')\n", encoding="utf-8")
             with self.assertRaisesRegex(RunJournalError, "代码内容已变化"):
                 open_repair_plan_review(path)
+
+    def test_repair_plan_review_integrity_drift_releases_snapshot_and_ticket(self):
+        for kind in ("code", "plan", "result"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp:
+                repo, ticket, sha = self._repo(Path(tmp))
+                path, _ = start_run(repo, ticket, sha, ["app.py"])
+                record_run(path, "implementing")
+                record_run(path, "reviewing")
+                review = open_review_evidence(path)
+                submit_review_result(path, Path(str(review["snapshot_dir"])), self_review_result(review, "findings", [{
+                    "id": "root-1", "root_cause": "root-1", "severity": "P1",
+                    "summary": "must repair", "baseline_reachable": True,
+                }]))
+                unit = self._open_approved_repair_plan_review(path)
+                snapshot = Path(str(unit["snapshot_dir"]))
+                result = {
+                    "content_id": unit["content_id"],
+                    "checks": {"my-review-design": {"status": "pass", "reason": None}},
+                    "findings": [], "inconclusive": [],
+                }
+                if kind == "code":
+                    (repo / "app.py").write_text("print('drift')\n", encoding="utf-8")
+                elif kind == "plan":
+                    repair = json.loads(path.read_text())["repair_plan"]
+                    Path(str(repair["path"])).write_text("# stale\n", encoding="utf-8")
+                else:
+                    result["content_id"] = "different-content"
+
+                report = submit_repair_plan_review(path, snapshot, result)
+                journal = json.loads(path.read_text())
+                self.assertEqual("stale", report["status"])
+                self.assertEqual("blocked-by-review", report["next_action"])
+                self.assertFalse(snapshot.exists())
+                self.assertEqual("blocked-by-review", journal["submission"]["outcome"])
+                self.assertTrue(journal["repair_plan"]["stop_reason"])
+                self.assertEqual("ready-for-agent", ticket.read_text().split("status: ")[1].splitlines()[0])
+
+    def test_repair_plan_review_invalid_result_remains_retryable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            review = open_review_evidence(path)
+            submit_review_result(path, Path(str(review["snapshot_dir"])), self_review_result(review, "findings", [{
+                "id": "root-1", "root_cause": "root-1", "severity": "P1",
+                "summary": "must repair", "baseline_reachable": True,
+            }]))
+            unit = self._open_approved_repair_plan_review(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            with self.assertRaisesRegex(RunJournalError, "完整覆盖"):
+                submit_repair_plan_review(path, snapshot, {
+                    "content_id": unit["content_id"], "checks": {},
+                    "findings": [], "inconclusive": [],
+                })
+            self.assertTrue(snapshot.exists())
+            self.assertEqual("plan-reviewing", json.loads(path.read_text())["phase"])
+            report = submit_repair_plan_review(path, snapshot, {
+                "content_id": unit["content_id"],
+                "checks": {"my-review-design": {"status": "pass", "reason": None}},
+                "findings": [], "inconclusive": [],
+            })
+            self.assertEqual("pass", report["status"])
+            self.assertFalse(snapshot.exists())
 
     def test_review_rejects_unreachable_blocker_and_releases_snapshot(self):
         with tempfile.TemporaryDirectory() as tmp:

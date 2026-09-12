@@ -44,7 +44,9 @@ from .fs_safety import (
 from .artifact_review import (
     ArtifactReviewError,
     build_artifact_review_snapshot,
+    finalize_artifact_review_snapshot,
     submit_artifact_review_result,
+    verify_artifact_review_snapshot,
 )
 
 
@@ -1120,7 +1122,9 @@ def _begin_repair_planning(
         "root_causes": sorted(roots),
         "path": None,
         "content_id": None,
+        "snapshot_dir": None,
         "review_receipt": None,
+        "stop_reason": None,
     }
     events = journal.get("events")
     if not isinstance(events, list):
@@ -1181,13 +1185,18 @@ def open_repair_plan(path: Path) -> dict[str, object]:
     return {"status": "ready", "path": str(plan), "round": repair["round"], "finding_ids": repair["finding_ids"]}
 
 
-def _validate_repair_plan(path: Path, repair: dict[str, object]) -> Path:
+def _repair_plan_file(path: Path, repair: dict[str, object]) -> Path:
     raw_path = repair.get("path")
     if not isinstance(raw_path, str):
         raise RunJournalError("repair plan 尚未创建")
     plan = Path(raw_path).resolve()
     if plan != _repair_plan_path(path, str(repair.get("review_id", ""))).resolve() or not plan.is_file() or plan.is_symlink():
         raise RunJournalError("repair plan 路径无效")
+    return plan
+
+
+def _validate_repair_plan(path: Path, repair: dict[str, object]) -> Path:
+    plan = _repair_plan_file(path, repair)
     text = plan.read_text(encoding="utf-8")
     identifiers = re.findall(r"^## Finding ([A-Za-z0-9][A-Za-z0-9._-]{0,127})$", text, flags=re.MULTILINE)
     expected = repair.get("finding_ids")
@@ -1198,6 +1207,59 @@ def _validate_repair_plan(path: Path, repair: dict[str, object]) -> Path:
         if section is None or any(not re.search(rf"^- {field}: .+", section.group(1), flags=re.MULTILINE) for field in ("Acceptance IDs", "Root cause", "Change", "Verification", "Out of scope")):
             raise RunJournalError("repair plan finding 缺少必填决策")
     return plan
+
+
+def _repair_plan_review_snapshot(path: Path, repair: dict[str, object], snapshot_dir: Path) -> Path:
+    """Require the exact snapshot opened by this repair-plan journal."""
+    recorded = repair.get("snapshot_dir")
+    if not isinstance(recorded, str):
+        raise RunJournalError("repair plan review snapshot 未登记")
+    expected = Path(recorded).resolve()
+    actual = snapshot_dir.resolve()
+    if actual != expected:
+        raise RunJournalError("repair plan review snapshot 不匹配")
+    expected_root = _evidence_directory(path) / "repair-plan-snapshots"
+    if actual.parent != expected_root.resolve():
+        raise RunJournalError("repair plan review snapshot 路径无效")
+    return actual
+
+
+def _block_repair_plan_review(
+    path: Path,
+    repair: dict[str, object],
+    plan: Path,
+    snapshot_dir: Path,
+    blocker: str,
+    *,
+    snapshot_released: bool = False,
+) -> dict[str, object]:
+    """Release a permanently invalid repair-plan review and project its terminal state."""
+    if not snapshot_released:
+        try:
+            finalize_artifact_review_snapshot(
+                [plan], str(repair["content_id"]), snapshot_dir
+            )
+        except ArtifactReviewError as exc:
+            raise RunJournalError("repair plan review snapshot 无法安全释放") from exc
+    journal = _load_journal(path)
+    current = journal.get("repair_plan")
+    if not isinstance(current, dict):
+        raise RunJournalError("repair plan 状态无效")
+    current["stop_reason"] = blocker
+    events = journal.get("events")
+    if not isinstance(events, list):
+        raise RunJournalError("run journal events 无效")
+    events.append({
+        "phase": "plan-reviewing", "event": "repair-plan-review-invalidated",
+        "round": current.get("round"), "reason": blocker,
+        "at": datetime.now(timezone.utc).isoformat(),
+    })
+    _write_json_atomic(path, journal)
+    submit_run_outcome(path, {
+        "outcome": "blocked-by-review", "test_receipt": None,
+        "review_receipt": None, "code_receipt": None, "blocker": blocker,
+    })
+    return {"status": "stale", "next_action": "blocked-by-review", "blocker": blocker}
 
 
 def open_repair_plan_review(path: Path) -> dict[str, object]:
@@ -1214,6 +1276,8 @@ def open_repair_plan_review(path: Path) -> dict[str, object]:
     except ArtifactReviewError as exc:
         raise RunJournalError(str(exc)) from exc
     repair["content_id"] = unit["content_id"]
+    repair["snapshot_dir"] = unit["snapshot_dir"]
+    repair["stop_reason"] = None
     journal["phase"] = "plan-reviewing"
     events = journal.get("events")
     assert isinstance(events, list)
@@ -1225,22 +1289,36 @@ def open_repair_plan_review(path: Path) -> dict[str, object]:
 def submit_repair_plan_review(path: Path, snapshot_dir: Path, result: dict[str, object]) -> dict[str, object]:
     """Close the plan-only review and permit code writes only on a clean pass."""
     journal, repair, _ = _repair_plan_state(path, "plan-reviewing")
+    snapshot_dir = _repair_plan_review_snapshot(path, repair, snapshot_dir)
+    plan = _repair_plan_file(path, repair)
     if build_code_receipt(path)["content_id"] != repair.get("code_content_id"):
-        raise RunJournalError("plan review 期间代码内容已变化")
-    plan = _validate_repair_plan(path, repair)
+        return _block_repair_plan_review(
+            path, repair, plan, snapshot_dir, "repair plan review code content drift"
+        )
+    try:
+        verification = verify_artifact_review_snapshot(
+            [plan], str(repair["content_id"])
+        )
+    except ArtifactReviewError as exc:
+        raise RunJournalError("repair plan review snapshot 无法验证") from exc
+    if verification["status"] != "match":
+        return _block_repair_plan_review(
+            path, repair, plan, snapshot_dir, "repair plan review content drift"
+        )
+    _validate_repair_plan(path, repair)
     if result.get("content_id") != repair.get("content_id"):
-        raise RunJournalError("repair plan review content_id 不匹配")
+        return _block_repair_plan_review(
+            path, repair, plan, snapshot_dir, "repair plan review result content_id mismatch"
+        )
     try:
         accepted = submit_artifact_review_result([plan], snapshot_dir, result)
     except ArtifactReviewError as exc:
         raise RunJournalError(str(exc)) from exc
     if accepted["status"] != "accepted":
-        submit_run_outcome(path, {
-            "outcome": "blocked-by-review", "test_receipt": None,
-            "review_receipt": None, "code_receipt": None,
-            "blocker": "repair plan review snapshot stale",
-        })
-        return {"status": "stale", "next_action": "blocked-by-review"}
+        return _block_repair_plan_review(
+            path, repair, plan, snapshot_dir, "repair plan review snapshot stale",
+            snapshot_released=True,
+        )
     design_pass = accepted["checks"].get("my-review-design") == {"status": "pass", "reason": None}
     plan_receipt = _persist_evidence(path, {
         "kind": "repair-plan-review", "status": "pass" if design_pass else "findings",

@@ -8,6 +8,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from .artifact_review import ArtifactReviewError, required_checks_for_artifact_kind
+
 
 class EvalError(RuntimeError):
     """Raised for malformed or unverifiable deterministic eval records."""
@@ -29,6 +31,7 @@ REQUIRED_SCENARIOS = frozenset(
         "requirement-analysis-clear-request",
         "requirement-analysis-misleading-analogy",
         "artifact-review-design-method-boundary",
+        "artifact-review-repair-plan-method-boundary",
         "implementation-review-baseline-reachability",
         "implementation-review-repeated-root-cause",
     }
@@ -487,8 +490,12 @@ def _evaluate_artifact_review_contract(input_value: dict[str, object]) -> dict[s
     )
     if not isinstance(case["fixed_review_unit"], bool):
         raise EvalError("artifact-review-contract.input.fixed_review_unit: must be boolean")
-    if case["artifact_kind"] not in {"general", "design"}:
+    if not isinstance(case["artifact_kind"], str):
         raise EvalError("artifact-review-contract.input.artifact_kind: invalid kind")
+    try:
+        expected_checks = set(required_checks_for_artifact_kind(case["artifact_kind"]))
+    except ArtifactReviewError as exc:
+        raise EvalError("artifact-review-contract.input.artifact_kind: invalid kind") from exc
     required_checks = case["required_checks"]
     completed_checks = case["completed_checks"]
     if (
@@ -520,15 +527,6 @@ def _evaluate_artifact_review_contract(input_value: dict[str, object]) -> dict[s
             "rule": "fixed-review-unit",
             "next": "prepare-review-unit",
         }
-    expected_checks = {
-        "my-final-state-writing",
-        "my-reader-first-writing",
-        "my-visual-communication",
-        "my-humanizer",
-        "my-artifact-finalization",
-    }
-    if case["artifact_kind"] == "design":
-        expected_checks.add("my-review-design")
     if set(required_checks) != expected_checks:
         return {
             "status": "stop",
