@@ -1,6 +1,10 @@
 # Local Agent state and work artifacts
 .agent/
 
+# Versioned fresh-agent fixture used by the implementation turn-closure smoke.
+!evals/fixtures/my-implement/unfinished-session/.agent/
+!evals/fixtures/my-implement/unfinished-session/.agent/**
+
 # Generated release artifacts and local release pointer
 releases/
 current.json
