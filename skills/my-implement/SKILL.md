@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 ## 回合完成
 
-遵循[implementation session](references/shared/adapters/implementation-session.md)的回合关闭契约。已跑局部测试、正在施工或等待下一步都只是进度；可以用 commentary 汇报，但不得因此发送 final 或结束实施。只有 runtime 已登记可关闭的结果并完成适用的范围 transition，才可对用户结束回合。
+遵循[implementation session](references/shared/adapters/implementation-session.md)的回合关闭契约。已跑局部测试、正在施工或等待下一步都只是进度；可以用 commentary 汇报，但不得因此发送 final 或结束实施。恢复、普通校验错误或 repair-plan 通过后，向 runtime 查询当前 gate，并完成它指向的闭环；只有 runtime 已登记可关闭的结果并完成适用的范围 transition，才可对用户结束回合。
 
 实现与计划出现偏差时，按语义影响处理：
 
@@ -31,4 +31,4 @@ disable-model-invocation: true
 
 提交结果前，自动在 runtime 固定的审查单元上应用[代码审查方法](references/composed/my-code-review/COMPOSED.md)，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。
 
-代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由[设计成立性](references/composed/my-review-design/COMPOSED.md)增强自审。方案通过前不改代码；通过后才按方案修复。默认仅允许这一轮修复，最终复审仍有 finding 时停止并交回 runtime 的 `blocked-by-review`；`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
+代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由[设计成立性](references/composed/my-review-design/COMPOSED.md)增强自审。方案通过前不改代码；通过后按 runtime gate 修复、测试并重新审查。默认仅允许这一轮修复；最终复审的新有效 finding 由 runtime 作为正式 `blocked-by-review` 登记。`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。

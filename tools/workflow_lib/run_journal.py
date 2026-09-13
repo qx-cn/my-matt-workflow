@@ -674,6 +674,8 @@ def open_review_evidence(path: Path) -> dict[str, object]:
     context = journal.get("context")
     if not isinstance(context, dict):
         raise RunJournalError("run journal context 无效")
+    if journal.get("active_review") is not None:
+        raise RunJournalError("当前 review snapshot 尚未提交或废弃")
     repo = Path(str(context.get("repo", ""))).resolve()
     base_sha = context.get("base_sha")
     ticket = context.get("ticket")
@@ -771,6 +773,13 @@ def open_review_evidence(path: Path) -> dict[str, object]:
         register_owned_directory(
             snapshot_root, snapshot_dir, purpose="run-review-snapshot"
         )
+        journal["active_review"] = {
+            "review_id": review_id,
+            "snapshot_dir": str(snapshot_dir),
+            "code_content_id": code["content_id"],
+        }
+        journal.pop("recovery", None)
+        _write_json_atomic(path, journal)
     except Exception:
         if snapshot_dir.exists():
             snapshot_dir.chmod(0o700)
@@ -792,7 +801,7 @@ def open_review_evidence(path: Path) -> dict[str, object]:
 
 
 def _owned_review_unit(
-    path: Path, snapshot_dir: Path
+    path: Path, snapshot_dir: Path, *, verify_current_code: bool = True
 ) -> tuple[dict[str, object], dict[str, object], Path, Path, dict[str, object], dict[str, object]]:
     journal = _load_journal(path)
     context = journal.get("context")
@@ -801,6 +810,16 @@ def _owned_review_unit(
     repo = Path(str(context.get("repo", ""))).resolve()
     expected_root = (_evidence_directory(path) / "review-snapshots").resolve()
     snapshot_dir = snapshot_dir.resolve()
+    active = journal.get("active_review")
+    if active is not None:
+        if not isinstance(active, dict):
+            raise RunJournalError("active_review 状态无效")
+        if (
+            active.get("snapshot_dir") != str(snapshot_dir)
+            or active.get("review_id") is None
+            or active.get("code_content_id") is None
+        ):
+            raise RunJournalError("review snapshot 与当前 active_review 不匹配")
     if snapshot_dir.parent != expected_root:
         raise RunJournalError("review snapshot 不属于当前 run")
     try:
@@ -830,8 +849,13 @@ def _owned_review_unit(
         raise RunJournalError("review snapshot schema 无效")
     _verify_ticket_boundary(context, unit.get("ticket_boundary"))
     code = build_code_receipt(path)
-    if unit.get("code_content_id") != code["content_id"]:
+    if verify_current_code and unit.get("code_content_id") != code["content_id"]:
         raise RunJournalError("review snapshot 与当前代码不匹配")
+    if active is not None and (
+        active.get("review_id") != unit.get("review_id")
+        or active.get("code_content_id") != unit.get("code_content_id")
+    ):
+        raise RunJournalError("active_review 内容与 snapshot 不匹配")
     return journal, context, repo, expected_root, unit, code
 
 
@@ -843,6 +867,105 @@ def _release_review_snapshot(expected_root: Path, snapshot_dir: Path) -> None:
         )
     except FilesystemSafetyError as exc:
         raise RunJournalError("review snapshot 无法安全释放") from exc
+
+
+def _record_review_recovery(path: Path, error_class: str, detail: str) -> None:
+    """Keep a correctable review failure visible across agent turns."""
+    journal = _load_journal(path)
+    active = journal.get("active_review")
+    if not isinstance(active, dict):
+        raise RunJournalError("可恢复 review 错误缺少 active_review")
+    prior = journal.get("recovery")
+    attempts = prior.get("attempts", 0) if isinstance(prior, dict) else 0
+    if not isinstance(attempts, int) or isinstance(attempts, bool) or attempts < 0:
+        attempts = 0
+    journal["recovery"] = {
+        "kind": "review-submit",
+        "error_class": error_class,
+        "detail": detail,
+        "attempts": attempts + 1,
+        "at": datetime.now(timezone.utc).isoformat(),
+    }
+    events = journal.get("events")
+    if not isinstance(events, list):
+        raise RunJournalError("run journal events 无效")
+    events.append({
+        "phase": journal.get("phase"), "event": "review-recovery",
+        "error_class": error_class, "at": journal["recovery"]["at"],
+    })
+    _write_json_atomic(path, journal)
+
+
+def _clear_active_review(path: Path) -> None:
+    journal = _load_journal(path)
+    journal.pop("active_review", None)
+    journal.pop("recovery", None)
+    _write_json_atomic(path, journal)
+
+
+def _formal_review_critical(path: Path, outcome: str, critical_class: str, detail: str) -> dict[str, object]:
+    """Project an integrity failure as an auditable formal blocker."""
+    journal = _load_journal(path)
+    journal["critical"] = {
+        "class": critical_class,
+        "predicate": "review snapshot integrity could not be verified",
+        "detail": detail,
+        "at": datetime.now(timezone.utc).isoformat(),
+    }
+    journal.pop("active_review", None)
+    journal.pop("recovery", None)
+    events = journal.get("events")
+    if not isinstance(events, list):
+        raise RunJournalError("run journal events 无效")
+    events.append({
+        "phase": journal.get("phase"), "event": "formal-critical",
+        "class": critical_class, "at": journal["critical"]["at"],
+    })
+    _write_json_atomic(path, journal)
+    return submit_run_outcome(path, {
+        "outcome": outcome, "test_receipt": None,
+        "review_receipt": None, "code_receipt": None, "blocker": detail,
+    })
+
+
+def implementation_status(path: Path) -> dict[str, object]:
+    """Return the one coarse runtime gate implied by durable journal state."""
+    journal = _load_journal(path)
+    phase = journal.get("phase")
+    submission = journal.get("submission")
+    active = journal.get("active_review")
+    recovery = journal.get("recovery")
+    repair = journal.get("repair_plan")
+    if isinstance(submission, dict):
+        gate = "complete" if submission.get("outcome") == "completed" else "formal-blocked"
+    elif phase == "complete":
+        gate = "complete"
+    elif phase == "reviewing":
+        if isinstance(active, dict):
+            gate = "correct-review-result" if isinstance(recovery, dict) else "submit-review-result"
+        else:
+            gate = "open-review"
+    elif phase == "planning":
+        gate = "review-repair-plan" if isinstance(repair, dict) and repair.get("path") else "create-repair-plan"
+    elif phase == "plan-reviewing":
+        gate = "review-repair-plan"
+    elif phase == "implementing":
+        gate = "fix-approved-findings" if isinstance(repair, dict) and repair.get("review_receipt") else "continue-implementation"
+    elif phase == "committing":
+        gate = "submit-completed"
+    elif phase in {"admitted", "testing", "revising", "blocked-by-evidence"}:
+        gate = "continue-implementation"
+    elif phase == "blocked-by-design":
+        gate = "formal-blocked" if journal.get("blocker") else "continue-implementation"
+    else:
+        raise RunJournalError("run journal phase 无效")
+    return {
+        "status": "active" if gate not in {"complete", "formal-blocked"} else gate,
+        "phase": phase,
+        "next_gate": gate,
+        "active_review": active,
+        "recovery": recovery,
+    }
 
 
 def _validate_evidence_refs(
@@ -1358,19 +1481,55 @@ def submit_review_result(
     argv: list[str] | None = None,
     completed: subprocess.CompletedProcess[bytes] | None = None,
 ) -> dict[str, object]:
-    """Persist every terminal review outcome and release its owned snapshot."""
-    journal, context, repo, expected_root, unit, code = _owned_review_unit(
-        path, snapshot_dir
-    )
+    """Persist a review result without discarding correctable caller input errors."""
+    try:
+        journal, context, repo, expected_root, unit, code = _owned_review_unit(
+            path, snapshot_dir, verify_current_code=False
+        )
+    except RunJournalError as exc:
+        # An arbitrary path must not be able to block a run. Only the currently
+        # registered review unit is a formal integrity failure.
+        current = _load_journal(path)
+        active = current.get("active_review")
+        if isinstance(active, dict) and active.get("snapshot_dir") == str(snapshot_dir.resolve()):
+            return _formal_review_critical(
+                path, "blocked-by-review", "review-snapshot-integrity", str(exc)
+            )
+        raise
     snapshot_dir = snapshot_dir.resolve()
+    release_snapshot = False
     try:
         if journal.get("phase") not in {"reviewing", "committing"}:
             raise RunJournalError("review result 只能在 review 阶段提交")
-        status, roots = _validate_review_result(path, result, unit, code, context)
-        _verify_review_snapshot_bytes(unit, snapshot_dir)
+        try:
+            _verify_review_snapshot_bytes(unit, snapshot_dir)
+        except RunJournalError as exc:
+            return _formal_review_critical(
+                path, "blocked-by-review", "review-snapshot-integrity", str(exc)
+            )
+        if unit.get("code_content_id") != code["content_id"]:
+            _release_review_snapshot(expected_root, snapshot_dir)
+            _clear_active_review(path)
+            return {
+                "status": "stale", "next_action": "open-review",
+                "reason": "review result 与当前 review snapshot 不匹配",
+            }
+        try:
+            status, roots = _validate_review_result(path, result, unit, code, context)
+        except RunJournalError as exc:
+            _record_review_recovery(path, "invalid-review-result", str(exc))
+            return {
+                "status": "retryable", "next_action": "correct-review-result",
+                "reason": str(exc),
+            }
         current_code = build_code_receipt(path)
         if current_code["content_id"] != code["content_id"]:
-            raise RunJournalError("review result 与当前 review snapshot 不匹配")
+            _release_review_snapshot(expected_root, snapshot_dir)
+            _clear_active_review(path)
+            return {
+                "status": "stale", "next_action": "open-review",
+                "reason": "review result 与当前 review snapshot 不匹配",
+            }
         previous_roots = _previous_review_roots(path)
         result_path = _evidence_directory(path) / "review-results" / f"{unit['review_id']}.json"
         if result_path.exists() or result_path.is_symlink():
@@ -1420,6 +1579,19 @@ def submit_review_result(
                 except RunJournalError as exc:
                     if str(exc) != "repair round limit reached":
                         raise
+                    terminal = _load_journal(path)
+                    terminal["critical"] = {
+                        "class": "review-boundary-exhausted",
+                        "predicate": "a new valid review finding exceeded max_repair_rounds",
+                        "finding_receipt": receipt,
+                        "repair_plan_receipt": (
+                            terminal.get("repair_plan", {}).get("review_receipt")
+                            if isinstance(terminal.get("repair_plan"), dict) else None
+                        ),
+                        "policy_limit": _repair_round_limit(context),
+                        "at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    _write_json_atomic(path, terminal)
                     submit_run_outcome(path, {
                         "outcome": "blocked-by-review", "test_receipt": None,
                         "review_receipt": None, "code_receipt": None,
@@ -1442,6 +1614,7 @@ def submit_review_result(
             "inconclusive": "blocked-by-evidence",
             "blocked-by-design": "blocked-by-design",
         }[status]
+        release_snapshot = True
         return {
             "status": status,
             "next_action": next_action,
@@ -1451,8 +1624,18 @@ def submit_review_result(
             "repair_round": round_number if status == "findings" and not repeated else None,
             "repair_round_limit": limit if status == "findings" and not repeated else None,
         }
+    except RunJournalError as exc:
+        # A runtime failure after a sound snapshot is still recoverable until a
+        # separate, verifiable Critical predicate says otherwise.
+        _record_review_recovery(path, "review-submit-runtime-error", str(exc))
+        return {
+            "status": "retryable", "next_action": "correct-review-result",
+            "reason": str(exc),
+        }
     finally:
-        _release_review_snapshot(expected_root, snapshot_dir)
+        if release_snapshot:
+            _release_review_snapshot(expected_root, snapshot_dir)
+            _clear_active_review(path)
 
 
 def record_review_evidence(
@@ -1495,10 +1678,10 @@ def record_review_evidence(
     try:
         result = json.loads(completed.stdout.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        _release_review_snapshot(expected_root, snapshot_dir.resolve())
+        _record_review_recovery(path, "invalid-review-result", "review command 未输出有效 JSON")
         raise RunJournalError("review command 未输出有效 JSON") from exc
     if not isinstance(result, dict) or completed.returncode != 0:
-        _release_review_snapshot(expected_root, snapshot_dir.resolve())
+        _record_review_recovery(path, "invalid-review-result", "review command 结果或退出状态无效")
         raise RunJournalError("review command 结果或退出状态无效")
     return submit_review_result(
         path,
@@ -1699,6 +1882,8 @@ def submit_run_outcome(
             updated = json.loads(json.dumps(journal))
             updated["submission"] = submission
             updated["phase"] = terminal_phase
+            updated.pop("active_review", None)
+            updated.pop("recovery", None)
             receipts = updated.get("receipts")
             if not isinstance(receipts, dict):
                 raise RunJournalError("run journal receipts 无效")

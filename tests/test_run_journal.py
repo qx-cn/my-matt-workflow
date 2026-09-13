@@ -14,6 +14,7 @@ from tools.workflow_lib.run_journal import (
     build_code_receipt,
     build_run_context,
     close_implementation_session,
+    implementation_status,
     open_repair_plan,
     open_repair_plan_review,
     open_implementation_session,
@@ -612,7 +613,9 @@ class RunJournalTests(unittest.TestCase):
                 if attempt == 0:
                     self._approve_repair_plan(path)
             self.assertEqual("blocked-by-review", report["next_action"])
-            self.assertEqual("blocked-by-review", json.loads(path.read_text())["submission"]["outcome"])
+            journal = json.loads(path.read_text())
+            self.assertEqual("blocked-by-review", journal["submission"]["outcome"])
+            self.assertEqual("review-boundary-exhausted", journal["critical"]["class"])
             self.assertEqual("ready-for-agent", ticket.read_text().split("status: ")[1].splitlines()[0])
 
     def test_full_auto_allows_at_most_five_repair_rounds(self):
@@ -723,7 +726,7 @@ class RunJournalTests(unittest.TestCase):
             self.assertEqual("pass", report["status"])
             self.assertFalse(snapshot.exists())
 
-    def test_review_rejects_unreachable_blocker_and_releases_snapshot(self):
+    def test_review_rejects_unreachable_blocker_and_keeps_snapshot_retryable(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo, ticket, sha = self._repo(Path(tmp))
             path, _ = start_run(repo, ticket, sha, ["app.py"])
@@ -731,19 +734,21 @@ class RunJournalTests(unittest.TestCase):
             record_run(path, "reviewing")
             unit = open_review_evidence(path)
             snapshot = Path(str(unit["snapshot_dir"]))
-            with self.assertRaisesRegex(RunJournalError, "固定基线"):
-                submit_review_result(
-                    path,
-                    snapshot,
-                    self_review_result(unit, "findings", [{
-                            "id": "schema-8-to-9",
-                            "root_cause": "unsupported-intermediate-schema",
-                            "severity": "P1",
-                            "summary": "assumes an unpublished schema version",
-                            "baseline_reachable": False,
-                        }]),
-                )
-            self.assertFalse(snapshot.exists())
+            report = submit_review_result(
+                path,
+                snapshot,
+                self_review_result(unit, "findings", [{
+                        "id": "schema-8-to-9",
+                        "root_cause": "unsupported-intermediate-schema",
+                        "severity": "P1",
+                        "summary": "assumes an unpublished schema version",
+                        "baseline_reachable": False,
+                    }]),
+            )
+            self.assertEqual("retryable", report["status"])
+            self.assertEqual("correct-review-result", report["next_action"])
+            self.assertTrue(snapshot.exists())
+            self.assertEqual("reviewing", json.loads(path.read_text())["phase"])
 
     def test_self_review_requires_complete_coverage_and_acceptance_owner(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -755,8 +760,84 @@ class RunJournalTests(unittest.TestCase):
             result = self_review_result(unit, "pass")
             result["self_review_coverage"]["acceptance"] = []
 
-            with self.assertRaisesRegex(RunJournalError, "完整覆盖"):
-                submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+            report = submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+            self.assertEqual("retryable", report["status"])
+            self.assertTrue(Path(str(unit["snapshot_dir"])).exists())
+
+    def test_review_status_survives_invalid_result_and_corrected_resubmission(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            invalid = self_review_result(unit, "pass")
+            invalid["self_review_coverage"]["acceptance"] = []
+            self.assertEqual(
+                "retryable", submit_review_result(path, snapshot, invalid)["status"]
+            )
+            status = implementation_status(path)
+            self.assertEqual("correct-review-result", status["next_gate"])
+            self.assertEqual(str(snapshot), status["active_review"]["snapshot_dir"])
+            report = submit_review_result(path, snapshot, self_review_result(unit, "pass"))
+            self.assertEqual("pass", report["status"])
+            self.assertFalse(snapshot.exists())
+            self.assertIsNone(json.loads(path.read_text()).get("active_review"))
+
+    def test_code_drift_retires_active_review_and_requires_new_snapshot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            (repo / "app.py").write_text("print('changed')\n", encoding="utf-8")
+            report = submit_review_result(path, snapshot, self_review_result(unit, "pass"))
+            self.assertEqual("stale", report["status"])
+            self.assertEqual("open-review", report["next_action"])
+            self.assertFalse(snapshot.exists())
+            self.assertEqual("open-review", implementation_status(path)["next_gate"])
+
+    def test_registered_snapshot_tampering_becomes_formal_critical(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            snapshot = Path(str(unit["snapshot_dir"]))
+            marker = snapshot / ".review-unit.json"
+            snapshot.chmod(0o700)
+            marker.chmod(0o600)
+            marker.write_text(marker.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            report = submit_review_result(path, snapshot, self_review_result(unit, "pass"))
+            self.assertEqual("accepted", report["status"])
+            journal = json.loads(path.read_text())
+            self.assertEqual("blocked-by-review", journal["submission"]["outcome"])
+            self.assertEqual("review-snapshot-integrity", journal["critical"]["class"])
+
+    def test_cli_malformed_review_result_keeps_correction_gate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, ticket, sha = self._repo(Path(tmp))
+            path, _ = start_run(repo, ticket, sha, ["app.py"])
+            record_run(path, "implementing")
+            record_run(path, "reviewing")
+            unit = open_review_evidence(path)
+            bad_result = Path(tmp) / "bad-review.json"
+            bad_result.write_text("{", encoding="utf-8")
+            completed = subprocess.run(
+                [
+                    sys.executable, "tools/workflow.py", "run-review-submit",
+                    "--journal", str(path), "--snapshot-dir", str(unit["snapshot_dir"]),
+                    "--result-file", str(bad_result),
+                ],
+                cwd=ROOT, capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            self.assertEqual("retryable", json.loads(completed.stdout)["status"])
+            self.assertEqual("correct-review-result", implementation_status(path)["next_gate"])
 
     def test_follow_on_is_nonblocking_and_must_target_direct_successor(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -823,10 +904,8 @@ class RunJournalTests(unittest.TestCase):
                 "session_id": unit["implementation_session_id"],
             }
             result["self_review_coverage"] = None
-            with self.assertRaisesRegex(RunJournalError, "independent session"):
-                submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
-
-            unit = open_review_evidence(path)
+            report = submit_review_result(path, Path(str(unit["snapshot_dir"])), result)
+            self.assertEqual("retryable", report["status"])
             self.assertIn("review_inputs", unit)
             self.assertIn("spec", [item["kind"] for item in unit["review_inputs"]])
             result = self_review_result(unit, "pass")

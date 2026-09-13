@@ -40,8 +40,8 @@
     },
     {
       "id": "implementation-turn-closure",
-      "goal": "未关闭 implementation journal 的进度汇报不结束回合；范围完成或正式 blocker 才可 final",
-      "rubric": ["does_not_final_with_active_journal", "continues_to_runtime_outcome", "continues_ready_frontier_ticket", "reports_registered_blocker_with_recovery"]
+      "goal": "未关闭 implementation journal 的进度汇报不结束回合；approved repair 后继续修复、测试、复审；范围完成或正式 blocker 才可 final",
+      "rubric": ["does_not_final_with_active_journal", "continues_after_approved_repair", "continues_to_runtime_outcome", "continues_ready_frontier_ticket", "reports_registered_blocker_with_recovery"]
     },
     {
       "id": "intentional-human-stops",

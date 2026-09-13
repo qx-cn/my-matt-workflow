@@ -12,6 +12,12 @@ python3 <runtime_entry> implementation-open --repo <repo> --ticket <ticket> --ba
 
 `implementation-open` 会通过可恢复事务领取 Ticket，并把 journal 留在 `admitted`。按实际阶段推进同一 journal：开始实现前记录 `implementing`，进入审查时记录 `reviewing`，只有测试与审查都绑定到最终代码内容后才记录 `committing`。
 
+每次恢复、CLI 校验错误或 repair-plan 审查通过后，先查询 runtime 的唯一粗粒度 gate；它只说明当前流程边界，不替 Agent 调度 TDD 切片：
+
+```sh
+python3 <runtime_entry> implementation-status --journal <journal>
+```
+
 ```sh
 python3 <runtime_entry> run-record <journal> --phase implementing
 python3 <runtime_entry> run-record <journal> --phase reviewing
@@ -28,7 +34,7 @@ python3 <runtime_entry> run-record <journal> --phase committing
 
 宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID`、`MY_MATT_TICKET_BOUNDARY` 和 `MY_MATT_IMPLEMENTATION_SESSION_ID` 传递固定单元。传入 `--reviewer-session-id` 时，命令从只读 snapshot 目录运行，其中包含代码、基线、Spec、规则和 boundary manifest；结果必须使用同一不同的 ID 作为 `independent_session` provenance。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive | blocked-by-design`。默认 `reviewer_provenance=self`，并覆盖当前 Ticket 每个验收与必需风险探针；finding 必须引用当前验收，follow-on 只能引用直接下游 owner，design gap 才使用 `blocked-by-design`。用户显式要求独立审查时才使用不同的 `independent_session` provenance；这证明 session 区分和冻结输入，不证明不存在其他隐藏上下文。
 
-runtime 登记每轮结果并在所有终态释放 snapshot。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`。默认只允许一轮修复；最终复审仍有 finding 时返回 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。repair-plan 审查的代码、方案或结果 content ID 再次变化时，runtime 释放其受管 snapshot、终止为 `blocked-by-review`；必须显式开启新会话，不能在原会话隐式重开。
+runtime 登记每轮结果。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`，此时 `implementation-status` 返回 `fix-approved-findings`；修复后必须重新测试、开新 code-review snapshot 并复审。默认只允许一轮修复；最终复审出现新的有效 finding 时，runtime 以带 finding receipt、repair-plan receipt 和 profile limit 的 `review-boundary-exhausted` Critical 登记 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。普通 review result JSON/coverage 校验失败保留同一受管 snapshot，并由 status 返回 `correct-review-result`；代码漂移废弃旧 snapshot 并返回 `open-review`；只有可验证的 snapshot 完整性或归属损坏才登记正式 Critical。
 
 ## 回合关闭
 
@@ -42,7 +48,7 @@ runtime 不能观察或拦截宿主发送的聊天 final；宿主必须自行把
 
 `max_repair_rounds` 只限制同一审查 finding 的自动修复轮数，不限制正常 TDD 切片或 Ticket 推进。达到限制时登记 `blocked-by-review`，而不是以未提交的进度汇报结束回合。
 
-每个 lane 结束时，把下面的 JSON 保存为文件并提交：
+仅当 `implementation-status` 返回 `submit-completed`，或 runtime 已登记正式 Critical 时，把下面的 JSON 保存为文件并提交：
 
 ```json
 {"outcome":"completed|blocked-by-design|blocked-by-evidence","test_receipt":{"kind":"test","evidence_id":"<runtime evidence id>"},"review_receipt":{"kind":"review","evidence_id":"<runtime evidence id>"},"code_receipt":{"kind":"code","content_id":"<code-content-id>","sources":[]},"blocker":null}

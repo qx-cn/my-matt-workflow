@@ -62,6 +62,7 @@ from workflow_lib.run_journal import (
     build_code_receipt,
     build_run_context,
     close_implementation_session,
+    implementation_status,
     implementation_work_unit,
     open_repair_plan,
     open_repair_plan_review,
@@ -836,6 +837,14 @@ def command_implementation_close(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def command_implementation_status(args: argparse.Namespace) -> None:
+    try:
+        report = implementation_status(Path(args.journal))
+    except RunJournalError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_run_record(args: argparse.Namespace) -> None:
     try:
         journal = record_run(
@@ -884,7 +893,12 @@ def command_run_review_evidence(args: argparse.Namespace) -> None:
 
 
 def command_run_review_submit(args: argparse.Namespace) -> None:
-    result = _read_result_object(args.result_file, "code review")
+    try:
+        result = _read_result_object(args.result_file, "code review")
+    except SystemExit:
+        # Route malformed JSON through the journal too, so a later Agent sees
+        # the same active snapshot and an explicit correction gate.
+        result = {}
     try:
         report = submit_review_result(
             Path(args.journal), Path(args.snapshot_dir), result
@@ -1236,6 +1250,10 @@ def parser() -> argparse.ArgumentParser:
     implementation_close = sub.add_parser("implementation-close")
     implementation_close.add_argument("--journal", action="append", required=True)
     implementation_close.set_defaults(func=command_implementation_close)
+
+    implementation_status_parser = sub.add_parser("implementation-status")
+    implementation_status_parser.add_argument("--journal", required=True)
+    implementation_status_parser.set_defaults(func=command_implementation_status)
 
     run_record = sub.add_parser("run-record")
     run_record.add_argument("journal")
