@@ -48,6 +48,15 @@ from .artifact_review import (
     submit_artifact_review_result,
     verify_artifact_review_snapshot,
 )
+from .review_results import validate_review_result as validate_review_result_semantics
+from .implementation_service import next_implementation_action
+from .repair_plans import render_repair_plan, validate_repair_plan_text
+from .evidence_records import (
+    canonical_evidence_bytes,
+    evidence_identifier,
+    validate_evidence_bytes,
+    validate_evidence_receipt,
+)
 
 
 class RunJournalError(ValueError):
@@ -71,9 +80,6 @@ IMPLEMENTATION_OUTCOMES = frozenset(
     {"completed", "blocked-by-design", "blocked-by-evidence", "blocked-by-review"}
 )
 REVIEW_METHOD = "my-code-review"
-REVIEW_STATUSES = frozenset({"pass", "findings", "inconclusive", "blocked-by-design"})
-REVIEW_SEVERITIES = frozenset({"P0", "P1", "P2"})
-REVIEW_PROVENANCE_KINDS = frozenset({"self", "independent_session"})
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
@@ -597,10 +603,8 @@ def _evidence_directory(path: Path) -> Path:
 
 
 def _persist_evidence(path: Path, record: dict[str, object]) -> dict[str, str]:
-    encoded = json.dumps(
-        record, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
-    evidence_id = hashlib.sha256(encoded).hexdigest()
+    encoded = canonical_evidence_bytes(record)
+    evidence_id = evidence_identifier(record)
     destination = _evidence_directory(path) / f"{evidence_id}.json"
     if destination.exists():
         if destination.read_bytes() != encoded + b"\n":
@@ -929,43 +933,8 @@ def _formal_review_critical(path: Path, outcome: str, critical_class: str, detai
 
 
 def implementation_status(path: Path) -> dict[str, object]:
-    """Return the one coarse runtime gate implied by durable journal state."""
-    journal = _load_journal(path)
-    phase = journal.get("phase")
-    submission = journal.get("submission")
-    active = journal.get("active_review")
-    recovery = journal.get("recovery")
-    repair = journal.get("repair_plan")
-    if isinstance(submission, dict):
-        gate = "complete" if submission.get("outcome") == "completed" else "formal-blocked"
-    elif phase == "complete":
-        gate = "complete"
-    elif phase == "reviewing":
-        if isinstance(active, dict):
-            gate = "correct-review-result" if isinstance(recovery, dict) else "submit-review-result"
-        else:
-            gate = "open-review"
-    elif phase == "planning":
-        gate = "review-repair-plan" if isinstance(repair, dict) and repair.get("path") else "create-repair-plan"
-    elif phase == "plan-reviewing":
-        gate = "review-repair-plan"
-    elif phase == "implementing":
-        gate = "fix-approved-findings" if isinstance(repair, dict) and repair.get("review_receipt") else "continue-implementation"
-    elif phase == "committing":
-        gate = "submit-completed"
-    elif phase in {"admitted", "testing", "revising", "blocked-by-evidence"}:
-        gate = "continue-implementation"
-    elif phase == "blocked-by-design":
-        gate = "formal-blocked" if journal.get("blocker") else "continue-implementation"
-    else:
-        raise RunJournalError("run journal phase 无效")
-    return {
-        "status": "active" if gate not in {"complete", "formal-blocked"} else gate,
-        "phase": phase,
-        "next_gate": gate,
-        "active_review": active,
-        "recovery": recovery,
-    }
+    """Compatibility entrypoint for the application-level next action."""
+    return next_implementation_action(_load_journal(path), error_type=RunJournalError)
 
 
 def _validate_evidence_refs(
@@ -993,152 +962,19 @@ def _validate_evidence_refs(
         raise RunJournalError("review coverage 证据引用不属于当前 work unit")
 
 
-def _validate_self_review_coverage(
-    path: Path, context: dict[str, object], unit: dict[str, object], coverage: object
-) -> None:
-    if not isinstance(coverage, dict) or set(coverage) != {"acceptance", "probes"}:
-        raise RunJournalError("self review coverage schema 无效")
-    boundary = unit.get("ticket_boundary")
-    if not isinstance(boundary, dict):
-        raise RunJournalError("review Ticket boundary 无效")
-    current = boundary.get("current")
-    expected_acceptance = {
-        item.get("id") for item in current.get("acceptance", [])
-        if isinstance(item, dict) and isinstance(item.get("id"), str)
-    } if isinstance(current, dict) else set()
-    acceptance = coverage.get("acceptance")
-    if not isinstance(acceptance, list):
-        raise RunJournalError("self review acceptance coverage 无效")
-    seen_acceptance: set[str] = set()
-    for item in acceptance:
-        if not isinstance(item, dict) or set(item) != {"acceptance_id", "evidence_refs"}:
-            raise RunJournalError("self review acceptance 条目无效")
-        identifier = item.get("acceptance_id")
-        if not isinstance(identifier, str) or identifier in seen_acceptance:
-            raise RunJournalError("self review acceptance_id 重复或无效")
-        seen_acceptance.add(identifier)
-        _validate_evidence_refs(path, context, unit, item.get("evidence_refs"))
-    if seen_acceptance != expected_acceptance:
-        raise RunJournalError("self review 未完整覆盖当前 Ticket 验收")
-    expected_probes = set(boundary.get("required_probes", []))
-    probes = coverage.get("probes")
-    if not isinstance(probes, list):
-        raise RunJournalError("self review probe coverage 无效")
-    seen_probes: set[str] = set()
-    for item in probes:
-        if not isinstance(item, dict) or set(item) != {"probe", "summary", "evidence_refs"}:
-            raise RunJournalError("self review probe 条目无效")
-        probe = item.get("probe")
-        if not isinstance(probe, str) or probe in seen_probes or not isinstance(item.get("summary"), str) or not item["summary"].strip():
-            raise RunJournalError("self review probe 重复或无效")
-        seen_probes.add(probe)
-        _validate_evidence_refs(path, context, unit, item.get("evidence_refs"))
-    if seen_probes != expected_probes:
-        raise RunJournalError("self review 未完整覆盖必需风险探针")
-
-
 def _validate_review_result(
     path: Path, result: dict[str, object], unit: dict[str, object], code: dict[str, object],
     context: dict[str, object],
 ) -> tuple[str, set[str]]:
-    if set(result) != {
-        "review_id", "status", "code_content_id", "reviewer_provenance", "findings",
-        "follow_ons", "design_gap", "self_review_coverage",
-    }:
-        raise RunJournalError("review result 字段无效")
-    status = result.get("status")
-    findings = result.get("findings")
-    follow_ons = result.get("follow_ons")
-    provenance = result.get("reviewer_provenance")
-    if (
-        status not in REVIEW_STATUSES
-        or result.get("review_id") != unit.get("review_id")
-        or result.get("code_content_id") != code.get("content_id")
-        or not isinstance(findings, list)
-        or not isinstance(follow_ons, list)
-        or not isinstance(provenance, dict)
-        or set(provenance) != {"kind", "session_id"}
-        or provenance.get("kind") not in REVIEW_PROVENANCE_KINDS
-        or not isinstance(provenance.get("session_id"), str)
-        or not _SAFE_ID.fullmatch(str(provenance.get("session_id")))
-    ):
-        raise RunJournalError("review result 与当前 review snapshot 不匹配")
-    if provenance["kind"] == "self":
-        if provenance["session_id"] != unit.get("implementation_session_id"):
-            raise RunJournalError("self review 必须使用当前 implementation session")
-        _validate_self_review_coverage(path, context, unit, result.get("self_review_coverage"))
-    elif provenance["session_id"] == unit.get("implementation_session_id") or result.get("self_review_coverage") is not None:
-        raise RunJournalError("independent session provenance 或 coverage 无效")
-    boundary = unit.get("ticket_boundary")
-    current = boundary.get("current") if isinstance(boundary, dict) else None
-    acceptance_ids = {
-        item.get("id") for item in current.get("acceptance", [])
-        if isinstance(item, dict) and isinstance(item.get("id"), str)
-    } if isinstance(current, dict) else set()
-    successors = {
-        item.get("id"): {
-            entry.get("id") for entry in item.get("acceptance", [])
-            if isinstance(entry, dict) and isinstance(entry.get("id"), str)
-        }
-        for item in boundary.get("successors", [])
-        if isinstance(item, dict) and isinstance(item.get("id"), str)
-    } if isinstance(boundary, dict) else {}
-    for item in follow_ons:
-        if not isinstance(item, dict) or set(item) != {
-            "id", "root_cause", "owner_ticket_id", "acceptance_ids", "summary", "baseline_reachable"
-        }:
-            raise RunJournalError("review follow-on schema 无效")
-        owner = item.get("owner_ticket_id")
-        refs = item.get("acceptance_ids")
-        if (
-            not all(isinstance(item.get(field), str) and str(item[field]).strip() for field in ("id", "root_cause", "summary"))
-            or owner not in successors
-            or not isinstance(refs, list) or not refs or not all(isinstance(ref, str) for ref in refs)
-            or not set(refs).issubset(successors[owner])
-            or item.get("baseline_reachable") not in {True, False}
-        ):
-            raise RunJournalError("review follow-on 不属于当前 Ticket 的直接下游")
-    design_gap = result.get("design_gap")
-    if status == "blocked-by-design":
-        if findings or follow_ons or not isinstance(design_gap, dict) or set(design_gap) != {"root_cause", "summary", "evidence_refs"}:
-            raise RunJournalError("design gap review result 无效")
-        if not all(isinstance(design_gap.get(field), str) and str(design_gap[field]).strip() for field in ("root_cause", "summary")):
-            raise RunJournalError("design gap 缺少根因或摘要")
-        _validate_evidence_refs(path, context, unit, design_gap.get("evidence_refs"))
-        return str(status), {str(design_gap["root_cause"])}
-    if design_gap is not None:
-        raise RunJournalError("仅 blocked-by-design review 可包含 design_gap")
-    if status == "pass":
-        if findings:
-            raise RunJournalError("pass review 不得包含 findings")
-        return str(status), set()
-    if not findings:
-        raise RunJournalError(f"{status} review 必须包含结构化条目")
-    roots: set[str] = set()
-    for item in findings:
-        if not isinstance(item, dict) or set(item) != {
-            "id", "root_cause", "severity", "summary", "baseline_reachable", "acceptance_ids"
-        }:
-            raise RunJournalError("review finding schema 无效")
-        if not all(
-            isinstance(item.get(field), str) and str(item[field]).strip()
-            for field in ("id", "root_cause", "summary")
-        ):
-            raise RunJournalError("review finding 缺少 id、root_cause 或 summary")
-        item_acceptance = item.get("acceptance_ids")
-        if not isinstance(item_acceptance, list) or not item_acceptance or not all(isinstance(value, str) for value in item_acceptance) or not set(item_acceptance).issubset(acceptance_ids):
-            raise RunJournalError("review finding 必须引用当前 Ticket 验收")
-        if status == "findings":
-            if item.get("severity") not in REVIEW_SEVERITIES:
-                raise RunJournalError("review finding severity 无效")
-            if item.get("baseline_reachable") is not True:
-                raise RunJournalError(
-                    "review finding 必须能从固定基线到当前快照证明；否则标记 inconclusive"
-                )
-        elif item.get("severity") is not None or item.get("baseline_reachable") not in {None, False}:
-            raise RunJournalError("inconclusive 条目不得伪造 severity 或基线可达性")
-        roots.add(str(item["root_cause"]))
-    return str(status), roots
+    return validate_review_result_semantics(
+        result,
+        unit,
+        code,
+        validate_evidence_refs=lambda refs: _validate_evidence_refs(
+            path, context, unit, refs
+        ),
+        error_type=RunJournalError,
+    )
 
 
 def _verify_review_snapshot_bytes(unit: dict[str, object], snapshot_dir: Path) -> None:
@@ -1272,19 +1108,6 @@ def _repair_plan_state(path: Path, phase: str) -> tuple[dict[str, object], dict[
     return journal, repair, repo
 
 
-def _repair_plan_template(repair: dict[str, object], findings: list[dict[str, object]]) -> str:
-    sections: list[str] = ["# Repair plan", "", "仅修复以下当前 Ticket findings。"]
-    for finding in findings:
-        identifier = finding["id"]
-        acceptance = ", ".join(finding["acceptance_ids"])
-        sections.extend([
-            "", f"## Finding {identifier}", f"- Acceptance IDs: {acceptance}",
-            f"- Root cause: {finding['root_cause']}", "- Change: ",
-            "- Verification: ", "- Out of scope: ",
-        ])
-    return "\n".join(sections) + "\n"
-
-
 def open_repair_plan(path: Path) -> dict[str, object]:
     """Create the sole mutable planning artifact for the current review findings."""
     journal, repair, repo = _repair_plan_state(path, "planning")
@@ -1302,7 +1125,7 @@ def open_repair_plan(path: Path) -> dict[str, object]:
     if plan.exists() or plan.is_symlink():
         raise RunJournalError("repair plan 目标已存在")
     plan.parent.mkdir(parents=True, exist_ok=True)
-    plan.write_text(_repair_plan_template(repair, findings), encoding="utf-8")
+    plan.write_text(render_repair_plan(findings), encoding="utf-8")
     repair["path"] = str(plan)
     _write_json_atomic(path, journal)
     return {"status": "ready", "path": str(plan), "round": repair["round"], "finding_ids": repair["finding_ids"]}
@@ -1320,15 +1143,11 @@ def _repair_plan_file(path: Path, repair: dict[str, object]) -> Path:
 
 def _validate_repair_plan(path: Path, repair: dict[str, object]) -> Path:
     plan = _repair_plan_file(path, repair)
-    text = plan.read_text(encoding="utf-8")
-    identifiers = re.findall(r"^## Finding ([A-Za-z0-9][A-Za-z0-9._-]{0,127})$", text, flags=re.MULTILINE)
-    expected = repair.get("finding_ids")
-    if not isinstance(expected, list) or sorted(identifiers) != sorted(expected) or len(identifiers) != len(set(identifiers)):
-        raise RunJournalError("repair plan 必须逐项覆盖且仅覆盖当前 findings")
-    for identifier in identifiers:
-        section = re.search(rf"^## Finding {re.escape(identifier)}$([\s\S]*?)(?=^## Finding |\Z)", text, flags=re.MULTILINE)
-        if section is None or any(not re.search(rf"^- {field}: .+", section.group(1), flags=re.MULTILINE) for field in ("Acceptance IDs", "Root cause", "Change", "Verification", "Out of scope")):
-            raise RunJournalError("repair plan finding 缺少必填决策")
+    validate_repair_plan_text(
+        plan.read_text(encoding="utf-8"),
+        repair.get("finding_ids"),
+        error_type=RunJournalError,
+    )
     return plan
 
 
@@ -1694,17 +1513,9 @@ def record_review_evidence(
 
 
 def _load_evidence(path: Path, receipt: object, kind: str) -> dict[str, object]:
-    if (
-        not isinstance(receipt, dict)
-        or set(receipt) != {"kind", "evidence_id"}
-        or receipt.get("kind") != kind
-        or not isinstance(receipt.get("evidence_id"), str)
-        or not re.fullmatch(r"[0-9a-f]{64}", str(receipt["evidence_id"]))
-    ):
-        raise RunJournalError(
-            f"completed outcome 必须引用 runtime 生成的 {kind}_receipt"
-        )
-    evidence_id = str(receipt["evidence_id"])
+    evidence_id = validate_evidence_receipt(
+        receipt, kind, error_type=RunJournalError
+    )
     journal = _load_journal(path)
     registered = journal.get("evidence")
     if not isinstance(registered, list) or receipt not in registered:
@@ -1712,15 +1523,11 @@ def _load_evidence(path: Path, receipt: object, kind: str) -> dict[str, object]:
     evidence_path = _evidence_directory(path) / f"{evidence_id}.json"
     try:
         raw = evidence_path.read_bytes()
-        record = json.loads(raw)
-    except (OSError, json.JSONDecodeError) as exc:
+    except OSError as exc:
         raise RunJournalError(f"{kind} evidence record 无法读取") from exc
-    canonical = json.dumps(
-        record, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
-    if raw != canonical + b"\n" or hashlib.sha256(canonical).hexdigest() != evidence_id:
-        raise RunJournalError(f"{kind} evidence record 已漂移")
-    return record
+    return validate_evidence_bytes(
+        raw, evidence_id, kind, error_type=RunJournalError
+    )
 
 
 def _validate_completion_receipts(

@@ -1,12 +1,12 @@
 ---
 name: my-requirement-analysis
-description: 手动验证 AI 对用户需求的理解是否正确，并在制定 Plan 前识别偏差、遗漏和关键歧义。
+description: 在复杂或显式请求时验证 AI 对用户需求的理解，并在制定 Plan 前识别偏差、遗漏和关键歧义。
 disable-model-invocation: true
 ---
 
 # Requirement Analysis
 
-仅在用户明确调用 `{{skill-call:my-requirement-analysis}}` 时运行。显式调用授权本次需求核对，但不意味着每次都要启动独立 reviewer。它验证“理解是否正确”，不评判方案优劣。
+仅在用户明确调用 `{{skill-call:my-requirement-analysis}}`，或当前请求复杂、隐含、类比驱动并由[开发保证等级](references/shared/adapters/assurance-levels.md)要求增强需求核对时运行；这不意味着每次都要启动独立 reviewer。普通 grill 已产生可追溯需求摘要时，不重复完整访谈。它验证“理解是否正确”，不评判方案优劣。
 
 先形成主 Agent 摘要：目标、范围、用户明确约束和可观察验收标准。每一项都标出来自用户原文、仓库事实还是尚未确认的推断。
 

@@ -15,7 +15,7 @@ python3 <runtime_entry> implementation-open --repo <repo> --ticket <ticket> --ba
 每次恢复、CLI 校验错误或 repair-plan 审查通过后，先查询 runtime 的唯一粗粒度 gate；它只说明当前流程边界，不替 Agent 调度 TDD 切片：
 
 ```sh
-python3 <runtime_entry> implementation-status --journal <journal>
+python3 <runtime_entry> implementation-next-action --journal <journal>
 ```
 
 ```sh
@@ -30,11 +30,11 @@ python3 <runtime_entry> run-review-evidence --journal <journal> --snapshot-dir <
 python3 <runtime_entry> run-record <journal> --phase committing
 ```
 
-`run-code-receipt` 对 Ticket 声明的 `rule_scope`（含 `**` 等 glob）生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope 及其固定基线副本，以及当前 Ticket 验收、直接下游 owner 和按 Ticket 声明的风险探针；语义方法由 runtime 固定为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。
+`implementation-next-action` 是恢复和推进 session 的高层入口；旧 `implementation-status` 保留兼容，两者返回相同的 `next_action` 与 `next_gate`。`run-code-receipt` 对 Ticket 声明的 `rule_scope`（含 `**` 等 glob）生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope 及其固定基线副本，以及当前 Ticket 验收、直接下游 owner 和按 Ticket 声明的风险探针；语义方法由 runtime 固定为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。
 
 宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID`、`MY_MATT_TICKET_BOUNDARY` 和 `MY_MATT_IMPLEMENTATION_SESSION_ID` 传递固定单元。传入 `--reviewer-session-id` 时，命令从只读 snapshot 目录运行，其中包含代码、基线、Spec、规则和 boundary manifest；结果必须使用同一不同的 ID 作为 `independent_session` provenance。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive | blocked-by-design`。默认 `reviewer_provenance=self`，并覆盖当前 Ticket 每个验收与必需风险探针；finding 必须引用当前验收，follow-on 只能引用直接下游 owner，design gap 才使用 `blocked-by-design`。用户显式要求独立审查时才使用不同的 `independent_session` provenance；这证明 session 区分和冻结输入，不证明不存在其他隐藏上下文。
 
-runtime 登记每轮结果。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`，此时 `implementation-status` 返回 `fix-approved-findings`；修复后必须重新测试、开新 code-review snapshot 并复审。默认只允许一轮修复；最终复审出现新的有效 finding 时，runtime 以带 finding receipt、repair-plan receipt 和 profile limit 的 `review-boundary-exhausted` Critical 登记 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。普通 review result JSON/coverage 校验失败保留同一受管 snapshot，并由 status 返回 `correct-review-result`；代码漂移废弃旧 snapshot 并返回 `open-review`；只有可验证的 snapshot 完整性或归属损坏才登记正式 Critical。
+runtime 登记每轮结果。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`，此时 `implementation-next-action` 返回 `fix-approved-findings`；修复后必须重新测试、开新 code-review snapshot 并复审。默认只允许一轮修复；最终复审出现新的有效 finding 时，runtime 以带 finding receipt、repair-plan receipt 和 profile limit 的 `review-boundary-exhausted` Critical 登记 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。普通 review result JSON/coverage 校验失败保留同一受管 snapshot，并由 status 返回 `correct-review-result`；代码漂移废弃旧 snapshot 并返回 `open-review`；只有可验证的 snapshot 完整性或归属损坏才登记正式 Critical。
 
 ## 回合关闭
 
@@ -48,7 +48,7 @@ runtime 不能观察或拦截宿主发送的聊天 final；宿主必须自行把
 
 `max_repair_rounds` 只限制同一审查 finding 的自动修复轮数，不限制正常 TDD 切片或 Ticket 推进。达到限制时登记 `blocked-by-review`，而不是以未提交的进度汇报结束回合。
 
-仅当 `implementation-status` 返回 `submit-completed`，或 runtime 已登记正式 Critical 时，把下面的 JSON 保存为文件并提交：
+仅当 `implementation-next-action` 返回 `submit-completed`，或 runtime 已登记正式 Critical 时，把下面的 JSON 保存为文件并提交：
 
 ```json
 {"outcome":"completed|blocked-by-design|blocked-by-evidence","test_receipt":{"kind":"test","evidence_id":"<runtime evidence id>"},"review_receipt":{"kind":"review","evidence_id":"<runtime evidence id>"},"code_receipt":{"kind":"code","content_id":"<code-content-id>","sources":[]},"blocker":null}

@@ -11,6 +11,7 @@
 - 项目固定规则只配置一次，保存在 `.agent/matt-workflow.md`；`agent_directory_mode: private`（默认）使用无 remote 的嵌套 Git，`shared` 则由主仓库跟踪、提交和推送 `.agent/`。无 Git 项目同样使用 `.agent/` 保存文档与进度。
 - 没有外部 Tracker 时，Spec 和 Tickets 保存到 `.agent/work/`。
 - 所有本地工作产物按 `.agent/work/<topic>/<type>/` 保存；交接由 `my-handoff` 写入 `handoffs/handoffs-<topic>-<time-or-sequence>.md` 并保留历史。
+- `assurance_level` 与写入授权正交：`quick` 用于明确、低风险、单切片工作，`standard` 是默认层，`audited` 用于高风险、跨边界或明确要求完整可恢复审计链的工作。
 - 工作流源目录是唯一可编辑源；安装器可复制稳定 release 到 Codex、Cursor、Claude 或用户指定的 Skill 目录。
 
 ## 维护命令
@@ -30,6 +31,7 @@ python3 tools/workflow.py deploy --target codex
 python3 tools/workflow.py prune-releases
 python3 tools/workflow.py resolve-rules --repo <project> --agent codex
 python3 tools/workflow.py validate-ticket <ticket-path>
+python3 tools/workflow.py implementation-next-action --journal <run-journal>
 python3 tools/workflow.py run-code-receipt --journal <run-journal>
 python3 tools/workflow.py run-review-open --journal <run-journal>
 python3 tools/workflow.py run-test-evidence --journal <run-journal> -- <declared test argv...>
@@ -39,7 +41,7 @@ python3 tools/workflow.py run-review-evidence --journal <run-journal> --snapshot
 
 测试命令来自项目 profile 的 `test_commands`。`my-implement` 宿主可用 `run-review-submit` 登记组合的 `my-code-review` 结果；需要独立进程时，审查命令来自可选的 `review_commands`。runtime 只执行 work unit 建立时已冻结的精确 argv；审查命令从 `MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID` 读取当前审查单元，并在 stdout 输出结果 JSON。
 
-`workflow.py check` 是源树的权威本地检查：它严格验证静态输入、可执行 eval 与冒烟注册表，运行完整单元测试；存在 `current.json` 时还会先校验 release 的校验和、缺失文件和额外文件，再比较其与源树是否一致。尚未构建首个 release 时会明确报告 release 验证不适用。
+`workflow.py check` 是源树的权威本地检查：它严格验证静态输入、确定性 contract、fresh-agent 验证计划与 digest 绑定的执行证据注册表，并运行完整单元测试；存在 `current.json` 时还会先校验 release 的校验和、缺失文件和额外文件，再比较其与源树是否一致。没有登记实际执行证据时，`execution_evidence.status` 明确为 `not-recorded`；存在记录时同时报告 `release_ids` 和相对 current release 的 `current|historical|mixed`，避免把旧 release 的运行记录解释为当前证据。这些状态不影响静态/确定性门禁的真实性，也不会被表述成 Agent 行为通过。尚未构建首个 release 时会明确报告 release 验证不适用。
 
 `workflow.py doctor` 是只读部署诊断：它分别报告源树、current release 与 Codex/Cursor/Claude 安装状态，明确区分 `valid`、`drift`、`invalid` 和 `not-installed`，不会自动安装或修复。
 

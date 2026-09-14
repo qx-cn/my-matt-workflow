@@ -49,15 +49,18 @@ def _validate_evidence(skill: str, value: object) -> dict[str, object]:
     for layer, record in value.items():
         if not isinstance(record, dict):
             raise _fail(f"{skill}.evidence.{layer}", "必须是对象")
-        if set(record) == {"cases"}:
-            cases = record["cases"]
+        if set(record) == {"planned_cases"}:
+            cases = record["planned_cases"]
             if (
                 not isinstance(cases, list)
                 or not cases
                 or any(not isinstance(case, str) or not case.strip() for case in cases)
                 or len(cases) != len(set(cases))
             ):
-                raise _fail(f"{skill}.evidence.{layer}.cases", "必须是非空且不重复的 case id 数组")
+                raise _fail(
+                    f"{skill}.evidence.{layer}.planned_cases",
+                    "必须是非空且不重复的验证计划 case id 数组",
+                )
         elif set(record) == {"exemption"}:
             exemption = record["exemption"]
             required = {"reason", "risk", "release_condition"}
@@ -72,7 +75,10 @@ def _validate_evidence(skill: str, value: object) -> dict[str, object]:
             ):
                 raise _fail(f"{skill}.evidence.{layer}.exemption", "字段不能为空")
         else:
-            raise _fail(f"{skill}.evidence.{layer}", "只能声明 cases 或 exemption")
+            raise _fail(
+                f"{skill}.evidence.{layer}",
+                "只能声明 planned_cases 或 exemption；场景计划不是执行证据",
+            )
         result[layer] = record
     return result
 
@@ -215,8 +221,8 @@ def _validate_evidence_case_ids(root: Path, portfolio: PortfolioManifest) -> Non
 
     for skill, entry in portfolio.skills.items():
         deterministic_record = entry.evidence["deterministic"]
-        if "cases" in deterministic_record:
-            for identifier in deterministic_record["cases"]:
+        if "planned_cases" in deterministic_record:
+            for identifier in deterministic_record["planned_cases"]:
                 if identifier not in deterministic:
                     raise _fail(skill, f"引用未知 deterministic case：{identifier}")
                 if skill not in deterministic[identifier]:
@@ -225,8 +231,8 @@ def _validate_evidence_case_ids(root: Path, portfolio: PortfolioManifest) -> Non
                         f"deterministic case 未声明覆盖该 Skill：{identifier}",
                     )
         fresh_record = entry.evidence["fresh_agent"]
-        if "cases" in fresh_record:
-            for identifier in fresh_record["cases"]:
+        if "planned_cases" in fresh_record:
+            for identifier in fresh_record["planned_cases"]:
                 if identifier not in fresh_ids:
                     raise _fail(skill, f"引用未知 fresh-agent case：{identifier}")
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # 测试驱动开发
 
-TDD 是 red → green → refactor 循环。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。
+TDD 是 red → green → refactor 循环。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。在主实施流程中按[开发保证等级](references/shared/adapters/assurance-levels.md)选择证据强度。
 
 探索代码库时，读取已有的项目领域术语与 ADR，使测试名称和接口词汇匹配项目语言，并尊重所涉及区域的 ADR。
 
@@ -34,4 +34,4 @@ TDD 是 red → green → refactor 循环。本 Skill 只保留循环与完成�
 - **一次一个切片。** 每轮一个 seam、一个测试、一个最小实现。
 - **再 refactor。** green 后在同一行为 seam 下消除重复、改善名称与内部结构；每次小步重跑测试，保持 green。重构不增加新行为，新行为回到下一轮 red。
 
-完成条件：每项验收行为都经历可观察 red、最小 green 与保持 green 的必要 refactor；测试通过稳定 seam，且没有把未验证行为或推测性抽象带入当前切片。
+行为新增或修复默认让每项验收经历可观察 red、最小 green 与保持 green 的必要 refactor。已有充分行为覆盖的小修、characterization、机械重构、配置/文档变更，或暂时无法建立 red 的诊断工作，可以采用等价验证策略；必须说明为何 TDD 不适用、运行最接近风险的验证，并且不能把未验证行为或推测性抽象带入当前切片。完成判断依据是验收与证据，不把 runtime 无法证明的 red 历史伪装成 receipt。

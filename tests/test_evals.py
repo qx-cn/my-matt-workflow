@@ -390,6 +390,16 @@ class CheckGateTests(unittest.TestCase):
                 {"status": "valid", "evidence_level": "unit"},
                 replacement_gate["tests"],
             )
+            self.assertEqual("planned-cases", replacement_gate["verification_plan"]["evidence_level"])
+            self.assertEqual("not-recorded", replacement_gate["execution_evidence"]["status"])
+            self.assertEqual(
+                "not-recorded",
+                replacement_gate["execution_evidence"]["release_relation"],
+            )
+            self.assertEqual(
+                "fresh-agent-execution",
+                replacement_gate["execution_evidence"]["evidence_level"],
+            )
             self.assertNotIn("release", replacement_gate)
             self.assertTrue(release.is_dir())
 

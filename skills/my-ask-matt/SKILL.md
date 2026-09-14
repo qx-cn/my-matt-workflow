@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # 询问 Matt
 
-这是 portfolio 的路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy` 与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
+这是 portfolio 的路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`、[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
 
 ## 主流程
 
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 1. 有代码库的想法用 `{{skill-call:my-grill-with-docs}}`；没有代码库用 `{{skill-call:my-grill-me}}`。两者共享内部访谈方法，需要澄清领域语言时使用 `{{skill-call:my-domain-modeling}}`。
 2. 纸面讨论无法回答逻辑或界面问题时，用 `{{skill-call:my-handoff}}` 跨会话保存上下文，再用 `{{skill-call:my-prototype}}` 得出可运行证据。
-3. 跨会话构建先用 `{{skill-call:my-to-spec}}`，再用 `{{skill-call:my-to-tickets}}`；实施阶段由 `{{skill-call:my-implement}}` 在当前已批准范围内实施。明确要求测试先行时可直接进入 `{{skill-call:my-tdd}}`。
+3. `quick` 且通过低风险准入时，可从已确认需求摘要直接用 `{{skill-call:my-implement}}`；`standard` 先用 `{{skill-call:my-to-spec}}`，仅在多切片、跨上下文或存在依赖图时再用 `{{skill-call:my-to-tickets}}`；`audited` 依次使用 Spec、Tickets 和完整 implementation session。实施阶段统一由 `{{skill-call:my-implement}}` 在当前已批准范围内实施。明确只要求 TDD 方法教学或单独循环时可进入 `{{skill-call:my-tdd}}`。
 4. 交付需要证据报告时，以 `{{skill-call:my-test-report}}` 收束需求、改动、测试与缺口。它是按需尾段，不把未执行测试写成通过。
 
 阶段边界遵循[上下文卫生](references/policies/context-hygiene.md)。上下文接近限制时用 `{{skill-call:my-handoff}}`，在新会话继续。

@@ -7,7 +7,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .behavior_evidence import BehaviorEvidenceError, validate_behavior_suite
+from .behavior_evidence import (
+    BehaviorEvidenceError,
+    execution_evidence_release_relation,
+    validate_behavior_suite,
+    validate_execution_evidence_registry,
+)
 from .evals import EvalError, validate_evals
 from .installer import verify_release
 from .release import release_matches_source
@@ -71,8 +76,13 @@ def run_check(
         static = validate_repository(root)
         evals = validate_evals(root)
         validate_smoke_registry(root)
-        validate_behavior_suite(
+        planned_fresh_agent = validate_behavior_suite(
             root / "evals" / "agent-smokes" / "astra-behavior-suite.json"
+        )
+        execution_evidence = validate_execution_evidence_registry(
+            root,
+            root / "evals" / "agent-smokes" / "execution-evidence-registry.json",
+            root / "evals" / "agent-smokes" / "astra-behavior-suite.json",
         )
     except (ValidationError, EvalError, SmokeRegistryError, BehaviorEvidenceError) as exc:
         raise CheckError(str(exc)) from exc
@@ -92,7 +102,23 @@ def run_check(
         "static": static,
         "evals": evals,
         "tests": {"status": "valid", "evidence_level": "unit"},
+        "verification_plan": {
+            "status": "valid",
+            "evidence_level": "planned-cases",
+            "fresh_agent_cases": len(planned_fresh_agent),
+        },
+        "execution_evidence": execution_evidence,
     }
     if check_current_release:
-        report["release"] = verify_current_release(root)
+        release = verify_current_release(root)
+        report["release"] = release
+        current_release_id = (
+            release.get("release") if release.get("status") == "valid" else None
+        )
+        execution_evidence["release_relation"] = (
+            execution_evidence_release_relation(
+                execution_evidence,
+                current_release_id if isinstance(current_release_id, str) else None,
+            )
+        )
     return report

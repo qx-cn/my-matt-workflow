@@ -112,6 +112,7 @@ class CompositionManifestTests(unittest.TestCase):
                 "my-codebase-design",
                 "my-domain-modeling",
                 "my-grilling",
+                "my-requirement-analysis",
                 "my-grill-with-docs",
             ],
             resolve_transitive_closure(

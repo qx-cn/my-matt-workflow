@@ -693,6 +693,7 @@ class ProfileTests(unittest.TestCase):
     def test_round_trips_supported_profile(self):
         config = {
             "schema_version": 1,
+            "assurance_level": "standard",
             "task_backend": "local",
             "agent_directory_mode": "private",
             "default_base_branch": "main",
@@ -1028,6 +1029,60 @@ class ProfileTests(unittest.TestCase):
             self.assertRegex(rendered, rf"(?m)^{re.escape(key)}: ")
         self.assertIn("humanizer_policy: deny", rendered)
         self.assertIn("work_scope_policy: single-ticket", rendered)
+        self.assertIn("assurance_level: standard", rendered)
+
+    def test_assurance_levels_are_orthogonal_and_shared(self):
+        base = get_policy_preset("full-auto") | {
+            "schema_version": 1,
+            "task_backend": "local",
+            "assurance_level": "quick",
+        }
+        parsed, _ = parse_profile(render_profile(base))
+        self.assertEqual("quick", parsed["assurance_level"])
+        self.assertEqual("autonomous", parsed["decision_policy"])
+        self.assertEqual("approved-plan", parsed["work_scope_policy"])
+
+        for invalid in ("minimal", "full", ""):
+            text = (
+                "---\nschema_version: 1\ntask_backend: local\n"
+                f"assurance_level: {invalid}\n---\n"
+            )
+            if invalid:
+                with self.assertRaisesRegex(ProfileError, "assurance_level"):
+                    parse_profile(text)
+
+        adapter = (
+            Path(__file__).resolve().parents[1]
+            / "resources/adapters/assurance-levels.md"
+        ).read_text()
+        for phrase in ("## quick", "## standard", "## audited", "正交"):
+            self.assertIn(phrase, adapter)
+        for skill in (
+            "my-ask-matt",
+            "my-grill-with-docs",
+            "my-implement",
+            "my-requirement-analysis",
+            "my-setup",
+            "my-tdd",
+            "my-to-spec",
+            "my-to-tickets",
+        ):
+            body = (
+                Path(__file__).resolve().parents[1] / "skills" / skill / "SKILL.md"
+            ).read_text()
+            self.assertIn("references/shared/adapters/assurance-levels.md", body)
+
+        setup = (
+            Path(__file__).resolve().parents[1] / "skills/my-setup/SKILL.md"
+        ).read_text()
+        self.assertIn("--assurance-level <confirmed-level>", setup)
+
+        spec = (
+            Path(__file__).resolve().parents[1] / "skills/my-to-spec/SKILL.md"
+        ).read_text()
+        self.assertLess(spec.index("**设计 Gate**"), spec.index("**写入**"))
+        self.assertIn("status: <draft|current>", spec)
+        self.assertIn("才把候选状态晋升为 `current`", spec)
 
     def test_five_presets_match_spec_including_humanizer_defaults(self):
         expected = {
@@ -1495,6 +1550,33 @@ class RefreshProjectTests(unittest.TestCase):
             text=True,
             check=False,
         )
+
+    def test_setup_and_refresh_persist_explicit_assurance_level(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            created = self._run(
+                "setup",
+                "--repo",
+                str(repo),
+                "--assurance-level",
+                "audited",
+                "--apply",
+            )
+            self.assertEqual(0, created.returncode, created.stderr)
+            profile = repo / ".agent/matt-workflow.md"
+            config, _ = parse_profile(profile.read_text())
+            self.assertEqual("audited", config["assurance_level"])
+
+            refreshed = self._run(
+                "refresh-project",
+                "--repo",
+                str(repo),
+                "--assurance-level",
+                "quick",
+            )
+            self.assertEqual(0, refreshed.returncode, refreshed.stderr)
+            config, _ = parse_profile(profile.read_text())
+            self.assertEqual("quick", config["assurance_level"])
 
     def test_setup_previews_and_refresh_migrates_artifacts_without_gitignore_changes(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -37,6 +37,10 @@
       "kind": "execution-protocol",
       "validation": "tests/test_workflow.py::ProfileTests.test_ready_ticket_requires_rule_evidence"
     },
+    "resources/adapters/assurance-levels.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow.py::ProfileTests.test_assurance_levels_are_orthogonal_and_shared"
+    },
     "resources/adapters/work-scope.md": {
       "kind": "execution-protocol",
       "validation": "tests/test_workflow.py::ProfileTests.test_continue_semantics_do_not_widen_work_scope_in_skills"

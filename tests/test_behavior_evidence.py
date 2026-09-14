@@ -1,4 +1,5 @@
 import json
+import hashlib
 import shutil
 import subprocess
 import sys
@@ -8,8 +9,10 @@ from pathlib import Path
 
 from tools.workflow_lib.behavior_evidence import (
     BehaviorEvidenceError,
+    execution_evidence_release_relation,
     validate_behavior_evidence,
     validate_behavior_suite,
+    validate_execution_evidence_registry,
 )
 
 
@@ -18,7 +21,11 @@ SUITE = ROOT / "evals/agent-smokes/astra-behavior-suite.json"
 
 
 class BehaviorEvidenceTests(unittest.TestCase):
-    def _record(self, model: str = "default-test-model") -> dict[str, object]:
+    def _record(
+        self,
+        model: str = "default-test-model",
+        release_id: str = "test-release",
+    ) -> dict[str, object]:
         cases = validate_behavior_suite(SUITE)
         case_id = "authorized-local-no-reconfirm"
         return {
@@ -30,7 +37,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
                     "case_id": case_id,
                     "model": model,
                     "host": "codex-cli 0.153.0",
-                    "release_id": "test-release",
+                    "release_id": release_id,
                     "session_id": "session-1",
                     "status": "pass",
                     "raw_output": "done",
@@ -162,6 +169,105 @@ class BehaviorEvidenceTests(unittest.TestCase):
             self.assertEqual(16, len(report["missing"]))
             with self.assertRaisesRegex(BehaviorEvidenceError, "缺少行为场景"):
                 validate_behavior_evidence(SUITE, evidence, require_complete=True)
+
+    def test_empty_execution_registry_is_explicitly_not_recorded(self):
+        report = validate_execution_evidence_registry(
+            ROOT,
+            ROOT / "evals/agent-smokes/execution-evidence-registry.json",
+            SUITE,
+        )
+        self.assertEqual("not-recorded", report["status"])
+        self.assertEqual("fresh-agent-execution", report["evidence_level"])
+        self.assertEqual([], report["records"])
+
+    def test_execution_registry_binds_repo_evidence_by_digest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            evidence = root / "evidence.json"
+            evidence.write_text(json.dumps(self._record()))
+            digest = hashlib.sha256(evidence.read_bytes()).hexdigest()
+            registry = root / "registry.json"
+            registry.write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "records": [
+                            {"evidence_path": "evidence.json", "sha256": digest}
+                        ],
+                    }
+                )
+            )
+            report = validate_execution_evidence_registry(root, registry, SUITE)
+            self.assertEqual("valid", report["status"])
+            self.assertEqual(1, report["records"][0]["runs"])
+            self.assertEqual(["test-release"], report["release_ids"])
+            self.assertEqual("unbound", report["release_relation"])
+            self.assertEqual(
+                "current",
+                execution_evidence_release_relation(report, "test-release"),
+            )
+            self.assertEqual(
+                "historical",
+                execution_evidence_release_relation(report, "new-release"),
+            )
+            mixed = report | {"release_ids": ["old-release", "test-release"]}
+            self.assertEqual(
+                "mixed",
+                execution_evidence_release_relation(mixed, "test-release"),
+            )
+            evidence.write_text("{}")
+            with self.assertRaisesRegex(BehaviorEvidenceError, "digest 不匹配"):
+                validate_execution_evidence_registry(root, registry, SUITE)
+
+    def test_execution_registry_rejects_evidence_without_any_runs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            evidence = root / "evidence.json"
+            record = self._record()
+            record["runs"] = []
+            evidence.write_text(json.dumps(record))
+            digest = hashlib.sha256(evidence.read_bytes()).hexdigest()
+            registry = root / "registry.json"
+            registry.write_text(json.dumps({
+                "version": 1,
+                "records": [{"evidence_path": "evidence.json", "sha256": digest}],
+            }))
+            with self.assertRaisesRegex(BehaviorEvidenceError, "不含运行记录"):
+                validate_execution_evidence_registry(root, registry, SUITE)
+
+    def test_execution_registry_rejects_paths_outside_repository(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            root.mkdir()
+            registry = root / "registry.json"
+            registry.write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "records": [
+                            {"evidence_path": "../evidence.json", "sha256": "0" * 64}
+                        ],
+                    }
+                )
+            )
+            with self.assertRaisesRegex(BehaviorEvidenceError, "越出仓库"):
+                validate_execution_evidence_registry(root, registry, SUITE)
+
+    def test_execution_registry_requires_relative_path_and_hex_digest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            registry = root / "registry.json"
+            for evidence_path, digest in (
+                (str(root / "evidence.json"), "0" * 64),
+                ("evidence.json", "z" * 64),
+            ):
+                registry.write_text(json.dumps({
+                    "version": 1,
+                    "records": [{"evidence_path": evidence_path, "sha256": digest}],
+                }))
+                with self.subTest(evidence_path=evidence_path, digest=digest):
+                    with self.assertRaisesRegex(BehaviorEvidenceError, "标识无效"):
+                        validate_execution_evidence_registry(root, registry, SUITE)
 
     def test_pass_is_not_bound_to_one_model(self):
         with tempfile.TemporaryDirectory() as tmp:

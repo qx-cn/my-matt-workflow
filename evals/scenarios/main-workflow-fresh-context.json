@@ -26,10 +26,10 @@
     "version": 1,
     "scenario": "main-workflow-fresh-context",
     "sources": [
-      {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:c4e72aa41412855f8932382bddbab921c1817d4df10893f5542da29928d5c0cb"},
-      {"path": "skills/my-to-spec/SKILL.md", "sha256": "sha256:5b85b0aa5333a2ce4940240dcbccc956d1ad68655d9a45a9f6eb3adf6a7a52b1"},
-      {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:9336278d9de6d07adcdb8bde394de159a328c41f9f40b2d6539769d233246ecd"},
-      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:13632f7bf7a17532c7b3428d34765c0a2d3566888568fd9d6f0f38bd58f074c6"},
+      {"path": "skills/my-grill-with-docs/SKILL.md", "sha256": "sha256:cc727499b7b2018a400992afd3b6eb0644e393f122db017e7277338494c7debd"},
+      {"path": "skills/my-to-spec/SKILL.md", "sha256": "sha256:bc4043c301f1a915f23b0925bd1dd979cae87eae82c21585ba5fd5ed46d68426"},
+      {"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:6a4e6dd843579ea60d6b9aee77437876e3f52f353e8758645fa5f2ed1276f3cf"},
+      {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:15ce61a84c7cdcb574cc512bd8e8e40411bb74f94d6540e1342ba4f38796cfe6"},
       {"path": "skills/my-test-report/SKILL.md", "sha256": "sha256:3188710f22c085d061c7ca7153418d4fafbacd2008cf5de738362c9856d91026"}
     ]
   }

@@ -22,9 +22,11 @@ POLICIES = {"confirm", "allow", "deny"}
 COMPOSITION_POLICIES = {"manual", "automatic"}
 WORK_SCOPE_POLICIES = {"single-ticket", "ready-frontier", "approved-plan"}
 DECISION_POLICIES = {"ask", "autonomous", "halt"}
+ASSURANCE_LEVELS = {"quick", "standard", "audited"}
 
 PROFILE_FIELD_ORDER = (
     "schema_version",
+    "assurance_level",
     "task_backend",
     "agent_directory_mode",
     "default_base_branch",
@@ -46,6 +48,7 @@ PROFILE_FIELD_ORDER = (
 
 BASE_DEFAULTS: dict[str, Any] = {
     "schema_version": 1,
+    "assurance_level": "standard",
     "task_backend": "local",
     "agent_directory_mode": "private",
     "default_base_branch": "main",
@@ -125,6 +128,11 @@ POLICY_PRESET_LABELS = {
 }
 
 POLICY_VALUE_MEANINGS: dict[str, dict[str, str]] = {
+    "assurance_level": {
+        "quick": "仅限单会话低风险工作；需求摘要、针对性测试和同会话自审",
+        "standard": "版本化 Spec；按复杂度使用 Ticket，并保留测试与审查证据",
+        "audited": "完整 Spec/Ticket 血缘、journal、冻结快照、receipt 和恢复门禁",
+    },
     "task_backend": {
         "local": "本地 `.agent/work/` 产物",
         "external": "外部 Tracker",
@@ -268,6 +276,8 @@ def format_policy_catalog() -> str:
             allowed = sorted(DECISION_POLICIES)
         elif key == "default_execution_agent":
             allowed = ["auto", *sorted(EXECUTION_AGENTS)]
+        elif key == "assurance_level":
+            allowed = ["quick", "standard", "audited"]
         else:
             allowed = []
         detail = "; ".join(
@@ -325,6 +335,7 @@ def _validate(config: dict[str, Any]) -> None:
         "work_scope_policy",
         "decision_policy",
         "default_execution_agent",
+        "assurance_level",
     ):
         if field in config and not _is_empty(config[field]) and not isinstance(config[field], str):
             raise ProfileError(f"{field} 必须是字符串")
@@ -388,6 +399,11 @@ def _validate(config: dict[str, Any]) -> None:
     )
     if execution_agent != "auto" and execution_agent not in EXECUTION_AGENTS:
         raise ProfileError("default_execution_agent 必须是 auto、codex、cursor 或 claude")
+    assurance_level = _coalesce(
+        config, "assurance_level", BASE_DEFAULTS["assurance_level"]
+    )
+    if assurance_level not in ASSURANCE_LEVELS:
+        raise ProfileError("assurance_level 必须是：audited、quick 或 standard")
     for field in (
         "branch_policy",
         "commit_policy",

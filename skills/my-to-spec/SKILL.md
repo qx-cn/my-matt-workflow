@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
 
-读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略与生效的 `humanizer_policy`。`default_execution_agent` 只用于后续 Ticket 的默认值，不为 Spec 分配执行 Agent。配置不存在时先运行 `{{skill-call:my-setup}}`。写入团队文档或外部 Tracker 前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略、生效的 `humanizer_policy` 与[开发保证等级](references/shared/adapters/assurance-levels.md)。`default_execution_agent` 只用于后续 Ticket 的默认值，不为 Spec 分配执行 Agent。配置不存在时先运行 `{{skill-call:my-setup}}`。写入团队文档或外部 Tracker 前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
 
 ## 过程
 
@@ -20,9 +20,11 @@ disable-model-invocation: true
 
 5. 使用下列模板撰写 Spec。
 
-6. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
+6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，读取[设计成立性](references/composed/my-review-design/COMPOSED.md)并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
 
-7. **写入**：根据 `task_backend` 保存：
+7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
+
+8. **写入**：仅写入 `status: current` 且已通过适用 Gate 的版本，根据 `task_backend` 保存：
    - `local`：写入 `.agent/work/<feature-slug>/specs/specs-<feature-slug>-<time-or-sequence>.md`；
    - `project-docs`：先展示补丁，确认后写入配置的项目文档位置；
    - `external`：先展示完整预览，确认后发布到配置的 Tracker；
@@ -37,7 +39,7 @@ disable-model-invocation: true
 spec_id: <稳定 feature id>
 revision: <正整数>
 supersedes: <上一版路径、URL 或空>
-status: current
+status: <draft|current>
 ---
 ```
 

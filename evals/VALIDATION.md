@@ -6,11 +6,11 @@
 2. `deterministic-contract`：`evals/scenarios/` 与历史命名的 `workflow.py smoke` 验证结构化契约及源 SHA；它不能证明模型实际遵循 Skill，也不能冒充真实业务 smoke。
 3. `fresh-agent-smoke`：让未参与实现的 Agent 在隔离项目中读取已构建 release，只凭给定输入完成工作，并保存原始输出、模型/宿主、release、结果与失败原因。只有这一层能作为 Agent 行为证据；真实业务项目仍需另行 smoke。
 
-`python3 tools/workflow.py check` 的 `valid` 只覆盖前两层。没有 fresh-agent 或真实项目运行记录时，报告必须写“未运行”，不得推断通过。
+`python3 tools/workflow.py check` 分别报告 `verification_plan` 与 `execution_evidence`。前者通过只证明待执行场景定义有效；后者只有在注册表含有 repo 内、digest 绑定、至少一次运行且 schema 有效的记录时才形成 fresh-agent 执行证据，并通过 `release_ids` / `release_relation` 区分 current、historical 与 mixed。没有 fresh-agent 或真实项目运行记录时，状态必须是 `not-recorded` / “未运行”，不得推断通过。
 
 ## Agent 行为证据
 
-`evals/agent-smokes/astra-behavior-suite.json` 定义代表性行为场景，`evals/agent-smokes/astra-evidence.schema.json` 定义记录形状；这些历史文件名和 suite id 为兼容已有证据而保留，不表示验证必须使用 Astra。实际运行结果属于任务产物，不进入源码 release；用下列命令校验：
+`evals/agent-smokes/astra-behavior-suite.json` 定义代表性行为场景，`evals/agent-smokes/astra-evidence.schema.json` 定义记录形状；这些历史文件名和 suite id 为兼容已有证据而保留，不表示验证必须使用 Astra。实际运行结果通常属于任务产物；只有 repo 内文件才可按 SHA-256 digest 登记到 `execution-evidence-registry.json`，registry 不接受外部路径，也不会把 suite 中的 planned case 当成运行结果。用下列命令校验单份证据：
 
 ```sh
 python3 tools/workflow.py validate-agent-evidence <evidence.json> --require-complete

@@ -74,11 +74,31 @@ class PortfolioContractTests(unittest.TestCase):
             path = root / "portfolio/manifest.json"
             data = json.loads(path.read_text())
             data["skills"]["my-tdd"]["evidence"]["deterministic"] = {
-                "cases": ["invented-green-case"]
+                "planned_cases": ["invented-green-case"]
             }
             path.write_text(json.dumps(data))
             with self.assertRaisesRegex(
                 PortfolioError, r"my-tdd.*未知 deterministic case"
+            ):
+                validate_portfolio(root)
+
+    def test_portfolio_calls_scenarios_plans_not_execution_evidence(self):
+        manifest = validate_portfolio(ROOT)
+        fresh = manifest.skills["my-implement"].evidence["fresh_agent"]
+        self.assertIn("planned_cases", fresh)
+        self.assertNotIn("cases", fresh)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._fixture(root)
+            path = root / "portfolio/manifest.json"
+            data = json.loads(path.read_text())
+            data["skills"]["my-implement"]["evidence"]["fresh_agent"] = {
+                "cases": ["implementation-turn-closure"]
+            }
+            path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(
+                PortfolioError, r"只能声明 planned_cases 或 exemption"
             ):
                 validate_portfolio(root)
 

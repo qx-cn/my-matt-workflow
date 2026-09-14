@@ -107,6 +107,20 @@
         "my-triage"
       ]
     },
+    "adapter-assurance-levels": {
+      "source": "resources/adapters/assurance-levels.md",
+      "release_path": "references/shared/adapters/assurance-levels.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-grill-with-docs",
+        "my-implement",
+        "my-requirement-analysis",
+        "my-setup",
+        "my-tdd",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
     "adapter-work-scope": {
       "source": "resources/adapters/work-scope.md",
       "release_path": "references/shared/adapters/work-scope.md",

@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
 
-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy`）；缺失时先运行 `{{skill-call:my-setup}}`。用户或已批准材料明确分配执行 Agent 时，该 Ticket 使用该值；否则使用项目的 `default_execution_agent`。`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy` 与[开发保证等级](references/shared/adapters/assurance-levels.md)）；缺失时先运行 `{{skill-call:my-setup}}`。`quick` 不进入本 Skill；`standard` 仅在多切片、跨上下文或存在依赖图时拆 Ticket；`audited` 必须建立完整 Ticket 血缘。用户或已批准材料明确分配执行 Agent 时，该 Ticket 使用该值；否则使用项目的 `default_execution_agent`。`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
 
 ## 过程
 

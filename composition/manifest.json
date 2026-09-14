@@ -6,12 +6,16 @@
     ],
     "my-grill-with-docs": [
       {"skill": "my-grilling", "when": "always", "kind": "method"},
-      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"}
+      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"},
+      {"skill": "my-requirement-analysis", "when": "complex-or-ambiguous-request", "kind": "method"}
     ],
     "my-implement": [
       {"skill": "my-tdd", "when": "tdd-phase", "kind": "method"},
       {"skill": "my-code-review", "when": "review-phase", "kind": "method"},
       {"skill": "my-review-design", "when": "repair-plan-phase", "kind": "method"}
+    ],
+    "my-to-spec": [
+      {"skill": "my-review-design", "when": "load-bearing-design", "kind": "method"}
     ],
     "my-prototype": [
       {"skill": "my-implement", "when": "approved-production-absorption", "kind": "handoff"}

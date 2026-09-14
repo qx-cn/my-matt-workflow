@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 
 
@@ -24,6 +25,9 @@ RUN_FIELDS = {
     "commands",
     "limitation",
 }
+
+EXECUTION_REGISTRY_FIELDS = {"version", "records"}
+EXECUTION_RECORD_FIELDS = {"evidence_path", "sha256"}
 
 
 def _read_json(path: Path) -> object:
@@ -82,6 +86,7 @@ def validate_behavior_evidence(
     ):
         raise BehaviorEvidenceError(f"{evidence_path}: evidence 头无效")
     seen: set[str] = set()
+    release_ids: set[str] = set()
     statuses: dict[str, int] = {status: 0 for status in sorted(RUN_STATUSES)}
     for run in raw["runs"]:
         if not isinstance(run, dict) or set(run) != RUN_FIELDS:
@@ -96,6 +101,7 @@ def validate_behavior_evidence(
         for field in ("model", "host", "release_id", "session_id"):
             if not isinstance(run[field], str) or not run[field]:
                 raise BehaviorEvidenceError(f"{evidence_path}: {case_id}.{field} 不能为空")
+        release_ids.add(run["release_id"])
         if status in {"pass", "fail"} and not run["raw_output"]:
             raise BehaviorEvidenceError(f"{evidence_path}: {case_id} 缺少原始输出")
         if not isinstance(run["observations"], dict) or set(run["observations"]) != set(cases[case_id]):
@@ -129,4 +135,89 @@ def validate_behavior_evidence(
         "runs": len(seen),
         "missing": missing,
         "statuses": statuses,
+        "release_ids": sorted(release_ids),
     }
+
+
+def validate_execution_evidence_registry(
+    root: Path, registry_path: Path, suite_path: Path
+) -> dict[str, object]:
+    """Validate checked-in indexes of actual behavior runs without inventing evidence."""
+    source_root = root.resolve()
+    raw = _read_json(registry_path)
+    if not isinstance(raw, dict) or set(raw) != EXECUTION_REGISTRY_FIELDS:
+        raise BehaviorEvidenceError(f"{registry_path}: execution registry 字段无效")
+    records = raw["records"]
+    if raw["version"] != 1 or not isinstance(records, list):
+        raise BehaviorEvidenceError(f"{registry_path}: execution registry 版本或 records 无效")
+
+    reports: list[dict[str, object]] = []
+    seen: set[str] = set()
+    for record in records:
+        if not isinstance(record, dict) or set(record) != EXECUTION_RECORD_FIELDS:
+            raise BehaviorEvidenceError(f"{registry_path}: execution record 字段无效")
+        relative = record["evidence_path"]
+        digest = record["sha256"]
+        if (
+            not isinstance(relative, str)
+            or not relative
+            or relative in seen
+            or Path(relative).is_absolute()
+            or not isinstance(digest, str)
+            or len(digest) != 64
+            or any(character not in "0123456789abcdef" for character in digest)
+        ):
+            raise BehaviorEvidenceError(f"{registry_path}: execution record 标识无效")
+        evidence_path = (source_root / relative).resolve()
+        try:
+            evidence_path.relative_to(source_root)
+        except ValueError as exc:
+            raise BehaviorEvidenceError(
+                f"{registry_path}: evidence_path 越出仓库：{relative}"
+            ) from exc
+        if not evidence_path.is_file():
+            raise BehaviorEvidenceError(f"{registry_path}: evidence 文件不存在：{relative}")
+        actual = hashlib.sha256(evidence_path.read_bytes()).hexdigest()
+        if actual != digest:
+            raise BehaviorEvidenceError(f"{registry_path}: evidence digest 不匹配：{relative}")
+        report = validate_behavior_evidence(suite_path, evidence_path)
+        if report["runs"] == 0:
+            raise BehaviorEvidenceError(
+                f"{registry_path}: execution evidence 不含运行记录：{relative}"
+            )
+        reports.append({"evidence_path": relative, "sha256": digest, **report})
+        seen.add(relative)
+
+    release_ids = sorted({
+        release_id
+        for report in reports
+        for release_id in report["release_ids"]
+    })
+    return {
+        "status": "valid" if reports else "not-recorded",
+        "evidence_level": "fresh-agent-execution",
+        "release_ids": release_ids,
+        "release_relation": "unbound" if reports else "not-recorded",
+        "records": reports,
+    }
+
+
+def execution_evidence_release_relation(
+    report: dict[str, object], current_release_id: str | None
+) -> str:
+    """Classify actual execution records against the selected current release."""
+    release_ids = report.get("release_ids")
+    if report.get("status") == "not-recorded":
+        return "not-recorded"
+    if not isinstance(release_ids, list) or not all(
+        isinstance(value, str) and value for value in release_ids
+    ):
+        raise BehaviorEvidenceError("execution evidence release_ids 无效")
+    if current_release_id is None:
+        return "unbound"
+    releases = set(release_ids)
+    if releases == {current_release_id}:
+        return "current"
+    if current_release_id in releases:
+        return "mixed"
+    return "historical"

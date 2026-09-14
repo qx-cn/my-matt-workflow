@@ -297,6 +297,7 @@ def command_setup(args: argparse.Namespace) -> None:
 
     defaults = {
         "schema_version": 1,
+        "assurance_level": "standard",
         "task_backend": "local",
         "agent_directory_mode": "private",
         "default_base_branch": _default_branch(repo),
@@ -314,21 +315,22 @@ def command_setup(args: argparse.Namespace) -> None:
         "domain_sources": [],
     }
     overrides = {
-            "task_backend": args.task_backend,
-            "agent_directory_mode": args.agent_directory_mode,
-            "default_base_branch": args.base_branch,
-            "branch_policy": args.branch_policy,
-            "commit_policy": args.commit_policy,
-            "external_write_policy": args.external_write_policy,
-            "docs_writeback": args.docs_writeback,
-            "humanizer_policy": getattr(args, "humanizer_policy", None),
-            "composition_policy": args.composition_policy,
-            "work_scope_policy": args.work_scope_policy,
-            "decision_policy": args.decision_policy,
-            "default_execution_agent": args.execution_agent,
-            "test_commands": args.test_command,
-            "standards_sources": args.standards_source,
-            "domain_sources": args.domain_source,
+        "assurance_level": args.assurance_level,
+        "task_backend": args.task_backend,
+        "agent_directory_mode": args.agent_directory_mode,
+        "default_base_branch": args.base_branch,
+        "branch_policy": args.branch_policy,
+        "commit_policy": args.commit_policy,
+        "external_write_policy": args.external_write_policy,
+        "docs_writeback": args.docs_writeback,
+        "humanizer_policy": getattr(args, "humanizer_policy", None),
+        "composition_policy": args.composition_policy,
+        "work_scope_policy": args.work_scope_policy,
+        "decision_policy": args.decision_policy,
+        "default_execution_agent": args.execution_agent,
+        "test_commands": args.test_command,
+        "standards_sources": args.standards_source,
+        "domain_sources": args.domain_source,
     }
     preset = get_policy_preset(args.preset) if args.preset else {}
     explicit = {key: value for key, value in overrides.items() if value is not None}
@@ -1056,6 +1058,7 @@ def _add_profile_arguments(command: argparse.ArgumentParser) -> None:
               "（兼容别名 supervised|unattended）"),
     )
     command.add_argument("--task-backend", choices=["local", "external", "project-docs", "none"])
+    command.add_argument("--assurance-level", choices=["quick", "standard", "audited"])
     command.add_argument("--agent-directory-mode", choices=["private", "shared"])
     command.add_argument("--base-branch")
     command.add_argument("--branch-policy", choices=["confirm", "allow", "deny"])
@@ -1254,6 +1257,10 @@ def parser() -> argparse.ArgumentParser:
     implementation_status_parser = sub.add_parser("implementation-status")
     implementation_status_parser.add_argument("--journal", required=True)
     implementation_status_parser.set_defaults(func=command_implementation_status)
+
+    implementation_next_parser = sub.add_parser("implementation-next-action")
+    implementation_next_parser.add_argument("--journal", required=True)
+    implementation_next_parser.set_defaults(func=command_implementation_status)
 
     run_record = sub.add_parser("run-record")
     run_record.add_argument("journal")

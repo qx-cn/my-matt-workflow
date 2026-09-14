@@ -6,17 +6,17 @@ disable-model-invocation: true
 
 # 实施
 
-把 runtime 提供的当前工作单元实现为可验证、可审查的代码。工作单元中的 Ticket、Spec、适用规则和允许范围是本次实施边界；调度、状态、恢复、写操作 gate 与内容快照由 runtime 管理，不在本 Skill 中重新编排。开始与交付遵循 [implementation session](references/shared/adapters/implementation-session.md)。
+先读取项目 `assurance_level` 并遵循[开发保证等级](references/shared/adapters/assurance-levels.md)。`quick` 以当前对话中已确认的可追溯需求摘要为工作单元，不伪造 runtime journal；完成针对性测试和同会话代码自审后按实际证据交付。`standard` 在存在 Ticket 时使用 runtime session；没有 Ticket 的单一切片以版本化 Spec 为边界并保存实际测试和 review 证据。`audited` 必须使用 runtime 提供的工作单元和完整 [implementation session](references/shared/adapters/implementation-session.md)。工作单元中的 Ticket、Spec、适用规则和允许范围始终是实施边界；使用 session 时调度、状态、恢复、写操作 gate 与内容快照由 runtime 管理，不在本 Skill 中重复编排。
 
 ## 实施方法
 
-先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。按照 [TDD 方法](references/composed/my-tdd/COMPOSED.md)逐个完成最小 red-green 切片；只实现当前行为所需内容，不预建尚未要求的抽象或能力。
+先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。行为新增或修复默认按照 [TDD 方法](references/composed/my-tdd/COMPOSED.md)完成最小 red-green 切片；符合 TDD 例外时记录依据并采用等价验证策略。只实现当前行为所需内容，不预建尚未要求的抽象或能力。
 
 每个切片运行能最快证明该行为的最小针对性测试。工作单元结束时验证受影响模块或链路；只有整份计划结束、发布或合并前、仓库规则要求，或者风险证据表明影响面扩大时，才运行完整测试套件。
 
 ## 回合完成
 
-遵循[implementation session](references/shared/adapters/implementation-session.md)的回合关闭契约。已跑局部测试、正在施工或等待下一步都只是进度；可以用 commentary 汇报，但不得因此发送 final 或结束实施。恢复、普通校验错误或 repair-plan 通过后，向 runtime 查询当前 gate，并完成它指向的闭环；只有 runtime 已登记可关闭的结果并完成适用的范围 transition，才可对用户结束回合。
+使用 runtime session 时遵循[implementation session](references/shared/adapters/implementation-session.md)的回合关闭契约。已跑局部测试、正在施工或等待下一步都只是进度；可以用 commentary 汇报，但不得因此发送 final 或结束实施。恢复、普通校验错误或 repair-plan 通过后，向 runtime 查询当前 gate，并完成它指向的闭环；只有 runtime 已登记可关闭的结果并完成适用的范围 transition，才可对用户结束回合。无 runtime session 的 quick/standard 单切片只有在验收、必要测试、自审和证据摘要全部闭合后才能结束。
 
 实现与计划出现偏差时，按语义影响处理：
 
