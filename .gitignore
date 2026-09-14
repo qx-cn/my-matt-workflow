@@ -1,5 +1,4 @@
-# Local Agent state and work artifacts
-.agent/
+# Shared Agent configuration and work artifacts are versioned in this repository.
 
 # Versioned fresh-agent fixture used by the implementation turn-closure smoke.
 !evals/fixtures/my-implement/unfinished-session/.agent/
