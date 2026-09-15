@@ -23,7 +23,7 @@
     "scenario": "artifact-review-repair-plan-method-boundary",
     "sources": [
       {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:15ce61a84c7cdcb574cc512bd8e8e40411bb74f94d6540e1342ba4f38796cfe6"},
-      {"path": "skills/my-review-design/SKILL.md", "sha256": "sha256:183ecdc3ef2f105f55f318c686c56e04ba94753c97a989a7573187929b80ef92"}
+      {"path": "skills/my-review-design/SKILL.md", "sha256": "sha256:adfbad22aa54ad4f07a726f2311408a34ffc6f869278b69cb346aedac35c5beb"}
     ]
   }
 }

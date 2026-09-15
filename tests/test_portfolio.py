@@ -17,7 +17,7 @@ class PortfolioContractTests(unittest.TestCase):
 
     def test_repository_portfolio_is_closed(self):
         manifest = validate_portfolio(ROOT)
-        self.assertEqual(37, len(manifest.skills))
+        self.assertEqual(38, len(manifest.skills))
         self.assertEqual(
             {
                 path.name
@@ -26,6 +26,25 @@ class PortfolioContractTests(unittest.TestCase):
             },
             set(manifest.skills),
         )
+
+    def test_first_principles_review_is_explicit_specialist_with_contract_evidence(self):
+        manifest = validate_portfolio(ROOT)
+        skill = manifest.skills["my-first-principles-review"]
+        self.assertEqual("specialist", skill.discoverability)
+        self.assertEqual(frozenset({"entry", "review"}), skill.roles)
+        self.assertEqual(
+            7,
+            len(skill.evidence["deterministic"]["planned_cases"]),
+        )
+
+        text = (ROOT / "skills/my-first-principles-review/SKILL.md").read_text()
+        self.assertIn("disable-model-invocation: true", text)
+        self.assertIn("first-principles-reasoning.md", text)
+
+    def test_ticket_contract_preserves_coverage_and_expand_contract_exception(self):
+        text = (ROOT / "skills/my-to-tickets/SKILL.md").read_text()
+        self.assertIn("acceptance coverage", text)
+        self.assertIn("expand–contract", text)
 
     def test_router_macro_edges_are_bidirectional(self):
         with tempfile.TemporaryDirectory() as tmp:

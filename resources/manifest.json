@@ -37,6 +37,18 @@
         "my-artifact-finalization"
       ]
     },
+    "first-principles-reasoning": {
+      "source": "resources/first-principles-reasoning.md",
+      "release_path": "references/shared/first-principles-reasoning.md",
+      "consumers": [
+        "my-first-principles-review",
+        "my-grill-with-docs",
+        "my-review-design",
+        "my-review-skill",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
     "visual-communication": {
       "source": "resources/visual-communication.md",
       "release_path": "references/shared/visual-communication.md",
@@ -85,6 +97,7 @@
         "my-diagnosing-bugs",
         "my-domain-modeling",
         "my-edit-article",
+        "my-grilling",
         "my-to-tickets"
       ]
     },

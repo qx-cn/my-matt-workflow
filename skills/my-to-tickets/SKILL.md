@@ -50,7 +50,7 @@ disable-model-invocation: true
 - **交付什么**：该 Ticket 端到端实现的行为。
 - **适用规则与影响区域**：规则来源、影响模块/目录/glob，以及由规则推出的实施约束。
 
-先自检粒度是否过粗或过细、阻塞边是否只依赖真正门槛，以及是否有应合并或再拆分的 Ticket。若这些都能从已批准 Spec、项目规则和代码推断，分类为 `routine`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)继续保存可审阅草稿，不要求用户再次批准机械拆分。
+先自检粒度是否过粗或过细、阻塞边是否只依赖真正门槛，以及是否有应合并或再拆分的 Ticket。再建立不写入 Ticket 正文的 acceptance coverage：源 Spec 的每项验收至少有一个明确 owner，所有 Ticket 验收都能回指源验收或经批准的实施约束，不存在遗漏或无授权重复。按[第一性原理推理](references/shared/first-principles-reasoning.md)检查每个普通功能切片的端到端行为是否对验收作出必要贡献；保留上文大范围机械重构的 expand–contract 例外，不要求迁移批次直接产生新的用户可见能力。若这些都能从已批准 Spec、项目规则和代码推断，分类为 `routine`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)继续保存可审阅草稿，不要求用户再次批准机械拆分。
 
 只有拆分暴露出会改变目标、范围、公开接口、数据语义、测试投入或风险承担的未知时，才分类为 `consequential` 并执行 `decision-gate`；`confirm` 时连同编号方案和具体分歧询问，`allow` 时记录依据后继续，`pause` 时停止。用户专属产品取舍分类为 `user-exclusive`，不得由自动策略决定。
 

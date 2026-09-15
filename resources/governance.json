@@ -13,6 +13,10 @@
       "kind": "reviewable-rule",
       "review_skill": "my-artifact-finalization"
     },
+    "resources/first-principles-reasoning.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-first-principles-review"
+    },
     "resources/visual-communication.md": {
       "kind": "reviewable-rule",
       "review_skill": "my-visual-communication"

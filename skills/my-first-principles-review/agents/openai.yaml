@@ -1,0 +1,6 @@
+interface:
+  display_name: "First Principles Review"
+  short_description: "Test whether a proposal works from fundamentals"
+  default_prompt: "Use $my-first-principles-review to assess whether this proposal is fundamentally sound."
+policy:
+  allow_implicit_invocation: false

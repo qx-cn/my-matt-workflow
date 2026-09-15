@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "id": "first-principles-unnecessary-complexity",
+  "type": "first-principles-review-contract",
+  "skills": ["my-first-principles-review"],
+  "input": {"goal_grounded": true, "facts_traceable": true, "constraints_authoritative": true, "causal_chain_complete": true, "smaller_equivalent_exists": true, "prediction_falsifiable": true, "acceptance_detects_failure": true},
+  "expected": {"verdict": "VIOLATES", "rule": "unnecessary-complexity", "next": "adopt-or-disprove-smaller-alternative"},
+  "evidence": {"version": 1, "scenario": "first-principles-unnecessary-complexity", "sources": [{"path": "skills/my-first-principles-review/SKILL.md", "sha256": "sha256:e9ef9d174fe9757fcad824f929bd1c13b6d14c6e6eadaef27a6b060d552c3df0"}]}
+}

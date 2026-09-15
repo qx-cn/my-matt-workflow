@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "id": "ticket-horizontal-slice-rejected",
+  "type": "ticket-slicing-contract",
+  "skills": ["my-to-tickets"],
+  "input": {"spec_acceptance": 3, "owned_acceptance": 3, "unauthorized_duplicates": 0, "slice_kind": "horizontal", "mechanical_refactor": false, "backward_compatible": false, "expand_contract_green": false, "dependencies_real": true},
+  "expected": {"status": "stop", "rule": "vertical-slice", "next": "restore-independent-acceptance"},
+  "evidence": {"version": 1, "scenario": "ticket-horizontal-slice-rejected", "sources": [{"path": "skills/my-to-tickets/SKILL.md", "sha256": "sha256:6b2c79d8934ae53d0fb80e30292ea7bd5ef2f1156620fe6c96238ca156ecb61d"}]}
+}

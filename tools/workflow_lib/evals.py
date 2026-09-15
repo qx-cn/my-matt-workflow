@@ -38,6 +38,18 @@ REQUIRED_SCENARIOS = frozenset(
         "implementation-turn-single-ticket-complete",
         "implementation-turn-ready-frontier-continue",
         "implementation-turn-repair-limit-blocked",
+        "first-principles-goal-substitution",
+        "first-principles-pseudo-constraint",
+        "first-principles-unnecessary-complexity",
+        "first-principles-causal-gap",
+        "first-principles-evidence-mismatch",
+        "first-principles-sound-proposal",
+        "ticket-horizontal-slice-rejected",
+        "ticket-expand-contract-accepted",
+        "ticket-vertical-slice-accepted",
+        "first-principles-evidence-over-falsifiability",
+        "ticket-expand-contract-requires-compatibility",
+        "ticket-integrate-and-verify-fallback",
     }
 )
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -56,6 +68,8 @@ _SCENARIO_TYPES = frozenset(
         "requirement-analysis-contract",
         "implementation-review-contract",
         "implementation-turn-closure-contract",
+        "first-principles-review-contract",
+        "ticket-slicing-contract",
     }
 )
 
@@ -682,6 +696,158 @@ def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str,
     }
 
 
+def _evaluate_first_principles_review_contract(
+    input_value: dict[str, object],
+) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "goal_grounded",
+            "facts_traceable",
+            "constraints_authoritative",
+            "causal_chain_complete",
+            "smaller_equivalent_exists",
+            "prediction_falsifiable",
+            "acceptance_detects_failure",
+        },
+        "first-principles-review-contract.input",
+    )
+    if not all(isinstance(value, bool) for value in case.values()):
+        raise EvalError(
+            "first-principles-review-contract.input: all fields must be booleans"
+        )
+    if not case["facts_traceable"]:
+        return {
+            "verdict": "INCONCLUSIVE",
+            "rule": "evidence-gap",
+            "next": "locate-load-bearing-facts",
+        }
+    if not case["goal_grounded"]:
+        return {
+            "verdict": "VIOLATES",
+            "rule": "goal-substitution",
+            "next": "restore-observable-user-goal",
+        }
+    if not case["constraints_authoritative"]:
+        return {
+            "verdict": "VIOLATES",
+            "rule": "pseudo-constraint",
+            "next": "remove-or-confirm-constraint",
+        }
+    if not case["causal_chain_complete"]:
+        return {
+            "verdict": "VIOLATES",
+            "rule": "causal-gap",
+            "next": "repair-goal-to-result-chain",
+        }
+    if case["smaller_equivalent_exists"]:
+        return {
+            "verdict": "VIOLATES",
+            "rule": "unnecessary-complexity",
+            "next": "adopt-or-disprove-smaller-alternative",
+        }
+    if not case["acceptance_detects_failure"]:
+        return {
+            "verdict": "VIOLATES",
+            "rule": "evidence-mismatch",
+            "next": "align-acceptance-with-failure",
+        }
+    if not case["prediction_falsifiable"]:
+        return {
+            "verdict": "HOLDS_WITH_GAPS",
+            "rule": "falsifiability-gap",
+            "next": "define-disconfirming-observation",
+        }
+    return {
+        "verdict": "HOLDS",
+        "rule": "fundamentally-sound",
+        "next": "retain-proposal",
+    }
+
+
+def _evaluate_ticket_slicing_contract(input_value: dict[str, object]) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "spec_acceptance",
+            "owned_acceptance",
+            "unauthorized_duplicates",
+            "slice_kind",
+            "mechanical_refactor",
+            "backward_compatible",
+            "expand_contract_green",
+            "dependencies_real",
+        },
+        "ticket-slicing-contract.input",
+    )
+    for field in ("spec_acceptance", "owned_acceptance", "unauthorized_duplicates"):
+        if not isinstance(case[field], int) or isinstance(case[field], bool) or case[field] < 0:
+            raise EvalError(f"ticket-slicing-contract.input.{field}: must be non-negative")
+    if case["slice_kind"] not in {"vertical", "horizontal"}:
+        raise EvalError(
+            "ticket-slicing-contract.input.slice_kind: must be vertical or horizontal"
+        )
+    for field in (
+        "mechanical_refactor",
+        "backward_compatible",
+        "expand_contract_green",
+        "dependencies_real",
+    ):
+        if not isinstance(case[field], bool):
+            raise EvalError(f"ticket-slicing-contract.input.{field}: must be boolean")
+    if case["owned_acceptance"] != case["spec_acceptance"]:
+        return {
+            "status": "stop",
+            "rule": "acceptance-coverage",
+            "next": "assign-each-source-acceptance",
+        }
+    if case["unauthorized_duplicates"]:
+        return {
+            "status": "stop",
+            "rule": "single-acceptance-owner",
+            "next": "remove-or-authorize-duplicates",
+        }
+    if not case["dependencies_real"]:
+        return {
+            "status": "stop",
+            "rule": "real-blocking-edge",
+            "next": "remove-artificial-dependency",
+        }
+    if case["slice_kind"] == "horizontal":
+        if case["mechanical_refactor"] and not case["backward_compatible"]:
+            return {
+                "status": "stop",
+                "rule": "expand-contract-compatibility",
+                "next": "preserve-old-form-during-migration",
+            }
+        if (
+            case["mechanical_refactor"]
+            and case["backward_compatible"]
+            and case["expand_contract_green"]
+        ):
+            return {
+                "status": "valid",
+                "rule": "expand-contract-exception",
+                "next": "retain-green-migration-slice",
+            }
+        if case["mechanical_refactor"] and case["backward_compatible"]:
+            return {
+                "status": "valid",
+                "rule": "integrate-and-verify-fallback",
+                "next": "add-final-integrate-and-verify-ticket",
+            }
+        return {
+            "status": "stop",
+            "rule": "vertical-slice",
+            "next": "restore-independent-acceptance",
+        }
+    return {
+        "status": "valid",
+        "rule": "acceptance-owned-vertical-slice",
+        "next": "save-ticket-set",
+    }
+
+
 def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
     """Execute one structured deterministic scenario and assert its exact outcome."""
     evaluators = {
@@ -697,6 +863,8 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "requirement-analysis-contract": _evaluate_requirement_analysis_contract,
         "implementation-review-contract": _evaluate_implementation_review_contract,
         "implementation-turn-closure-contract": _evaluate_implementation_turn_closure_contract,
+        "first-principles-review-contract": _evaluate_first_principles_review_contract,
+        "ticket-slicing-contract": _evaluate_ticket_slicing_contract,
     }
     outcome = evaluators[scenario.case_type](scenario.input)
     if outcome != scenario.expected:

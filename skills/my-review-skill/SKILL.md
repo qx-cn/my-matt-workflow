@@ -39,7 +39,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 
 ### 4. 审查因果机制与边界
 
-对承重指令建立“指令 → Agent 判断 → 动作 → 可观察结果 → 用户结果”链；断链是无效操作、仪式步骤或错误补偿的候选。再把模型判断、共享规则、机械操作、硬不变量和产物模板分别归到 Skill、shared reference、script、runtime 和 asset，检查调用方式、职责所有权、事实来源及与宿主规则的冲突。
+对承重指令应用[第一性原理推理](references/shared/first-principles-reasoning.md)，建立从指令、Agent 判断和动作到可观察结果与用户结果的因果链，并用最小反事实检查 Skill 或额外规则是否真的增加结果可靠性；断链是无效操作、仪式步骤或错误补偿的候选。再把模型判断、共享规则、机械操作、硬不变量和产物模板分别归到 Skill、shared reference、script、runtime 和 asset，检查调用方式、职责所有权、事实来源及与宿主规则的冲突。
 
 完成条件：主要机制能解释用户价值，每项承重职责只有一个合理归宿。
 

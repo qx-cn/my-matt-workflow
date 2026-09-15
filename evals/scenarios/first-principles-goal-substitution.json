@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "id": "first-principles-goal-substitution",
+  "type": "first-principles-review-contract",
+  "skills": ["my-first-principles-review"],
+  "input": {"goal_grounded": false, "facts_traceable": true, "constraints_authoritative": true, "causal_chain_complete": true, "smaller_equivalent_exists": false, "prediction_falsifiable": true, "acceptance_detects_failure": true},
+  "expected": {"verdict": "VIOLATES", "rule": "goal-substitution", "next": "restore-observable-user-goal"},
+  "evidence": {"version": 1, "scenario": "first-principles-goal-substitution", "sources": [{"path": "skills/my-first-principles-review/SKILL.md", "sha256": "sha256:e9ef9d174fe9757fcad824f929bd1c13b6d14c6e6eadaef27a6b060d552c3df0"}]}
+}

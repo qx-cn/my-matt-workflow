@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 19,
-                "required_scenarios": 18,
+                "scenarios": 31,
+                "required_scenarios": 30,
             },
             validate_evals(ROOT),
         )
@@ -591,7 +591,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    37, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    38, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
                 original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
@@ -615,5 +615,5 @@ class FullReleaseE2ETests(unittest.TestCase):
                     original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    37, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    38, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
