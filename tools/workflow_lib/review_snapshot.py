@@ -47,11 +47,26 @@ def _base_manifest(repo: Path, commit: str) -> dict[str, tuple[str, str]]:
     return manifest
 
 
+def _index_manifest(repo: Path) -> dict[str, tuple[str, str]]:
+    manifest: dict[str, tuple[str, str]] = {}
+    for item in _git(repo, "ls-files", "--stage", "-z").split(b"\0"):
+        if not item:
+            continue
+        metadata, raw_path = item.split(b"\t", 1)
+        mode, object_id, stage = metadata.decode("ascii").split(" ")
+        if stage != "0":
+            raise ReviewSnapshotError(
+                f"存在未解决的 index 冲突，无法快照：{os.fsdecode(raw_path)}"
+            )
+        manifest[os.fsdecode(raw_path)] = (mode, object_id)
+    return manifest
+
+
 def _blob_id(repo: Path, content: bytes) -> str:
     return _git(repo, "hash-object", "--stdin", input_bytes=content).decode("ascii").strip()
 
 
-def _current_entry(repo: Path, relative_path: str) -> tuple[str, str] | None:
+def _plain_entry(repo: Path, relative_path: str) -> tuple[str, str] | None:
     path = repo / relative_path
     if not os.path.lexists(path):
         return None
@@ -60,13 +75,83 @@ def _current_entry(repo: Path, relative_path: str) -> tuple[str, str] | None:
     if path.is_file():
         mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
         return mode, _blob_id(repo, path.read_bytes())
-    if path.is_dir() and (path / ".git").exists():
-        object_id = _git(path, "rev-parse", "HEAD").decode("ascii").strip()
-        return "160000", object_id
     raise ReviewSnapshotError(f"无法快照非常规路径：{relative_path}")
 
 
-def _source_paths(repo: Path, merge_base: str) -> dict[str, list[str]]:
+def _gitlink_entry(
+    repo: Path, relative_path: str, index_object_id: str
+) -> tuple[str, str]:
+    path = repo / relative_path
+    if not (path / ".git").exists():
+        return "160000", index_object_id
+    try:
+        object_id = _git(path, "rev-parse", "--verify", "HEAD").decode("ascii").strip()
+    except ReviewSnapshotError as exc:
+        raise ReviewSnapshotError(
+            f"父仓 gitlink 没有可解析 HEAD：{relative_path}"
+        ) from exc
+    if _git(path, "status", "--porcelain=v1", "-z", "--untracked-files=all"):
+        raise ReviewSnapshotError(
+            f"父仓 gitlink 含未绑定到 commit 的工作树内容：{relative_path}"
+        )
+    return "160000", object_id
+
+
+def _prefixed(prefix: str, relative_path: str) -> str:
+    return f"{prefix}/{relative_path}" if prefix else relative_path
+
+
+def _worktree_manifest(
+    repo: Path, *, prefix: str = "", seen: set[Path] | None = None
+) -> dict[str, tuple[str, str]]:
+    """Describe final worktree bytes, expanding untracked embedded repositories."""
+    resolved = repo.resolve()
+    visited = seen if seen is not None else set()
+    if resolved in visited:
+        raise ReviewSnapshotError(f"检测到循环嵌套 Git 工作树：{repo}")
+    visited.add(resolved)
+    try:
+        manifest: dict[str, tuple[str, str]] = {}
+        index = _index_manifest(repo)
+        for relative_path, (mode, object_id) in sorted(index.items()):
+            display_path = _prefixed(prefix, relative_path)
+            entry = (
+                _gitlink_entry(repo, relative_path, object_id)
+                if mode == "160000"
+                else _plain_entry(repo, relative_path)
+            )
+            if entry is not None:
+                manifest[display_path] = entry
+
+        untracked = _paths(
+            _git(repo, "ls-files", "--others", "--exclude-standard", "-z")
+        )
+        for raw_path in sorted(untracked):
+            relative_path = raw_path.rstrip("/")
+            path = repo / relative_path
+            display_path = _prefixed(prefix, relative_path)
+            if path.is_dir() and not path.is_symlink() and (path / ".git").exists():
+                embedded = _worktree_manifest(
+                    path, prefix=display_path, seen=visited
+                )
+                collision = set(manifest) & set(embedded)
+                if collision:
+                    raise ReviewSnapshotError(
+                        f"嵌套 Git 路径与父仓清单冲突：{sorted(collision)[0]}"
+                    )
+                manifest.update(embedded)
+                continue
+            entry = _plain_entry(repo, relative_path)
+            if entry is not None:
+                manifest[display_path] = entry
+        return manifest
+    finally:
+        visited.remove(resolved)
+
+
+def _source_paths(
+    repo: Path, merge_base: str, *, untracked: list[str]
+) -> dict[str, list[str]]:
     return {
         "committed": _paths(
             _git(repo, "diff", "--name-only", "-z", merge_base, "HEAD", "--")
@@ -75,9 +160,7 @@ def _source_paths(repo: Path, merge_base: str) -> dict[str, list[str]]:
             _git(repo, "diff", "--cached", "--name-only", "-z", "HEAD", "--")
         ),
         "unstaged": _paths(_git(repo, "diff", "--name-only", "-z", "--")),
-        "untracked": _paths(
-            _git(repo, "ls-files", "--others", "--exclude-standard", "-z")
-        ),
+        "untracked": untracked,
     }
 
 
@@ -103,13 +186,13 @@ def build_review_snapshot(repo: Path, fixed_point: str) -> dict[str, object]:
     merge_base = _git(repo, "merge-base", resolved_fixed, head).decode("ascii").strip()
 
     base = _base_manifest(repo, merge_base)
-    current_paths = set(
-        _paths(_git(repo, "ls-files", "-z", "--cached", "--others", "--exclude-standard"))
-    )
+    current = _worktree_manifest(repo)
+    root_index_paths = set(_index_manifest(repo))
+    expanded_untracked = sorted(set(current) - root_index_paths)
     changes: list[dict[str, object]] = []
-    for relative_path in sorted(set(base) | current_paths):
+    for relative_path in sorted(set(base) | set(current)):
         base_entry = base.get(relative_path)
-        current_entry = _current_entry(repo, relative_path)
+        current_entry = current.get(relative_path)
         if base_entry == current_entry:
             continue
         if base_entry is None:
@@ -136,7 +219,7 @@ def build_review_snapshot(repo: Path, fixed_point: str) -> dict[str, object]:
         )
 
     content_payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "merge_base": merge_base,
         "changes": changes,
     }
@@ -148,6 +231,7 @@ def build_review_snapshot(repo: Path, fixed_point: str) -> dict[str, object]:
     ).encode("utf-8")
     clean = not bool(_git(repo, "status", "--porcelain=v1", "-z"))
     return {
+        "schema_version": 2,
         "status": "ready" if changes else "empty",
         "repo": str(repo),
         "fixed_point": fixed_point,
@@ -156,6 +240,8 @@ def build_review_snapshot(repo: Path, fixed_point: str) -> dict[str, object]:
         "head": head,
         "content_id": hashlib.sha256(encoded).hexdigest(),
         "clean": clean,
-        "change_sources": _source_paths(repo, merge_base),
+        "change_sources": _source_paths(
+            repo, merge_base, untracked=expanded_untracked
+        ),
         "changes": changes,
     }

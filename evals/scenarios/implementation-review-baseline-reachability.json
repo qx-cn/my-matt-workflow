@@ -20,7 +20,7 @@
     "scenario": "implementation-review-baseline-reachability",
     "sources": [
       {"path": "skills/my-implement/SKILL.md", "sha256": "sha256:15ce61a84c7cdcb574cc512bd8e8e40411bb74f94d6540e1342ba4f38796cfe6"},
-      {"path": "skills/my-code-review/SKILL.md", "sha256": "sha256:457f0776f4372527433e248a208aec50999cbc258fa5316cd1d15a81b36eb630"}
+      {"path": "skills/my-code-review/SKILL.md", "sha256": "sha256:4effff4adaf204217a18716f118dd6f91c72dfc197f6358cf5cdc83d0d3e4782"}
     ]
   }
 }

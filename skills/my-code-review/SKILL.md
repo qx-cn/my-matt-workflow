@@ -23,7 +23,7 @@ disable-model-invocation: true
 
 独立调用时，用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。组合模式改为验证审查单元的 `method`、`review_id`、`code_content_id`、`ticket_boundary` 与 artifacts，并从只读 snapshot 取证。
 
-快照必须覆盖 committed、staged、unstaged 与 untracked 内容：以 `git diff --binary <merge_base>` 读取所有 tracked 最终内容，以 `git log <merge_base>..HEAD --oneline` 读取 Commit 上下文，并读取 `change_sources.untracked` 中每个路径的完整内容。二进制或无法直接阅读的文件记录类型、大小与可用检查结果，不得静默跳过。
+快照必须覆盖 committed、staged、unstaged 与 untracked 内容：以 `git diff --binary <merge_base>` 读取所有 tracked 最终内容，以 `git log <merge_base>..HEAD --oneline` 读取 Commit 上下文，并读取 `change_sources.untracked` 中每个路径的完整内容。父仓未跟踪的嵌套 Git 工作树会在 receipt 中展开为逐文件路径，包括没有 HEAD 的 private workspace；只读取这些展开路径，不把目录占位或嵌套仓 HEAD 当成文件内容。二进制或无法直接阅读的文件记录类型、大小与可用检查结果，不得静默跳过。
 
 两个维度必须使用同一 `content_id` 和 `changes` 路径集合。坏 ref 或 `status: empty` 在此失败；任何内容变化都要重建快照并重跑两个维度，旧 receipt 立即失效。
 

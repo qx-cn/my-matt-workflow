@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.workflow_lib.review_snapshot import build_review_snapshot
+from tools.workflow_lib.review_snapshot import ReviewSnapshotError, build_review_snapshot
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -119,6 +119,87 @@ class ReviewSnapshotTests(unittest.TestCase):
             )
             self.assertEqual(0, verified.returncode, verified.stderr)
             self.assertEqual("match", json.loads(verified.stdout)["status"])
+
+    def test_snapshot_expands_unborn_embedded_repository(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, baseline = self._repo(tmp)
+            embedded = repo / ".agent"
+            embedded.mkdir()
+            self._git(embedded, "init", "-q")
+            spec = embedded / "spec.md"
+            spec.write_text("# Spec\n")
+
+            before = build_review_snapshot(repo, baseline)
+
+            self.assertEqual(2, before["schema_version"])
+            self.assertEqual("ready", before["status"])
+            self.assertEqual([".agent/spec.md"], before["change_sources"]["untracked"])
+            self.assertEqual(
+                {".agent/spec.md"},
+                {change["path"] for change in before["changes"]},
+            )
+            self.assertNotIn(".agent/.git", json.dumps(before))
+
+            self._git(embedded, "add", "spec.md")
+            staged = build_review_snapshot(repo, baseline)
+            self.assertEqual(before["content_id"], staged["content_id"])
+
+            spec.write_text("# Changed Spec\n")
+            changed = build_review_snapshot(repo, baseline)
+            self.assertNotEqual(before["content_id"], changed["content_id"])
+
+    def test_snapshot_expands_committed_embedded_repository_and_honors_ignores(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, baseline = self._repo(tmp)
+            embedded = repo / ".agent"
+            embedded.mkdir()
+            self._git(embedded, "init", "-q")
+            self._git(embedded, "config", "user.email", "nested@example.com")
+            self._git(embedded, "config", "user.name", "Nested Test")
+            (embedded / ".gitignore").write_text("ignored.txt\n")
+            (embedded / "tracked.md").write_text("committed\n")
+            self._git(embedded, "add", ".gitignore", "tracked.md")
+            self._git(embedded, "commit", "-qm", "nested baseline")
+            (embedded / "tracked.md").write_text("modified\n")
+            (embedded / "untracked.md").write_text("new\n")
+            (embedded / "ignored.txt").write_text("ignored\n")
+
+            snapshot = build_review_snapshot(repo, baseline)
+            paths = {change["path"] for change in snapshot["changes"]}
+
+            self.assertEqual(
+                {".agent/.gitignore", ".agent/tracked.md", ".agent/untracked.md"},
+                paths,
+            )
+            self.assertNotIn(".agent/ignored.txt", paths)
+
+    def test_parent_owned_gitlink_stays_gitlink_and_rejects_dirty_content(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, baseline = self._repo(tmp)
+            embedded = repo / "vendor"
+            embedded.mkdir()
+            self._git(embedded, "init", "-q")
+            self._git(embedded, "config", "user.email", "nested@example.com")
+            self._git(embedded, "config", "user.name", "Nested Test")
+            (embedded / "library.txt").write_text("library\n")
+            self._git(embedded, "add", "library.txt")
+            self._git(embedded, "commit", "-qm", "library")
+            nested_head = self._git(embedded, "rev-parse", "HEAD")
+            self._git(repo, "add", "vendor")
+
+            snapshot = build_review_snapshot(repo, baseline)
+            vendor = next(
+                change for change in snapshot["changes"] if change["path"] == "vendor"
+            )
+            self.assertEqual(
+                {"mode": "160000", "object_id": nested_head}, vendor["current"]
+            )
+
+            (embedded / "dirty.txt").write_text("dirty\n")
+            with self.assertRaisesRegex(
+                ReviewSnapshotError, "gitlink 含未绑定到 commit 的工作树内容：vendor"
+            ):
+                build_review_snapshot(repo, baseline)
 
 
 if __name__ == "__main__":
