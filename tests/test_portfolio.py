@@ -17,7 +17,7 @@ class PortfolioContractTests(unittest.TestCase):
 
     def test_repository_portfolio_is_closed(self):
         manifest = validate_portfolio(ROOT)
-        self.assertEqual(38, len(manifest.skills))
+        self.assertEqual(39, len(manifest.skills))
         self.assertEqual(
             {
                 path.name
@@ -239,6 +239,19 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn("争议命题", review)
         self.assertIn("预计成本", review)
         self.assertIn("用户明确授权", review)
+
+    def test_agent_rule_review_is_explicit_and_root_first(self):
+        manifest = validate_portfolio(ROOT)
+        review = manifest.skills["my-review-agent-rules"]
+        self.assertEqual("routed", review.discoverability)
+        self.assertEqual(frozenset({"entry", "review"}), review.roles)
+        text = (ROOT / "skills/my-review-agent-rules/SKILL.md").read_text()
+        self.assertIn("disable-model-invocation: true", text)
+        self.assertIn("Rule Set Survey", text)
+        self.assertIn("Rule Contract", text)
+        self.assertIn("REPLACE_WITH_RUNTIME", text)
+        self.assertIn("references/shared/adapters/specialized-review-session.md", text)
+        self.assertLess(text.index("判断存在价值与归宿"), text.index("最后检查指令设计"))
 
     def test_ticket_templates_are_progressively_disclosed_by_backend(self):
         skill = (ROOT / "skills/my-to-tickets/SKILL.md").read_text()

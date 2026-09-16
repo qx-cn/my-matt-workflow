@@ -27,6 +27,7 @@ REQUIRED_SCENARIOS = frozenset(
         "main-workflow-fresh-context",
         "artifact-review-method-boundary",
         "skill-review-root-before-wording",
+        "agent-rule-review-root-before-wording",
         "handoff-round-trip",
         "handoff-draft-not-deliver",
         "handoff-goal-mismatch",
@@ -69,6 +70,7 @@ _SCENARIO_TYPES = frozenset(
         "main-workflow-contract",
         "artifact-review-contract",
         "skill-review-contract",
+        "agent-rule-review-contract",
         "handoff-contract",
         "requirement-analysis-contract",
         "implementation-review-contract",
@@ -774,6 +776,137 @@ def _evaluate_skill_review_contract(input_value: dict[str, object]) -> dict[str,
     }
 
 
+def _evaluate_agent_rule_review_contract(
+    input_value: dict[str, object],
+) -> dict[str, object]:
+    case = _require_fields(
+        input_value,
+        {
+            "fixed_review_unit",
+            "runtime_snapshot_ready",
+            "inventory_complete",
+            "rule_contract_complete",
+            "destination_gate_complete",
+            "host_semantics_complete",
+            "walkthrough_coverage_complete",
+            "snapshot_verified",
+            "evidence_level",
+            "comparative_dispute",
+            "user_authorized_comparative",
+            "root_causes",
+            "foundational_findings",
+            "editorial_candidates",
+            "disposition",
+            "declared_verdict",
+        },
+        "agent-rule-review-contract.input",
+    )
+    gate_fields = (
+        "fixed_review_unit",
+        "runtime_snapshot_ready",
+        "inventory_complete",
+        "rule_contract_complete",
+        "destination_gate_complete",
+        "host_semantics_complete",
+        "walkthrough_coverage_complete",
+        "snapshot_verified",
+    )
+    if not all(isinstance(case[field], bool) for field in gate_fields):
+        raise EvalError("agent-rule-review-contract.input: gate fields must be booleans")
+    if case["evidence_level"] not in {"static", "observed", "comparative"}:
+        raise EvalError("agent-rule-review-contract.input.evidence_level: invalid level")
+    if not isinstance(case["comparative_dispute"], bool) or not isinstance(
+        case["user_authorized_comparative"], bool
+    ):
+        raise EvalError(
+            "agent-rule-review-contract.input: comparative gates must be booleans"
+        )
+    roots = case["root_causes"]
+    if not isinstance(roots, list) or not all(
+        isinstance(root, str) and root for root in roots
+    ):
+        raise EvalError(
+            "agent-rule-review-contract.input.root_causes: must be a string list"
+        )
+    for field in ("foundational_findings", "editorial_candidates"):
+        if not isinstance(case[field], int) or case[field] < 0:
+            raise EvalError(
+                f"agent-rule-review-contract.input.{field}: must be non-negative"
+            )
+    verdicts = {
+        "KEEP",
+        "TARGETED_FIX",
+        "REDESIGN",
+        "MERGE",
+        "RELOCATE",
+        "EXTERNALIZE",
+        "REPLACE_WITH_RUNTIME",
+        "RETIRE",
+        "INCONCLUSIVE",
+    }
+    if case["declared_verdict"] not in verdicts:
+        raise EvalError("agent-rule-review-contract.input.declared_verdict: invalid verdict")
+    dispositions = {
+        "no-material-issue": "KEEP",
+        "local-repair": "TARGETED_FIX",
+        "mechanism-redesign": "REDESIGN",
+        "duplicate-owner": "MERGE",
+        "wrong-location": "RELOCATE",
+        "reference-only": "EXTERNALIZE",
+        "mechanical-invariant": "REPLACE_WITH_RUNTIME",
+        "obsolete-or-harmful": "RETIRE",
+        "decisive-evidence-gap": "INCONCLUSIVE",
+    }
+    if case["disposition"] not in dispositions:
+        raise EvalError("agent-rule-review-contract.input.disposition: invalid disposition")
+    if not case["fixed_review_unit"] or not case["runtime_snapshot_ready"]:
+        return {
+            "status": "stop",
+            "rule": "fixed-review-unit",
+            "next": "build-runtime-snapshot",
+        }
+    ordered_gates = (
+        ("inventory_complete", "complete-rule-inventory", "inventory-agent-rules"),
+        ("rule_contract_complete", "rule-contract-before-wording", "reconstruct-rule-contract"),
+        ("destination_gate_complete", "destination-before-wording", "evaluate-rule-destination"),
+        ("host_semantics_complete", "resolve-host-semantics", "inspect-rule-applicability"),
+        ("walkthrough_coverage_complete", "complete-walkthrough-coverage", "map-uncovered-paths"),
+        ("snapshot_verified", "verify-review-snapshot", "finalize-review-unit"),
+    )
+    for field, rule, next_step in ordered_gates:
+        if not case[field]:
+            return {"status": "stop", "rule": rule, "next": next_step}
+    if case["evidence_level"] == "comparative" and (
+        not case["comparative_dispute"]
+        or not case["user_authorized_comparative"]
+    ):
+        return {
+            "status": "stop",
+            "rule": "authorized-disputed-comparative",
+            "next": "report-current-evidence",
+        }
+    findings = len(set(roots))
+    foundational = case["foundational_findings"]
+    if foundational > findings:
+        raise EvalError(
+            "agent-rule-review-contract.input.foundational_findings exceeds roots"
+        )
+    if case["declared_verdict"] != dispositions[case["disposition"]]:
+        return {
+            "status": "stop",
+            "rule": "verdict-matches-disposition",
+            "next": "correct-verdict",
+        }
+    return {
+        "status": "valid",
+        "rule": "root-before-wording",
+        "findings": findings,
+        "suppressed_editorial": case["editorial_candidates"] if foundational else 0,
+        "verdict": case["declared_verdict"],
+        "next": "report",
+    }
+
+
 def _evaluate_first_principles_review_contract(
     input_value: dict[str, object],
 ) -> dict[str, object]:
@@ -937,6 +1070,7 @@ def run_scenario(repo_root: Path, scenario: Scenario) -> dict[str, object]:
         "main-workflow-contract": _evaluate_main_workflow_contract,
         "artifact-review-contract": _evaluate_artifact_review_contract,
         "skill-review-contract": _evaluate_skill_review_contract,
+        "agent-rule-review-contract": _evaluate_agent_rule_review_contract,
         "handoff-contract": _evaluate_handoff_contract,
         "requirement-analysis-contract": _evaluate_requirement_analysis_contract,
         "implementation-review-contract": _evaluate_implementation_review_contract,

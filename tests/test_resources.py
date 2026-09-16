@@ -461,6 +461,31 @@ class SharedResourceTests(unittest.TestCase):
             ):
                 validate_skills(root / "skills", repo_root=root)
 
+    def test_specialized_review_session_is_bundled_for_reviewers(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in ("my-review-skill", "my-review-agent-rules"):
+                target = Path(tmp) / name
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, name, target)
+                reference = (
+                    target
+                    / "references/shared/adapters/specialized-review-session.md"
+                )
+                self.assertTrue(reference.is_file(), name)
+                self.assertIn("artifact-review-snapshot", reference.read_text())
+                self.assertIn("artifact-review-finalize", reference.read_text())
+
+            other = Path(tmp) / "my-review-design"
+            other.mkdir()
+            bundle_resources_for_skill(manifest, ROOT, "my-review-design", other)
+            self.assertFalse(
+                (
+                    other
+                    / "references/shared/adapters/specialized-review-session.md"
+                ).exists()
+            )
+
     def test_static_validation_rejects_resource_symlink_escape(self):
         with tempfile.TemporaryDirectory() as tmp:
             workspace = Path(tmp)

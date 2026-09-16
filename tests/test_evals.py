@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 36,
-                "required_scenarios": 35,
+                "scenarios": 37,
+                "required_scenarios": 36,
             },
             validate_evals(ROOT),
         )
@@ -126,6 +126,76 @@ class EvalValidationTests(unittest.TestCase):
                 input_value = {**scenario.input, field: False}
                 blocked = replace(scenario, input=input_value, expected=expected)
                 self.assertEqual(expected, run_scenario(ROOT, blocked))
+
+    def test_agent_rule_review_contract_blocks_each_incomplete_gate(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "agent-rule-review-root-before-wording"
+        )
+        gates = {
+            "runtime_snapshot_ready": {
+                "status": "stop",
+                "rule": "fixed-review-unit",
+                "next": "build-runtime-snapshot",
+            },
+            "inventory_complete": {
+                "status": "stop",
+                "rule": "complete-rule-inventory",
+                "next": "inventory-agent-rules",
+            },
+            "rule_contract_complete": {
+                "status": "stop",
+                "rule": "rule-contract-before-wording",
+                "next": "reconstruct-rule-contract",
+            },
+            "destination_gate_complete": {
+                "status": "stop",
+                "rule": "destination-before-wording",
+                "next": "evaluate-rule-destination",
+            },
+            "host_semantics_complete": {
+                "status": "stop",
+                "rule": "resolve-host-semantics",
+                "next": "inspect-rule-applicability",
+            },
+            "walkthrough_coverage_complete": {
+                "status": "stop",
+                "rule": "complete-walkthrough-coverage",
+                "next": "map-uncovered-paths",
+            },
+            "snapshot_verified": {
+                "status": "stop",
+                "rule": "verify-review-snapshot",
+                "next": "finalize-review-unit",
+            },
+        }
+        for field, expected in gates.items():
+            with self.subTest(field=field):
+                blocked = replace(
+                    scenario,
+                    input={**scenario.input, field: False},
+                    expected=expected,
+                )
+                self.assertEqual(expected, run_scenario(ROOT, blocked))
+
+    def test_agent_rule_review_verdict_must_match_disposition(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "agent-rule-review-root-before-wording"
+        )
+        expected = {
+            "status": "stop",
+            "rule": "verdict-matches-disposition",
+            "next": "correct-verdict",
+        }
+        inconsistent = replace(
+            scenario,
+            input={**scenario.input, "declared_verdict": "TARGETED_FIX"},
+            expected=expected,
+        )
+        self.assertEqual(expected, run_scenario(ROOT, inconsistent))
 
     def test_handoff_contract_does_not_fake_fresh_context(self):
         scenario = next(
@@ -650,7 +720,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    38, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    39, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
                 original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
@@ -674,5 +744,5 @@ class FullReleaseE2ETests(unittest.TestCase):
                     original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    38, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    39, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )

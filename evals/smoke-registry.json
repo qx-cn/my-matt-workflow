@@ -13,6 +13,7 @@
     "my-implement": ["rule-plan-ticket-loop", "main-workflow-fresh-context", "implementation-review-baseline-reachability", "implementation-review-repeated-root-cause", "artifact-review-repair-plan-method-boundary", "implementation-turn-active-session", "implementation-turn-single-ticket-complete", "implementation-turn-ready-frontier-continue", "implementation-turn-repair-limit-blocked"],
     "my-code-review": ["implementation-review-baseline-reachability", "implementation-review-repeated-root-cause"],
     "my-review-artifact": ["artifact-review-method-boundary", "artifact-review-design-method-boundary"],
+    "my-review-agent-rules": ["agent-rule-review-root-before-wording"],
     "my-review-design": ["artifact-review-design-method-boundary", "artifact-review-repair-plan-method-boundary"],
     "my-requirement-analysis": ["requirement-analysis-clear-request", "requirement-analysis-misleading-analogy"],
     "my-review-skill": ["skill-review-root-before-wording"],

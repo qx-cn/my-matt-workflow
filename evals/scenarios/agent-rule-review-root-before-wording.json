@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "id": "agent-rule-review-root-before-wording",
+  "type": "agent-rule-review-contract",
+  "skills": ["my-review-agent-rules"],
+  "input": {
+    "fixed_review_unit": true,
+    "runtime_snapshot_ready": true,
+    "inventory_complete": true,
+    "rule_contract_complete": true,
+    "destination_gate_complete": true,
+    "host_semantics_complete": true,
+    "walkthrough_coverage_complete": true,
+    "snapshot_verified": true,
+    "evidence_level": "static",
+    "comparative_dispute": false,
+    "user_authorized_comparative": false,
+    "root_causes": ["mechanical-policy-in-prose", "always-apply-overreach", "always-apply-overreach"],
+    "foundational_findings": 1,
+    "editorial_candidates": 3,
+    "disposition": "mechanical-invariant",
+    "declared_verdict": "REPLACE_WITH_RUNTIME"
+  },
+  "expected": {
+    "status": "valid",
+    "rule": "root-before-wording",
+    "findings": 2,
+    "suppressed_editorial": 3,
+    "verdict": "REPLACE_WITH_RUNTIME",
+    "next": "report"
+  },
+  "evidence": {
+    "version": 1,
+    "scenario": "agent-rule-review-root-before-wording",
+    "sources": [
+      {
+        "path": "skills/my-review-agent-rules/SKILL.md",
+        "sha256": "sha256:aa4bcc47dd0d0d583563c05dc99ad95b2962724fa3752dde15e1102f4ff95382"
+      }
+    ]
+  }
+}

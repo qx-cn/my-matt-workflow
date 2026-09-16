@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Agent Rules"
+  short_description: "Root-cause review for project Agent rules"
+  default_prompt: "Use $my-review-agent-rules to review this project's Agent instruction rules."
+policy:
+  allow_implicit_invocation: false

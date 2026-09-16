@@ -82,7 +82,7 @@ from workflow_lib.smoke_registry import (
     resolve_smoke_scenarios,
 )
 from workflow_lib.validator import ValidationError, validate_repository
-from workflow_lib.rules import EXECUTION_AGENTS, RuleError, resolve_rules
+from workflow_lib.rules import EXECUTION_AGENTS, RuleError, inspect_rules, resolve_rules
 from workflow_lib.tickets import (
     TICKET_STATUS_TRANSITIONS,
     TicketError,
@@ -583,6 +583,19 @@ def command_resolve_rules(args: argparse.Namespace) -> None:
     except RuleError as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps({"agent": args.agent, "rules": rules}, ensure_ascii=False, indent=2))
+
+
+def command_inspect_rules(args: argparse.Namespace) -> None:
+    try:
+        result = inspect_rules(
+            Path(args.repo),
+            args.agent,
+            args.path,
+            codex_fallback_filenames=args.codex_fallback,
+        )
+    except RuleError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 def command_decision_gate(args: argparse.Namespace) -> None:
@@ -1136,6 +1149,13 @@ def parser() -> argparse.ArgumentParser:
     resolve_rules_cmd.add_argument("--path", action="append", default=[])
     resolve_rules_cmd.add_argument("--codex-fallback", action="append", default=[])
     resolve_rules_cmd.set_defaults(func=command_resolve_rules)
+
+    inspect_rules_cmd = sub.add_parser("inspect-rules")
+    inspect_rules_cmd.add_argument("--repo", default=".")
+    inspect_rules_cmd.add_argument("--agent", choices=sorted(EXECUTION_AGENTS), required=True)
+    inspect_rules_cmd.add_argument("--path", action="append", default=[])
+    inspect_rules_cmd.add_argument("--codex-fallback", action="append", default=[])
+    inspect_rules_cmd.set_defaults(func=command_inspect_rules)
 
     decision_gate = sub.add_parser("decision-gate")
     decision_gate.add_argument("--repo", default=".")

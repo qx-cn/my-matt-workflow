@@ -77,6 +77,10 @@
       "kind": "execution-protocol",
       "validation": "tests/test_workflow.py::ProfileTests.test_runtime_sessions_are_split_and_skills_remain_semantic"
     },
+    "resources/adapters/specialized-review-session.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_specialized_review_session_is_bundled_for_reviewers"
+    },
     "policies/context-hygiene.md": {
       "kind": "execution-protocol",
       "validation": "tests/test_resources.py::SharedResourceTests.test_workflow_control_pointers_are_bundled_for_consumers"

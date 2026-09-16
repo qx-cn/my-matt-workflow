@@ -92,6 +92,11 @@
       "id": "skill-review-runtime-root-before-wording",
       "goal": "Skill 审查先处理错误职责归宿，并抑制由根因派生的措辞建议",
       "rubric": ["uses_runtime_generated_content_id", "completes_scope_inventory", "reconstructs_job_contract", "assigns_deterministic_safety_to_runtime", "covers_walkthrough_paths", "verifies_snapshot_before_report", "does_not_claim_static_effectiveness", "suppresses_editorial_nits", "provides_minimal_next_validation"]
+    },
+    {
+      "id": "agent-rule-scope-and-authority",
+      "goal": "Agent 项目规则审查先处理归宿、宿主作用域与权威冲突，再检查措辞",
+      "rubric": ["uses_runtime_generated_content_id", "inventories_all_rule_candidates", "distinguishes_target_and_non_target_paths", "preserves_manual_and_invalid_rules", "reports_authority_conflict", "assigns_mechanical_safety_to_runtime", "covers_walkthrough_paths", "verifies_snapshot_before_report", "does_not_claim_static_effectiveness", "suppresses_editorial_nits"]
     }
   ]
 }

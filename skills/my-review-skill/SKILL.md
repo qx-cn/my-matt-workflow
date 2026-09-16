@@ -21,7 +21,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 
 ### 1. 固定审查对象
 
-先解析目标宿主以及目标 Skill、`agents/`、可达 references、scripts、assets、调用者、被调用项、runtime、eval 和已知失败反馈，得到完整且按绝对路径稳定排序的文件列表。把列表中的每个文件作为重复的 `--artifact` 参数，交给安装状态记录的 `runtime_entry` 运行 `artifact-review-snapshot`；只读取返回的 `review_unit`、`content_id` 和只读 `snapshot_path`，不得自行拼接哈希或继续从 live path 取证。无法纳入快照的外部状态标记为证据缺口。
+先解析目标宿主以及目标 Skill、`agents/`、可达 references、scripts、assets、调用者、被调用项、runtime、eval 和已知失败反馈，得到完整且按绝对路径稳定排序的文件列表，再按[专项只读审查会话](references/shared/adapters/specialized-review-session.md)建立 snapshot。只读取返回的 `review_unit`、`content_id` 和只读 `snapshot_path`，不得继续从 live path 取证。
 
 完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照并重跑审查。
 
@@ -69,7 +69,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 
 ## 输出
 
-输出前，用相同的稳定排序文件列表、`content_id` 和 `snapshot_dir` 交给 `runtime_entry` 运行 `artifact-review-finalize`。只有返回 `status: match` 才可发送报告；返回 `stale` 时丢弃结论、重建快照并重跑。finalize 同时释放临时快照，不得绕过。
+输出前按专项审查会话验证并释放 snapshot。只有返回 `status: match` 才可发送报告；返回 `stale` 时丢弃结论、重建快照并重跑。
 
 先写 `Review-Unit`、`Target-Host`、`Evidence-Level` 与一个 Verdict。每个 finding 用一个短段落说明根因、失败路径或不变量、证据、影响及最小干预方向。只列会改变 Verdict 的 `Evidence Gaps`，并给出取得最终判断的最小 `Next Validation`。
 

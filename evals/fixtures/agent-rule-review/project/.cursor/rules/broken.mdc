@@ -1,0 +1,4 @@
+---
+globs: [src/generated/**
+
+This malformed rule must not silently become globally applicable.

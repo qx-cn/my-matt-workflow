@@ -16,6 +16,8 @@
 
 Cursor 规则必须按原生语义处理：`alwaysApply: true` 全局适用；`globs` 只匹配目标路径；只有 `description` 的规则需要相关性判断；无三者的规则仅在显式手动引用时适用。Claude 的 `paths` 规则也只在匹配路径时适用。
 
+`resolve-rules` 只返回实施时可选择或需要语义判断的规则，不是完整 inventory 或 metadata validator。审查项目规则时使用 `python3 <runtime_entry> inspect-rules --repo <repo> --agent <codex|cursor|claude> [--path <路径> ...]`：它保留 manual、shadowed、candidate 与 invalid 规则，并以 `target_match: null` 表示仍需语义判断或显式引用。invalid metadata 不能退化为 always，也不能因为未出现在 `resolve-rules` 中而被当作不存在。
+
 ## 计划输出
 
 Spec 不声明执行 Agent；输出前只解析跨 Agent 的项目规则与 ADR。Ticket 先确定自己的 `execution_agent`，再解析目标 Agent 的规则。计划顶部只记录 Ticket 级执行选择与未解决冲突数；不要写冗长规则综述。每个计划项固定写四项：

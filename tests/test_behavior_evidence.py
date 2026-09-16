@@ -51,7 +51,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
 
     def test_checked_in_suite_and_schema_are_valid(self):
         cases = validate_behavior_suite(SUITE)
-        self.assertEqual(18, len(cases))
+        self.assertEqual(19, len(cases))
         schema = json.loads(
             (ROOT / "evals/agent-smokes/astra-evidence.schema.json").read_text()
         )
@@ -166,7 +166,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
             evidence.write_text(json.dumps(self._record()))
             report = validate_behavior_evidence(SUITE, evidence)
             self.assertEqual(1, report["runs"])
-            self.assertEqual(17, len(report["missing"]))
+            self.assertEqual(18, len(report["missing"]))
             with self.assertRaisesRegex(BehaviorEvidenceError, "缺少行为场景"):
                 validate_behavior_evidence(SUITE, evidence, require_complete=True)
 

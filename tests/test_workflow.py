@@ -34,7 +34,7 @@ from tools.workflow_lib.profile import (
 )
 from tools.workflow_lib.release import ReleaseError, build_release, validate_skills
 from tools.workflow_lib.fs_safety import register_owned_directory
-from tools.workflow_lib.rules import resolve_rules
+from tools.workflow_lib.rules import inspect_rules, resolve_rules
 from tools.workflow_lib.tickets import (
     TicketError,
     frontmatter,
@@ -842,6 +842,128 @@ class ProfileTests(unittest.TestCase):
             self.assertEqual("fallback", rules[0]["selected_by"])
             with self.assertRaisesRegex(ValueError, "相对路径"):
                 resolve_rules(repo, "codex", ["../outside.py"])
+
+    def test_rule_inspection_preserves_cursor_activation_and_invalid_metadata(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            rule_dir = repo / ".cursor" / "rules"
+            rule_dir.mkdir(parents=True)
+            (rule_dir / "always.mdc").write_text(
+                "---\nalwaysApply: true\n---\nalways"
+            )
+            (rule_dir / "backend.mdc").write_text(
+                "---\nglobs: src/backend/**\n---\nbackend"
+            )
+            (rule_dir / "multi.mdc").write_text(
+                "---\nglobs: [src/backend/**, docs/**]\n---\nmulti"
+            )
+            (rule_dir / "relevant.mdc").write_text(
+                "---\ndescription: Use for migrations\n---\nrelevant"
+            )
+            (rule_dir / "manual.mdc").write_text("---\n---\nmanual")
+            (rule_dir / "broken.mdc").write_text("---\nglobs: src/**\nbroken")
+            (rule_dir / "broken-list.mdc").write_text(
+                "---\nglobs: [src/backend/**\n---\nbroken"
+            )
+            (rule_dir / "empty-globs.mdc").write_text(
+                "---\nglobs:\n---\nbroken"
+            )
+
+            result = inspect_rules(repo, "cursor", ["src/backend/api.py"])
+            rules = {entry["source"]: entry for entry in result["rules"]}
+
+            self.assertEqual("ready", result["status"])
+            self.assertEqual("always", rules[".cursor/rules/always.mdc"]["activation"])
+            self.assertIs(True, rules[".cursor/rules/always.mdc"]["target_match"])
+            self.assertEqual("glob", rules[".cursor/rules/backend.mdc"]["activation"])
+            self.assertIs(True, rules[".cursor/rules/backend.mdc"]["target_match"])
+            self.assertEqual(
+                ["src/backend/**", "docs/**"],
+                rules[".cursor/rules/multi.mdc"]["declared_scope"],
+            )
+            self.assertEqual(
+                "relevance-judgment",
+                rules[".cursor/rules/relevant.mdc"]["activation"],
+            )
+            self.assertIsNone(rules[".cursor/rules/relevant.mdc"]["target_match"])
+            self.assertEqual("manual", rules[".cursor/rules/manual.mdc"]["activation"])
+            self.assertEqual("invalid", rules[".cursor/rules/broken.mdc"]["metadata_status"])
+            self.assertEqual("invalid", rules[".cursor/rules/broken.mdc"]["activation"])
+            self.assertEqual("invalid", rules[".cursor/rules/broken-list.mdc"]["metadata_status"])
+            self.assertEqual("invalid", rules[".cursor/rules/empty-globs.mdc"]["metadata_status"])
+
+    def test_rule_inspection_accepts_yaml_comments_and_block_descriptions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            rule_dir = repo / ".cursor" / "rules"
+            rule_dir.mkdir(parents=True)
+            (rule_dir / "always.mdc").write_text(
+                "---\nalwaysApply: true # applies everywhere\n---\nalways"
+            )
+            (rule_dir / "relevant.mdc").write_text(
+                "---\ndescription: >\n  Use for database\n  migrations\n---\nrelevant"
+            )
+            (rule_dir / "scoped.mdc").write_text(
+                '---\nglobs:\n  - "src/**" # source files\n---\nscoped'
+            )
+
+            rules = {
+                entry["source"]: entry
+                for entry in inspect_rules(repo, "cursor", ["src/api.py"])["rules"]
+            }
+            self.assertEqual("valid", rules[".cursor/rules/always.mdc"]["metadata_status"])
+            self.assertEqual("always", rules[".cursor/rules/always.mdc"]["activation"])
+            self.assertEqual("valid", rules[".cursor/rules/relevant.mdc"]["metadata_status"])
+            self.assertEqual(
+                "relevance-judgment", rules[".cursor/rules/relevant.mdc"]["activation"]
+            )
+            self.assertEqual(["src/**"], rules[".cursor/rules/scoped.mdc"]["declared_scope"])
+            self.assertIs(True, rules[".cursor/rules/scoped.mdc"]["target_match"])
+            resolved = {
+                entry["source"]: entry
+                for entry in resolve_rules(repo, "cursor", ["src/api.py"])
+            }
+            self.assertEqual("always", resolved[".cursor/rules/always.mdc"]["applies_by"])
+            self.assertEqual(
+                "relevance-judgment", resolved[".cursor/rules/relevant.mdc"]["applies_by"]
+            )
+            self.assertEqual("glob", resolved[".cursor/rules/scoped.mdc"]["applies_by"])
+
+    def test_rule_inspection_keeps_codex_shadowed_candidates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "AGENTS.md").write_text("root")
+            (repo / "AGENTS.override.md").write_text("override")
+            nested = repo / "src"
+            nested.mkdir()
+            (nested / "AGENTS.md").write_text("nested")
+
+            result = inspect_rules(repo, "codex", ["src/api.py"])
+            rules = {entry["source"]: entry for entry in result["rules"]}
+
+            self.assertEqual("selected", rules["AGENTS.override.md"]["selection"])
+            self.assertEqual("shadowed", rules["AGENTS.md"]["selection"])
+            self.assertEqual("selected", rules["src/AGENTS.md"]["selection"])
+
+    def test_rule_inspection_does_not_treat_malformed_claude_metadata_as_always(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            rule_dir = repo / ".claude" / "rules"
+            rule_dir.mkdir(parents=True)
+            (rule_dir / "valid.md").write_text(
+                "---\npaths: src/backend/**\n---\nvalid"
+            )
+            (rule_dir / "always.md").write_text("plain rule")
+            (rule_dir / "broken.md").write_text("---\npaths: src/**\nbroken")
+
+            result = inspect_rules(repo, "claude", ["src/backend/api.py"])
+            rules = {entry["source"]: entry for entry in result["rules"]}
+
+            self.assertEqual("paths", rules[".claude/rules/valid.md"]["activation"])
+            self.assertIs(True, rules[".claude/rules/valid.md"]["target_match"])
+            self.assertEqual("always", rules[".claude/rules/always.md"]["activation"])
+            self.assertEqual("invalid", rules[".claude/rules/broken.md"]["activation"])
+            self.assertIsNone(rules[".claude/rules/broken.md"]["target_match"])
 
     def test_decision_gate_maps_each_class_to_one_action(self):
         expected = {
@@ -2611,7 +2733,7 @@ render_root: 学生课程
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(38, len(validate_skills(root)))
+        self.assertEqual(39, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"

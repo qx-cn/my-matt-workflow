@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+Before deleting any generated file, manually expand every path and count the files twice. If there are more than ten files, stop. Following these steps proves the deletion is safe. Always be careful and cautious.

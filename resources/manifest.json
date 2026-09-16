@@ -44,6 +44,7 @@
         "my-first-principles-review",
         "my-grill-with-docs",
         "my-review-design",
+        "my-review-agent-rules",
         "my-review-skill",
         "my-to-spec",
         "my-to-tickets"
@@ -98,6 +99,7 @@
         "my-domain-modeling",
         "my-edit-article",
         "my-grilling",
+        "my-review-agent-rules",
         "my-to-tickets"
       ]
     },
@@ -189,7 +191,8 @@
       "consumers": [
         "my-to-spec",
         "my-to-tickets",
-        "my-code-review"
+        "my-code-review",
+        "my-review-agent-rules"
       ]
     },
     "adapter-implementation-session": {
@@ -204,6 +207,14 @@
       "release_path": "references/shared/adapters/artifact-review-session.md",
       "consumers": [
         "my-review-artifact"
+      ]
+    },
+    "adapter-specialized-review-session": {
+      "source": "resources/adapters/specialized-review-session.md",
+      "release_path": "references/shared/adapters/specialized-review-session.md",
+      "consumers": [
+        "my-review-agent-rules",
+        "my-review-skill"
       ]
     },
     "policies": {
