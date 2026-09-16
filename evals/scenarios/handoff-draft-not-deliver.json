@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "id": "handoff-draft-not-deliver",
+  "type": "handoff-contract",
+  "skills": ["my-handoff"],
+  "input": {
+    "source_claims": {"goal": "Continue checkout recovery", "out_of_scope": [], "decisions": ["Keep retry boundary"], "state": {"working_tree": "unknown"}, "evidence": [], "risks": ["No independent reader"], "references": ["spec.md"], "first_step": "Verify repository state"},
+    "reconstructed_claims": {"goal": "Continue checkout recovery", "out_of_scope": [], "decisions": ["Keep retry boundary"], "state": {"working_tree": "unknown"}, "evidence": [], "risks": ["No independent reader"], "references": ["spec.md"], "first_step": "Verify repository state"},
+    "declared_status": "draft",
+    "reader_context": "self-check",
+    "finalization_gates": {"source_ledger": "pass", "internal_consistency": "pass", "reader_reconstruction": "blocked", "fact_correctness": "blocked"},
+    "references_valid": true,
+    "sensitive_data_removed": true,
+    "first_step_actionable": true,
+    "draft_gaps_recorded": true
+  },
+  "expected": {"status": "inconclusive", "rule": "draft-not-deliver", "next": "save-draft-not-deliver"},
+  "evidence": {"version": 1, "scenario": "handoff-draft-not-deliver", "sources": [{"path": "skills/my-handoff/SKILL.md", "sha256": "sha256:451cd8172fc89eaded3da6dea446efa8ef7db926e533d1798624ee3e1774ea54"}]}
+}

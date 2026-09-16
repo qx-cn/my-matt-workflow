@@ -29,6 +29,11 @@
       "rubric": ["method_runs_in_same_turn", "handoff_does_not_run_without_authorization"]
     },
     {
+      "id": "handoff-fresh-context-recovery",
+      "goal": "新会话只凭 ready handoff 忠实恢复目标、边界、决定、状态、风险、引用和第一步",
+      "rubric": ["ready_requires_independent_reconstruction", "reconstructs_goal_scope_decisions", "separates_delivery_state_surfaces", "preserves_risks_and_references", "first_step_is_actionable"]
+    },
+    {
       "id": "grill-spec-boundary",
       "goal": "Grill 收口保留领域记录并交给用户显式进入 Spec 阶段",
       "rubric": ["keeps_domain_records_only", "does_not_write_formal_spec_or_plan", "outputs_explicit_to_spec_handoff", "does_not_start_design_review", "does_not_bypass_humanizer"]

@@ -1424,6 +1424,9 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("依据与未知", spec)
         handoff = (root / "my-handoff/SKILL.md").read_text()
         self.assertIn("fresh-context", handoff)
+        self.assertIn("Handoff-Status: draft | ready", handoff)
+        self.assertIn("Reader-Reconstruction: pass | inconclusive", handoff)
+        self.assertIn("不得输出 `resume-first-step`", handoff)
 
     def test_standalone_design_review_stays_focused(self):
         root = Path(__file__).resolve().parents[1] / "skills"

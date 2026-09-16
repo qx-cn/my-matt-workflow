@@ -45,8 +45,8 @@ class EvalValidationTests(unittest.TestCase):
             {
                 "status": "valid",
                 "evidence_level": "deterministic-contract",
-                "scenarios": 31,
-                "required_scenarios": 30,
+                "scenarios": 36,
+                "required_scenarios": 35,
             },
             validate_evals(ROOT),
         )
@@ -134,16 +134,75 @@ class EvalValidationTests(unittest.TestCase):
             if item.identifier == "handoff-round-trip"
         )
         expected = {
-            "status": "inconclusive",
-            "rule": "reader-reconstruction-evidence-gap",
-            "next": "deliver-draft-with-gap",
+            "status": "stop",
+            "rule": "false-ready",
+            "next": "repair-handoff",
         }
         blocked = replace(
             scenario,
-            input={**scenario.input, "independent_context": False},
+            input={
+                **scenario.input,
+                "reader_context": "self-check",
+                "finalization_gates": {
+                    **scenario.input["finalization_gates"],
+                    "reader_reconstruction": "blocked",
+                },
+            },
             expected=expected,
         )
         self.assertEqual(expected, run_scenario(ROOT, blocked))
+
+    def test_handoff_contract_allows_recorded_draft_but_never_delivers_it(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "handoff-draft-not-deliver"
+        )
+        self.assertEqual(scenario.expected, run_scenario(ROOT, scenario))
+
+        missing_gaps = replace(
+            scenario,
+            input={**scenario.input, "draft_gaps_recorded": False},
+            expected={
+                "status": "stop",
+                "rule": "record-draft-gaps",
+                "next": "repair-handoff",
+            },
+        )
+        self.assertEqual(missing_gaps.expected, run_scenario(ROOT, missing_gaps))
+
+        invalid_gate_state = replace(
+            scenario,
+            input={
+                **scenario.input,
+                "finalization_gates": {
+                    **scenario.input["finalization_gates"],
+                    "reader_reconstruction": "inconclusive",
+                },
+            },
+        )
+        with self.assertRaisesRegex(EvalError, "must be pass or blocked"):
+            run_scenario(ROOT, invalid_gate_state)
+
+    def test_handoff_contract_redaction_blocks_even_a_draft(self):
+        scenario = next(
+            item
+            for item in load_scenarios(ROOT / "evals")
+            if item.identifier == "handoff-draft-not-deliver"
+        )
+        redaction_failure = replace(
+            scenario,
+            input={**scenario.input, "sensitive_data_removed": False},
+            expected={
+                "status": "stop",
+                "rule": "redact-sensitive-data",
+                "next": "repair-handoff",
+            },
+        )
+        self.assertEqual(
+            redaction_failure.expected,
+            run_scenario(ROOT, redaction_failure),
+        )
 
     def test_skill_review_comparative_requires_dispute_and_authorization(self):
         scenario = next(

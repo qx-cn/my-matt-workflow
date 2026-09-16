@@ -48,6 +48,11 @@ class SharedResourceTests(unittest.TestCase):
             },
             set(entry["consumers"]),
         )
+
+        text = (ROOT / "resources/artifact-finalization.md").read_text()
+        self.assertIn("可以持久化明确标为 `draft`", text)
+        self.assertIn("不得称为已发布、可直接继续或可交接", text)
+        self.assertIn("敏感信息尚未移除时连草稿也不得保存", text)
         text = (ROOT / entry["source"]).read_text()
         for gate in ("来源账本", "内部一致性", "读者重建", "事实正确性"):
             self.assertIn(gate, text)

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "id": "handoff-goal-mismatch",
+  "type": "handoff-contract",
+  "skills": ["my-handoff"],
+  "input": {
+    "source_claims": {"goal": "Repair checkout", "out_of_scope": [], "decisions": [], "state": {"working_tree": "clean"}, "evidence": [], "risks": [], "references": [], "first_step": "Open Ticket 04"},
+    "reconstructed_claims": {"goal": "Redesign payments", "out_of_scope": [], "decisions": [], "state": {"working_tree": "clean"}, "evidence": [], "risks": [], "references": [], "first_step": "Open Ticket 04"},
+    "declared_status": "ready",
+    "reader_context": "independent",
+    "finalization_gates": {"source_ledger": "pass", "internal_consistency": "pass", "reader_reconstruction": "pass", "fact_correctness": "pass"},
+    "references_valid": true,
+    "sensitive_data_removed": true,
+    "first_step_actionable": true,
+    "draft_gaps_recorded": false
+  },
+  "expected": {"status": "stop", "rule": "false-ready", "next": "repair-handoff"},
+  "evidence": {"version": 1, "scenario": "handoff-goal-mismatch", "sources": [{"path": "skills/my-handoff/SKILL.md", "sha256": "sha256:451cd8172fc89eaded3da6dea446efa8ef7db926e533d1798624ee3e1774ea54"}]}
+}

@@ -4,22 +4,38 @@
   "type": "handoff-contract",
   "skills": ["my-handoff"],
   "input": {
-    "source_fields": ["goal", "out_of_scope", "decisions", "evidence", "risks", "references", "first_step"],
-    "reconstructed_fields": ["goal", "out_of_scope", "decisions", "evidence", "risks", "references", "first_step"],
+    "source_claims": {
+      "goal": "Continue checkout recovery",
+      "out_of_scope": ["Payment redesign"],
+      "decisions": ["Preserve the accepted retry boundary"],
+      "state": {"working_tree": "clean", "local_commit": "abc123", "remote": "abc123", "release": "v3", "codex_install": "v3"},
+      "evidence": ["targeted tests passed"],
+      "risks": ["Claude install is unknown"],
+      "references": ["specs-checkout-03.md"],
+      "first_step": "Open Ticket 04 and verify its blockers"
+    },
+    "reconstructed_claims": {
+      "goal": "Continue checkout recovery",
+      "out_of_scope": ["Payment redesign"],
+      "decisions": ["Preserve the accepted retry boundary"],
+      "state": {"working_tree": "clean", "local_commit": "abc123", "remote": "abc123", "release": "v3", "codex_install": "v3"},
+      "evidence": ["targeted tests passed"],
+      "risks": ["Claude install is unknown"],
+      "references": ["specs-checkout-03.md"],
+      "first_step": "Open Ticket 04 and verify its blockers"
+    },
+    "declared_status": "ready",
+    "reader_context": "independent",
+    "finalization_gates": {"source_ledger": "pass", "internal_consistency": "pass", "reader_reconstruction": "pass", "fact_correctness": "pass"},
     "references_valid": true,
     "sensitive_data_removed": true,
-    "independent_context": true
+    "first_step_actionable": true,
+    "draft_gaps_recorded": false
   },
-  "expected": {
-    "status": "valid",
-    "rule": "handoff-round-trip",
-    "next": "resume-first-step"
-  },
+  "expected": {"status": "valid", "rule": "handoff-round-trip", "next": "resume-first-step"},
   "evidence": {
     "version": 1,
     "scenario": "handoff-round-trip",
-    "sources": [
-      {"path": "skills/my-handoff/SKILL.md", "sha256": "sha256:4e333124c67588eb6436730481b8c003919a308325d07cd07cb9f11df0a6d952"}
-    ]
+    "sources": [{"path": "skills/my-handoff/SKILL.md", "sha256": "sha256:451cd8172fc89eaded3da6dea446efa8ef7db926e533d1798624ee3e1774ea54"}]
   }
 }

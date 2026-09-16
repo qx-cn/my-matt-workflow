@@ -28,6 +28,11 @@ REQUIRED_SCENARIOS = frozenset(
         "artifact-review-method-boundary",
         "skill-review-root-before-wording",
         "handoff-round-trip",
+        "handoff-draft-not-deliver",
+        "handoff-goal-mismatch",
+        "handoff-decision-mismatch",
+        "handoff-state-stale",
+        "handoff-first-step-not-actionable",
         "requirement-analysis-clear-request",
         "requirement-analysis-misleading-analogy",
         "artifact-review-design-method-boundary",
@@ -298,45 +303,118 @@ def _evaluate_handoff_contract(input_value: dict[str, object]) -> dict[str, obje
     case = _require_fields(
         input_value,
         {
-            "source_fields",
-            "reconstructed_fields",
+            "source_claims",
+            "reconstructed_claims",
+            "declared_status",
+            "reader_context",
+            "finalization_gates",
             "references_valid",
             "sensitive_data_removed",
-            "independent_context",
+            "first_step_actionable",
+            "draft_gaps_recorded",
         },
         "handoff-contract.input",
     )
-    required = {
+    required_claims = {
         "goal",
         "out_of_scope",
         "decisions",
+        "state",
         "evidence",
         "risks",
         "references",
         "first_step",
     }
-    source = case["source_fields"]
-    reconstructed = case["reconstructed_fields"]
-    if not isinstance(source, list) or not all(isinstance(item, str) for item in source):
-        raise EvalError("handoff-contract.input.source_fields: must be strings")
-    if not isinstance(reconstructed, list) or not all(
-        isinstance(item, str) for item in reconstructed
+    claims: dict[str, dict[str, object]] = {}
+    for field in ("source_claims", "reconstructed_claims"):
+        value = _require_fields(
+            case[field], required_claims, f"handoff-contract.input.{field}"
+        )
+        for scalar in ("goal", "first_step"):
+            if not isinstance(value[scalar], str) or not value[scalar].strip():
+                raise EvalError(f"handoff-contract.input.{field}.{scalar}: must be non-empty")
+        for collection in (
+            "out_of_scope",
+            "decisions",
+            "evidence",
+            "risks",
+            "references",
+        ):
+            if not isinstance(value[collection], list) or not all(
+                isinstance(item, str) and item.strip() for item in value[collection]
+            ):
+                raise EvalError(
+                    f"handoff-contract.input.{field}.{collection}: must be strings"
+                )
+        if not isinstance(value["state"], dict) or not value["state"]:
+            raise EvalError(f"handoff-contract.input.{field}.state: must be non-empty")
+        claims[field] = value
+
+    declared_status = case["declared_status"]
+    if declared_status not in {"draft", "ready"}:
+        raise EvalError("handoff-contract.input.declared_status: must be draft or ready")
+    reader_context = case["reader_context"]
+    if reader_context not in {"self-check", "independent"}:
+        raise EvalError(
+            "handoff-contract.input.reader_context: must be self-check or independent"
+        )
+    gates = _require_fields(
+        case["finalization_gates"],
+        {
+            "source_ledger",
+            "internal_consistency",
+            "reader_reconstruction",
+            "fact_correctness",
+        },
+        "handoff-contract.input.finalization_gates",
+    )
+    for gate in (
+        "source_ledger",
+        "internal_consistency",
+        "reader_reconstruction",
+        "fact_correctness",
     ):
-        raise EvalError("handoff-contract.input.reconstructed_fields: must be strings")
-    for field in ("references_valid", "sensitive_data_removed", "independent_context"):
+        if gates[gate] not in {"pass", "blocked"}:
+            raise EvalError(
+                f"handoff-contract.input.finalization_gates.{gate}: must be pass or blocked"
+            )
+    if reader_context == "self-check" and gates["reader_reconstruction"] == "pass":
+        raise EvalError(
+            "handoff-contract.input.finalization_gates.reader_reconstruction: "
+            "self-check cannot pass"
+        )
+    for field in (
+        "references_valid",
+        "sensitive_data_removed",
+        "first_step_actionable",
+        "draft_gaps_recorded",
+    ):
         if not isinstance(case[field], bool):
             raise EvalError(f"handoff-contract.input.{field}: must be boolean")
+
     if not case["sensitive_data_removed"]:
         return {"status": "stop", "rule": "redact-sensitive-data", "next": "repair-handoff"}
-    if not case["references_valid"]:
-        return {"status": "stop", "rule": "verify-references", "next": "repair-handoff"}
-    if set(source) != required or set(reconstructed) != required:
-        return {"status": "stop", "rule": "reader-reconstruction", "next": "repair-handoff"}
-    if not case["independent_context"]:
+
+    ready_eligible = bool(
+        case["references_valid"]
+        and case["first_step_actionable"]
+        and reader_context == "independent"
+        and all(value == "pass" for value in gates.values())
+        and claims["source_claims"] == claims["reconstructed_claims"]
+    )
+    if declared_status == "ready" and not ready_eligible:
+        return {"status": "stop", "rule": "false-ready", "next": "repair-handoff"}
+    if declared_status == "draft":
+        if not ready_eligible and not case["draft_gaps_recorded"]:
+            return {
+                "status": "stop",
+                "rule": "record-draft-gaps",
+                "next": "repair-handoff",
+            }
         return {
             "status": "inconclusive",
-            "rule": "reader-reconstruction-evidence-gap",
-            "next": "deliver-draft-with-gap",
+            "rule": "draft-not-deliver",
+            "next": "save-draft-not-deliver",
         }
     return {"status": "valid", "rule": "handoff-round-trip", "next": "resume-first-step"}
 
