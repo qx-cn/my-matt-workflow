@@ -84,11 +84,42 @@ def ticket_lock(repo: Path, topic: str, ticket_id: str) -> Iterator[None]:
     """Serialize claim/recovery/update for one Ticket without stale lock files."""
     if not _SAFE_ID.fullmatch(topic) or not _SAFE_ID.fullmatch(ticket_id):
         raise LifecycleError("Ticket topic 或 id 不能用于生命周期锁")
-    path = repo / ".agent" / "work" / topic / "runs" / "locks" / f"{ticket_id}.lock"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+    with topic_lifecycle_lock(repo, topic, exclusive=False):
+        path = repo / ".agent" / "work" / topic / "runs" / "locks" / f"{ticket_id}.lock"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a+", encoding="utf-8") as handle:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+@contextmanager
+def topic_lifecycle_lock(repo: Path, topic: str, *, exclusive: bool) -> Iterator[None]:
+    """Let Topic publication exclude runtime Ticket claim/completion mutations."""
+    if not _SAFE_ID.fullmatch(topic):
+        raise LifecycleError("Topic 不能用于生命周期锁")
+    locks = repo / ".agent" / "topic-locks"
+    if locks.is_symlink():
+        raise LifecycleError("Topic 锁目录不能是符号链接")
+    locks.mkdir(parents=True, exist_ok=True)
+    path = locks / f"{topic}.lock"
+    if path.is_symlink():
+        raise LifecycleError("Topic 锁不能是符号链接")
+    with path.open("a+b") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
         try:
+            if not exclusive:
+                active = repo / ".agent" / "work" / topic
+                archived = repo / ".agent" / "archive" / topic
+                if archived.exists() or archived.is_symlink():
+                    raise LifecycleError("Topic 已归档，不能再更新实施会话")
+                if not active.is_dir() or active.is_symlink():
+                    raise LifecycleError("活动 Topic 不存在")
+                seal = repo / ".agent" / "work" / topic / "archive" / "publication.json"
+                if seal.exists() or seal.is_symlink():
+                    raise LifecycleError("Topic 已封存，不能再更新实施会话")
             yield
         finally:
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)

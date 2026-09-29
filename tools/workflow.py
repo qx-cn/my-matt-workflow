@@ -48,6 +48,10 @@ from workflow_lib.work_artifacts import (
     apply_work_artifact_migration,
 )
 from workflow_lib.work_overview import WorkOverviewError, format_work_overview, work_overview
+from workflow_lib.spec_archive import SpecArchiveError, archive_spec
+from workflow_lib.topic_archive import (
+    TopicArchiveError, archive_topic, list_archived_topics, show_archived_topic,
+)
 from workflow_lib.release import build_release, release_matches_source
 from workflow_lib.review_snapshot import ReviewSnapshotError, build_review_snapshot
 from workflow_lib.artifact_review import (
@@ -678,6 +682,45 @@ def command_work_overview(args: argparse.Namespace) -> None:
         print(format_work_overview(report))
 
 
+def command_archive_spec(args: argparse.Namespace) -> None:
+    try:
+        report = archive_spec(
+            Path(args.repo), args.topic, args.spec_id,
+            apply=args.apply, expected_sha256=args.expected_sha256,
+            expected_previous_sha256=args.expected_previous_sha256,
+        )
+    except SpecArchiveError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+
+
+def command_archive_topic(args: argparse.Namespace) -> None:
+    try:
+        report = archive_topic(
+            Path(args.repo), args.topic,
+            apply=args.apply, expected_digest=args.expected_digest,
+        )
+    except TopicArchiveError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+
+
+def command_archive_show(args: argparse.Namespace) -> None:
+    try:
+        report = show_archived_topic(Path(args.repo), args.topic)
+    except TopicArchiveError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+
+
+def command_archive_list(args: argparse.Namespace) -> None:
+    try:
+        report = list_archived_topics(Path(args.repo))
+    except TopicArchiveError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+
+
 def command_write_gate(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve()
     try:
@@ -1203,6 +1246,31 @@ def parser() -> argparse.ArgumentParser:
     work_overview_cmd.add_argument("--topic")
     work_overview_cmd.add_argument("--json", action="store_true")
     work_overview_cmd.set_defaults(func=command_work_overview)
+
+    archive_spec_cmd = sub.add_parser("archive-spec")
+    archive_spec_cmd.add_argument("--repo", default=".")
+    archive_spec_cmd.add_argument("--topic", required=True)
+    archive_spec_cmd.add_argument("--spec-id", required=True)
+    archive_spec_cmd.add_argument("--apply", action="store_true")
+    archive_spec_cmd.add_argument("--expected-sha256")
+    archive_spec_cmd.add_argument("--expected-previous-sha256")
+    archive_spec_cmd.set_defaults(func=command_archive_spec)
+
+    archive_topic_cmd = sub.add_parser("archive-topic")
+    archive_topic_cmd.add_argument("--repo", default=".")
+    archive_topic_cmd.add_argument("--topic", required=True)
+    archive_topic_cmd.add_argument("--apply", action="store_true")
+    archive_topic_cmd.add_argument("--expected-digest")
+    archive_topic_cmd.set_defaults(func=command_archive_topic)
+
+    archive_show_cmd = sub.add_parser("archive-show")
+    archive_show_cmd.add_argument("--repo", default=".")
+    archive_show_cmd.add_argument("--topic", required=True)
+    archive_show_cmd.set_defaults(func=command_archive_show)
+
+    archive_list_cmd = sub.add_parser("archive-list")
+    archive_list_cmd.add_argument("--repo", default=".")
+    archive_list_cmd.set_defaults(func=command_archive_list)
 
     write_gate = sub.add_parser("write-gate")
     write_gate.add_argument("--repo", default=".")

@@ -12,6 +12,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+from functools import wraps
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -23,6 +24,7 @@ from .lifecycle import (
     project_ticket,
     recover_lifecycle_transactions,
     ticket_lock,
+    topic_lifecycle_lock,
 )
 from .tickets import (
     TicketError,
@@ -337,6 +339,26 @@ def _write_json_atomic(path: Path, value: dict[str, object]) -> None:
             temporary.unlink()
 
 
+def _guard_topic_mutation(function):
+    """Hold the same Topic lock as publication around a journal write workflow."""
+    @wraps(function)
+    def guarded(path: Path, *args, **kwargs):
+        journal = _load_journal(path)
+        context = journal.get("context")
+        if not isinstance(context, dict):
+            raise RunJournalError("run journal context 无效")
+        repo = Path(str(context.get("repo", ""))).resolve()
+        topic = context.get("topic")
+        if not isinstance(topic, str):
+            raise RunJournalError("run journal topic 无效")
+        try:
+            with topic_lifecycle_lock(repo, topic, exclusive=False):
+                return function(path, *args, **kwargs)
+        except LifecycleError as exc:
+            raise RunJournalError(str(exc)) from exc
+    return guarded
+
+
 def _journal_path(
     repo: Path, context: dict[str, object], *, attempt_id: str | None = None
 ) -> Path:
@@ -642,6 +664,7 @@ def _persist_evidence(path: Path, record: dict[str, object]) -> dict[str, str]:
     return receipt
 
 
+@_guard_topic_mutation
 def run_test_evidence(path: Path, argv: list[str]) -> dict[str, str]:
     """Execute one declared test command and persist its runtime evidence."""
     if not argv or any(not isinstance(value, str) or not value for value in argv):
@@ -672,9 +695,12 @@ def run_test_evidence(path: Path, argv: list[str]) -> dict[str, str]:
     return _persist_evidence(path, record)
 
 
+@_guard_topic_mutation
 def open_review_evidence(path: Path) -> dict[str, object]:
     """Create an owned immutable snapshot for an external code reviewer."""
     journal = _load_journal(path)
+    if journal.get("submission") is not None:
+        raise RunJournalError("已完成会话不能创建新的 review snapshot")
     context = journal.get("context")
     if not isinstance(context, dict):
         raise RunJournalError("run journal context 无效")
@@ -1108,6 +1134,7 @@ def _repair_plan_state(path: Path, phase: str) -> tuple[dict[str, object], dict[
     return journal, repair, repo
 
 
+@_guard_topic_mutation
 def open_repair_plan(path: Path) -> dict[str, object]:
     """Create the sole mutable planning artifact for the current review findings."""
     journal, repair, repo = _repair_plan_state(path, "planning")
@@ -1204,6 +1231,7 @@ def _block_repair_plan_review(
     return {"status": "stale", "next_action": "blocked-by-review", "blocker": blocker}
 
 
+@_guard_topic_mutation
 def open_repair_plan_review(path: Path) -> dict[str, object]:
     """Freeze a complete repair plan for the design-only review method."""
     journal, repair, _ = _repair_plan_state(path, "planning")
@@ -1228,6 +1256,7 @@ def open_repair_plan_review(path: Path) -> dict[str, object]:
     return unit
 
 
+@_guard_topic_mutation
 def submit_repair_plan_review(path: Path, snapshot_dir: Path, result: dict[str, object]) -> dict[str, object]:
     """Close the plan-only review and permit code writes only on a clean pass."""
     journal, repair, _ = _repair_plan_state(path, "plan-reviewing")
@@ -1291,6 +1320,7 @@ def submit_repair_plan_review(path: Path, snapshot_dir: Path, result: dict[str, 
     return {"status": "pass", "next_action": next_action, "repair_plan_receipt": plan_receipt}
 
 
+@_guard_topic_mutation
 def submit_review_result(
     path: Path,
     snapshot_dir: Path,
@@ -1457,6 +1487,7 @@ def submit_review_result(
             _clear_active_review(path)
 
 
+@_guard_topic_mutation
 def record_review_evidence(
     path: Path, snapshot_dir: Path, argv: list[str], *, reviewer_session_id: str | None = None,
 ) -> dict[str, object]:
@@ -1617,6 +1648,102 @@ def _validate_completion_receipts(
         raise RunJournalError("review result 与 evidence 不匹配")
     if current["content_id"] != review_evidence["snapshot_content_id"]:
         raise RunJournalError("review snapshot 内容已变化")
+
+
+def validate_completed_run_history(
+    path: Path, *, relocation: tuple[Path, Path] | None = None,
+) -> dict[str, object]:
+    """Recheck frozen evidence; relocation maps only this run's archived Topic paths."""
+    original_journal = path.resolve()
+    if relocation is not None:
+        original_root, archived_root = relocation
+        if not path.is_relative_to(archived_root):
+            raise RunJournalError("归档会话不在指定 Topic 内")
+        original_journal = original_root / path.relative_to(archived_root)
+    journal = _load_journal(path)
+    submission = journal.get("submission")
+    context = journal.get("context")
+    if (
+        journal.get("phase") != "complete"
+        or not isinstance(submission, dict)
+        or submission.get("outcome") != "completed"
+        or not isinstance(context, dict)
+    ):
+        raise RunJournalError("会话没有有效的 completed outcome")
+    receipts = journal.get("receipts")
+    if not isinstance(receipts, dict) or any(
+        receipts.get(kind) != submission.get(f"{kind}_receipt")
+        for kind in ("test", "review", "code")
+    ):
+        raise RunJournalError("完成收据与会话记录不一致")
+    code = submission.get("code_receipt")
+    if not isinstance(code, dict) or code.get("kind") != "code" or not isinstance(code.get("sources"), list) or not code["sources"]:
+        raise RunJournalError("完成会话缺少冻结的代码收据")
+    encoded = json.dumps(code["sources"], ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    content_id = hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+    if code.get("content_id") != content_id:
+        raise RunJournalError("冻结的代码收据内容标识无效")
+    test = _load_evidence(path, submission.get("test_receipt"), "test")
+    if (
+        test.get("status") != "pass"
+        or test.get("exit_code") != 0
+        or test.get("code_content_id") != content_id
+        or not isinstance(test.get("argv"), list)
+        or not test["argv"]
+        or not all(isinstance(arg, str) and arg for arg in test["argv"])
+    ):
+        raise RunJournalError("测试证据未通过或未绑定冻结代码")
+    review = _load_evidence(path, submission.get("review_receipt"), "review")
+    if (
+        review.get("status") != "pass"
+        or review.get("method") != REVIEW_METHOD
+        or review.get("execution") not in {"host-method", "declared-command"}
+        or review.get("code_content_id") != content_id
+        or review.get("snapshot_content_id") != content_id
+    ):
+        raise RunJournalError("审查证据未通过或未绑定冻结代码")
+    result_receipt = review.get("result")
+    if not isinstance(result_receipt, dict):
+        raise RunJournalError("审查结果收据无效")
+    repo = Path(str(context.get("repo", ""))).resolve()
+    result_path = Path(str(result_receipt.get("path", "")))
+    archived_result = result_path
+    if relocation is not None and (result_path == original_root or result_path.is_relative_to(original_root)):
+        archived_result = archived_root / result_path.relative_to(original_root)
+    current_result = _source_receipt(repo, archived_result, "review result", kind="review-result")
+    if archived_result != result_path:
+        current_result["path"] = str(result_path)
+        current_result["repo_path"] = result_path.relative_to(repo).as_posix()
+    if current_result != result_receipt:
+        raise RunJournalError("审查结果文件已变化")
+    try:
+        result = json.loads(archived_result.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise RunJournalError("审查结果无法读取") from exc
+    unit = review.get("snapshot")
+    if not isinstance(unit, dict) or not isinstance(unit.get("artifacts"), list) or not unit["artifacts"]:
+        raise RunJournalError("审查快照清单无效")
+    if (
+        unit.get("journal") != str(original_journal)
+        or unit.get("code_content_id") != content_id
+        or unit.get("review_id") != review.get("review_id")
+        or unit.get("implementation_session_id") != journal.get("implementation_session_id")
+    ):
+        raise RunJournalError("审查快照清单与完成会话不匹配")
+    code_sources = {
+        (item.get("repo_path"), item.get("sha256"), item.get("size"))
+        for item in code["sources"] if isinstance(item, dict)
+    }
+    review_sources = {
+        (item.get("repo_path"), item.get("sha256"), item.get("size"))
+        for item in unit["artifacts"] if isinstance(item, dict)
+    }
+    if len(code_sources) != len(code["sources"]) or code_sources != review_sources:
+        raise RunJournalError("审查快照清单与冻结代码收据不匹配")
+    status, _ = _validate_review_result(path, result, unit, code, context)
+    if status != "pass" or result.get("review_id") != review.get("review_id"):
+        raise RunJournalError("审查结果与冻结快照不匹配")
+    return {"status": "valid", "code_content_id": content_id}
 
 
 def submit_run_outcome(

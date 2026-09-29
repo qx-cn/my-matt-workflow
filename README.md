@@ -33,6 +33,10 @@ python3 tools/workflow.py resolve-rules --repo <project> --agent codex
 python3 tools/workflow.py validate-ticket <ticket-path>
 python3 tools/workflow.py work-overview --repo <project>
 python3 tools/workflow.py work-overview --repo <project> --topic <topic> --json
+python3 tools/workflow.py archive-spec --repo <project> --topic <topic> --spec-id <spec-id>
+python3 tools/workflow.py archive-topic --repo <project> --topic <topic>
+python3 tools/workflow.py archive-list --repo <project>
+python3 tools/workflow.py archive-show --repo <project> --topic <topic>
 python3 tools/workflow.py implementation-next-action --journal <run-journal>
 python3 tools/workflow.py run-code-receipt --journal <run-journal>
 python3 tools/workflow.py run-review-open --journal <run-journal>
@@ -42,6 +46,10 @@ python3 tools/workflow.py run-review-evidence --journal <run-journal> --snapshot
 ```
 
 `work-overview` 只读汇总 `local` 后端的 Spec 修订与状态、Ticket、实施会话、已有收据与下一动作。默认输出面向人的摘要，`--json` 输出相同内容供工具使用。它会标出冲突或无法判定的状态；收据存在只表示已登记，不单独证明测试或审查通过。活动实施会话的下一动作来自现有 `implementation-next-action` 判定；可开始的 Ticket 是手动候选，不代表自动扩大工作范围。
+
+本地长期 Spec 位于 `.agent/specs/<spec-id>.md`，是**已发布行为的当前权威文本**；旧版保存在 `.agent/specs/history/<spec-id>/<revision>.md`。活动 Topic 的版本化 Spec 是该变更的实施边界，发布前不会自动改变长期 Spec。合并时先通读原长期 Spec 与 Topic 的当前 Spec，将完整的现行行为写入 `.agent/work/<topic>/archive/canonical-spec.md`，核对新增、修改、移除行为及不变量。候选 frontmatter 使用 `spec_id`、顺序递增的 `revision`、`status: current`、`supersedes`（上一长期 Spec 即将保存的历史版本相对路径；首次为空）、`source_topic`、`source_spec_revision`、`source_spec_sha256`。独立审查结论写入同目录的 `spec-review.md`，`spec-review.json` 记录 `schema_version: 1`、`reviewer`、`verdict: No findings.`、`source_sha256`、`previous_sha256`（首次为 `none`）、`candidate_sha256`、`report_sha256`。`archive-spec` 默认只预览来源、候选哈希、审查状态和目标；审查记录与字节匹配后用 `--apply --expected-sha256 <预览的 candidate_sha256> --expected-previous-sha256 <预览的 previous_sha256，首次为 none>` 发布。命令只验证结构、完成状态、Ticket 血缘、已完成实施会话冻结的 Spec 哈希和 Ticket 定义，以及审查记录绑定；审查者独立性和文本是否忠实合并仍需人工核实。一个 Topic 对应一个 Spec id，且只能发布一次。发布前要求 Topic 的实施 Ticket 全部完成且验收项仍全部勾选、每张都有与其来源 Spec 和 Ticket 定义匹配的已完成实施会话，当前来源 Spec revision 至少有一张已完成 Ticket，且没有活动实施会话。发布事务会写入 `archive/publication.json`，区分 `publishing` 与 `published` 并支持同内容重试；实施入口在封存后拒绝新会话。没有运行记录的旧实施 Topic 当前不能通过发布门禁；人工补证入口需另行设计，不能仅凭 Ticket 勾选发布。此功能目前只支持 `local` 后端。
+
+`archive-topic` 默认预览 Topic 的完成依据（含长期 Spec 发布版本）、目标目录、逐文件路径与哈希，以及 `tree_sha256`；核对后用 `--apply --expected-digest <预览的 tree_sha256>` 将整个目录移至 `.agent/archive/<topic>/`。含实施 Ticket 的 Topic 必须先成功执行 `archive-spec`；纯文档/研究 Topic 不需要长期 Spec，但须在 `archive/completion.json` 声明 `schema_version: 1`、`topic`、`status: complete`、`behavior_change: none` 和非空的 Topic 内 `evidence` 路径列表。证据必须是独立于 `archive/` 的非空文件。若其他活动 Topic、项目 profile 或当前长期 Spec 仍通过绝对路径、项目相对路径、相对链接或符号链接引用旧 Topic，先处理该引用。归档清单保存原路径、新路径及每个文件的哈希；`archive-list` 轻量列出归档路径和清单存在状态（不做完整核验，单份损坏归档不会挡住其他条目），`archive-show` 核验文件及完成会话的历史收据，并将历史 Ticket、会话及审查结果中的 Topic 内路径映射到归档目录，同时报告外部来源的失效或漂移。原始 Ticket、journal 和证据字节保持不变；归档历史不进入活动实施准入。
 
 接续工作时先指定主题查看 `work-overview`。文本视图汇总已完成 Ticket 和历史会话的数量，完整记录仍在 `--json` 中。如果有一个来源一致、与当前 Ticket claim 匹配的活动会话，总览会指出它的下一动作；其他旧会话或旧文件的问题仍逐条显示，顶层状态仍为 `needs-attention`。看到问题时应按文件核查，不能把下一动作提示理解为已通过实施门禁。
 
