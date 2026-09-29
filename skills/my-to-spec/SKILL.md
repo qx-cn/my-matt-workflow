@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 ## 过程
 
-1. 确定 Spec 血缘。首次产出分配稳定的 `spec_id` 与 `revision: 1`；修订时沿用 `spec_id`、递增 `revision`，并让 `supersedes` 指向上一版。每版新建文件，不覆盖历史版本；正文只写当前有效状态。
+1. 确定 Spec 血缘。首次产出分配稳定的 `spec_id` 与 `revision: 1`；修订时沿用 `spec_id`、递增 `revision`，并让 `supersedes` 指向上一版。每版新建文件，不覆盖历史版本；规范正文只写当前有效状态。修订时阅读全文并与上一版的有效行为比较；上一版若以补充条款继承更早版本，先沿血缘读到能重建有效行为的基线。为新增、修改、移除的外部可观察行为建立非规范性的修订索引，逐项指向本版最终条款、前版依据及受影响验收；没有行为变化时明确写“无外部行为变化”。不要从文字 diff 推断语义变化，也不要把被移除的旧条款复制为本版要求。
 
 2. 若尚未探索，先探索仓库以理解当前代码状态。整个 Spec 使用项目领域术语，并遵守所触及区域的 ADR。输出前按 [项目规则解析](references/shared/adapters/project-rules.md) 解析跨 Agent 的项目规则；每个承重实施决策必须给出影响区域、规则、约束和验证。每张 Ticket 的目标 Agent 及其原生规则留到 Ticket 阶段解析。普通、可逆的实现细节留给实施阶段。
 
@@ -22,7 +22,7 @@ disable-model-invocation: true
 
 6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，读取[设计成立性](references/composed/my-review-design/COMPOSED.md)并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
 
-7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
+7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。修订版还须核对修订索引与前版、当前正文和验收一致，确认没有遗漏行为变化、把旧状态误写成当前要求，或让索引产生正文没有的约束。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
 
 8. **写入**：仅写入 `status: current` 且已通过适用 Gate 的版本，根据 `task_backend` 保存：
    - `local`：写入 `.agent/work/<feature-slug>/specs/specs-<feature-slug>-<time-or-sequence>.md`；
@@ -98,5 +98,9 @@ status: <draft|current>
 ## 补充说明
 
 与该功能有关的其他说明。
+
+## 本次修订索引（仅修订版）
+
+这是评审与影响分析的导航，不增加、覆盖或恢复规范正文中的要求。按外部可观察行为列出本次新增、修改、移除项；每项指向本版最终条款或说明其已移除，标明前版依据及受影响验收。没有行为变化时只写“无外部行为变化”，不造空表。索引只引用旧版，不重复已废止的旧要求；迁移、兼容或安全边界确需保留的旧状态应写入规范正文的相应位置。后续 Ticket 影响映射仍由 `my-to-tickets` 负责。
 
 </spec-template>

@@ -31,6 +31,8 @@ python3 tools/workflow.py deploy --target codex
 python3 tools/workflow.py prune-releases
 python3 tools/workflow.py resolve-rules --repo <project> --agent codex
 python3 tools/workflow.py validate-ticket <ticket-path>
+python3 tools/workflow.py work-overview --repo <project>
+python3 tools/workflow.py work-overview --repo <project> --topic <topic> --json
 python3 tools/workflow.py implementation-next-action --journal <run-journal>
 python3 tools/workflow.py run-code-receipt --journal <run-journal>
 python3 tools/workflow.py run-review-open --journal <run-journal>
@@ -38,6 +40,10 @@ python3 tools/workflow.py run-test-evidence --journal <run-journal> -- <declared
 python3 tools/workflow.py run-review-submit --journal <run-journal> --snapshot-dir <review-snapshot-dir> --result-file <json>
 python3 tools/workflow.py run-review-evidence --journal <run-journal> --snapshot-dir <review-snapshot-dir> -- <declared-review-command>
 ```
+
+`work-overview` 只读汇总 `local` 后端的 Spec 修订与状态、Ticket、实施会话、已有收据与下一动作。默认输出面向人的摘要，`--json` 输出相同内容供工具使用。它会标出冲突或无法判定的状态；收据存在只表示已登记，不单独证明测试或审查通过。活动实施会话的下一动作来自现有 `implementation-next-action` 判定；可开始的 Ticket 是手动候选，不代表自动扩大工作范围。
+
+接续工作时先指定主题查看 `work-overview`。文本视图汇总已完成 Ticket 和历史会话的数量，完整记录仍在 `--json` 中。如果有一个来源一致、与当前 Ticket claim 匹配的活动会话，总览会指出它的下一动作；其他旧会话或旧文件的问题仍逐条显示，顶层状态仍为 `needs-attention`。看到问题时应按文件核查，不能把下一动作提示理解为已通过实施门禁。
 
 测试命令来自项目 profile 的 `test_commands`。`my-implement` 宿主可用 `run-review-submit` 登记组合的 `my-code-review` 结果；需要独立进程时，审查命令来自可选的 `review_commands`。runtime 只执行 work unit 建立时已冻结的精确 argv；审查命令从 `MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID` 读取当前审查单元，并在 stdout 输出结果 JSON。
 

@@ -56,7 +56,7 @@ disable-model-invocation: true
 
 ### 5. 保存或发布 Ticket
 
-输入是修订版 Spec 时，先做影响映射：已完成 Ticket 保持 `complete` 且不改正文；需要撤销或迁移其结果时新增补偿 Ticket。受影响的未完成 Ticket 进入 `revising`，更新来源、验收和阻塞边，通过 `validate-ticket` 后标为 `revalidated`；不受影响的 Ticket 保留原血缘。不得删除历史 Ticket 或把完成记录改写成“未发生”。
+输入是修订版 Spec 时，先用其修订索引核对前版与本版最终行为；旧 Spec 没有索引时直接比较有效条款，不因缺少索引猜测 Ticket 影响。向评审者展示“变化的行为/验收 → 受影响的未完成 Ticket → 处理方式”的简短映射，并列出需补偿的已完成 Ticket；无影响也明确说明依据。已完成 Ticket 保持 `complete` 且不改正文；需要撤销或迁移其结果时新增补偿 Ticket。受影响的未完成 Ticket 进入 `revising`，更新来源、验收和阻塞边，通过 `validate-ticket` 后标为 `revalidated`；不受影响的 Ticket 保留原血缘。不得删除历史 Ticket 或把完成记录改写成“未发生”。
 
 **写入前**：按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，再按配置后端保存：
 

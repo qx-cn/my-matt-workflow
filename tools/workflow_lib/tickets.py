@@ -100,7 +100,10 @@ def _admission_fields(ticket: dict[str, object], path: Path) -> dict[str, object
         raise TicketError("只有 implementation Ticket 可进入实施")
     if "claimed_by" not in ticket:
         raise TicketError("ready-for-agent Ticket 必须显式声明 claimed_by")
-    if ticket.get("claimed_by") not in {None, ""}:
+    claimed_by = ticket.get("claimed_by")
+    if claimed_by is not None and not isinstance(claimed_by, str):
+        raise TicketError(f"Ticket claimed_by 必须是字符串：{path}")
+    if claimed_by not in {None, ""}:
         raise TicketError("ready-for-agent Ticket 已被认领")
     blocked_by = ticket.get("blocked_by")
     if not isinstance(blocked_by, list) or not all(
@@ -108,7 +111,7 @@ def _admission_fields(ticket: dict[str, object], path: Path) -> dict[str, object
     ):
         raise TicketError("ready-for-agent Ticket 必须声明 blocked_by 字符串列表")
     agent = ticket.get("execution_agent")
-    if agent not in EXECUTION_AGENT_POLICIES:
+    if not isinstance(agent, str) or agent not in EXECUTION_AGENT_POLICIES:
         raise TicketError(
             "ready-for-agent Ticket 的 execution_agent 必须是 auto、codex、cursor 或 claude"
         )
@@ -382,32 +385,50 @@ def eligible_local_tickets(tickets_dir: Path, *, allowed_ids: set[str] | None = 
     in the host workflow, so selecting the next Ticket cannot mutate a project.
     """
     records, scope = ticket_scope_state(tickets_dir, allowed_ids=allowed_ids)
-    dependency_statuses = {
-        identifier: str(ticket.get("status"))
-        for identifier, (_, ticket) in records.items()
-    }
-
     candidates: list[TicketCandidate] = []
-    for identifier, (path, ticket) in records.items():
+    for identifier in records:
         if identifier not in scope:
             continue
-        if (
-            ticket.get("ticket_kind") != "implementation"
-            or ticket.get("status") not in IMPLEMENTATION_ENTRY_STATUSES
-        ):
-            continue
-        if ticket.get("claimed_by") not in {None, ""}:
-            continue
-        blocked_by = ticket.get("blocked_by")
-        if not isinstance(blocked_by, list):
-            raise TicketError(f"Ticket blocked_by 必须是列表：{path}")
-        if any(records[blocker][1].get("status") != "complete" for blocker in blocked_by):
-            continue
-        if not _unchecked_acceptance(path):
-            continue
-        validate_ready_ticket(path, dependency_statuses=dependency_statuses)
-        candidates.append(TicketCandidate(identifier, path, _sequence(ticket, path)))
+        candidate = eligible_ticket_candidate(identifier, records)
+        if candidate is not None:
+            candidates.append(candidate)
     return sorted(candidates, key=lambda candidate: (candidate.sequence, candidate.identifier))
+
+
+def eligible_ticket_candidate(
+    identifier: str, records: dict[str, tuple[Path, dict[str, object]]]
+) -> TicketCandidate | None:
+    """Check one candidate without discarding unrelated Ticket state."""
+    path, ticket = records[identifier]
+    if ticket.get("ticket_kind") != "implementation":
+        return None
+    status = ticket.get("status")
+    if not isinstance(status, str):
+        raise TicketError(f"Ticket status 必须是字符串：{path}")
+    if status not in IMPLEMENTATION_ENTRY_STATUSES:
+        return None
+    claimed_by = ticket.get("claimed_by")
+    if claimed_by is not None and not isinstance(claimed_by, str):
+        raise TicketError(f"Ticket claimed_by 必须是字符串：{path}")
+    if claimed_by not in {None, ""}:
+        return None
+    blocked_by = ticket.get("blocked_by")
+    if not isinstance(blocked_by, list) or not all(
+        isinstance(blocker, str) and blocker for blocker in blocked_by
+    ):
+        raise TicketError(f"Ticket blocked_by 必须是字符串列表：{path}")
+    missing = [blocker for blocker in blocked_by if blocker not in records]
+    if missing:
+        raise TicketError(f"Ticket 依赖不存在：{identifier} -> {', '.join(missing)}")
+    if any(records[blocker][1].get("status") != "complete" for blocker in blocked_by):
+        return None
+    if not _unchecked_acceptance(path):
+        return None
+    validate_ready_ticket(
+        path,
+        dependency_statuses={key: str(metadata.get("status")) for key, (_, metadata) in records.items()},
+    )
+    return TicketCandidate(identifier, path, _sequence(ticket, path))
 
 
 def implementation_ticket_ids(tickets_dir: Path) -> list[str]:

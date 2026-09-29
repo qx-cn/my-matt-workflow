@@ -47,6 +47,7 @@ from workflow_lib.work_artifacts import (
     analyze_work_artifacts,
     apply_work_artifact_migration,
 )
+from workflow_lib.work_overview import WorkOverviewError, format_work_overview, work_overview
 from workflow_lib.release import build_release, release_matches_source
 from workflow_lib.review_snapshot import ReviewSnapshotError, build_review_snapshot
 from workflow_lib.artifact_review import (
@@ -666,6 +667,17 @@ def command_next_ticket(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def command_work_overview(args: argparse.Namespace) -> None:
+    try:
+        report = work_overview(Path(args.repo), topic=args.topic)
+    except WorkOverviewError as exc:
+        raise SystemExit(str(exc)) from exc
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    else:
+        print(format_work_overview(report))
+
+
 def command_write_gate(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve()
     try:
@@ -1185,6 +1197,12 @@ def parser() -> argparse.ArgumentParser:
     next_ticket.add_argument("--scope-file")
     next_ticket.add_argument("--blocker")
     next_ticket.set_defaults(func=command_next_ticket)
+
+    work_overview_cmd = sub.add_parser("work-overview")
+    work_overview_cmd.add_argument("--repo", default=".")
+    work_overview_cmd.add_argument("--topic")
+    work_overview_cmd.add_argument("--json", action="store_true")
+    work_overview_cmd.set_defaults(func=command_work_overview)
 
     write_gate = sub.add_parser("write-gate")
     write_gate.add_argument("--repo", default=".")
