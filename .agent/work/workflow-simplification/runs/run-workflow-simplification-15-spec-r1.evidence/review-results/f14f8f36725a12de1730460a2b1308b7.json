@@ -1,0 +1,24 @@
+{
+  "code_content_id": "6b9e9db162770c5f2065ce0954ea82469c58cd25fcb856659bc607ed2ee20c29",
+  "design_gap": null,
+  "findings": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-15#A1"
+      ],
+      "baseline_reachable": true,
+      "id": "repair15-config-object-coercion",
+      "root_cause": "STRING_KEYS bypass JSON container type validation",
+      "severity": "P1",
+      "summary": "tools/workflow_lib/topic_service.py:106-109：default_base_branch: {} 被新字符串兼容分支直接当作字符串，setup / work-overview / setup --apply 均退出 0，后者写成 default_base_branch: \"{}\"；正式基线 read_config 对同一输入抛出 TopicError（必须为非空字符串）。路径：已有 v2 配置含对象值 -> read_config 无条件文本化 -> validate_config 看到 str -> Git 允许 {} 作为 ref -> 错误配置被接受并固化。违反 workflow-simplification-15#A1 的类型不符仍拒绝；兼容应限制为旧裸字符串/指定标量，保留 JSON 容器类型拒绝。CLI 复现与基线证据在 /tmp/workflow-15-independent-verification.json。"
+    }
+  ],
+  "follow_ons": [],
+  "review_id": "f14f8f36725a12de1730460a2b1308b7",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "independent-repair15"
+  },
+  "self_review_coverage": null,
+  "status": "findings"
+}

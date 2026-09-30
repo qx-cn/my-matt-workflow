@@ -1,0 +1,2180 @@
+{
+  "kind": "supplemental-independent-code-review",
+  "ticket_id": "workflow-simplification-04",
+  "base_sha": "9fdbcda28f39548562186ee6d56af7fe18b79b27",
+  "head": "dfc3532f96a442de6584770e945bee469f35b181",
+  "review_scope": "change-only",
+  "changes": [
+    "tests/test_implement_review.py",
+    "tools/workflow.py",
+    "tools/workflow_lib/ticket_review.py",
+    "tools/workflow_lib/topic_service.py"
+  ],
+  "excluded_paths": [
+    ".agent/work/workflow-simplification/deliveries/deliveries-workflow-simplification-04.md",
+    ".agent/work/workflow-simplification/handoffs/handoffs-workflow-simplification-04-review-foundation.md",
+    ".agent/work/workflow-simplification/reviews/review-workflow-simplification-04-plan.json",
+    ".agent/work/workflow-simplification/reviews/review-workflow-simplification-04-round-1.json",
+    ".agent/work/workflow-simplification/reviews/review-workflow-simplification-04-round-2.json",
+    ".agent/work/workflow-simplification/runs/locks/workflow-simplification-04.lock",
+    ".agent/work/workflow-simplification/runs/result-workflow-simplification-04.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/18021660bbe9b853627bea72069bc5f8142dae5232c1afeed970b4f59f17cbd8.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/3554fe6558987ea38f3d81eafedce1fc8d0ad7b496ddec98af9ea8f6214f4e86.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/6a9fc3452e3dbfaab487504ce39a0e83a2115205e92117a2bcca9b149fdff810.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/dd252cafdc4b24e090fd236c5bc2e7e32db74dafa2e22368151c5b4b04f672cc.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/de77bef90c5c0f24f491caf2dcc723c8e87faa48b9606a37f3379acc168e9416.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/repair-plan-snapshots/.artifact-review.lock",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/repair-plan-snapshots/.my-matt-ownership.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/repair-plans/7511de7a2c5bc61ab1ac191851750cf7.md",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/review-results/3e0141fcaaf0971c13c5a97986fde549.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/review-results/7511de7a2c5bc61ab1ac191851750cf7.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+    ".agent/work/workflow-simplification/runs/run-workflow-simplification-04-spec-r1.json",
+    ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-04.md"
+  ],
+  "artifacts": [
+    {
+      "side": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/000-app.py",
+      "sha256": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "size": 56
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/001-test_app.py",
+      "sha256": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "size": 181
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/002-app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/003-review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/004-test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_behavior_evidence.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/005-test_behavior_evidence.py",
+      "sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "size": 13477
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_composition.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/006-test_composition.py",
+      "sha256": "e5aa209665a3458811ed0dda43ed3be93313713d4c22cc8ef2a203a07afc96f8",
+      "size": 17260
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_doctor.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/007-test_doctor.py",
+      "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "size": 2391
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_evals.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/008-test_evals.py",
+      "sha256": "a9b53195a6dddf4b7996352044709e5b284a652c4a0b5e26a87a8efee4fec018",
+      "size": 29937
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_evidence_records.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/009-test_evidence_records.py",
+      "sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "size": 1511
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_implement_lifecycle.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_implement_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/010-test_implement_lifecycle.py",
+      "sha256": "adf351cb856ea2455181084dd13b45ec463316926676f816d39c5734611dc58f",
+      "size": 15361
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_implementation_service.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/011-test_implementation_service.py",
+      "sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "size": 1548
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_lifecycle_hardening.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_lifecycle_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/012-test_lifecycle_hardening.py",
+      "sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "size": 20705
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_portfolio.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/013-test_portfolio.py",
+      "sha256": "8b4838b500e588cfc77a08f0be27f61eb2d4bbc62f16c23e6c2d362c8c77ecfc",
+      "size": 12384
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_repair_plans.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/014-test_repair_plans.py",
+      "sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "size": 1610
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_resources.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/015-test_resources.py",
+      "sha256": "01739b59dd57529b81447a01f0fa44b4ec4b259da6f6ec6585e315b44b797e60",
+      "size": 24191
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_review_results.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/016-test_review_results.py",
+      "sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "size": 2324
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_review_snapshot.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/017-test_review_snapshot.py",
+      "sha256": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "size": 8343
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_run_journal.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/018-test_run_journal.py",
+      "sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "size": 48385
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_security_hardening.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_security_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/019-test_security_hardening.py",
+      "sha256": "665dd01ad50cf00151c46f89581e1e8985a67fb763f3fd2a6e6fdb8723e9fbd1",
+      "size": 24146
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_teach_quality.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_teach_quality.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/020-test_teach_quality.py",
+      "sha256": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "size": 9297
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_topic_lifecycle.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_topic_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/021-test_topic_lifecycle.py",
+      "sha256": "5a0e21d6305ee79043fbf244caa3cc413a2c390cdcac5deab99fb359d0f7611b",
+      "size": 13894
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_work_overview.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/022-test_work_overview.py",
+      "sha256": "809fcc43d6bfcc9c52a443510bbecb915a9002cd1d60fc5b6c7a30f123974209",
+      "size": 21690
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_workflow.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/023-test_workflow.py",
+      "sha256": "46315d9edb1883993e1845bbbc30b5aa72fc928efbbe05a901f8f540e10bbc62",
+      "size": 139530
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_workflow_baseline.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/024-test_workflow_baseline.py",
+      "sha256": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "size": 5580
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tests/test_workflow_cli_hardening.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_workflow_cli_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/025-test_workflow_cli_hardening.py",
+      "sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "size": 4114
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/__init__.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/026-__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/capture_legacy_fixtures.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/capture_legacy_fixtures.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/027-capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/capture_workflow_baseline.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/capture_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/028-capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/029-workflow.py",
+      "sha256": "7575ed915c310235a0bee565d24775f89a470d9c14e8592f19eb7b10a3ae1b64",
+      "size": 60678
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/__init__.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/030-__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/artifact_review.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/artifact_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/031-artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/behavior_evidence.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/032-behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/check.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/check.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/033-check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/composition.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/034-composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/decision_gates.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/decision_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/035-decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/doctor.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/036-doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/evals.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/037-evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/evidence_records.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/038-evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/fs_safety.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/fs_safety.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/039-fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/implementation_service.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/040-implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/installer.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/installer.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/041-installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/lifecycle.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/042-lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/portfolio.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/043-portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/profile.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/profile.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/044-profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/projection.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/projection.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/045-projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/release.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/release.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/046-release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/repair_plans.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/047-repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/resource_governance.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/resource_governance.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/048-resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/resources.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/049-resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/review_results.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/050-review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/review_snapshot.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/051-review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/rules.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/rules.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/052-rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/run_journal.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/053-run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/smoke_registry.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/smoke_registry.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/054-smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/source_walker.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/source_walker.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/055-source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/spec_archive.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/spec_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/056-spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/ticket_implementation.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/ticket_implementation.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/057-ticket_implementation.py",
+      "sha256": "1af4bed12ae1c9c3b898710ef57fe6309a36a82c2ed3ed6881967afc1031fed5",
+      "size": 15568
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/tickets.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/tickets.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/058-tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/topic_archive.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/topic_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/059-topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/topic_service.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/topic_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/060-topic_service.py",
+      "sha256": "d7d2e9d49c9dd7e2f4942127f922010f3266eed4257ef366acbedf60dfa924d6",
+      "size": 20033
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/transitions.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/transitions.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/061-transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/validator.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/validator.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/062-validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/work_artifacts.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/work_artifacts.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/063-work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/work_overview.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/064-work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566
+    },
+    {
+      "side": "baseline",
+      "repo_path": "tools/workflow_lib/write_gates.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/write_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/065-write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/066-app.py",
+      "sha256": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "size": 56
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/067-test_app.py",
+      "sha256": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "size": 181
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/068-app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/069-review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/070-test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_behavior_evidence.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/071-test_behavior_evidence.py",
+      "sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "size": 13477
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_composition.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/072-test_composition.py",
+      "sha256": "e5aa209665a3458811ed0dda43ed3be93313713d4c22cc8ef2a203a07afc96f8",
+      "size": 17260
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_doctor.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/073-test_doctor.py",
+      "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "size": 2391
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_evals.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/074-test_evals.py",
+      "sha256": "a9b53195a6dddf4b7996352044709e5b284a652c4a0b5e26a87a8efee4fec018",
+      "size": 29937
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_evidence_records.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/075-test_evidence_records.py",
+      "sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "size": 1511
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_implement_lifecycle.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_implement_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/076-test_implement_lifecycle.py",
+      "sha256": "adf351cb856ea2455181084dd13b45ec463316926676f816d39c5734611dc58f",
+      "size": 15361
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_implement_review.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_implement_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+      "sha256": "00500325f41e2efdc3aa231a504619f261c174777591c5b648499922a9497b59",
+      "size": 15431
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_implementation_service.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/078-test_implementation_service.py",
+      "sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "size": 1548
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_lifecycle_hardening.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_lifecycle_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/079-test_lifecycle_hardening.py",
+      "sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "size": 20705
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_portfolio.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/080-test_portfolio.py",
+      "sha256": "8b4838b500e588cfc77a08f0be27f61eb2d4bbc62f16c23e6c2d362c8c77ecfc",
+      "size": 12384
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_repair_plans.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/081-test_repair_plans.py",
+      "sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "size": 1610
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_resources.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/082-test_resources.py",
+      "sha256": "01739b59dd57529b81447a01f0fa44b4ec4b259da6f6ec6585e315b44b797e60",
+      "size": 24191
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_review_results.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/083-test_review_results.py",
+      "sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "size": 2324
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_review_snapshot.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/084-test_review_snapshot.py",
+      "sha256": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "size": 8343
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_run_journal.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/085-test_run_journal.py",
+      "sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "size": 48385
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_security_hardening.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_security_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/086-test_security_hardening.py",
+      "sha256": "665dd01ad50cf00151c46f89581e1e8985a67fb763f3fd2a6e6fdb8723e9fbd1",
+      "size": 24146
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_teach_quality.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_teach_quality.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/087-test_teach_quality.py",
+      "sha256": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "size": 9297
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_topic_lifecycle.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_topic_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/088-test_topic_lifecycle.py",
+      "sha256": "5a0e21d6305ee79043fbf244caa3cc413a2c390cdcac5deab99fb359d0f7611b",
+      "size": 13894
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_work_overview.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/089-test_work_overview.py",
+      "sha256": "809fcc43d6bfcc9c52a443510bbecb915a9002cd1d60fc5b6c7a30f123974209",
+      "size": 21690
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_workflow.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/090-test_workflow.py",
+      "sha256": "46315d9edb1883993e1845bbbc30b5aa72fc928efbbe05a901f8f540e10bbc62",
+      "size": 139530
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_workflow_baseline.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/091-test_workflow_baseline.py",
+      "sha256": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "size": 5580
+    },
+    {
+      "side": "current",
+      "repo_path": "tests/test_workflow_cli_hardening.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_workflow_cli_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/092-test_workflow_cli_hardening.py",
+      "sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "size": 4114
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/__init__.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/093-__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/capture_legacy_fixtures.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/capture_legacy_fixtures.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/094-capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/capture_workflow_baseline.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/capture_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/095-capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/096-workflow.py",
+      "sha256": "761d16057d7df38d484eb9abe28e83b9c39ac065556b453347ca41b0ec4981a1",
+      "size": 61082
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/__init__.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/097-__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/artifact_review.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/artifact_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/098-artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/behavior_evidence.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/099-behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/check.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/check.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/100-check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/composition.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/101-composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/decision_gates.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/decision_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/102-decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/doctor.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/103-doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/evals.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/104-evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/evidence_records.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/105-evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/fs_safety.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/fs_safety.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/106-fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/implementation_service.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/107-implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/installer.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/installer.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/108-installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/lifecycle.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/109-lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/portfolio.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/110-portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/profile.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/profile.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/111-profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/projection.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/projection.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/112-projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/release.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/release.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/113-release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/repair_plans.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/114-repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/resource_governance.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/resource_governance.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/115-resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/resources.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/116-resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/review_results.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/117-review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/review_snapshot.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/118-review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/rules.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/rules.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/119-rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/run_journal.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/120-run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/smoke_registry.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/smoke_registry.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/121-smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/source_walker.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/source_walker.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/122-source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/spec_archive.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/spec_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/123-spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/ticket_implementation.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/ticket_implementation.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/124-ticket_implementation.py",
+      "sha256": "1af4bed12ae1c9c3b898710ef57fe6309a36a82c2ed3ed6881967afc1031fed5",
+      "size": 15568
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/ticket_review.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/ticket_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+      "sha256": "571694afc2dc9e396459141f1be3e143895a241f32fe28e4839aaddbcb4ef9a6",
+      "size": 18536
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/tickets.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/tickets.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/126-tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/topic_archive.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/topic_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/127-topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/topic_service.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/topic_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/128-topic_service.py",
+      "sha256": "c7485eb77e04f3141c1883efa1f743089bdbf4d3b6796ad3e5d45c6553ab4b13",
+      "size": 20410
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/transitions.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/transitions.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/129-transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/validator.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/validator.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/130-validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/work_artifacts.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/work_artifacts.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/131-work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/work_overview.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/132-work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566
+    },
+    {
+      "side": "current",
+      "repo_path": "tools/workflow_lib/write_gates.py",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/write_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/133-write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/135-specs-workflow-simplification.md",
+      "sha256": "ce2412a7dcde61e294425e073a7a8417d51b3690a998ef1f3d682afa47b86532",
+      "size": 61007
+    },
+    {
+      "side": "input",
+      "repo_path": "resources/testing-seams.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/resources/testing-seams.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/151-testing-seams.md",
+      "sha256": "c8e39b60a94e82b25d0881553b24018c5ffe2597b426a13c6bc3982e4d848d4e",
+      "size": 1096
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/matt-workflow.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/matt-workflow.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/134-matt-workflow.md",
+      "sha256": "a52b6c1715ca767a348e284f657f79df296d199c1c72271a5fdaa78443a5bac9",
+      "size": 1467
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-01.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-01.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/136-tickets-workflow-simplification-01.md",
+      "sha256": "15487aa57e1ba30bc03603a79b7385db75d0f8170971fecc374fb386aa655674",
+      "size": 3142
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-02.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-02.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/137-tickets-workflow-simplification-02.md",
+      "sha256": "c6e062e862e036fb99d14041afdd342120ac659a201e479ad969fb3744a47c9e",
+      "size": 3545
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-03.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-03.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/138-tickets-workflow-simplification-03.md",
+      "sha256": "b6e93a5f0b35296e48c12ad6aff06d67db6acbb6def507a4db46ae0800d4b322",
+      "size": 3462
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-04.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-04.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/139-tickets-workflow-simplification-04.md",
+      "sha256": "7c7eb955cbadd5e39bbc598ea4dd7a76941c5cda5139af8a5d7d8408031b9d27",
+      "size": 3145
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-05.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-05.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/140-tickets-workflow-simplification-05.md",
+      "sha256": "b34809478d4a17dbe7707d975fcdf6d355ebcf738b128c69cbccf92d4a57cf4d",
+      "size": 3099
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-06.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-06.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/141-tickets-workflow-simplification-06.md",
+      "sha256": "3d60e83ccc882f1a211c2c1f27827202ab341305ba35f15d71d1f0a346e28198",
+      "size": 3183
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-07.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-07.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/142-tickets-workflow-simplification-07.md",
+      "sha256": "31e57d139e75cb134ffeada9a2cddcb0d0e8d7b9c68ac4df1ee04d69fce3bda9",
+      "size": 3447
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-08.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-08.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/143-tickets-workflow-simplification-08.md",
+      "sha256": "b329e4917f2d46dccc986ce37e5374e97d708cec749c799248d2983ec7c20db8",
+      "size": 3466
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-09.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-09.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/144-tickets-workflow-simplification-09.md",
+      "sha256": "1d1f71aa2ebb1d22c7a78f89bba0f642b82a2f9d3f4be57a8cc374bd9f169dc8",
+      "size": 3555
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-10.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-10.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/145-tickets-workflow-simplification-10.md",
+      "sha256": "9841cf6d795a5306ccb5548f97f5daff15145526fc4ccfd365da689d823fe81a",
+      "size": 3999
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-11.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-11.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/146-tickets-workflow-simplification-11.md",
+      "sha256": "e3a8fcd705ac6c7272cc98f8e101fecea6db5a19a122139f3a77c7d96a7d1190",
+      "size": 2931
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-12.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-12.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/147-tickets-workflow-simplification-12.md",
+      "sha256": "c09642c38653c639d26ccd392252f9d4ec0fbda68d52fd6db40e5bc5ddd5aac6",
+      "size": 3167
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-13.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-13.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/148-tickets-workflow-simplification-13.md",
+      "sha256": "c02b9c9ccff0927f55212b98ab8b40a326e5f8efa1001e0cbc1de397a52f7804",
+      "size": 4340
+    },
+    {
+      "side": "input",
+      "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-14.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-14.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/149-tickets-workflow-simplification-14.md",
+      "sha256": "5a624b223dc6a1bb1edfbf88e17b85f5c41350be7991fae6b1658676868c6ada",
+      "size": 3061
+    },
+    {
+      "side": "input",
+      "repo_path": "my-code-review-method.md",
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/my-code-review-method.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/150-my-code-review-method.md",
+      "sha256": "5a0c24c6b3fecf747f188ae0f37d195b6053195a6209bf64da8ec6b9407b70de",
+      "size": 9396
+    }
+  ],
+  "probes": [
+    "recovery",
+    "downstream-owner"
+  ],
+  "artifact_content_id": "66693412d23c8199867932e963ef35e63705db769a2359f6964bb9e15f230d74",
+  "snapshot_dir": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn",
+  "intake_snapshot": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/152-intake.json",
+  "snapshot_artifacts": [
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/000-app.py",
+      "sha256": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "size": 56
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/001-test_app.py",
+      "sha256": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "size": 181
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/002-app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/003-review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/004-test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/005-test_behavior_evidence.py",
+      "sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "size": 13477
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/006-test_composition.py",
+      "sha256": "e5aa209665a3458811ed0dda43ed3be93313713d4c22cc8ef2a203a07afc96f8",
+      "size": 17260
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/007-test_doctor.py",
+      "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "size": 2391
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/008-test_evals.py",
+      "sha256": "a9b53195a6dddf4b7996352044709e5b284a652c4a0b5e26a87a8efee4fec018",
+      "size": 29937
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/009-test_evidence_records.py",
+      "sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "size": 1511
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_implement_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/010-test_implement_lifecycle.py",
+      "sha256": "adf351cb856ea2455181084dd13b45ec463316926676f816d39c5734611dc58f",
+      "size": 15361
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/011-test_implementation_service.py",
+      "sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "size": 1548
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_lifecycle_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/012-test_lifecycle_hardening.py",
+      "sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "size": 20705
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/013-test_portfolio.py",
+      "sha256": "8b4838b500e588cfc77a08f0be27f61eb2d4bbc62f16c23e6c2d362c8c77ecfc",
+      "size": 12384
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/014-test_repair_plans.py",
+      "sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "size": 1610
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/015-test_resources.py",
+      "sha256": "01739b59dd57529b81447a01f0fa44b4ec4b259da6f6ec6585e315b44b797e60",
+      "size": 24191
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/016-test_review_results.py",
+      "sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "size": 2324
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/017-test_review_snapshot.py",
+      "sha256": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "size": 8343
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/018-test_run_journal.py",
+      "sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "size": 48385
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_security_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/019-test_security_hardening.py",
+      "sha256": "665dd01ad50cf00151c46f89581e1e8985a67fb763f3fd2a6e6fdb8723e9fbd1",
+      "size": 24146
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_teach_quality.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/020-test_teach_quality.py",
+      "sha256": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "size": 9297
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_topic_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/021-test_topic_lifecycle.py",
+      "sha256": "5a0e21d6305ee79043fbf244caa3cc413a2c390cdcac5deab99fb359d0f7611b",
+      "size": 13894
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/022-test_work_overview.py",
+      "sha256": "809fcc43d6bfcc9c52a443510bbecb915a9002cd1d60fc5b6c7a30f123974209",
+      "size": 21690
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/023-test_workflow.py",
+      "sha256": "46315d9edb1883993e1845bbbc30b5aa72fc928efbbe05a901f8f540e10bbc62",
+      "size": 139530
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/024-test_workflow_baseline.py",
+      "sha256": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "size": 5580
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tests/test_workflow_cli_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/025-test_workflow_cli_hardening.py",
+      "sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "size": 4114
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/026-__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/capture_legacy_fixtures.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/027-capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/capture_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/028-capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/029-workflow.py",
+      "sha256": "7575ed915c310235a0bee565d24775f89a470d9c14e8592f19eb7b10a3ae1b64",
+      "size": 60678
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/030-__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/artifact_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/031-artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/032-behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/check.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/033-check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/034-composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/decision_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/035-decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/036-doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/037-evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/038-evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/fs_safety.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/039-fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/040-implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/installer.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/041-installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/042-lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/043-portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/profile.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/044-profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/projection.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/045-projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/release.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/046-release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/047-repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/resource_governance.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/048-resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/049-resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/050-review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/051-review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/rules.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/052-rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/053-run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/smoke_registry.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/054-smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/source_walker.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/055-source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/spec_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/056-spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/ticket_implementation.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/057-ticket_implementation.py",
+      "sha256": "1af4bed12ae1c9c3b898710ef57fe6309a36a82c2ed3ed6881967afc1031fed5",
+      "size": 15568
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/tickets.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/058-tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/topic_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/059-topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/topic_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/060-topic_service.py",
+      "sha256": "d7d2e9d49c9dd7e2f4942127f922010f3266eed4257ef366acbedf60dfa924d6",
+      "size": 20033
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/transitions.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/061-transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/validator.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/062-validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/work_artifacts.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/063-work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/064-work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/baseline/tools/workflow_lib/write_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/065-write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/066-app.py",
+      "sha256": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "size": 56
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/067-test_app.py",
+      "sha256": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "size": 181
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/068-app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/069-review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/070-test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/071-test_behavior_evidence.py",
+      "sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "size": 13477
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/072-test_composition.py",
+      "sha256": "e5aa209665a3458811ed0dda43ed3be93313713d4c22cc8ef2a203a07afc96f8",
+      "size": 17260
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/073-test_doctor.py",
+      "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "size": 2391
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/074-test_evals.py",
+      "sha256": "a9b53195a6dddf4b7996352044709e5b284a652c4a0b5e26a87a8efee4fec018",
+      "size": 29937
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/075-test_evidence_records.py",
+      "sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "size": 1511
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_implement_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/076-test_implement_lifecycle.py",
+      "sha256": "adf351cb856ea2455181084dd13b45ec463316926676f816d39c5734611dc58f",
+      "size": 15361
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_implement_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+      "sha256": "00500325f41e2efdc3aa231a504619f261c174777591c5b648499922a9497b59",
+      "size": 15431
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/078-test_implementation_service.py",
+      "sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "size": 1548
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_lifecycle_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/079-test_lifecycle_hardening.py",
+      "sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "size": 20705
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/080-test_portfolio.py",
+      "sha256": "8b4838b500e588cfc77a08f0be27f61eb2d4bbc62f16c23e6c2d362c8c77ecfc",
+      "size": 12384
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/081-test_repair_plans.py",
+      "sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "size": 1610
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/082-test_resources.py",
+      "sha256": "01739b59dd57529b81447a01f0fa44b4ec4b259da6f6ec6585e315b44b797e60",
+      "size": 24191
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/083-test_review_results.py",
+      "sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "size": 2324
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/084-test_review_snapshot.py",
+      "sha256": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "size": 8343
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/085-test_run_journal.py",
+      "sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "size": 48385
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_security_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/086-test_security_hardening.py",
+      "sha256": "665dd01ad50cf00151c46f89581e1e8985a67fb763f3fd2a6e6fdb8723e9fbd1",
+      "size": 24146
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_teach_quality.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/087-test_teach_quality.py",
+      "sha256": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "size": 9297
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_topic_lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/088-test_topic_lifecycle.py",
+      "sha256": "5a0e21d6305ee79043fbf244caa3cc413a2c390cdcac5deab99fb359d0f7611b",
+      "size": 13894
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/089-test_work_overview.py",
+      "sha256": "809fcc43d6bfcc9c52a443510bbecb915a9002cd1d60fc5b6c7a30f123974209",
+      "size": 21690
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/090-test_workflow.py",
+      "sha256": "46315d9edb1883993e1845bbbc30b5aa72fc928efbbe05a901f8f540e10bbc62",
+      "size": 139530
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/091-test_workflow_baseline.py",
+      "sha256": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "size": 5580
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tests/test_workflow_cli_hardening.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/092-test_workflow_cli_hardening.py",
+      "sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "size": 4114
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/093-__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/capture_legacy_fixtures.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/094-capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/capture_workflow_baseline.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/095-capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/096-workflow.py",
+      "sha256": "761d16057d7df38d484eb9abe28e83b9c39ac065556b453347ca41b0ec4981a1",
+      "size": 61082
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/__init__.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/097-__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/artifact_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/098-artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/behavior_evidence.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/099-behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/check.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/100-check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/composition.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/101-composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/decision_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/102-decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/doctor.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/103-doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/evals.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/104-evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/evidence_records.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/105-evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/fs_safety.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/106-fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/implementation_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/107-implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/installer.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/108-installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/lifecycle.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/109-lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/portfolio.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/110-portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/profile.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/111-profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/projection.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/112-projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/release.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/113-release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/repair_plans.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/114-repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/resource_governance.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/115-resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/resources.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/116-resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/review_results.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/117-review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/review_snapshot.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/118-review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/rules.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/119-rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/run_journal.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/120-run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/smoke_registry.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/121-smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/source_walker.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/122-source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/spec_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/123-spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/ticket_implementation.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/124-ticket_implementation.py",
+      "sha256": "1af4bed12ae1c9c3b898710ef57fe6309a36a82c2ed3ed6881967afc1031fed5",
+      "size": 15568
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/ticket_review.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+      "sha256": "571694afc2dc9e396459141f1be3e143895a241f32fe28e4839aaddbcb4ef9a6",
+      "size": 18536
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/tickets.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/126-tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/topic_archive.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/127-topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/topic_service.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/128-topic_service.py",
+      "sha256": "c7485eb77e04f3141c1883efa1f743089bdbf4d3b6796ad3e5d45c6553ab4b13",
+      "size": 20410
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/transitions.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/129-transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/validator.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/130-validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/work_artifacts.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/131-work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/work_overview.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/132-work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/current/tools/workflow_lib/write_gates.py",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/133-write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/matt-workflow.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/134-matt-workflow.md",
+      "sha256": "a52b6c1715ca767a348e284f657f79df296d199c1c72271a5fdaa78443a5bac9",
+      "size": 1467
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/135-specs-workflow-simplification.md",
+      "sha256": "ce2412a7dcde61e294425e073a7a8417d51b3690a998ef1f3d682afa47b86532",
+      "size": 61007
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-01.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/136-tickets-workflow-simplification-01.md",
+      "sha256": "15487aa57e1ba30bc03603a79b7385db75d0f8170971fecc374fb386aa655674",
+      "size": 3142
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-02.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/137-tickets-workflow-simplification-02.md",
+      "sha256": "c6e062e862e036fb99d14041afdd342120ac659a201e479ad969fb3744a47c9e",
+      "size": 3545
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-03.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/138-tickets-workflow-simplification-03.md",
+      "sha256": "b6e93a5f0b35296e48c12ad6aff06d67db6acbb6def507a4db46ae0800d4b322",
+      "size": 3462
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-04.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/139-tickets-workflow-simplification-04.md",
+      "sha256": "7c7eb955cbadd5e39bbc598ea4dd7a76941c5cda5139af8a5d7d8408031b9d27",
+      "size": 3145
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-05.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/140-tickets-workflow-simplification-05.md",
+      "sha256": "b34809478d4a17dbe7707d975fcdf6d355ebcf738b128c69cbccf92d4a57cf4d",
+      "size": 3099
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-06.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/141-tickets-workflow-simplification-06.md",
+      "sha256": "3d60e83ccc882f1a211c2c1f27827202ab341305ba35f15d71d1f0a346e28198",
+      "size": 3183
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-07.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/142-tickets-workflow-simplification-07.md",
+      "sha256": "31e57d139e75cb134ffeada9a2cddcb0d0e8d7b9c68ac4df1ee04d69fce3bda9",
+      "size": 3447
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-08.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/143-tickets-workflow-simplification-08.md",
+      "sha256": "b329e4917f2d46dccc986ce37e5374e97d708cec749c799248d2983ec7c20db8",
+      "size": 3466
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-09.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/144-tickets-workflow-simplification-09.md",
+      "sha256": "1d1f71aa2ebb1d22c7a78f89bba0f642b82a2f9d3f4be57a8cc374bd9f169dc8",
+      "size": 3555
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-10.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/145-tickets-workflow-simplification-10.md",
+      "sha256": "9841cf6d795a5306ccb5548f97f5daff15145526fc4ccfd365da689d823fe81a",
+      "size": 3999
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-11.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/146-tickets-workflow-simplification-11.md",
+      "sha256": "e3a8fcd705ac6c7272cc98f8e101fecea6db5a19a122139f3a77c7d96a7d1190",
+      "size": 2931
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-12.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/147-tickets-workflow-simplification-12.md",
+      "sha256": "c09642c38653c639d26ccd392252f9d4ec0fbda68d52fd6db40e5bc5ddd5aac6",
+      "size": 3167
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-13.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/148-tickets-workflow-simplification-13.md",
+      "sha256": "c02b9c9ccff0927f55212b98ab8b40a326e5f8efa1001e0cbc1de397a52f7804",
+      "size": 4340
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-14.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/149-tickets-workflow-simplification-14.md",
+      "sha256": "5a624b223dc6a1bb1edfbf88e17b85f5c41350be7991fae6b1658676868c6ada",
+      "size": 3061
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/my-code-review-method.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/150-my-code-review-method.md",
+      "sha256": "5a0c24c6b3fecf747f188ae0f37d195b6053195a6209bf64da8ec6b9407b70de",
+      "size": 9396
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/inputs/resources/testing-seams.md",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/151-testing-seams.md",
+      "sha256": "c8e39b60a94e82b25d0881553b24018c5ffe2597b426a13c6bc3982e4d848d4e",
+      "size": 1096
+    },
+    {
+      "source_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-independent-intake-w5s055ss/04/intake.json",
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/152-intake.json",
+      "sha256": "d51b377f02081364c64f5e2d12af2b0da62cc43662427e9bde85d220b0613e89",
+      "size": 43575
+    }
+  ]
+}

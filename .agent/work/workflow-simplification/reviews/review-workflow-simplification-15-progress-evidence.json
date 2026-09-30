@@ -1,0 +1,47 @@
+{
+  "kind": "implementation-progress-evidence",
+  "runtime_receipt": false,
+  "source": "actual CLI outputs observed in this implementation session",
+  "targeted_modules": [
+    {
+      "command": "python3 -m unittest discover -s tests -p test_topic_lifecycle.py",
+      "tests": 17,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_implement_lifecycle.py",
+      "tests": 19,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_implement_review.py",
+      "tests": 13,
+      "exit_code": 0
+    }
+  ],
+  "red_green": [
+    {
+      "behavior": "branch null/true/numeric config roundtrip",
+      "red_exit_code": 1,
+      "green_exit_code": 0
+    },
+    {
+      "behavior": "duplicate/equivalent test command failure masked by later success",
+      "red_exit_code": 1,
+      "green_exit_code": 0
+    },
+    {
+      "behavior": "numeric invariant coverage missing",
+      "red_exit_code": 1,
+      "green_exit_code": 0
+    }
+  ],
+  "additional_observations": [
+    "SIGKILL interrupted formal run invalidates previous success after CLI restart; full rerun recovers",
+    "Historical record without test_run proof requires full rerun"
+  ],
+  "limitations": [
+    "Progress record is not a runtime test or review receipt",
+    "Initial configuration red run also exposed a misplaced existing test assertion, corrected before module verification"
+  ]
+}

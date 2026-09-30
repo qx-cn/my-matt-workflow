@@ -1,0 +1,43 @@
+---
+id: "workflow-simplification-15"
+title: "补偿修复测试、配置与审查覆盖的证据完整性"
+ticket_kind: "implementation"
+spec_id: "workflow-simplification"
+spec_revision: 1
+spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+supersedes_ticket: []
+compensates: ["workflow-simplification-02", "workflow-simplification-03", "workflow-simplification-04"]
+status: complete
+blocked_by: ["workflow-simplification-02", "workflow-simplification-03", "workflow-simplification-04"]
+claimed_by:
+tags: ["independent-review-compensation"]
+sequence: 15
+test_commands: ["python3 -m unittest discover -s tests"]
+rule_sources: [".agent/work/workflow-simplification/specs/specs-workflow-simplification.md", "resources/testing-seams.md"]
+rule_scope: ["tools/workflow_lib/topic_service.py", "tools/workflow_lib/ticket_implementation.py", "tools/workflow_lib/ticket_review.py", "tests/test_topic_lifecycle.py", "tests/test_implement_lifecycle.py", "tests/test_implement_review.py"]
+rule_constraints: ["修复独立补审 CR02-C1、03-C1、IND04-S1；守住 Spec r1，不扩展功能。", "原完成 Ticket、旧审核和 receipt 保持历史事实；新增补偿记录。", "公共 CLI 临时仓库验证可观察行为；独立 reviewer 仅消费 runtime 冻结材料。"]
+rule_conflicts: []
+review_probes: ["recovery"]
+execution_agent: "auto"
+---
+
+# 15 — 证据完整性补偿修复
+
+## 要构建什么
+
+独立补审发现 CR02-C1、03-C1、IND04-S1，来源为 reviews/review-workflow-simplification-01-04-independent.json。修复现有 Spec r1 的配置往返、声明测试通过与第一轮 coverage 契约，不重新定义原验收。
+
+## 适用规则与影响区域
+
+- 当前 Spec 的配置 M6、测试绑定 M5、AC-08/12、审查首轮 coverage 与 I-6；resources/testing-seams.md。
+- 仅上述 rule_scope 三个运行时模块和三个 CLI 测试模块。完成记录放在本 Topic 的新增 Ticket/run/review/delivery/handoff 中。
+- 不实施后续 finish/resolve/branch/migrate 或 Skill 重构，不安装、不推送、不写外部系统。
+- 原 02–04 complete 与旧审查结果保持不变；本 Ticket 成功只补偿三项发现。
+
+## 验收标准
+
+- [x] 合法 Git 分支名 null、true、数字及含引号/反斜线的合法名称经 setup/再次 setup/overview 保持字符串值；旧版 v2 裸字符串配置兼容，类型不符或非法 schema 仍拒绝。
+- [x] 完整声明测试按最近一次完整批次及每个声明位置判定；重复/等价 argv 的先失败后成功仍整体失败，status 指向 test。完整重测成功才可通过，progress 成功不能掩盖失败。
+- [x] 批次开始即作废旧通过依据；执行中断、只执行部分、测试期间内容改变或旧记录缺少批次证明均不能通过；CLI 重启后保持相同判断，重测可恢复。
+- [x] 首轮覆盖目标包含冻结 Spec 的 I-1… I-11 和字母前缀编号（如 I-K1/I-T1）；遗漏任一项拒绝，声明项可提交，有理由的 not-applicable 可通过，未声明或重复目标仍拒绝。
+- [x] 针对性回归和声明全量测试通过；runtime 登记当前内容的独立审核 pass receipt；保存原始复现、修复映射与验证边界，未改写历史完成事实。

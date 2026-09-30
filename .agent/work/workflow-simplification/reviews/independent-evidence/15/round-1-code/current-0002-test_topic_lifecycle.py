@@ -68,15 +68,13 @@ class TopicLifecycleTests(unittest.TestCase):
         self.assertTrue((self.repo / ".agent/.git").is_dir())
 
     def test_setup_preserves_string_branch_names_across_config_roundtrips(self):
-        for branch in ('null', 'true', '123', '1e3', 'quote"name', 'feature/path', '{}'):
+        for branch in ('null', 'true', '123', '1e3', 'quote"name', 'feature/path'):
             with self.subTest(branch=branch):
                 self.cli('setup', '--apply', '--agent-directory-mode', 'shared', '--base-branch', branch)
                 self.cli('work-overview')
                 report = json.loads(self.cli('setup').stdout)
                 self.assertEqual(branch, report['config']['default_base_branch'])
                 self.cli('setup', '--apply')
-                if branch == '{}':
-                    continue  # Only quoted JSON is a string; a bare object is not.
                 # Previous v2 renderers emitted bare strings: keep these readable.
                 path = self.repo / '.agent/matt-workflow.md'
                 text = path.read_text().splitlines()
@@ -88,19 +86,6 @@ class TopicLifecycleTests(unittest.TestCase):
         text = path.read_text()
         path.write_text(text.replace('schema_version: 2', 'schema_version: "2"'))
         self.assertIn('migrate', self.cli('work-overview', ok=False).stderr)
-
-    def test_json_object_and_list_branch_values_are_rejected_without_writes(self):
-        self.setup_config()
-        path = self.repo / '.agent/matt-workflow.md'
-        text = path.read_text()
-        for value in ('{}', '[]', '{"name":"main"}', '["main"]'):
-            with self.subTest(value=value):
-                path.write_text('\n'.join('default_base_branch: ' + value if line.startswith('default_base_branch:') else line
-                                          for line in text.splitlines()) + '\n')
-                before = path.read_bytes()
-                for args in (('setup',), ('work-overview',), ('setup', '--apply')):
-                    self.assertIn('default_base_branch', self.cli(*args, ok=False).stderr)
-                    self.assertEqual(before, path.read_bytes())
 
     def test_invalid_and_legacy_setup_is_zero_write(self):
         for flag, value, message in [("--assurance-level", "audited", "migrate"),

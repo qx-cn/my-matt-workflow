@@ -1,0 +1,302 @@
+{
+  "review_id": "f14f8f36725a12de1730460a2b1308b7",
+  "code_content_id": "6b9e9db162770c5f2065ce0954ea82469c58cd25fcb856659bc607ed2ee20c29",
+  "base_sha": "dfc3532f96a442de6584770e945bee469f35b181",
+  "purpose": "Unchanged primary dependency context for the sole runtime review unit. Current changed files must always come from runtime unit artifacts. No separate review boundary or conclusion.",
+  "artifacts": [
+    {
+      "repo_path": "resources/testing-seams.md",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/resources/testing-seams.md",
+      "sha256": "c8e39b60a94e82b25d0881553b24018c5ffe2597b426a13c6bc3982e4d848d4e",
+      "size": 1096,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/__init__.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/capture_legacy_fixtures.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/capture_workflow_baseline.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow.py",
+      "sha256": "761d16057d7df38d484eb9abe28e83b9c39ac065556b453347ca41b0ec4981a1",
+      "size": 61082,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/__init__.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/artifact_review.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/behavior_evidence.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/check.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/composition.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/decision_gates.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/doctor.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/evals.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/evidence_records.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/fs_safety.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/implementation_service.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/installer.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/lifecycle.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/portfolio.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/profile.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/projection.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/release.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/repair_plans.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/resource_governance.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/resources.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/review_results.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/review_snapshot.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/rules.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/run_journal.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/smoke_registry.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/source_walker.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/spec_archive.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/ticket_implementation.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/ticket_implementation.py",
+      "sha256": "1af4bed12ae1c9c3b898710ef57fe6309a36a82c2ed3ed6881967afc1031fed5",
+      "size": 15568,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/ticket_review.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/ticket_review.py",
+      "sha256": "571694afc2dc9e396459141f1be3e143895a241f32fe28e4839aaddbcb4ef9a6",
+      "size": 18536,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/tickets.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/topic_archive.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/topic_service.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/topic_service.py",
+      "sha256": "c7485eb77e04f3141c1883efa1f743089bdbf4d3b6796ad3e5d45c6553ab4b13",
+      "size": 20410,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/transitions.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/validator.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/work_artifacts.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/work_overview.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566,
+      "origin": "fixed-baseline-git-object"
+    },
+    {
+      "repo_path": "tools/workflow_lib/write_gates.py",
+      "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-29s_9g0k/tools/workflow_lib/write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463,
+      "origin": "fixed-baseline-git-object"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "original_path": ".agent/work/workflow-simplification/reviews/independent-evidence/03/independent03-probes.log",
+    "versioned_copy": ".agent/work/workflow-simplification/reviews/independent-evidence/03/independent03-probes.txt",
+    "sha256": "e4e5364ad7f2e9384aa5af2533f2340425df854eb22cb24f112fb15a94345750"
+  },
+  {
+    "original_path": ".agent/work/workflow-simplification/reviews/independent-evidence/15/workflow-15-final-test_implement_review.py.log",
+    "versioned_copy": ".agent/work/workflow-simplification/reviews/independent-evidence/15/workflow-15-final-test_implement_review.py.txt",
+    "sha256": "81baf7f97dfa71c3eef9f87118a05ac5b0cee16f8bcb013bd6627ad488ea4294"
+  },
+  {
+    "original_path": ".agent/work/workflow-simplification/reviews/independent-evidence/15/workflow-15-final-test_topic_lifecycle.py.log",
+    "versioned_copy": ".agent/work/workflow-simplification/reviews/independent-evidence/15/workflow-15-final-test_topic_lifecycle.py.txt",
+    "sha256": "803790c96c15885672922f2c203eb0749489541e50779ac70ac8daf196ebcee1"
+  },
+  {
+    "original_path": ".agent/work/workflow-simplification/reviews/independent-evidence/15/workflow-15-final-test_implement_lifecycle.py.log",
+    "versioned_copy": ".agent/work/workflow-simplification/reviews/independent-evidence/15/workflow-15-final-test_implement_lifecycle.py.txt",
+    "sha256": "521912429ceca353c9366095ffe2af1210650baa184ec5c899f1d02a42b5b2dc"
+  }
+]

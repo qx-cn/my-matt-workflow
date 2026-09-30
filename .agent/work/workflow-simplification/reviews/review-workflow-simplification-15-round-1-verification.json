@@ -1,0 +1,136 @@
+{
+  "review_id": "f14f8f36725a12de1730460a2b1308b7",
+  "code_content_id": "6b9e9db162770c5f2065ce0954ea82469c58cd25fcb856659bc607ed2ee20c29",
+  "hash_checks": [
+    "resources/testing-seams.md",
+    "tools/__init__.py",
+    "tools/capture_legacy_fixtures.py",
+    "tools/capture_workflow_baseline.py",
+    "tools/workflow.py",
+    "tools/workflow_lib/__init__.py",
+    "tools/workflow_lib/artifact_review.py",
+    "tools/workflow_lib/behavior_evidence.py",
+    "tools/workflow_lib/check.py",
+    "tools/workflow_lib/composition.py",
+    "tools/workflow_lib/decision_gates.py",
+    "tools/workflow_lib/doctor.py",
+    "tools/workflow_lib/evals.py",
+    "tools/workflow_lib/evidence_records.py",
+    "tools/workflow_lib/fs_safety.py",
+    "tools/workflow_lib/implementation_service.py",
+    "tools/workflow_lib/installer.py",
+    "tools/workflow_lib/lifecycle.py",
+    "tools/workflow_lib/portfolio.py",
+    "tools/workflow_lib/profile.py",
+    "tools/workflow_lib/projection.py",
+    "tools/workflow_lib/release.py",
+    "tools/workflow_lib/repair_plans.py",
+    "tools/workflow_lib/resource_governance.py",
+    "tools/workflow_lib/resources.py",
+    "tools/workflow_lib/review_results.py",
+    "tools/workflow_lib/review_snapshot.py",
+    "tools/workflow_lib/rules.py",
+    "tools/workflow_lib/run_journal.py",
+    "tools/workflow_lib/smoke_registry.py",
+    "tools/workflow_lib/source_walker.py",
+    "tools/workflow_lib/spec_archive.py",
+    "tools/workflow_lib/ticket_implementation.py",
+    "tools/workflow_lib/ticket_review.py",
+    "tools/workflow_lib/tickets.py",
+    "tools/workflow_lib/topic_archive.py",
+    "tools/workflow_lib/topic_service.py",
+    "tools/workflow_lib/transitions.py",
+    "tools/workflow_lib/validator.py",
+    "tools/workflow_lib/work_artifacts.py",
+    "tools/workflow_lib/work_overview.py",
+    "tools/workflow_lib/write_gates.py",
+    "tests/test_implement_lifecycle.py",
+    "tests/test_implement_review.py",
+    "tests/test_topic_lifecycle.py",
+    "tools/workflow_lib/ticket_implementation.py",
+    "tools/workflow_lib/ticket_review.py",
+    "tools/workflow_lib/topic_service.py",
+    ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+    ".agent/matt-workflow.md"
+  ],
+  "hash_verification_exit_code": 0,
+  "type_probe": {
+    "baseline": "TopicError: default_base_branch 必须为非空字符串",
+    "current": [
+      {
+        "argv": [
+          "setup"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"{}\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "work-overview"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "setup",
+          "--apply"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"{}\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+        "stderr": ""
+      }
+    ],
+    "exit_code": 0
+  },
+  "extra_probes": [
+    {
+      "probe": "recovery-partial-batch",
+      "interrupted_exit_code": -9,
+      "persisted_entries": 1,
+      "completed": false,
+      "status_after_restart": {
+        "baseline": "07b524a18a441ef77e261cc9feb89a50218322ee",
+        "definition_changed": false,
+        "next_command": "workflow.py implement test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpwclb1xha --ticket feature-01",
+        "status": "implementing",
+        "tests_passed": false,
+        "ticket": "feature-01",
+        "topic": "feature"
+      },
+      "recovery_exit_code": 0
+    },
+    {
+      "probe": "coverage-every-target",
+      "exit_codes": {
+        "I-1": 1,
+        "I-2": 1,
+        "I-3": 1,
+        "I-4": 1,
+        "I-5": 1,
+        "I-6": 1,
+        "I-7": 1,
+        "I-8": 1,
+        "I-9": 1,
+        "I-10": 1,
+        "I-11": 1,
+        "I-K1": 1,
+        "I-T1": 1,
+        "undeclared": 1,
+        "duplicate": 1,
+        "reasonless": 1,
+        "full_reasoned_coverage": 0
+      }
+    }
+  ],
+  "module_projection_tests": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "count": 49,
+    "exit_code": 0,
+    "seconds": 62.351,
+    "scope": "three supplied test modules, not full repository regression"
+  },
+  "result_schema_validation_exit_code": 0
+}

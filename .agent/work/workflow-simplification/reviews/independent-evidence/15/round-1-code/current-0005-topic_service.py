@@ -103,14 +103,15 @@ def read_config(repo):
         key, value = key.strip(), value.strip()
         if not separator or key in config:
             raise TopicError(f"配置字段无效或重复：{key}")
-        try:
-            parsed = json.loads(value)
-        except json.JSONDecodeError:
-            parsed = value
-        # Legacy bare null/true/123 branch names retain their spelling. Do not
-        # coerce structured JSON: objects/lists must still fail type validation.
-        config[key] = (value if key in STRING_KEYS and not isinstance(parsed, (str, list, dict))
-                       else parsed)
+        if key in STRING_KEYS and not value.startswith('"'):
+            # Legacy v2 files used bare strings, including legal branch names
+            # such as null/true/123. Their type comes from the field schema.
+            config[key] = value
+        else:
+            try:
+                config[key] = json.loads(value)
+            except json.JSONDecodeError:
+                config[key] = value
     return validate_config(config)
 
 

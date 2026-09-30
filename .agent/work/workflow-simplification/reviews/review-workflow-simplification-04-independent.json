@@ -1,0 +1,368 @@
+{
+  "ticket_id": "workflow-simplification-04",
+  "base_sha": "9fdbcda28f39548562186ee6d56af7fe18b79b27",
+  "head": "dfc3532f96a442de6584770e945bee469f35b181",
+  "artifact_content_id": "66693412d23c8199867932e963ef35e63705db769a2359f6964bb9e15f230d74",
+  "status": "findings",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "/root/independent_ticket04",
+    "model": null,
+    "model_policy": "inherited",
+    "session_id_observation": "spawn_agent 返回的 canonical task_name，无 UUID 可观察"
+  },
+  "coverage": [
+    {
+      "target": "workflow-simplification-04#A1",
+      "judgement": "ok",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 22,
+          "line_end": 49
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 115,
+          "line_end": 126
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 36,
+          "line_end": 62
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 189,
+          "line_end": 219
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 244,
+          "line_end": 261
+        }
+      ],
+      "reason": "基线/最终内容分别冻结，保留 scope 外差异；删除、二进制、symlink、mode 与嵌套 fixture agent 内容的公共 CLI 测试通过。"
+    },
+    {
+      "target": "workflow-simplification-04#A2",
+      "judgement": "ok",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 127,
+          "line_end": 149
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 141,
+          "line_end": 165
+        }
+      ],
+      "reason": "冻结验收/probes/downstream/decided/rules/骨架；没有读取执行简报或实施者总结。公共 CLI 验证材料存在及秘密计划排除。"
+    },
+    {
+      "target": "workflow-simplification-04#A3",
+      "judgement": "ok",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 178,
+          "line_end": 185
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 273,
+          "line_end": 301
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 76,
+          "line_end": 95
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 116,
+          "line_end": 140
+        }
+      ],
+      "reason": "预填字段逐项匹配；内容、规则、Spec/Ticket、已决事项、下游验收变化拒绝旧结果；字段错误保留重试。"
+    },
+    {
+      "target": "workflow-simplification-04#A4",
+      "judgement": "finding",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 144,
+          "line_end": 145
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 199,
+          "line_end": 200
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 247,
+          "line_end": 266
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/135-specs-workflow-simplification.md",
+          "repo_path": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "line_start": 268,
+          "line_end": 282
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/135-specs-workflow-simplification.md",
+          "repo_path": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "line_start": 388,
+          "line_end": 390
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 96,
+          "line_end": 115
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 221,
+          "line_end": 235
+        }
+      ],
+      "reason": "其余 status/severity/reviewer/required-field 形状校验通过；不变量目标遗漏全局 I-1 至 I-11，导致不完整 coverage 可 pass、完整 coverage 被拒绝。见 IND04-S1。"
+    },
+    {
+      "target": "workflow-simplification-04#A5",
+      "judgement": "ok",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 188,
+          "line_end": 198
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 299,
+          "line_end": 316
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/128-topic_service.py",
+          "repo_path": "tools/workflow_lib/topic_service.py",
+          "line_start": 260,
+          "line_end": 268
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 64,
+          "line_end": 74
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 167,
+          "line_end": 182
+        }
+      ],
+      "reason": "仅 advisory 归 pass 并出现在 topic status；self 无法将同单元来源改 independent，实际 model 与开启声明绑定。"
+    },
+    {
+      "target": "recovery",
+      "judgement": "ok",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+          "repo_path": "tools/workflow_lib/ticket_review.py",
+          "line_start": 273,
+          "line_end": 316
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 116,
+          "line_end": 140
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/077-test_implement_review.py",
+          "repo_path": "tests/test_implement_review.py",
+          "line_start": 167,
+          "line_end": 187
+        }
+      ],
+      "reason": "CLI 每次独立重启，结果与当前 active unit 持久绑定；过期内容恢复后可重试，冻结篡改明确拒绝，同单元同结果重复提交保持幂等。未要求此切片实现后续 reopen/stop。"
+    },
+    {
+      "target": "downstream-owner",
+      "judgement": "ok",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/140-tickets-workflow-simplification-05.md",
+          "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-05.md",
+          "line_start": 38,
+          "line_end": 44
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/141-tickets-workflow-simplification-06.md",
+          "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-06.md",
+          "line_start": 38,
+          "line_end": 44
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/142-tickets-workflow-simplification-07.md",
+          "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-07.md",
+          "line_start": 38,
+          "line_end": 45
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/145-tickets-workflow-simplification-10.md",
+          "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-10.md",
+          "line_start": 38,
+          "line_end": 46
+        }
+      ],
+      "reason": "finish 与 pass 消费由 05 拥有；四轮/停止信号/reopen 由 06 拥有，整分支由 07，宿主实际派发/共享资源接入由 10。没有把这些后续消费者记为本 Ticket finding。"
+    }
+  ],
+  "findings": [
+    {
+      "id": "IND04-S1",
+      "dimension": "Spec",
+      "severity": "P1",
+      "confidence": "high",
+      "acceptance_ids": [
+        "workflow-simplification-04#A4"
+      ],
+      "summary": "全局不变量被排除在 coverage_targets 外，遗漏 coverage 的结果可通过，补全结果反而被拒绝",
+      "location": {
+        "repo_path": "tools/workflow_lib/ticket_review.py",
+        "line_start": 144,
+        "line_end": 145
+      },
+      "failure_path": "标准项目有效 Spec 含冻结源原有 M7 全局不变量 I-1… I-11；implement start → test → review。coverage_targets 正则只捕获 I-[A-Z][0-9]+，因此这些不变量均遗漏。仅填当前验收、recovery 和正控制 I-K1 的 pass 结果 --submit 返回 0 并登记 pass；补 target=I-6 的合法 coverage 则退出 1，报 coverage[3].target 未声明或重复。",
+      "reachability": "官方 base 9fdbcda 的 implement 仅 start/test/status，当前 head 新引入 review 与上述 regex。复现使用冻结 current 源码、冻结测试临时仓库 seam 和冻结 Spec M7 原文，未借用中间施工 schema；I-6 审查来源属于当前 04 验收，其他未来能力可标 not-applicable，但其覆盖项仍必须允许。",
+      "verification": {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 /tmp/workflow-independent-04-probe.py",
+        "script": "/tmp/workflow-independent-04-probe.py",
+        "process_exit_code": 0,
+        "observations": [
+          {
+            "case": "omit_all_global_invariants",
+            "coverage_targets": [
+              "feature-01#A1",
+              "recovery",
+              "I-K1"
+            ],
+            "submit_exit_code": 0,
+            "registered_status": "pass"
+          },
+          {
+            "case": "supply_I-6_coverage",
+            "submit_exit_code": 1,
+            "stderr": "coverage[3].target: 未声明或重复"
+          }
+        ],
+        "evidence": [
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+            "repo_path": "tools/workflow_lib/ticket_review.py",
+            "line_start": 144,
+            "line_end": 145
+          },
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+            "repo_path": "tools/workflow_lib/ticket_review.py",
+            "line_start": 199,
+            "line_end": 200
+          },
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/125-ticket_review.py",
+            "repo_path": "tools/workflow_lib/ticket_review.py",
+            "line_start": 247,
+            "line_end": 266
+          },
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/135-specs-workflow-simplification.md",
+            "repo_path": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+            "line_start": 268,
+            "line_end": 282
+          },
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/135-specs-workflow-simplification.md",
+            "repo_path": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+            "line_start": 388,
+            "line_end": 390
+          }
+        ]
+      }
+    }
+  ],
+  "follow_ons": [
+    {
+      "owner_ticket": "workflow-simplification-05",
+      "acceptance_ids": [
+        "workflow-simplification-05#A1",
+        "workflow-simplification-05#A2"
+      ],
+      "summary": "后续完成 finish 消费与通过失效后的下一条完整命令；本次只核查当前材料/submit 边界。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn/140-tickets-workflow-simplification-05.md",
+          "repo_path": ".agent/work/workflow-simplification/tickets/tickets-workflow-simplification-05.md",
+          "line_start": 40,
+          "line_end": 41
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Code 与 Spec 是同一独立 reviewer 上下文的两遍顺序审查，未声称两遍上下文隔离；不读取 Code 候选清单来启动 Spec pass。",
+    "仅检查冻结 base/head 的 change-only 范围；153 个 snapshot_artifacts 开始及结束均 SHA256 match，未读 actual source/handoff/实施总结/既有审查。",
+    "精确模型 id 不可观察，model=null，模型和思考档位继承，未升级或降级。",
+    "45 个针对性测试通过：review 12、implementation lifecycle 17、topic lifecycle 16，均真实退出 0；未运行全测试集合或跨 Python 版本验证。",
+    "宿主 session_id/model 是 runtime 接收的声明；实际外部派发与共享循环规则由后续 Ticket 承担，本审查不声称验证宿主派发。"
+  ],
+  "validation": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_implement_review.py -v",
+      "cwd": "/tmp/ind04/current",
+      "count": 12,
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_implement_lifecycle.py -v",
+      "cwd": "/tmp/ind04/current",
+      "count": 17,
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_topic_lifecycle.py -v",
+      "cwd": "/tmp/ind04/current",
+      "count": 16,
+      "exit_code": 0
+    }
+  ],
+  "snapshot_validation": {
+    "count": 153,
+    "initial_status": "match",
+    "final_status": "match"
+  }
+}

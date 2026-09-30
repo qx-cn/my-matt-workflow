@@ -1,0 +1,48 @@
+{
+  "ticket": "workflow-simplification-15",
+  "compensates": [
+    "workflow-simplification-02",
+    "workflow-simplification-03",
+    "workflow-simplification-04"
+  ],
+  "original_findings": [
+    "CR02-C1",
+    "03-C1",
+    "IND04-S1"
+  ],
+  "outcome": "completed",
+  "source_base": "dfc3532f96a442de6584770e945bee469f35b181",
+  "code_content_id": "944f13f24d48d6afddc4136c95e0b30ddc0557283f83ac17259f1ec8df6af7ea",
+  "targeted_tests": 50,
+  "independent_probes": 13,
+  "full_test_receipt": {
+    "evidence_id": "5161bfc110098b47db35bffc784d0aba68115d98953f5415795cb067943e2d3f",
+    "kind": "test"
+  },
+  "independent_review_receipt": {
+    "evidence_id": "fb6126bbb0b03d97906ef0afcba0f01c0b10c5a6e2f19720e6c0841c324503df",
+    "kind": "review"
+  },
+  "original_completion_and_review_records_unchanged": true,
+  "model_policy": "inherited; exact model not observable",
+  "review_sessions": [
+    {
+      "task_name": "/root/independent_repair15",
+      "runtime_session_id": "independent-repair15",
+      "status": "findings"
+    },
+    {
+      "task_name": "/root/independent_final15",
+      "runtime_session_id": "independent-final15",
+      "status": "pass"
+    }
+  ],
+  "repair_rounds_used": 1,
+  "repair_round_limit": 1,
+  "scope_transition": {
+    "reason": "single-ticket",
+    "status": "complete"
+  },
+  "external_write": false,
+  "installation": false
+}

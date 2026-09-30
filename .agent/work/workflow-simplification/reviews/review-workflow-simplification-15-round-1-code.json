@@ -1,0 +1,60 @@
+{
+  "review_id": "f14f8f36725a12de1730460a2b1308b7",
+  "code_content_id": "6b9e9db162770c5f2065ce0954ea82469c58cd25fcb856659bc607ed2ee20c29",
+  "artifacts": [
+    {
+      "baseline_sha256": "adf351cb856ea2455181084dd13b45ec463316926676f816d39c5734611dc58f",
+      "baseline_size": 15361,
+      "baseline_snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-f14f8f36725a12de1730460a2b1308b7-461pxmix/baseline-0000-test_implement_lifecycle.py",
+      "repo_path": "tests/test_implement_lifecycle.py",
+      "sha256": "50da13e19e9e8f85e37fffae62e8ce9019d9da42c36bbb6665a13dfba54740a2",
+      "size": 18098,
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0000-test_implement_lifecycle.py"
+    },
+    {
+      "baseline_sha256": "00500325f41e2efdc3aa231a504619f261c174777591c5b648499922a9497b59",
+      "baseline_size": 15431,
+      "baseline_snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-f14f8f36725a12de1730460a2b1308b7-461pxmix/baseline-0001-test_implement_review.py",
+      "repo_path": "tests/test_implement_review.py",
+      "sha256": "40569f5d09b9db3b7bb0df213a8013c1548d0a864d129e645615d11e337a3224",
+      "size": 16574,
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0001-test_implement_review.py"
+    },
+    {
+      "baseline_sha256": "5a0e21d6305ee79043fbf244caa3cc413a2c390cdcac5deab99fb359d0f7611b",
+      "baseline_size": 13894,
+      "baseline_snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-f14f8f36725a12de1730460a2b1308b7-461pxmix/baseline-0002-test_topic_lifecycle.py",
+      "repo_path": "tests/test_topic_lifecycle.py",
+      "sha256": "9b60e7c0c31e199e4bdfc5b9a2ff540e18f7b8b18e8a93c9112f1a6d067a8279",
+      "size": 15269,
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0002-test_topic_lifecycle.py"
+    },
+    {
+      "baseline_sha256": "1af4bed12ae1c9c3b898710ef57fe6309a36a82c2ed3ed6881967afc1031fed5",
+      "baseline_size": 15568,
+      "baseline_snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-f14f8f36725a12de1730460a2b1308b7-461pxmix/baseline-0003-ticket_implementation.py",
+      "repo_path": "tools/workflow_lib/ticket_implementation.py",
+      "sha256": "fc5da5d316bdea3c00d627bde56689f9357f49b965b3fe893e51f02b8d4ec647",
+      "size": 16308,
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0003-ticket_implementation.py"
+    },
+    {
+      "baseline_sha256": "571694afc2dc9e396459141f1be3e143895a241f32fe28e4839aaddbcb4ef9a6",
+      "baseline_size": 18536,
+      "baseline_snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-f14f8f36725a12de1730460a2b1308b7-461pxmix/baseline-0004-ticket_review.py",
+      "repo_path": "tools/workflow_lib/ticket_review.py",
+      "sha256": "0a0c7ee9bc8ee97d9572f8f89b46549fe39e3e64bc81f4b484088eb19d641ded",
+      "size": 18542,
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0004-ticket_review.py"
+    },
+    {
+      "baseline_sha256": "c7485eb77e04f3141c1883efa1f743089bdbf4d3b6796ad3e5d45c6553ab4b13",
+      "baseline_size": 20410,
+      "baseline_snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-f14f8f36725a12de1730460a2b1308b7-461pxmix/baseline-0005-topic_service.py",
+      "repo_path": "tools/workflow_lib/topic_service.py",
+      "sha256": "aee2f8b4e4df18a9d219075fb7d8e2fcb5ebc1ea58cd44a90c207ee41e252661",
+      "size": 20778,
+      "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0005-topic_service.py"
+    }
+  ]
+}

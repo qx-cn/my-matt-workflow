@@ -1,0 +1,20 @@
+[
+  {
+    "finding_id": "CR02-C1",
+    "current_head": "dfc3532f96a442de6584770e945bee469f35b181",
+    "still_present": true,
+    "basis": "read_config AST unchanged"
+  },
+  {
+    "finding_id": "03-C1",
+    "current_head": "dfc3532f96a442de6584770e945bee469f35b181",
+    "still_present": true,
+    "basis": "entire owning implementation file unchanged"
+  },
+  {
+    "finding_id": "IND04-S1",
+    "current_head": "dfc3532f96a442de6584770e945bee469f35b181",
+    "still_present": true,
+    "basis": "entire owning implementation file unchanged"
+  }
+]

@@ -1,0 +1,112 @@
+{
+  "ticket_id": "workflow-simplification-01",
+  "base_sha": "40e51afc02c1c16d4672a1f82a582d85180fb9e5",
+  "head": "1e1cc4a8837e116aef72bd10126ab5f2ce1a3f45",
+  "artifact_content_id": "8d897694424f4aa9ff17b613c943b44e2ddc03c319152d8002209765d11ca9c6",
+  "status": "pass",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "/root/independent_ticket01",
+    "model": null,
+    "model_policy": "inherited"
+  },
+  "coverage": [
+    {
+      "acceptance_id": "workflow-simplification-01#A1",
+      "judgment": "satisfied",
+      "summary": "生成器以旧 runtime setup/open/test/review/submit/close 创建 A–E；36 条 CLI 事件保存零退出码，另有 C 两次旧投影 API；旧配置 audited/schema1、分片术语、源提交/基线/期望转换保存。APP、测试与公共 fixture 身份不含宿主秘密。",
+      "evidence": [
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/144-capture_legacy_fixtures.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/060-generation.json",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/059-baseline.json",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/057-README.md"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-01#A2",
+      "judgment": "satisfied",
+      "summary": "原 eval 冻结 8 文件与保留副本逐字一致；加入临时重建项目后原副本比对测试实际执行并通过，完整旧 runtime 采集成功重跑。",
+      "evidence": [
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/144-capture_legacy_fixtures.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/141-test_workflow_baseline.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/116-matt-workflow.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/117-specs-turn-closure-01.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/118-tickets-turn-closure-01.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/119-tickets-turn-closure-02.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/120-AGENTS.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/121-app.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/122-review.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/123-test_app.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/437-matt-workflow.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/438-specs-turn-closure-01.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/439-tickets-turn-closure-01.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/440-tickets-turn-closure-02.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/441-AGENTS.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/442-app.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/443-review.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/444-test_app.py"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-01#A3",
+      "judgment": "satisfied",
+      "summary": "旧 release manifest/runtime SHA 与原 baseline 一致；调用冻结旧 projection 得到 Cursor 安装件，独立测得58213字符、90文件、38唯一内容；全文件路径/字符数/SHA清单与原保存清单完全相同。完整旧 runtime 采集亦退出0且字符数58213。",
+      "evidence": [
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/145-capture_workflow_baseline.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/144-capture_legacy_fixtures.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/141-test_workflow_baseline.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/059-baseline.json",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/057-README.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/182-specs-workflow-simplification.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/000-manifest.json",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/001-workflow.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf/017-projection.py",
+        "/tmp/workflow-independent-01-verification.json"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-01#A4",
+      "judgment": "satisfied",
+      "summary": "4 项新增测试退出 0；bundle 可克隆，A/B/C journal 基线 commit 可解析，A–E 状态匹配且 E 为两个进行中状态，临时加载前后原 fixtures SHA 未变。",
+      "evidence": [
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/141-test_workflow_baseline.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/058-baseline.bundle",
+        "/tmp/workflow-independent-01-verification.json"
+      ]
+    },
+    {
+      "probe": "recovery",
+      "judgment": "satisfied-for-current-ticket",
+      "summary": "保存原始旧记录与 Git bundle，进行中基线可解析；临时加载覆盖实际成功且不改原 fixture。时间/attempt/绝对临时路径被明确记录为非逐字重建部分。新 runtime 续跑属于 Ticket08。",
+      "evidence": [
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/057-README.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/141-test_workflow_baseline.py",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/059-baseline.json",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/190-tickets-workflow-simplification-08.md"
+      ]
+    },
+    {
+      "probe": "downstream-owner",
+      "judgment": "owner-boundary-respected",
+      "summary": "Ticket08#A4/A5/A6 拥有 A–E 迁移、旧基线重绑及幂等；Ticket13#A5 拥有新主链 35000 上限。Ticket01 只采集旧格式与基线，没有提前实现这些消费者能力。直接依赖 Ticket02 拥有配置v2/quick，未要求其能力提前落在 Ticket01。",
+      "evidence": [
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/183-tickets-workflow-simplification-01.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/184-tickets-workflow-simplification-02.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/190-tickets-workflow-simplification-08.md",
+        "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6/195-tickets-workflow-simplification-13.md"
+      ]
+    }
+  ],
+  "findings": [],
+  "follow_ons": [],
+  "limitations": [
+    "仅使用 runtime 冻结 artifact；未读取实际仓库实现、实施总结、handoff 或既有审查。",
+    "具体模型 id 不可观察；session_id 使用工具显示的独立 agent 身份。",
+    "只运行新增基线测试；冻结单元不含整个仓库资源/skills/evals，未宣称全量 unittest 或 Python3.10 已通过。",
+    "完整采集重跑使用/tmp合成源码身份，不宣称其source_commit与原基线相同；源文件从固定旧release及原eval冻结件重建，随机attempt/时间/临时路径不要求逐字一致。"
+  ],
+  "verification": "/tmp/workflow-independent-01-verification.json",
+  "supplemental_artifact_content_ids": [
+    "2c01ec7db33af81a9514c065b5440b3c916eb37f61d91f3c33866b89f600c8d7"
+  ]
+}

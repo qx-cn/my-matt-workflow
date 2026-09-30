@@ -1,0 +1,37 @@
+[
+  {
+    "content_id": "8d897694424f4aa9ff17b613c943b44e2ddc03c319152d8002209765d11ca9c6",
+    "snapshot_dir": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-8d897694424f-u68gfrq6",
+    "status": "match",
+    "expected_content_id": "8d897694424f4aa9ff17b613c943b44e2ddc03c319152d8002209765d11ca9c6",
+    "released": true
+  },
+  {
+    "content_id": "27d42ef20f0a79309444dfe4bafbe1e7bf4ce5c35d686eea60a17d520ca4c902",
+    "snapshot_dir": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp",
+    "status": "match",
+    "expected_content_id": "27d42ef20f0a79309444dfe4bafbe1e7bf4ce5c35d686eea60a17d520ca4c902",
+    "released": true
+  },
+  {
+    "content_id": "05fdabac99f77b128956fc46fab7dd43cfbd148f866abb129288715a79c1b29d",
+    "snapshot_dir": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-05fdabac99f7-gk33z37r",
+    "status": "match",
+    "expected_content_id": "05fdabac99f77b128956fc46fab7dd43cfbd148f866abb129288715a79c1b29d",
+    "released": true
+  },
+  {
+    "content_id": "66693412d23c8199867932e963ef35e63705db769a2359f6964bb9e15f230d74",
+    "snapshot_dir": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-66693412d23c-ch23fhgn",
+    "status": "match",
+    "expected_content_id": "66693412d23c8199867932e963ef35e63705db769a2359f6964bb9e15f230d74",
+    "released": true
+  },
+  {
+    "content_id": "2c01ec7db33af81a9514c065b5440b3c916eb37f61d91f3c33866b89f600c8d7",
+    "snapshot_dir": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-2c01ec7db33a-f1onqmbf",
+    "status": "match",
+    "expected_content_id": "2c01ec7db33af81a9514c065b5440b3c916eb37f61d91f3c33866b89f600c8d7",
+    "released": true
+  }
+]

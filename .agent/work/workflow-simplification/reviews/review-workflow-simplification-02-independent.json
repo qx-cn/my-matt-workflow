@@ -1,0 +1,251 @@
+{
+  "ticket_id": "workflow-simplification-02",
+  "base_sha": "1e1cc4a8837e116aef72bd10126ab5f2ce1a3f45",
+  "head": "dba5ef7380f4713481b110728a5387dfd8d3a730",
+  "artifact_content_id": "27d42ef20f0a79309444dfe4bafbe1e7bf4ce5c35d686eea60a17d520ca4c902",
+  "status": "findings",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "/root/independent_ticket02",
+    "model": null,
+    "model_policy": "inherited"
+  },
+  "coverage": [
+    {
+      "acceptance_id": "workflow-simplification-02#A1",
+      "judgment": "partial: setup 预览零写入、九键/private/非法值和旧配置拒绝均有证据；合法 default_base_branch=null 无法写入后重读，见 CR02-C1。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "59-143"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "53-73;191-195"
+        }
+      ],
+      "verification": "生命周期测试通过；formal base/head null 分支比较确认偏差。"
+    },
+    {
+      "acceptance_id": "workflow-simplification-02#A2",
+      "judgment": "covered: 显式选择、内容干净、活动/待补建/归档 guards、standard 无星号全量测试准入，以及 quick 的创建/切换/保持分支。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "215-241"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "75-100;124-127"
+        }
+      ],
+      "verification": "原有 CLI 测试以及独立 existing_quick_branch_records_switched_head 通过。"
+    },
+    {
+      "acceptance_id": "workflow-simplification-02#A3",
+      "judgment": "covered: 省略参数只接受唯一活动 Topic，归档 status 只读，overview 区分 document/pending/active 并排除归档。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "154-185;244-266"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "75-122"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/083-test_work_overview.py",
+          "lines": "407-433"
+        }
+      ],
+      "verification": "生命周期 16 和 overview 17 测试通过。"
+    },
+    {
+      "acceptance_id": "workflow-simplification-02#A4",
+      "judgment": "covered: 检查实际固定标题与验收对照，排除围栏模板；运行全量测试，失败/执行错误/改内容拒绝；无测试标记；quick 归档/度量/最多一代码提交无实施记录。摘要内逐条不同测试的内容由后续 Skill owner 接入。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "269-297;321-416"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "129-193;225-253"
+        }
+      ],
+      "verification": "CLI quick/shared/private 成功和缺陷测试通过；独立 no_content_private_quick_has_no_code_commit / failed_command_execution_then_retry 通过。"
+    },
+    {
+      "acceptance_id": "workflow-simplification-02#A5",
+      "judgment": "covered: 文档直接完成、kind topic/null、不覆盖归档、拒绝待补建与无 Ticket standard。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "321-338;358-365;384-416"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "102-127"
+        }
+      ],
+      "verification": "原有 CLI 测试及 private_document_preserves_content_and_commits_agent 通过。"
+    },
+    {
+      "acceptance_id": "workflow-simplification-02#A6",
+      "judgment": "covered: 成功完成时提交 metadata，private 主仓不包含 agent，文档不提交无关内容，quick 至多一次内容提交；所有调用均为本地 Git/测试，无 push 或外部写入调用。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "298-318;339-416"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "142-179;197-223"
+        }
+      ],
+      "verification": "shared/private quick、ignored metadata、文档 staged 内容保留、private 重试测试通过。"
+    },
+    {
+      "probe": "recovery",
+      "judgment": "covered: summary/test failures 不归档；测试执行错误保留 active；shared commit 失败回滚 metadata 并可重试；private 已完成代码提交而 metadata 失败时记录 code_commit，重试不再提交内容；出现新内容则拒绝并可恢复后再收尾。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+          "lines": "341-355;369-415"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/082-test_topic_lifecycle.py",
+          "lines": "179-193;211-223"
+        }
+      ],
+      "verification": "6 个独立探针中 failed_command_execution_then_retry 和 private_retry_new_content_is_rejected_after_code_commit 通过；原有恢复测试通过。"
+    },
+    {
+      "probe": "downstream-owner",
+      "judgment": "covered: 当前实现只承诺 quick/文档与显式 standard 准入。Ticket03 owns implement start/test、自动补建；05/07 owns standard 完成和整分支；08 owns全局配置/旧 Topic 迁移；10 owns quick 逐条验收→不同测试→代码位置 Skill 内容；13 owns CLI 清理和最终跨切片验证。未将后续消费者功能作为当前 finding。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/130-tickets-workflow-simplification-03.md",
+          "lines": "29-46"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/132-tickets-workflow-simplification-05.md",
+          "lines": "29-45"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/134-tickets-workflow-simplification-07.md",
+          "lines": "29-46"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/135-tickets-workflow-simplification-08.md",
+          "lines": "29-46"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/137-tickets-workflow-simplification-10.md",
+          "lines": "29-49"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/140-tickets-workflow-simplification-13.md",
+          "lines": "29-49"
+        },
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/129-tickets-workflow-simplification-02.md",
+          "lines": "29-46"
+        }
+      ],
+      "verification": "逐条核对冻结 Ticket owner/当前边界；无完整重构完成声明。"
+    }
+  ],
+  "findings": [
+    {
+      "id": "CR02-C1",
+      "dimension": "Code",
+      "severity": "P2",
+      "confidence": "high",
+      "acceptance_ids": [
+        "workflow-simplification-02#A1"
+      ],
+      "summary": "保留 setup 写出的合法分支名 null 的字符串类型",
+      "location": {
+        "repo_path": "tools/workflow_lib/topic_service.py",
+        "line_start": 104,
+        "line_end": 107
+      },
+      "failure_path": "在有效 Git 仓库使用合法默认分支 null；setup --apply --agent-directory-mode shared --base-branch null 验证字符串并成功写入 default_base_branch: null。read_config 的 json.loads 将其解析为 None，随后 validate_config 拒绝；topic start、status、work-overview 均不能正常读取 setup 刚写出的配置。",
+      "reachability": "formal base_sha 的冻结 CLI 同样 setup 后 work-overview 退出 0；head 冻结 CLI setup 退出 0，但 work-overview/topic start 退出 1。基线没有对裸 null 做 JSON null 转换；该回归直接由本次新 parser 引入。数字或 true 的既有解析问题未纳入本次 finding。",
+      "verification": {
+        "script": "/tmp/independent02/repro_null_branch.py",
+        "script_exit_code": 0,
+        "baseline_setup_exit_code": 0,
+        "baseline_work_overview_exit_code": 0,
+        "head_setup_exit_code": 0,
+        "head_work_overview_exit_code": 1,
+        "head_topic_start_exit_code": 1,
+        "error": "default_base_branch 必须为非空字符串",
+        "evidence": [
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/120-topic_service.py",
+            "lines": "104-113;128-143"
+          },
+          {
+            "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/042-profile.py",
+            "lines": "301-318;473-485"
+          }
+        ]
+      }
+    }
+  ],
+  "follow_ons": [
+    {
+      "owner_ticket_id": "workflow-simplification-03",
+      "acceptance_ids": [
+        "workflow-simplification-03#A2",
+        "workflow-simplification-03#A4",
+        "workflow-simplification-03#A6"
+      ],
+      "summary": "按既有 Ticket03 接入自动补建、Ticket 测试/失败恢复和 Ticket 所属 Topic 定位。当前 topic status 的 implement 指针仍是后续消费者接入口，不构成 Ticket02 finding。",
+      "evidence": [
+        {
+          "snapshot_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/supplemental-snapshots/my-matt-review-27d42ef20f0a-z2foz1vp/130-tickets-workflow-simplification-03.md",
+          "lines": "39-46"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "只对固定 base/head 的 change-only 冻结切片作结论，未读取当前仓库实现、实施总结、handoff 或历史审核。",
+    "冻结材料不包含完整 skills/resources/policies 构建树，因此未执行要求这些输入的整个历史测试集合；运行与修改直接相关的 40 项测试及 6 个独立探针。",
+    "具体模型 ID 与 runtime session UUID 不可观察；session_id 使用工具返回的 agent_name，model=null，继承策略没有变更。",
+    "两个 pass 按 Code→Spec 顺序复核；Spec 从 Spec/同一快照重新逐条映射，不声称单 session 两个 pass 的上下文隔离。"
+  ],
+  "verification": {
+    "snapshot_artifacts_verified": 145,
+    "snapshot_sha256_final": "match",
+    "tests": [
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_topic_lifecycle.py",
+        "cwd": "/tmp/independent02/current",
+        "tests": 16,
+        "exit_code": 0
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_work_overview.py",
+        "cwd": "/tmp/independent02/current",
+        "tests": 17,
+        "exit_code": 0
+      },
+      {
+        "command": "7 named setup/refresh CLI unittest cases in tests/test_workflow.py",
+        "cwd": "/tmp/independent02/current",
+        "tests": 7,
+        "exit_code": 0
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 /tmp/independent02/probes.py",
+        "cwd": "/tmp/independent02/current",
+        "tests": 6,
+        "exit_code": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,438 @@
+{
+  "binding_checks": [
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/current-0000-test_implement_lifecycle.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/baseline-0000-test_implement_lifecycle.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/current-0001-test_implement_review.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/baseline-0001-test_implement_review.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/current-0002-test_topic_lifecycle.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/baseline-0002-test_topic_lifecycle.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/current-0003-ticket_implementation.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/baseline-0003-ticket_implementation.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/current-0004-ticket_review.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/baseline-0004-ticket_review.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/current-0005-topic_service.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/baseline-0005-topic_service.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/input-0000-specs-workflow-simplification.md",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/runs/run-workflow-simplification-15-spec-r1.evidence/review-snapshots/review-6198ce96fe465ba2087608eb377a1a13-yle0zpk5/input-0001-matt-workflow.md",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/resources/testing-seams.md",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/__init__.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/capture_legacy_fixtures.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/capture_workflow_baseline.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/__init__.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/artifact_review.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/behavior_evidence.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/check.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/composition.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/decision_gates.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/doctor.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/evals.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/evidence_records.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/fs_safety.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/implementation_service.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/installer.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/lifecycle.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/portfolio.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/profile.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/projection.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/release.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/repair_plans.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/resource_governance.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/resources.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/review_results.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/review_snapshot.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/rules.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/run_journal.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/smoke_registry.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/source_walker.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/spec_archive.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/ticket_implementation.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/ticket_review.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/tickets.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/topic_archive.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/topic_service.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/transitions.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/validator.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/work_artifacts.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/work_overview.py",
+    "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-15-fixed-context-51v19uxd/tools/workflow_lib/write_gates.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0000-test_implement_lifecycle.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0001-test_implement_review.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0002-test_topic_lifecycle.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0003-ticket_implementation.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0004-ticket_review.py",
+    "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/reviews/independent-evidence/15/round-1-code/current-0005-topic_service.py"
+  ],
+  "projection": "/tmp/workflow-15-final-projection-ni_oo3c8",
+  "review_id": "6198ce96fe465ba2087608eb377a1a13",
+  "code_content_id": "944f13f24d48d6afddc4136c95e0b30ddc0557283f83ac17259f1ec8df6af7ea",
+  "base_sha": "dfc3532f96a442de6584770e945bee469f35b181",
+  "independent_cli_probes": [
+    {
+      "raw": "{}",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        }
+      ]
+    },
+    {
+      "raw": "[]",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        }
+      ]
+    },
+    {
+      "raw": "{\"name\":\"main\"}",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        }
+      ]
+    },
+    {
+      "raw": "[\"main\"]",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "default_base_branch 必须为非空字符串\n"
+        }
+      ]
+    },
+    {
+      "raw": "false",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"false\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"false\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "raw": "null",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"null\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"null\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "raw": "123",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"123\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"123\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "raw": "\"{}\"",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"{}\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"{}\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "raw": "\"quote\\\"name\"",
+      "commands": [
+        {
+          "args": [
+            "setup"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"quote\\\"name\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "work-overview"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "setup",
+            "--apply"
+          ],
+          "exit_code": 0,
+          "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"quote\\\"name\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "probe": "changed_during_batch",
+      "test_exit": 0,
+      "status": {
+        "baseline": "406bb9b53f3db25954996d023c55518a1011dab3",
+        "definition_changed": false,
+        "next_command": "workflow.py implement test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_h_3tccu --ticket feature-01",
+        "status": "implementing",
+        "tests_passed": false,
+        "ticket": "feature-01",
+        "topic": "feature"
+      }
+    },
+    {
+      "probe": "partial_batch",
+      "status": {
+        "baseline": "406bb9b53f3db25954996d023c55518a1011dab3",
+        "definition_changed": false,
+        "next_command": "workflow.py implement test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_h_3tccu --ticket feature-01",
+        "status": "implementing",
+        "tests_passed": false,
+        "ticket": "feature-01",
+        "topic": "feature"
+      }
+    },
+    {
+      "probe": "undeclared",
+      "exit_code": 1,
+      "stderr": "coverage[15].target: 未声明或重复\n"
+    },
+    {
+      "probe": "duplicate",
+      "exit_code": 1,
+      "stderr": "coverage[15].target: 未声明或重复\n"
+    }
+  ],
+  "git_object_binding": "all context artifacts and six runtime baselines match base_sha Git blobs",
+  "ticket_definition_sha256": "461d2c3aa131665e2b9fc3b2df3bae898ab60cb9f0a5963a5f0e54a6906df250",
+  "ticket_definition_contract": "normalized JSON, not raw Ticket bytes",
+  "projection_tests": {
+    "command": "PYTHONPATH=tests python3 -m unittest test_topic_lifecycle test_implement_lifecycle test_implement_review",
+    "exit_code": 0,
+    "tests_run": 50,
+    "elapsed_seconds": 65.565,
+    "output": "Ran 50 tests in 65.565s\n\nOK",
+    "scope": "three-module projection only"
+  },
+  "repair_reproduction": {
+    "first_frozen_code": {
+      "exit_code": 0,
+      "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": false, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"{}\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": []}, \"detected_standards_sources\": []}\n"
+    },
+    "current_frozen_code": {
+      "exit_code": 1,
+      "stderr": "default_base_branch 必须为非空字符串\n"
+    }
+  },
+  "provenance": {
+    "canonical_task_name": "/root/independent_final15",
+    "result_session_safeid": "independent-final15",
+    "model": "inherited; precise id not observable",
+    "reasoning": "inherited; no upgrade"
+  },
+  "acceptance_coverage": [
+    {
+      "acceptance_id": "workflow-simplification-15#A1",
+      "judgement": "ok",
+      "evidence": "50-test module suite and raw/quoted/container CLI probes; first-round object defect reproduced then rejected by current code"
+    },
+    {
+      "acceptance_id": "workflow-simplification-15#A2",
+      "judgement": "ok",
+      "evidence": "duplicate and equivalent argv failure/progress/full-rerun CLI regression"
+    },
+    {
+      "acceptance_id": "workflow-simplification-15#A3",
+      "judgement": "ok",
+      "evidence": "SIGKILL/restart/legacy record regression plus independent partial-batch/content-change/recovery probes"
+    },
+    {
+      "acceptance_id": "workflow-simplification-15#A4",
+      "judgement": "ok",
+      "evidence": "numeric and letter invariant regression plus independent undeclared/duplicate/reasoned-not-applicable probes"
+    },
+    {
+      "acceptance_id": "workflow-simplification-15#A5",
+      "judgement": "ok",
+      "evidence": "targeted projection tests exit 0; independent result artifact prepared for runtime submission; broader declared full repository test and receipt persistence remain caller-owned"
+    }
+  ],
+  "required_probes": [
+    {
+      "probe": "recovery",
+      "judgement": "ok",
+      "evidence": "SIGKILL with fresh CLI status, removal of batch proof, partial batch, content mutation, and full rerun"
+    }
+  ]
+}

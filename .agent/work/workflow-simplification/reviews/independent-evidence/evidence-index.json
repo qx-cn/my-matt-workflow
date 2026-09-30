@@ -1,0 +1,37 @@
+[
+  {
+    "original_path": "/tmp/workflow-independent-01-verification.json",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/01/workflow-independent-01-verification.json",
+    "sha256": "a04aba871af2ed80f9714928e61f91b2019c9b80b9d41a98e9e08b53bbb6136c"
+  },
+  {
+    "original_path": "/tmp/workflow-independent-01-extra-unit.json",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/01/workflow-independent-01-extra-unit.json",
+    "sha256": "c4c3cd3e882b31f0c972dec6f322d302f4213a1b2e793a616627b5f15ff1eeef"
+  },
+  {
+    "original_path": "/tmp/independent02/probes.py",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/02/probes.py",
+    "sha256": "bd79bea30e05ce6c8b4e4bccb8487a2755d6e861434cda3f93fee2c129e2297b"
+  },
+  {
+    "original_path": "/tmp/independent02/repro_null_branch.py",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/02/repro_null_branch.py",
+    "sha256": "dfebbe22badc6705e26204ae70637ed1f4687636096898925ee720841424c1b7"
+  },
+  {
+    "original_path": "/tmp/independent03-probes.py",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/03/independent03-probes.py",
+    "sha256": "242d6d98e3a6a07d053fbf2dd5c75ad4751b4e1bca95681165d8d83d4c1943be"
+  },
+  {
+    "original_path": "/tmp/independent03-probes.log",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/03/independent03-probes.log",
+    "sha256": "e4e5364ad7f2e9384aa5af2533f2340425df854eb22cb24f112fb15a94345750"
+  },
+  {
+    "original_path": "/tmp/workflow-independent-04-probe.py",
+    "persisted_path": ".agent/work/workflow-simplification/reviews/independent-evidence/04/workflow-independent-04-probe.py",
+    "sha256": "8f40b9ddb7503d0ea0c0a5c4840cd4e27c7f6b9b459eabac83d4c5f13528fd20"
+  }
+]
