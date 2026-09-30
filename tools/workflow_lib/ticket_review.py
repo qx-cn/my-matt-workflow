@@ -267,10 +267,8 @@ def validate_result(result, manifest):
     return result
 
 
-def submit_review(repo, ticket=None, topic=None, result_file=None):
-    repo, config, topic, path, unit, record = impl.load_active(repo, ticket, topic)
-    if frontmatter(path)['status'] != 'implementing':
-        raise topics.TopicError('implement review 只接受 implementing')
+def current_manifest(repo, config, topic, path, unit):
+    """Validate the same frozen inputs for submission and completion consumers."""
     active = unit.get('active_review')
     if not active:
         raise topics.TopicError('unit_id: 没有当前冻结单元；请先 implement review')
@@ -295,6 +293,26 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
         raise topics.TopicError('decided: 已决事项已变化，请重新 review')
     if downstream(repo, topic, unit['ticket']) != manifest['downstream_tickets']:
         raise topics.TopicError('downstream_tickets: 下游验收已变化，请重新 review')
+    return manifest
+
+
+def require_pass(repo, config, topic, path, unit):
+    manifest = current_manifest(repo, config, topic, path, unit)
+    entry = unit.get('reviews', [{}])[-1]
+    if entry.get('status') != 'pass' or entry.get('unit_id') != manifest['unit_id']:
+        raise topics.TopicError('review: 当前冻结单元没有通过记录')
+    accepted = topics.topic_path(repo, topic) / 'reviews' / f"accepted-{manifest['unit_id']}.json"
+    if not accepted.is_file() or json.loads(accepted.read_text()) != entry:
+        raise topics.TopicError('review: 登记记录不一致，请重新 review')
+    validate_result(entry['result'], manifest)
+    return entry
+
+
+def submit_review(repo, ticket=None, topic=None, result_file=None):
+    repo, config, topic, path, unit, record = impl.load_active(repo, ticket, topic)
+    if frontmatter(path)['status'] != 'implementing':
+        raise topics.TopicError('implement review 只接受 implementing')
+    manifest = current_manifest(repo, config, topic, path, unit)
     try:
         submitted = json.loads(Path(result_file).read_text())
     except (OSError, ValueError) as exc:

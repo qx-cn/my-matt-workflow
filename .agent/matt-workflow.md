@@ -15,16 +15,16 @@ assurance_level: standard
 task_backend: local
 agent_directory_mode: shared
 default_base_branch: main
-branch_policy: confirm
-commit_policy: confirm
+branch_policy: allow
+commit_policy: allow
 external_write_policy: confirm
-docs_writeback: confirm
+docs_writeback: allow
 humanizer_policy: deny
-composition_policy: manual
-work_scope_policy: single-ticket
-decision_policy: ask
+composition_policy: automatic
+work_scope_policy: approved-plan
+decision_policy: autonomous
 default_execution_agent: auto
-max_repair_rounds: 1
+max_repair_rounds: 5
 test_commands: ["python3 -m unittest discover -s tests"]
 review_commands: []
 standards_sources: []

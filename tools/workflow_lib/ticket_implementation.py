@@ -306,10 +306,17 @@ def test(repo, ticket=None, topic=None, argv=None):
 
 
 def status(repo, ticket=None, topic=None):
-    repo, _, topic, path, unit, _ = load_active(repo, ticket, topic)
+    repo, config, topic, path, unit, _ = load_active(repo, ticket, topic)
     passed = tests_passed(repo, unit)
     definition_changed = definition(repo, path) != unit["definition"]
     command = "review" if passed else "test"
+    if passed:
+        from . import ticket_review
+        try:
+            ticket_review.require_pass(repo, config, topic, path, unit)
+            command = "finish"
+        except (topics.TopicError, OSError, ValueError):
+            pass
     return {"ticket": unit["ticket"], "topic": topic, "status": frontmatter(path)["status"],
             "baseline": unit["baseline"], "tests_passed": passed, "definition_changed": definition_changed,
             "next_command": f"workflow.py implement {command} --repo {shlex.quote(str(repo))} --ticket {unit['ticket']}"}
@@ -323,4 +330,4 @@ def next_start_command(repo, topic):
                 return f"workflow.py implement start --repo {shlex.quote(str(repo))} --ticket {value['id']}"
         except (topics.TopicError, TicketError):
             continue
-    return f"workflow.py topic status --repo {shlex.quote(str(repo))} --topic {topic}"
+    return f"workflow.py topic complete --repo {shlex.quote(str(repo))} --topic {topic}"

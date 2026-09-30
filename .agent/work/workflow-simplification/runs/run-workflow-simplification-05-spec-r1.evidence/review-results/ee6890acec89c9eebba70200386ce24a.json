@@ -1,0 +1,90 @@
+{
+  "code_content_id": "aa6d6a6c24739e81013e194f7c5adab4c91a2feac71a2d32bee57425a9cbb47e",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [],
+  "review_id": "ee6890acec89c9eebba70200386ce24a",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "df41d891c15765651732abdbe3062d91"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-05#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-05#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-05#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-05#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-05#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "Code pass 核对提交失败恢复和当前完整测试/冻结审查绑定；Spec pass 独立按 M3/M5/I-A1/I-A2 与 A1-A5 核对。下一 owner 06 的轮数与裁决、07 的多 Ticket 分支收尾尚未接入，05 不提前承担。"
+      },
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_implement_finish.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "recovery",
+        "summary": "Code pass 核对提交失败恢复和当前完整测试/冻结审查绑定；Spec pass 独立按 M3/M5/I-A1/I-A2 与 A1-A5 核对。下一 owner 06 的轮数与裁决、07 的多 Ticket 分支收尾尚未接入，05 不提前承担。"
+      }
+    ]
+  },
+  "status": "pass"
+}

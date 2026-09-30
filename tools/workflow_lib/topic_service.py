@@ -346,10 +346,17 @@ def complete(repo, topic=None):
     if value.get("level") == "standard":
         if not full_tests(config):
             raise TopicError("standard 需要非空全量测试集合")
-        if not list((path / "tickets").glob("*.md")):
+        from . import ticket_implementation as impl
+        tickets = impl.records(repo, topic)
+        if not tickets:
             raise TopicError("standard 没有 Ticket；请拆分 Ticket 或 topic abandon")
-        raise TopicError("standard 收尾由后续实施 Ticket 接入；请运行 implement status")
-    summary = check_summary(path, True) if quick else None
+        if len(tickets) > 1:
+            raise TopicError("多 Ticket standard 请运行 topic review；整分支收尾由后续 Ticket 接入")
+        if any(t[1].get('status') != 'complete' for t in tickets.values()):
+            raise TopicError("Ticket 尚未 complete；请运行 implement status")
+        if content_dirty(repo):
+            raise TopicError("单 Ticket standard 内容不干净；请恢复内容或另建 Ticket")
+    summary = check_summary(path, quick) if quick or value.get('level') == 'standard' else None
     preflight_commit(repo, config)
     dirty = content_dirty(repo)
     if quick and dirty and value.get("code_commit"):

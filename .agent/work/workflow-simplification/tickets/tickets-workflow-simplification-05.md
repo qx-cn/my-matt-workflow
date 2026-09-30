@@ -7,9 +7,9 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-04"]
-claimed_by:
+claimed_by: 
 tags: []
 sequence: 5
 test_commands: ["python3 -m unittest discover -s tests"]
@@ -37,8 +37,8 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] 干净 Ticket 五步完成，结果文件只填写判断字段；每条声明测试和审查通过均绑定当前内容，验收复选框全勾选才允许 finish。
-- [ ] 通过后修改任一内容文件，finish 拒绝且 status 指向重测和复审；只修改 agent 或忽略文件不失效。测试失败也不能 finish。
-- [ ] finish 有内容时最多一次代码提交，标题为 ticket id 加标题；无内容时不做代码提交；经历修复必须提供 notes-file，修复思路进入提交正文。
-- [ ] Ticket 状态变 complete，追加 kind ticket/outcome complete 度量；返回真正合格的下一张 Ticket，否则指向 topic complete。
-- [ ] 单 Ticket standard 在 Ticket complete、内容干净和摘要齐全后归档；自动补建的 Topic 也能完成；全部终点满足 shared/private 的 I-A1、I-A2 和每 Ticket 一次代码提交。
+- [x] 干净 Ticket 五步完成，结果文件只填写判断字段；每条声明测试和审查通过均绑定当前内容，验收复选框全勾选才允许 finish。
+- [x] 通过后修改任一内容文件，finish 拒绝且 status 指向重测和复审；只修改 agent 或忽略文件不失效。测试失败也不能 finish。
+- [x] finish 有内容时最多一次代码提交，标题为 ticket id 加标题；无内容时不做代码提交；经历修复必须提供 notes-file，修复思路进入提交正文。
+- [x] Ticket 状态变 complete，追加 kind ticket/outcome complete 度量；返回真正合格的下一张 Ticket，否则指向 topic complete。
+- [x] 单 Ticket standard 在 Ticket complete、内容干净和摘要齐全后归档；自动补建的 Topic 也能完成；全部终点满足 shared/private 的 I-A1、I-A2 和每 Ticket 一次代码提交。
