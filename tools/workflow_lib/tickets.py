@@ -44,8 +44,12 @@ def _value(raw: str) -> object:
     value = raw.strip()
     if value.startswith("[") and value.endswith("]"):
         try:
-            return json.loads(value.replace("'", '"'))
+            return json.loads(value)
         except json.JSONDecodeError:
+            try:
+                return json.loads(value.replace("'", '"'))
+            except json.JSONDecodeError:
+                pass
             contents = value[1:-1].strip()
             if not contents:
                 return []

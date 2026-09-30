@@ -7,9 +7,9 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-02"]
-claimed_by:
+claimed_by: 
 tags: []
 sequence: 3
 test_commands: ["python3 -m unittest discover -s tests"]
@@ -37,9 +37,9 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] validate-ticket 接受 Spec 第 3 节字段，检查非空 test_commands、来源血缘、依赖和规则冲突；shlex argv 匹配支持配置前缀加零或多个参数，拒绝 unittestx 等伪前缀。
-- [ ] implement start 拒绝未完成依赖、脏内容、quick 和同 Topic 已有 implementing/needs-user；待补建自动成为 standard，基线取与默认分支分叉点，并再次校验全量测试非空。
-- [ ] 执行 M2 分支规则；记录 Ticket 基线及定义快照；生成包含 Ticket、Spec 验收、已完成前置提交与改动文件、适用规则和测试命令的简报，预留 Agent 实施计划。
-- [ ] implement test 不带 argv 时逐条执行声明测试并绑定当前内容；任一失败非零退出，显示失败命令、退出码和输出末尾；status 给出重测命令，不给 finish。
-- [ ] 带 argv 的匹配测试仅用于进度，不计入完成依据；在 implementing/needs-user 中 test_commands 偏离定义快照时拒绝，提示恢复或用户修订后 reopen。
-- [ ] ticket id 自带 Topic；省略 ticket 时只选择指定 Topic 唯一的实施中/needs-user Ticket，无候选则提示 topic status；topic A 的测试不能运行 topic B 的 Ticket。
+- [x] validate-ticket 接受 Spec 第 3 节字段，检查非空 test_commands、来源血缘、依赖和规则冲突；shlex argv 匹配支持配置前缀加零或多个参数，拒绝 unittestx 等伪前缀。
+- [x] implement start 拒绝未完成依赖、脏内容、quick 和同 Topic 已有 implementing/needs-user；待补建自动成为 standard，基线取与默认分支分叉点，并再次校验全量测试非空。
+- [x] 执行 M2 分支规则；记录 Ticket 基线及定义快照；生成包含 Ticket、Spec 验收、已完成前置提交与改动文件、适用规则和测试命令的简报，预留 Agent 实施计划。
+- [x] implement test 不带 argv 时逐条执行声明测试并绑定当前内容；任一失败非零退出，显示失败命令、退出码和输出末尾；status 给出重测命令，不给 finish。
+- [x] 带 argv 的匹配测试仅用于进度，不计入完成依据；在 implementing/needs-user 中 test_commands 偏离定义快照时拒绝，提示恢复或用户修订后 reopen。
+- [x] ticket id 自带 Topic；省略 ticket 时只选择指定 Topic 唯一的实施中/needs-user Ticket，无候选则提示 topic status；topic A 的测试不能运行 topic B 的 Ticket。

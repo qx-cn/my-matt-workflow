@@ -254,6 +254,9 @@ def status(repo, topic=None):
     command = None if value["status"] == "archived" else (
         f"workflow.py implement start --repo {shlex.quote(str(repo))} --topic {topic}" if value["status"] == "pending"
         else f"workflow.py topic complete --repo {shlex.quote(str(repo))} --topic {topic}")
+    if value["status"] == "pending":
+        from .ticket_implementation import next_start_command
+        command = next_start_command(repo, topic)
     return {"topic": topic, **value, "next_command": command}
 
 

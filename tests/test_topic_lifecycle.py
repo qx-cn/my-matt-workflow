@@ -28,7 +28,12 @@ class TopicLifecycleTests(unittest.TestCase):
         return subprocess.check_output(["git", *args], cwd=cwd or self.repo, text=True).strip()
 
     def cli(self, *args, ok=True):
-        result = subprocess.run([sys.executable, str(CLI), *args, "--repo", str(self.repo)],
+        if "--" in args:
+            index = args.index("--")
+            arguments = [*args[:index], "--repo", str(self.repo), *args[index:]]
+        else:
+            arguments = [*args, "--repo", str(self.repo)]
+        result = subprocess.run([sys.executable, str(CLI), *arguments],
                                 capture_output=True, text=True,
                                 env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
         if ok:

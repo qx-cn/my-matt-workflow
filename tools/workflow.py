@@ -98,7 +98,7 @@ from workflow_lib.tickets import (
 )
 from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
-from workflow_lib import topic_service
+from workflow_lib import topic_service, ticket_implementation
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -618,14 +618,10 @@ def command_decision_gate(args: argparse.Namespace) -> None:
 
 def command_validate_ticket(args: argparse.Namespace) -> None:
     try:
-        path = Path(args.path).resolve()
-        records, _ = ticket_scope_state(path.parent)
-        statuses = {
-            identifier: str(ticket.get("status"))
-            for identifier, (_, ticket) in records.items()
-        }
-        report = validate_ready_ticket(path, dependency_statuses=statuses)
-    except TicketError as exc:
+        repo = topic_service.safe_repo(Path(args.repo))
+        path = Path(args.path).resolve() if args.path else ticket_implementation.select(repo, args.ticket)[1]
+        report = ticket_implementation.validate(repo, path)
+    except (TicketError, topic_service.TopicError, OSError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(report, ensure_ascii=False))
 
@@ -1083,6 +1079,20 @@ def command_topic(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def command_implement(args: argparse.Namespace) -> None:
+    try:
+        if args.implement_action == "start":
+            report = ticket_implementation.start(Path(args.repo), args.ticket, args.topic, args.agent)
+        elif args.implement_action == "test":
+            argv = args.argv[1:] if args.argv[:1] == ["--"] else args.argv
+            report = ticket_implementation.test(Path(args.repo), args.ticket, args.topic, argv)
+        else:
+            report = ticket_implementation.status(Path(args.repo), args.ticket, args.topic)
+    except (TicketError, topic_service.TopicError, RuleError, OSError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def _release_ids_referenced_by(agent_homes: set[Path]) -> set[str]:
     referenced = {_current_release().name}
     for agent_home in agent_homes:
@@ -1202,6 +1212,19 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--level", choices=("quick", "standard"), required=True)
         command.set_defaults(func=command_topic)
 
+    implement = sub.add_parser("implement")
+    implement_actions = implement.add_subparsers(dest="implement_action", required=True)
+    for action in ("start", "test", "status"):
+        command = implement_actions.add_parser(action)
+        command.add_argument("--repo", default=".")
+        command.add_argument("--topic")
+        command.add_argument("--ticket")
+        if action == "start":
+            command.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
+        if action == "test":
+            command.add_argument("argv", nargs=argparse.REMAINDER)
+        command.set_defaults(func=command_implement)
+
     refresh_project = sub.add_parser("refresh-project")
     _add_profile_arguments(refresh_project)
     refresh_project.set_defaults(func=command_refresh_project)
@@ -1264,7 +1287,9 @@ def parser() -> argparse.ArgumentParser:
     decision_gate.set_defaults(func=command_decision_gate)
 
     validate_ticket = sub.add_parser("validate-ticket")
-    validate_ticket.add_argument("path")
+    validate_ticket.add_argument("path", nargs="?")
+    validate_ticket.add_argument("--repo", default=".")
+    validate_ticket.add_argument("--ticket")
     validate_ticket.set_defaults(func=command_validate_ticket)
 
     ticket_transition_cmd = sub.add_parser("ticket-transition")

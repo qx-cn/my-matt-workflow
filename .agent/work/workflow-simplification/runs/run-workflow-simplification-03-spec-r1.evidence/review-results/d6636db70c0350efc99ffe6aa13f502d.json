@@ -1,0 +1,106 @@
+{
+  "code_content_id": "d6b22dbcf233d05f35eb70454f22040573ee9f57bffd5deb15d1ad69be2bbbd5",
+  "design_gap": null,
+  "findings": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-03#A2",
+        "workflow-simplification-03#A3"
+      ],
+      "baseline_reachable": true,
+      "id": "branch-admission",
+      "root_cause": "admission-inputs-cached-before-branch-switch",
+      "severity": "P1",
+      "summary": "Code: start 只在切换分支前验证 Ticket/Topic/规则，却在切换后直接写 implementing。冻结代码复现：main 的 Ticket ready、已有 feature 分支的同 Ticket needs-user，start 从 main 切到 feature 后把 needs-user 改为 implementing。切换后的配置、定义、全部 Ticket 状态和规则必须重新检查，不能以缓存覆盖实际状态。ticket_implementation.py:start。"
+    },
+    {
+      "acceptance_ids": [
+        "workflow-simplification-03#A4"
+      ],
+      "baseline_reachable": true,
+      "id": "test-content-binding",
+      "root_cause": "test-batch-shares-one-content-fingerprint",
+      "severity": "P1",
+      "summary": "Code: test 在批次外只取一次 content_id。冻结代码复现：命令1在原内容运行并修改内容，命令2在修改内容运行并恢复原内容，两条记录均标原内容，tests_passed 错误为 true。必须每条命令执行前独立取内容身份，避免后续在不同内容上跑的测试冒充当前内容的完成依据。ticket_implementation.py:test。"
+    }
+  ],
+  "follow_ons": [],
+  "review_id": "d6636db70c0350efc99ffe6aa13f502d",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "a6c70fb401f71965740a0dad157caf32"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-03#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-03#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-03#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-03#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-03#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-03#A6",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "recovery",
+        "summary": "已有目标分支和多条真实子进程测试的内容变化已在冻结源复现；需要本轮修复。"
+      },
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_implementation.py",
+          "snapshot:tests/test_implement_lifecycle.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "04 接管冻结审查材料和结果，03 只提供准入及真实测试；未实现 finish 或审查循环。"
+      }
+    ]
+  },
+  "status": "findings"
+}
