@@ -1270,38 +1270,18 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual("allow", review["commit_policy"])
         self.assertEqual("confirm", light["commit_policy"])
 
-    def test_setup_can_apply_each_canonical_preset(self):
+    def test_setup_rejects_removed_presets_without_writing(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
-            first = True
             for preset in POLICY_PRESETS:
-                command = [
-                    "python3",
-                    "tools/workflow.py",
-                    "setup",
-                    "--repo",
-                    str(repo),
-                    "--preset",
-                    preset,
-                    "--apply",
-                ]
-                if not first:
-                    command.append("--refresh")
                 result = subprocess.run(
-                    command,
-                    cwd=Path(__file__).resolve().parents[1],
-                    capture_output=True,
-                    text=True,
-                    check=True,
+                    [sys.executable, "tools/workflow.py", "setup", "--repo", str(repo),
+                     "--preset", preset, "--apply"],
+                    capture_output=True, text=True, check=False,
                 )
-                first = False
-                written = (repo / ".agent" / "matt-workflow.md").read_text()
-                for key, value in POLICY_PRESETS[preset].items():
-                    self.assertIn(f"{key}: {value}", written)
-                self.assertIn("strict-control", result.stdout)
-                self.assertIn("light-control", result.stdout)
-                self.assertIn("semi-auto", result.stdout)
-                self.assertIn("full-auto", result.stdout)
+                self.assertNotEqual(0, result.returncode)
+                self.assertIn("migrate", result.stderr)
+                self.assertFalse((repo / ".agent").exists())
 
     def test_rendered_profile_documents_five_presets_not_only_old_poles(self):
         rendered = render_profile(get_policy_preset("strict-control") | {
@@ -1687,10 +1667,14 @@ class RefreshProjectTests(unittest.TestCase):
                 "audited",
                 "--apply",
             )
-            self.assertEqual(0, created.returncode, created.stderr)
+            self.assertNotEqual(0, created.returncode)
+            self.assertIn("migrate", created.stderr)
             profile = repo / ".agent/matt-workflow.md"
-            config, _ = parse_profile(profile.read_text())
-            self.assertEqual("audited", config["assurance_level"])
+            self.assertFalse(profile.exists())
+            # Historical refresh coverage remains until the migration Ticket
+            # removes that command; new setup no longer creates v1 profiles.
+            profile.parent.mkdir()
+            profile.write_text(render_profile({"schema_version": 1, "task_backend": "local"}))
 
             refreshed = self._run(
                 "refresh-project",
@@ -1718,8 +1702,8 @@ class RefreshProjectTests(unittest.TestCase):
 
             preview = self._run("setup", "--repo", str(repo))
 
-            self.assertEqual(0, preview.returncode, preview.stderr)
-            self.assertIn('"from": ".agent/work/checkout/spec.md"', preview.stdout)
+            self.assertNotEqual(0, preview.returncode)
+            self.assertIn("migrate", preview.stderr)
             self.assertTrue(legacy.exists())
             self.assertEqual(".cache/\n", gitignore.read_text())
 
@@ -1777,22 +1761,25 @@ class RefreshProjectTests(unittest.TestCase):
             self.assertIn('"mode": "shared"', result.stdout)
             self.assertFalse((repo / ".agent/.git").exists())
             subprocess.run(["git", "add", ".agent/matt-workflow.md"], cwd=repo, check=True)
-            refreshed = self._run("refresh-project", "--repo", str(repo))
-            self.assertEqual(0, refreshed.returncode, refreshed.stderr)
+            self.assertIn("schema_version: 2", (repo / ".agent/matt-workflow.md").read_text())
 
     def test_shared_mode_requires_explicit_migration_before_removing_nested_git(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
             subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
-            private = self._run("setup", "--repo", str(repo), "--apply")
+            # Seed the historical private profile for refresh-project tests.
+            profile = repo / ".agent/matt-workflow.md"
+            profile.parent.mkdir()
+            profile.write_text(render_profile({"schema_version": 1, "task_backend": "local"}))
+            private = self._run("refresh-project", "--repo", str(repo))
             self.assertEqual(0, private.returncode, private.stderr)
             self.assertTrue((repo / ".agent/.git").exists())
 
             preview = self._run(
                 "setup", "--repo", str(repo), "--refresh", "--agent-directory-mode", "shared"
             )
-            self.assertEqual(0, preview.returncode, preview.stderr)
-            self.assertIn("remove_nested_git_requires_migrate_agent_directory_mode", preview.stdout)
+            self.assertNotEqual(0, preview.returncode)
+            self.assertIn("migrate", preview.stderr)
 
             refused = self._run(
                 "refresh-project", "--repo", str(repo), "--agent-directory-mode", "shared"

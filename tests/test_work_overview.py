@@ -414,6 +414,12 @@ class WorkOverviewTests(unittest.TestCase):
             topic = repo / ".agent" / "work" / "feature"
             self._spec(topic, "02", 2)
             self._ticket(topic, "first", 1)
+            from tools.workflow_lib.topic_service import render_config
+            (repo / ".agent/matt-workflow.md").write_text(render_config({
+                "schema_version": 2, "task_backend": "local", "agent_directory_mode": "shared",
+                "default_base_branch": "main", "test_commands": [], "standards_sources": [],
+                "domain_sources": [], "default_execution_agent": "auto", "assurance_level": "standard",
+            }))
             base = [sys.executable, "tools/workflow.py", "work-overview", "--repo", str(repo), "--topic", "feature"]
             root = Path(__file__).resolve().parents[1]
 
@@ -421,9 +427,9 @@ class WorkOverviewTests(unittest.TestCase):
             structured = subprocess.run([*base, "--json"], cwd=root, capture_output=True, text=True, check=False)
 
             self.assertEqual(0, readable.returncode, readable.stderr)
-            self.assertIn("下一步：可手动开始 Ticket first", readable.stdout)
+            self.assertIn("feature: pending", readable.stdout)
             self.assertEqual(0, structured.returncode, structured.stderr)
-            self.assertEqual("first", json.loads(structured.stdout)["topics"][0]["frontier"][0]["id"])
+            self.assertEqual("pending", json.loads(structured.stdout)["topics"][0]["status"])
 
 
 if __name__ == "__main__":

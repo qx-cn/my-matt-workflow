@@ -7,9 +7,9 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-01"]
-claimed_by:
+claimed_by: 
 tags: []
 sequence: 2
 test_commands: ["python3 -m unittest discover -s tests"]
@@ -37,9 +37,9 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] setup 默认只探测和展示，apply 才写入 schema_version 2 的九个配置键；private 沿用嵌套 git 初始化。非法值指出字段，旧配置和 audited 提示 migrate，检测失败零写入。
-- [ ] topic start 必须选择 Topic，检查内容干净、归档重名和现有状态；standard 启动要求至少一条无星号全量测试；quick 在默认分支按 M2 创建或切换分支，在其他分支不切换。
-- [ ] 多个活动 Topic 时省略 topic 的相关操作拒绝；一个活动 Topic 可省略；归档 Topic 只读。work-overview 正确区分活动、待补建与文档 Topic。
-- [ ] quick complete 校验全部摘要章节和验收对照；全量测试失败则拒绝，空集合标记未配置测试；成功时最多一次代码提交、归档和 kind quick 度量，没有实施记录。
-- [ ] 文档 Topic 可直接 complete，记录 kind topic 且不可观察字段为 null；同名归档不覆盖；待补建不能直接 complete，无 Ticket 的 standard 拒绝完成。
-- [ ] quick/文档完成满足 I-A1、I-A2；内容与 agent 改动的提交边界正确，任何流程不推送、不写外部系统。
+- [x] setup 默认只探测和展示，apply 才写入 schema_version 2 的九个配置键；private 沿用嵌套 git 初始化。非法值指出字段，旧配置和 audited 提示 migrate，检测失败零写入。
+- [x] topic start 必须选择 Topic，检查内容干净、归档重名和现有状态；standard 启动要求至少一条无星号全量测试；quick 在默认分支按 M2 创建或切换分支，在其他分支不切换。
+- [x] 多个活动 Topic 时省略 topic 的相关操作拒绝；一个活动 Topic 可省略；归档 Topic 只读。work-overview 正确区分活动、待补建与文档 Topic。
+- [x] quick complete 校验全部摘要章节和验收对照；全量测试失败则拒绝，空集合标记未配置测试；成功时最多一次代码提交、归档和 kind quick 度量，没有实施记录。
+- [x] 文档 Topic 可直接 complete，记录 kind topic 且不可观察字段为 null；同名归档不覆盖；待补建不能直接 complete，无 Ticket 的 standard 拒绝完成。
+- [x] quick/文档完成满足 I-A1、I-A2；内容与 agent 改动的提交边界正确，任何流程不推送、不写外部系统。

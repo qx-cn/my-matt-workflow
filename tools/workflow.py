@@ -98,6 +98,7 @@ from workflow_lib.tickets import (
 )
 from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
+from workflow_lib import topic_service
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -270,7 +271,7 @@ def _initialize_agent_repository(
     }
 
 
-def command_setup(args: argparse.Namespace) -> None:
+def command_legacy_setup(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve()
     profile_path = repo / ".agent" / "matt-workflow.md"
     has_existing_profile = profile_path.exists()
@@ -673,13 +674,14 @@ def command_next_ticket(args: argparse.Namespace) -> None:
 
 def command_work_overview(args: argparse.Namespace) -> None:
     try:
-        report = work_overview(Path(args.repo), topic=args.topic)
-    except WorkOverviewError as exc:
+        report = topic_service.overview(Path(args.repo), args.topic)
+    except (topic_service.TopicError, OSError) as exc:
         raise SystemExit(str(exc)) from exc
     if args.json:
         print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     else:
-        print(format_work_overview(report))
+        for topic in report["topics"]:
+            print(f'{topic["topic"]}: {topic["status"]}')
 
 
 def command_archive_spec(args: argparse.Namespace) -> None:
@@ -1046,7 +1048,39 @@ def command_refresh_project(args: argparse.Namespace) -> None:
     """Apply a confirmed project refresh without repeating setup switches."""
     args.refresh = True
     args.apply = True
-    command_setup(args)
+    command_legacy_setup(args)
+
+
+def command_setup(args: argparse.Namespace) -> None:
+    try:
+        removed_flags = ("preset", "branch_policy", "commit_policy", "external_write_policy",
+                         "docs_writeback", "humanizer_policy", "composition_policy",
+                         "work_scope_policy", "decision_policy", "migrate_work_artifacts",
+                         "migrate_agent_directory_mode", "confirm_candidate_link_repair")
+        if any(getattr(args, key, None) for key in removed_flags):
+            raise topic_service.TopicError("旧 setup 参数已删除；请运行 migrate")
+        overrides = {"task_backend": args.task_backend, "agent_directory_mode": args.agent_directory_mode,
+                     "default_base_branch": args.base_branch, "test_commands": args.test_command,
+                     "standards_sources": args.standards_source, "domain_sources": args.domain_source,
+                     "default_execution_agent": args.execution_agent, "assurance_level": args.assurance_level}
+        report = topic_service.setup(Path(args.repo), overrides, args.apply,
+                                     _discover_standards_sources(Path(args.repo), args.execution_agent or "auto"))
+    except (topic_service.TopicError, OSError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_topic(args: argparse.Namespace) -> None:
+    try:
+        if args.topic_action == "start":
+            report = topic_service.start(Path(args.repo), args.topic, args.level)
+        elif args.topic_action == "status":
+            report = topic_service.status(Path(args.repo), args.topic)
+        else:
+            report = topic_service.complete(Path(args.repo), args.topic)
+    except (topic_service.TopicError, OSError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
 def _release_ids_referenced_by(agent_homes: set[Path]) -> set[str]:
@@ -1157,6 +1191,16 @@ def parser() -> argparse.ArgumentParser:
     setup.add_argument("--apply", action="store_true")
     setup.add_argument("--refresh", action="store_true")
     setup.set_defaults(func=command_setup)
+
+    topic = sub.add_parser("topic")
+    topic_actions = topic.add_subparsers(dest="topic_action", required=True)
+    for action in ("start", "status", "complete"):
+        command = topic_actions.add_parser(action)
+        command.add_argument("--repo", default=".")
+        command.add_argument("--topic", required=action == "start")
+        if action == "start":
+            command.add_argument("--level", choices=("quick", "standard"), required=True)
+        command.set_defaults(func=command_topic)
 
     refresh_project = sub.add_parser("refresh-project")
     _add_profile_arguments(refresh_project)

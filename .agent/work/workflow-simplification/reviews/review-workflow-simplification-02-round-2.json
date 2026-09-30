@@ -1,0 +1,104 @@
+{
+  "review_id": "01a4dce444c59f3eef19b0140561e13a",
+  "code_content_id": "dc0c6dc2bd60600c885d8f6d27f60d71f880525b02564d35e23e2b25a828bdf9",
+  "status": "pass",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "eb1cdf49f7f6a4e56924e3d82472f43e"
+  },
+  "findings": [],
+  "follow_ons": [
+    {
+      "id": "pending-next-ticket-command",
+      "root_cause": "ticket-selection-owned-by-next-implementation-entry",
+      "owner_ticket_id": "workflow-simplification-03",
+      "acceptance_ids": [
+        "workflow-simplification-03#A6"
+      ],
+      "baseline_reachable": true,
+      "summary": "03 接入 Ticket 定位时，topic status 的 pending 下一步应带所选 ready Ticket 的 --ticket；省略 ticket 的实施中定位规则不用于首次启动。02 当前只建立 Topic 分类；详细交接见 handoffs-workflow-simplification-02-runtime-foundation.md。"
+    }
+  ],
+  "design_gap": null,
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-02#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "snapshot:tools/workflow.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-02#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-02#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-02#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-02#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-02#A6",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "probe": "recovery",
+        "summary": "Git 提交失败回滚为活动 Topic，私有元数据失败后的恢复不重复代码提交；围栏模板回归已通过。",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "probe": "downstream-owner",
+        "summary": "03拥有 Ticket 定位及实施入口，05/07拥有 standard收尾；本次只兑现配置v2与quick/document，并将pending命令定位留给03。",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_topic_lifecycle.py",
+          "test:1b8e6d1841e9f8e18e1922210b374206351c122ebdb1a3c4c9ac9c1fb81e94b4",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      }
+    ]
+  }
+}
