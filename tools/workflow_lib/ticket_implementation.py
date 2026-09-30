@@ -236,7 +236,7 @@ def start(repo, ticket=None, topic=None, agent=None):
     return {"ticket": value["id"], "topic": topic, "baseline": baseline, "briefing": str(brief)}
 
 
-def load_active(repo, ticket, topic):
+def load_active(repo, ticket, topic, check_commands=True):
     repo = topics.safe_repo(repo)
     config = topics.read_config(repo)
     topic, path = select(repo, ticket, topic)
@@ -247,9 +247,10 @@ def load_active(repo, ticket, topic):
     if not record.is_file():
         raise topics.TopicError("缺少新实施记录；请运行 migrate")
     unit = json.loads(record.read_text())
-    if value.get("test_commands") != unit["definition"]["ticket"]["metadata"].get("test_commands"):
+    if check_commands and value.get("test_commands") != unit["definition"]["ticket"]["metadata"].get("test_commands"):
         raise topics.TopicError("test_commands 与定义快照不同；恢复原值，或用户确认修订后 resolve --reopen")
-    validate(repo, path, config)
+    if check_commands:
+        validate(repo, path, config)
     return repo, config, topic, path, unit, record
 
 
@@ -306,7 +307,7 @@ def test(repo, ticket=None, topic=None, argv=None):
 
 
 def status(repo, ticket=None, topic=None):
-    repo, config, topic, path, unit, _ = load_active(repo, ticket, topic)
+    repo, config, topic, path, unit, _ = load_active(repo, ticket, topic, check_commands=False)
     passed = tests_passed(repo, unit)
     definition_changed = definition(repo, path) != unit["definition"]
     command = "review" if passed else "test"
@@ -317,9 +318,16 @@ def status(repo, ticket=None, topic=None):
             command = "finish"
         except (topics.TopicError, OSError, ValueError):
             pass
+    next_command = f"workflow.py implement {command} --repo {shlex.quote(str(repo))} --ticket {unit['ticket']}"
+    if frontmatter(path)['status'] == 'needs-user' and passed:
+        next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --accept --reason '<理由>'"
+    if definition_changed:
+        next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --reopen --reason '<理由>'"
     return {"ticket": unit["ticket"], "topic": topic, "status": frontmatter(path)["status"],
             "baseline": unit["baseline"], "tests_passed": passed, "definition_changed": definition_changed,
-            "next_command": f"workflow.py implement {command} --repo {shlex.quote(str(repo))} --ticket {unit['ticket']}"}
+            "stop_reason": unit.get("stop_reason"), "rounds_used": len(unit.get("reviews", [])),
+            "decisions": unit.get("decisions", []),
+            "next_command": next_command}
 
 
 def next_start_command(repo, topic):

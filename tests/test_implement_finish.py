@@ -97,6 +97,7 @@ class FinishTests(unittest.TestCase):
 
     def test_repairs_require_notes_and_commit_body_keeps_reason(self):
         self.start()
+        (self.repo / 'code.txt').write_text('initial implementation')
         report = self.review()
         finding = {'id': 'bug', 'severity': 'blocking', 'summary': 'marker failure',
                    'anchor': 'feature-01#A1', 'location': 'code.txt:1',

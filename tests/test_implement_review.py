@@ -253,6 +253,10 @@ class ReviewTests(unittest.TestCase):
             report = self.review()
             result = self.result(report, status=expected)
             self.assertEqual(expected, json.loads(self.submit(result).stdout)["status"])
+            self.assertEqual('needs-user', json.loads(self.cli('implement', 'status').stdout)['status'])
+            spec = self.repo / '.agent/work/feature/specs/specs-feature-01.md'
+            spec.write_text(spec.read_text() + '\nclarification: ' + expected + '\n')
+            self.cli('resolve', '--ticket', 'feature-01', '--reopen', '--reason', 'clarified definition')
         path = self.repo / ".agent/work/feature/tickets/tickets-feature-01.md"
         self.replace(path, "status", "needs-user")
         self.assertIn("implementing", self.cli("implement", "review", "--ticket", "feature-01",

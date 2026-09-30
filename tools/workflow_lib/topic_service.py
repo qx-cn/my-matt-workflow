@@ -264,11 +264,13 @@ def status(repo, topic=None):
         from .ticket_implementation import next_start_command
         command = next_start_command(repo, topic)
     advisories = []
+    known_issues = []
     for record in ((archive if archive.exists() else path) / "implementations").glob("*.json"):
         implementation = json.loads(record.read_text())
+        known_issues.extend(implementation.get("known_issues", []))
         for review in implementation.get("reviews", []):
             advisories.extend(f for f in review.get("result", {}).get("findings", []) if f.get("severity") == "advisory")
-    return {"topic": topic, **value, "advisories": advisories, "next_command": command}
+    return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues, "next_command": command}
 
 
 def overview(repo, topic=None):

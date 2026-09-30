@@ -16,7 +16,7 @@ def metric(unit, outcome, verdict):
             'test_runs': len({t.get('run_id', t.get('finished_at')) for t in unit['tests']}),
             'review_rounds': len(unit.get('reviews', [])),
             'findings': {s: sum(f.get('severity') == s for f in findings) for s in ('blocking', 'advisory')},
-            'repair_rounds': sum(r.get('status') == 'findings' for r in unit.get('reviews', [])),
+            'repair_rounds': sum(bool(r.get('repair')) for r in unit.get('reviews', [])),
             'needs_user_count': unit.get('needs_user_count', 0), 'command_errors': None,
             'reviewer_provenance': verdict['reviewer']['provenance'], 'tests_configured': True}
 
@@ -31,12 +31,17 @@ def finish(repo, ticket=None, topic=None, notes_file=None):
     verdict = review.require_pass(repo, config, topic, path, unit)
     if re.search(r'^\s*- \[ \]', path.read_text(), re.M):
         raise topics.TopicError('acceptance: 验收复选框必须全部勾选')
-    repairs = any(r.get('status') == 'findings' for r in unit.get('reviews', []))
+    repairs = any(r.get('repair') for r in unit.get('reviews', []))
     if repairs and not notes_file:
         raise topics.TopicError('notes_file: 经历修复必须提供修复思路')
     notes = Path(notes_file).read_text() if notes_file else ''
     if repairs and not notes.strip():
         raise topics.TopicError('notes_file: 修复思路不能为空')
+    return commit_completion(repo, config, topic, path, unit, record, verdict, notes)
+
+
+def commit_completion(repo, config, topic, path, unit, record, verdict, notes, outcome='complete'):
+    value = frontmatter(path)
     topics.preflight_commit(repo, config)
     private = config['agent_directory_mode'] == 'private'
     dirty = topics.content_dirty(repo)
@@ -55,10 +60,10 @@ def finish(repo, ticket=None, topic=None, notes_file=None):
     try:
         path.write_text(re.sub(r'^claimed_by:.*$', 'claimed_by:',
                               re.sub(r'^status:.*$', 'status: complete', path.read_text(), flags=re.M), flags=re.M))
-        unit['outcome'] = 'complete'
+        unit['outcome'] = outcome
         impl.write_json(record, unit)
         with metrics.open('a') as stream:
-            stream.write(json.dumps(metric(unit, 'complete', verdict), ensure_ascii=False) + '\n')
+            stream.write(json.dumps(metric(unit, outcome, verdict), ensure_ascii=False) + '\n')
         if private:
             topics.git(repo / '.agent', 'add', '--force', '--all', '--', '.')
             topics.git(repo / '.agent', 'commit', '-m', message)

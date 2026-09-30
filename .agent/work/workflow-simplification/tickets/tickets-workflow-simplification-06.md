@@ -7,9 +7,9 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-05"]
-claimed_by:
+claimed_by: 
 tags: []
 sequence: 6
 test_commands: ["python3 -m unittest discover -s tests"]
@@ -37,8 +37,8 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] 最多四轮，pass 后内容变化仍消耗下一轮；第四轮阻断或第四轮通过后失效再申请审查均置 needs-user，拒绝第五轮。blocked-by-design/inconclusive 同样立即停止。
-- [ ] 四个停止信号各有可达用例：连续复审阻断落在前次修复内、相邻修复在中间快照行号重叠、contradicts 指向旧问题、基线增删行超过第一轮的 1.5 倍；原因可见。
-- [ ] needs-user 拒绝继续开轮，但可运行测试；accept 必须测试在当前内容通过且满足 I-K1，有内容才提交，complete 和 accepted 度量同步，剩余阻断作为已知问题。
-- [ ] reopen 从 implementing/needs-user 均可执行，但仅 status、claimed_by、复选框变化时拒绝；Ticket 定义或 Spec 改变后重读校验，保留代码与基线，测试/审查记录作废，轮数和信号归零。
-- [ ] 修订后的测试声明重新按 I-K2 校验并生效；每条裁决理由保存；重启 CLI 后轮数、停止原因和定义快照仍有效。
+- [x] 最多四轮，pass 后内容变化仍消耗下一轮；第四轮阻断或第四轮通过后失效再申请审查均置 needs-user，拒绝第五轮。blocked-by-design/inconclusive 同样立即停止。
+- [x] 四个停止信号各有可达用例：连续复审阻断落在前次修复内、相邻修复在中间快照行号重叠、contradicts 指向旧问题、基线增删行超过第一轮的 1.5 倍；原因可见。
+- [x] needs-user 拒绝继续开轮，但可运行测试；accept 必须测试在当前内容通过且满足 I-K1，有内容才提交，complete 和 accepted 度量同步，剩余阻断作为已知问题。
+- [x] reopen 从 implementing/needs-user 均可执行，但仅 status、claimed_by、复选框变化时拒绝；Ticket 定义或 Spec 改变后重读校验，保留代码与基线，测试/审查记录作废，轮数和信号归零。
+- [x] 修订后的测试声明重新按 I-K2 校验并生效；每条裁决理由保存；重启 CLI 后轮数、停止原因和定义快照仍有效。

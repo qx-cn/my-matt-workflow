@@ -10,7 +10,7 @@ import re
 import uuid
 
 from . import ticket_implementation as impl
-from . import topic_service as topics
+from . import topic_service as topics, review_loop
 from .tickets import acceptance_items, frontmatter
 
 PREFILLED = ('unit_id', 'content_id', 'round', 'acceptance', 'probes', 'downstream_tickets')
@@ -103,6 +103,12 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
         raise topics.TopicError('implement review 只接受 implementing')
     if not isinstance(reviewer_model, str) or not reviewer_model.strip():
         raise topics.TopicError('reviewer.model: 开启审查时请用 --reviewer-model 声明宿主实际模型')
+    if len(unit.get('reviews', [])) >= 4:
+        try:
+            require_pass(repo, config, topic, path, unit)
+        except (topics.TopicError, OSError, ValueError):
+            review_loop.stop(unit, path, record, '轮数耗尽：4 轮后没有当前有效通过记录')
+        raise topics.TopicError('轮数上限为 4；拒绝第 5 轮')
     implementation_session = unit.setdefault('implementation_session_id', uuid.uuid4().hex)
     review_context = {'provenance': 'independent' if reviewer_session_id and reviewer_session_id != implementation_session else 'self',
                       'model': reviewer_model, 'session_id': reviewer_session_id or implementation_session}
@@ -157,8 +163,9 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
         active = {'manifest': str(manifest_path), 'manifest_sha256': digest(manifest_path.read_bytes()),
                   'snapshot_dir': str(directory), 'result_file': str(result_file),
                   'definition': starting_definition, 'config': config}
+        unit.setdefault('first_review_volume', review_loop.volume(manifest))
         unit['active_review'] = active
-        unit.setdefault('reviews', []).append({'unit_id': unit_id, 'content_id': identity, 'round': skeleton['round'], 'status': 'open'})
+        unit.setdefault('reviews', []).append({'unit_id': unit_id, 'content_id': identity, 'round': skeleton['round'], 'status': 'open', 'manifest': str(manifest_path)})
         impl.write_json(record, unit)
         return {**active, **{k: skeleton[k] for k in PREFILLED}, 'rounds_used': skeleton['round'], 'rounds_remaining': max(0, 4 - skeleton['round'])}
     except Exception:
@@ -318,10 +325,12 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
     except (OSError, ValueError) as exc:
         raise topics.TopicError(f'result: 无法读取有效 JSON：{exc}') from exc
     result = validate_result(submitted, manifest)
+    review_loop.check_contradictions(unit, result)
     status = result['status']
     if status == 'findings' and not any(f['severity'] == 'blocking' for f in result['findings']):
         status = 'pass'
-    entry = {'unit_id': manifest['unit_id'], 'content_id': manifest['content_id'], 'round': manifest['round'],
+    repair = review_loop.repair_for(unit, manifest)
+    entry = {'manifest': unit['active_review']['manifest'], 'repair': repair, 'unit_id': manifest['unit_id'], 'content_id': manifest['content_id'], 'round': manifest['round'],
              'status': status, 'reviewer': result['reviewer'], 'result': result}
     accepted = topics.topic_path(repo, topic) / 'reviews' / f"accepted-{manifest['unit_id']}.json"
     if accepted.exists():
@@ -330,7 +339,11 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
     else:
         impl.write_json(accepted, entry)
     unit['reviews'][-1] = entry
-    impl.write_json(record, unit)
+    reason = review_loop.signals(unit, manifest, result, repair)
+    if reason:
+        review_loop.stop(unit, path, record, reason)
+    else:
+        impl.write_json(record, unit)
     return {**entry, 'rounds_used': manifest['round'], 'rounds_remaining': max(0, 4 - manifest['round'])}
 
 

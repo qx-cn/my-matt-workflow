@@ -98,7 +98,7 @@ from workflow_lib.tickets import (
 )
 from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
-from workflow_lib import topic_service, ticket_implementation, ticket_review, ticket_completion
+from workflow_lib import topic_service, ticket_implementation, ticket_review, ticket_completion, ticket_resolution
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1079,6 +1079,14 @@ def command_topic(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def command_resolve(args: argparse.Namespace) -> None:
+    try:
+        report = ticket_resolution.resolve(Path(args.repo), args.ticket, args.topic, args.accept, args.reason)
+    except (TicketError, topic_service.TopicError, RuleError, OSError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_implement(args: argparse.Namespace) -> None:
     try:
         if args.implement_action == "start":
@@ -1234,6 +1242,16 @@ def parser() -> argparse.ArgumentParser:
         if action == "finish":
             command.add_argument("--notes-file")
         command.set_defaults(func=command_implement)
+
+    resolve = sub.add_parser("resolve")
+    resolve.add_argument("--repo", default=".")
+    resolve.add_argument("--ticket")
+    resolve.add_argument("--topic")
+    decision = resolve.add_mutually_exclusive_group(required=True)
+    decision.add_argument("--accept", action="store_true")
+    decision.add_argument("--reopen", action="store_true")
+    resolve.add_argument("--reason", required=True)
+    resolve.set_defaults(func=command_resolve)
 
     refresh_project = sub.add_parser("refresh-project")
     _add_profile_arguments(refresh_project)
