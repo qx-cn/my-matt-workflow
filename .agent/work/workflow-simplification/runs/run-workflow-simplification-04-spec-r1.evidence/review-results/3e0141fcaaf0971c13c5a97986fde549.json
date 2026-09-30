@@ -1,0 +1,89 @@
+{
+  "code_content_id": "7b73faccbff7b00e19bfd82ba2e43f3a9785b4807c3228c2a8aec7e7ef1b6cae",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-05#A1",
+        "workflow-simplification-05#A2"
+      ],
+      "baseline_reachable": true,
+      "id": "normalized-review-pass-consumer",
+      "owner_ticket_id": "workflow-simplification-05",
+      "root_cause": "finish-consumes-normalized-verdict-and-current-binding",
+      "summary": "05 的 finish 应消费 reviews entry.status（仅 advisory 的原始 findings 已归一化为 pass），并核验当前内容/材料绑定及测试；不能把原始 result.status 当完成 verdict，或把过期 pass 当当前资格。接口交接见 handoffs-workflow-simplification-04-review-foundation.md。"
+    }
+  ],
+  "review_id": "3e0141fcaaf0971c13c5a97986fde549",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "98e7de0090a5bfae19e87f23c8548604"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-04#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "recovery",
+        "summary": "Code 复审确认过滤仅根路径，baseline/current 都保留嵌套 agent fixture，回归涵盖未跟踪和修改文件；冻结校验、同单元重试、拒绝结论覆盖仍成立。Spec 独立顺序 pass 从冻结 M1/M4/M5及第4节建立证据，A1–A5 无剩余阻断。"
+      },
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "05 消费规范化 entry.status 和当前绑定后 finish；06 负责上限/停止/needs-user。来源模型只证明宿主声明一致，10 负责真实宿主派发；施工 self 如实记录。"
+      }
+    ]
+  },
+  "status": "pass"
+}

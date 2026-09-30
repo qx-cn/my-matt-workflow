@@ -257,7 +257,12 @@ def status(repo, topic=None):
     if value["status"] == "pending":
         from .ticket_implementation import next_start_command
         command = next_start_command(repo, topic)
-    return {"topic": topic, **value, "next_command": command}
+    advisories = []
+    for record in ((archive if archive.exists() else path) / "implementations").glob("*.json"):
+        implementation = json.loads(record.read_text())
+        for review in implementation.get("reviews", []):
+            advisories.extend(f for f in review.get("result", {}).get("findings", []) if f.get("severity") == "advisory")
+    return {"topic": topic, **value, "advisories": advisories, "next_command": command}
 
 
 def overview(repo, topic=None):

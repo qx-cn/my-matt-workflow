@@ -98,7 +98,7 @@ from workflow_lib.tickets import (
 )
 from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
-from workflow_lib import topic_service, ticket_implementation
+from workflow_lib import topic_service, ticket_implementation, ticket_review
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1083,6 +1083,8 @@ def command_implement(args: argparse.Namespace) -> None:
     try:
         if args.implement_action == "start":
             report = ticket_implementation.start(Path(args.repo), args.ticket, args.topic, args.agent)
+        elif args.implement_action == "review":
+            report = ticket_review.review(Path(args.repo), args.ticket, args.topic, args.submit, args.reviewer_model, args.reviewer_session_id)
         elif args.implement_action == "test":
             argv = args.argv[1:] if args.argv[:1] == ["--"] else args.argv
             report = ticket_implementation.test(Path(args.repo), args.ticket, args.topic, argv)
@@ -1214,13 +1216,17 @@ def parser() -> argparse.ArgumentParser:
 
     implement = sub.add_parser("implement")
     implement_actions = implement.add_subparsers(dest="implement_action", required=True)
-    for action in ("start", "test", "status"):
+    for action in ("start", "test", "review", "status"):
         command = implement_actions.add_parser(action)
         command.add_argument("--repo", default=".")
         command.add_argument("--topic")
         command.add_argument("--ticket")
         if action == "start":
             command.add_argument("--agent", choices=sorted(EXECUTION_AGENTS))
+        if action == "review":
+            command.add_argument("--submit")
+            command.add_argument("--reviewer-model")
+            command.add_argument("--reviewer-session-id")
         if action == "test":
             command.add_argument("argv", nargs=argparse.REMAINDER)
         command.set_defaults(func=command_implement)

@@ -1,0 +1,87 @@
+{
+  "code_content_id": "2dbae8a91bfdb09baf3d48ddbd2348c63fc9f0d3a25f6e692395458a27656f75",
+  "design_gap": null,
+  "findings": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-04#A1"
+      ],
+      "baseline_reachable": true,
+      "id": "nested-agent-fixture",
+      "root_cause": "agent-exclusion-applies-to-every-path-component",
+      "severity": "P1",
+      "summary": "Code: ticket_review.py:content_path 把任意路径片段 .agent 都排除。冻结代码在真实临时 Git 仓库从 baseline start 后新增 tests/fixtures/demo/.agent/config.md，topic_service.content_paths 包含该文件，但 review changes 为空。测试 fixture 属于项目内容，必须冻结并作为 scope 外文件保留；只能排除项目根 .agent/.git。正式基线已有 tests/fixtures/**/.agent 内容，新增 API 可直接到达此失败路径。"
+    }
+  ],
+  "follow_ons": [],
+  "review_id": "7511de7a2c5bc61ab1ac191851750cf7",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "98e7de0090a5bfae19e87f23c8548604"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-04#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-04#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "recovery",
+        "summary": "冻结材料、定义、规则、决定和内容漂移被拒绝，错误结果可原单元重试；发现普通 fixture 被过滤，需要修复。"
+      },
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/ticket_review.py",
+          "snapshot:tests/test_implement_review.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "05 消费当前内容审查结果以 finish；06 执行轮数/停止条件；09/10 接入共享规则与宿主上下文。本轮未要求下游能力提前交付。"
+      }
+    ]
+  },
+  "status": "findings"
+}

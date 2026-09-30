@@ -7,9 +7,9 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-03"]
-claimed_by:
+claimed_by: 
 tags: []
 sequence: 4
 test_commands: ["python3 -m unittest discover -s tests"]
@@ -37,8 +37,8 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] implement review 冻结 Ticket 基线以来全部内容差异，排除 agent、git 和被忽略文件；rule_scope 之外的文件单列，不能从审查差异中删去。
-- [ ] 材料包含冻结改动、稳定验收编号、probes、下游 Ticket、已决事项、循环规则与骨架；排除实施者总结和简报的实施计划。
-- [ ] 骨架预填 unit_id、content_id、round、acceptance、probes、downstream_tickets；submit 比较当前冻结单元，任何不一致或必填缺失指出具体字段。
-- [ ] 校验 reviewer 来源与实际模型、coverage、四类 status 和两类 severity；blocking 必填锚定对象、位置、出错路径和可达性；pass 含阻断问题拒绝。
-- [ ] 仅 advisory 的结果登记为通过，建议出现在 topic status；审查来源如实保存，self 不能被标为 independent。
+- [x] implement review 冻结 Ticket 基线以来全部内容差异，排除 agent、git 和被忽略文件；rule_scope 之外的文件单列，不能从审查差异中删去。
+- [x] 材料包含冻结改动、稳定验收编号、probes、下游 Ticket、已决事项、循环规则与骨架；排除实施者总结和简报的实施计划。
+- [x] 骨架预填 unit_id、content_id、round、acceptance、probes、downstream_tickets；submit 比较当前冻结单元，任何不一致或必填缺失指出具体字段。
+- [x] 校验 reviewer 来源与实际模型、coverage、四类 status 和两类 severity；blocking 必填锚定对象、位置、出错路径和可达性；pass 含阻断问题拒绝。
+- [x] 仅 advisory 的结果登记为通过，建议出现在 topic status；审查来源如实保存，self 不能被标为 independent。
