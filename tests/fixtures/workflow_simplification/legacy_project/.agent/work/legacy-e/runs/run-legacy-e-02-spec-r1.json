@@ -1,0 +1,152 @@
+{
+  "attempt_id": "1c3844aad249613f63006dd9a81392f0",
+  "blocker": "Synthetic legacy design-blocked example for migration.",
+  "context": {
+    "base_sha": "0e266f7708510548fbf794ae247b9ca1f84924c0",
+    "context_id": "a07a6e490076f3e18309ede80af09a1c808631f76dabebf4224ba17d96d917e5",
+    "domain_sources": [],
+    "policies": {
+      "composition_policy": "manual",
+      "decision_policy": "ask",
+      "humanizer_policy": "deny",
+      "max_repair_rounds": 1,
+      "work_scope_policy": "single-ticket"
+    },
+    "repo": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project",
+    "review_commands": [],
+    "rule_map": [
+      {
+        "applies_by": "codex-native",
+        "directory": ".",
+        "precedence_index": 0,
+        "scope": [
+          "app.py",
+          "test_app.py"
+        ],
+        "selected_by": "agents",
+        "source": "AGENTS.md"
+      }
+    ],
+    "schema_version": 1,
+    "source_receipts": [
+      {
+        "kind": "profile",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/matt-workflow.md",
+        "repo_path": ".agent/matt-workflow.md",
+        "sha256": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+        "size": 1452
+      },
+      {
+        "kind": "rule",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/AGENTS.md",
+        "repo_path": "AGENTS.md",
+        "sha256": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+        "size": 54
+      }
+    ],
+    "spec": {
+      "content": {
+        "kind": "spec",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-e/specs/specs-legacy-e-01.md",
+        "repo_path": ".agent/work/legacy-e/specs/specs-legacy-e-01.md",
+        "sha256": "5cca50d8569089d03544122fc991065d72bb28b8eb2192c6a67723c3906fe551",
+        "size": 143
+      },
+      "id": "legacy-e",
+      "ref": ".agent/work/legacy-e/specs/specs-legacy-e-01.md",
+      "revision": 1
+    },
+    "standards_sources": [],
+    "test_commands": [
+      "python3 -m unittest -v"
+    ],
+    "ticket": {
+      "declared_scope": [
+        "app.py",
+        "test_app.py"
+      ],
+      "definition": {
+        "kind": "ticket-definition",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md",
+        "sha256": "22ed9d53ee52e7d7cae0d52002715de9536ad590a5d100dbdfba9214b6e276b4",
+        "size": 542
+      },
+      "execution_agent": "codex",
+      "id": "legacy-e-02",
+      "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md",
+      "review_boundary": {
+        "current": {
+          "acceptance": [
+            {
+              "id": "legacy-e-02#A1",
+              "text": "greeting trims the name and returns Hello, fixture."
+            }
+          ],
+          "definition": {
+            "kind": "ticket-definition",
+            "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md",
+            "sha256": "22ed9d53ee52e7d7cae0d52002715de9536ad590a5d100dbdfba9214b6e276b4",
+            "size": 542
+          },
+          "id": "legacy-e-02"
+        },
+        "required_probes": [],
+        "successors": []
+      },
+      "status": "ready-for-agent"
+    },
+    "topic": "legacy-e",
+    "write_gates": {
+      "branch": {
+        "policy": "branch_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "commit": {
+        "policy": "commit_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "docs": {
+        "policy": "docs_writeback",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "external": {
+        "policy": "external_write_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      }
+    }
+  },
+  "events": [
+    {
+      "at": "2026-09-30T09:58:15.896435+00:00",
+      "phase": "admitted"
+    },
+    {
+      "at": "2026-09-30T09:58:16.040726+00:00",
+      "outcome": "blocked-by-design",
+      "phase": "blocked-by-design"
+    }
+  ],
+  "evidence": [],
+  "implementation_session_id": "164a65060026d881fc54e6684e9cdd67",
+  "phase": "blocked-by-design",
+  "receipts": {
+    "code": null,
+    "review": null,
+    "test": null
+  },
+  "repair_plan": null,
+  "run_id": "legacy-e-02",
+  "schema_version": 3,
+  "submission": {
+    "at": "2026-09-30T09:58:16.040726+00:00",
+    "blocker": "Synthetic legacy design-blocked example for migration.",
+    "code_receipt": null,
+    "outcome": "blocked-by-design",
+    "review_receipt": null,
+    "test_receipt": null
+  }
+}

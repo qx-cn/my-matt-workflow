@@ -1,0 +1,143 @@
+{
+  "attempt_id": "e37322b185397e6d327225a9cb892ac8",
+  "blocker": null,
+  "context": {
+    "base_sha": "0e266f7708510548fbf794ae247b9ca1f84924c0",
+    "context_id": "42ad9e7dfc627e0295c9835ca54f71ff5da18f7503c06f451d13bee810d95fef",
+    "domain_sources": [],
+    "policies": {
+      "composition_policy": "manual",
+      "decision_policy": "ask",
+      "humanizer_policy": "deny",
+      "max_repair_rounds": 1,
+      "work_scope_policy": "single-ticket"
+    },
+    "repo": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project",
+    "review_commands": [],
+    "rule_map": [
+      {
+        "applies_by": "codex-native",
+        "directory": ".",
+        "precedence_index": 0,
+        "scope": [
+          "app.py",
+          "test_app.py"
+        ],
+        "selected_by": "agents",
+        "source": "AGENTS.md"
+      }
+    ],
+    "schema_version": 1,
+    "source_receipts": [
+      {
+        "kind": "profile",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/matt-workflow.md",
+        "repo_path": ".agent/matt-workflow.md",
+        "sha256": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+        "size": 1452
+      },
+      {
+        "kind": "rule",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/AGENTS.md",
+        "repo_path": "AGENTS.md",
+        "sha256": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+        "size": 54
+      }
+    ],
+    "spec": {
+      "content": {
+        "kind": "spec",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-a/specs/specs-legacy-a-01.md",
+        "repo_path": ".agent/work/legacy-a/specs/specs-legacy-a-01.md",
+        "sha256": "5d71acde259d0dc2f3b05278352eeffb8d1dddbb18e1e5125406cdc1c8f3e291",
+        "size": 143
+      },
+      "id": "legacy-a",
+      "ref": ".agent/work/legacy-a/specs/specs-legacy-a-01.md",
+      "revision": 1
+    },
+    "standards_sources": [],
+    "test_commands": [
+      "python3 -m unittest -v"
+    ],
+    "ticket": {
+      "declared_scope": [
+        "app.py",
+        "test_app.py"
+      ],
+      "definition": {
+        "kind": "ticket-definition",
+        "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md",
+        "sha256": "b08373e301e15e5cc328e84edec55cab9d8f4be5ac0bc7e108a7ad715fd701c6",
+        "size": 542
+      },
+      "execution_agent": "codex",
+      "id": "legacy-a-03",
+      "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md",
+      "review_boundary": {
+        "current": {
+          "acceptance": [
+            {
+              "id": "legacy-a-03#A1",
+              "text": "greeting trims the name and returns Hello, fixture."
+            }
+          ],
+          "definition": {
+            "kind": "ticket-definition",
+            "path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow-v1-baseline-rznekm87/project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md",
+            "sha256": "b08373e301e15e5cc328e84edec55cab9d8f4be5ac0bc7e108a7ad715fd701c6",
+            "size": 542
+          },
+          "id": "legacy-a-03"
+        },
+        "required_probes": [],
+        "successors": []
+      },
+      "status": "ready-for-agent"
+    },
+    "topic": "legacy-a",
+    "write_gates": {
+      "branch": {
+        "policy": "branch_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "commit": {
+        "policy": "commit_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "docs": {
+        "policy": "docs_writeback",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "external": {
+        "policy": "external_write_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      }
+    }
+  },
+  "events": [
+    {
+      "at": "2026-09-30T09:58:12.501156+00:00",
+      "phase": "admitted"
+    },
+    {
+      "at": "2026-09-30T09:58:12.645991+00:00",
+      "phase": "implementing"
+    }
+  ],
+  "evidence": [],
+  "implementation_session_id": "2bb18988760b74da236eae34fc97b116",
+  "phase": "implementing",
+  "receipts": {
+    "code": null,
+    "review": null,
+    "test": null
+  },
+  "repair_plan": null,
+  "run_id": "legacy-a-03",
+  "schema_version": 3
+}

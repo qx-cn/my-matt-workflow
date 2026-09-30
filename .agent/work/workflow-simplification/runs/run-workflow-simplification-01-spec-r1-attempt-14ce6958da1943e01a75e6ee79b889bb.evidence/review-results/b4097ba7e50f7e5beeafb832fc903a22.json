@@ -1,0 +1,59 @@
+{
+  "code_content_id": "3ddff0af73bfbe0dadb0abce96bae7dfbd4f6a46f90c0984b47532e9ff549d43",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [],
+  "review_id": "b4097ba7e50f7e5beeafb832fc903a22",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "833e22da291db442d012f6bf555620b1"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-01#A1",
+        "evidence_refs": [
+          "snapshot:tools/capture_legacy_fixtures.py",
+          "snapshot:tests/fixtures/workflow_simplification/generation.json",
+          "snapshot:tests/fixtures/workflow_simplification/baseline.json",
+          "test:3a7083068104b91cc5ac111f21b86925c3c7360b030f0f3c33e46ce7822cfa4c"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-01#A2",
+        "evidence_refs": [
+          "snapshot:tests/test_workflow_baseline.py",
+          "snapshot:tests/fixtures/workflow_simplification/README.md",
+          "test:3a7083068104b91cc5ac111f21b86925c3c7360b030f0f3c33e46ce7822cfa4c"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-01#A3",
+        "evidence_refs": [
+          "snapshot:tools/capture_workflow_baseline.py",
+          "snapshot:tests/fixtures/workflow_simplification/baseline.json",
+          "test:3a7083068104b91cc5ac111f21b86925c3c7360b030f0f3c33e46ce7822cfa4c"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-01#A4",
+        "evidence_refs": [
+          "snapshot:tests/test_workflow_baseline.py",
+          "snapshot:tests/fixtures/workflow_simplification/baseline.bundle",
+          "test:3a7083068104b91cc5ac111f21b86925c3c7360b030f0f3c33e46ce7822cfa4c"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tests/fixtures/workflow_simplification/README.md",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "01 only captures v1 inputs; 02 owns new Topic/setup behavior. No future migration or new workflow capability is claimed as implemented."
+      }
+    ]
+  },
+  "status": "pass"
+}

@@ -1,0 +1,186 @@
+{
+  "attempt_id": "808c9765758e2db9fdfebc1d9ae1b2d2",
+  "blocker": "Initial work unit has no declared test commands because project test_commands was empty. User authorized adding unittest and reopening on 2026-09-30; close this attempt before changing its frozen profile.",
+  "context": {
+    "base_sha": "40e51afc02c1c16d4672a1f82a582d85180fb9e5",
+    "context_id": "6291f124d2459fdcdf04aef1fd82a895f7e72e55e34a5a0bfcf28a51af6310fe",
+    "domain_sources": [],
+    "policies": {
+      "composition_policy": "manual",
+      "decision_policy": "ask",
+      "humanizer_policy": "deny",
+      "max_repair_rounds": 1,
+      "work_scope_policy": "single-ticket"
+    },
+    "repo": "/Users/sherly/CS/wsp/ai/my-matt-workflow",
+    "review_commands": [],
+    "rule_map": [],
+    "schema_version": 1,
+    "source_receipts": [
+      {
+        "kind": "profile",
+        "path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/matt-workflow.md",
+        "repo_path": ".agent/matt-workflow.md",
+        "sha256": "8078e2d2669203730393bee6874a33f651196862e194f29dea590e7cacf19e8a",
+        "size": 1428
+      }
+    ],
+    "spec": {
+      "content": {
+        "kind": "spec",
+        "path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+        "repo_path": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+        "sha256": "ce2412a7dcde61e294425e073a7a8417d51b3690a998ef1f3d682afa47b86532",
+        "size": 61007
+      },
+      "id": "workflow-simplification",
+      "ref": ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+      "revision": 1
+    },
+    "standards_sources": [],
+    "test_commands": [],
+    "ticket": {
+      "declared_scope": [
+        "tools/**",
+        "tests/**",
+        "evals/fixtures/**"
+      ],
+      "definition": {
+        "kind": "ticket-definition",
+        "path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-01.md",
+        "sha256": "ce6ed05b377f07d3e053719795822f1bf2427713f307f016f09f1977a6568340",
+        "size": 3008
+      },
+      "execution_agent": "codex",
+      "id": "workflow-simplification-01",
+      "path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-01.md",
+      "requested_execution_agent": "auto",
+      "review_boundary": {
+        "current": {
+          "acceptance": [
+            {
+              "id": "workflow-simplification-01#A1",
+              "text": "使用施工开始前的旧版 runtime 生成 AC-35 的 A–E Topic、旧配置和分片术语样例；保存生成方式、旧版提交、基线提交及期望转换结果。样例不含宿主秘密或真实用户项目内容。"
+            },
+            {
+              "id": "workflow-simplification-01#A2",
+              "text": "将未完成实施会话 fixture 复制到测试 fixtures；保留迁移所需旧记录和基线，复制完成前不删除 evals。"
+            },
+            {
+              "id": "workflow-simplification-01#A3",
+              "text": "按第 9 节的 Cursor 安装件、相对 Markdown 链接传递闭包和内容去重口径测量旧 release；包含旧 requirement-analysis，保存精确字符数、release 标识和复现方式。"
+            },
+            {
+              "id": "workflow-simplification-01#A4",
+              "text": "样例可在临时 git 仓库加载；A、B、C 的进行中记录均有可用基线，E 确实违反 I-T3；全量测试可以读取样例而不写回样例。"
+            }
+          ],
+          "definition": {
+            "kind": "ticket-definition",
+            "path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-01.md",
+            "sha256": "ce6ed05b377f07d3e053719795822f1bf2427713f307f016f09f1977a6568340",
+            "size": 3008
+          },
+          "id": "workflow-simplification-01"
+        },
+        "required_probes": [
+          "downstream-owner"
+        ],
+        "successors": [
+          {
+            "acceptance": [
+              {
+                "id": "workflow-simplification-02#A1",
+                "text": "setup 默认只探测和展示，apply 才写入 schema_version 2 的九个配置键；private 沿用嵌套 git 初始化。非法值指出字段，旧配置和 audited 提示 migrate，检测失败零写入。"
+              },
+              {
+                "id": "workflow-simplification-02#A2",
+                "text": "topic start 必须选择 Topic，检查内容干净、归档重名和现有状态；standard 启动要求至少一条无星号全量测试；quick 在默认分支按 M2 创建或切换分支，在其他分支不切换。"
+              },
+              {
+                "id": "workflow-simplification-02#A3",
+                "text": "多个活动 Topic 时省略 topic 的相关操作拒绝；一个活动 Topic 可省略；归档 Topic 只读。work-overview 正确区分活动、待补建与文档 Topic。"
+              },
+              {
+                "id": "workflow-simplification-02#A4",
+                "text": "quick complete 校验全部摘要章节和验收对照；全量测试失败则拒绝，空集合标记未配置测试；成功时最多一次代码提交、归档和 kind quick 度量，没有实施记录。"
+              },
+              {
+                "id": "workflow-simplification-02#A5",
+                "text": "文档 Topic 可直接 complete，记录 kind topic 且不可观察字段为 null；同名归档不覆盖；待补建不能直接 complete，无 Ticket 的 standard 拒绝完成。"
+              },
+              {
+                "id": "workflow-simplification-02#A6",
+                "text": "quick/文档完成满足 I-A1、I-A2；内容与 agent 改动的提交边界正确，任何流程不推送、不写外部系统。"
+              }
+            ],
+            "blocked_by": [
+              "workflow-simplification-01"
+            ],
+            "definition": {
+              "kind": "ticket-definition",
+              "path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-simplification/tickets/tickets-workflow-simplification-02.md",
+              "sha256": "f5ace02b20b190adb7c1485455eb64b1b6191b8ab1c78497a7d6503072e09403",
+              "size": 3568
+            },
+            "id": "workflow-simplification-02"
+          }
+        ]
+      },
+      "status": "ready-for-agent"
+    },
+    "topic": "workflow-simplification",
+    "write_gates": {
+      "branch": {
+        "policy": "branch_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "commit": {
+        "policy": "commit_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "docs": {
+        "policy": "docs_writeback",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      },
+      "external": {
+        "policy": "external_write_policy",
+        "reason": "policy-confirm",
+        "status": "confirm"
+      }
+    }
+  },
+  "events": [
+    {
+      "at": "2026-09-30T09:27:22.818208+00:00",
+      "phase": "admitted"
+    },
+    {
+      "at": "2026-09-30T09:48:00.885844+00:00",
+      "outcome": "blocked-by-evidence",
+      "phase": "blocked-by-evidence"
+    }
+  ],
+  "evidence": [],
+  "implementation_session_id": "a09d720840992fdb4f7a40ae52724e74",
+  "phase": "blocked-by-evidence",
+  "receipts": {
+    "code": null,
+    "review": null,
+    "test": null
+  },
+  "repair_plan": null,
+  "run_id": "workflow-simplification-01",
+  "schema_version": 3,
+  "submission": {
+    "at": "2026-09-30T09:48:00.885844+00:00",
+    "blocker": "Initial work unit has no declared test commands because project test_commands was empty. User authorized adding unittest and reopening on 2026-09-30; close this attempt before changing its frozen profile.",
+    "code_receipt": null,
+    "outcome": "blocked-by-evidence",
+    "review_receipt": null,
+    "test_receipt": null
+  }
+}

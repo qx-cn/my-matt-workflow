@@ -11,7 +11,7 @@
 # 缺键或空值按 strict-control 生效。
 # 下列值是本项目当前实际生效的策略。
 schema_version: 1
-assurance_level: standard
+assurance_level: audited
 task_backend: local
 agent_directory_mode: shared
 default_base_branch: main
@@ -23,9 +23,9 @@ humanizer_policy: deny
 composition_policy: manual
 work_scope_policy: single-ticket
 decision_policy: ask
-default_execution_agent: auto
+default_execution_agent: codex
 max_repair_rounds: 1
-test_commands: ["python3 -m unittest discover -s tests"]
+test_commands: ["python3 -m unittest -v"]
 review_commands: []
 standards_sources: []
 domain_sources: []
