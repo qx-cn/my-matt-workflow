@@ -211,7 +211,7 @@ def content_id(repo):
 
 
 def content_dirty(repo):
-    tracked = git(repo, "diff", "--quiet", "HEAD", "--", ".", ":(exclude).agent", check=False)
+    tracked = git(repo, "diff", "--quiet", "HEAD", "--", ".", ":(top,exclude).agent", check=False)
     if tracked.returncode not in (0, 1):
         raise TopicError("需要已有 HEAD 的 Git 仓库")
     untracked = git(repo, "ls-files", "-z", "--others", "--exclude-standard").stdout
@@ -270,7 +270,15 @@ def status(repo, topic=None):
         known_issues.extend(implementation.get("known_issues", []))
         for review in implementation.get("reviews", []):
             advisories.extend(f for f in review.get("result", {}).get("findings", []) if f.get("severity") == "advisory")
-    return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues, "next_command": command}
+    branch_file = (archive if archive.exists() else path) / 'branch-review.json'
+    branch = json.loads(branch_file.read_text()) if branch_file.exists() else None
+    if branch:
+        known_issues.extend(branch.get('known_issues', []))
+        if branch.get('status') == 'needs-user' and value['status'] != 'archived':
+            command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --branch --topic {topic} --accept --reason '<理由>'"
+    return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
+            "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
+            "next_command": command}
 
 
 def overview(repo, topic=None):
@@ -334,7 +342,7 @@ def preflight_commit(repo, config):
             raise TopicError("存在 Git 合并冲突；请先解决")
 
 
-def complete(repo, topic=None):
+def complete(repo, topic=None, accepted_reason=None, known_issues=None):
     repo = safe_repo(repo)
     config = read_config(repo)
     topic = select_topic(repo, topic)
@@ -345,6 +353,8 @@ def complete(repo, topic=None):
     if value["status"] == "pending":
         raise TopicError("待补建 Topic 请先运行 implement start")
     quick = value.get("level") == "quick"
+    multi = False
+    branch_unit = None
     if value.get("level") == "standard":
         if not full_tests(config):
             raise TopicError("standard 需要非空全量测试集合")
@@ -352,18 +362,33 @@ def complete(repo, topic=None):
         tickets = impl.records(repo, topic)
         if not tickets:
             raise TopicError("standard 没有 Ticket；请拆分 Ticket 或 topic abandon")
-        if len(tickets) > 1:
-            raise TopicError("多 Ticket standard 请运行 topic review；整分支收尾由后续 Ticket 接入")
+        multi = len(tickets) > 1
         if any(t[1].get('status') != 'complete' for t in tickets.values()):
             raise TopicError("Ticket 尚未 complete；请运行 implement status")
-        if content_dirty(repo):
+        if not multi and content_dirty(repo):
             raise TopicError("单 Ticket standard 内容不干净；请恢复内容或另建 Ticket")
+        if multi:
+            from . import branch_review
+            _, _, _, _, _, branch_unit, _ = branch_review.load(repo, topic)
+            if accepted_reason is not None:
+                if branch_unit['status'] != 'needs-user':
+                    raise TopicError('branch accept 只接受 needs-user')
+                if not branch_review.tests_passed(repo, config, topic):
+                    raise TopicError('test: 接受必须有当前全量测试通过记录')
+            else:
+                branch_review.require_pass(repo, config, topic, path, tickets, branch_unit)
     summary = check_summary(path, quick) if quick or value.get('level') == 'standard' else None
     preflight_commit(repo, config)
     dirty = content_dirty(repo)
-    if quick and dirty and value.get("code_commit"):
+    if (quick or multi) and dirty and value.get("code_commit"):
         raise TopicError("quick 代码已经提交；新的内容改动请另建 Topic，或恢复后重试收尾")
     tests = full_tests(config) if quick else []
+    if multi:
+        branch_review.test(repo, topic)
+        if not branch_review.tests_passed(repo, config, topic):
+            raise TopicError('test: 全量测试改变了内容；当前内容没有完整通过记录')
+        if accepted_reason is None:
+            branch_review.require_pass(repo, config, topic, path, tickets, branch_unit)
     for command in tests:
         before = content_id(repo)
         value["test_runs"] = value.get("test_runs", 0) + 1
@@ -377,10 +402,11 @@ def complete(repo, topic=None):
         if content_id(repo) != before:
             raise TopicError(f"测试改变了内容：{command}；请检查后重新运行 topic complete")
     original_summary = summary.read_bytes() if summary else None
+    original_branch = (path / "branch-review.json").read_bytes() if multi else None
     finished = now()
     record = {"kind": "quick" if quick else "topic", "topic": topic, "ticket": None,
               "level": value.get("level"), "started_at": value.get("started_at"),
-              "finished_at": finished, "outcome": "complete",
+              "finished_at": finished, "outcome": "accepted" if accepted_reason is not None else "complete",
               "test_runs": value.get("test_runs", 0) if quick else None,
               "review_rounds": None, "findings": {"blocking": None, "advisory": None},
               "repair_rounds": None, "needs_user_count": None, "command_errors": None,
@@ -388,12 +414,18 @@ def complete(repo, topic=None):
               "tests_configured": bool(tests) if quick else None}
     metrics = repo / ".agent/metrics.jsonl"
     original_metrics = metrics.read_bytes() if metrics.exists() else None
+    if branch_unit is not None:
+        from .ticket_completion import metric
+        test_unit = json.loads(branch_review.tests_record(repo, topic).read_text())
+        counts = metric({**branch_unit, 'ticket': None, 'tests': test_unit['tests']}, record['outcome'], branch_unit['reviews'][-1])
+        for key in ('test_runs','review_rounds','findings','repair_rounds','needs_user_count','reviewer_provenance','tests_configured'):
+            record[key] = counts[key]
     private = config["agent_directory_mode"] == "private"
     # In private mode commit content first. If the metadata commit fails,
     # record that commit so recovery cannot create a second quick code commit.
-    if private and dirty and quick:
-        git(repo, "add", "--all", "--", ".", ":(exclude).agent")
-        git(repo, "commit", "-m", f"Topic {topic} quick implementation")
+    if private and dirty and (quick or multi):
+        git(repo, "add", "--all", "--", ".", ":(top,exclude).agent")
+        git(repo, "commit", "-m", f"Topic {topic} 收尾修复" if multi else f"Topic {topic} quick implementation")
         value["code_commit"] = git(repo, "rev-parse", "HEAD").stdout.decode().strip()
         (path / STATE_FILE).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
     active_value = dict(value)
@@ -404,7 +436,14 @@ def complete(repo, topic=None):
             index = next(index for title, index in summary_headings(text) if title == "测试结果")
             lines[index] += "\n\n未配置测试"
             summary.write_text("\n".join(lines) + "\n")
-        value.update(status="archived", outcome="complete", finished_at=finished, reason="完成")
+        if accepted_reason is not None:
+            text = summary.read_text()
+            text += '\n\n### 分支裁决\n' + accepted_reason + '\n\n已知问题：\n' + json.dumps(known_issues or [], ensure_ascii=False, indent=2) + '\n'
+            summary.write_text(text)
+            branch_unit.setdefault('decisions', []).append(dict(action='accept',reason=accepted_reason,at=finished))
+            branch_unit['known_issues'] = known_issues or []
+            (path / 'branch-review.json').write_text(json.dumps(branch_unit,ensure_ascii=False,indent=2)+'\n')
+        value.update(status="archived", outcome=record['outcome'], finished_at=finished, reason=accepted_reason or "完成")
         (path / STATE_FILE).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
         with metrics.open("a") as stream:
             stream.write(json.dumps(record, ensure_ascii=False) + "\n")
@@ -418,11 +457,11 @@ def complete(repo, topic=None):
             git(agent, "commit", "-m", f"Topic {topic} complete")
         else:
             git(repo, "add", "--force", "--all", "--", ".agent")
-            if quick and dirty:
-                git(repo, "add", "--all", "--", ".", ":(exclude).agent")
+            if (quick or multi) and dirty:
+                git(repo, "add", "--all", "--", ".", ":(top,exclude).agent")
             # A document Topic only commits metadata, preserving unrelated content.
-            git(repo, "commit", "--only", "-m", f"Topic {topic} complete", "--",
-                "." if quick and dirty else ".agent")
+            git(repo, "commit", "--only", "-m", f"Topic {topic} 收尾修复" if multi and dirty else f"Topic {topic} complete", "--",
+                "." if (quick or multi) and dirty else ".agent")
     except (TopicError, OSError):
         # Restore the active Topic and remove the uncommitted metric. Content
         # and the user's staged changes are never discarded.
@@ -435,5 +474,46 @@ def complete(repo, topic=None):
             metrics.write_bytes(original_metrics)
         if summary:
             summary.write_bytes(original_summary)
+        if original_branch is not None:
+            (path / "branch-review.json").write_bytes(original_branch)
         raise
     return {"topic": topic, **value, "tests_configured": bool(tests) if quick else None}
+
+
+def abandon(repo, topic=None, reason=''):
+    if not reason.strip(): raise TopicError('reason: 放弃必须有非空理由')
+    repo = safe_repo(repo)
+    config = read_config(repo)
+    topic = select_topic(repo, topic)
+    path, archive = topic_path(repo,topic), topic_path(repo,topic,True)
+    if archive.exists(): raise TopicError('Topic 已归档，只读；不能覆盖')
+    if not path.is_dir(): raise TopicError('Topic 不存在')
+    preflight_commit(repo,config)
+    dirty = [p.decode() for p in git(repo,'diff','--name-only','-z','HEAD','--','.',':(top,exclude).agent').stdout.split(b'\0') if p]
+    dirty += [p.decode() for p in git(repo,'ls-files','-z','--others','--exclude-standard').stdout.split(b'\0') if p and not p.startswith(b'.agent/') and p!=b'.agent']
+    value = state(path)
+    old_state = (path/STATE_FILE).read_bytes() if (path/STATE_FILE).exists() else None
+    metrics = repo/'.agent/metrics.jsonl'
+    old_metrics = metrics.read_bytes() if metrics.exists() else None
+    value.update(status='archived',outcome='abandoned',finished_at=now(),reason=reason)
+    record = dict(kind='topic',topic=topic,ticket=None,level=value.get('level'),started_at=value.get('started_at'),
+                  finished_at=value['finished_at'],outcome='abandoned',test_runs=None,review_rounds=None,
+                  findings=dict(blocking=None,advisory=None),repair_rounds=None,needs_user_count=None,
+                  command_errors=None,reviewer_provenance=None,tests_configured=None)
+    try:
+        (path/STATE_FILE).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
+        with metrics.open('a') as stream: stream.write(json.dumps(record,ensure_ascii=False)+'\n')
+        archive.parent.mkdir(parents=True,exist_ok=True)
+        path.rename(archive)
+        private = config['agent_directory_mode']=='private'
+        target = repo/'.agent' if private else repo
+        git(target,'add','--force','--all','--','.' if private else '.agent')
+        git(target,'commit','--only','-m',f'Topic {topic} abandoned: {reason}','--','.' if private else '.agent')
+    except (TopicError,OSError):
+        if archive.exists() and not path.exists(): archive.rename(path)
+        if old_state is None: (path/STATE_FILE).unlink(missing_ok=True)
+        else: (path/STATE_FILE).write_bytes(old_state)
+        if old_metrics is None: metrics.unlink(missing_ok=True)
+        else: metrics.write_bytes(old_metrics)
+        raise
+    return dict(topic=topic,**value,dirty_content=sorted(set(dirty)))

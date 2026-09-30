@@ -254,9 +254,9 @@ def load_active(repo, ticket, topic, check_commands=True):
     return repo, config, topic, path, unit, record
 
 
-def tests_passed(repo, unit):
+def tests_passed(repo, unit, commands=None):
     content = topics.content_id(repo)
-    commands = [shlex.split(c) for c in unit["definition"]["ticket"]["metadata"]["test_commands"]]
+    commands = commands if commands is not None else [shlex.split(c) for c in unit["definition"]["ticket"]["metadata"]["test_commands"]]
     run = unit.get("test_run")
     # Old per-command history cannot prove one whole declaration completed.
     if not run or not run["completed"] or run["commands"] != commands:
@@ -274,6 +274,12 @@ def test(repo, ticket=None, topic=None, argv=None):
     if progress and not argv_matches(argv, config["test_commands"]):
         raise topics.TopicError("测试 argv 未匹配配置 test_commands")
     commands = [argv] if progress else [shlex.split(c) for c in frontmatter(path)["test_commands"]]
+    outputs = run_test_batch(repo, unit, record, commands, progress)
+    return {"ticket": unit["ticket"], "topic": topic, "progress": progress,
+            "tests": outputs, "tests_passed": tests_passed(repo, unit)}
+
+
+def run_test_batch(repo, unit, record, commands, progress=False):
     run_id = uuid.uuid4().hex
     if not progress:
         # Persist before executing: a crash must invalidate previous success.
@@ -298,12 +304,10 @@ def test(repo, ticket=None, topic=None, argv=None):
     if not progress:
         unit["test_run"]["completed"] = True
         write_json(record, unit)
-    report = {"ticket": unit["ticket"], "topic": topic, "progress": progress,
-              "tests": outputs, "tests_passed": tests_passed(repo, unit)}
     if failed:
         messages = [f"测试失败：{shlex.join(t['argv'])}\n退出码：{t['exit_code']}\n{t['output_tail']}" for t in outputs if t["exit_code"]]
         raise topics.TopicError("\n".join(messages))
-    return report
+    return outputs
 
 
 def status(repo, ticket=None, topic=None):

@@ -98,7 +98,7 @@ from workflow_lib.tickets import (
 )
 from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
-from workflow_lib import topic_service, ticket_implementation, ticket_review, ticket_completion, ticket_resolution
+from workflow_lib import topic_service, ticket_implementation, ticket_review, ticket_completion, ticket_resolution, branch_review
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1072,16 +1072,25 @@ def command_topic(args: argparse.Namespace) -> None:
             report = topic_service.start(Path(args.repo), args.topic, args.level)
         elif args.topic_action == "status":
             report = topic_service.status(Path(args.repo), args.topic)
+        elif args.topic_action == "test":
+            report = branch_review.test(Path(args.repo), args.topic)
+        elif args.topic_action == "review":
+            report = branch_review.review(Path(args.repo), args.topic, args.submit, args.reviewer_model, args.reviewer_session_id)
+        elif args.topic_action == "abandon":
+            report = topic_service.abandon(Path(args.repo), args.topic, args.reason)
         else:
             report = topic_service.complete(Path(args.repo), args.topic)
-    except (topic_service.TopicError, OSError) as exc:
+    except (TicketError, RuleError, topic_service.TopicError, OSError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
 def command_resolve(args: argparse.Namespace) -> None:
     try:
-        report = ticket_resolution.resolve(Path(args.repo), args.ticket, args.topic, args.accept, args.reason)
+        if args.branch:
+            report = branch_review.resolve(Path(args.repo), args.topic, args.accept, args.reason)
+        else:
+            report = ticket_resolution.resolve(Path(args.repo), args.ticket, args.topic, args.accept, args.reason)
     except (TicketError, topic_service.TopicError, RuleError, OSError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
@@ -1216,12 +1225,18 @@ def parser() -> argparse.ArgumentParser:
 
     topic = sub.add_parser("topic")
     topic_actions = topic.add_subparsers(dest="topic_action", required=True)
-    for action in ("start", "status", "complete"):
+    for action in ("start", "status", "test", "review", "complete", "abandon"):
         command = topic_actions.add_parser(action)
         command.add_argument("--repo", default=".")
         command.add_argument("--topic", required=action == "start")
         if action == "start":
             command.add_argument("--level", choices=("quick", "standard"), required=True)
+        if action == "review":
+            command.add_argument("--submit")
+            command.add_argument("--reviewer-model")
+            command.add_argument("--reviewer-session-id")
+        if action == "abandon":
+            command.add_argument("--reason", required=True)
         command.set_defaults(func=command_topic)
 
     implement = sub.add_parser("implement")
@@ -1245,7 +1260,9 @@ def parser() -> argparse.ArgumentParser:
 
     resolve = sub.add_parser("resolve")
     resolve.add_argument("--repo", default=".")
-    resolve.add_argument("--ticket")
+    selection = resolve.add_mutually_exclusive_group(required=True)
+    selection.add_argument("--ticket")
+    selection.add_argument("--branch", action="store_true")
     resolve.add_argument("--topic")
     decision = resolve.add_mutually_exclusive_group(required=True)
     decision.add_argument("--accept", action="store_true")

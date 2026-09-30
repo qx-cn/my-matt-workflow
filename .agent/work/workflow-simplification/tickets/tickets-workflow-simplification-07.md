@@ -7,9 +7,9 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-06"]
-claimed_by:
+claimed_by: 
 tags: []
 sequence: 7
 test_commands: ["python3 -m unittest discover -s tests"]
@@ -37,9 +37,9 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] topic test 执行全部无星号命令，空集合和失败均非零退出；topic review 仅用于多 Ticket standard，要求所有 Ticket complete 及绑定当前内容的全量测试通过。
-- [ ] 整分支材料覆盖 Topic 基线以来全部内容，验收取 Ticket 并集；轮数和四种停止信号独立于 Ticket 对象，needs-user 时 complete 拒绝。
-- [ ] 多 Ticket complete 再次运行全量测试，校验摘要及有效整分支审查；有收尾内容改动时最多一次收尾修复提交，归档并追加 Topic 度量。
-- [ ] branch accept 要求 needs-user、全量测试及其余收尾条件；结果归档，有内容则收尾提交，accepted 度量和已知问题进入摘要。branch reopen 仅在其快照以来 Ticket/Spec 定义改变时归零。
-- [ ] topic abandon 可放弃任意未归档 Topic，原因与 abandoned 度量持久化；未提交内容原样保留并列出；overview 不再显示，归档 Ticket start 拒绝。
-- [ ] 按 AC-24 在 private/shared 各完整运行单 Ticket、多 Ticket 含分支修复、Ticket accept、分支 accept、abandon；验证 I-A1、I-A2、I-3，包括无内容无需代码提交与归档重名拒绝。
+- [x] topic test 执行全部无星号命令，空集合和失败均非零退出；topic review 仅用于多 Ticket standard，要求所有 Ticket complete 及绑定当前内容的全量测试通过。
+- [x] 整分支材料覆盖 Topic 基线以来全部内容，验收取 Ticket 并集；轮数和四种停止信号独立于 Ticket 对象，needs-user 时 complete 拒绝。
+- [x] 多 Ticket complete 再次运行全量测试，校验摘要及有效整分支审查；有收尾内容改动时最多一次收尾修复提交，归档并追加 Topic 度量。
+- [x] branch accept 要求 needs-user、全量测试及其余收尾条件；结果归档，有内容则收尾提交，accepted 度量和已知问题进入摘要。branch reopen 仅在其快照以来 Ticket/Spec 定义改变时归零。
+- [x] topic abandon 可放弃任意未归档 Topic，原因与 abandoned 度量持久化；未提交内容原样保留并列出；overview 不再显示，归档 Ticket start 拒绝。
+- [x] 按 AC-24 在 private/shared 各完整运行单 Ticket、多 Ticket 含分支修复、Ticket accept、分支 accept、abandon；验证 I-A1、I-A2、I-3，包括无内容无需代码提交与归档重名拒绝。
