@@ -4,6 +4,8 @@ description: 只读审查 Skill、AGENTS.md、CLAUDE.md 或 Cursor 项目指令�
 disable-model-invocation: true
 ---
 
+遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
+
 # 审查 Agent 指令
 
 只读审查 Skill 或项目规则，不修改目标、发布结果或把“优化现有 Skill”预设为答案。合法结论包括保留、局部修复、重构、合并、外置为参考、改由 runtime 执行、退役，以及证据不足。
@@ -27,7 +29,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 
 先解析目标宿主以及目标 Skill、`agents/`、可达 references、scripts、assets、调用者、被调用项、runtime、eval 和已知失败反馈，得到完整且按绝对路径稳定排序的文件列表，再按[专项只读审查会话](references/shared/adapters/specialized-review-session.md)建立 snapshot。只读取返回的 `review_unit`、`content_id` 和只读 `snapshot_path`，不得继续从 live path 取证。
 
-完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照并重跑审查。
+完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照，复审范围遵循共享审查循环。
 
 ### 2. 重建 Job Contract
 

@@ -5,12 +5,8 @@
       "source": "resources/humanizer.md",
       "release_path": "references/shared/humanizer.md",
       "consumers": [
-        "my-code-review",
-        "my-domain-modeling",
         "my-humanizer",
-        "my-review-artifact",
-        "my-to-spec",
-        "my-to-tickets"
+        "my-review-artifact"
       ]
     },
     "final-state-writing": {
@@ -20,6 +16,7 @@
         "my-ask-matt",
         "my-codebase-design",
         "my-grilling",
+        "my-handoff",
         "my-review-artifact",
         "my-review-design",
         "my-tech-design",
@@ -34,7 +31,6 @@
       "release_path": "references/shared/artifact-finalization.md",
       "consumers": [
         "my-ask-matt",
-        "my-handoff",
         "my-review-artifact",
         "my-to-spec"
       ]
@@ -43,7 +39,6 @@
       "source": "resources/first-principles-reasoning.md",
       "release_path": "references/shared/first-principles-reasoning.md",
       "consumers": [
-        "my-grill-with-docs",
         "my-review-design",
         "my-review-instructions",
         "my-to-spec",
@@ -98,7 +93,7 @@
         "my-diagnosing-bugs",
         "my-domain-modeling",
         "my-edit-article",
-        "my-grilling",
+        "my-to-spec",
         "my-to-tickets"
       ]
     },
@@ -107,8 +102,6 @@
       "release_path": "references/shared/adapters/composition.md",
       "consumers": [
         "my-ask-matt",
-        "my-grill-me",
-        "my-grill-with-docs",
         "my-improve-codebase-architecture",
         "my-wayfinder",
         "my-writing-for-agents"
@@ -118,7 +111,6 @@
       "source": "resources/adapters/ticket-selection.md",
       "release_path": "references/shared/adapters/ticket-selection.md",
       "consumers": [
-        "my-to-tickets",
         "my-triage"
       ]
     },
@@ -130,9 +122,7 @@
         "my-grill-with-docs",
         "my-implement",
         "my-setup",
-        "my-tdd",
-        "my-to-spec",
-        "my-to-tickets"
+        "my-tdd"
       ]
     },
     "adapter-work-scope": {
@@ -147,8 +137,6 @@
       "release_path": "references/shared/adapters/write-actions.md",
       "consumers": [
         "my-resolving-merge-conflicts",
-        "my-to-spec",
-        "my-to-tickets",
         "my-wayfinder"
       ]
     },
@@ -159,7 +147,6 @@
         "my-code-review",
         "my-diagnosing-bugs",
         "my-domain-modeling",
-        "my-grill-with-docs",
         "my-review-design",
         "my-tdd",
         "my-wayfinder"
@@ -170,9 +157,11 @@
       "release_path": "references/shared/adapters/artifact-storage.md",
       "consumers": [
         "my-edit-article",
+        "my-grill-with-docs",
         "my-handoff",
         "my-test-report",
-        "my-to-questionnaire"
+        "my-to-questionnaire",
+        "my-to-spec"
       ]
     },
     "testing-seams": {
@@ -198,6 +187,7 @@
       "source": "resources/adapters/implementation-session.md",
       "release_path": "references/shared/adapters/implementation-session.md",
       "consumers": [
+        "my-grill-with-docs",
         "my-implement"
       ]
     },
@@ -229,7 +219,8 @@
       "source": "resources/requirement-analysis.md",
       "release_path": "references/shared/requirement-analysis.md",
       "consumers": [
-        "my-grill-with-docs"
+        "my-grill-with-docs",
+        "my-grilling"
       ]
     },
     "requirement-reviewer-brief": {
@@ -257,6 +248,47 @@
       "release_path": "references/shared/project-rule-review.md",
       "consumers": [
         "my-review-instructions"
+      ]
+    },
+    "user-intervention": {
+      "source": "resources/user-intervention.md",
+      "release_path": "references/shared/user-intervention.md",
+      "consumers": [
+        "my-code-review",
+        "my-domain-modeling",
+        "my-grill-with-docs",
+        "my-grilling",
+        "my-handoff",
+        "my-implement",
+        "my-review-artifact",
+        "my-review-design",
+        "my-review-instructions",
+        "my-tech-design",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
+    "review-loop": {
+      "source": "resources/review-loop.md",
+      "release_path": "references/shared/review-loop.md",
+      "consumers": [
+        "my-code-review",
+        "my-implement",
+        "my-review-artifact",
+        "my-review-design",
+        "my-review-instructions",
+        "my-tech-design",
+        "my-to-spec"
+      ]
+    },
+    "workflow-delivery": {
+      "source": "resources/workflow-delivery.md",
+      "release_path": "references/shared/workflow-delivery.md",
+      "consumers": [
+        "my-domain-modeling",
+        "my-grill-with-docs",
+        "my-implement",
+        "my-to-tickets"
       ]
     }
   }

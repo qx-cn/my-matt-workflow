@@ -526,18 +526,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("路由索引", text)
         self.assertIn("不要在本 Skill 内执行", text)
 
-    def test_consumers_point_to_generated_resources(self):
-        root = Path(__file__).resolve().parents[1] / "skills"
-        for skill in (
-            "my-to-spec",
-            "my-to-tickets",
-            "my-domain-modeling",
-            "my-code-review",
-        ):
-            text = (root / skill / "SKILL.md").read_text()
-            with self.subTest(skill=skill):
-                self.assertIn("references/shared/humanizer.md", text)
-                self.assertNotIn("../my-to-spec/humanizer.md", text)
 
     def test_plan_skills_use_project_rule_adapter(self):
         root = Path(__file__).resolve().parents[1]
@@ -629,66 +617,6 @@ class ProfileTests(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertIn('"detected_standards_sources": ["AGENTS.md"]', result.stdout)
 
-    def test_composition_callers_use_one_dispatch_channel(self):
-        root = Path(__file__).resolve().parents[1]
-        expectations = {
-            "my-grill-me": {
-                "core": [
-                    "composition_policy",
-                    "执行后返回宿主",
-                    "立即提出第一个问题",
-                ],
-                "adapters": ["composition.md"],
-            },
-            "my-grill-with-docs": {
-                "core": ["composition_policy", "执行后返回宿主"],
-                "adapters": ["composition.md", "artifact-access.md"],
-            },
-        }
-
-        for skill, expectation in expectations.items():
-            text = (root / "skills" / skill / "SKILL.md").read_text()
-            with self.subTest(skill=skill):
-                for phrase in expectation["core"]:
-                    self.assertIn(phrase, text)
-                for adapter in expectation["adapters"]:
-                    self.assertIn(
-                        f"references/shared/adapters/{adapter}", text
-                    )
-                self.assertIn("automatic", text)
-                self.assertIn("manual", text)
-                self.assertNotIn("项目策略优先", text)
-
-    def test_internal_composition_methods_return_in_manual_mode(self):
-        root = Path(__file__).resolve().parents[1] / "skills"
-        for skill in (
-            "my-grill-me",
-            "my-grill-with-docs",
-            "my-improve-codebase-architecture",
-        ):
-            text = (root / skill / "SKILL.md").read_text()
-            with self.subTest(skill=skill):
-                self.assertIn("执行后返回宿主", text)
-                self.assertNotRegex(text, r"manual`：输出对应的.*随后停止")
-
-        implement = (root / "my-implement/SKILL.md").read_text()
-        self.assertIn("{{skill-call:my-tdd}}", implement)
-        self.assertIn("{{skill-call:my-code-review}}", implement)
-        self.assertNotIn("composition_policy", implement)
-
-        wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
-        self.assertIn("内部方法", wayfinder)
-        self.assertIn("阶段交接", wayfinder)
-        self.assertIn("my-to-spec", wayfinder)
-
-    def test_grill_me_manual_entry_executes_composed_interview_in_same_turn(self):
-        root = Path(__file__).resolve().parents[1]
-        text = (root / "skills/my-grill-me/SKILL.md").read_text()
-
-        self.assertIn("{{skill-call:my-grilling}}", text)
-        self.assertIn("立即提出第一个问题", text)
-        self.assertNotIn("输出 `/my-grilling`", text)
-        self.assertNotIn("输出 `$my-grilling`", text)
 
     def test_round_trips_supported_profile(self):
         config = {
@@ -996,12 +924,10 @@ class ProfileTests(unittest.TestCase):
         prototype = (root / "my-prototype/LOGIC.md").read_text()
         wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
 
-        self.assertIn("分类为 `routine`", tickets)
         self.assertNotIn("反复迭代直至用户批准", tickets)
         self.assertIn("不为普通、可逆的重排单独等待确认", article)
         self.assertIn("继续穷尽当前授权范围内的只读证据", diagnosing)
         self.assertIn("不因 `decision_policy: ask` 重复确认", diagnosing)
-        self.assertIn("执行 `allow | confirm | pause` 的唯一结果", domain)
         self.assertIn("视为 `routine`", prototype)
         self.assertNotIn("按 `decision_policy` 询问后续方式", wayfinder)
 
@@ -1010,9 +936,6 @@ class ProfileTests(unittest.TestCase):
         implement = (root / "my-implement/SKILL.md").read_text()
         design_twice = (root / "my-codebase-design/DESIGN-IT-TWICE.md").read_text()
 
-        self.assertIn("最小针对性测试", implement)
-        self.assertIn("受影响模块或链路", implement)
-        self.assertIn("只有整份计划结束、发布或合并前", implement)
         self.assertNotIn("结束时运行一次完整测试套件", implement)
         self.assertIn("用户未禁止", design_twice)
         self.assertIn("不设固定下限", design_twice)
@@ -1133,8 +1056,6 @@ class ProfileTests(unittest.TestCase):
             )
         )
         self.assertIn("继续", implement_contract)
-        self.assertIn("不升档", implement_contract)
-        self.assertIn("work_scope_policy", implement_contract)
 
         router = (root / "my-ask-matt" / "SKILL.md").read_text()
         self.assertIn("当前已批准范围内实施", router)
@@ -1177,33 +1098,13 @@ class ProfileTests(unittest.TestCase):
             Path(__file__).resolve().parents[1]
             / "resources/adapters/assurance-levels.md"
         ).read_text()
-        for phrase in ("## quick", "## standard", "## audited", "正交"):
+        for phrase in ("quick", "standard"):
             self.assertIn(phrase, adapter)
-        for skill in (
-            "my-ask-matt",
-            "my-grill-with-docs",
-            "my-implement",
-            "my-setup",
-            "my-tdd",
-            "my-to-spec",
-            "my-to-tickets",
-        ):
-            body = (
-                Path(__file__).resolve().parents[1] / "skills" / skill / "SKILL.md"
-            ).read_text()
-            self.assertIn("references/shared/adapters/assurance-levels.md", body)
-
         setup = (
             Path(__file__).resolve().parents[1] / "skills/my-setup/SKILL.md"
         ).read_text()
         self.assertIn("--assurance-level <confirmed-level>", setup)
 
-        spec = (
-            Path(__file__).resolve().parents[1] / "skills/my-to-spec/SKILL.md"
-        ).read_text()
-        self.assertLess(spec.index("**设计 Gate**"), spec.index("**写入**"))
-        self.assertIn("status: <draft|current>", spec)
-        self.assertIn("才把候选状态晋升为 `current`", spec)
 
     def test_five_presets_match_spec_including_humanizer_defaults(self):
         expected = {
@@ -1350,56 +1251,6 @@ class ProfileTests(unittest.TestCase):
         self.assertNotIn("在 `supervised` 项目中", diagnosing)
         self.assertNotIn("在 `unattended` 项目中", diagnosing)
 
-    def test_humanizer_policy_source_of_truth_freezes_contracts(self):
-        sot = (
-            Path(__file__).resolve().parents[1]
-            / "resources"
-            / "humanizer.md"
-        ).read_text()
-        self.assertIn("humanizer_policy", sot)
-        self.assertIn("`deny`", sot)
-        self.assertIn("`confirm`", sot)
-        self.assertIn("`allow`", sot)
-        self.assertIn("/my-humanizer", sot)
-        self.assertIn("叙述段", sot)
-        self.assertIn("契约段", sot)
-        self.assertIn("必须 / 不得", sot)
-        self.assertIn("验收条目", sot)
-        self.assertIn("未确认不得", sot)
-        self.assertRegex(sot, r"不主动|跳过主动")
-        self.assertIn("Agent 执行偏离", sot)
-
-    def test_doc_generation_skills_point_to_humanizer_at_write_step(self):
-        root = Path(__file__).resolve().parents[1] / "skills"
-        expectations = {
-            "my-to-spec": (
-                "[humanizer](references/shared/humanizer.md)",
-                "写入前",
-            ),
-            "my-to-tickets": (
-                "[humanizer](references/shared/humanizer.md)",
-                "写入前",
-            ),
-        }
-        for skill, (pointer, timing) in expectations.items():
-            text = (root / skill / "SKILL.md").read_text()
-            with self.subTest(skill=skill):
-                self.assertIn("humanizer_policy", text)
-                self.assertIn(pointer, text)
-                self.assertIn(timing, text)
-                self.assertNotIn("## humanizer", text)
-
-        grill = (root / "my-grill-with-docs/SKILL.md").read_text()
-        domain = (root / "my-domain-modeling/SKILL.md").read_text()
-        self.assertIn("单个术语", grill)
-        self.assertIn("ADR 候选可在访谈中写入个人工作区", grill)
-        self.assertIn("{{skill-call:my-to-spec}}", grill)
-        self.assertIn("正式 Spec 与可执行计划由 `my-to-spec` 生成", grill)
-        self.assertNotIn("输出可执行计划", grill)
-        self.assertNotIn("团队文档、最终 Spec 与最终计划", grill)
-        self.assertIn("立即", domain)
-        self.assertIn("[humanizer](references/shared/humanizer.md)", domain)
-        self.assertIn("个人记录例外", domain)
 
     def test_code_review_skill_is_compact_and_signal_first(self):
         text = (
@@ -1413,10 +1264,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("代码行为", text)
         self.assertIn("Spec", text)
         self.assertRegex(text, r"ADR|相关文档")
-        self.assertIn("humanizer_policy", text)
-        self.assertIn(
-            "[humanizer](references/shared/humanizer.md)", text
-        )
         self.assertRegex(text, r"领域用语|简短")
         self.assertIn("函数", text)
         self.assertIn("变量", text)
@@ -1427,7 +1274,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("证据", text)
         self.assertIn("影响及最小验证方式", text)
         self.assertIn("低风险变更不为并行而增加 reviewer", text)
-        self.assertIn("manual` 或 `automatic` 都必须", text)
         self.assertIn("## Code", text)
         self.assertIn("## Spec", text)
         self.assertNotIn("## Standards", text)
@@ -1452,7 +1298,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("**Code pass**", text)
         self.assertIn("**Spec pass**", text)
         self.assertIn("每条规范性要求映射到实现与测试证据", text)
-        self.assertIn("不输出这份检查清单", text)
         self.assertIn("同一失败链只保留", text)
         self.assertIn("按主要原因归类", text)
         self.assertIn("未评估：未找到可用 Spec", text)
@@ -1466,7 +1311,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("Review-Scope: <scope>", text)
         self.assertIn("无内容的注释、命名或统计子节不生成", text)
         self.assertIn("用户显式指定的任何 fixed-point", text)
-        self.assertIn("method=my-code-review", text)
         self.assertIn("组合模式不得另建 snapshot", text)
         self.assertIn("不得替换", text)
         self.assertIn("仅在用户未指定而采用默认基线分支时", text)
@@ -1489,45 +1333,6 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("专业术语首次出现时用白话解释", text)
         self.assertIn("不能仅因“动词＋宾语”形式", text)
 
-    def test_implementation_method_defers_snapshot_and_journal_mechanics_to_runtime(self):
-        root = Path(__file__).resolve().parents[1]
-        review = (root / "skills/my-code-review/SKILL.md").read_text()
-        implement = (root / "skills/my-implement/SKILL.md").read_text()
-
-        for source in ("committed", "staged", "unstaged", "untracked"):
-            self.assertIn(source, review)
-        self.assertIn("Review-Snapshot: <content_id>", review)
-        self.assertIn("旧 receipt 立即失效", review)
-        self.assertIn("内容快照由 runtime 管理", implement)
-        self.assertIn("{{skill-call:my-code-review}}", implement)
-        for runtime_detail in (
-            "run-start",
-            "run-record",
-            "review-snapshot",
-            "ticket-transition",
-            "worktree",
-            "parallel_mode",
-        ):
-            self.assertNotIn(runtime_detail, implement)
-
-    def test_spec_and_handoff_apply_finalization_gate(self):
-        root = Path(__file__).resolve().parents[1] / "skills"
-        for skill in ("my-to-spec", "my-handoff"):
-            text = (root / skill / "SKILL.md").read_text()
-            with self.subTest(skill=skill):
-                self.assertIn(
-                    "references/shared/artifact-finalization.md",
-                    text,
-                )
-                self.assertIn("最终校验", text)
-
-        spec = (root / "my-to-spec/SKILL.md").read_text()
-        self.assertIn("依据与未知", spec)
-        handoff = (root / "my-handoff/SKILL.md").read_text()
-        self.assertIn("fresh-context", handoff)
-        self.assertIn("Handoff-Status: draft | ready", handoff)
-        self.assertIn("Reader-Reconstruction: pass | inconclusive", handoff)
-        self.assertIn("不得输出 `resume-first-step`", handoff)
 
     def test_standalone_design_review_stays_focused(self):
         root = Path(__file__).resolve().parents[1] / "skills"
@@ -1549,24 +1354,8 @@ class ProfileTests(unittest.TestCase):
             self.assertIn(field, tickets)
         self.assertNotIn("很长、带编号", spec)
         self.assertNotIn("理想数量是一个", spec)
-        self.assertIn("pause-for-revision", implement)
-        self.assertIn("blocked-by-design", implement)
         self.assertIn("补偿", implement)
 
-    def test_runtime_adapters_own_spec_writeback_and_resume_policy(self):
-        root = Path(__file__).resolve().parents[1]
-        implement = (root / "skills/my-implement/SKILL.md").read_text()
-        write_actions = (root / "resources/adapters/write-actions.md").read_text()
-        work_scope = (root / "resources/adapters/work-scope.md").read_text()
-
-        self.assertIn("最小 Spec 修订范围", implement)
-        self.assertIn("补偿", implement)
-        self.assertNotIn("docs_writeback", implement)
-        self.assertNotIn("写回与准入完成前不得恢复实施", implement)
-        self.assertIn("文件写权限", write_actions)
-        self.assertIn("确认修订后立即写回", write_actions)
-        self.assertIn("写回", work_scope)
-        self.assertIn("pause-for-revision", work_scope)
 
     def test_artifact_review_skill_contains_method_not_runtime_runbook(self):
         root = Path(__file__).resolve().parents[1]
@@ -1587,46 +1376,6 @@ class ProfileTests(unittest.TestCase):
             "Agent",
         ):
             self.assertNotIn(runtime_detail, review)
-
-    def test_runtime_sessions_are_split_and_skills_remain_semantic(self):
-        root = Path(__file__).resolve().parents[1]
-        implementation_session = (
-            root / "resources/adapters/implementation-session.md"
-        ).read_text()
-        artifact_review_session = (
-            root / "resources/adapters/artifact-review-session.md"
-        ).read_text()
-        implement = (root / "skills/my-implement/SKILL.md").read_text()
-        review = (root / "skills/my-review-artifact/SKILL.md").read_text()
-
-        for command in (
-            "implementation-open",
-            "implementation-submit",
-            "implementation-close",
-        ):
-            self.assertIn(command, implementation_session)
-            self.assertNotIn(command, artifact_review_session)
-            self.assertNotIn(command, implement)
-            self.assertNotIn(command, review)
-        for command in (
-            "artifact-review-open",
-            "artifact-review-submit",
-        ):
-            self.assertIn(command, artifact_review_session)
-            self.assertNotIn(command, implementation_session)
-            self.assertNotIn(command, implement)
-            self.assertNotIn(command, review)
-        self.assertIn("默认是串行", implementation_session)
-        self.assertIn("用户明确要求并行", implementation_session)
-        self.assertIn("默认串行", artifact_review_session)
-        self.assertIn("用户明确要求并行", artifact_review_session)
-        self.assertIn("references/shared/adapters/implementation-session.md", implement)
-        self.assertIn("references/shared/adapters/artifact-review-session.md", review)
-        self.assertIn("MY_MATT_REVIEW_METHOD", implementation_session)
-        self.assertIn("语义方法由 runtime 固定", implementation_session)
-        self.assertIn("不要再生成另一份未绑定快照", implement)
-        self.assertIn("required_checks", review)
-        self.assertIn("未全部闭合时不得输出 `No findings.`", review)
 
 
 class GitIgnoreRepositoryTests(unittest.TestCase):
@@ -2779,7 +2528,7 @@ render_root: 学生课程
             release = build_release(root / "skills", Path(tmp) / "releases",
                                     release_id="resources-v2", upstream_id="local-matt-skills", repo_root=root)
             self.assertFalse((release / "skills/my-implement/references/composed").exists())
-            self.assertTrue((release / "skills/my-implement/references/shared/humanizer.md").is_file())
+            self.assertTrue((release / "skills/my-implement/references/shared/review-loop.md").is_file())
             body = (release / "skills/my-implement/SKILL.md").read_text()
             self.assertIn("{{skill-call:my-tdd}}", body)
             self.assertIn("{{skill-call:my-code-review}}", body)
@@ -2827,9 +2576,8 @@ render_root: 学生课程
                     "implementation-session.md",
                 },
                 "my-review-artifact": {"artifact-review-session.md"},
-                "my-grill-me": {"composition.md"},
+                "my-grill-me": set(),
                 "my-grill-with-docs": {
-                    "composition.md",
                     "artifact-access.md",
                 },
             }

@@ -21,6 +21,7 @@ blocked_by: []
 claimed_by:
 tags: []
 sequence: <NN>
+test_commands: [<至少一条与项目配置匹配的命令>]
 rule_sources: []
 rule_scope: []
 rule_constraints: []
@@ -46,7 +47,7 @@ execution_agent: <auto|codex|cursor|claude>
 - [ ] 验收标准 2
 ```
 
-`blocked_by` 必须是 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取时仅填写 `claimed_by`，完成阻塞 Ticket 时将其 `status` 设为 `complete`。正文状态行不能替代 frontmatter，也不能据此猜测旧 Ticket 类型。
+`blocked_by` 必须是 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取、状态和验收勾选由 runtime 管理。正文状态行不能替代 frontmatter，也不能据此猜测旧 Ticket 类型。
 
 修订未完成 Ticket 时，`supersedes_ticket` 指向被替代项；补偿已完成工作时，`compensates` 指向历史 Ticket。新 Ticket 始终绑定当前 Spec revision。关闭前勾选全部验收项。
 

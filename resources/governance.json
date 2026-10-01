@@ -31,11 +31,11 @@
     },
     "resources/instruction-authority.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_decision_gate_maps_each_class_to_one_action"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/composition.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_composition_callers_use_one_dispatch_channel"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/ticket-selection.md": {
       "kind": "execution-protocol",
@@ -43,15 +43,15 @@
     },
     "resources/adapters/assurance-levels.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_assurance_levels_are_orthogonal_and_shared"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/work-scope.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_continue_semantics_do_not_widen_work_scope_in_skills"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/write-actions.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::WriteGateTests.test_every_configured_write_policy_has_a_runtime_gate"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/artifact-access.md": {
       "kind": "execution-protocol",
@@ -71,11 +71,11 @@
     },
     "resources/adapters/implementation-session.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_runtime_sessions_are_split_and_skills_remain_semantic"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/artifact-review-session.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_runtime_sessions_are_split_and_skills_remain_semantic"
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     },
     "resources/adapters/specialized-review-session.md": {
       "kind": "execution-protocol",
@@ -128,6 +128,18 @@
     "resources/project-rule-review.md": {
       "kind": "execution-protocol",
       "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+    },
+    "resources/user-intervention.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+    },
+    "resources/review-loop.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+    },
+    "resources/workflow-delivery.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
     }
   }
 }

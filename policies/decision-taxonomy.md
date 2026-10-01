@@ -1,9 +1,5 @@
-# 决策分类
+# 决策边界
 
-自治只可处理可逆的执行细节：已批准 Ticket 内的实现选择、已验证证据的解释，以及不改变用户目标的顺序调整。`decision_policy: ask` 也不表示对每个普通技术细节暂停；在 `ready-frontier` 流程中，只对无法由 Ticket、计划或代码推断且会改变范围、公开接口、测试投资或风险承担的关键决定暂停。
+已批准范围内的可逆执行细节由 Agent 推进，能从环境查证的事实自行获取。承重未知、用户专属决定及写入动作按当前 Skill 根目录的 `references/shared/user-intervention.md`（找用户的唯一条件）处理；本文件不另定义确认清单。
 
-调用方不得自行写“询问、继续或停止”的选择列表。先分类为 `routine`、`consequential` 或 `user-exclusive`，再执行 runtime `decision-gate` 返回的唯一动作。
-
-以下是用户专属产品决定，绝不因 `decision_policy: autonomous` 自动决定：目标或范围、用户体验取舍、成功指标、优先级、公开承诺、不可逆数据或兼容性选择，以及冲突的产品需求。遇到这类决定时保留问题和证据，等待用户；Wayfinder 的 `wayfinder-decision` Ticket 正是用来承载这些决定，不能转入实施池。
-
-写操作、外部发布、分支和提交的门槛仍由项目配置与[写操作边界](write-boundaries.md)独立决定；决策分类不放宽它们。
+Wayfinder 的决定工作仍由参与者代表自己的意见，不能把待用户回答的决定转为实施授权。

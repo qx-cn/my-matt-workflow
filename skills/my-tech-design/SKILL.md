@@ -4,6 +4,8 @@ description: 将讨论与代码库事实整理为可评审的技术方案；支�
 disable-model-invocation: true
 ---
 
+遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
+
 # 技术方案
 
 为不了解当前代码细节、但需要判断方案是否成立和风险是否可接受的工程师生成技术方案。它不是实现清单。

@@ -4,13 +4,16 @@ description: 通过高强度访谈澄清设计决定，并在过程中建立 ADR
 disable-model-invocation: true
 ---
 
-本流程依赖 `my-grilling` 与 `my-domain-modeling`。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`，遵循[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)：
+# 从需求到交付
 
-- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都调用当前阶段需要的 {{skill-call:my-grilling}} 和 {{skill-call:my-domain-modeling}}，执行后返回宿主；不要输出另一条 Skill 调用。
-- 复杂、隐含或类比驱动的请求在摘要形成后读取[requirement-analysis](references/shared/requirement-analysis.md)，作为风险触发的方法返回宿主；普通请求不重复核对。
+调用 {{skill-call:my-grilling}} 访谈，调用 {{skill-call:my-domain-modeling}} 澄清领域术语与承重决定；方法完成后返回本流程。复杂或类比请求在摘要形成前读取[需求核对](references/shared/requirement-analysis.md)。共同遵循[找用户的条件](references/shared/user-intervention.md)。
 
-本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失。
+没有代码库时采用 my-grill-me 的访谈用途，只产需求摘要，停止主链；不创建 Topic、Spec 或 Ticket。
 
-用户以具体方案、类比或既有做法表达需求时，应用[第一性原理推理](references/shared/first-principles-reasoning.md)中的因果链，先把使用者可观察目标与所给手段分开。只有两者差异会改变目标、范围、约束或验收时才进入访谈；不要把“重新发明方案”变成每次请求的固定步骤。
+## 对齐点1
 
-访谈结论经用户确认后，生成一份可追溯需求摘要：目标、范围、明确约束、可观察验收，以及每项来自用户原文、仓库事实还是尚未确认的推断。`quick` 且满足低风险准入时，输出 `{{skill-call:my-implement}}`；其他等级输出 `{{skill-call:my-to-spec}}`。正式 Spec 与可执行计划由 `my-to-spec` 生成；本 Skill 不创建它们。
+输出目标、范围、约束、可观察验收，逐项注明来自用户原文、仓库事实或待确认推断；按[保证等级](references/shared/adapters/assurance-levels.md)提议 quick/standard 及理由。按[产物存储](references/shared/adapters/artifact-storage.md)保存 `requirements/requirements-<topic>-01.md`。用户确认后执行 topic start；配置缺失时先完成 setup。
+
+quick 直接实施和自审，不创建 Spec/Ticket；遵循[实施适配](references/shared/adapters/implementation-session.md)与[交付规则](references/shared/workflow-delivery.md)，完成 Topic。
+
+standard 直接调用 {{skill-call:my-to-spec}}，由它继续 to-tickets；两者合并呈现对齐点2。用户确认后按依赖逐张实施。多 Ticket 全部完成后运行 topic test 和 topic review，沉淀长期知识、写摘要，再 topic complete。中间直接调用已确认阶段，用户无需手动切换 Skill。

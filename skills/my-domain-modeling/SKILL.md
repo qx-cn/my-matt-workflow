@@ -3,58 +3,14 @@ name: my-domain-modeling
 description: 在 my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
 ---
 
-# My Domain Modeling
+遵循[指令权威](references/shared/instruction-authority.md)。
 
-在设计过程中主动构建并收紧项目领域模型。这是一项**主动**的纪律：挑战术语、构造边缘场景，并在术语或决策结晶时立即记录。（其他 Skill 为取得词汇而阅读项目术语表不属于本 Skill；本 Skill 用于改变模型，而不仅是使用模型。）
+# 项目领域模型
 
-术语表或 ADR 面向未来维护者时，按[面向读者写作](references/shared/reader-first-writing.md)说明定义、适用边界，以及这项决定为何不应被无依据地重新争论。
+先读取 `.agent/CONTEXT.md`、`.agent/adr/`、配置列出的领域来源及相关代码，遵循[产物访问](references/shared/adapters/artifact-access.md)。主动质疑冲突术语，用具体边缘场景区分概念，并将用户描述与代码交叉验证；涉及用户决定时遵循[找用户的条件](references/shared/user-intervention.md)。
 
-## 文件结构
+术语解决后按 [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) 更新项目级 `.agent/CONTEXT.md`；只写项目词汇、定义和边界，不存实现细节。多上下文在同一文件按领域分节；不按 Topic 分片。未来维护者需要据此理解和判断，按[面向读者写作](references/shared/reader-first-writing.md)表达。
 
-首先读取项目配置列出的正式术语表、ADR 和相关代码。项目正式文档位置因仓库而异，不假设根目录存在 `CONTEXT.md` 或固定 `docs/adr/`；项目配置未列出时，按当前 topic 使用下列个人目录：
+难以撤回、缺少背景会让未来维护者意外、且有真实替代权衡的决定，按 [ADR-FORMAT.md](ADR-FORMAT.md) 写 `.agent/adr/NNNN-<slug>.md`。三项缺一就不写。先扫描已有编号与决定，保留依据及被拒替代方案；不是模板填充。
 
-```text
-.agent/work/<topic>/domain/
-├── domain-<topic>-glossary.md
-└── adr/
-    ├── domain-<topic>-0001-event-sourced-orders.md
-    └── domain-<topic>-0002-postgres-for-write-model.md
-```
-
-按需创建文件：只有内容可写时才创建。首个术语解决后才创建 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；首次需要 ADR 才创建 `.agent/work/<topic>/domain/adr/`。若仓库存在多个领域上下文，以项目配置和目录边界确定术语及 ADR 的归属；仍不明确时，将归属选择分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)执行 `allow | confirm | pause` 的唯一结果。
-
-读取既有个人术语表或 ADR 时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
-
-## 会话期间
-
-### 对照术语表提出质疑
-
-当用户所用术语与既有语言冲突，立即指出：“术语表将‘取消’定义为 X，但你似乎在说 Y；究竟是哪一个？”
-
-### 收紧模糊语言
-
-当用户使用含糊或多义术语时，提出精确、规范的名称：“你说的是‘账户’，是 Customer 还是 User？它们不同。”
-
-### 讨论具体场景
-
-讨论领域关系时，用具体场景压测它们。构造探查边缘情况的场景，迫使概念之间的边界变得精确。
-
-### 与代码交叉验证
-
-用户说明某事如何工作时，检查代码是否一致。发现矛盾时明确展示，例如：“代码会取消整张 Order，但你刚说可以部分取消；哪个是正确行为？”
-
-### 就地更新个人术语表
-
-术语一经解决，立即按 [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) 的格式写入 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；不要批量积压。这个增量记录不代表整体讨论已经最终确认，按 [humanizer](references/shared/humanizer.md) 的个人记录例外处理。个人术语表必须完全不含实现细节，不得把它当作 Spec、草稿本或实现决策库；它只是一份词汇表。
-
-正式团队术语文档是外部写入：按项目策略先预览、确认或依照已批准的无人值守计划写回；写入前按 [humanizer](references/shared/humanizer.md) 执行。个人术语表先记录，避免丢失本次会话结论。
-
-### 谨慎提出 ADR
-
-只有同时满足以下三项才建议创建 ADR：
-
-1. **难以逆转**：以后改变主意的成本很高。
-2. **缺少背景会令人意外**：未来读者会问“他们为什么这样做？”
-3. **源于真实权衡**：存在真实替代方案，并因具体原因选择其一。
-
-缺任何一项就不写 ADR。使用 [ADR-FORMAT.md](ADR-FORMAT.md) 的格式先写个人候选；写回团队 ADR 目录前遵守项目写入策略。
+Topic 收尾再核对哪些已确认知识值得长期保留，依[交付规则](references/shared/workflow-delivery.md)记录新增及依据。修改既有项目文档按共同确认条件处理。

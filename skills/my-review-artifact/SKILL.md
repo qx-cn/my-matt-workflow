@@ -4,6 +4,8 @@ description: 对一个固定版本的交付产物做综合只读审查，合并�
 disable-model-invocation: true
 ---
 
+遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
+
 # 综合审查产物
 
 审查 runtime 提供的固定 `review_unit`，并把结论连同其 `content_id` 交回 runtime 验证。快照生命周期、过期检查和执行调度由 runtime 管理；本 Skill 只决定审查什么以及哪些问题值得报告。开始与交付遵循 [artifact review session](references/shared/adapters/artifact-review-session.md)。

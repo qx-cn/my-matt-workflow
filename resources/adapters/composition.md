@@ -1,9 +1,5 @@
 # 组合调用
 
-调用关系与调用权限以 `composition/manifest.json` 为唯一依据；路由索引不算调用边。
+调用关系和权限以 composition/manifest.json 为唯一依据，路由索引不算调用边。method在阶段内执行并返回；chain在已通过主链对齐后继续；handoff的确认依[找用户的条件](../user-intervention.md)。
 
-- `method`：在当前阶段内调用对应 Skill，执行后返回调用方。
-- `handoff`：主链之外的阶段交接，调用前向用户确认一次。
-- `chain`：主链交接，在已确认的对齐点之后自动进行。
-
-调用方用宿主语法调用已安装的 Skill。源码中的 `{{skill-call:my-name}}` 由安装投影转换为 Codex 的 `$my-name` 或 Cursor/Claude 的 `/my-name`。被调用方是独立安装入口，不向调用方复制方法正文；共享资源按资源清单打包。
+调用源码用 {{skill-call:my-name}}，安装投影为 Codex 的 $my-name 或 Cursor/Claude 的 /my-name；调用已安装入口，共享资源按清单分发。主链的阶段结果供下一阶段直接使用，不要求用户手动切换。

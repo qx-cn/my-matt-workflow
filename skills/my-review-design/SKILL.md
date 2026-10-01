@@ -3,6 +3,8 @@ name: my-review-design
 description: 在 my-to-spec、my-review-artifact 流程中作为指定阶段的方法被调用。
 ---
 
+遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
+
 # 评审已形成方案
 
 本 Skill 只判断设计本身是否成立并足以进入实施，不承担整份产物的综合质量验收。需要固定审查快照、跨质量维度检查或正式交付结论时，使用 `my-review-artifact` 并声明 `artifact_kind=design`。

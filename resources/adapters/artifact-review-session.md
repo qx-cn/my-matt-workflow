@@ -1,23 +1,7 @@
-# Artifact review session
+# 产物审查适配
 
-本文件定义产物审查 Skill 与项目 runtime 的 session 接口；Skill 只消费固定审查单元并返回语义结果，不自行复制调度、快照或验证流程。
+从宿主安装状态取得绝对 runtime_entry，运行 artifact-review-open --artifact <path>（多个文件重复参数），设计类使用 --kind design。消费其固定review_unit、content_id和所需方法，不另建未绑定结论。
 
-开始前从当前 Agent 的 `my-matt-workflow/install-state.json` 读取绝对 `runtime_entry`，然后运行：
+方法名和适用维度遵循[审查循环](../review-loop.md)的产物接口，不适用给理由。humanizer 是审查方法，不是工作流强制润色步骤。
 
-```sh
-python3 <runtime_entry> artifact-review-open --artifact <path> [--artifact <path> ...] [--kind general|design] [--parallel]
-```
-
-`--kind` 默认为 `general`；技术方案、架构说明或设计文档使用 `design`，runtime 只在这种审查单元中加入 `my-review-design`。默认串行。只有用户明确要求并行时才传 `--parallel`；runtime 返回共享同一 `content_id` 的方法 lane，宿主负责按 `dispatch` 执行。结果 JSON 必须完整覆盖 `review_unit.required_checks`：
-
-```json
-{"content_id":"<id>","checks":{"<method>":{"status":"pass|finding|inconclusive|not-applicable","reason":null}},"findings":[],"inconclusive":[]}
-```
-
-`not-applicable` 必须提供非空 `reason`。每个 `finding` 或 `inconclusive` 项以 `checks` 数组标明它解释的方法；一个合并项可覆盖多个方法。提交并释放快照：
-
-```sh
-python3 <runtime_entry> artifact-review-submit --artifact <path> [--artifact <path> ...] --snapshot-dir <dir> --result-file <json>
-```
-
-runtime 会拒绝缺失方法、无解释的 finding/inconclusive，或已变化的源内容。直接调用 Skill 而宿主没有接入这些命令时，必须明确说明缺少 runtime session；不能虚构工作单元、固定快照或闭合结果。
+结果用 content_id、checks、findings、inconclusive；checks逐项闭合pass/finding/inconclusive/not-applicable。artifact-review-submit提交固定内容，快照和哈希由runtime验证，expect-content-id仍可用于验证/释放。文档轮次、日志和停止由[审查循环](../review-loop.md)约束，命令不计轮数；不得靠重新开快照重置文档限制。

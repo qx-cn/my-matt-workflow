@@ -1,8 +1,3 @@
-# 写操作 Gate
+# 写入确认
 
-任何受 profile 控制的写操作先通过安装 runtime 的 `write-gate`，再执行；该命令只返回 `allow`、`confirm`、`deny` 或 `pause`，不会执行写入。
-
-- `branch` 读取 `branch_policy`；`commit` 读取 `commit_policy`；`external` 读取 `external_write_policy`；`docs` 读取 `docs_writeback`。
-- `confirm` 必须等待用户，`deny` 不得执行，`allow` 可继续。
-- `docs_writeback: allow` 表示用户确认修订后立即写回文档，不再询问文件写权限；`confirm` 写回前再确认写权限；`deny` 停止写回。
-- 即使 `external_write_policy: allow`，裸 `--approved-scope` 也不能自证授权。external request 必须绑定 kind、target、operation、scope id 与宿主可信 confirmation receipt；当前 CLI 没有可验证的宿主信任通道，因此返回 `pause`，由宿主实时向用户确认。固定安全禁止项永远不可放宽。
+写入动作遵循[找用户的条件](../user-intervention.md)，用户确认后直接完成具体动作。已有本地文件授权不等于外部发布授权；先完成可审阅结果再处理适用确认。不另定义配置驱动的门槛。

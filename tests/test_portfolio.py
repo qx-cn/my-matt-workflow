@@ -5,12 +5,10 @@ import unittest
 from pathlib import Path
 
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class PortfolioContractTests(unittest.TestCase):
-
 
 
     def test_ticket_contract_preserves_coverage_and_expand_contract_exception(self):
@@ -19,16 +17,14 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn("expand–contract", text)
 
 
-
-
-
-
     def test_artifact_storage_adapter_is_declared_for_writers(self):
         manifest = json.loads((ROOT / "resources/manifest.json").read_text())
         resource = manifest["resources"]["adapter-artifact-storage"]
         self.assertEqual(
             {
                 "my-edit-article",
+                "my-grill-with-docs",
+                "my-to-spec",
                 "my-handoff",
                 "my-test-report",
                 "my-to-questionnaire",

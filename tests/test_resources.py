@@ -42,7 +42,6 @@ class SharedResourceTests(unittest.TestCase):
         self.assertEqual(
             {
                 "my-to-spec",
-                "my-handoff",
                 "my-ask-matt",
                 "my-review-artifact",
             },
@@ -109,13 +108,7 @@ class SharedResourceTests(unittest.TestCase):
     def test_humanizer_is_bundled_only_for_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         with tempfile.TemporaryDirectory() as tmp:
-            for name in (
-                "my-to-spec",
-                "my-to-tickets",
-                "my-domain-modeling",
-                "my-code-review",
-                "my-humanizer",
-            ):
+            for name in manifest.resources["humanizer"].consumers:
                 consumer = Path(tmp) / name
                 consumer.mkdir()
                 bundle_resources_for_skill(manifest, ROOT, name, consumer)
@@ -277,7 +270,7 @@ class SharedResourceTests(unittest.TestCase):
                 "references/policies/merge-conflict-approval.md",
             ),
             "my-to-tickets": (
-                "references/shared/adapters/ticket-selection.md",
+                "references/shared/user-intervention.md",
             ),
             "my-triage": (
                 "references/shared/adapters/ticket-selection.md",
@@ -318,7 +311,7 @@ class SharedResourceTests(unittest.TestCase):
                 bundle_resources_for_skill(manifest, ROOT, skill, target)
                 authority = target / "references/shared/instruction-authority.md"
                 self.assertTrue(authority.is_file(), skill)
-                self.assertIn("decision-gate", authority.read_text())
+                self.assertIn("user-intervention.md", authority.read_text())
 
     def test_policies_are_bundled_only_for_explicit_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
@@ -363,7 +356,7 @@ class SharedResourceTests(unittest.TestCase):
             <= effective["adapter-work-scope"]
         )
         self.assertNotIn("my-triage", direct["adapter-write-actions"])
-        self.assertIn("my-triage", effective["adapter-write-actions"])
+        self.assertIn("my-triage", effective["user-intervention"])
         self.assertIn("my-to-spec", effective["instruction-authority"])
 
         validate_skills(ROOT / "skills", repo_root=ROOT)

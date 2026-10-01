@@ -3,12 +3,12 @@ name: my-grilling
 description: 在 my-grill-me、my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
 ---
 
-围绕会改变目标、范围、约束或验收的承重未知进行高强度访谈。沿决策树逐支前进，一次解决一个决定及其依赖；每个问题都给出推荐答案。
+# 访谈方法
 
-每次只问一个问题，等待反馈后再继续。一次问多个问题会令人无所适从。
+围绕会改变目标、范围、约束或验收的承重未知追问。先查证环境中可获得的事实；用户需决定的事项遵循[找用户的条件](references/shared/user-intervention.md)。
 
-能通过探索环境（文件系统、工具等）找到的**事实**，应自行查证而非提问。按[指令权威与决策 Gate](references/shared/instruction-authority.md)区分决定：已批准范围内普通、可逆的 `routine` 细节由 Agent 继续；`consequential` 只在 gate 返回 `confirm` 时询问；产品取舍、成功指标、优先级或不可逆承诺等 `user-exclusive` 决定必须由用户回答。
+每轮列出所有互不依赖的问题，每题附推荐答案和取舍依据；用户可全部采纳或只改几项。依赖其他答案的留下一轮，会大幅影响其他问题的单独问。例如先确定服务对象，再问依赖它的成功指标；部署路径与已有测试可独立核对时同轮问。
 
-当目标、范围、明确约束和可观察验收均可追溯，且没有未处理的 `consequential` 或 `user-exclusive` 未知时，访谈完成。需要用户回答的决定尚未解决前不得执行该事项；不要为了“覆盖所有方面”继续询问普通实现细节。
+用户以具体方案或类比描述目标时，先分清目标与手段；复杂、隐含或类比请求在形成摘要前按[需求核对](references/shared/requirement-analysis.md)检查理解。只有会改变结果的歧义继续追问。
 
-确认后按[最终态写作](references/shared/final-state-writing.md)收束当前有效决定，供后续产物使用。
+目标、范围、明确约束、可观察验收均可追溯且承重未知已解决时完成；按[最终态写作](references/shared/final-state-writing.md)收束决定，返回调用方，不因普通实现细节继续访谈。

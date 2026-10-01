@@ -7,7 +7,7 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-09"]
 claimed_by:
 tags: []
@@ -37,10 +37,10 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] grilling/grill-with-docs 按依赖批量提问并给推荐答案，复杂或类比请求先核对；摘要逐项标来源并提议 quick/standard，无代码库 grill-me 仅产摘要。
-- [ ] 主链完成两次对齐后直接调用后续 Skill；对齐点 2 包括 Spec、逐 Ticket 行为、依赖、测试命令与边界；按顺序实施，不让用户逐段手动调用。
-- [ ] 找用户完整条件只在一份共享资源定义，相关 Skill/权威资源引用；覆盖对齐、用户专属选择、审查停止、外部操作、范围外文档、setup/migrate、非主链 handoff 与环境阻塞。
-- [ ] 审查循环规则在一份共享资源覆盖 M4 与第 4 节全部要点，指定六个 Skill 引用；第一轮穷尽 coverage、复审限定影响、建议不修复、下游归建议、修复仅改正删除收窄、同事实联动和单一规则定义。
-- [ ] standard 派新上下文只读审查者，继承模型与思考档位并记实际模型；派不出时如实 self；文档最多四轮、记录产物与轮次等日志、不能通过扩范围重置，停止交用户裁决；已决清单不能重开。
-- [ ] implement 在动手前补写实施计划并按 runtime 状态恢复；quick 摘要有逐条验收→不同测试→代码位置；收尾沉淀 CONTEXT/ADR、全部固定摘要节、建议/已知问题/介入/未验证项。
-- [ ] to-spec 不依赖长期 Spec；domain-modeling 写项目级术语和 ADR；handoff 仅用于换宿主/目录/人或未成 Spec 的访谈，取消 ready/draft 与独立重建门槛。
+- [x] grilling/grill-with-docs 按依赖批量提问并给推荐答案，复杂或类比请求先核对；摘要逐项标来源并提议 quick/standard，无代码库 grill-me 仅产摘要。
+- [x] 主链完成两次对齐后直接调用后续 Skill；对齐点 2 包括 Spec、逐 Ticket 行为、依赖、测试命令与边界；按顺序实施，不让用户逐段手动调用。
+- [x] 找用户完整条件只在一份共享资源定义，相关 Skill/权威资源引用；覆盖对齐、用户专属选择、审查停止、外部操作、范围外文档、setup/migrate、非主链 handoff 与环境阻塞。
+- [x] 审查循环规则在一份共享资源覆盖 M4 与第 4 节全部要点，指定六个 Skill 引用；第一轮穷尽 coverage、复审限定影响、建议不修复、下游归建议、修复仅改正删除收窄、同事实联动和单一规则定义。
+- [x] standard 派新上下文只读审查者，继承模型与思考档位并记实际模型；派不出时如实 self；文档最多四轮、记录产物与轮次等日志、不能通过扩范围重置，停止交用户裁决；已决清单不能重开。
+- [x] implement 在动手前补写实施计划并按 runtime 状态恢复；quick 摘要有逐条验收→不同测试→代码位置；收尾沉淀 CONTEXT/ADR、全部固定摘要节、建议/已知问题/介入/未验证项。
+- [x] to-spec 不依赖长期 Spec；domain-modeling 写项目级术语和 ADR；handoff 仅用于换宿主/目录/人或未成 Spec 的访谈，取消 ready/draft 与独立重建门槛。

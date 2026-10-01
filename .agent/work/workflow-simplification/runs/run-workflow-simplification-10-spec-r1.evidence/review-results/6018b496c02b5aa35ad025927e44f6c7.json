@@ -1,0 +1,107 @@
+{
+  "code_content_id": "3d104d4127429ac0ec2a930bdb908f349fb5827894b548551162a4b55fc941cd",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-13#A2"
+      ],
+      "baseline_reachable": true,
+      "id": "FO10-13",
+      "owner_ticket_id": "workflow-simplification-13",
+      "root_cause": "remaining-legacy-interface-cleanup",
+      "summary": "冻结入口与支持资源剩余旧配置/命令引用由 Ticket13 最终清理，本轮不扩展范围。"
+    }
+  ],
+  "review_id": "6018b496c02b5aa35ad025927e44f6c7",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "08348bb5e30e341541450f2a62005859"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-10#A1",
+        "evidence_refs": [
+          "snapshot:skills/my-grilling/SKILL.md",
+          "snapshot:skills/my-grill-with-docs/SKILL.md",
+          "snapshot:skills/my-grill-me/SKILL.md",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-10#A2",
+        "evidence_refs": [
+          "snapshot:skills/my-grill-with-docs/SKILL.md",
+          "snapshot:skills/my-to-spec/SKILL.md",
+          "snapshot:skills/my-to-tickets/SKILL.md",
+          "snapshot:skills/my-implement/SKILL.md",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-10#A3",
+        "evidence_refs": [
+          "snapshot:resources/user-intervention.md",
+          "snapshot:resources/instruction-authority.md",
+          "snapshot:policies/decision-taxonomy.md",
+          "snapshot:policies/write-boundaries.md",
+          "snapshot:tests/test_workflow_texts_v2.py",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-10#A4",
+        "evidence_refs": [
+          "snapshot:resources/review-loop.md",
+          "snapshot:skills/my-code-review/SKILL.md",
+          "snapshot:skills/my-review-artifact/SKILL.md",
+          "snapshot:skills/my-review-design/SKILL.md",
+          "snapshot:skills/my-review-instructions/SKILL.md",
+          "snapshot:skills/my-tech-design/SKILL.md",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-10#A5",
+        "evidence_refs": [
+          "snapshot:resources/review-loop.md",
+          "snapshot:resources/adapters/artifact-review-session.md",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-10#A6",
+        "evidence_refs": [
+          "snapshot:skills/my-implement/SKILL.md",
+          "snapshot:resources/adapters/implementation-session.md",
+          "snapshot:resources/workflow-delivery.md",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-10#A7",
+        "evidence_refs": [
+          "snapshot:skills/my-to-spec/SKILL.md",
+          "snapshot:skills/my-domain-modeling/SKILL.md",
+          "snapshot:skills/my-domain-modeling/CONTEXT-FORMAT.md",
+          "snapshot:skills/my-domain-modeling/ADR-FORMAT.md",
+          "snapshot:skills/my-handoff/SKILL.md",
+          "test:7591b3578a15bacd2d866afe9d67b08ec95f926140b87d1c983d50c23e5be07e"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "snapshot:resources/review-loop.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "核对直接后继12/13：技术方案方法与最终旧CLI/配置清理分别归其owner，当前七项文本验收闭合，不据此扩张当前范围。"
+      }
+    ]
+  },
+  "status": "pass"
+}

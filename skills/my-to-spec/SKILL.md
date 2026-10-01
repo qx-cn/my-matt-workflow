@@ -3,33 +3,17 @@ name: my-to-spec
 description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段的工作单元被调用。
 ---
 
-本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
+遵循[指令权威](references/shared/instruction-authority.md)。
 
-读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略、生效的 `humanizer_policy` 与[开发保证等级](references/shared/adapters/assurance-levels.md)。`default_execution_agent` 只用于后续 Ticket 的默认值，不为 Spec 分配执行 Agent。配置不存在时先运行 `{{skill-call:my-setup}}`。写入团队文档或外部 Tracker 前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+# 整理 Spec
 
-## 过程
+从已确认需求和代码库事实整理版本化 Spec（也可称 PRD），不重新访谈。不为 Spec 分配执行 Agent。先读取[最终态写作](references/shared/final-state-writing.md)、[项目规则解析](references/shared/adapters/project-rules.md)与既有 ADR；找用户按[共同条件](references/shared/user-intervention.md)。
 
-1. 确定 Spec 血缘。首次产出分配稳定的 `spec_id` 与 `revision: 1`；修订时沿用 `spec_id`、递增 `revision`，并让 `supersedes` 指向上一版。每版新建文件，不覆盖历史版本；规范正文只写当前有效状态。若本地已有 `.agent/specs/<spec_id>.md`，先阅读全文并以它作为**已归档行为的当前权威基线**；本 Topic 的 Spec 是尚未归档变更的实施边界，不能默默覆盖长期 Spec。修订时阅读全文并与上一版的有效行为比较；上一版若以补充条款继承更早版本，先沿血缘读到能重建有效行为的基线。为新增、修改、移除的外部可观察行为建立非规范性的修订索引，逐项指向本版最终条款、前版依据及受影响验收；没有行为变化时明确写“无外部行为变化”。不要从文字 diff 推断语义变化，也不要把被移除的旧条款复制为本版要求。
+首次分配 spec_id/revision1；修订递增 revision，用 supersedes 指前版，每版新增 Topic 内文件，阅读全文比较有效行为并记修订索引。Topic Spec 是实施边界，不读取或发布长期 Spec。承重决定用[第一性原理推理](references/shared/first-principles-reasoning.md)连接目标、事实、机制、真实替代与可证伪验收；可逆实现细节留给实施。
 
-2. 若尚未探索，先探索仓库以理解当前代码状态。整个 Spec 使用项目领域术语，并遵守所触及区域的 ADR。输出前按 [项目规则解析](references/shared/adapters/project-rules.md) 解析跨 Agent 的项目规则；每个承重实施决策必须给出影响区域、规则、约束和验证。每张 Ticket 的目标 Agent 及其原生规则留到 Ticket 阶段解析。普通、可逆的实现细节留给实施阶段。
+写清目标、范围、行为、不变量、验证策略及影响结果的未知。必要时调用 {{skill-call:my-review-design}}，遵循[审查循环](references/shared/review-loop.md)。来源与事实按[产物最终校验](references/shared/artifact-finalization.md)核对，承重未知保持可定位，不润色成确定结论。
 
-3. 从已确认讨论中提取目标、范围外、外部可观察行为、不变量、验收标准和未知。用户故事只在角色差异会改变行为或验收时使用，不为“全面”而枚举同义场景。对承重决策应用[第一性原理推理](references/shared/first-principles-reasoning.md)，把目标、事实与约束、采用机制、最小反事实、可证伪预测和验收连成紧凑 reasoning record；普通可逆实现细节不生成空记录。
-
-4. 描述验证策略：优先复用现有测试 seam，并选择能证明外部行为的最高层验证。只有新增 seam 会改变架构、公开接口或测试投入时才作为承重决定交给用户；不要预设全项目必须收敛为一个 seam。
-
-5. 使用下列模板撰写 Spec。
-
-6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，调用 {{skill-call:my-review-design}}并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
-
-7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。修订版还须核对修订索引与前版、当前正文和验收一致，确认没有遗漏行为变化、把旧状态误写成当前要求，或让索引产生正文没有的约束。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
-
-8. **写入**：仅写入 `status: current` 且已通过适用 Gate 的版本，根据 `task_backend` 保存：
-   - `local`：写入 `.agent/work/<feature-slug>/specs/specs-<feature-slug>-<time-or-sequence>.md`；
-   - `project-docs`：先展示补丁，确认后写入配置的项目文档位置；
-   - `external`：先展示完整预览，确认后发布到配置的 Tracker；
-   - `none`：只在当前会话输出。
-
-   对 external 后端，只有项目配置允许并在本次得到明确确认后，才添加项目配置的 agent-ready 标签；不得猜测 `ready-for-agent` 等标签名称。
+按[产物存储](references/shared/adapters/artifact-storage.md)保存 Topic specs，再直接调用 {{skill-call:my-to-tickets}}。Spec 与逐 Ticket 行为、依赖、测试命令和边界合并呈现对齐点2；用户确认前不实施，确认后由 to-tickets 直接继续 implement。
 
 <spec-template>
 
@@ -38,7 +22,7 @@ description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段�
 spec_id: <稳定 feature id>
 revision: <正整数>
 supersedes: <上一版路径、URL 或空>
-status: <draft|current>
+status: current
 ---
 ```
 
