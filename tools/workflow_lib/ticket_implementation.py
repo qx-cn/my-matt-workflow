@@ -169,6 +169,18 @@ def admission_inputs(repo, path, topic):
             "topic": topics.state(topics.topic_path(repo, topic))}
 
 
+def section_text(text, title):
+    headings=list(topics.summary_headings(text))
+    lines=text.splitlines()
+    for heading,index in headings:
+        if heading == title:
+            level=len(lines[index].lstrip().split()[0])
+            end=next((j for _,j in headings if j>index and
+                      len(lines[j].lstrip().split()[0])<=level),len(lines))
+            return '\n'.join(lines[index+1:end]).strip()
+    return ''
+
+
 def start(repo, ticket=None, topic=None, agent=None):
     repo = topics.safe_repo(repo)
     config = topics.read_config(repo)
@@ -239,9 +251,21 @@ def start(repo, ticket=None, topic=None, agent=None):
             log = topics.git(repo, "log", "--format=%H", f"--grep=^{dependency}:", "-1").stdout.decode().strip()
             commit = log or None
         changed = topics.git(repo, "diff-tree", "--root", "--no-commit-id", "--name-only", "-r", commit).stdout.decode() if commit else "不可观察：未记录提交\n"
-        parts.insert(6, f"### {dependency}\n提交：{commit}\n{changed}")
+        impact=section_text(prior.get('self_review',{}).get('text',''),'影响面')
+        parts.insert(6, f"### {dependency}\n提交：{commit}\n改动文件：\n{changed}\n契约与消费者（前置 Ticket 声明）：\n{impact or '未记录；实施者须自行核实'}")
+    touchpoints=value.get('touchpoints') or section_text(path.read_text(),'触点提示') or '无：Ticket 未提供触点提示'
+    parts += ['## 非约束性触点提示',json.dumps(touchpoints,ensure_ascii=False) if isinstance(touchpoints,list) else str(touchpoints)]
+    if batch_id:
+        _, batch=batches.active(repo,topic,batch_id)
+        parts.append('## 同批次已提交 Ticket 的影响面（实施者声明，待核实）')
+        for identifier in batch['tickets']:
+            if identifier != value['id'] and records(repo,topic)[identifier][1]['status']=='complete':
+                previous=record_path(repo,topic,identifier)
+                previous_unit=json.loads(previous.read_text()) if previous.exists() else {}
+                impact=section_text(previous_unit.get('self_review',{}).get('text',''),'影响面')
+                parts.append(f"### {identifier}\n{impact or '未记录；自行核实'}")
     parts += sources + ["## 测试命令", "\n".join(value["test_commands"]),
-                        "## 实施计划", "Agent 动手前补写：文件和接口、每项验收对应断言、Spec 隐含但尚未覆盖的输入。"]
+                        "## 实施计划", "Agent 动手前补写：文件和接口；现状断言→代码依据；契约/共享函数/表结构/配置/锁/错误码→调用方/消费者和兼容、数据、并发、权限、性能结论；每项验收各自对应测试断言。事实冲突按 spec-challenge 停止，不任选一边实现。"]
     brief.parent.mkdir(parents=True, exist_ok=True)
     brief.write_text("\n\n".join(parts) + "\n")
     unit["briefing"] = str(brief)

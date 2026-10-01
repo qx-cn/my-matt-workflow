@@ -43,6 +43,45 @@ class BatchTests(unittest.TestCase):
         Path(report['result_file']).write_text(json.dumps(result))
         self.cli(action,'review','--topic','feature','--submit',report['result_file'])
         return report
+    def test_briefing_contains_predecessor_contracts_batch_impacts_and_hints(self):
+        self.setup(2)
+        self.cli('implement','start','--ticket','feature-01')
+        (self.repo/'code.txt').write_text('first')
+        self.cli('implement','test')
+        notes=self.repo/'.agent/self.md'
+        notes.write_text('\n'.join(f'## {h}\n无：玩具用例。\n' for h in batches.SELF_SECTIONS).replace(
+            '## 影响面\n无：玩具用例。', '## 影响面\n概述\n### 对外契约\nCONTRACT_CALLER_SENTINEL\n### 兼容性\nROLLING_SENTINEL'))
+        self.cli('implement','self-review','--notes-file',str(notes))
+        first=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md'
+        first.write_text(first.read_text().replace('- [ ]','- [x]'))
+        self.cli('implement','finish')
+        p=self.repo/'.agent/work/feature/tickets/tickets-feature-02.md'
+        p.write_text(p.read_text()+'\n## 触点提示\nshared module; public contract\n')
+        report=json.loads(self.cli('implement','start','--ticket','feature-02').stdout)
+        text=Path(report['briefing']).read_text()
+        self.assertIn('code.txt',text)
+        self.assertIn('CONTRACT_CALLER_SENTINEL',text)
+        self.assertIn('ROLLING_SENTINEL',text)
+        prior=text.split('## 已完成前置 Ticket',1)[1].split('## 适用规则',1)[0]
+        peers=text.split('## 同批次已提交 Ticket 的影响面',1)[1].split('## 测试命令',1)[0]
+        for section in (prior,peers):
+            self.assertIn('CONTRACT_CALLER_SENTINEL',section)
+            self.assertIn('ROLLING_SENTINEL',section)
+        self.assertIn('契约与消费者',text)
+        self.assertIn('同批次已提交 Ticket 的影响面',text)
+        self.assertIn('shared module; public contract',text)
+        self.assertIn('现状断言→代码依据',text)
+        (self.repo/'code.txt').write_text('second')
+        self.cli('implement','test');self.self_review()
+        p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.cli('implement','finish')
+        report=self.review()
+        manifest=json.loads(Path(report['manifest']).read_text())
+        declaration=next(item for item in manifest['inputs'] if Path(item['snapshot_path']).name=='impact-declarations.md')
+        frozen=Path(declaration['snapshot_path']).read_text()
+        self.assertIn('CONTRACT_CALLER_SENTINEL',frozen)
+        self.assertIn('ROLLING_SENTINEL',frozen)
+
     def test_clean_three_ticket_batch_one_dispatch_and_topic_completion(self):
         self.setup(3)
         for i in range(1,4):self.implement(i)

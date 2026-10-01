@@ -5,7 +5,7 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
 
 # 测试驱动开发
 
-TDD 是 red → green 循环。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。在主实施流程中按[开发保证等级](references/shared/adapters/assurance-levels.md)选择证据强度。
+TDD 是 red → green → 受限整理。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。在主实施流程中按[开发保证等级](references/shared/adapters/assurance-levels.md)选择证据强度。
 
 探索代码库时，读取已有的项目领域术语与 ADR，使测试名称和接口词汇匹配项目语言，并尊重所涉及区域的 ADR。
 
@@ -31,6 +31,6 @@ TDD 是 red → green 循环。本 Skill 只保留循环与完成门；测试形
 
 - **先 red，后 green。** 先写失败测试，再只写足以通过的代码。不要预判未来测试或加入推测性功能。
 - **一次一个切片。** 每轮一个 seam、一个测试、一个最小实现。
-重构属于审查阶段，只作为建议提出，留给后续工作，不进入本次红绿循环。
+green 后在本 Ticket 触及的代码内做行为不变的整理：去重、命名、按项目分层调整位置；不做跨模块重构。整理后重跑定向测试，删除推测性代码和重复实现。测试夹具不得照搬实现的数据来源，预期值仍必须来自 Spec、已知正确字面量或独立演算示例。
 
 行为新增或修复默认让每项验收经历可观察 red 与最小 green。已有充分行为覆盖的小修、characterization、机械重构、配置/文档变更，或暂时无法建立 red 的诊断工作，可以采用等价验证策略；必须说明为何 TDD 不适用、运行最接近风险的验证，并且不能把未验证行为或推测性抽象带入当前切片。完成判断依据是验收与证据，不把 runtime 无法证明的 red 历史伪装成 receipt。

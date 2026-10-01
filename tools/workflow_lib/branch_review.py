@@ -102,12 +102,7 @@ def materials(repo, config, topic, tickets):
         ticket_documents.append(path.read_text())
         history = json.loads(stored.read_text()) if stored.is_file() else {}
         self_text = history.get('self_review',{}).get('text','')
-        headings = list(topics.summary_headings(self_text))
-        lines = self_text.splitlines()
-        for title,index in headings:
-            if title == '影响面':
-                end = next((j for _,j in headings if j>index),len(lines))
-                impacts.append(f"### {identifier}（实施者声明，待核实）\n"+'\n'.join(lines[index+1:end]))
+        impacts.append(f"### {identifier}（实施者声明，待核实）\n" + impl.section_text(self_text, '影响面'))
         mapped, text = impl.rule_material(repo, config, value, agent)
         rules.append({'ticket': identifier, 'rules': mapped})
         sources.extend(text)
