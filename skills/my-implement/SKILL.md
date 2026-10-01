@@ -1,7 +1,6 @@
 ---
 name: my-implement
-description: 根据已批准的 Spec 或 implementation Ticket 编写并验证代码；不用于重新定义需求或只做代码审查。
-disable-model-invocation: true
+description: 在 my-to-tickets、my-prototype 流程中作为指定阶段的工作单元被调用。
 ---
 
 # 实施
@@ -10,7 +9,7 @@ disable-model-invocation: true
 
 ## 实施方法
 
-先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。行为新增或修复默认按照 [TDD 方法](references/composed/my-tdd/COMPOSED.md)完成最小 red-green 切片；符合 TDD 例外时记录依据并采用等价验证策略。只实现当前行为所需内容，不预建尚未要求的抽象或能力。
+先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。行为新增或修复默认按照 {{skill-call:my-tdd}}完成最小 red-green 切片；符合 TDD 例外时记录依据并采用等价验证策略。只实现当前行为所需内容，不预建尚未要求的抽象或能力。
 
 每个切片运行能最快证明该行为的最小针对性测试。工作单元结束时验证受影响模块或链路；只有整份计划结束、发布或合并前、仓库规则要求，或者风险证据表明影响面扩大时，才运行完整测试套件。
 
@@ -29,6 +28,6 @@ disable-model-invocation: true
 
 ## 完成标准
 
-提交结果前，自动在 runtime 固定的审查单元上应用[代码审查方法](references/composed/my-code-review/COMPOSED.md)，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。
+提交结果前，自动在 runtime 固定的审查单元上应用{{skill-call:my-code-review}}，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。
 
-代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由[设计成立性](references/composed/my-review-design/COMPOSED.md)增强自审。方案通过前不改代码；通过后按 runtime gate 修复、测试并重新审查。默认仅允许这一轮修复；最终复审的新有效 finding 由 runtime 作为正式 `blocked-by-review` 登记。`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
+代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由受管方案审查增强自审。方案通过前不改代码；通过后按 runtime gate 修复、测试并重新审查。默认仅允许这一轮修复；最终复审的新有效 finding 由 runtime 作为正式 `blocked-by-review` 登记。`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。

@@ -1,0 +1,1 @@
+{"argv":["python3","-m","unittest","discover","-s","tests"],"code_content_id":"f8fef059a944af77105db1d52e10c62e75d6a8d9a3cd1440e5663f96918b5e65","exit_code":0,"kind":"test","status":"pass","stderr_sha256":"744a294be6285355f036fffe017885bffd196c9ac9ca59e86d1833bac1f911a3","stdout_sha256":"f3534dc6f72941f76e040b42bfdb2df1541027dfdc2d909b54dc58e858691d6f"}

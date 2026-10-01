@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # 询问 Matt
 
-这是 portfolio 的路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`、[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
+这是个人 Skill 的路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`、[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
 
 ## 主流程
 
@@ -34,9 +34,9 @@ disable-model-invocation: true
 
 - 固定基线的代码审查：`{{skill-call:my-code-review}}`。
 - 只判断已形成方案的逻辑、承重决策、状态和责任边界是否闭环：`{{skill-call:my-review-design}}`。
-- 需要固定快照、跨质量维度检查或正式交付结论：`{{skill-call:my-review-artifact}}`；设计产物使用 `artifact_kind=design`，专项方法包括 `{{skill-call:my-reader-first-writing}}`、`{{skill-call:my-final-state-writing}}`、`{{skill-call:my-visual-communication}}`、`{{skill-call:my-humanizer}}` 和 `{{skill-call:my-artifact-finalization}}`。
-- Codex、Cursor 或 Claude 项目规则的存在价值、作用域、权威与冲突审查：`{{skill-call:my-review-agent-rules}}`。
-- Skill 组合、职责或文本审查：`{{skill-call:my-review-skill}}`；编写方法参考 `{{skill-call:my-writing-great-skills}}`。
+- 需要固定快照、跨质量维度检查或正式交付结论：`{{skill-call:my-review-artifact}}`；设计产物使用 `artifact_kind=design`，专项方法包括 `[共享方法](references/shared/reader-first-writing.md)`、`[共享方法](references/shared/final-state-writing.md)`、`[共享方法](references/shared/visual-communication.md)`、`{{skill-call:my-humanizer}}` 和 `[共享方法](references/shared/artifact-finalization.md)`。
+- Codex、Cursor 或 Claude 项目规则的存在价值、作用域、权威与冲突审查：`{{skill-call:my-review-instructions}}`。
+- Skill 组合、职责或文本审查：`{{skill-call:my-review-instructions}}`；编写方法参考 `{{skill-call:my-writing-for-agents}}`。
 - 代码库健康巡检：`{{skill-call:my-improve-codebase-architecture}}`；模块形状与 seam 词汇参考 `{{skill-call:my-codebase-design}}`。
 
 ## 独立工具
@@ -44,4 +44,6 @@ disable-model-invocation: true
 - 有来源约束的阅读与综合：`{{skill-call:my-research}}`。
 - 围绕有状态学习工作区学习概念：`{{skill-call:my-teach}}`。
 
-portfolio 还明确保留三个非路由入口：`my-install` 是行政入口，`my-requirement-analysis` 与 `my-tech-design` 是仅在用户明确选择时使用的 specialist。它们不会由本路由器暗中跳转。
+- 安装或更新个人工作流：`{{skill-call:my-install}}`。
+- 编写技术方案：`{{skill-call:my-tech-design}}`。
+- 在访谈阶段执行追问方法：`{{skill-call:my-grilling}}`。

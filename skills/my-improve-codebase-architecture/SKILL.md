@@ -19,7 +19,7 @@ disable-model-invocation: true
 
 ## 深化循环
 
-用户选择候选后，读取 `.agent/matt-workflow.md` 的 `composition_policy`，按[组合调用](references/shared/adapters/composition.md)将 `my-grill-with-docs` 与 `my-codebase-design` 作为内部方法：读取当前所需的 [my-grill-with-docs 正文](references/composed/my-grill-with-docs/COMPOSED.md) 或 [my-codebase-design 正文](references/composed/my-codebase-design/COMPOSED.md)，执行后返回宿主，不输出另一条 Skill 调用。
+用户选择候选后，读取 `.agent/matt-workflow.md` 的 `composition_policy`，按[组合调用](references/shared/adapters/composition.md)将 `my-grilling`、`my-domain-modeling` 与 `my-codebase-design` 作为内部方法：调用当前所需的 {{skill-call:my-grilling}} 与 {{skill-call:my-domain-modeling}} 或 {{skill-call:my-codebase-design}}，执行后返回宿主，不输出另一条 Skill 调用。
 
 - 用访谈确认约束、依赖、深化模块形状、接缝内外和能存活的测试。
 - 新领域概念或澄清后的术语更新到项目配置指定的领域模型；承重拒绝理由确实值得未来避免重提时，才建议记录 ADR。

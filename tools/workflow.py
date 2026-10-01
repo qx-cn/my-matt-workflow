@@ -550,6 +550,8 @@ def _build_release(args: argparse.Namespace) -> Path:
             check_current_release=False, root=snapshot_root
         ),
         current_pointer=ROOT / "current.json",
+        agent_homes=list(AGENT_STATE_HOMES.values())
+        + ([Path(args.agent_home).expanduser()] if getattr(args, "agent_home", None) else []),
     )
     print(release)
     return release
@@ -1034,7 +1036,8 @@ def command_deploy(args: argparse.Namespace) -> None:
             reusable = False
     if not reusable:
         _build_release(
-            argparse.Namespace(release_id=args.release_id, upstream_id=args.upstream_id)
+            argparse.Namespace(release_id=args.release_id, upstream_id=args.upstream_id,
+                               agent_home=args.agent_home)
         )
     else:
         print(f"REUSED {current}")

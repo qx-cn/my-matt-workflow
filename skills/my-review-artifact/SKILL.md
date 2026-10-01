@@ -14,12 +14,12 @@ disable-model-invocation: true
 
 先明确产物的目标读者、用途和承重决策，再只采用真正适用的方法：
 
-- 最终交付物：[最终态表达](references/composed/my-final-state-writing/COMPOSED.md)
-- 读者需要据此理解或行动：[读者优先](references/composed/my-reader-first-writing/COMPOSED.md)
-- 复杂关系、流程或状态需要视觉表达：[视觉沟通](references/composed/my-visual-communication/COMPOSED.md)
-- 面向人的成篇文本：[自然表达](references/composed/my-humanizer/COMPOSED.md)
-- 承重交付物需要来源、完整性与发布前检查：[产物最终化](references/composed/my-artifact-finalization/COMPOSED.md)
-- `review_unit.artifact_kind` 为 `design`：[设计成立性](references/composed/my-review-design/COMPOSED.md)
+- 最终交付物：[final-state-writing](references/shared/final-state-writing.md)
+- 读者需要据此理解或行动：[reader-first-writing](references/shared/reader-first-writing.md)
+- 复杂关系、流程或状态需要视觉表达：[visual-communication](references/shared/visual-communication.md)
+- 面向人的成篇文本：[自然表达](references/shared/humanizer.md)
+- 承重交付物需要来源、完整性与发布前检查：[artifact-finalization](references/shared/artifact-finalization.md)
+- `review_unit.artifact_kind` 为 `design`：{{skill-call:my-review-design}}
 
 逐项处理 `review_unit.required_checks`：适用时审查，不适用时标记 `not-applicable` 并给出简短理由；不要为了覆盖规则而制造 finding。多个维度指向同一根因时合并为一个 finding，并保留最能说明影响的证据。
 

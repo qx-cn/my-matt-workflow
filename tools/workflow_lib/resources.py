@@ -74,7 +74,6 @@ def load_resource_manifest(path: Path) -> SharedResourceManifest:
             consumers: str | tuple[str, ...] = "*"
         elif (
             isinstance(raw_consumers, list)
-            and raw_consumers
             and all(
                 isinstance(consumer, str) and consumer.strip()
                 for consumer in raw_consumers
@@ -84,7 +83,7 @@ def load_resource_manifest(path: Path) -> SharedResourceManifest:
             if len(consumers) != len(set(consumers)):
                 raise ResourceError(f"{name}: consumer 重复")
         else:
-            raise ResourceError(f"{name}: consumers 必须为 '*' 或非空数组")
+            raise ResourceError(f"{name}: consumers 必须为 '*' 或数组")
         resources[name] = SharedResource(
             source,
             source_key == "source_dir",

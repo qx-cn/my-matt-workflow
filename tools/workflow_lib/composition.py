@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import heapq
 import json
-import re
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,69 +16,6 @@ COMPOSITION_POLICY_MEANINGS = {
 
 class CompositionError(RuntimeError):
     """Raised when Skill composition declarations are invalid."""
-
-
-_MARKDOWN_LINK = re.compile(
-    r"(?P<prefix>!?\[[^\]]*\]\()(?P<target><[^>]+>|[^)\s]+)(?P<suffix>\))"
-)
-_COMPOSED_METADATA = {"name", "description", "disable-model-invocation"}
-
-
-def _strip_composed_frontmatter(text: str) -> str:
-    """Remove Skill registration metadata from a read-only composed copy."""
-    lines = text.splitlines(keepends=True)
-    if not lines or lines[0].strip() != "---":
-        return text
-    try:
-        end = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
-    except StopIteration:
-        return text
-
-    retained = [
-        line
-        for line in lines[1:end]
-        if line.split(":", 1)[0].strip() not in _COMPOSED_METADATA
-    ]
-    if not any(line.strip() and not line.lstrip().startswith("#") for line in retained):
-        return "".join(lines[end + 1:]).lstrip("\n")
-    return "---\n" + "".join(retained) + "---\n" + "".join(lines[end + 1:])
-
-
-def _rewrite_relative_skill_links(text: str) -> str:
-    """Point copied Markdown links at non-invocable composed skill bodies."""
-
-    def rewrite_line(line: str) -> str:
-        def replace(match: re.Match[str]) -> str:
-            target = match.group("target")
-            wrapped = target.startswith("<") and target.endswith(">")
-            value = target[1:-1] if wrapped else target
-            if value.startswith(("http://", "https://")):
-                return match.group(0)
-            path, separator, fragment = value.partition("#")
-            if not path.endswith("SKILL.md"):
-                return match.group(0)
-            replacement = path[:-len("SKILL.md")] + "COMPOSED.md"
-            if separator:
-                replacement += separator + fragment
-            if wrapped:
-                replacement = f"<{replacement}>"
-            return f"{match.group('prefix')}{replacement}{match.group('suffix')}"
-
-        return _MARKDOWN_LINK.sub(replace, line)
-
-    rewritten: list[str] = []
-    fence: str | None = None
-    for line in text.splitlines(keepends=True):
-        stripped = line.lstrip()
-        marker = "```" if stripped.startswith("```") else "~~~" if stripped.startswith("~~~") else None
-        if marker is not None:
-            fence = None if fence == marker else marker if fence is None else fence
-            rewritten.append(line)
-        elif fence is None:
-            rewritten.append(rewrite_line(line))
-        else:
-            rewritten.append(line)
-    return "".join(rewritten)
 
 
 @dataclass(frozen=True)
@@ -137,9 +72,9 @@ def load_composition_manifest(path: Path) -> CompositionManifest:
             if not isinstance(when, str) or not when.strip():
                 raise CompositionError(f"{caller}[{index}]: when 不能为空")
             kind = edge_value["kind"]
-            if kind not in {"method", "handoff"}:
+            if kind not in {"method", "handoff", "chain"}:
                 raise CompositionError(
-                    f"{caller}[{index}]: kind 必须为 method 或 handoff"
+                    f"{caller}[{index}]: kind 必须为 method、handoff 或 chain"
                 )
             if skill in seen:
                 raise CompositionError(f"{caller}: 重复依赖 {skill}")
@@ -186,6 +121,14 @@ def validate_composition_manifest(
                     f"{router}: 路由引用未知 Skill：{entry}"
                 )
 
+    if manifest.routable_entries:
+        declared = set(manifest.callers) | set(manifest.routable_entries)
+        declared.update(edge.skill for edges in manifest.callers.values() for edge in edges)
+        declared.update(entry for entries in manifest.routable_entries.values() for entry in entries)
+        actual = {p.name for p in skills_dir.iterdir() if p.is_dir()}
+        if actual != declared:
+            raise CompositionError(f"Skill 集合与组合清单不一致：{sorted(actual ^ declared)}")
+
     state: dict[str, int] = {}
     stack: list[str] = []
 
@@ -201,8 +144,6 @@ def validate_composition_manifest(
         stack.append(skill)
         for edge in sorted(manifest.callers.get(skill, ()), key=lambda item: item.skill):
             visit(edge.skill)
-        for entry in sorted(manifest.routable_entries.get(skill, ())):
-            visit(entry)
         stack.pop()
         state[skill] = 2
 
@@ -246,52 +187,7 @@ def resolve_transitive_closure(
     return result
 
 
-def compose_dependency_references(
-    skills_dir: Path,
-    caller_staged_dir: Path,
-    dependencies: list[str],
-) -> list[str]:
-    """Copy dependency Skills into a caller's generated reference tree."""
-    composed_root = caller_staged_dir / "references" / "composed"
-    skills_root = skills_dir.resolve()
-    for dependency in dependencies:
-        source = (skills_dir / dependency).resolve()
-        target = composed_root / dependency
-        if not source.is_relative_to(skills_root) or not source.is_dir():
-            raise CompositionError(f"组合依赖不存在：{dependency}")
-        if target.exists():
-            raise CompositionError(f"组合目标已存在：{target}")
 
-    written: list[str] = []
-    for dependency in dependencies:
-        source_path = skills_dir / dependency
-        source = source_path.resolve()
-        target = composed_root / dependency
-        for path in sorted(source_path.rglob("*")):
-            resolved = path.resolve()
-            if (
-                not resolved.is_relative_to(source)
-                or not resolved.is_relative_to(skills_root)
-            ):
-                raise CompositionError(
-                    f"{dependency}: 组合文件越界："
-                    f"{path.relative_to(source_path)}"
-                )
-            if not path.is_file():
-                continue
-            relative = path.relative_to(source_path)
-            if relative == Path("agents/openai.yaml"):
-                continue
-            if relative.name == "SKILL.md":
-                relative = relative.with_name("COMPOSED.md")
-            destination = target / relative
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            if path.suffix == ".md":
-                contents = _rewrite_relative_skill_links(path.read_text())
-                if path.name == "SKILL.md":
-                    contents = _strip_composed_frontmatter(contents)
-                destination.write_text(contents)
-            else:
-                shutil.copy2(path, destination)
-            written.append(str(destination.relative_to(caller_staged_dir)))
-    return sorted(written)
+def model_invocable_skills(manifest: CompositionManifest | None) -> set[str]:
+    """Only declared call targets are model-invocable; routes are not calls."""
+    return {edge.skill for edges in manifest.callers.values() for edge in edges} if manifest else set()

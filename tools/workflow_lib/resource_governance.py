@@ -132,10 +132,6 @@ def validate_resource_governance(
             skill = rule.get("review_skill")
             if not isinstance(skill, str) or not skill.strip():
                 raise ResourceGovernanceError(f"{document}: review_skill 不能为空")
-            if skill in review_skills:
-                raise ResourceGovernanceError(
-                    f"{document}: review Skill 必须专用于一条共享规则：{skill}"
-                )
             review_skills.add(skill)
             skill_file = root / "skills" / skill / "SKILL.md"
             if not skill_file.is_file():

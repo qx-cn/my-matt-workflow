@@ -1,7 +1,6 @@
 ---
 name: my-domain-modeling
-description: 澄清领域术语、关系、边界和难以逆转的设计决策
-disable-model-invocation: true
+description: 在 my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
 ---
 
 # My Domain Modeling

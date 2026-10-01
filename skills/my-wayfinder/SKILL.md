@@ -47,10 +47,7 @@ disable-model-invocation: true
 
 有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。依赖调用和地图完成后的交接遵循 [组合调用](references/shared/adapters/composition.md)。
 
-需要 `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 或 `my-to-spec` 时，读取 `.agent/matt-workflow.md` 的 `composition_policy`，先区分内部方法与阶段交接：
-
-- `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 是内部方法：两种策略都只加载当前阶段对应的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md)、[my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)、[my-research 正文](references/composed/my-research/COMPOSED.md)或 [my-prototype 正文](references/composed/my-prototype/COMPOSED.md)，执行后返回宿主，不输出另一条 Skill 调用。
-- `my-to-spec` 是阶段交接：`automatic` 只在地图已完成且 Spec 阶段已获授权时读取 [my-to-spec 正文](references/composed/my-to-spec/COMPOSED.md)；`manual` 输出 `{{skill-call:my-to-spec}}` 后停止。
+调用关系以组合清单为准：`{{skill-call:my-grilling}}`、`{{skill-call:my-domain-modeling}}` 和 `{{skill-call:my-prototype}}` 是内部方法，执行后返回宿主；研究读取[研究方法](references/shared/research-method.md)，不另调用研究 Skill。交给 `{{skill-call:my-to-spec}}` 属于阶段交接，调用前向用户确认一次。
 
 ### 绘制地图
 
@@ -60,7 +57,7 @@ disable-model-invocation: true
 2. **绘制 frontier。** 再做一次访谈，这次按**广度优先**：展开整个空间，而非深挖某条线，找出开放决定与现在可做的第一步。若完全没有迷雾，意味着目的地路径已清晰且可在一会话内完成；不必创建地图，报告结论并建议下一入口。下一阶段已在当前授权范围内时按 handoff 规则继续，否则停止在建议，不用为结束一个已完成阶段再询问一次。
 3. **创建地图**：Tracker 模式加 `wayfinder:map` 标签；本地模式创建 `wayfinders-<initiative>-<time-or-sequence>.md`。填写目的地与备注，“已作决定”留空，在“尚未明确”勾勒迷雾。外部 Tracker 写入按项目写入策略处理。
 4. **创建现已可表述的 Tickets**：作为地图子 Issue 或本地 Ticket 文件；再进行**第二轮**连接阻塞边，因为 Ticket 要先有 ID / 路径才能互相引用。其余不能表述的内容仍留在“尚未明确”。
-5. **启动研究。** 对每个新建 `research` Ticket，按 `composition_policy` 选择串行执行 `my-research`，或启动研究子 Agent 并行解决；将其发现链接回 Ticket，原始研究工件存放于 `.agent/work/<initiative>/researches/researches-<initiative>-<time-or-sequence>.md`。不得自动建分支、Commit 或外传资料。
+5. **启动研究。** 对每个新建 `research` Ticket，读取共享研究方法，按任务需要串行执行或启动研究子 Agent 并行解决；将其发现链接回 Ticket，原始研究工件存放于 `.agent/work/<initiative>/researches/researches-<initiative>-<time-or-sequence>.md`。不得自动建分支、Commit 或外传资料。
 6. **停止。** 绘图只是一个会话的工作，本会话不亲自解决其他 Ticket。
 
 ### 沿地图工作

@@ -1,7 +1,6 @@
 ---
 name: my-tdd
-description: 以 red-green-refactor 循环进行测试驱动开发。
-disable-model-invocation: true
+description: 在 my-implement 流程中作为指定阶段的方法被调用。
 ---
 
 # 测试驱动开发

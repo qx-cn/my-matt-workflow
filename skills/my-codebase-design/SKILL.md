@@ -1,7 +1,6 @@
 ---
 name: my-codebase-design
-description: 用深模块、Interface、Seam 与 Adapter 的共享词汇设计代码库。
-disable-model-invocation: true
+description: 在 my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
 ---
 
 # 代码库设计

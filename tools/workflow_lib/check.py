@@ -7,17 +7,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .behavior_evidence import (
-    BehaviorEvidenceError,
-    execution_evidence_release_relation,
-    validate_behavior_suite,
-    validate_execution_evidence_registry,
-)
-from .evals import EvalError, validate_evals
 from .installer import verify_release
 from .release import release_matches_source
 from .smoke_registry import SmokeRegistryError, validate_smoke_registry
-from .validator import ValidationError, validate_repository
 
 
 class CheckError(RuntimeError):
@@ -70,22 +62,8 @@ def verify_current_release(root: Path) -> dict[str, object]:
 def run_check(
     repo_root: Path, *, check_current_release: bool = True
 ) -> dict[str, object]:
-    """Run static, unit, eval, registry, and optional current-release gates."""
+    """Run tests and optional current-release integrity checks."""
     root = repo_root.resolve()
-    try:
-        static = validate_repository(root)
-        evals = validate_evals(root)
-        validate_smoke_registry(root)
-        planned_fresh_agent = validate_behavior_suite(
-            root / "evals" / "agent-smokes" / "astra-behavior-suite.json"
-        )
-        execution_evidence = validate_execution_evidence_registry(
-            root,
-            root / "evals" / "agent-smokes" / "execution-evidence-registry.json",
-            root / "evals" / "agent-smokes" / "astra-behavior-suite.json",
-        )
-    except (ValidationError, EvalError, SmokeRegistryError, BehaviorEvidenceError) as exc:
-        raise CheckError(str(exc)) from exc
     tests = subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", "tests"],
         cwd=root,
@@ -96,29 +74,8 @@ def run_check(
     if tests.returncode:
         output = (tests.stdout + tests.stderr).strip()
         raise CheckError("unit tests failed:\n" + output)
-    static["evidence_level"] = "static"
-    report = {
-        "status": "valid",
-        "static": static,
-        "evals": evals,
-        "tests": {"status": "valid", "evidence_level": "unit"},
-        "verification_plan": {
-            "status": "valid",
-            "evidence_level": "planned-cases",
-            "fresh_agent_cases": len(planned_fresh_agent),
-        },
-        "execution_evidence": execution_evidence,
-    }
+    report = {"status": "valid", "tests": {"status": "valid", "evidence_level": "unit"}}
     if check_current_release:
         release = verify_current_release(root)
         report["release"] = release
-        current_release_id = (
-            release.get("release") if release.get("status") == "valid" else None
-        )
-        execution_evidence["release_relation"] = (
-            execution_evidence_release_relation(
-                execution_evidence,
-                current_release_id if isinstance(current_release_id, str) else None,
-            )
-        )
     return report

@@ -6,8 +6,8 @@ disable-model-invocation: true
 
 本流程依赖 `my-grilling` 与 `my-domain-modeling`。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`，遵循[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)：
 
-- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都只读取当前阶段需要的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 和 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，执行后返回宿主；不要输出另一条 Skill 调用。
-- 复杂、隐含或类比驱动的请求在摘要形成后读取[需求核对正文](references/composed/my-requirement-analysis/COMPOSED.md)，作为风险触发的方法返回宿主；普通请求不重复核对。
+- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都调用当前阶段需要的 {{skill-call:my-grilling}} 和 {{skill-call:my-domain-modeling}}，执行后返回宿主；不要输出另一条 Skill 调用。
+- 复杂、隐含或类比驱动的请求在摘要形成后读取[requirement-analysis](references/shared/requirement-analysis.md)，作为风险触发的方法返回宿主；普通请求不重复核对。
 
 本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失。
 

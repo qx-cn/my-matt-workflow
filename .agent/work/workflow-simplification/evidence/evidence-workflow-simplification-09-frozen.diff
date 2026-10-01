@@ -1,0 +1,92 @@
+--- before/my-triage/SKILL.md
++++ after/my-triage/SKILL.md
+@@ -51,7 +51,7 @@
+ `my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 也不进入 triage。
+ 
+ - **外部 Tracker**：保留 Tracker 原生的类别、状态、评论与 Agent brief；`ready-for-agent` 仍表示该外部事项已附上可执行简报。
+-- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。随后读取 [my-to-tickets handoff 正文](references/composed/my-to-tickets/COMPOSED.md)；需要跨会话时输出 `{{skill-call:my-to-tickets}}` 并停止。`my-to-tickets` 负责生成具有完整 Spec/rules/agent/acceptance lineage 的 Ticket。
++- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。随后调用 {{skill-call:my-to-tickets}}；需要跨会话时输出 `{{skill-call:my-to-tickets}}` 并停止。`my-to-tickets` 负责生成具有完整 Spec/rules/agent/acceptance lineage 的 Ticket。
+ 
+ 读取既有本地 Ticket 时按 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。
+ 
+@@ -81,7 +81,7 @@
+ 1. **收集上下文。** 阅读完整的 Issue 或 PR（正文、评论、标签、作者、日期；PR 还要读 diff）。解析既有分诊记录，避免重新询问已解决的问题。借助项目的领域词汇表探索代码库，遵循该区域的 ADR。对代码库执行两项检查：(a) **冗余性**——按领域概念（而不只是请求的措辞）搜索是否已有请求行为的实现，并报告搜索位置。若已存在，它是“已实现”的 `wontfix`（步骤 5）。(b) **既往拒绝**——阅读 `.out-of-scope/*.md`，并找出与本请求相似的记录。
+ 2. **提出建议。** 告知维护者类别和状态建议及理由，并给出与请求相关的简要代码库摘要——包括是否已实现。等待指示。
+ 3. **验证主张。** 在追问前，先检查主张是否成立。对于 Bug，按报告者的步骤复现。对于 PR，确认 diff 是否实现其声称的内容——检出它，并运行相关测试或命令。报告结果：已确认（附代码路径）、失败，或细节不足（这是强烈的 `needs-info` 信号）。已确认的验证会形成更有力的 Agent 简报。
+-4. **追问（如需要）。** 若请求还需充实，读取 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 与 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
++4. **追问（如需要）。** 若请求还需充实，调用 {{skill-call:my-grilling}} 与 {{skill-call:my-domain-modeling}}，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
+ 5. **应用结果：**
+    - `ready-for-agent` —— 发布 Agent 简报评论（[AGENT-BRIEF.md](AGENT-BRIEF.md)）。
+    - `ready-for-human` —— 使用与 Agent 简报相同的结构，但说明为何不可委派（判断调用、外部访问、设计决策、手动测试）。
+
+--- before/my-wayfinder/SKILL.md
++++ after/my-wayfinder/SKILL.md
+@@ -47,10 +47,7 @@
+ 
+ 有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。依赖调用和地图完成后的交接遵循 [组合调用](references/shared/adapters/composition.md)。
+ 
+-需要 `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 或 `my-to-spec` 时，读取 `.agent/matt-workflow.md` 的 `composition_policy`，先区分内部方法与阶段交接：
+-
+-- `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 是内部方法：两种策略都只加载当前阶段对应的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md)、[my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)、[my-research 正文](references/composed/my-research/COMPOSED.md)或 [my-prototype 正文](references/composed/my-prototype/COMPOSED.md)，执行后返回宿主，不输出另一条 Skill 调用。
+-- `my-to-spec` 是阶段交接：`automatic` 只在地图已完成且 Spec 阶段已获授权时读取 [my-to-spec 正文](references/composed/my-to-spec/COMPOSED.md)；`manual` 输出 `{{skill-call:my-to-spec}}` 后停止。
++调用关系以组合清单为准：`{{skill-call:my-grilling}}`、`{{skill-call:my-domain-modeling}}` 和 `{{skill-call:my-prototype}}` 是内部方法，执行后返回宿主；研究读取[研究方法](references/shared/research-method.md)，不另调用研究 Skill。交给 `{{skill-call:my-to-spec}}` 属于阶段交接，调用前向用户确认一次。
+ 
+ ### 绘制地图
+ 
+@@ -60,7 +57,7 @@
+ 2. **绘制 frontier。** 再做一次访谈，这次按**广度优先**：展开整个空间，而非深挖某条线，找出开放决定与现在可做的第一步。若完全没有迷雾，意味着目的地路径已清晰且可在一会话内完成；不必创建地图，报告结论并建议下一入口。下一阶段已在当前授权范围内时按 handoff 规则继续，否则停止在建议，不用为结束一个已完成阶段再询问一次。
+ 3. **创建地图**：Tracker 模式加 `wayfinder:map` 标签；本地模式创建 `wayfinders-<initiative>-<time-or-sequence>.md`。填写目的地与备注，“已作决定”留空，在“尚未明确”勾勒迷雾。外部 Tracker 写入按项目写入策略处理。
+ 4. **创建现已可表述的 Tickets**：作为地图子 Issue 或本地 Ticket 文件；再进行**第二轮**连接阻塞边，因为 Ticket 要先有 ID / 路径才能互相引用。其余不能表述的内容仍留在“尚未明确”。
+-5. **启动研究。** 对每个新建 `research` Ticket，按 `composition_policy` 选择串行执行 `my-research`，或启动研究子 Agent 并行解决；将其发现链接回 Ticket，原始研究工件存放于 `.agent/work/<initiative>/researches/researches-<initiative>-<time-or-sequence>.md`。不得自动建分支、Commit 或外传资料。
++5. **启动研究。** 对每个新建 `research` Ticket，读取共享研究方法，按任务需要串行执行或启动研究子 Agent 并行解决；将其发现链接回 Ticket，原始研究工件存放于 `.agent/work/<initiative>/researches/researches-<initiative>-<time-or-sequence>.md`。不得自动建分支、Commit 或外传资料。
+ 6. **停止。** 绘图只是一个会话的工作，本会话不亲自解决其他 Ticket。
+ 
+ ### 沿地图工作
+
+--- before/my-wayfinder/references/map-and-ticket-format.md
++++ after/my-wayfinder/references/map-and-ticket-format.md
+@@ -68,7 +68,7 @@
+ 
+ 每个 Ticket 都是 **HITL**（由能代表自己意见的人实时参与）或 **AFK**（Agent 单独驱动）。HITL Ticket 只能经实时交流解决；Agent 不能代替用户回答其一侧的问题，否则该过程已经失效。
+ 
+-- **研究（AFK）**：阅读文档、第三方 API 或本地知识库，找出决定所等待的事实。使用 `my-research`；需要并行时，按 `composition_policy` 启动研究子 Agent。仅当当前工作目录以外的知识确实必要时使用。
++- **研究（AFK）**：阅读文档、第三方 API 或本地知识库，找出决定所等待的事实。读取[研究方法](shared/research-method.md)；需要并行时启动研究子 Agent。仅当当前工作目录以外的知识确实必要时使用。
+ - **原型（HITL）**：制作廉价、粗糙而具体的可反应工件，以提高讨论保真度，例如大纲、粗略方案、stub，或通过 `my-prototype` 生成 UI/逻辑代码。Ticket 链接原型作为资产。适合“应该长什么样”或“应该如何行为”是关键问题时。
+ - **访谈（HITL）**：通过 `my-grilling` 和 `my-domain-modeling` 一次一个问题地讨论；这是默认类型。
+ - **任务（HITL 或 AFK）**：做出决定前必须完成的手动工作。此时没有可决定、可原型化或可研究的事情，但工作不完成讨论就被阻塞：注册服务以评估 API、配置访问权限、迁移数据以观察形状等。它是唯一“做事”而非“决定”的类型，因解除决定阻塞而存在，并不交付目的地。Agent 能独立执行时按 AFK 处理；否则提供精确的 HITL 清单。工作完成时解决；答案记录完成事项及后续 Ticket 依赖的事实（凭据位置、新 URL、行数等），但不暴露敏感数据。
+
+--- before/my-research/SKILL.md
++++ after/my-research/SKILL.md
+@@ -6,13 +6,4 @@
+ 
+ # My Research
+ 
+-先按[面向读者写作](references/shared/reader-first-writing.md)明确谁要用报告做什么决定；报告结论先行，并把证据强度、适用时间、分歧和对决定的含义放在读者容易找到的位置。
+-
+-1. 明确研究问题、决策问题、时间范围和所需可信度。
+-2. 优先官方文档、标准、源代码和第一方 API；每个关键结论追溯到原始来源。
+-3. 不向外部服务上传企业源码、内部日志或未公开业务信息。
+-4. 区分事实、推断、未知和建议；记录来源 URL、版本和访问日期。
+-5. 默认写入 `.agent/work/<topic>/researches/researches-<topic>-<time-or-sequence>.md`。
+-6. 项目已有正式研究文档位置时，先展示写回补丁，经用户确认后再修改。
+-
+-研究只提供证据，不替代产品或架构决策。
++阅读并执行[研究方法](references/shared/research-method.md)。
+
+--- before/my-prototype/SKILL.md
++++ after/my-prototype/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-prototype
+-description: 用可抛弃原型回答一个难以仅靠讨论解决的设计问题
+-disable-model-invocation: true
++description: 在 my-wayfinder 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # My Prototype
+@@ -28,4 +27,4 @@
+ 5. **展示状态。** 每次操作后（逻辑）或每次变体切换时（UI），打印或渲染完整相关状态，让用户看见变化。
+ 6. **以结论和交接结束。** 在 `.agent/work/<feature>/prototypes/prototypes-<feature>-<time-or-sequence>.md` 记录问题、结论、观察依据、不能外推的范围和被否定方案。保留结论后删除一次性代码；项目策略明确要求保留一手证据时，才把原型存入批准的位置。
+ 
+-原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才读取 [my-implement handoff 正文](references/composed/my-implement/COMPOSED.md)；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。
++原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才调用 {{skill-call:my-implement}}；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。

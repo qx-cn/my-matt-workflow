@@ -1,7 +1,6 @@
 ---
 name: my-grilling
-description: 对计划、决策或想法进行高强度逐项访谈。
-disable-model-invocation: true
+description: 在 my-grill-me、my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
 ---
 
 围绕会改变目标、范围、约束或验收的承重未知进行高强度访谈。沿决策树逐支前进，一次解决一个决定及其依赖；每个问题都给出推荐答案。

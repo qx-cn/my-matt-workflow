@@ -43,8 +43,8 @@ class SharedResourceTests(unittest.TestCase):
             {
                 "my-to-spec",
                 "my-handoff",
-                "my-final-state-writing",
-                "my-artifact-finalization",
+                "my-ask-matt",
+                "my-review-artifact",
             },
             set(entry["consumers"]),
         )
@@ -89,7 +89,7 @@ class SharedResourceTests(unittest.TestCase):
             shutil.copytree(ROOT / "resources", root / "resources")
             shutil.copytree(ROOT / "policies", root / "policies")
             shutil.copytree(ROOT / "skills", root / "skills")
-            skill = root / "skills/my-final-state-writing/SKILL.md"
+            skill = root / "skills/my-review-artifact/SKILL.md"
             skill.write_text(skill.read_text().replace("只读", "读取"))
             manifest = load_resource_manifest(root / "resources/manifest.json")
             with self.assertRaisesRegex(
@@ -167,7 +167,7 @@ class SharedResourceTests(unittest.TestCase):
     def test_visual_communication_is_bundled_only_for_human_facing_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         consumers = (
-            "my-visual-communication",
+            "my-review-artifact",
             "my-teach",
             "my-test-report",
         )
@@ -207,13 +207,13 @@ class SharedResourceTests(unittest.TestCase):
             for name in ("my-edit-article", "my-research", "my-test-report"):
                 target = Path(tmp) / name
                 target.mkdir()
-                bundle_resources_for_skill(manifest, ROOT, name, target)
+                bundle_resources_for_skill(manifest, ROOT, name, target, effective_consumers=self._effective_consumers())
                 self.assertTrue((target / "references/shared/reader-first-writing.md").is_file())
                 self.assertFalse((target / "references/shared/document-rendering.md").exists())
             for name in ("my-tech-design", "my-improve-codebase-architecture", "my-teach"):
                 target = Path(tmp) / f"render-{name}"
                 target.mkdir()
-                bundle_resources_for_skill(manifest, ROOT, name, target)
+                bundle_resources_for_skill(manifest, ROOT, name, target, effective_consumers=self._effective_consumers())
                 self.assertTrue((target / "references/shared/reader-first-writing.md").is_file())
                 self.assertTrue((target / "references/shared/document-rendering.md").is_file())
 
@@ -464,7 +464,7 @@ class SharedResourceTests(unittest.TestCase):
     def test_specialized_review_session_is_bundled_for_reviewers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         with tempfile.TemporaryDirectory() as tmp:
-            for name in ("my-review-skill", "my-review-agent-rules"):
+            for name in ("my-review-instructions",):
                 target = Path(tmp) / name
                 target.mkdir()
                 bundle_resources_for_skill(manifest, ROOT, name, target)

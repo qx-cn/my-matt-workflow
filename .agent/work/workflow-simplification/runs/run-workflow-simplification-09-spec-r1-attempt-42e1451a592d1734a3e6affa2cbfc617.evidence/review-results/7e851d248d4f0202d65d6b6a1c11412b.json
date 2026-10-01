@@ -1,0 +1,90 @@
+{
+  "code_content_id": "f632e6f720c4e04e2c290db727a9db170b5694bcfa537e1830b4903a823a8c4d",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [],
+  "review_id": "7e851d248d4f0202d65d6b6a1c11412b",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "a82f699a831710507622c0b3f6a9fe8a"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-09#A1",
+        "evidence_refs": [
+          "snapshot:skills/my-review-instructions/SKILL.md",
+          "snapshot:resources/governance.json",
+          "snapshot:resources/project-rule-review.md",
+          "snapshot:tests/test_skill_packaging_v2.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A2",
+        "evidence_refs": [
+          "snapshot:composition/manifest.json",
+          "snapshot:tests/test_skill_packaging_v2.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/installer.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:skills/my-tdd/agents/openai.yaml",
+          "snapshot:tests/test_skill_packaging_v2.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/composition.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:resources/adapters/composition.md",
+          "snapshot:resources/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A5",
+        "evidence_refs": [
+          "snapshot:resources/research-method.md",
+          "snapshot:skills/my-research/SKILL.md",
+          "snapshot:skills/my-wayfinder/SKILL.md",
+          "snapshot:skills/my-triage/SKILL.md",
+          "snapshot:skills/my-prototype/SKILL.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A6",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:tests/test_skill_packaging_v2.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A7",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/check.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tests/test_evals.py"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:skills/my-writing-for-agents/SKILL.md",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "Frozen Code then independently rebuilt Spec pass: exact32/22/11/31 structural contract, body-copy deletion and shared-resource closure, all3 temporary installs, defect-injected catalog/metadata/link rejection and release retention. Both current findings resolved: explicit custom-home release survives real deployment before install verification; invocation prose no longer directs callers to retired copied bodies. Frozen8 differences are solely permitted metadata/call/config/research externalization. Current09 owns build preflight/check decoupling per user-approved adjustment; direct successors10/11 retain workflow/method semantics,13 retains legacy eval directories, unused modules/commands and final integration. Source tests record observable artifacts, no real-host writes."
+      }
+    ]
+  },
+  "status": "pass"
+}

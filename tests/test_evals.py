@@ -39,351 +39,6 @@ from tools.workflow_lib.validator import (
 ROOT = Path(__file__).resolve().parents[1]
 
 
-class EvalValidationTests(unittest.TestCase):
-    def test_checked_in_scenarios_and_evidence_are_strictly_valid(self):
-        self.assertEqual(
-            {
-                "status": "valid",
-                "evidence_level": "deterministic-contract",
-                "scenarios": 37,
-                "required_scenarios": 36,
-            },
-            validate_evals(ROOT),
-        )
-
-    def test_checked_in_scenarios_dispatch_deterministic_behavior(self):
-        scenarios = load_scenarios(ROOT / "evals")
-        self.assertEqual(
-            [scenario.identifier for scenario in scenarios],
-            sorted(scenario.identifier for scenario in scenarios),
-        )
-        for scenario in scenarios:
-            self.assertEqual(
-                scenario.expected,
-                run_scenario(ROOT, scenario),
-                scenario.identifier,
-            )
-
-    def test_repair_plan_contract_rejects_a_broader_method_set(self):
-        scenarios = {
-            scenario.identifier: scenario
-            for scenario in load_scenarios(ROOT / "evals")
-        }
-        repair_plan = scenarios["artifact-review-repair-plan-method-boundary"]
-        malformed = replace(
-            repair_plan,
-            input={
-                **repair_plan.input,
-                "required_checks": ["my-review-design", "my-humanizer"],
-            },
-        )
-        with self.assertRaisesRegex(EvalError, "outcome mismatch"):
-            run_scenario(ROOT, malformed)
-
-    def test_implementation_turn_closure_rejects_final_before_scope_transition(self):
-        scenarios = {
-            scenario.identifier: scenario
-            for scenario in load_scenarios(ROOT / "evals")
-        }
-        completed = scenarios["implementation-turn-single-ticket-complete"]
-        malformed = replace(
-            completed,
-            input={**completed.input, "next_ticket": "not-run"},
-        )
-        with self.assertRaisesRegex(EvalError, "outcome mismatch"):
-            run_scenario(ROOT, malformed)
-
-    def test_skill_review_contract_blocks_incomplete_structural_gates(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "skill-review-root-before-wording"
-        )
-        gates = {
-            "runtime_snapshot_ready": {
-                "status": "stop",
-                "rule": "fixed-review-unit",
-                "next": "build-runtime-snapshot",
-            },
-            "scope_inventory_complete": {
-                "status": "stop",
-                "rule": "complete-scope-inventory",
-                "next": "resolve-skill-relations",
-            },
-            "walkthrough_coverage_complete": {
-                "status": "stop",
-                "rule": "complete-walkthrough-coverage",
-                "next": "map-uncovered-paths",
-            },
-            "snapshot_verified": {
-                "status": "stop",
-                "rule": "verify-review-snapshot",
-                "next": "finalize-review-unit",
-            },
-        }
-        for field, expected in gates.items():
-            with self.subTest(field=field):
-                input_value = {**scenario.input, field: False}
-                blocked = replace(scenario, input=input_value, expected=expected)
-                self.assertEqual(expected, run_scenario(ROOT, blocked))
-
-    def test_agent_rule_review_contract_blocks_each_incomplete_gate(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "agent-rule-review-root-before-wording"
-        )
-        gates = {
-            "runtime_snapshot_ready": {
-                "status": "stop",
-                "rule": "fixed-review-unit",
-                "next": "build-runtime-snapshot",
-            },
-            "inventory_complete": {
-                "status": "stop",
-                "rule": "complete-rule-inventory",
-                "next": "inventory-agent-rules",
-            },
-            "rule_contract_complete": {
-                "status": "stop",
-                "rule": "rule-contract-before-wording",
-                "next": "reconstruct-rule-contract",
-            },
-            "destination_gate_complete": {
-                "status": "stop",
-                "rule": "destination-before-wording",
-                "next": "evaluate-rule-destination",
-            },
-            "host_semantics_complete": {
-                "status": "stop",
-                "rule": "resolve-host-semantics",
-                "next": "inspect-rule-applicability",
-            },
-            "walkthrough_coverage_complete": {
-                "status": "stop",
-                "rule": "complete-walkthrough-coverage",
-                "next": "map-uncovered-paths",
-            },
-            "snapshot_verified": {
-                "status": "stop",
-                "rule": "verify-review-snapshot",
-                "next": "finalize-review-unit",
-            },
-        }
-        for field, expected in gates.items():
-            with self.subTest(field=field):
-                blocked = replace(
-                    scenario,
-                    input={**scenario.input, field: False},
-                    expected=expected,
-                )
-                self.assertEqual(expected, run_scenario(ROOT, blocked))
-
-    def test_agent_rule_review_verdict_must_match_disposition(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "agent-rule-review-root-before-wording"
-        )
-        expected = {
-            "status": "stop",
-            "rule": "verdict-matches-disposition",
-            "next": "correct-verdict",
-        }
-        inconsistent = replace(
-            scenario,
-            input={**scenario.input, "declared_verdict": "TARGETED_FIX"},
-            expected=expected,
-        )
-        self.assertEqual(expected, run_scenario(ROOT, inconsistent))
-
-    def test_handoff_contract_does_not_fake_fresh_context(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "handoff-round-trip"
-        )
-        expected = {
-            "status": "stop",
-            "rule": "false-ready",
-            "next": "repair-handoff",
-        }
-        blocked = replace(
-            scenario,
-            input={
-                **scenario.input,
-                "reader_context": "self-check",
-                "finalization_gates": {
-                    **scenario.input["finalization_gates"],
-                    "reader_reconstruction": "blocked",
-                },
-            },
-            expected=expected,
-        )
-        self.assertEqual(expected, run_scenario(ROOT, blocked))
-
-    def test_handoff_contract_allows_recorded_draft_but_never_delivers_it(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "handoff-draft-not-deliver"
-        )
-        self.assertEqual(scenario.expected, run_scenario(ROOT, scenario))
-
-        missing_gaps = replace(
-            scenario,
-            input={**scenario.input, "draft_gaps_recorded": False},
-            expected={
-                "status": "stop",
-                "rule": "record-draft-gaps",
-                "next": "repair-handoff",
-            },
-        )
-        self.assertEqual(missing_gaps.expected, run_scenario(ROOT, missing_gaps))
-
-        invalid_gate_state = replace(
-            scenario,
-            input={
-                **scenario.input,
-                "finalization_gates": {
-                    **scenario.input["finalization_gates"],
-                    "reader_reconstruction": "inconclusive",
-                },
-            },
-        )
-        with self.assertRaisesRegex(EvalError, "must be pass or blocked"):
-            run_scenario(ROOT, invalid_gate_state)
-
-    def test_handoff_contract_redaction_blocks_even_a_draft(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "handoff-draft-not-deliver"
-        )
-        redaction_failure = replace(
-            scenario,
-            input={**scenario.input, "sensitive_data_removed": False},
-            expected={
-                "status": "stop",
-                "rule": "redact-sensitive-data",
-                "next": "repair-handoff",
-            },
-        )
-        self.assertEqual(
-            redaction_failure.expected,
-            run_scenario(ROOT, redaction_failure),
-        )
-
-    def test_skill_review_comparative_requires_dispute_and_authorization(self):
-        scenario = next(
-            item
-            for item in load_scenarios(ROOT / "evals")
-            if item.identifier == "skill-review-root-before-wording"
-        )
-        expected = {
-            "status": "stop",
-            "rule": "authorized-disputed-comparative",
-            "next": "report-current-evidence",
-        }
-        unauthorized = replace(
-            scenario,
-            input={
-                **scenario.input,
-                "evidence_level": "comparative",
-                "comparative_dispute": True,
-                "user_authorized_comparative": False,
-            },
-            expected=expected,
-        )
-        self.assertEqual(expected, run_scenario(ROOT, unauthorized))
-
-    def test_requirement_analysis_cases_choose_cost_by_request_shape(self):
-        scenarios = {
-            item.identifier: item for item in load_scenarios(ROOT / "evals")
-        }
-        clear = run_scenario(
-            ROOT, scenarios["requirement-analysis-clear-request"]
-        )
-        self.assertEqual("quick-pass", clear["review_mode"])
-        analogy = run_scenario(
-            ROOT, scenarios["requirement-analysis-misleading-analogy"]
-        )
-        self.assertEqual("independent", analogy["review_mode"])
-        self.assertEqual("MISUNDERSTANDING", analogy["verdict"])
-
-    def test_tampered_structured_expected_outcome_is_rejected(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            shutil.copytree(ROOT / "evals", root / "evals")
-            shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/grilling-one-question-hitl.json"
-            raw = json.loads(scenario.read_text())
-            raw["expected"]["stop"] = "continue-questioning"
-            scenario.write_text(json.dumps(raw))
-
-            with self.assertRaisesRegex(EvalError, "outcome mismatch"):
-                validate_evals(root)
-
-    def test_tampered_structured_input_is_rejected(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            shutil.copytree(ROOT / "evals", root / "evals")
-            shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/diagnosing-bugs-no-red-loop.json"
-            raw = json.loads(scenario.read_text())
-            raw["input"]["policy"] = "manual"
-            scenario.write_text(json.dumps(raw))
-
-            with self.assertRaisesRegex(EvalError, "fields must be"):
-                validate_evals(root)
-
-    def test_allow_missing_does_not_allow_malformed_scenarios(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            scenarios = root / "evals" / "scenarios"
-            scenarios.mkdir(parents=True)
-            (scenarios / "broken.json").write_text("{}")
-
-            with self.assertRaisesRegex(EvalError, "fields"):
-                validate_evals(root, allow_missing=True)
-
-    def test_allow_missing_only_skips_absent_evidence(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            shutil.copytree(ROOT / "evals", root / "evals")
-            shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/tdd-seam-pressure.json"
-            raw = json.loads(scenario.read_text())
-            del raw["evidence"]
-            scenario.write_text(json.dumps(raw))
-
-            self.assertEqual("valid", validate_evals(root, allow_missing=True)["status"])
-            with self.assertRaisesRegex(EvalError, "evidence fields"):
-                validate_evals(root)
-
-    def test_stale_evidence_hash_is_rejected(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            shutil.copytree(ROOT / "evals", root / "evals")
-            shutil.copytree(ROOT / "skills", root / "skills")
-            scenario = root / "evals/scenarios/tdd-seam-pressure.json"
-            raw = json.loads(scenario.read_text())
-            raw["evidence"]["sources"][0]["sha256"] = "sha256:" + "0" * 64
-            scenario.write_text(json.dumps(raw))
-
-            with self.assertRaisesRegex(EvalError, "stale"):
-                validate_evals(root)
-
-    def test_smoke_registry_validates_complete_registered_scenarios(self):
-        scenarios = load_scenarios(ROOT / "evals")
-        registry = validate_smoke_registry(ROOT, scenarios)
-        registered = {identifier for identifiers in registry.values() for identifier in identifiers}
-        self.assertEqual({scenario.identifier for scenario in scenarios}, registered)
-        self.assertIn("main-workflow-fresh-context", registered)
-
-    def test_smoke_registry_rejects_unknown_requested_skill(self):
-        with self.assertRaisesRegex(SmokeRegistryError, "not registered"):
-            resolve_smoke_scenarios(ROOT, ["my-no-such-skill"])
 
 
 class StaticGateTests(unittest.TestCase):
@@ -401,47 +56,6 @@ class StaticGateTests(unittest.TestCase):
 
 
 class EvalCliTests(unittest.TestCase):
-    def test_validate_evals_and_smoke_report_machine_readable_status(self):
-        valid = subprocess.run(
-            [sys.executable, "tools/workflow.py", "validate-evals"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        self.assertEqual(0, valid.returncode, valid.stderr)
-        self.assertEqual("valid", json.loads(valid.stdout)["status"])
-        self.assertEqual(
-            "deterministic-contract",
-            json.loads(valid.stdout)["evidence_level"],
-        )
-
-        unknown = subprocess.run(
-            [sys.executable, "tools/workflow.py", "smoke", "--skills", "my-unknown"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        self.assertNotEqual(0, unknown.returncode)
-        report = json.loads(unknown.stdout)
-        self.assertEqual("invalid", report["status"])
-        self.assertIn("not registered", report["error"])
-
-        registry = subprocess.run(
-            [sys.executable, "tools/workflow.py", "smoke"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        self.assertEqual(0, registry.returncode, registry.stderr)
-        registry_report = json.loads(registry.stdout)
-        self.assertEqual("valid", registry_report["status"])
-        self.assertEqual(
-            "deterministic-contract",
-            registry_report["evidence_level"],
-        )
 
     def test_validation_guide_separates_contracts_from_real_agent_smoke(self):
         text = (ROOT / "evals/VALIDATION.md").read_text()
@@ -519,20 +133,10 @@ class CheckGateTests(unittest.TestCase):
                 {"status": "valid", "evidence_level": "unit"},
                 replacement_gate["tests"],
             )
-            self.assertEqual("planned-cases", replacement_gate["verification_plan"]["evidence_level"])
-            self.assertEqual("not-recorded", replacement_gate["execution_evidence"]["status"])
-            self.assertEqual(
-                "not-recorded",
-                replacement_gate["execution_evidence"]["release_relation"],
-            )
-            self.assertEqual(
-                "fresh-agent-execution",
-                replacement_gate["execution_evidence"]["evidence_level"],
-            )
             self.assertNotIn("release", replacement_gate)
             self.assertTrue(release.is_dir())
 
-    def test_canonical_build_rejects_missing_eval_and_smoke_inputs(self):
+    def test_canonical_build_no_longer_reads_legacy_eval_and_smoke_inputs(self):
         def remove_evidence(root: Path) -> None:
             scenario = (
                 root / "evals" / "scenarios" / "tdd-seam-pressure.json"
@@ -569,15 +173,14 @@ class CheckGateTests(unittest.TestCase):
                 self._source_copy(root)
                 remove_input(root)
 
-                with self.assertRaisesRegex(ValidationError, error):
-                    build_release(
+                build_release(
                         root / "skills",
                         root / "releases",
                         release_id=f"missing-{name}",
                         upstream_id="local-matt-skills",
                         repo_root=root,
                     )
-                self.assertFalse((root / "releases" / f"missing-{name}").exists())
+                self.assertTrue((root / "releases" / f"missing-{name}").exists())
 
     def test_workflow_build_stops_before_writing_release_when_unit_gate_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -720,7 +323,7 @@ class FullReleaseE2ETests(unittest.TestCase):
                 home = Path(tmp) / target
                 install_release(first, home, target=target)
                 self.assertEqual(
-                    39, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    32, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )
                 original = (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 install_release(second, home, target=target)
@@ -744,5 +347,5 @@ class FullReleaseE2ETests(unittest.TestCase):
                     original, (home / "skills" / "my-humanizer" / "SKILL.md").read_bytes()
                 )
                 self.assertEqual(
-                    39, len([path for path in (home / "skills").iterdir() if path.is_dir()])
+                    32, len([path for path in (home / "skills").iterdir() if path.is_dir()])
                 )

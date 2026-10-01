@@ -1,0 +1,94 @@
+{
+  "review_id": "1a2c2fbc7e5b6ee0e59800010a1b95f0",
+  "status": "findings",
+  "code_content_id": "77fd36b9081daad16b56f4be2511c987ba4d6ca8f777168c9aba787f28c51d39",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "a82f699a831710507622c0b3f6a9fe8a"
+  },
+  "findings": [
+    {
+      "id": "09-retired-body-call-prose",
+      "root_cause": "invocation-pointer-replacement-retains-body-read-instructions",
+      "severity": "P1",
+      "baseline_reachable": true,
+      "acceptance_ids": [
+        "workflow-simplification-09#A4"
+      ],
+      "summary": "skills/my-writing-for-agents/SKILL.md:23 still directs callers to composition edge and composed-body pointers although this change removed the body builder. grill-with-docs and architecture replace copied paths with host macros while still instructing readers to read them; architecture also names my-grill-with-docs as its internal method although approved edges call grilling/domain-modeling directly. The changed packaging has no supported body path; align these touched invocation instructions with shared composition adapter without rewriting downstream method semantics."
+    }
+  ],
+  "follow_ons": [],
+  "design_gap": null,
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-09#A1",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A2",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A3",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A4",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A5",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A6",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A7",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "probe": "downstream-owner",
+        "summary": "Frozen Code then fresh Spec pass: custom agent_home retention repaired and real deployment regression green. Current A4 still has retired body-reading instructions in touched consumers; method semantics remain owned by successors10/11. Fix only invocation prose and preserve methods.",
+        "evidence_refs": [
+          "snapshot:skills/my-writing-for-agents/SKILL.md",
+          "snapshot:skills/my-grill-with-docs/SKILL.md",
+          "snapshot:skills/my-improve-codebase-architecture/SKILL.md"
+        ]
+      }
+    ]
+  }
+}

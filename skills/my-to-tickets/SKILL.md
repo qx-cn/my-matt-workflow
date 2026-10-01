@@ -1,7 +1,6 @@
 ---
 name: my-to-tickets
-description: 将计划、Spec 或当前对话拆成 tracer-bullet Ticket；每张声明阻塞边，并按项目配置保存或发布。
-disable-model-invocation: true
+description: 在 my-to-spec、my-triage 流程中作为指定阶段的工作单元被调用。
 ---
 
 # 拆分 Ticket

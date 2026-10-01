@@ -1,6 +1,0 @@
-interface:
-  display_name: "Final-State Writing"
-  short_description: "Review or write only the current confirmed state"
-  default_prompt: "Use $my-final-state-writing to review this document for obsolete or conflicting state."
-policy:
-  allow_implicit_invocation: false

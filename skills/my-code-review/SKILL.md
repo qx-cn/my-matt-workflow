@@ -1,7 +1,6 @@
 ---
 name: my-code-review
-description: 从固定基线开始，沿 Code 与 Spec 两个顺序独立的审查 pass 检查代码变更。
-disable-model-invocation: true
+description: 在 my-implement 流程中作为指定阶段的方法被调用。
 ---
 
 # 代码审查

@@ -1,0 +1,3117 @@
+diff --git a/composition/manifest.json b/composition/manifest.json
+index 140607e..da53e69 100644
+--- a/composition/manifest.json
++++ b/composition/manifest.json
+@@ -2,87 +2,171 @@
+   "version": 2,
+   "callers": {
+     "my-grill-me": [
+-      {"skill": "my-grilling", "when": "always", "kind": "method"}
++      {
++        "skill": "my-grilling",
++        "kind": "method",
++        "when": "method-phase"
++      }
+     ],
+     "my-grill-with-docs": [
+-      {"skill": "my-grilling", "when": "always", "kind": "method"},
+-      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"},
+-      {"skill": "my-requirement-analysis", "when": "complex-or-ambiguous-request", "kind": "method"}
+-    ],
+-    "my-implement": [
+-      {"skill": "my-tdd", "when": "tdd-phase", "kind": "method"},
+-      {"skill": "my-code-review", "when": "review-phase", "kind": "method"},
+-      {"skill": "my-review-design", "when": "repair-plan-phase", "kind": "method"}
++      {
++        "skill": "my-grilling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-domain-modeling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-to-spec",
++        "kind": "chain",
++        "when": "chain-phase"
++      }
+     ],
+     "my-to-spec": [
+-      {"skill": "my-review-design", "when": "load-bearing-design", "kind": "method"}
++      {
++        "skill": "my-review-design",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-to-tickets",
++        "kind": "chain",
++        "when": "chain-phase"
++      }
+     ],
+-    "my-prototype": [
+-      {"skill": "my-implement", "when": "approved-production-absorption", "kind": "handoff"}
++    "my-to-tickets": [
++      {
++        "skill": "my-implement",
++        "kind": "chain",
++        "when": "chain-phase"
++      }
++    ],
++    "my-implement": [
++      {
++        "skill": "my-tdd",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-code-review",
++        "kind": "method",
++        "when": "method-phase"
++      }
+     ],
+     "my-review-artifact": [
+-      {"skill": "my-final-state-writing", "when": "final-deliverable", "kind": "method"},
+-      {"skill": "my-visual-communication", "when": "complex-human-facing", "kind": "method"},
+-      {"skill": "my-humanizer", "when": "human-facing-prose", "kind": "method"},
+-      {"skill": "my-reader-first-writing", "when": "reader-facing", "kind": "method"},
+-      {"skill": "my-artifact-finalization", "when": "load-bearing-deliverable", "kind": "method"},
+-      {"skill": "my-review-design", "when": "design-artifact", "kind": "method"}
++      {
++        "skill": "my-review-design",
++        "kind": "method",
++        "when": "design-artifact"
++      }
+     ],
+-    "my-review-skill": [
+-      {"skill": "my-writing-great-skills", "when": "instruction-design-after-existence-gate", "kind": "method"}
++    "my-review-instructions": [
++      {
++        "skill": "my-writing-for-agents",
++        "kind": "method",
++        "when": "method-phase"
++      }
+     ],
+     "my-triage": [
+-      {"skill": "my-grilling", "when": "missing-information", "kind": "method"},
+-      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"},
+-      {"skill": "my-to-tickets", "when": "confirmed-local-brief", "kind": "handoff"}
++      {
++        "skill": "my-grilling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-domain-modeling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-to-tickets",
++        "kind": "handoff",
++        "when": "handoff-phase"
++      }
+     ],
+     "my-wayfinder": [
+-      {"skill": "my-grilling", "when": "grilling-decision", "kind": "method"},
+-      {"skill": "my-domain-modeling", "when": "domain-decision", "kind": "method"},
+-      {"skill": "my-research", "when": "research-ticket", "kind": "method"},
+-      {"skill": "my-prototype", "when": "prototype-ticket", "kind": "method"},
+-      {"skill": "my-to-spec", "when": "handoff-to-spec", "kind": "handoff"}
++      {
++        "skill": "my-grilling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-domain-modeling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-prototype",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-to-spec",
++        "kind": "handoff",
++        "when": "handoff-phase"
++      }
++    ],
++    "my-prototype": [
++      {
++        "skill": "my-implement",
++        "kind": "handoff",
++        "when": "handoff-phase"
++      }
+     ],
+     "my-improve-codebase-architecture": [
+-      {"skill": "my-codebase-design", "when": "design-vocabulary", "kind": "method"},
+-      {"skill": "my-grill-with-docs", "when": "selected-candidate", "kind": "method"}
++      {
++        "skill": "my-codebase-design",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-grilling",
++        "kind": "method",
++        "when": "method-phase"
++      },
++      {
++        "skill": "my-domain-modeling",
++        "kind": "method",
++        "when": "method-phase"
++      }
+     ]
+   },
+   "routable_entries": {
+     "my-ask-matt": [
+-      "my-artifact-finalization",
+       "my-code-review",
+       "my-codebase-design",
+       "my-diagnosing-bugs",
+       "my-domain-modeling",
+       "my-edit-article",
+-      "my-final-state-writing",
+-      "my-grill-with-docs",
+       "my-grill-me",
++      "my-grill-with-docs",
++      "my-grilling",
+       "my-handoff",
+       "my-humanizer",
+       "my-implement",
+       "my-improve-codebase-architecture",
++      "my-install",
+       "my-prototype",
+-      "my-reader-first-writing",
+       "my-research",
+       "my-resolving-merge-conflicts",
+       "my-review-artifact",
+-      "my-review-agent-rules",
+       "my-review-design",
+-      "my-review-skill",
++      "my-review-instructions",
+       "my-setup",
+       "my-tdd",
+       "my-teach",
++      "my-tech-design",
+       "my-test-report",
+       "my-to-questionnaire",
+       "my-to-spec",
+       "my-to-tickets",
+       "my-triage",
+-      "my-visual-communication",
+       "my-wayfinder",
+       "my-wizard",
+-      "my-writing-great-skills"
++      "my-writing-for-agents"
+     ]
+   }
+ }
+diff --git a/portfolio/manifest.json b/portfolio/manifest.json
+deleted file mode 100644
+index b5e5c8f..0000000
+--- a/portfolio/manifest.json
++++ /dev/null
+@@ -1,44 +0,0 @@
+-{
+-  "version": 1,
+-  "skills": {
+-    "my-artifact-finalization": {"category": "quality", "discoverability": "routed", "roles": ["review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario yet", "risk": "Finalization behavior is only statically checked", "release_condition": "Add when finalization runtime is introduced"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before making this flow release-critical"}}, "real_project": {"exemption": {"reason": "No curated project trace", "risk": "Repository-specific behavior is unmeasured", "release_condition": "Capture on next qualifying delivery"}}}},
+-    "my-ask-matt": {"category": "routing", "discoverability": "specialist", "roles": ["entry"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "router-contract"]}, "deterministic": {"exemption": {"reason": "Routing is currently a static graph contract", "risk": "Natural-language route choice is unmeasured", "release_condition": "Add a route-choice scenario"}}, "fresh_agent": {"planned_cases": ["manual-method-and-handoff"]}, "real_project": {"exemption": {"reason": "No curated route trace", "risk": "Portfolio navigation is unmeasured in a project", "release_condition": "Capture on next multi-skill delivery"}}}},
+-    "my-code-review": {"category": "quality", "discoverability": "routed", "roles": ["entry", "review", "method"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["implementation-review-baseline-reachability", "implementation-review-repeated-root-cause"]}, "fresh_agent": {"planned_cases": ["code-review-change-only-signal", "code-review-without-spec", "code-review-touched-context"]}, "real_project": {"exemption": {"reason": "No curated real-project trace", "risk": "Review precision outside fixtures is unmeasured", "release_condition": "Capture on next accepted review"}}}},
+-    "my-codebase-design": {"category": "architecture", "discoverability": "routed", "roles": ["method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "Reference method has no deterministic scenario", "risk": "Vocabulary application is unmeasured", "release_condition": "Add when its caller receives a seeded architecture case"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Method behavior is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated project trace", "risk": "Practical architecture leverage is unmeasured", "release_condition": "Capture on next architecture change"}}}},
+-    "my-diagnosing-bugs": {"category": "implementation", "discoverability": "routed", "roles": ["entry"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["diagnosing-bugs-no-red-loop"]}, "fresh_agent": {"exemption": {"reason": "No isolated fresh-agent result", "risk": "Red-loop discipline is not behaviorally proven", "release_condition": "Promote deterministic fixture to fresh-agent case"}}, "real_project": {"exemption": {"reason": "No curated debugging trace", "risk": "Real failure diagnosis quality is unmeasured", "release_condition": "Capture on next qualifying bug"}}}},
+-    "my-domain-modeling": {"category": "discovery", "discoverability": "routed", "roles": ["method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Vocabulary decisions are unmeasured", "release_condition": "Add with a seeded ambiguity fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated project trace", "risk": "Domain language quality is unmeasured", "release_condition": "Capture on next domain refactor"}}}},
+-    "my-edit-article": {"category": "writing", "discoverability": "routed", "roles": ["entry"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract", "article-authorization-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Authorization handling is only statically checked", "release_condition": "Add a pre-authorized edit case"}}, "fresh_agent": {"planned_cases": ["authorized-local-no-reconfirm", "user-over-skill-default"]}, "real_project": {"exemption": {"reason": "No curated edit trace", "risk": "Editing quality is unmeasured", "release_condition": "Capture on next in-place edit"}}}},
+-    "my-final-state-writing": {"category": "writing", "discoverability": "routed", "roles": ["review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Historical-state removal is unmeasured", "release_condition": "Add a seeded stale-state fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated project trace", "risk": "Final-state clarity is unmeasured", "release_condition": "Capture on next durable artifact"}}}},
+-    "my-first-principles-review": {"category": "quality", "discoverability": "specialist", "roles": ["entry", "review"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["first-principles-goal-substitution", "first-principles-pseudo-constraint", "first-principles-unnecessary-complexity", "first-principles-causal-gap", "first-principles-evidence-mismatch", "first-principles-evidence-over-falsifiability", "first-principles-sound-proposal"]}, "fresh_agent": {"exemption": {"reason": "No isolated result recorded", "risk": "Natural-language review behavior is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated decision trace", "risk": "Practical decision leverage is unmeasured", "release_condition": "Capture on next accepted first-principles review"}}}},
+-    "my-grill-me": {"category": "discovery", "discoverability": "routed", "roles": ["entry"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Interview behavior is unmeasured", "release_condition": "Add a one-question fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated interview trace", "risk": "Standalone discovery quality is unmeasured", "release_condition": "Capture on next qualifying use"}}}},
+-    "my-grill-with-docs": {"category": "discovery", "discoverability": "routed", "roles": ["entry", "method"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["rule-plan-ticket-loop"]}, "fresh_agent": {"planned_cases": ["intentional-human-stops"]}, "real_project": {"exemption": {"reason": "No curated end-to-end trace", "risk": "Repository discovery quality is unmeasured", "release_condition": "Capture on next feature discovery"}}}},
+-    "my-grilling": {"category": "discovery", "discoverability": "internal", "roles": ["method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["grilling-one-question-hitl"]}, "fresh_agent": {"planned_cases": ["intentional-human-stops"]}, "real_project": {"exemption": {"reason": "No curated interview trace", "risk": "Question quality is unmeasured", "release_condition": "Capture on next qualifying use"}}}},
+-    "my-handoff": {"category": "workflow", "discoverability": "routed", "roles": ["entry", "handoff"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "handoff-pointer-contract", "artifact-storage-contract"]}, "deterministic": {"planned_cases": ["handoff-decision-mismatch", "handoff-draft-not-deliver", "handoff-first-step-not-actionable", "handoff-goal-mismatch", "handoff-round-trip", "handoff-state-stale"]}, "fresh_agent": {"planned_cases": ["manual-method-and-handoff", "handoff-fresh-context-recovery"]}, "real_project": {"exemption": {"reason": "No curated round-trip trace", "risk": "Cross-session recovery is unmeasured", "release_condition": "Capture on next multi-session delivery"}}}},
+-    "my-humanizer": {"category": "writing", "discoverability": "routed", "roles": ["review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Frozen-content preservation is unmeasured", "release_condition": "Add a seeded prose fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated edit trace", "risk": "Naturalness and fidelity are unmeasured", "release_condition": "Capture on next qualifying artifact"}}}},
+-    "my-implement": {"category": "implementation", "discoverability": "routed", "roles": ["entry", "handoff"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["rule-plan-ticket-loop", "main-workflow-fresh-context", "implementation-review-baseline-reachability", "implementation-review-repeated-root-cause", "artifact-review-repair-plan-method-boundary", "implementation-turn-active-session", "implementation-turn-single-ticket-complete", "implementation-turn-ready-frontier-continue", "implementation-turn-repair-limit-blocked"]}, "fresh_agent": {"planned_cases": ["main-workflow-fresh-context", "risk-scaled-testing", "implementation-turn-closure"]}, "real_project": {"exemption": {"reason": "No portfolio-linked project trace", "risk": "Implementation behavior is not auditable from this registry", "release_condition": "Attach next accepted implementation trace"}}}},
+-    "my-improve-codebase-architecture": {"category": "architecture", "discoverability": "routed", "roles": ["entry"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Candidate selection quality is unmeasured", "release_condition": "Add a seeded architecture fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated project trace", "risk": "Architecture improvement impact is unmeasured", "release_condition": "Capture on next accepted improvement"}}}},
+-    "my-install": {"category": "administration", "discoverability": "administrative", "roles": ["admin"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "install-location-contract"]}, "deterministic": {"exemption": {"reason": "Installer tests are not registered as a smoke scenario", "risk": "Portfolio cannot trace install behavior", "release_condition": "Register the install matrix"}}, "fresh_agent": {"exemption": {"reason": "Administrative flow is exercised deterministically", "risk": "Natural-language command selection is unmeasured", "release_condition": "Add before changing command surface"}}, "real_project": {"exemption": {"reason": "Real hosts are intentionally out of candidate scope", "risk": "Host-specific drift remains possible", "release_condition": "Record after authorized host install"}}}},
+-    "my-prototype": {"category": "discovery", "discoverability": "routed", "roles": ["entry", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract", "prototype-handoff-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Production-boundary behavior is only statically checked", "release_condition": "Add a prototype absorption fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated prototype trace", "risk": "Decision fidelity is unmeasured", "release_condition": "Capture on next qualifying prototype"}}}},
+-    "my-reader-first-writing": {"category": "writing", "discoverability": "routed", "roles": ["review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Reader alignment is unmeasured", "release_condition": "Add a seeded audience mismatch fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated project trace", "risk": "Reader outcomes are unmeasured", "release_condition": "Capture on next reader-facing artifact"}}}},
+-    "my-requirement-analysis": {"category": "discovery", "discoverability": "specialist", "roles": ["entry", "review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["requirement-analysis-clear-request", "requirement-analysis-misleading-analogy"]}, "fresh_agent": {"exemption": {"reason": "No independent reviewer case recorded", "risk": "Claimed independence is unproven", "release_condition": "Run a complex-request reviewer case"}}, "real_project": {"exemption": {"reason": "No curated comparison trace", "risk": "Practical value is unknown", "release_condition": "Capture before portfolio reclassification"}}}},
+-    "my-research": {"category": "discovery", "discoverability": "routed", "roles": ["entry", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Source quality is unmeasured", "release_condition": "Add a fixed-source fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated research trace", "risk": "Real source synthesis is unmeasured", "release_condition": "Capture on next research handoff"}}}},
+-    "my-resolving-merge-conflicts": {"category": "implementation", "discoverability": "routed", "roles": ["entry"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Approval boundary is not portfolio-traced", "release_condition": "Add a conflict fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Intent preservation is unmeasured", "release_condition": "Add before command-surface changes"}}, "real_project": {"exemption": {"reason": "No curated merge trace", "risk": "Real conflict behavior is unmeasured", "release_condition": "Capture on next approved resolution"}}}},
+-    "my-review-artifact": {"category": "quality", "discoverability": "routed", "roles": ["entry", "review"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["artifact-review-method-boundary"]}, "fresh_agent": {"exemption": {"reason": "No isolated result linked in portfolio", "risk": "Composite review behavior is unmeasured", "release_condition": "Promote current scenario to fresh-agent evidence"}}, "real_project": {"exemption": {"reason": "No curated artifact trace", "risk": "Review usefulness is unmeasured", "release_condition": "Capture on next accepted artifact review"}}}},
+-    "my-review-agent-rules": {"category": "quality", "discoverability": "routed", "roles": ["entry", "review"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["agent-rule-review-root-before-wording"]}, "fresh_agent": {"planned_cases": ["agent-rule-scope-and-authority"]}, "real_project": {"exemption": {"reason": "No portfolio-linked project-rule review trace", "risk": "Practical rule-review signal is unmeasured", "release_condition": "Attach the next accepted Agent rule review"}}}},
+-    "my-review-design": {"category": "quality", "discoverability": "routed", "roles": ["entry", "review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["artifact-review-design-method-boundary", "artifact-review-repair-plan-method-boundary"]}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated review trace", "risk": "Practical signal is unmeasured", "release_condition": "Capture on next accepted design review"}}}},
+-    "my-review-skill": {"category": "quality", "discoverability": "routed", "roles": ["entry", "review"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["skill-review-root-before-wording"]}, "fresh_agent": {"planned_cases": ["skill-review-runtime-root-before-wording"]}, "real_project": {"exemption": {"reason": "No portfolio-linked review trace", "risk": "Real portfolio triage remains unmeasured", "release_condition": "Attach next accepted Skill review"}}}},
+-    "my-setup": {"category": "administration", "discoverability": "routed", "roles": ["entry", "admin"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "Setup tests are not registered as smoke scenarios", "risk": "Portfolio cannot trace configuration behavior", "release_condition": "Register setup contract cases"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Setup guidance behavior is unmeasured", "release_condition": "Add before configuration schema changes"}}, "real_project": {"exemption": {"reason": "No curated setup trace", "risk": "Project-specific setup behavior is unmeasured", "release_condition": "Capture on next new project setup"}}}},
+-    "my-tdd": {"category": "implementation", "discoverability": "routed", "roles": ["entry", "method"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "tdd-cycle-contract"]}, "deterministic": {"planned_cases": ["tdd-seam-pressure"]}, "fresh_agent": {"exemption": {"reason": "No isolated fresh-agent result", "risk": "Refactor and seam behavior are not proven", "release_condition": "Run a seeded red-green-refactor case"}}, "real_project": {"exemption": {"reason": "No curated TDD trace", "risk": "Test value in production code is unmeasured", "release_condition": "Capture on next TDD implementation"}}}},
+-    "my-teach": {"category": "writing", "discoverability": "routed", "roles": ["entry"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No deterministic smoke registry entry", "risk": "Course generation is only covered by other gates", "release_condition": "Register content and frontend cases"}}, "fresh_agent": {"planned_cases": ["teach-reader-course-from-source-heavy-input", "teach-frontend-blocks-author-centered-draft"]}, "real_project": {"exemption": {"reason": "No curated learner trace", "risk": "Learning outcomes are unmeasured", "release_condition": "Capture on next learner-reviewed course"}}}},
+-    "my-tech-design": {"category": "architecture", "discoverability": "specialist", "roles": ["entry"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract", "tech-design-stage-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Stage separation is only statically checked", "release_condition": "Add a content-to-frontend fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Design rendering behavior is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated design trace", "risk": "Reviewer usefulness is unmeasured", "release_condition": "Capture on next approved design"}}}},
+-    "my-test-report": {"category": "quality", "discoverability": "routed", "roles": ["entry"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "artifact-storage-contract"]}, "deterministic": {"planned_cases": ["main-workflow-fresh-context"]}, "fresh_agent": {"planned_cases": ["main-workflow-fresh-context"]}, "real_project": {"exemption": {"reason": "No portfolio-linked report trace", "risk": "Evidence-report usefulness is unmeasured", "release_condition": "Attach next accepted delivery report"}}}},
+-    "my-to-questionnaire": {"category": "discovery", "discoverability": "routed", "roles": ["entry"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract", "artifact-storage-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Questionnaire coverage is unmeasured", "release_condition": "Add a seeded knowledge-gap fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated questionnaire trace", "risk": "Response usefulness is unmeasured", "release_condition": "Capture after next completed questionnaire"}}}},
+-    "my-to-spec": {"category": "workflow", "discoverability": "routed", "roles": ["entry", "handoff"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["main-workflow-fresh-context"]}, "fresh_agent": {"planned_cases": ["main-workflow-fresh-context"]}, "real_project": {"exemption": {"reason": "No portfolio-linked spec trace", "risk": "Spec handoff quality is unmeasured", "release_condition": "Attach next approved spec"}}}},
+-    "my-to-tickets": {"category": "workflow", "discoverability": "routed", "roles": ["entry", "handoff"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"planned_cases": ["rule-plan-ticket-loop", "main-workflow-fresh-context", "ticket-horizontal-slice-rejected", "ticket-expand-contract-accepted", "ticket-expand-contract-requires-compatibility", "ticket-integrate-and-verify-fallback", "ticket-vertical-slice-accepted"]}, "fresh_agent": {"planned_cases": ["main-workflow-fresh-context"]}, "real_project": {"exemption": {"reason": "No portfolio-linked ticket trace", "risk": "Ticket slicing quality is unmeasured", "release_condition": "Attach next accepted ticket set"}}}},
+-    "my-triage": {"category": "workflow", "discoverability": "routed", "roles": ["entry"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "triage-handoff-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Tracker and local handoff split is only statically checked", "release_condition": "Add both backend fixtures"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Triage state behavior is unmeasured", "release_condition": "Add before tracker integration changes"}}, "real_project": {"exemption": {"reason": "No curated triage trace", "risk": "External tracker behavior is unmeasured", "release_condition": "Capture on next authorized triage"}}}},
+-    "my-visual-communication": {"category": "writing", "discoverability": "routed", "roles": ["review", "method"], "criticality": "standard", "evidence": {"static": {"planned_cases": ["portfolio-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Visualization choice is unmeasured", "release_condition": "Add a seeded visual-intent fixture"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Behavioral compliance is unmeasured", "release_condition": "Add before critical promotion"}}, "real_project": {"exemption": {"reason": "No curated artifact trace", "risk": "Visual comprehension is unmeasured", "release_condition": "Capture on next reader-reviewed diagram"}}}},
+-    "my-wayfinder": {"category": "workflow", "discoverability": "routed", "roles": ["entry"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "handoff-pointer-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Decision-map progression is unmeasured", "release_condition": "Add a frontier fixture"}}, "fresh_agent": {"planned_cases": ["manual-method-and-handoff"]}, "real_project": {"exemption": {"reason": "No curated initiative trace", "risk": "Multi-session map quality is unmeasured", "release_condition": "Capture on next completed map"}}}},
+-    "my-wizard": {"category": "administration", "discoverability": "routed", "roles": ["entry", "admin"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "wizard-secret-contract"]}, "deterministic": {"exemption": {"reason": "No dedicated deterministic scenario", "risk": "Secret destination checks are only statically specified", "release_condition": "Add tracked and ignored target fixtures"}}, "fresh_agent": {"exemption": {"reason": "No isolated case recorded", "risk": "Generated wizard behavior is unmeasured", "release_condition": "Add before template changes"}}, "real_project": {"exemption": {"reason": "No curated wizard trace", "risk": "Third-party setup behavior is unmeasured", "release_condition": "Capture after authorized setup"}}}},
+-    "my-writing-great-skills": {"category": "skill-authoring", "discoverability": "routed", "roles": ["method"], "criticality": "critical", "evidence": {"static": {"planned_cases": ["portfolio-contract", "invocation-policy-contract"]}, "deterministic": {"planned_cases": ["writing-great-skills-baseline-discipline"]}, "fresh_agent": {"planned_cases": ["skill-review-runtime-root-before-wording"]}, "real_project": {"exemption": {"reason": "No portfolio-linked authoring trace", "risk": "Skill quality impact is unmeasured", "release_condition": "Attach next accepted Skill revision"}}}}
+-  }
+-}
+diff --git a/resources/artifact-finalization.md b/resources/artifact-finalization.md
+index 34b1620..5eb7235 100644
+--- a/resources/artifact-finalization.md
++++ b/resources/artifact-finalization.md
+@@ -27,3 +27,9 @@
+ - `assumption` / `unknown`：公开标注影响和解除方式；若它会改变承重决策，gate 为 `blocked`。
+ 
+ 四项全部 `pass` 后才可标记为终态、发布或交接。校验后的润色不得新增事实、改变结论或删除仍影响决策的未知；发生这类变化时重新执行四项 gate。
++
++## 审查应用
++
++只检查会改变目标、范围、公开接口、数据语义、验收、风险承担或下一步动作的主张。分别运行来源账本、内部一致性、读者重建和事实正确性四项 gate；一项失败不能被其他项抵消。需要核实仓库、执行或外部来源时读取相应证据，不能获得的承重证据标为未知。
++
++每个发现给出主张位置、失败的 gate、可定位的证据、影响及解除方式；同一根因跨 gate 出现时合并，并列出所有受影响 gate。四项全部通过时写 `No findings.`；不得用总分、笼统正确率或无证据的通过清单代替结论。
+diff --git a/resources/final-state-writing.md b/resources/final-state-writing.md
+index df89f4a..ab3c92f 100644
+--- a/resources/final-state-writing.md
++++ b/resources/final-state-writing.md
+@@ -3,3 +3,9 @@
+ 最终产物只陈述当前有效的目标、设计、约束和待确认项。以最新确认的决定覆盖早期讨论；已被取代的候选项不进入正文。
+ 
+ 只有旧状态影响迁移、兼容、回滚或安全边界，或其取舍值得写入 ADR 时，才在对应章节保留。总览、主流程和实施项始终描述最终采用的状态。
++
++## 审查应用
++
++用户要求 review、检查或审查已有产物时，只读评审，不修改或重写原文。逐项核对正文中的目标、设计、约束和待确认项是否仍是当前有效状态；只有旧状态影响迁移、兼容、回滚、安全边界或 ADR 取舍时才允许保留。
++
++只报告有明确文本依据的问题，并给出位置、违反的规则、对读者决定或后续实施的影响，以及最小修订方向；同一过期决定造成的多个表象合并为一项。没有合格发现时写 `No findings.`。
+diff --git a/resources/first-principles-reasoning.md b/resources/first-principles-reasoning.md
+index 266c1bc..e427927 100644
+--- a/resources/first-principles-reasoning.md
++++ b/resources/first-principles-reasoning.md
+@@ -21,3 +21,22 @@
+ ## 应用边界
+ 
+ 各 Skill 只使用与自身决定有关的部分：需求阶段分离目标与手段，Spec 记录承重决策链，设计审查寻找反例，Ticket 阶段验证验收所有权，Skill 审查判断指令是否真正改变用户结果。专项 Skill 已经拥有的领域规则、runtime 已经强制的机械不变量，以及普通可逆细节都不在这里重复。
++
++## 审查应用
++
++1. 固定审查对象、目标读者和要支持的决定。只有存在会改变对象边界的多种合理理解时，才询问一个最小问题。
++2. 重建使用者可观察的真实目标；将事实、假设和未知按共享来源分类，不能查证的承重事实保持未知。
++3. 检查目标到机制再到用户结果的因果链，识别把手段、类比、惯例或局部指标当成目标的情况。
++4. 对承重选择比较维持现状、删除机制或一个更小替代方案；检查额外复杂度是否产生可观察收益。
++5. 检查可证伪预测和验收证据能否捕获失败，而不是只证明步骤执行过。
++
++只报告会改变采用、修改或放弃决定的问题，同一根因去重。每项说明对象位置、失败的推理环节、事实或假设依据、对用户结果的影响、最小修正方向和最小验证。
++
++最终只给出一个 Verdict：
++
++- `HOLDS`：目标、因果链、反事实和验收成立，没有影响决定的证据缺口；
++- `HOLDS_WITH_GAPS`：核心机制成立，只有不会推翻它的可解除证据缺口；
++- `VIOLATES`：目标替换、关键因果断裂、无收益复杂度或验收错位会改变决定；
++- `INCONCLUSIVE`：缺少承重事实，无法判断核心机制是否成立。
++
++没有通过准入的 finding 时写 `No findings.`。不要输出逐项通过清单、泛化哲学、领域专项结论或未经请求的改写稿。
+diff --git a/resources/governance.json b/resources/governance.json
+index cabb45c..9c770e2 100644
+--- a/resources/governance.json
++++ b/resources/governance.json
+@@ -7,23 +7,23 @@
+     },
+     "resources/final-state-writing.md": {
+       "kind": "reviewable-rule",
+-      "review_skill": "my-final-state-writing"
++      "review_skill": "my-review-artifact"
+     },
+     "resources/artifact-finalization.md": {
+       "kind": "reviewable-rule",
+-      "review_skill": "my-artifact-finalization"
++      "review_skill": "my-review-artifact"
+     },
+     "resources/first-principles-reasoning.md": {
+       "kind": "reviewable-rule",
+-      "review_skill": "my-first-principles-review"
++      "review_skill": "my-review-design"
+     },
+     "resources/visual-communication.md": {
+       "kind": "reviewable-rule",
+-      "review_skill": "my-visual-communication"
++      "review_skill": "my-review-artifact"
+     },
+     "resources/reader-first-writing.md": {
+       "kind": "reviewable-rule",
+-      "review_skill": "my-reader-first-writing"
++      "review_skill": "my-review-artifact"
+     },
+     "resources/document-rendering.md": {
+       "kind": "execution-protocol",
+@@ -59,11 +59,11 @@
+     },
+     "resources/adapters/artifact-storage.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_portfolio.py::PortfolioContractTests.test_artifact_storage_adapter_is_declared_for_writers"
++      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+     },
+     "resources/testing-seams.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_portfolio.py::PortfolioContractTests.test_testing_seam_contract_is_shared"
++      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+     },
+     "resources/adapters/project-rules.md": {
+       "kind": "execution-protocol",
+@@ -108,6 +108,22 @@
+     "policies/write-boundaries.md": {
+       "kind": "execution-protocol",
+       "validation": "tests/test_workflow.py::WriteGateTests.test_every_configured_write_policy_has_a_runtime_gate"
++    },
++    "resources/requirement-analysis.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
++    },
++    "resources/requirement-reviewer-brief.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
++    },
++    "resources/research-method.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
++    },
++    "resources/agent-rule-applicability.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+     }
+   }
+ }
+diff --git a/resources/manifest.json b/resources/manifest.json
+index 2bb6d8b..cf6c202 100644
+--- a/resources/manifest.json
++++ b/resources/manifest.json
+@@ -5,47 +5,47 @@
+       "source": "resources/humanizer.md",
+       "release_path": "references/shared/humanizer.md",
+       "consumers": [
+-        "my-to-spec",
+-        "my-to-tickets",
+-        "my-domain-modeling",
+         "my-code-review",
+-        "my-humanizer"
++        "my-domain-modeling",
++        "my-humanizer",
++        "my-review-artifact",
++        "my-to-spec",
++        "my-to-tickets"
+       ]
+     },
+     "final-state-writing": {
+       "source": "resources/final-state-writing.md",
+       "release_path": "references/shared/final-state-writing.md",
+       "consumers": [
++        "my-ask-matt",
++        "my-codebase-design",
+         "my-grilling",
++        "my-review-artifact",
++        "my-review-design",
+         "my-tech-design",
++        "my-test-report",
+         "my-to-spec",
+         "my-to-tickets",
+-        "my-codebase-design",
+-        "my-writing-great-skills",
+-        "my-review-design",
+-        "my-test-report",
+-        "my-final-state-writing"
++        "my-writing-for-agents"
+       ]
+     },
+     "artifact-finalization": {
+       "source": "resources/artifact-finalization.md",
+       "release_path": "references/shared/artifact-finalization.md",
+       "consumers": [
+-        "my-to-spec",
++        "my-ask-matt",
+         "my-handoff",
+-        "my-final-state-writing",
+-        "my-artifact-finalization"
++        "my-review-artifact",
++        "my-to-spec"
+       ]
+     },
+     "first-principles-reasoning": {
+       "source": "resources/first-principles-reasoning.md",
+       "release_path": "references/shared/first-principles-reasoning.md",
+       "consumers": [
+-        "my-first-principles-review",
+         "my-grill-with-docs",
+         "my-review-design",
+-        "my-review-agent-rules",
+-        "my-review-skill",
++        "my-review-instructions",
+         "my-to-spec",
+         "my-to-tickets"
+       ]
+@@ -54,7 +54,8 @@
+       "source": "resources/visual-communication.md",
+       "release_path": "references/shared/visual-communication.md",
+       "consumers": [
+-        "my-visual-communication",
++        "my-ask-matt",
++        "my-review-artifact",
+         "my-teach",
+         "my-test-report"
+       ]
+@@ -63,15 +64,14 @@
+       "source": "resources/reader-first-writing.md",
+       "release_path": "references/shared/reader-first-writing.md",
+       "consumers": [
++        "my-ask-matt",
+         "my-code-review",
+         "my-diagnosing-bugs",
+         "my-domain-modeling",
+         "my-edit-article",
+-        "my-reader-first-writing",
+-        "my-final-state-writing",
+         "my-improve-codebase-architecture",
+         "my-prototype",
+-        "my-research",
++        "my-review-artifact",
+         "my-review-design",
+         "my-teach",
+         "my-tech-design",
+@@ -99,7 +99,6 @@
+         "my-domain-modeling",
+         "my-edit-article",
+         "my-grilling",
+-        "my-review-agent-rules",
+         "my-to-tickets"
+       ]
+     },
+@@ -107,11 +106,11 @@
+       "source": "resources/adapters/composition.md",
+       "release_path": "references/shared/adapters/composition.md",
+       "consumers": [
++        "my-ask-matt",
+         "my-grill-me",
+         "my-grill-with-docs",
+-        "my-ask-matt",
+-        "my-wayfinder",
+-        "my-improve-codebase-architecture"
++        "my-improve-codebase-architecture",
++        "my-wayfinder"
+       ]
+     },
+     "adapter-ticket-selection": {
+@@ -129,7 +128,6 @@
+         "my-ask-matt",
+         "my-grill-with-docs",
+         "my-implement",
+-        "my-requirement-analysis",
+         "my-setup",
+         "my-tdd",
+         "my-to-spec",
+@@ -147,22 +145,22 @@
+       "source": "resources/adapters/write-actions.md",
+       "release_path": "references/shared/adapters/write-actions.md",
+       "consumers": [
++        "my-resolving-merge-conflicts",
+         "my-to-spec",
+         "my-to-tickets",
+-        "my-wayfinder",
+-        "my-resolving-merge-conflicts"
++        "my-wayfinder"
+       ]
+     },
+     "adapter-artifact-access": {
+       "source": "resources/adapters/artifact-access.md",
+       "release_path": "references/shared/adapters/artifact-access.md",
+       "consumers": [
+-        "my-grill-with-docs",
+         "my-code-review",
+-        "my-review-design",
++        "my-diagnosing-bugs",
+         "my-domain-modeling",
++        "my-grill-with-docs",
++        "my-review-design",
+         "my-tdd",
+-        "my-diagnosing-bugs",
+         "my-wayfinder"
+       ]
+     },
+@@ -189,10 +187,10 @@
+       "source": "resources/adapters/project-rules.md",
+       "release_path": "references/shared/adapters/project-rules.md",
+       "consumers": [
+-        "my-to-spec",
+-        "my-to-tickets",
+         "my-code-review",
+-        "my-review-agent-rules"
++        "my-review-instructions",
++        "my-to-spec",
++        "my-to-tickets"
+       ]
+     },
+     "adapter-implementation-session": {
+@@ -213,8 +211,7 @@
+       "source": "resources/adapters/specialized-review-session.md",
+       "release_path": "references/shared/adapters/specialized-review-session.md",
+       "consumers": [
+-        "my-review-agent-rules",
+-        "my-review-skill"
++        "my-review-instructions"
+       ]
+     },
+     "policies": {
+@@ -226,6 +223,33 @@
+         "my-resolving-merge-conflicts",
+         "my-wayfinder"
+       ]
++    },
++    "requirement-analysis": {
++      "source": "resources/requirement-analysis.md",
++      "release_path": "references/shared/requirement-analysis.md",
++      "consumers": [
++        "my-grill-with-docs"
++      ]
++    },
++    "requirement-reviewer-brief": {
++      "source": "resources/requirement-reviewer-brief.md",
++      "release_path": "references/shared/requirement-reviewer-brief.md",
++      "consumers": []
++    },
++    "research-method": {
++      "source": "resources/research-method.md",
++      "release_path": "references/shared/research-method.md",
++      "consumers": [
++        "my-research",
++        "my-wayfinder"
++      ]
++    },
++    "agent-rule-applicability": {
++      "source": "resources/agent-rule-applicability.md",
++      "release_path": "references/shared/agent-rule-applicability.md",
++      "consumers": [
++        "my-review-instructions"
++      ]
+     }
+   }
+ }
+diff --git a/resources/reader-first-writing.md b/resources/reader-first-writing.md
+index 10f7b8f..c07e840 100644
+--- a/resources/reader-first-writing.md
++++ b/resources/reader-first-writing.md
+@@ -13,3 +13,9 @@
+ 把“作者还没完成什么”和“读者据此还不能判断什么”分开：前者只留在内部工件；后者若影响读者的决定或动作，改写为正文中的适用限制或下一步核验。内部事实清单、关系清单可帮助检查，但成品只在确有复习价值时换成自然的读者标题，不为字段对齐设置固定栏目。
+ 
+ 选择最小且清楚的表达方式。教学课页中的系统边界与依赖、带条件或异常的流程、跨方协作、状态迁移、多项精确对照，默认分别使用关系图、流程图、时序图、状态图或表格；只有简单结论、短步骤、少量字段和短列表才直接用文字。其他文档仍按读者任务判断图示是否明显降低理解成本。图示只能辅助，关键结论和约束仍用文字定义。
++
++## 审查应用
++
++从任务、文档和已有材料推断主要读者、用途、预期决定或动作、已有知识及最关心的风险。只有缺失信息会实质改变评审结论时才询问用户；否则标明必要假设并继续。
++
++只报告有具体文本依据、会妨碍目标读者理解或行动的问题。每项包含位置、读者任务受到的影响、违反的规则及最小修订方向；同一根因导致的背景冗余、结论埋藏或表达失配合并为一项。不输出内部 reader brief，不为覆盖检查项而制造发现。没有合格发现时写 `No findings.`。
+diff --git a/resources/visual-communication.md b/resources/visual-communication.md
+index 35db2e1..5105971 100644
+--- a/resources/visual-communication.md
++++ b/resources/visual-communication.md
+@@ -19,3 +19,9 @@
+ 共享规则与内容阶段的 `visual_intent` 不规定 CSS 类名、页面组件或特定项目的模块清单，这些留给前端规范和专题材料。实际图示可以使用当前主题中经材料确认的真实模块、角色和领域名称。
+ 
+ 其他文档仍按读者任务判断图示是否明显降低理解成本。Markdown 默认使用 Mermaid；HTML 使用原生 SVG 或页面组件。宿主 Skill 已有更具体的图形或输出规范时，以其规范为准。
++
++## 审查应用
++
++用户要求 review、检查或审查已有产物时，只读评审，不修改文档或生成替代图。检查复杂结构、关系、顺序、分支、状态和差异是否因纯文字而难以理解；已有图示是否选型正确、只回答一个核心问题、紧邻对应结论，并由文字保留关键结论与约束；简单内容是否存在为画图而画图。
++
++只报告会明显降低理解准确性或效率的问题。每项给出位置、具体理解障碍、违反的规则及最小调整方向；同一表达选择引发的多个表象合并为一项。没有合格发现时写 `No findings.`。
+diff --git a/skills/my-artifact-finalization/SKILL.md b/skills/my-artifact-finalization/SKILL.md
+deleted file mode 100644
+index 73909b1..0000000
+--- a/skills/my-artifact-finalization/SKILL.md
++++ /dev/null
+@@ -1,13 +0,0 @@
+----
+-name: my-artifact-finalization
+-description: 在写入、发布或交接前只读审查承重文档；检查来源、内部一致性、读者重建和事实正确性四项 gate。
+-disable-model-invocation: true
+----
+-
+-# 产物最终校验
+-
+-只读评审用户指定的 Spec、handoff 或其他承重文档，不修改文档、不替作者补充事实，也不把普通文风问题升级为 blocker。阅读并执行[产物最终校验](references/shared/artifact-finalization.md)；该共享规则是唯一权威来源。
+-
+-只检查会改变目标、范围、公开接口、数据语义、验收、风险承担或下一步动作的主张。分别运行来源账本、内部一致性、读者重建和事实正确性四项 gate；一项失败不能被其他项抵消。需要核实仓库、执行或外部来源时读取相应证据，不能获得的承重证据标为未知。
+-
+-每个发现给出主张位置、失败的 gate、可定位的证据、影响及解除方式；同一根因跨 gate 出现时合并，并列出所有受影响 gate。四项全部通过时写 `No findings.`；不得用总分、笼统正确率或无证据的通过清单代替结论。
+diff --git a/skills/my-artifact-finalization/agents/openai.yaml b/skills/my-artifact-finalization/agents/openai.yaml
+deleted file mode 100644
+index f04cc10..0000000
+--- a/skills/my-artifact-finalization/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Artifact Finalization Review"
+-  short_description: "Run four evidence gates on critical documents"
+-  default_prompt: "Use $my-artifact-finalization to review this document before it is published or handed off."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-ask-matt/SKILL.md b/skills/my-ask-matt/SKILL.md
+index dc50099..e056a71 100644
+--- a/skills/my-ask-matt/SKILL.md
++++ b/skills/my-ask-matt/SKILL.md
+@@ -34,9 +34,9 @@ disable-model-invocation: true
+ 
+ - 固定基线的代码审查：`{{skill-call:my-code-review}}`。
+ - 只判断已形成方案的逻辑、承重决策、状态和责任边界是否闭环：`{{skill-call:my-review-design}}`。
+-- 需要固定快照、跨质量维度检查或正式交付结论：`{{skill-call:my-review-artifact}}`；设计产物使用 `artifact_kind=design`，专项方法包括 `{{skill-call:my-reader-first-writing}}`、`{{skill-call:my-final-state-writing}}`、`{{skill-call:my-visual-communication}}`、`{{skill-call:my-humanizer}}` 和 `{{skill-call:my-artifact-finalization}}`。
+-- Codex、Cursor 或 Claude 项目规则的存在价值、作用域、权威与冲突审查：`{{skill-call:my-review-agent-rules}}`。
+-- Skill 组合、职责或文本审查：`{{skill-call:my-review-skill}}`；编写方法参考 `{{skill-call:my-writing-great-skills}}`。
++- 需要固定快照、跨质量维度检查或正式交付结论：`{{skill-call:my-review-artifact}}`；设计产物使用 `artifact_kind=design`，专项方法包括 `[共享方法](references/shared/reader-first-writing.md)`、`[共享方法](references/shared/final-state-writing.md)`、`[共享方法](references/shared/visual-communication.md)`、`{{skill-call:my-humanizer}}` 和 `[共享方法](references/shared/artifact-finalization.md)`。
++- Codex、Cursor 或 Claude 项目规则的存在价值、作用域、权威与冲突审查：`{{skill-call:my-review-instructions}}`。
++- Skill 组合、职责或文本审查：`{{skill-call:my-review-instructions}}`；编写方法参考 `{{skill-call:my-writing-for-agents}}`。
+ - 代码库健康巡检：`{{skill-call:my-improve-codebase-architecture}}`；模块形状与 seam 词汇参考 `{{skill-call:my-codebase-design}}`。
+ 
+ ## 独立工具
+@@ -44,4 +44,4 @@ disable-model-invocation: true
+ - 有来源约束的阅读与综合：`{{skill-call:my-research}}`。
+ - 围绕有状态学习工作区学习概念：`{{skill-call:my-teach}}`。
+ 
+-portfolio 还明确保留三个非路由入口：`my-install` 是行政入口，`my-requirement-analysis` 与 `my-tech-design` 是仅在用户明确选择时使用的 specialist。它们不会由本路由器暗中跳转。
++portfolio 还明确保留三个非路由入口：`my-install` 是行政入口，需求核对 与 `my-tech-design` 是仅在用户明确选择时使用的 specialist。它们不会由本路由器暗中跳转。
+diff --git a/skills/my-code-review/SKILL.md b/skills/my-code-review/SKILL.md
+index c37421d..9e8b39f 100644
+--- a/skills/my-code-review/SKILL.md
++++ b/skills/my-code-review/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-code-review
+-description: 从固定基线开始，沿 Code 与 Spec 两个顺序独立的审查 pass 检查代码变更。
+-disable-model-invocation: true
++description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # 代码审查
+diff --git a/skills/my-code-review/agents/openai.yaml b/skills/my-code-review/agents/openai.yaml
+index df063d9..dec0ec8 100644
+--- a/skills/my-code-review/agents/openai.yaml
++++ b/skills/my-code-review/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "Code Review"
+   short_description: "Review a diff on code and spec"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-codebase-design/SKILL.md b/skills/my-codebase-design/SKILL.md
+index 7a75392..0df6fc5 100644
+--- a/skills/my-codebase-design/SKILL.md
++++ b/skills/my-codebase-design/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-codebase-design
+-description: 用深模块、Interface、Seam 与 Adapter 的共享词汇设计代码库。
+-disable-model-invocation: true
++description: 在 my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # 代码库设计
+diff --git a/skills/my-codebase-design/agents/openai.yaml b/skills/my-codebase-design/agents/openai.yaml
+index eb8ffab..f876400 100644
+--- a/skills/my-codebase-design/agents/openai.yaml
++++ b/skills/my-codebase-design/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "Codebase Design"
+   short_description: "Vocabulary for deep-module design"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-domain-modeling/SKILL.md b/skills/my-domain-modeling/SKILL.md
+index 240e104..5449ce9 100644
+--- a/skills/my-domain-modeling/SKILL.md
++++ b/skills/my-domain-modeling/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-domain-modeling
+-description: 澄清领域术语、关系、边界和难以逆转的设计决策
+-disable-model-invocation: true
++description: 在 my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # My Domain Modeling
+diff --git a/skills/my-domain-modeling/agents/openai.yaml b/skills/my-domain-modeling/agents/openai.yaml
+index 6477ab3..f6ed0b1 100644
+--- a/skills/my-domain-modeling/agents/openai.yaml
++++ b/skills/my-domain-modeling/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "Domain Modeling"
+   short_description: "Build and sharpen a domain model"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-final-state-writing/SKILL.md b/skills/my-final-state-writing/SKILL.md
+deleted file mode 100644
+index e87cc61..0000000
+--- a/skills/my-final-state-writing/SKILL.md
++++ /dev/null
+@@ -1,17 +0,0 @@
+----
+-name: my-final-state-writing
+-description: 审查、撰写或修订文档，使正文只保留当前有效状态。
+-disable-model-invocation: true
+----
+-
+-# 最终态写作
+-
+-用于只读审查、撰写或修订交付文档、设计说明、实施计划、报告和用户可见的总结，使正文准确反映当前已确认的状态。
+-
+-撰写前先按[面向读者写作](references/shared/reader-first-writing.md)确定人类读者的决定或动作，再阅读并遵循[最终态写作规则](references/shared/final-state-writing.md)。该共享规则是唯一权威来源；不要在本 Skill 或产物中重复维护规则文本。若产物将进入实施、评审或跨会话交接，写入前再执行[产物最终校验](references/shared/artifact-finalization.md)。
+-
+-## Review 模式
+-
+-用户要求 review、检查或审查已有产物时，只读评审，不修改或重写原文。逐项核对正文中的目标、设计、约束和待确认项是否仍是当前有效状态；只有旧状态影响迁移、兼容、回滚、安全边界或 ADR 取舍时才允许保留。
+-
+-只报告有明确文本依据的问题，并给出位置、违反的规则、对读者决定或后续实施的影响，以及最小修订方向；同一过期决定造成的多个表象合并为一项。没有合格发现时写 `No findings.`。
+diff --git a/skills/my-final-state-writing/agents/openai.yaml b/skills/my-final-state-writing/agents/openai.yaml
+deleted file mode 100644
+index 7de60f9..0000000
+--- a/skills/my-final-state-writing/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Final-State Writing"
+-  short_description: "Review or write only the current confirmed state"
+-  default_prompt: "Use $my-final-state-writing to review this document for obsolete or conflicting state."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-first-principles-review/SKILL.md b/skills/my-first-principles-review/SKILL.md
+deleted file mode 100644
+index 1377831..0000000
+--- a/skills/my-first-principles-review/SKILL.md
++++ /dev/null
+@@ -1,30 +0,0 @@
+----
+-name: my-first-principles-review
+-description: 对已形成的提案、决定、流程或设计做只读第一性原理审查，验证目标到手段的因果关系；不替代领域专项 review。
+-disable-model-invocation: true
+----
+-
+-# 第一性原理审查
+-
+-当用户明确要判断一个已形成的提案、决定、流程、制度、产品机制或技术设计“从根本上是否成立”时使用本 Skill。它是建议性专项审查：不修改对象、不替用户做产品取舍，也不产生 `my-review-artifact` 的正式交付 receipt。
+-
+-判断技术设计是否闭环并足以实施时使用 `my-review-design`；审查代码正确性使用 `my-code-review`；判断 Skill 是否应存在或应迁入 runtime 使用 `my-review-skill`；需要固定快照、跨维度检查和正式交付 Verdict 时使用 `my-review-artifact`。
+-
+-读取对象及其直接引用的最小事实来源，并应用[第一性原理推理](references/shared/first-principles-reasoning.md)：
+-
+-1. 固定审查对象、目标读者和要支持的决定。只有存在会改变对象边界的多种合理理解时，才询问一个最小问题。
+-2. 重建使用者可观察的真实目标；将事实、假设和未知按共享来源分类，不能查证的承重事实保持未知。
+-3. 检查目标到机制再到用户结果的因果链，识别把手段、类比、惯例或局部指标当成目标的情况。
+-4. 对承重选择比较维持现状、删除机制或一个更小替代方案；检查额外复杂度是否产生可观察收益。
+-5. 检查可证伪预测和验收证据能否捕获失败，而不是只证明步骤执行过。
+-
+-只报告会改变采用、修改或放弃决定的问题，同一根因去重。每项说明对象位置、失败的推理环节、事实或假设依据、对用户结果的影响、最小修正方向和最小验证。
+-
+-最终只给出一个 Verdict：
+-
+-- `HOLDS`：目标、因果链、反事实和验收成立，没有影响决定的证据缺口；
+-- `HOLDS_WITH_GAPS`：核心机制成立，只有不会推翻它的可解除证据缺口；
+-- `VIOLATES`：目标替换、关键因果断裂、无收益复杂度或验收错位会改变决定；
+-- `INCONCLUSIVE`：缺少承重事实，无法判断核心机制是否成立。
+-
+-没有通过准入的 finding 时写 `No findings.`。不要输出逐项通过清单、泛化哲学、领域专项结论或未经请求的改写稿。
+diff --git a/skills/my-first-principles-review/agents/openai.yaml b/skills/my-first-principles-review/agents/openai.yaml
+deleted file mode 100644
+index 34b6bed..0000000
+--- a/skills/my-first-principles-review/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "First Principles Review"
+-  short_description: "Test whether a proposal works from fundamentals"
+-  default_prompt: "Use $my-first-principles-review to assess whether this proposal is fundamentally sound."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-grill-me/SKILL.md b/skills/my-grill-me/SKILL.md
+index cbde3c4..b83013a 100644
+--- a/skills/my-grill-me/SKILL.md
++++ b/skills/my-grill-me/SKILL.md
+@@ -6,6 +6,6 @@ disable-model-invocation: true
+ 
+ 本流程是 `my-grilling` 的薄入口。读取 `.agent/matt-workflow.md` 的 `composition_policy` 并遵循[组合调用](references/shared/adapters/composition.md)：
+ 
+-- `my-grilling` 是内部方法：`automatic` 与 `manual` 都只读取 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md)，执行后返回宿主；不要输出另一个 Skill 调用文本。
++- `my-grilling` 是内部方法：`automatic` 与 `manual` 都只读取 {{skill-call:my-grilling}}，执行后返回宿主；不要输出另一个 Skill 调用文本。
+ 
+ 读取正文后在本次调用中直接执行访谈，立即提出第一个问题。不要停在路由提示上。
+diff --git a/skills/my-grill-with-docs/SKILL.md b/skills/my-grill-with-docs/SKILL.md
+index 6c88e61..66adf59 100644
+--- a/skills/my-grill-with-docs/SKILL.md
++++ b/skills/my-grill-with-docs/SKILL.md
+@@ -6,8 +6,8 @@ disable-model-invocation: true
+ 
+ 本流程依赖 `my-grilling` 与 `my-domain-modeling`。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`，遵循[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)：
+ 
+-- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都只读取当前阶段需要的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 和 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，执行后返回宿主；不要输出另一条 Skill 调用。
+-- 复杂、隐含或类比驱动的请求在摘要形成后读取[需求核对正文](references/composed/my-requirement-analysis/COMPOSED.md)，作为风险触发的方法返回宿主；普通请求不重复核对。
++- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都只读取当前阶段需要的 {{skill-call:my-grilling}} 和 {{skill-call:my-domain-modeling}}，执行后返回宿主；不要输出另一条 Skill 调用。
++- 复杂、隐含或类比驱动的请求在摘要形成后读取[requirement-analysis](references/shared/requirement-analysis.md)，作为风险触发的方法返回宿主；普通请求不重复核对。
+ 
+ 本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失。
+ 
+diff --git a/skills/my-grilling/SKILL.md b/skills/my-grilling/SKILL.md
+index 3506583..33cefea 100644
+--- a/skills/my-grilling/SKILL.md
++++ b/skills/my-grilling/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-grilling
+-description: 对计划、决策或想法进行高强度逐项访谈。
+-disable-model-invocation: true
++description: 在 my-grill-me、my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ 围绕会改变目标、范围、约束或验收的承重未知进行高强度访谈。沿决策树逐支前进，一次解决一个决定及其依赖；每个问题都给出推荐答案。
+diff --git a/skills/my-grilling/agents/openai.yaml b/skills/my-grilling/agents/openai.yaml
+index 532e101..552aa7e 100644
+--- a/skills/my-grilling/agents/openai.yaml
++++ b/skills/my-grilling/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "Grilling"
+   short_description: "Stress-test thinking one question at a time"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-implement/SKILL.md b/skills/my-implement/SKILL.md
+index e1ee589..74684ff 100644
+--- a/skills/my-implement/SKILL.md
++++ b/skills/my-implement/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-implement
+-description: 根据已批准的 Spec 或 implementation Ticket 编写并验证代码；不用于重新定义需求或只做代码审查。
+-disable-model-invocation: true
++description: 在 my-to-tickets、my-prototype 流程中作为指定阶段的工作单元被调用。
+ ---
+ 
+ # 实施
+@@ -10,7 +9,7 @@ disable-model-invocation: true
+ 
+ ## 实施方法
+ 
+-先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。行为新增或修复默认按照 [TDD 方法](references/composed/my-tdd/COMPOSED.md)完成最小 red-green 切片；符合 TDD 例外时记录依据并采用等价验证策略。只实现当前行为所需内容，不预建尚未要求的抽象或能力。
++先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。行为新增或修复默认按照 {{skill-call:my-tdd}}完成最小 red-green 切片；符合 TDD 例外时记录依据并采用等价验证策略。只实现当前行为所需内容，不预建尚未要求的抽象或能力。
+ 
+ 每个切片运行能最快证明该行为的最小针对性测试。工作单元结束时验证受影响模块或链路；只有整份计划结束、发布或合并前、仓库规则要求，或者风险证据表明影响面扩大时，才运行完整测试套件。
+ 
+@@ -29,6 +28,6 @@ disable-model-invocation: true
+ 
+ ## 完成标准
+ 
+-提交结果前，自动在 runtime 固定的审查单元上应用[代码审查方法](references/composed/my-code-review/COMPOSED.md)，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。
++提交结果前，自动在 runtime 固定的审查单元上应用{{skill-call:my-code-review}}，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。
+ 
+-代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由[设计成立性](references/composed/my-review-design/COMPOSED.md)增强自审。方案通过前不改代码；通过后按 runtime gate 修复、测试并重新审查。默认仅允许这一轮修复；最终复审的新有效 finding 由 runtime 作为正式 `blocked-by-review` 登记。`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
++代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由受管方案审查增强自审。方案通过前不改代码；通过后按 runtime gate 修复、测试并重新审查。默认仅允许这一轮修复；最终复审的新有效 finding 由 runtime 作为正式 `blocked-by-review` 登记。`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
+diff --git a/skills/my-implement/agents/openai.yaml b/skills/my-implement/agents/openai.yaml
+index f8794dc..600ef89 100644
+--- a/skills/my-implement/agents/openai.yaml
++++ b/skills/my-implement/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "Implement"
+   short_description: "Build work from a spec or tickets"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-improve-codebase-architecture/SKILL.md b/skills/my-improve-codebase-architecture/SKILL.md
+index e9a94c5..0304140 100644
+--- a/skills/my-improve-codebase-architecture/SKILL.md
++++ b/skills/my-improve-codebase-architecture/SKILL.md
+@@ -19,7 +19,7 @@ disable-model-invocation: true
+ 
+ ## 深化循环
+ 
+-用户选择候选后，读取 `.agent/matt-workflow.md` 的 `composition_policy`，按[组合调用](references/shared/adapters/composition.md)将 `my-grill-with-docs` 与 `my-codebase-design` 作为内部方法：读取当前所需的 [my-grill-with-docs 正文](references/composed/my-grill-with-docs/COMPOSED.md) 或 [my-codebase-design 正文](references/composed/my-codebase-design/COMPOSED.md)，执行后返回宿主，不输出另一条 Skill 调用。
++用户选择候选后，读取 `.agent/matt-workflow.md` 的 `composition_policy`，按[组合调用](references/shared/adapters/composition.md)将 `my-grill-with-docs` 与 `my-codebase-design` 作为内部方法：读取当前所需的 {{skill-call:my-grilling}} 与 {{skill-call:my-domain-modeling}} 或 {{skill-call:my-codebase-design}}，执行后返回宿主，不输出另一条 Skill 调用。
+ 
+ - 用访谈确认约束、依赖、深化模块形状、接缝内外和能存活的测试。
+ - 新领域概念或澄清后的术语更新到项目配置指定的领域模型；承重拒绝理由确实值得未来避免重提时，才建议记录 ADR。
+diff --git a/skills/my-prototype/SKILL.md b/skills/my-prototype/SKILL.md
+index 84a3f25..da63228 100644
+--- a/skills/my-prototype/SKILL.md
++++ b/skills/my-prototype/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-prototype
+-description: 用可抛弃原型回答一个难以仅靠讨论解决的设计问题
+-disable-model-invocation: true
++description: 在 my-wayfinder 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # My Prototype
+@@ -28,4 +27,4 @@ disable-model-invocation: true
+ 5. **展示状态。** 每次操作后（逻辑）或每次变体切换时（UI），打印或渲染完整相关状态，让用户看见变化。
+ 6. **以结论和交接结束。** 在 `.agent/work/<feature>/prototypes/prototypes-<feature>-<time-or-sequence>.md` 记录问题、结论、观察依据、不能外推的范围和被否定方案。保留结论后删除一次性代码；项目策略明确要求保留一手证据时，才把原型存入批准的位置。
+ 
+-原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才读取 [my-implement handoff 正文](references/composed/my-implement/COMPOSED.md)；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。
++原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才读取 {{skill-call:my-implement}}；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。
+diff --git a/skills/my-prototype/agents/openai.yaml b/skills/my-prototype/agents/openai.yaml
+index 82ebc7b..93c27cb 100644
+--- a/skills/my-prototype/agents/openai.yaml
++++ b/skills/my-prototype/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "Prototype"
+   short_description: "Prototype to answer a design question"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-reader-first-writing/SKILL.md b/skills/my-reader-first-writing/SKILL.md
+deleted file mode 100644
+index 7c29aac..0000000
+--- a/skills/my-reader-first-writing/SKILL.md
++++ /dev/null
+@@ -1,13 +0,0 @@
+----
+-name: my-reader-first-writing
+-description: 只读审查面向人类的文档是否围绕目标读者的决定或动作组织。
+-disable-model-invocation: true
+----
+-
+-# 面向读者写作评审
+-
+-只读评审用户指定的文档，不修改或重写原文。阅读并遵循[面向读者写作规则](references/shared/reader-first-writing.md)；该共享规则是唯一权威来源，不在本 Skill 中复制其检查清单。
+-
+-从任务、文档和已有材料推断主要读者、用途、预期决定或动作、已有知识及最关心的风险。只有缺失信息会实质改变评审结论时才询问用户；否则标明必要假设并继续。
+-
+-只报告有具体文本依据、会妨碍目标读者理解或行动的问题。每项包含位置、读者任务受到的影响、违反的规则及最小修订方向；同一根因导致的背景冗余、结论埋藏或表达失配合并为一项。不输出内部 reader brief，不为覆盖检查项而制造发现。没有合格发现时写 `No findings.`。
+diff --git a/skills/my-reader-first-writing/agents/openai.yaml b/skills/my-reader-first-writing/agents/openai.yaml
+deleted file mode 100644
+index 8046e92..0000000
+--- a/skills/my-reader-first-writing/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Reader-First Writing Review"
+-  short_description: "Review documents around the reader's real task"
+-  default_prompt: "Use $my-reader-first-writing to review whether this document serves its intended reader."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-requirement-analysis/SKILL.md b/skills/my-requirement-analysis/SKILL.md
+deleted file mode 100644
+index e9b5fd1..0000000
+--- a/skills/my-requirement-analysis/SKILL.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+----
+-name: my-requirement-analysis
+-description: 在复杂或显式请求时验证 AI 对用户需求的理解，并在制定 Plan 前识别偏差、遗漏和关键歧义。
+-disable-model-invocation: true
+----
+-
+-# Requirement Analysis
+-
+-仅在用户明确调用 `{{skill-call:my-requirement-analysis}}`，或当前请求复杂、隐含、类比驱动并由[开发保证等级](references/shared/adapters/assurance-levels.md)要求增强需求核对时运行；这不意味着每次都要启动独立 reviewer。普通 grill 已产生可追溯需求摘要时，不重复完整访谈。它验证“理解是否正确”，不评判方案优劣。
+-
+-先形成主 Agent 摘要：目标、范围、用户明确约束和可观察验收标准。每一项都标出来自用户原文、仓库事实还是尚未确认的推断。
+-
+-## 快速通过
+-
+-简单请求若目标、范围、约束和验收都能逐项直接对应用户原文，且没有会改变结果的第二种合理理解，记录 `PASS` 并进入 Plan。不要为了启动 reviewer 而扩大简单请求。
+-
+-## 独立审查
+-
+-只有复杂、隐含、类比驱动，或确有会改变结果的第二种合理理解时，才读取[独立需求 Reviewer Brief](references/reviewer-brief.md)，让一个未参与主摘要的 reviewer 独立对比原始输入与摘要。Reviewer 可读取用户点名的最小仓库上下文，但不能看到主 Agent 的疑点或预期答案。
+-
+-没有 sub-agent 能力时，主 Agent 仍完成四维自检并继续，但必须把结果标记为 `independence evidence gap`；不得把串行自审写成独立审查。
+-
+-## 处理结果
+-
+-- `PASS`：保留确认后的摘要，进入 Plan。
+-- `NEEDS_CLARIFICATION`：只向用户提出会改变目标、范围、约束或验收的最小问题，收到回答后更新摘要。
+-- `MISUNDERSTANDING`：按证据修正摘要；目标或范围发生实质变化时再做一次独立审查，否则记录修正后进入 Plan。
+-
+-完成条件：最终摘要的四类信息均可追溯；未解决的承重歧义已交给用户；独立性证据的实际状态被如实记录。
+diff --git a/skills/my-requirement-analysis/agents/openai.yaml b/skills/my-requirement-analysis/agents/openai.yaml
+deleted file mode 100644
+index 0eaacb9..0000000
+--- a/skills/my-requirement-analysis/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Requirement Analysis"
+-  short_description: "Manually verify requirements before planning"
+-  default_prompt: "Use $my-requirement-analysis to verify my requirements before planning."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-requirement-analysis/references/reviewer-brief.md b/skills/my-requirement-analysis/references/reviewer-brief.md
+deleted file mode 100644
+index 6384dd4..0000000
+--- a/skills/my-requirement-analysis/references/reviewer-brief.md
++++ /dev/null
+@@ -1,16 +0,0 @@
+-# 独立需求 Reviewer Brief
+-
+-向 reviewer 提供且只提供：
+-
+-- 用户原始输入，保持原样；
+-- 主 Agent 的理解摘要：目标、范围、明确约束、验收标准；
+-- 用户直接点名的最小文件或模块。
+-
+-Reviewer 独立形成理解，再按四项对比：
+-
+-1. 目标是否把示例、手段或类比误当任务本身；
+-2. 范围是否遗漏用户要求或无授权扩张；
+-3. 明确约束是否完整，约束之间是否冲突；
+-4. 是否存在会改变结果的多种合理解释。
+-
+-输出 `PASS | NEEDS_CLARIFICATION | MISUNDERSTANDING`。`PASS` 只需一行；非 PASS 只列会改变目标、范围、约束或验收的原文证据、偏差和最小澄清问题，不复述原始输入或逐项输出无问题维度。只评审需求理解，不评判实现方案。需求清晰时直接 PASS，不为显示价值制造歧义。
+diff --git a/skills/my-research/SKILL.md b/skills/my-research/SKILL.md
+index 7c06985..0876c30 100644
+--- a/skills/my-research/SKILL.md
++++ b/skills/my-research/SKILL.md
+@@ -6,13 +6,4 @@ disable-model-invocation: true
+ 
+ # My Research
+ 
+-先按[面向读者写作](references/shared/reader-first-writing.md)明确谁要用报告做什么决定；报告结论先行，并把证据强度、适用时间、分歧和对决定的含义放在读者容易找到的位置。
+-
+-1. 明确研究问题、决策问题、时间范围和所需可信度。
+-2. 优先官方文档、标准、源代码和第一方 API；每个关键结论追溯到原始来源。
+-3. 不向外部服务上传企业源码、内部日志或未公开业务信息。
+-4. 区分事实、推断、未知和建议；记录来源 URL、版本和访问日期。
+-5. 默认写入 `.agent/work/<topic>/researches/researches-<topic>-<time-or-sequence>.md`。
+-6. 项目已有正式研究文档位置时，先展示写回补丁，经用户确认后再修改。
+-
+-研究只提供证据，不替代产品或架构决策。
++阅读并执行[研究方法](references/shared/research-method.md)。
+diff --git a/skills/my-review-agent-rules/SKILL.md b/skills/my-review-agent-rules/SKILL.md
+deleted file mode 100644
+index 85eb81f..0000000
+--- a/skills/my-review-agent-rules/SKILL.md
++++ /dev/null
+@@ -1,79 +0,0 @@
+----
+-name: my-review-agent-rules
+-description: 对项目中的 Codex、Cursor 与 Claude Agent 指令做根本性只读审查；检查存在价值、宿主作用域、权威冲突、归宿和可执行性。
+-disable-model-invocation: true
+----
+-
+-# 根本性审查 Agent 项目规则
+-
+-只读审查项目级 Agent 指令，不修改规则，也不把“优化现有文字”预设为答案。普通代码、设计产物和 Skill 分别交给对应 review；个人全局规则只有在用户明确指定时才作为外部证据纳入。
+-
+-## 选择模式
+-
+-- **Rule Set Survey**：用户给出仓库或规则目录时，分别对 `codex`、`cursor`、`claude` 运行 inventory，盘点 Codex `AGENTS*`、Cursor `.cursorrules` 与 `.cursor/rules/**/*.mdc`、Claude `CLAUDE.md` 与 `.claude/rules/**/*.md`，以及会约束它们的共享标准。按源路径去重，但保留每个宿主的作用域关系。只报告集合级根因并给出 Deep Review 队列，不替每条规则下 Verdict。
+-- **Deep Review**：用户给出单条规则或紧密耦合规则组时，审查目标以及会改变其行为的上级、下级、共享标准、引用材料、重叠规则和确定性机制。
+-
+-Survey 只有在每个范围内规则源恰好进入一次 inventory，且其宿主、激活方式、声明作用域、覆盖关系与证据缺口均已记录时才是 `COMPLETE`。每个 Deep Review 候选必须有可定位的影响路径；否则 Survey 为 `INCONCLUSIVE`。
+-
+-## Deep Review
+-
+-### 1. 固定审查对象
+-
+-先按[项目规则解析](references/shared/adapters/project-rules.md)确定目标宿主。运行 `python3 <runtime_entry> inspect-rules --repo <repo> --agent <agent>`；有目标路径时逐项传入 `--path`。inventory 结果负责发现候选，不替代语义判断。多个目标路径分别检查适用性，不能把其中一个路径上的 `selected` 当作所有路径都生效。
+-
+-把目标、所有重叠或有 precedence 关系的规则、引用材料和相关确定性机制按[专项只读审查会话](references/shared/adapters/specialized-review-session.md)固定为一个 snapshot。完成条件：每个已解析行为依赖恰好映射到一个 snapshot 条目，或逐项标为 Evidence Gap。
+-
+-### 2. 重建 Rule Contract
+-
+-从真实请求、目标路径、规则消费者和行为证据重建：“在 X 情境中，该规则改变 Agent 的 Y 决定，从而产生 Z 可观察结果。”规则正文只是证据之一。无法建立契约时形成契约缺失 finding，不进入措辞审查。
+-
+-### 3. 判断存在价值与归宿
+-
+-对承重规则应用[第一性原理推理](references/shared/first-principles-reasoning.md)，依次检验：强 Agent 默认能力是否足够；内容是否只是知识参考；是否与另一规则重复；要求能否由 script、schema、CI 或 runtime 机械强制；是否确实属于 Agent 项目指令。主要机制必须能解释用户价值，每项承重职责只能有一个合理归宿。
+-
+-Deep Review Verdict：
+-
+-- `KEEP`：目标、归宿、作用域和机制成立，没有实质 finding。
+-- `TARGETED_FIX`：仍属于当前归宿，只需局部修复作用域、行为或文字。
+-- `REDESIGN`：目标成立，但规则机制或耦合结构需要根本重做。
+-- `MERGE`：与其他规则职责重复，应合并到一个权威来源。
+-- `RELOCATE`：仍是 Agent 指令，但宿主、目录或 precedence 层错误。
+-- `EXTERNALIZE`：内容是知识或参考，不应作为行为指令加载。
+-- `REPLACE_WITH_RUNTIME`：要求应由 script、schema、CI 或 runtime 机械强制。
+-- `RETIRE`：规则过时、无增量行为或净影响有害。
+-- `INCONCLUSIVE`：证据缺口会实质改变上述归宿判断。
+-
+-每种候选 Verdict 都要有接受或排除依据。
+-
+-### 4. 检查宿主适用性与权威
+-
+-按[指令权威](references/shared/instruction-authority.md)消解冲突，不把项目规则当成授权来源：
+-
+-- Cursor 的 `alwaysApply` 与合法 `globs` 可机械判断；`description` 必须记录相关性依据；无三种激活字段的是 `manual`，只有显式引用时适用；无效 metadata 不得静默丢弃。
+-- Codex 必须区分 `selected`、`shadowed` 与 `candidate`，并按目录 precedence 判断目标路径。
+-- Claude 的合法 `paths` 可机械判断；有效且无 `paths` 的规则为 always；无效 frontmatter 不得退化为 always。
+-- `target_match: null` 表示需要语义判断或显式引用，不表示适用，也不表示不适用。
+-
+-完成条件：目标规则的每种激活方式、覆盖边和权威冲突都已闭合为事实、finding 或会限制 Verdict 的 Evidence Gap。
+-
+-### 5. 走查并分级证据
+-
+-至少走查一个目标路径、非目标路径、冲突路径和失败路径。每个实际分支都映射到 case 与证据等级，或标为 Evidence Gap；未映射路径阻止受影响的 Verdict。
+-
+-- **static**：由文本、宿主语义或依赖推出；
+-- **observed**：有真实运行或失败记录；
+-- **comparative**：相同模型、reasoning、请求、snapshot 和权限下比较 baseline、当前规则与必要时的候选修订。
+-
+-只有 comparative 能证明规则相对 baseline 的行为增益。只有观察证据冲突，或增值争议会实质改变 Verdict 时，才能说明争议命题、影响、最小案例与成本，并在用户明确授权后运行 comparative。
+-
+-### 6. 最后检查指令设计
+-
+-只有存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，才逐句检查相关性、无效操作、重复、冲突、过度限定、不可执行要求和模糊完成条件。其他 Verdict 抑制会随归宿变化而消失的措辞建议。
+-
+-## Finding Gate 与输出
+-
+-finding 必须同时满足：存在可证明的失败路径或不变量；影响调用、作用域、权限、正确性、完成度或维护成本；位于固定审查单元内；指向可行动根因；不是普通偏好、无影响 style nit 或工具已可靠处理的问题；作者知道后大概率会修改。
+-
+-按 `FOUNDATIONAL`、`APPLICABILITY`、`BEHAVIORAL`、`INSTRUCTIONAL` 分类。同一失败链只保留最接近根因的一项；存在 `FOUNDATIONAL` finding 时抑制派生的作用域和措辞建议。
+-
+-按专项审查会话验证 snapshot 后再报告。Deep Review 先写 `Review-Unit`、`Target-Host`、`Evidence-Level` 与一个 Verdict；每个 finding 说明根因、失败路径、证据、影响和最小干预方向。Survey 只写 `COMPLETE | INCONCLUSIVE`、集合级 findings 和 Deep Review 队列。没有合格 finding 写 `No findings.`，不得把 static 通过写成行为有效。
+diff --git a/skills/my-review-agent-rules/agents/openai.yaml b/skills/my-review-agent-rules/agents/openai.yaml
+deleted file mode 100644
+index d011be3..0000000
+--- a/skills/my-review-agent-rules/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Review Agent Rules"
+-  short_description: "Root-cause review for project Agent rules"
+-  default_prompt: "Use $my-review-agent-rules to review this project's Agent instruction rules."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-review-artifact/SKILL.md b/skills/my-review-artifact/SKILL.md
+index 55f599a..26aa1f0 100644
+--- a/skills/my-review-artifact/SKILL.md
++++ b/skills/my-review-artifact/SKILL.md
+@@ -14,12 +14,12 @@ disable-model-invocation: true
+ 
+ 先明确产物的目标读者、用途和承重决策，再只采用真正适用的方法：
+ 
+-- 最终交付物：[最终态表达](references/composed/my-final-state-writing/COMPOSED.md)
+-- 读者需要据此理解或行动：[读者优先](references/composed/my-reader-first-writing/COMPOSED.md)
+-- 复杂关系、流程或状态需要视觉表达：[视觉沟通](references/composed/my-visual-communication/COMPOSED.md)
+-- 面向人的成篇文本：[自然表达](references/composed/my-humanizer/COMPOSED.md)
+-- 承重交付物需要来源、完整性与发布前检查：[产物最终化](references/composed/my-artifact-finalization/COMPOSED.md)
+-- `review_unit.artifact_kind` 为 `design`：[设计成立性](references/composed/my-review-design/COMPOSED.md)
++- 最终交付物：[final-state-writing](references/shared/final-state-writing.md)
++- 读者需要据此理解或行动：[reader-first-writing](references/shared/reader-first-writing.md)
++- 复杂关系、流程或状态需要视觉表达：[visual-communication](references/shared/visual-communication.md)
++- 面向人的成篇文本：[自然表达](references/shared/humanizer.md)
++- 承重交付物需要来源、完整性与发布前检查：[artifact-finalization](references/shared/artifact-finalization.md)
++- `review_unit.artifact_kind` 为 `design`：{{skill-call:my-review-design}}
+ 
+ 逐项处理 `review_unit.required_checks`：适用时审查，不适用时标记 `not-applicable` 并给出简短理由；不要为了覆盖规则而制造 finding。多个维度指向同一根因时合并为一个 finding，并保留最能说明影响的证据。
+ 
+diff --git a/skills/my-review-design/SKILL.md b/skills/my-review-design/SKILL.md
+index 4de8dda..0ef0824 100644
+--- a/skills/my-review-design/SKILL.md
++++ b/skills/my-review-design/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-review-design
+-description: 对已形成的 Spec、技术方案或架构设计做专项只读成立性评审；需要固定快照和综合交付验收时使用 my-review-artifact。
+-disable-model-invocation: true
++description: 在 my-to-spec、my-review-artifact 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # 评审已形成方案
+diff --git a/skills/my-review-design/agents/openai.yaml b/skills/my-review-design/agents/openai.yaml
+index 3b1fa72..912bae4 100644
+--- a/skills/my-review-design/agents/openai.yaml
++++ b/skills/my-review-design/agents/openai.yaml
+@@ -3,4 +3,4 @@ interface:
+   short_description: "Focused design-soundness review"
+   default_prompt: "Use $my-review-design to assess whether this formed design is sound and ready for implementation, without rewriting it."
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-review-skill/SKILL.md b/skills/my-review-skill/SKILL.md
+deleted file mode 100644
+index e0facbd..0000000
+--- a/skills/my-review-skill/SKILL.md
++++ /dev/null
+@@ -1,76 +0,0 @@
+----
+-name: my-review-skill
+-description: 对单个 Skill 做根本性只读审查，或分诊整个 Skill 集合；先判断存在价值与正确归宿，再检查行为和指令设计。
+-disable-model-invocation: true
+----
+-
+-# 根本性审查 Skill
+-
+-只读审查 Skill，不修改目标、发布结果或把“优化现有 Skill”预设为答案。合法结论包括保留、局部修复、重构、合并、外置为参考、改由 runtime 执行、退役，以及证据不足。
+-
+-## 选择模式
+-
+-- **Portfolio Survey**：用户给出一组或整个目录时，先固定范围并建立 Skill、共享参考、runtime 与调用者的完整 inventory，再找出职责重叠、孤立入口、调用冲突和重复事实来源，输出按影响排序的 Deep Review 队列。此模式不做逐句修改，也不替单个 Skill 下有效性结论。
+-- **Deep Review**：用户给出单个 Skill 时，审查它及所有会改变其行为的可达材料。一次只深审一个 Skill；需要审查多个时，先 Survey，再依次固定对象审查。
+-
+-Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inventory；其声明的调用者、被调用项、组合关系、共享材料和 runtime 边均已解析，或被逐项标记为证据缺口；每个 Deep Review 候选都有一条可定位的影响路径。任何未归档的范围内 Skill 或悬空关系都会阻止 Survey 完成。
+-
+-`critical`、近期修改或缺少行为证据只是排序信号，不自动授权 Deep Review 或 comparative。实际使用频率只接受可定位 trace 或用户确认；Git 修改次数不得冒充调用频率。
+-
+-## Deep Review
+-
+-### 1. 固定审查对象
+-
+-先解析目标宿主以及目标 Skill、`agents/`、可达 references、scripts、assets、调用者、被调用项、runtime、eval 和已知失败反馈，得到完整且按绝对路径稳定排序的文件列表，再按[专项只读审查会话](references/shared/adapters/specialized-review-session.md)建立 snapshot。只读取返回的 `review_unit`、`content_id` 和只读 `snapshot_path`，不得继续从 live path 取证。
+-
+-完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照并重跑审查。
+-
+-### 2. 重建 Job Contract
+-
+-从真实请求、调用者和行为证据重建“谁在什么情形调用它、它改变哪个 Agent 决定、产生什么可观察结果”。Skill 自己的 description 只是证据之一，不作为目标正确的证明。
+-
+-完成条件：能写出“当 X 时，该 Skill 通过改变 Y 决定，使 Z 结果更可靠”；无法写出时形成契约缺失候选，不进入文字审查。
+-
+-### 3. 存在性 Gate
+-
+-依次检验：强 Agent 默认能力是否已足够；内容是否只是外部参考；职责是否与另一 Skill 重合或只是其分支；确定性要求是否应由 script、schema 或 runtime 执行；是否确实需要独立调用。选出最合适的归宿，不假定现有 Skill 必须保留。
+-
+-完成条件：`KEEP | TARGETED_FIX | REDESIGN | MERGE | EXTERNALIZE | REPLACE_WITH_RUNTIME | RETIRE | INCONCLUSIVE` 每种结论都有接受或排除依据。
+-
+-### 4. 审查因果机制与边界
+-
+-对承重指令应用[第一性原理推理](references/shared/first-principles-reasoning.md)，建立从指令、Agent 判断和动作到可观察结果与用户结果的因果链，并用最小反事实检查 Skill 或额外规则是否真的增加结果可靠性；断链是无效操作、仪式步骤或错误补偿的候选。再把模型判断、共享规则、机械操作、硬不变量和产物模板分别归到 Skill、shared reference、script、runtime 和 asset，检查调用方式、职责所有权、事实来源及与宿主规则的冲突。
+-
+-完成条件：主要机制能解释用户价值，每项承重职责只有一个合理归宿。
+-
+-### 5. 走查并分级证据
+-
+-走查正常、边界和失败三种代表性请求，覆盖实际分支、材料读取、权限、暂停和完成条件。区分证据等级：
+-
+-- **static**：仅由文本、依赖或宿主机制推出；
+-- **observed**：有真实运行或失败记录；
+-- **comparative**：相同模型、reasoning、请求、快照和权限下，对比无 Skill、当前 Skill，以及需要时的候选修订版。
+-
+-只有 comparative 证据才能证明 Skill 相对 baseline 有效或无效；其余等级只陈述可证明的结构问题与风险。普通 Evidence Gap 不自动触发 comparative：只有观察证据互相冲突，或某项“Skill 相对 baseline 是否增值”的争议会实质改变 Verdict 时，Agent 才可提名。提名必须说明争议命题、对 Verdict 的影响、最小案例和预计成本；取得用户明确授权后才能运行，并且不给评估者预置怀疑点或期望答案。
+-
+-完成条件：正常、边界、失败三类请求均至少有一个代表 case；每条实际分支以及材料读取、权限、暂停和完成路径都映射到 case 与证据等级，或被明确列为会限制对应结论的 Evidence Gap。存在未映射路径时，不得进入该路径所影响的 Verdict。
+-
+-### 6. 最后检查指令设计
+-
+-仅当存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，读取并应用[优秀 Skill 设计参考](references/composed/my-writing-great-skills/COMPOSED.md)，检查调用、信息层级、完成条件、主导词、单一事实来源和失效模式。若结论是其他归宿，不输出即将随重构消失的文字建议。
+-
+-完成条件：所有进入报告的候选都通过下方 Finding Gate，并按根因去重。
+-
+-## Finding Gate
+-
+-候选必须同时满足：对调用、正确性、权限、完成度或维护成本有实质影响；有可证明的失败路径或不变量；位于审查对象内；指向可行动的根因；不是猜测、普通偏好、无影响 style nit 或工具已可靠覆盖的事项；作者知道后大概率会改变设计。同一失败链只保留最接近根因的一项，不限制通过 Gate 的真实发现数量。
+-
+-按干预杠杆归类：`FOUNDATIONAL`（存在性、目标、归宿）、`BEHAVIORAL`（真实分支结果）、`STRUCTURAL`（调用、组合、步骤、信息层级）、`INSTRUCTIONAL`（确实改变行为的文字）。存在 `FOUNDATIONAL` finding 时，抑制由它派生的下游措辞建议。
+-
+-## 输出
+-
+-输出前按专项审查会话验证并释放 snapshot。只有返回 `status: match` 才可发送报告；返回 `stale` 时丢弃结论、重建快照并重跑。
+-
+-先写 `Review-Unit`、`Target-Host`、`Evidence-Level` 与一个 Verdict。每个 finding 用一个短段落说明根因、失败路径或不变量、证据、影响及最小干预方向。只列会改变 Verdict 的 `Evidence Gaps`，并给出取得最终判断的最小 `Next Validation`。
+-
+-没有合格发现写 `No findings.`；缺少足以判断有效性的行为证据时用 `INCONCLUSIVE` 并报告当前可证明结论，不得把静态检查通过写成“Skill 已验证有效”，也不得默认要求 comparative。只有满足上述争议门槛时，才把授权请求作为 `Next Validation`。不复述完整审查过程、逐项通过清单、被拒绝候选或未经请求的改写稿。
+diff --git a/skills/my-review-skill/agents/openai.yaml b/skills/my-review-skill/agents/openai.yaml
+deleted file mode 100644
+index a3b6f06..0000000
+--- a/skills/my-review-skill/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Review Skill"
+-  short_description: "Root-cause review for Agent skills"
+-  default_prompt: "Use $my-review-skill to run a root-cause Deep Review of this skill."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-tdd/SKILL.md b/skills/my-tdd/SKILL.md
+index 281ba47..b1dda84 100644
+--- a/skills/my-tdd/SKILL.md
++++ b/skills/my-tdd/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-tdd
+-description: 以 red-green-refactor 循环进行测试驱动开发。
+-disable-model-invocation: true
++description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ ---
+ 
+ # 测试驱动开发
+diff --git a/skills/my-tdd/agents/openai.yaml b/skills/my-tdd/agents/openai.yaml
+index 5410e88..87f0e97 100644
+--- a/skills/my-tdd/agents/openai.yaml
++++ b/skills/my-tdd/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "TDD"
+   short_description: "Test-driven red-green-refactor"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-to-spec/SKILL.md b/skills/my-to-spec/SKILL.md
+index cd3f73f..89fc811 100644
+--- a/skills/my-to-spec/SKILL.md
++++ b/skills/my-to-spec/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-to-spec
+-description: 将当前对话整理为 Spec，并按项目配置保存或发布；不重新访谈，只综合已有讨论。
+-disable-model-invocation: true
++description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段的工作单元被调用。
+ ---
+ 
+ 本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
+@@ -20,7 +19,7 @@ disable-model-invocation: true
+ 
+ 5. 使用下列模板撰写 Spec。
+ 
+-6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，读取[设计成立性](references/composed/my-review-design/COMPOSED.md)并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
++6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，读取{{skill-call:my-review-design}}并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
+ 
+ 7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。修订版还须核对修订索引与前版、当前正文和验收一致，确认没有遗漏行为变化、把旧状态误写成当前要求，或让索引产生正文没有的约束。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
+ 
+diff --git a/skills/my-to-spec/agents/openai.yaml b/skills/my-to-spec/agents/openai.yaml
+index 549e6f7..4f43964 100644
+--- a/skills/my-to-spec/agents/openai.yaml
++++ b/skills/my-to-spec/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "To Spec"
+   short_description: "Turn a conversation into a spec"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-to-tickets/SKILL.md b/skills/my-to-tickets/SKILL.md
+index 68e8a01..e5b4e99 100644
+--- a/skills/my-to-tickets/SKILL.md
++++ b/skills/my-to-tickets/SKILL.md
+@@ -1,7 +1,6 @@
+ ---
+ name: my-to-tickets
+-description: 将计划、Spec 或当前对话拆成 tracer-bullet Ticket；每张声明阻塞边，并按项目配置保存或发布。
+-disable-model-invocation: true
++description: 在 my-to-spec、my-triage 流程中作为指定阶段的工作单元被调用。
+ ---
+ 
+ # 拆分 Ticket
+diff --git a/skills/my-to-tickets/agents/openai.yaml b/skills/my-to-tickets/agents/openai.yaml
+index 24605a5..dbfd916 100644
+--- a/skills/my-to-tickets/agents/openai.yaml
++++ b/skills/my-to-tickets/agents/openai.yaml
+@@ -2,4 +2,4 @@ interface:
+   display_name: "To Tickets"
+   short_description: "Split a plan into tracer-bullet tickets"
+ policy:
+-  allow_implicit_invocation: false
++  allow_implicit_invocation: true
+diff --git a/skills/my-triage/SKILL.md b/skills/my-triage/SKILL.md
+index 0f30f07..48a21de 100644
+--- a/skills/my-triage/SKILL.md
++++ b/skills/my-triage/SKILL.md
+@@ -51,7 +51,7 @@ disable-model-invocation: true
+ `my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 也不进入 triage。
+ 
+ - **外部 Tracker**：保留 Tracker 原生的类别、状态、评论与 Agent brief；`ready-for-agent` 仍表示该外部事项已附上可执行简报。
+-- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。随后读取 [my-to-tickets handoff 正文](references/composed/my-to-tickets/COMPOSED.md)；需要跨会话时输出 `{{skill-call:my-to-tickets}}` 并停止。`my-to-tickets` 负责生成具有完整 Spec/rules/agent/acceptance lineage 的 Ticket。
++- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。随后读取 {{skill-call:my-to-tickets}}；需要跨会话时输出 `{{skill-call:my-to-tickets}}` 并停止。`my-to-tickets` 负责生成具有完整 Spec/rules/agent/acceptance lineage 的 Ticket。
+ 
+ 读取既有本地 Ticket 时按 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。
+ 
+@@ -81,7 +81,7 @@ disable-model-invocation: true
+ 1. **收集上下文。** 阅读完整的 Issue 或 PR（正文、评论、标签、作者、日期；PR 还要读 diff）。解析既有分诊记录，避免重新询问已解决的问题。借助项目的领域词汇表探索代码库，遵循该区域的 ADR。对代码库执行两项检查：(a) **冗余性**——按领域概念（而不只是请求的措辞）搜索是否已有请求行为的实现，并报告搜索位置。若已存在，它是“已实现”的 `wontfix`（步骤 5）。(b) **既往拒绝**——阅读 `.out-of-scope/*.md`，并找出与本请求相似的记录。
+ 2. **提出建议。** 告知维护者类别和状态建议及理由，并给出与请求相关的简要代码库摘要——包括是否已实现。等待指示。
+ 3. **验证主张。** 在追问前，先检查主张是否成立。对于 Bug，按报告者的步骤复现。对于 PR，确认 diff 是否实现其声称的内容——检出它，并运行相关测试或命令。报告结果：已确认（附代码路径）、失败，或细节不足（这是强烈的 `needs-info` 信号）。已确认的验证会形成更有力的 Agent 简报。
+-4. **追问（如需要）。** 若请求还需充实，读取 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md) 与 [my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
++4. **追问（如需要）。** 若请求还需充实，读取 {{skill-call:my-grilling}} 与 {{skill-call:my-domain-modeling}}，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
+ 5. **应用结果：**
+    - `ready-for-agent` —— 发布 Agent 简报评论（[AGENT-BRIEF.md](AGENT-BRIEF.md)）。
+    - `ready-for-human` —— 使用与 Agent 简报相同的结构，但说明为何不可委派（判断调用、外部访问、设计决策、手动测试）。
+diff --git a/skills/my-visual-communication/SKILL.md b/skills/my-visual-communication/SKILL.md
+deleted file mode 100644
+index da7f0a3..0000000
+--- a/skills/my-visual-communication/SKILL.md
++++ /dev/null
+@@ -1,17 +0,0 @@
+----
+-name: my-visual-communication
+-description: 审查或改进面向人类文档中的视觉表达与图示。
+-disable-model-invocation: true
+----
+-
+-# 图示表达
+-
+-用于只读审查或撰写面向人类的课程、评审报告和说明文档，且图示能够比线性文字更准确、快速地解释复杂关系时。
+-
+-撰写前阅读并遵循[图示表达规则](references/shared/visual-communication.md)。该共享规则是唯一权威来源；不要在本 Skill 或产物中重复维护规则文本。
+-
+-## Review 模式
+-
+-用户要求 review、检查或审查已有产物时，只读评审，不修改文档或生成替代图。检查复杂结构、关系、顺序、分支、状态和差异是否因纯文字而难以理解；已有图示是否选型正确、只回答一个核心问题、紧邻对应结论，并由文字保留关键结论与约束；简单内容是否存在为画图而画图。
+-
+-只报告会明显降低理解准确性或效率的问题。每项给出位置、具体理解障碍、违反的规则及最小调整方向；同一表达选择引发的多个表象合并为一项。没有合格发现时写 `No findings.`。
+diff --git a/skills/my-visual-communication/agents/openai.yaml b/skills/my-visual-communication/agents/openai.yaml
+deleted file mode 100644
+index fbfcaf6..0000000
+--- a/skills/my-visual-communication/agents/openai.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-interface:
+-  display_name: "Visual Communication"
+-  short_description: "Review or create appropriate document visuals"
+-  default_prompt: "Use $my-visual-communication to review whether this document uses the right visual form."
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/skills/my-wayfinder/SKILL.md b/skills/my-wayfinder/SKILL.md
+index f080cee..bd552bb 100644
+--- a/skills/my-wayfinder/SKILL.md
++++ b/skills/my-wayfinder/SKILL.md
+@@ -49,8 +49,8 @@ disable-model-invocation: true
+ 
+ 需要 `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 或 `my-to-spec` 时，读取 `.agent/matt-workflow.md` 的 `composition_policy`，先区分内部方法与阶段交接：
+ 
+-- `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 是内部方法：两种策略都只加载当前阶段对应的 [my-grilling 正文](references/composed/my-grilling/COMPOSED.md)、[my-domain-modeling 正文](references/composed/my-domain-modeling/COMPOSED.md)、[my-research 正文](references/composed/my-research/COMPOSED.md)或 [my-prototype 正文](references/composed/my-prototype/COMPOSED.md)，执行后返回宿主，不输出另一条 Skill 调用。
+-- `my-to-spec` 是阶段交接：`automatic` 只在地图已完成且 Spec 阶段已获授权时读取 [my-to-spec 正文](references/composed/my-to-spec/COMPOSED.md)；`manual` 输出 `{{skill-call:my-to-spec}}` 后停止。
++- `my-grilling`、`my-domain-modeling`、`my-research`、`my-prototype` 是内部方法：两种策略都只加载当前阶段对应的 {{skill-call:my-grilling}}、{{skill-call:my-domain-modeling}}、[研究方法](references/shared/research-method.md)或 {{skill-call:my-prototype}}，执行后返回宿主，不输出另一条 Skill 调用。
++- `my-to-spec` 是阶段交接：`automatic` 只在地图已完成且 Spec 阶段已获授权时读取 {{skill-call:my-to-spec}}；`manual` 输出 `{{skill-call:my-to-spec}}` 后停止。
+ 
+ ### 绘制地图
+ 
+diff --git a/skills/my-writing-great-skills/GLOSSARY.md b/skills/my-writing-great-skills/GLOSSARY.md
+deleted file mode 100644
+index e784860..0000000
+--- a/skills/my-writing-great-skills/GLOSSARY.md
++++ /dev/null
+@@ -1,201 +0,0 @@
+-# 术语表——构建优秀 Skill
+-
+-这是使一个 Skill 出色的领域模型。Skill 的存在，是为了从随机系统中驯服出确定性；根本美德是**可预测性**，下列每个术语都是作用于它的杠杆。这是 [`writing-great-skills`](SKILL.md) 的已披露参考。
+-
+-术语按轴线分组：**调用**（如何抵达 Skill）、**信息层级**（如何组织内容）、**引导**（如何塑造 Agent 的运行时行为）及**剪枝**（如何保持精简）。每一种**失效模式**都与修复它的杠杆放在一起，并标记为*失效模式*。
+-
+-任何定义中的**粗体术语**也在本术语表中定义；请按其标题查找。
+-
+-## 可预测性
+-
+-Skill 使 Agent 在每一次运行中以相同*方式*行动的程度——过程相同，而非输出相同（头脑风暴 Skill 应当*可预测地*发散；它的 token 会变化，行为不会）。它是所有其他术语服务的根本美德；成本与可维护性是它的症状，而不是竞争对手。
+-
+-*避免使用*：一致性、可靠性、健壮性、输出确定性
+-
+-## 调用
+-
+-如何抵达一个 Skill，以及选择时需要付出的两类负荷。
+-
+-### 模型调用
+-
+-宿主 policy 允许模型隐式选择的 Skill。**描述**帮助候选匹配，但不是调用开关；真正的开关是目标宿主的 invocation policy。模型调用用候选上下文与误路由风险交换自主发现能力。
+-
+-*避免使用*：能力、工具、功能
+-
+-### 用户调用
+-
+-宿主 policy 要求显式选择的 Skill。它仍保留准确的**描述**供 UI、搜索和人工判断使用，但描述不会绕过 policy 触发模型调用。其他 Skill 若需复用其方法，依赖 composition 与 composed-body；若需把下一阶段交给用户，输出可移植调用宏。
+-
+-*避免使用*：流程、工作流、命令
+-
+-### 描述
+-
+-Skill 的宿主可见能力摘要。宿主允许隐式调用时，它参与候选匹配；宿主禁止隐式调用时，它服务 UI、搜索和人工选择。它影响发现质量与候选**上下文负荷**，但其存在本身不决定调用模式。
+-
+-*避免使用*：frontmatter、摘要
+-
+-### 上下文指针
+-
+-保留在 Agent 上下文中的参考，它指明某项上下文外材料，并编码抵达它的条件。**描述**是顶层上下文指针（上下文窗口 → Skill）；指向已披露文件的指针是低一层的同一对象。决定 Agent*何时*抵达及抵达*多可靠*的是它的措辞，而不是目标。必须取得的目标若藏在措辞薄弱的指针后，是一个方差 bug：先修复措辞；仅当强化失败时才把材料内联。
+-
+-*避免使用*：链接、引用、导入
+-
+-### 上下文负荷
+-
+-候选 Skill 的**描述**进入 Agent 上下文时造成的 token 与注意力成本。宿主如何选择和加载候选决定实际成本；不能通过删除用户调用 Skill 的准确摘要来假装成本为零。
+-
+-*避免使用*：token 成本、上下文膨胀
+-
+-### 认知负荷
+-
+-**用户调用** Skill 施加在人类身上的成本——必须在脑中保留什么：有哪些 Skill，以及何时抵达每一个（人类是索引）。**模型调用**借由 Agent 可发现性移除它；它也是拆分出更多用户调用 Skill 的制动器。它不是要最小化的成本：它是人类能动性的代价，也是有些 Skill 保持用户调用的原因。在人类判断重要处承担它；不重要处则移除它。
+-
+-*避免使用*：人类索引、负担、开销
+-
+-### 路由 Skill
+-
+-一项**用户调用** Skill，它的工作是指向其他显式入口——逐一说明其名称及何时抵达——使人类只需记住一个入口。它只输出下一跳的可移植调用宏并停止，不执行目标 Skill。这是用户调用 Skill 增多时**认知负荷**的解法。
+-
+-*避免使用*：分发器、菜单、注册表、索引、路由流程
+-
+-### 粒度
+-
+-划分 Skill 的精细程度。更细的划分会消耗两类负荷之一：更多**模型调用** Skill 消耗**上下文负荷**（更多描述挤占窗口并竞争注意力）；更多**用户调用** Skill 消耗**认知负荷**（人类要记住和抵达的更多）。两种切分指导划分。按**调用**，当有不同的**主导词**可独自触发它——你确实在提示中使用的触发词——时，拆出模型调用 Skill。按**序列**，在需要隐藏某一步的**完成后步骤**时拆分一串**步骤**，因为在它自己的上下文中隔离该步骤会清除后续内容。警惕反向操作：合并序列会将每一步的完成后步骤暴露给后续步骤，招致提前完成。
+-
+-*避免使用*：分块、模块化
+-
+-## 信息层级
+-
+-Skill 内容的组织方式，以及每一项应在梯子上放多低。
+-
+-### 信息层级
+-
+-按 Agent 对它的即时需要程度排序的 Skill 内容——一架单独的梯子，由两种切分产生：文件内或指针后，以及步骤或参考。层级为：
+-
+-- **步骤**——文件内，首要
+-- **参考**，文件内——次要
+-- **参考**，已披露——在**上下文指针**后
+-
+-没有**步骤**的 Skill 只使用后两层——这常是正当的扁平同级集合（例如审查的每一条规则同处一层），并非坏味道。层级独立于调用：无论内容全是步骤、全是参考还是两者兼具，Skill 都可以模型调用或用户调用。当 Skill 有步骤时，本应披露的文件内参考会掩埋它们，使注意到它们变成掷硬币——这是方差杠杆，而不只是可读性问题。让梯子顶部清晰；尽可能将内容沿梯子下推。
+-
+-*避免使用*：结构、组织、布局
+-
+-### 步骤
+-
+-Agent 按顺序执行的动作——当 Skill 有它们时，是内容的首要层级，也是它们在 SKILL.md 中赢得位置的部分。不是每个 Skill 都有步骤：一个 Skill 可以全是步骤（`tdd`）、全是**参考**（审查），或两者兼具，与调用无关。每一步以清晰或模糊的**完成条件**结束。
+-
+-*避免使用*：工作流、指令、编排
+-
+-### 参考
+-
+-Agent 按需查阅的材料——定义、事实、参数、示例、条件指令。当 Skill 有**步骤**时它次于步骤；当 Skill 没有步骤时它就是全部内容；或它完全位于任何 Skill 之外——参见**外部参考**。它通过**上下文指针**抵达，是**渐进式披露**的首要候选。
+-
+-*避免使用*：辅助材料、文档、背景
+-
+-### 外部参考
+-
+-位于 Skill 系统之外的**参考**——普通文件，没有**描述**，没有**步骤**，不可调用——任一 Skill 都可以指向它。它是无需自行触发的共享参考的归宿，也是两项**用户调用** Skill 唯一能使用的共享归宿，因为二者都没有描述，不能互相触发。
+-
+-*避免使用*：文档、资源、知识库
+-
+-### 渐进式披露
+-
+-将**参考**沿梯子下移——从 SKILL.md 移至**上下文指针**之后——以使顶层保持清晰。它主要不是 token 优化；它是保护**信息层级**的方式。它由**分支**许可：披露只有部分分支需要的内容，内联每条路径需要的内容；若指针在必须取得的材料上触发不可靠，强化措辞，只有失败时才将材料拉回内联。
+-
+-*避免使用*：延迟加载、分块
+-
+-### 共置
+-
+-将 Agent 同时需要的材料放在同一位置——把概念的定义、规则与注意事项放在一个标题下，而非分散于文件中——使阅读一部分时同时获得相邻内容。它是**信息层级**的文件内伙伴：层级决定一项内容放*多低*，共置决定它抵达后*与什么放在一起*。不存在一套用于**参考**正文的正确格式公式；检验是 Skill 应读起来像为 Agent 编写的文档，而分组材料在分散材料不具备这种效果时就应如此。它不同于**重复**：重复是在两处复述一个含义，分散则是将一个含义碎裂到多处。
+-
+-*避免使用*：分组、聚类、内聚
+-
+-### 蔓延
+-
+-*失效模式。* 一个单纯过长的 Skill——SKILL.md 的行数太多——与这些行是否过时或重复无关。即使全部内容都活跃且唯一，Skill 也会蔓延。它耗费可读性（Agent 在行动前要穿过更多内容，注意力在多余内容上变薄）、可维护性（每增加一行就多一行要保持**相关**）和 token。解法是**信息层级**：在**上下文指针**后下推**参考**，并按**分支**或序列拆分，使每条路径只携带所需内容。它不同于**沉积**（来自过时积累的长度）和**重复**（来自反复含义的长度）——无论原因，蔓延就是长度本身。
+-
+-*避免使用*：膨胀、长度、尺寸、冗长
+-
+-## 引导
+-
+-将 Agent 运行时行为塑向**可预测性**的杠杆。
+-
+-### 分支
+-
+-Skill 可被调用的一种不同方式——它处理的一个情形——因此不同运行会穿过不同路径。步骤很多的 Skill 可带有多个分支；线性 Skill 没有分支。
+-
+-*避免使用*：路径、情形、分叉
+-
+-### 主导词
+-
+-模型预训练中已有的紧凑概念——也称为 *Leitwort*——Agent 在执行 Skill 时借它思考。它通过调动模型已有先验，用最少 token 编码一项行为原则（例如 *lesson*、*proximal zone of development*、*fog of war*、*tracer bullets*）。应把它作为 token 反复出现，绝非作为句子反复出现；它在 Skill 中累积为分布式定义，并锚定整片行为区域。创造自己的词也可行，前提是清晰定义；但自造词不会调动先验——你要用定义 token 支付预训练词免费提供的东西。先使用已有词。
+-
+-主导词两次服务于**可预测性**。在正文中，它锚定**执行**——概念每次出现，Agent 都抵达相同行为；在扁平参考中，它将注意力聚焦在要寻找的一类事物，为每次运行调动正确检查。在**描述**中，它锚定**调用**——不仅在 Skill 内：当同一词出现在你的提示、文档和代码库中，Agent 会将共享语言与 Skill 连接，更可靠地触发它。用你真正会在想要该 Skill 时使用的主导词来书写描述。
+-
+-*避免使用*：关键字、术语、主题
+-
+-### 完成条件
+-
+-告知 Agent 一项工作单元已完成的条件——它据以判断的目标。两项性质使它成为杠杆，而非仅是一种质量。其**清晰度**（Agent 能否分辨完成与未完成？）抵抗**提前完成**——模糊的界限（“已理解”）允许 Agent 宣布完成并滑到下一步；该轴需要*步骤*才能生效，因为提前完成是步骤之间的失效。其**要求度**（它要求多少）设定**基础工作**——“已说明每一个修改的模型”会在“生成变更清单”不会的地方强制彻底工作；此轴*不*受步骤约束：它也可约束一组扁平参考，这正是没有步骤的 Skill 仍可带有穷尽门槛（“应用每一条规则”）的方式。最强的条件既可检查又穷尽。
+-
+-*避免使用*：完成条件、退出条件、停止规则
+-
+-### 基础工作
+-
+-Agent 在单一步骤内暗中所做的工作——读文件、探索代码库、变更、挖掘所需内容，而不是把它卸给用户。它存在于步骤结构之下：从不写成自己的步骤，潜藏在措辞中，由 Agent 而非 Skill 控制。它是**完成后步骤**跨步骤拉力在单步骤内的对应物。由**主导词**（*comprehensive*、*thorough*）或要求工作穷尽的**完成条件**提升——包括对扁平参考应用要求度轴，它驱动一个扁平参考 Skill 覆盖全部层级。当需求缺失，或**提前完成**截短步骤时，它会变薄。
+-
+-*避免使用*：范围、投入、勤勉、覆盖率
+-
+-### 完成后步骤
+-
+-当前步骤之后的**步骤**。它们可见时会把 Agent 向前拉入**提前完成**——看得越多，拉力越强；防御方法是把步骤序列拆成两段，从而隐藏它们。
+-
+-*避免使用*：视野、战争迷雾、前瞻
+-
+-### 提前完成
+-
+-*失效模式。* 在当前步骤真正完成前结束它，因为 Agent 的注意力从工作滑向了完成。它是步骤之间的失效：需要存在**步骤**才会发生——没有步骤的 Skill 过早退出并非提前完成，而是在未满足需求下的稀薄**基础工作**。这是两股力量的拉锯：可见的**完成后步骤**（向前拉力）和**完成条件**的清晰度（阻力——清晰、可检查的门槛能守住；模糊门槛会失守）。模糊是必要条件：清晰界限无论后续步骤可见多少都能抵抗拉力，所以从不匆忙的步骤不需要防御。有两个杠杆可守住会匆忙的步骤，但要按顺序使用：**先收紧界限**——这是局部且廉价的。仅当条件不可避免地模糊，*并且*确实观察到匆忙时，才**隐藏后续步骤**——隐藏只有跨越真实上下文边界（用户调用交接或子 Agent 派发）才有效；内联模型调用会让后续步骤留在上下文中，无法清除任何内容。它是基础工作变薄的一种原因，但不同于它：即使步骤运行至完全完成，基础工作仍可能变薄。
+-
+-*避免使用*：过早闭合、匆忙、赶工、走捷径
+-
+-### 否定
+-
+-*失效模式。* 通过禁止来引导——告诉 Agent*不要*做什么——会把被禁止行为拖进上下文，使它更容易可得，而不是更难。*不要想一头大象*，上下文里就只剩大象；*永远不要写冗长注释*，冗长正是 Agent 刚读到的模式。否定是一个弱修饰词，会被强烈激活的概念压过，因此禁令半读起来像是在指示做那件事。它的**主导词**是*大象*：禁令带入框架的任何对象。解法：提示**正向**目标——描述目标行为（“写一行注释”），使禁止的行为从未被说出。禁止只有作为无法正向表述的行为的硬护栏时才配存在；即使如此，也应与正向目标配对，使注意力落在应做之事上。
+-
+-*避免使用*：讽刺反弹、不提示、粉红大象
+-
+-## 剪枝
+-
+-保持 Skill 精简——每一种补救措施都与它修复的失效配对。
+-
+-### 单一事实来源
+-
+-每层含义恰好位于一个权威位置的理想状态，因此改变 Skill 行为时只需改一处。**重复**是对它的违背。
+-
+-*避免使用*：归宿、规范位置
+-
+-### 重复
+-
+-*失效模式。* 同一含义有多个**单一事实来源**。它消耗维护（改一处就必须改其他处）、消耗 token，并抬高突出度——重复一个含义会让它在层级上加权超过真实等级。它是**主导词**的意外反面：主导词通过重复 token 有意地提升注意力，绝不重复含义。
+-
+-*避免使用*：重复陈述、冗余
+-
+-### 相关性
+-
+-一行是否仍与 Skill 的工作有关——决定保留什么的镜头。一行失去相关性，要么是从未与任务有关（纯粹说明，或本应披露的**分支**），要么是变得过时：它描述的行为或世界改变后逐渐失准。较短的 Skill 更容易保持相关，因为检查每一行的成本更低。它不同于**无效操作**：相关性问的是一行是否与任务有关，而不是它是否改变行为。
+-
+-*避免使用*：承重、陈旧、新鲜度
+-
+-### 沉积
+-
+-*失效模式。* 旧内容层在 Skill 中沉淀而从不清除，因为添加感觉安全、删除感觉有风险——于是过时和无关的行积累起来，你不得不向下挖穿它们才能找到仍活跃的内容。没有剪枝纪律的任何 Skill 的默认命运；是**相关性**的缓慢侵蚀，与**重复**反复同一含义不同。
+-
+-*避免使用*：积累、膨胀、杂物、腐烂
+-
+-### 无效操作
+-
+-*失效模式。* 一条指令不改变任何事，因为模型默认已经会这样做；你付出负荷来告诉它本会做的事。测试是：与默认值相比，这一行会改变行为吗？一行可以完全**相关**却仍是无效操作。使**主导词**免费有效的同一先验，也使无效操作毫无价值。
+-
+-主导词是一种*技巧*；无效操作是对一行的*判决*——二者交叉。一个弱到无法击败默认值的主导词就是无效操作（当模型已经相当彻底时的 *be thorough*），修复是换一个能通过判决的更强词（*relentless*），不是改用其他技巧。因此，无效操作测试——与默认值相比，这一行会改变行为吗？——也是评定主导词是否配得上反复出现的办法。这是模型相对的，不是读者相对的：两人若对一行是否无效操作意见不同，分歧的是默认值，应通过运行 Skill 而非辩论解决。
+-
+-*避免使用*：冗余指令、重述显而易见之事、絮叨
+diff --git a/skills/my-writing-great-skills/SKILL.md b/skills/my-writing-great-skills/SKILL.md
+deleted file mode 100644
+index 2920149..0000000
+--- a/skills/my-writing-great-skills/SKILL.md
++++ /dev/null
+@@ -1,91 +0,0 @@
+----
+-name: my-writing-great-skills
+-description: 编写或从指令设计角度改进可预测、精简且可验证的个人 Skill。
+-disable-model-invocation: true
+----
+-
+-# My Writing Great Skills
+-
+-本 Skill 只负责 Skill 的调用描述、信息层级、完成条件、措辞和可验证性。它不判断 Skill 是否应存在、是否职责重叠、是否应迁入 runtime，也不凭静态文字证明行为有效；这些属于 `my-review-skill`。直接以 `review` 使用时，只输出这一层的指令设计发现，不扩张为根本性审查。
+-
+-Skill 的存在，是为了从随机系统中驯服出确定性。根本美德是 **可预测性**：每一次运行采用相同的**过程**，而不是产出相同的结果；下列每个杠杆都服务于它。
+-
+-编写 Skill 时，把每一行都视为强 Agent 会认真执行的约束：逐行判断它是否改变必要行为，删除默认能力已经覆盖的说明，并消除重复、冲突与过度限定。模型越来越智能意味着规则要更谨慎、更精简，而不是堆叠更多限制。这项逐行必要性原则可借用于起草 MDC，但 Agent 项目规则的存在性、宿主作用域、权威与冲突审查属于 `my-review-agent-rules`。
+-
+-**粗体术语**在 [`GLOSSARY.md`](GLOSSARY.md) 中定义；请查阅该文件获得完整含义。
+-
+-## 调用
+-
+-调用能力由**宿主 policy**决定，不由 `description` 是否存在决定。`description` 始终是宿主可见的能力摘要；宿主允许隐式调用时，它也参与候选匹配，宿主禁止隐式调用时，它仍服务 UI、搜索和人工选择，但不会自行授权模型调用。
+-
+-- **模型调用**：宿主 policy 允许隐式选择。描述使用精简、可区分的触发条件，代价是候选上下文与误路由风险。
+-- **用户调用**：宿主 policy 要求显式选择。Cursor 与 Claude 使用 `disable-model-invocation: true`；Codex 使用 `agents/openai.yaml` 的 `allow_implicit_invocation: false`。此时仍保留一行准确 description，不把它误当成自动调用开关。
+-
+-另一项 Skill 抵达它时，使用 composition edge 与 composed-body 指针；需要交给用户显式选择时，在可移植源码中使用 `{{skill-call:my-name}}`，由安装投影生成目标宿主语法。
+-
+-当用户调用的 Skill 多到超出你的记忆能力时，堆积的认知负荷可由**路由 Skill**解决：一个用户调用的 Skill，列出其他 Skill 及各自应在何时使用。
+-
+-## 编写描述
+-
+-允许隐式调用时，**描述**有两项工作：说明 Skill 是什么，并列出应触发它的**分支**。显式调用时，它只需准确概括能力。无论哪种模式，描述都应比正文更严格删减：
+-
+-- **把 Skill 的主导词前置**——描述在此承担调用工作。
+-- **一个分支只保留一个触发条件。** 把同一分支换个名字的同义说法是**重复**——“使用 TDD 构建功能……要求测试先行开发”是在重复同一个分支。应合并它们；只保留真正不同的分支。
+-- **删去正文已经具备的身份说明。** 描述仅保留触发条件，以及任何“当另一项 Skill 需要……”的抵达条款。
+-
+-## 信息层级
+-
+-Skill 由两类可自由混合的内容构成：**步骤**和**参考**。它可以全是步骤、全是参考，或两者兼具。核心决策是用哪一种，以及每种应在**信息层级**的何处——这是一架按 Agent 对材料的即时需要程度排序的梯子：
+-
+-1. **Skill 内步骤**——`SKILL.md` 中按顺序执行的动作，是首要层级：Agent 要做什么、按什么顺序做。每一步以**完成条件**结束，即判定工作完成的条件。条件应当*可检查*（Agent 能否区分完成与未完成？）；在重要处还应当*穷尽*（“已说明每一个修改的模型”，而不是“生成变更清单”），因为模糊条件会招致**提前完成**。
+-2. **Skill 内参考**——`SKILL.md` 中按需查阅的定义、规则或事实。它常常是正当的扁平同级集合（例如一次审查中的所有规则同处一层）——这没有问题，不是坏味道。*本 Skill 全是参考。*
+-3. **外部参考**——从 `SKILL.md` 推送到单独文件、通过**上下文指针**抵达的参考，只在指针触发时加载。（范围从*已披露*参考——如仍属于该 Skill 的同级 `GLOSSARY.md`——到位于 Skill 系统外、可被任一 Skill 指向的完整**外部参考**。）
+-
+-要求严格的完成条件会驱动彻底的**基础工作**——Agent 在工作中进行的挖掘——无论 Skill 是否有步骤皆如此；因为“应用每一条规则”对扁平参考的约束，与“完成每一步”对顺序步骤的约束同样有效。
+-
+-下推得太少，顶层会膨胀；下推得太多，又会隐藏 Agent 实际需要的材料。这种张力正是全部决策所在。
+-
+-**渐进式披露**是沿梯子向下移动——从 `SKILL.md` 移至链接文件——从而让顶层保持清晰。机制：在 Skill 文件夹中放置一个以内容命名的链接 `.md` 文件（本 Skill 将完整定义披露到 `GLOSSARY.md`）。有些 Skill 有多种用法，每种不同用法都是一个**分支**：不同运行走过其中不同路径。分支是最干净的披露检验：每个分支都需要的内容内联，只有部分分支需要的内容放到指针之后。**上下文指针**的*措辞*而非目标决定 Agent 在何时、以多高可靠性抵达材料。
+-
+-梯子决定一项内容应当*下放多远*，而**共置**决定它到达该处后*与什么放在一起*：应将一个概念的定义、规则与注意事项置于同一标题下，而非分散各处；如此阅读某一部分就会同时带上邻近内容。
+-
+-## 何时拆分
+-
+-**粒度**是划分 Skill 的精细程度，每一次切分都要消耗两类负荷之一，因此只能在切分值得时进行。有两种切分：
+-
+-- **按调用拆分**——当存在一个应当独自触发的不同**主导词**，或另一项 Skill 必须抵达它时，拆出一个**模型调用**的 Skill。新 Skill 始终加载的**描述**会消耗**上下文负荷**，因此这种独立可达性必须值得付出代价。
+-- **按序列拆分**——当仍在前方的**步骤**（某一步的**完成后步骤**）会诱使 Agent 仓促完成眼前的一步（**提前完成**）时，拆开一串步骤。让后续步骤离开视野，能促使 Agent 在当前任务上做更多**基础工作**。
+-
+-## 剪枝
+-
+-让每层含义保持在**单一事实来源**中：一个权威位置，因此变更行为时只需改一处。
+-
+-生成计划、Spec 或 Ticket 的 Skill 复用[最终态写作](references/shared/final-state-writing.md)，不重复定义这项规则。
+-
+-逐行检查**相关性**：它是否仍与该 Skill 的工作有关？
+-
+-接着逐句搜寻**无效操作**，而非只逐行检查：孤立地对每个句子进行无效操作测试；一个句子未通过时，删除整句而不是仅删几个词。要果断——多数未通过的散文应被删除，而不是改写。
+-
+-## 主导词
+-
+-**主导词**是模型预训练中已有的紧凑概念，Agent 在执行 Skill 时会借其思考（例如 *lesson*、*fog of war*、*tracer bullets*）。它会在全文反复出现（但不一定如此——强有力的主导词可能只需一次），累积成分布式定义，并以最少 token 锚定整片行为区域，因为它会调动已有先验。
+-
+-它以两种方式服务可预测性。在正文中，它锚定**执行**：Agent 每次看到该词，都会抵达相同行为。在描述中，它锚定**调用**：当同一个词出现在你的提示、文档和代码中，Agent 会将这种共享语言与该 Skill 连接起来，更可靠地触发它。
+-
+-寻找重构 Skill 以采用主导词的机会。在三处完整拼出的三元组（**重复**）、一条描述花一整句指向一个想法——都在等待被**折叠**成单一 token。示例：
+-
+-- “快速、确定、低开销” -> *tight*——把某一阶段反复表述的一项质量——折叠为一个预训练词（一个 *tight* 循环）。
+-- “你相信的循环” -> *red*——将模糊的门槛转换为二元、可观察的状态（循环会在 bug 上变为 *red*，或者不会）。
+-
+-你会赢得两次：token 更少，且 Agent 的思考有了更锐利的挂钩。假设每个 Skill 都藏有能被主导词淘汰的重述——去找出来。
+-
+-## 失效模式
+-
+-用它们诊断用户可能遇到的 Skill 问题。
+-
+-- **提前完成**——在一步真正完成前结束它，注意力滑向了*完成这件事*。按顺序防御：先收紧完成条件（廉价、局部）；仅当条件无法进一步变清晰且确实观察到匆忙时，才通过拆分隐藏完成后步骤（序列切分）。
+-- **重复**——同一含义存在于多个位置。它消耗维护与 token，并把某个含义在层级中的突出度抬高到超过其真实等级。
+-- **沉积**——由于添加看似安全、删除看似有风险而沉淀下来的过时层。没有剪枝纪律的任何 Skill 的默认命运。
+-- **蔓延**——即使每一行都活跃且唯一，Skill 仍然太长。它损害可读性与可维护性并浪费 token。解法是梯子：在指针后披露**参考**，并按**分支**或序列拆分，使每条路径只携带它需要的内容。
+-- **无效操作**——模型默认已经会遵守的一行，所以你付出负荷却没有传达任何内容。测试是：与默认行为相比，它是否改变了行为？弱主导词（模型已经相当彻底时的 *be thorough*）是无效操作；修复方式是使用更强的词（*relentless*），而不是换一种技巧。
+-- **否定**——通过禁止来引导会适得其反：*不要想一头大象*会说出大象，让它更容易被想到，而不是更难。应提示**正向**目标——陈述目标行为，使被禁止的行为不被说出；只有在无法正向表述的硬护栏中才保留禁止，即便如此也应与要做什么配对。
+diff --git a/skills/my-writing-great-skills/agents/openai.yaml b/skills/my-writing-great-skills/agents/openai.yaml
+deleted file mode 100644
+index d677a13..0000000
+--- a/skills/my-writing-great-skills/agents/openai.yaml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-interface:
+-  display_name: "Writing Great Skills"
+-  short_description: "Principles for predictable skills"
+-policy:
+-  allow_implicit_invocation: false
+diff --git a/tools/workflow_lib/composition.py b/tools/workflow_lib/composition.py
+index ee3b6d4..e3a711a 100644
+--- a/tools/workflow_lib/composition.py
++++ b/tools/workflow_lib/composition.py
+@@ -4,8 +4,6 @@ from __future__ import annotations
+ 
+ import heapq
+ import json
+-import re
+-import shutil
+ from dataclasses import dataclass
+ from pathlib import Path
+ 
+@@ -20,69 +18,6 @@ class CompositionError(RuntimeError):
+     """Raised when Skill composition declarations are invalid."""
+ 
+ 
+-_MARKDOWN_LINK = re.compile(
+-    r"(?P<prefix>!?\[[^\]]*\]\()(?P<target><[^>]+>|[^)\s]+)(?P<suffix>\))"
+-)
+-_COMPOSED_METADATA = {"name", "description", "disable-model-invocation"}
+-
+-
+-def _strip_composed_frontmatter(text: str) -> str:
+-    """Remove Skill registration metadata from a read-only composed copy."""
+-    lines = text.splitlines(keepends=True)
+-    if not lines or lines[0].strip() != "---":
+-        return text
+-    try:
+-        end = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
+-    except StopIteration:
+-        return text
+-
+-    retained = [
+-        line
+-        for line in lines[1:end]
+-        if line.split(":", 1)[0].strip() not in _COMPOSED_METADATA
+-    ]
+-    if not any(line.strip() and not line.lstrip().startswith("#") for line in retained):
+-        return "".join(lines[end + 1:]).lstrip("\n")
+-    return "---\n" + "".join(retained) + "---\n" + "".join(lines[end + 1:])
+-
+-
+-def _rewrite_relative_skill_links(text: str) -> str:
+-    """Point copied Markdown links at non-invocable composed skill bodies."""
+-
+-    def rewrite_line(line: str) -> str:
+-        def replace(match: re.Match[str]) -> str:
+-            target = match.group("target")
+-            wrapped = target.startswith("<") and target.endswith(">")
+-            value = target[1:-1] if wrapped else target
+-            if value.startswith(("http://", "https://")):
+-                return match.group(0)
+-            path, separator, fragment = value.partition("#")
+-            if not path.endswith("SKILL.md"):
+-                return match.group(0)
+-            replacement = path[:-len("SKILL.md")] + "COMPOSED.md"
+-            if separator:
+-                replacement += separator + fragment
+-            if wrapped:
+-                replacement = f"<{replacement}>"
+-            return f"{match.group('prefix')}{replacement}{match.group('suffix')}"
+-
+-        return _MARKDOWN_LINK.sub(replace, line)
+-
+-    rewritten: list[str] = []
+-    fence: str | None = None
+-    for line in text.splitlines(keepends=True):
+-        stripped = line.lstrip()
+-        marker = "```" if stripped.startswith("```") else "~~~" if stripped.startswith("~~~") else None
+-        if marker is not None:
+-            fence = None if fence == marker else marker if fence is None else fence
+-            rewritten.append(line)
+-        elif fence is None:
+-            rewritten.append(rewrite_line(line))
+-        else:
+-            rewritten.append(line)
+-    return "".join(rewritten)
+-
+-
+ @dataclass(frozen=True)
+ class DependencyEdge:
+     skill: str
+@@ -137,9 +72,9 @@ def load_composition_manifest(path: Path) -> CompositionManifest:
+             if not isinstance(when, str) or not when.strip():
+                 raise CompositionError(f"{caller}[{index}]: when 不能为空")
+             kind = edge_value["kind"]
+-            if kind not in {"method", "handoff"}:
++            if kind not in {"method", "handoff", "chain"}:
+                 raise CompositionError(
+-                    f"{caller}[{index}]: kind 必须为 method 或 handoff"
++                    f"{caller}[{index}]: kind 必须为 method、handoff 或 chain"
+                 )
+             if skill in seen:
+                 raise CompositionError(f"{caller}: 重复依赖 {skill}")
+@@ -201,8 +136,6 @@ def validate_composition_manifest(
+         stack.append(skill)
+         for edge in sorted(manifest.callers.get(skill, ()), key=lambda item: item.skill):
+             visit(edge.skill)
+-        for entry in sorted(manifest.routable_entries.get(skill, ())):
+-            visit(entry)
+         stack.pop()
+         state[skill] = 2
+ 
+@@ -246,52 +179,7 @@ def resolve_transitive_closure(
+     return result
+ 
+ 
+-def compose_dependency_references(
+-    skills_dir: Path,
+-    caller_staged_dir: Path,
+-    dependencies: list[str],
+-) -> list[str]:
+-    """Copy dependency Skills into a caller's generated reference tree."""
+-    composed_root = caller_staged_dir / "references" / "composed"
+-    skills_root = skills_dir.resolve()
+-    for dependency in dependencies:
+-        source = (skills_dir / dependency).resolve()
+-        target = composed_root / dependency
+-        if not source.is_relative_to(skills_root) or not source.is_dir():
+-            raise CompositionError(f"组合依赖不存在：{dependency}")
+-        if target.exists():
+-            raise CompositionError(f"组合目标已存在：{target}")
+ 
+-    written: list[str] = []
+-    for dependency in dependencies:
+-        source_path = skills_dir / dependency
+-        source = source_path.resolve()
+-        target = composed_root / dependency
+-        for path in sorted(source_path.rglob("*")):
+-            resolved = path.resolve()
+-            if (
+-                not resolved.is_relative_to(source)
+-                or not resolved.is_relative_to(skills_root)
+-            ):
+-                raise CompositionError(
+-                    f"{dependency}: 组合文件越界："
+-                    f"{path.relative_to(source_path)}"
+-                )
+-            if not path.is_file():
+-                continue
+-            relative = path.relative_to(source_path)
+-            if relative == Path("agents/openai.yaml"):
+-                continue
+-            if relative.name == "SKILL.md":
+-                relative = relative.with_name("COMPOSED.md")
+-            destination = target / relative
+-            destination.parent.mkdir(parents=True, exist_ok=True)
+-            if path.suffix == ".md":
+-                contents = _rewrite_relative_skill_links(path.read_text())
+-                if path.name == "SKILL.md":
+-                    contents = _strip_composed_frontmatter(contents)
+-                destination.write_text(contents)
+-            else:
+-                shutil.copy2(path, destination)
+-            written.append(str(destination.relative_to(caller_staged_dir)))
+-    return sorted(written)
++def model_invocable_skills(manifest: CompositionManifest | None) -> set[str]:
++    """Only declared call targets are model-invocable; routes are not calls."""
++    return {edge.skill for edges in manifest.callers.values() for edge in edges} if manifest else set()
+diff --git a/tools/workflow_lib/installer.py b/tools/workflow_lib/installer.py
+index 6956e4a..ff8c51a 100644
+--- a/tools/workflow_lib/installer.py
++++ b/tools/workflow_lib/installer.py
+@@ -39,7 +39,7 @@ _MANAGED_SKILL = re.compile(r"my-[a-z0-9-]+")
+ _RELEASE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+ _MANIFEST_FIELDS = {
+     "release_id", "upstream_id", "skills", "runtime", "composed",
+-    "shared_resources", "resource_consumers", "target_manifests",
++    "shared_resources", "resource_consumers", "target_manifests", "invocable_skills",
+ }
+ 
+ 
+@@ -491,7 +491,7 @@ def remove_verified_release(releases_dir: Path, release: Path) -> None:
+ 
+ 
+ def validate_skill_metadata_for_target(
+-    skill_dir: Path, target: str
++    skill_dir: Path, target: str, *, invocable: bool = False
+ ) -> None:
+     """Enforce target-specific manual invocation metadata."""
+     if target not in {"cursor", "claude", "codex"}:
+@@ -499,9 +499,8 @@ def validate_skill_metadata_for_target(
+     if target in {"cursor", "claude"}:
+         skill_file = skill_dir / "SKILL.md"
+         text = skill_file.read_text() if skill_file.is_file() else ""
+-        if not re.search(
+-            r"(?m)^disable-model-invocation:\s*true\s*$", text
+-        ):
++        disabled = re.search(r"(?m)^disable-model-invocation:\s*(\S+)\s*$", text)
++        if (disabled is not None if invocable else disabled is None or disabled.group(1) != "true"):
+             raise InstallError(
+                 f"{skill_dir.name}: {target} 目标要求 "
+                 "disable-model-invocation: true"
+@@ -509,12 +508,13 @@ def validate_skill_metadata_for_target(
+         return
+     metadata = skill_dir / "agents" / "openai.yaml"
+     text = metadata.read_text() if metadata.is_file() else ""
++    expected = "true" if invocable else "false"
+     if not re.search(
+-        r"(?m)^\s*allow_implicit_invocation:\s*false\s*$", text
++        rf"(?m)^\s*allow_implicit_invocation:\s*{expected}\s*$", text
+     ):
+         raise InstallError(
+             f"{skill_dir.name}: agents/openai.yaml 缺少 "
+-            "allow_implicit_invocation: false"
++            f"allow_implicit_invocation: {expected}"
+         )
+ 
+ 
+@@ -709,7 +709,8 @@ def _install_release(
+     if install_target is not None:
+         for skill_name in sorted(manifest["skills"]):
+             validate_skill_metadata_for_target(
+-                release / "skills" / skill_name, install_target
++                release / "skills" / skill_name, install_target,
++                invocable=skill_name in manifest.get("invocable_skills", [])
+             )
+     state_home.mkdir(parents=True, exist_ok=True)
+     skills_home = skills_home or state_home / "skills"
+diff --git a/tools/workflow_lib/portfolio.py b/tools/workflow_lib/portfolio.py
+deleted file mode 100644
+index dd4b63a..0000000
+--- a/tools/workflow_lib/portfolio.py
++++ /dev/null
+@@ -1,270 +0,0 @@
+-"""Strict portfolio contract for source Skills and their cross-file graph."""
+-
+-from __future__ import annotations
+-
+-import json
+-import re
+-from dataclasses import dataclass
+-from pathlib import Path
+-
+-from .composition import CompositionManifest, load_composition_manifest
+-
+-
+-class PortfolioError(RuntimeError):
+-    """Raised when the Skill portfolio is incomplete or internally inconsistent."""
+-
+-
+-_SKILL_NAME = re.compile(r"my-[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+-_CALL_MACRO = re.compile(r"\{\{skill-call:(my-[a-z0-9]+(?:-[a-z0-9]+)*)\}\}")
+-_RAW_HOST_CALL = re.compile(r"(?<![A-Za-z0-9_-])(?:/|\$)my-[a-z0-9-]+")
+-_DISCOVERABILITY = {"routed", "specialist", "administrative", "internal"}
+-_ROLES = {"entry", "method", "handoff", "review", "admin"}
+-_CRITICALITY = {"critical", "standard"}
+-_EVIDENCE_LAYERS = {"static", "deterministic", "fresh_agent", "real_project"}
+-
+-
+-@dataclass(frozen=True)
+-class PortfolioEntry:
+-    category: str
+-    discoverability: str
+-    roles: frozenset[str]
+-    criticality: str
+-    evidence: dict[str, object]
+-
+-
+-@dataclass(frozen=True)
+-class PortfolioManifest:
+-    version: int
+-    skills: dict[str, PortfolioEntry]
+-
+-
+-def _fail(location: str, message: str) -> PortfolioError:
+-    return PortfolioError(f"portfolio {location}: {message}")
+-
+-
+-def _validate_evidence(skill: str, value: object) -> dict[str, object]:
+-    if not isinstance(value, dict) or set(value) != _EVIDENCE_LAYERS:
+-        raise _fail(f"{skill}.evidence", "必须精确声明四个证据层")
+-    result: dict[str, object] = {}
+-    for layer, record in value.items():
+-        if not isinstance(record, dict):
+-            raise _fail(f"{skill}.evidence.{layer}", "必须是对象")
+-        if set(record) == {"planned_cases"}:
+-            cases = record["planned_cases"]
+-            if (
+-                not isinstance(cases, list)
+-                or not cases
+-                or any(not isinstance(case, str) or not case.strip() for case in cases)
+-                or len(cases) != len(set(cases))
+-            ):
+-                raise _fail(
+-                    f"{skill}.evidence.{layer}.planned_cases",
+-                    "必须是非空且不重复的验证计划 case id 数组",
+-                )
+-        elif set(record) == {"exemption"}:
+-            exemption = record["exemption"]
+-            required = {"reason", "risk", "release_condition"}
+-            if not isinstance(exemption, dict) or set(exemption) != required:
+-                raise _fail(
+-                    f"{skill}.evidence.{layer}.exemption",
+-                    "必须精确包含 reason、risk、release_condition",
+-                )
+-            if any(
+-                not isinstance(exemption[field], str) or not exemption[field].strip()
+-                for field in required
+-            ):
+-                raise _fail(f"{skill}.evidence.{layer}.exemption", "字段不能为空")
+-        else:
+-            raise _fail(
+-                f"{skill}.evidence.{layer}",
+-                "只能声明 planned_cases 或 exemption；场景计划不是执行证据",
+-            )
+-        result[layer] = record
+-    return result
+-
+-
+-def load_portfolio_manifest(path: Path) -> PortfolioManifest:
+-    """Load the strict version-1 portfolio manifest."""
+-    try:
+-        raw = json.loads(path.read_text())
+-    except (OSError, json.JSONDecodeError) as exc:
+-        raise PortfolioError(f"portfolio 清单无法读取：{path}") from exc
+-    if not isinstance(raw, dict) or set(raw) != {"version", "skills"}:
+-        raise PortfolioError("portfolio 清单字段必须为 version、skills")
+-    if raw["version"] != 1:
+-        raise PortfolioError(f"不支持的 portfolio 清单版本：{raw['version']!r}")
+-    if not isinstance(raw["skills"], dict):
+-        raise PortfolioError("portfolio skills 必须是对象")
+-
+-    entries: dict[str, PortfolioEntry] = {}
+-    expected_fields = {
+-        "category",
+-        "discoverability",
+-        "roles",
+-        "criticality",
+-        "evidence",
+-    }
+-    for name, value in raw["skills"].items():
+-        if not isinstance(name, str) or not _SKILL_NAME.fullmatch(name):
+-            raise _fail(str(name), "Skill 名称不合法")
+-        if not isinstance(value, dict) or set(value) != expected_fields:
+-            raise _fail(name, "字段必须为 category、discoverability、roles、criticality、evidence")
+-        category = value["category"]
+-        discoverability = value["discoverability"]
+-        roles = value["roles"]
+-        criticality = value["criticality"]
+-        if not isinstance(category, str) or not category.strip():
+-            raise _fail(f"{name}.category", "不能为空")
+-        if discoverability not in _DISCOVERABILITY:
+-            raise _fail(f"{name}.discoverability", "分类不合法")
+-        if (
+-            not isinstance(roles, list)
+-            or not roles
+-            or any(role not in _ROLES for role in roles)
+-            or len(roles) != len(set(roles))
+-        ):
+-            raise _fail(f"{name}.roles", "必须是非空且不重复的合法 role 数组")
+-        if discoverability == "internal" and set(roles) != {"method"}:
+-            raise _fail(f"{name}.roles", "internal Skill 必须且只能具有 method role")
+-        if criticality not in _CRITICALITY:
+-            raise _fail(f"{name}.criticality", "必须是 critical 或 standard")
+-        entries[name] = PortfolioEntry(
+-            category=category,
+-            discoverability=discoverability,
+-            roles=frozenset(roles),
+-            criticality=criticality,
+-            evidence=_validate_evidence(name, value["evidence"]),
+-        )
+-    return PortfolioManifest(version=1, skills=entries)
+-
+-
+-def _validate_graph(
+-    root: Path, portfolio: PortfolioManifest, composition: CompositionManifest
+-) -> None:
+-    entries = portfolio.skills
+-    for caller, edges in composition.callers.items():
+-        if caller not in entries:
+-            raise _fail(caller, "composition caller 未登记")
+-        caller_entry = entries[caller]
+-        if not caller_entry.roles & {"entry", "review"}:
+-            raise _fail(caller, "composition caller 必须具有 entry 或 review role")
+-        body = (root / "skills" / caller / "SKILL.md").read_text()
+-        for edge in edges:
+-            if edge.skill not in entries:
+-                raise _fail(caller, f"composition target 未登记：{edge.skill}")
+-            target = entries[edge.skill]
+-            pointer = f"references/composed/{edge.skill}/COMPOSED.md"
+-            if pointer not in body:
+-                raise _fail(caller, f"缺少 {edge.skill} 的 composed-body 指针")
+-            if edge.kind == "method" and "method" not in target.roles:
+-                raise _fail(edge.skill, "method edge 的目标必须具有 method role")
+-            if edge.kind == "handoff":
+-                if "handoff" not in target.roles:
+-                    raise _fail(edge.skill, "handoff edge 的目标必须具有 handoff role")
+-                if f"{{{{skill-call:{edge.skill}}}}}" not in body:
+-                    raise _fail(caller, f"handoff edge 缺少 {edge.skill} 调用宏")
+-
+-    for router, route_targets in composition.routable_entries.items():
+-        if router not in entries:
+-            raise _fail(router, "router 未登记")
+-        if "entry" not in entries[router].roles:
+-            raise _fail(router, "router 必须具有 entry role")
+-        body = (root / "skills" / router / "SKILL.md").read_text()
+-        macros = set(_CALL_MACRO.findall(body))
+-        routed = set(route_targets)
+-        if macros != routed:
+-            missing = sorted(routed - macros)
+-            undeclared = sorted(macros - routed)
+-            raise _fail(
+-                router,
+-                f"调用宏与 routed edges 不一致；缺少={missing} 未声明={undeclared}",
+-            )
+-        for target in routed:
+-            if target not in entries:
+-                raise _fail(router, f"route target 未登记：{target}")
+-            if entries[target].discoverability != "routed":
+-                raise _fail(target, "router 目标必须标记 discoverability=routed")
+-
+-
+-def _validate_evidence_case_ids(root: Path, portfolio: PortfolioManifest) -> None:
+-    deterministic: dict[str, set[str]] = {}
+-    scenarios_dir = root / "evals" / "scenarios"
+-    behavior_path = root / "evals" / "agent-smokes" / "astra-behavior-suite.json"
+-    # The build preflight owns missing-eval diagnostics. When the registries
+-    # exist, portfolio verifies that evidence claims point to real cases.
+-    if not scenarios_dir.is_dir() or not behavior_path.is_file():
+-        return
+-    for path in sorted(scenarios_dir.glob("*.json")):
+-        try:
+-            raw = json.loads(path.read_text())
+-        except (OSError, json.JSONDecodeError) as exc:
+-            raise PortfolioError(f"portfolio 无法读取 deterministic case：{path}") from exc
+-        identifier = raw.get("id") if isinstance(raw, dict) else None
+-        skills = raw.get("skills") if isinstance(raw, dict) else None
+-        if isinstance(identifier, str) and isinstance(skills, list):
+-            deterministic[identifier] = {
+-                skill for skill in skills if isinstance(skill, str)
+-            }
+-
+-    try:
+-        behavior_raw = json.loads(behavior_path.read_text())
+-    except (OSError, json.JSONDecodeError) as exc:
+-        raise PortfolioError(
+-            f"portfolio 无法读取 fresh-agent suite：{behavior_path}"
+-        ) from exc
+-    behavior_cases = behavior_raw.get("cases") if isinstance(behavior_raw, dict) else None
+-    fresh_ids = {
+-        case["id"]
+-        for case in behavior_cases or []
+-        if isinstance(case, dict) and isinstance(case.get("id"), str)
+-    }
+-
+-    for skill, entry in portfolio.skills.items():
+-        deterministic_record = entry.evidence["deterministic"]
+-        if "planned_cases" in deterministic_record:
+-            for identifier in deterministic_record["planned_cases"]:
+-                if identifier not in deterministic:
+-                    raise _fail(skill, f"引用未知 deterministic case：{identifier}")
+-                if skill not in deterministic[identifier]:
+-                    raise _fail(
+-                        skill,
+-                        f"deterministic case 未声明覆盖该 Skill：{identifier}",
+-                    )
+-        fresh_record = entry.evidence["fresh_agent"]
+-        if "planned_cases" in fresh_record:
+-            for identifier in fresh_record["planned_cases"]:
+-                if identifier not in fresh_ids:
+-                    raise _fail(skill, f"引用未知 fresh-agent case：{identifier}")
+-
+-
+-def _validate_portable_prose(root: Path) -> None:
+-    for markdown in sorted((root / "skills").glob("**/*.md")):
+-        match = _RAW_HOST_CALL.search(markdown.read_text())
+-        if match:
+-            raise _fail(
+-                str(markdown.relative_to(root)),
+-                f"可移植 prose 含宿主专属调用：{match.group(0)}",
+-            )
+-
+-
+-def validate_portfolio(root: Path) -> PortfolioManifest:
+-    """Validate directory inventory, roles, routing, evidence, and portable prose."""
+-    source_root = root.resolve()
+-    manifest = load_portfolio_manifest(source_root / "portfolio" / "manifest.json")
+-    skill_names = {
+-        path.name for path in (source_root / "skills").iterdir() if path.is_dir()
+-    }
+-    registered = set(manifest.skills)
+-    if skill_names != registered:
+-        raise PortfolioError(
+-            "portfolio 与 skills 目录不一致；"
+-            f"未登记={sorted(skill_names - registered)} "
+-            f"无目录={sorted(registered - skill_names)}"
+-        )
+-    composition = load_composition_manifest(
+-        source_root / "composition" / "manifest.json"
+-    )
+-    _validate_graph(source_root, manifest, composition)
+-    _validate_evidence_case_ids(source_root, manifest)
+-    _validate_portable_prose(source_root)
+-    return manifest
+diff --git a/tools/workflow_lib/release.py b/tools/workflow_lib/release.py
+index 9145317..0db8460 100644
+--- a/tools/workflow_lib/release.py
++++ b/tools/workflow_lib/release.py
+@@ -13,7 +13,7 @@ from typing import Callable
+ 
+ from .composition import (
+     CompositionManifest,
+-    compose_dependency_references,
++    model_invocable_skills,
+     load_composition_manifest,
+     resolve_transitive_closure,
+     validate_composition_manifest,
+@@ -191,26 +191,6 @@ def _declared_generated_targets(
+     targets = {skill: set() for skill in skill_names}
+     if composition is not None:
+         validate_composition_manifest(composition, skills_dir)
+-        declared_dependencies = {
+-            caller: resolve_transitive_closure(composition, caller)
+-            for caller in composition.callers
+-        }
+-        for caller, dependencies in declared_dependencies.items():
+-            for dependency in sorted(set(dependencies)):
+-                source = (skills_dir / dependency).resolve()
+-                for path in walk_skill_sources(source):
+-                    relative = path.relative_to(source)
+-                    if relative == Path("agents/openai.yaml"):
+-                        continue
+-                    if relative.name == "SKILL.md":
+-                        relative = relative.with_name("COMPOSED.md")
+-                    targets[caller].add(
+-                        str(
+-                            Path("references/composed")
+-                            / dependency
+-                            / relative
+-                        )
+-                    )
+     if resources is not None:
+         _, effective_consumers = resource_consumer_maps(
+             resources, skill_names, composition, repo_root
+@@ -449,8 +429,10 @@ def validate_skills(
+         seen.add(name)
+         if not metadata.get("description"):
+             raise ReleaseError(f"{name}: 缺少 description")
+-        if metadata.get("disable-model-invocation") != "true":
+-            raise ReleaseError(f"{name}: 必须设置 disable-model-invocation: true")
++        invocable = name in model_invocable_skills(composition)
++        expected = None if invocable else "true"
++        if metadata.get("disable-model-invocation") != expected:
++            raise ReleaseError(f"{name}: 调用元数据与组合清单不一致")
+         if len(text.splitlines()) > 500:
+             raise ReleaseError(f"{name}: SKILL.md 超过 500 行")
+         skill_root = skill_dir.resolve()
+@@ -500,102 +482,13 @@ def _validate_staged_references(staged_skills_dir: Path) -> None:
+                     raise ReleaseError(
+                         f"{skill_dir.name}: {source} 引用不存在：{reference}"
+                     )
+-        composed = skill_dir / "references" / "composed"
+-        if composed.is_dir():
+-            forbidden = sorted(composed.rglob("agents/openai.yaml"))
+-            if forbidden:
+-                raise ReleaseError(
+-                    f"{skill_dir.name}: 组合目录包含运行时元数据："
+-                    f"{forbidden[0].relative_to(skill_dir)}"
+-                )
+-            invocable = sorted(composed.rglob("SKILL.md"))
+-            if invocable:
+-                raise ReleaseError(
+-                    f"{skill_dir.name}: 组合目录包含可注册 Skill："
+-                    f"{invocable[0].relative_to(skill_dir)}"
+-                )
+-            named_composed = [
+-                path
+-                for path in sorted(composed.rglob("COMPOSED.md"))
+-                if re.search(r"(?m)^name:\s*", path.read_text())
+-            ]
+-            if named_composed:
+-                raise ReleaseError(
+-                    f"{skill_dir.name}: 组合正文包含可注册 name："
+-                    f"{named_composed[0].relative_to(skill_dir)}"
+-                )
+-            embedded_resources = [
+-                path
+-                for path in sorted(composed.rglob("*"))
+-                if path.is_dir()
+-                and path.name in {"policies", "shared"}
+-                and path.parent.name == "references"
+-            ]
+-            if embedded_resources:
+-                raise ReleaseError(
+-                    f"{skill_dir.name}: 组合目录包含重复共享资源："
+-                    f"{embedded_resources[0].relative_to(skill_dir)}"
+-                )
+-
+-
+-def _rewrite_composed_resource_links(skill_dir: Path) -> None:
+-    """Point composed references at the host Skill's shared resource bundle."""
+-    composed = skill_dir / "references" / "composed"
+-    if not composed.is_dir():
+-        return
+-    root = skill_dir.resolve()
+-
+-    def rewrite(markdown: Path, text: str) -> str:
+-        def replace(match: re.Match[str]) -> str:
+-            target = match.group("target")
+-            wrapped = target.startswith("<") and target.endswith(">")
+-            value = target[1:-1] if wrapped else target
+-            if value.startswith(("http://", "https://")):
+-                return match.group(0)
+-            path, separator, fragment = value.partition("#")
+-            candidate = (markdown.parent / path).resolve()
+-            try:
+-                parts = candidate.relative_to(root).parts
+-            except ValueError:
+-                return match.group(0)
+-            resource_start = next(
+-                (
+-                    index
+-                    for index in range(len(parts) - 1)
+-                    if parts[index] == "references"
+-                    and parts[index + 1] in {"policies", "shared"}
+-                ),
+-                None,
+-            )
+-            if resource_start is None:
+-                return match.group(0)
+-            destination = root.joinpath(*parts[resource_start:])
+-            if not destination.is_file():
+-                raise ReleaseError(
+-                    f"{skill_dir.name}: {markdown.relative_to(skill_dir)} "
+-                    f"组合引用的共享资源未打包：{value}"
+-                )
+-            source = markdown.parent.resolve().relative_to(root)
+-            target_path = destination.relative_to(root)
+-            rewritten = os.path.relpath(target_path, source).replace(os.sep, "/")
+-            if separator:
+-                rewritten += separator + fragment
+-            if wrapped:
+-                rewritten = f"<{rewritten}>"
+-            return f"{match.group('prefix')}{rewritten}{match.group('suffix')}"
+-
+-        return MARKDOWN_LINK_PATTERN.sub(replace, text)
+-
+-    for markdown in sorted(composed.rglob("*.md")):
+-        markdown.write_text(rewrite(markdown, markdown.read_text()))
+-
+ 
+ def _manifest_for_staged_tree(
+     staged_skills_dir: Path,
+     staged_runtime_dir: Path,
+     *,
+     upstream_id: str,
+-    composed: dict[str, list[str]],
++    invocable_skills: set[str],
+     shared_resources: dict[str, list[str]],
+     resource_consumers: dict[str, dict[str, list[str]]],
+ ) -> dict[str, object]:
+@@ -623,7 +516,8 @@ def _manifest_for_staged_tree(
+         "upstream_id": upstream_id,
+         "skills": portable_skills,
+         "runtime": runtime,
+-        "composed": composed,
++        "composed": {},
++        "invocable_skills": sorted(invocable_skills),
+         "shared_resources": shared_resources,
+         "resource_consumers": resource_consumers,
+         "target_manifests": target_manifests,
+@@ -668,28 +562,6 @@ def _stage_release_tree(
+     for source in sorted(runtime_library.glob("*.py")):
+         shutil.copy2(source, staged_runtime / "tools" / "workflow_lib" / source.name)
+ 
+-    composed: dict[str, list[str]] = {}
+-    if composition is not None:
+-        materialized: set[str] = set()
+-
+-        def materialize(caller: str) -> None:
+-            if caller in materialized:
+-                return
+-            for edge in composition.callers.get(caller, ()):
+-                materialize(edge.skill)
+-            dependencies = resolve_transitive_closure(composition, caller)
+-            if dependencies:
+-                compose_dependency_references(
+-                    staged_skills,
+-                    staged_skills / caller,
+-                    dependencies,
+-                )
+-                composed[caller] = dependencies
+-            materialized.add(caller)
+-
+-        for caller in sorted(composition.callers):
+-            materialize(caller)
+-
+     shared_resources: dict[str, list[str]] = {}
+     resource_consumers: dict[str, dict[str, list[str]]] = {
+         "direct": {},
+@@ -720,15 +592,13 @@ def _stage_release_tree(
+             )
+             if written:
+                 shared_resources[skill_dir.name] = written
+-    for skill_dir in skill_dirs:
+-        _rewrite_composed_resource_links(staged_skills / skill_dir.name)
+ 
+     _validate_staged_references(staged_skills)
+     return _manifest_for_staged_tree(
+         staged_skills,
+         staged_runtime,
+         upstream_id=upstream_id,
+-        composed=composed,
++        invocable_skills=model_invocable_skills(composition),
+         shared_resources=shared_resources,
+         resource_consumers=resource_consumers,
+     )
+diff --git a/tools/workflow_lib/resource_governance.py b/tools/workflow_lib/resource_governance.py
+index 5665eb5..c8cefd3 100644
+--- a/tools/workflow_lib/resource_governance.py
++++ b/tools/workflow_lib/resource_governance.py
+@@ -132,10 +132,6 @@ def validate_resource_governance(
+             skill = rule.get("review_skill")
+             if not isinstance(skill, str) or not skill.strip():
+                 raise ResourceGovernanceError(f"{document}: review_skill 不能为空")
+-            if skill in review_skills:
+-                raise ResourceGovernanceError(
+-                    f"{document}: review Skill 必须专用于一条共享规则：{skill}"
+-                )
+             review_skills.add(skill)
+             skill_file = root / "skills" / skill / "SKILL.md"
+             if not skill_file.is_file():
+diff --git a/tools/workflow_lib/resources.py b/tools/workflow_lib/resources.py
+index 800f994..5895fff 100644
+--- a/tools/workflow_lib/resources.py
++++ b/tools/workflow_lib/resources.py
+@@ -74,7 +74,6 @@ def load_resource_manifest(path: Path) -> SharedResourceManifest:
+             consumers: str | tuple[str, ...] = "*"
+         elif (
+             isinstance(raw_consumers, list)
+-            and raw_consumers
+             and all(
+                 isinstance(consumer, str) and consumer.strip()
+                 for consumer in raw_consumers
+@@ -84,7 +83,7 @@ def load_resource_manifest(path: Path) -> SharedResourceManifest:
+             if len(consumers) != len(set(consumers)):
+                 raise ResourceError(f"{name}: consumer 重复")
+         else:
+-            raise ResourceError(f"{name}: consumers 必须为 '*' 或非空数组")
++            raise ResourceError(f"{name}: consumers 必须为 '*' 或数组")
+         resources[name] = SharedResource(
+             source,
+             source_key == "source_dir",
+diff --git a/tools/workflow_lib/validator.py b/tools/workflow_lib/validator.py
+index 5d911ef..beb6361 100644
+--- a/tools/workflow_lib/validator.py
++++ b/tools/workflow_lib/validator.py
+@@ -12,7 +12,7 @@ from .resource_governance import (
+     validate_resource_governance,
+ )
+ from .resources import ResourceError, load_resource_manifest
+-from .portfolio import PortfolioError, validate_portfolio
++from .composition import load_composition_manifest, model_invocable_skills
+ 
+ 
+ class ValidationError(RuntimeError):
+@@ -88,17 +88,21 @@ def validate_manual_metadata(skills_dir: Path, *, expected_count: int | None) ->
+         raise ValidationError(
+             f"skills: expected {expected_count} manual-only skills, found {len(skill_dirs)}"
+         )
++    manifest_path = skills_dir.parent / "composition/manifest.json"
++    manifest = load_composition_manifest(manifest_path) if manifest_path.is_file() else None
++    invocable = model_invocable_skills(manifest)
+     for skill_dir in skill_dirs:
+         metadata = skill_dir / "agents" / "openai.yaml"
+         if not metadata.is_file():
+             raise ValidationError(f"{skill_dir.name}: missing agents/openai.yaml")
++        expected = "true" if skill_dir.name in invocable else "false"
+         if not re.search(
+-            r"(?m)^\s*allow_implicit_invocation:\s*false\s*$",
++            rf"(?m)^\s*allow_implicit_invocation:\s*{expected}\s*$",
+             metadata.read_text(),
+         ):
+             raise ValidationError(
+                 f"{skill_dir.name}: agents/openai.yaml must set "
+-                "allow_implicit_invocation: false"
++                f"allow_implicit_invocation: {expected}"
+             )
+ 
+ 
+@@ -160,10 +164,8 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
+     except ReleaseError as exc:
+         raise ValidationError(str(exc)) from exc
+     canonical = (root / "composition" / "manifest.json").is_file()
+-    portfolio = None
+     if canonical:
+         try:
+-            portfolio = validate_portfolio(root)
+             resource_manifest = load_resource_manifest(
+                 root / "resources" / "manifest.json"
+             )
+@@ -172,10 +174,10 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
+                 resource_manifest,
+                 root / "resources" / "governance.json",
+             )
+-        except (OSError, PortfolioError, ResourceError, ResourceGovernanceError) as exc:
++        except (OSError, ResourceError, ResourceGovernanceError) as exc:
+             raise ValidationError(str(exc)) from exc
+     validate_manual_metadata(
+-        skills_dir, expected_count=len(portfolio.skills) if portfolio else None
++        skills_dir, expected_count=None
+     )
+     validate_markdown_references(root)
+     validate_scripts(root)
+--- /dev/null
++++ b/resources/agent-rule-applicability.md
+@@ -0,0 +1,13 @@
++# 宿主规则适用性
++
++
++按[指令权威](instruction-authority.md)消解冲突，不把项目规则当成授权来源：
++
++- Cursor 的 `alwaysApply` 与合法 `globs` 可机械判断；`description` 必须记录相关性依据；无三种激活字段的是 `manual`，只有显式引用时适用；无效 metadata 不得静默丢弃。
++- Codex 必须区分 `selected`、`shadowed` 与 `candidate`，并按目录 precedence 判断目标路径。
++- Claude 的合法 `paths` 可机械判断；有效且无 `paths` 的规则为 always；无效 frontmatter 不得退化为 always。
++- `target_match: null` 表示需要语义判断或显式引用，不表示适用，也不表示不适用。
++
++完成条件：目标规则的每种激活方式、覆盖边和权威冲突都已闭合为事实、finding 或会限制 Verdict 的 Evidence Gap。
++
++
+--- /dev/null
++++ b/resources/requirement-analysis.md
+@@ -0,0 +1,23 @@
++# Requirement Analysis
++
++仅在用户明确调用 需求核对，或当前请求复杂、隐含、类比驱动并由[开发保证等级](adapters/assurance-levels.md)要求增强需求核对时运行；这不意味着每次都要启动独立 reviewer。普通 grill 已产生可追溯需求摘要时，不重复完整访谈。它验证“理解是否正确”，不评判方案优劣。
++
++先形成主 Agent 摘要：目标、范围、用户明确约束和可观察验收标准。每一项都标出来自用户原文、仓库事实还是尚未确认的推断。
++
++## 快速通过
++
++简单请求若目标、范围、约束和验收都能逐项直接对应用户原文，且没有会改变结果的第二种合理理解，记录 `PASS` 并进入 Plan。不要为了启动 reviewer 而扩大简单请求。
++
++## 独立审查
++
++只有复杂、隐含、类比驱动，或确有会改变结果的第二种合理理解时，才读取[独立需求 Reviewer Brief](requirement-reviewer-brief.md)，让一个未参与主摘要的 reviewer 独立对比原始输入与摘要。Reviewer 可读取用户点名的最小仓库上下文，但不能看到主 Agent 的疑点或预期答案。
++
++没有 sub-agent 能力时，主 Agent 仍完成四维自检并继续，但必须把结果标记为 `independence evidence gap`；不得把串行自审写成独立审查。
++
++## 处理结果
++
++- `PASS`：保留确认后的摘要，进入 Plan。
++- `NEEDS_CLARIFICATION`：只向用户提出会改变目标、范围、约束或验收的最小问题，收到回答后更新摘要。
++- `MISUNDERSTANDING`：按证据修正摘要；目标或范围发生实质变化时再做一次独立审查，否则记录修正后进入 Plan。
++
++完成条件：最终摘要的四类信息均可追溯；未解决的承重歧义已交给用户；独立性证据的实际状态被如实记录。
+--- /dev/null
++++ b/resources/requirement-reviewer-brief.md
+@@ -0,0 +1,16 @@
++# 独立需求 Reviewer Brief
++
++向 reviewer 提供且只提供：
++
++- 用户原始输入，保持原样；
++- 主 Agent 的理解摘要：目标、范围、明确约束、验收标准；
++- 用户直接点名的最小文件或模块。
++
++Reviewer 独立形成理解，再按四项对比：
++
++1. 目标是否把示例、手段或类比误当任务本身；
++2. 范围是否遗漏用户要求或无授权扩张；
++3. 明确约束是否完整，约束之间是否冲突；
++4. 是否存在会改变结果的多种合理解释。
++
++输出 `PASS | NEEDS_CLARIFICATION | MISUNDERSTANDING`。`PASS` 只需一行；非 PASS 只列会改变目标、范围、约束或验收的原文证据、偏差和最小澄清问题，不复述原始输入或逐项输出无问题维度。只评审需求理解，不评判实现方案。需求清晰时直接 PASS，不为显示价值制造歧义。
+--- /dev/null
++++ b/resources/research-method.md
+@@ -0,0 +1,14 @@
++
++
++# My Research
++
++先按[面向读者写作](reader-first-writing.md)明确谁要用报告做什么决定；报告结论先行，并把证据强度、适用时间、分歧和对决定的含义放在读者容易找到的位置。
++
++1. 明确研究问题、决策问题、时间范围和所需可信度。
++2. 优先官方文档、标准、源代码和第一方 API；每个关键结论追溯到原始来源。
++3. 不向外部服务上传企业源码、内部日志或未公开业务信息。
++4. 区分事实、推断、未知和建议；记录来源 URL、版本和访问日期。
++5. 默认写入 `.agent/work/<topic>/researches/researches-<topic>-<time-or-sequence>.md`。
++6. 项目已有正式研究文档位置时，先展示写回补丁，经用户确认后再修改。
++
++研究只提供证据，不替代产品或架构决策。
+--- /dev/null
++++ b/skills/my-review-instructions/SKILL.md
+@@ -0,0 +1,78 @@
++---
++name: my-review-instructions
++description: 对单个 Skill 做根本性只读审查，或分诊整个 Skill 集合；先判断存在价值与正确归宿，再检查行为和指令设计。
++disable-model-invocation: true
++---
++
++# 审查 Agent 指令
++
++只读审查 Skill，不修改目标、发布结果或把“优化现有 Skill”预设为答案。合法结论包括保留、局部修复、重构、合并、外置为参考、改由 runtime 执行、退役，以及证据不足。
++
++目标参数：`kind=skill|project-rules`，宿主参数 `host=codex|cursor|claude`。项目规则先按[宿主适用性](references/shared/agent-rule-applicability.md)与[项目规则解析](references/shared/adapters/project-rules.md)盘点作用域、覆盖关系和权威；下文的 Job Contract 对规则解释为 Rule Contract。
++
++## 选择模式
++
++- **Portfolio Survey**：用户给出一组或整个目录时，先固定范围并建立 Skill、共享参考、runtime 与调用者的完整 inventory，再找出职责重叠、孤立入口、调用冲突和重复事实来源，输出按影响排序的 Deep Review 队列。此模式不做逐句修改，也不替单个 Skill 下有效性结论。
++- **Deep Review**：用户给出单个 Skill 时，审查它及所有会改变其行为的可达材料。一次只深审一个 Skill；需要审查多个时，先 Survey，再依次固定对象审查。
++
++Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inventory；其声明的调用者、被调用项、组合关系、共享材料和 runtime 边均已解析，或被逐项标记为证据缺口；每个 Deep Review 候选都有一条可定位的影响路径。任何未归档的范围内 Skill 或悬空关系都会阻止 Survey 完成。
++
++`critical`、近期修改或缺少行为证据只是排序信号，不自动授权 Deep Review 或 comparative。实际使用频率只接受可定位 trace 或用户确认；Git 修改次数不得冒充调用频率。
++
++## Deep Review
++
++### 1. 固定审查对象
++
++先解析目标宿主以及目标 Skill、`agents/`、可达 references、scripts、assets、调用者、被调用项、runtime、eval 和已知失败反馈，得到完整且按绝对路径稳定排序的文件列表，再按[专项只读审查会话](references/shared/adapters/specialized-review-session.md)建立 snapshot。只读取返回的 `review_unit`、`content_id` 和只读 `snapshot_path`，不得继续从 live path 取证。
++
++完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照并重跑审查。
++
++### 2. 重建 Job Contract
++
++从真实请求、调用者和行为证据重建“谁在什么情形调用它、它改变哪个 Agent 决定、产生什么可观察结果”。Skill 自己的 description 只是证据之一，不作为目标正确的证明。
++
++完成条件：能写出“当 X 时，该 Skill 通过改变 Y 决定，使 Z 结果更可靠”；无法写出时形成契约缺失候选，不进入文字审查。
++
++### 3. 存在性 Gate
++
++依次检验：强 Agent 默认能力是否已足够；内容是否只是外部参考；职责是否与另一 Skill 重合或只是其分支；确定性要求是否应由 script、schema 或 runtime 执行；是否确实需要独立调用。选出最合适的归宿，不假定现有 Skill 必须保留。
++
++完成条件：`KEEP | TARGETED_FIX | REDESIGN | MERGE | EXTERNALIZE | REPLACE_WITH_RUNTIME | RETIRE | INCONCLUSIVE` 每种结论都有接受或排除依据。
++
++### 4. 审查因果机制与边界
++
++对承重指令应用[第一性原理推理](references/shared/first-principles-reasoning.md)，建立从指令、Agent 判断和动作到可观察结果与用户结果的因果链，并用最小反事实检查 Skill 或额外规则是否真的增加结果可靠性；断链是无效操作、仪式步骤或错误补偿的候选。再把模型判断、共享规则、机械操作、硬不变量和产物模板分别归到 Skill、shared reference、script、runtime 和 asset，检查调用方式、职责所有权、事实来源及与宿主规则的冲突。
++
++完成条件：主要机制能解释用户价值，每项承重职责只有一个合理归宿。
++
++### 5. 走查并分级证据
++
++走查正常、边界和失败三种代表性请求，覆盖实际分支、材料读取、权限、暂停和完成条件。区分证据等级：
++
++- **static**：仅由文本、依赖或宿主机制推出；
++- **observed**：有真实运行或失败记录；
++- **comparative**：相同模型、reasoning、请求、快照和权限下，对比无 Skill、当前 Skill，以及需要时的候选修订版。
++
++只有 comparative 证据才能证明 Skill 相对 baseline 有效或无效；其余等级只陈述可证明的结构问题与风险。普通 Evidence Gap 不自动触发 comparative：只有观察证据互相冲突，或某项“Skill 相对 baseline 是否增值”的争议会实质改变 Verdict 时，Agent 才可提名。提名必须说明争议命题、对 Verdict 的影响、最小案例和预计成本；取得用户明确授权后才能运行，并且不给评估者预置怀疑点或期望答案。
++
++完成条件：正常、边界、失败三类请求均至少有一个代表 case；每条实际分支以及材料读取、权限、暂停和完成路径都映射到 case 与证据等级，或被明确列为会限制对应结论的 Evidence Gap。存在未映射路径时，不得进入该路径所影响的 Verdict。
++
++### 6. 最后检查指令设计
++
++仅当存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，读取并应用{{skill-call:my-writing-for-agents}}，检查调用、信息层级、完成条件、主导词、单一事实来源和失效模式。若结论是其他归宿，不输出即将随重构消失的文字建议。
++
++完成条件：所有进入报告的候选都通过下方 Finding Gate，并按根因去重。
++
++## Finding Gate
++
++候选必须同时满足：对调用、正确性、权限、完成度或维护成本有实质影响；有可证明的失败路径或不变量；位于审查对象内；指向可行动的根因；不是猜测、普通偏好、无影响 style nit 或工具已可靠覆盖的事项；作者知道后大概率会改变设计。同一失败链只保留最接近根因的一项，不限制通过 Gate 的真实发现数量。
++
++按干预杠杆归类：`FOUNDATIONAL`（存在性、目标、归宿）、`BEHAVIORAL`（真实分支结果）、`STRUCTURAL`（调用、组合、步骤、信息层级）、`INSTRUCTIONAL`（确实改变行为的文字）。存在 `FOUNDATIONAL` finding 时，抑制由它派生的下游措辞建议。
++
++## 输出
++
++输出前按专项审查会话验证并释放 snapshot。只有返回 `status: match` 才可发送报告；返回 `stale` 时丢弃结论、重建快照并重跑。
++
++先写 `Review-Unit`、`Target-Host`、`Evidence-Level` 与一个 Verdict。每个 finding 用一个短段落说明根因、失败路径或不变量、证据、影响及最小干预方向。只列会改变 Verdict 的 `Evidence Gaps`，并给出取得最终判断的最小 `Next Validation`。
++
++没有合格发现写 `No findings.`；缺少足以判断有效性的行为证据时用 `INCONCLUSIVE` 并报告当前可证明结论，不得把静态检查通过写成“Skill 已验证有效”，也不得默认要求 comparative。只有满足上述争议门槛时，才把授权请求作为 `Next Validation`。不复述完整审查过程、逐项通过清单、被拒绝候选或未经请求的改写稿。
+--- /dev/null
++++ b/skills/my-review-instructions/agents/openai.yaml
+@@ -0,0 +1,6 @@
++interface:
++  display_name: "Review Skill"
++  short_description: "Root-cause review for Agent skills"
++  default_prompt: "Use $my-review-instructions to run a root-cause Deep Review of this skill."
++policy:
++  allow_implicit_invocation: false
+--- /dev/null
++++ b/skills/my-writing-for-agents/GLOSSARY.md
+@@ -0,0 +1,201 @@
++# 术语表——构建优秀 Skill
++
++这是使一个 Skill 出色的领域模型。Skill 的存在，是为了从随机系统中驯服出确定性；根本美德是**可预测性**，下列每个术语都是作用于它的杠杆。这是 [`writing-great-skills`](SKILL.md) 的已披露参考。
++
++术语按轴线分组：**调用**（如何抵达 Skill）、**信息层级**（如何组织内容）、**引导**（如何塑造 Agent 的运行时行为）及**剪枝**（如何保持精简）。每一种**失效模式**都与修复它的杠杆放在一起，并标记为*失效模式*。
++
++任何定义中的**粗体术语**也在本术语表中定义；请按其标题查找。
++
++## 可预测性
++
++Skill 使 Agent 在每一次运行中以相同*方式*行动的程度——过程相同，而非输出相同（头脑风暴 Skill 应当*可预测地*发散；它的 token 会变化，行为不会）。它是所有其他术语服务的根本美德；成本与可维护性是它的症状，而不是竞争对手。
++
++*避免使用*：一致性、可靠性、健壮性、输出确定性
++
++## 调用
++
++如何抵达一个 Skill，以及选择时需要付出的两类负荷。
++
++### 模型调用
++
++宿主 policy 允许模型隐式选择的 Skill。**描述**帮助候选匹配，但不是调用开关；真正的开关是目标宿主的 invocation policy。模型调用用候选上下文与误路由风险交换自主发现能力。
++
++*避免使用*：能力、工具、功能
++
++### 用户调用
++
++宿主 policy 要求显式选择的 Skill。它仍保留准确的**描述**供 UI、搜索和人工判断使用，但描述不会绕过 policy 触发模型调用。其他 Skill 若需复用其方法，依赖 composition 与 composed-body；若需把下一阶段交给用户，输出可移植调用宏。
++
++*避免使用*：流程、工作流、命令
++
++### 描述
++
++Skill 的宿主可见能力摘要。宿主允许隐式调用时，它参与候选匹配；宿主禁止隐式调用时，它服务 UI、搜索和人工选择。它影响发现质量与候选**上下文负荷**，但其存在本身不决定调用模式。
++
++*避免使用*：frontmatter、摘要
++
++### 上下文指针
++
++保留在 Agent 上下文中的参考，它指明某项上下文外材料，并编码抵达它的条件。**描述**是顶层上下文指针（上下文窗口 → Skill）；指向已披露文件的指针是低一层的同一对象。决定 Agent*何时*抵达及抵达*多可靠*的是它的措辞，而不是目标。必须取得的目标若藏在措辞薄弱的指针后，是一个方差 bug：先修复措辞；仅当强化失败时才把材料内联。
++
++*避免使用*：链接、引用、导入
++
++### 上下文负荷
++
++候选 Skill 的**描述**进入 Agent 上下文时造成的 token 与注意力成本。宿主如何选择和加载候选决定实际成本；不能通过删除用户调用 Skill 的准确摘要来假装成本为零。
++
++*避免使用*：token 成本、上下文膨胀
++
++### 认知负荷
++
++**用户调用** Skill 施加在人类身上的成本——必须在脑中保留什么：有哪些 Skill，以及何时抵达每一个（人类是索引）。**模型调用**借由 Agent 可发现性移除它；它也是拆分出更多用户调用 Skill 的制动器。它不是要最小化的成本：它是人类能动性的代价，也是有些 Skill 保持用户调用的原因。在人类判断重要处承担它；不重要处则移除它。
++
++*避免使用*：人类索引、负担、开销
++
++### 路由 Skill
++
++一项**用户调用** Skill，它的工作是指向其他显式入口——逐一说明其名称及何时抵达——使人类只需记住一个入口。它只输出下一跳的可移植调用宏并停止，不执行目标 Skill。这是用户调用 Skill 增多时**认知负荷**的解法。
++
++*避免使用*：分发器、菜单、注册表、索引、路由流程
++
++### 粒度
++
++划分 Skill 的精细程度。更细的划分会消耗两类负荷之一：更多**模型调用** Skill 消耗**上下文负荷**（更多描述挤占窗口并竞争注意力）；更多**用户调用** Skill 消耗**认知负荷**（人类要记住和抵达的更多）。两种切分指导划分。按**调用**，当有不同的**主导词**可独自触发它——你确实在提示中使用的触发词——时，拆出模型调用 Skill。按**序列**，在需要隐藏某一步的**完成后步骤**时拆分一串**步骤**，因为在它自己的上下文中隔离该步骤会清除后续内容。警惕反向操作：合并序列会将每一步的完成后步骤暴露给后续步骤，招致提前完成。
++
++*避免使用*：分块、模块化
++
++## 信息层级
++
++Skill 内容的组织方式，以及每一项应在梯子上放多低。
++
++### 信息层级
++
++按 Agent 对它的即时需要程度排序的 Skill 内容——一架单独的梯子，由两种切分产生：文件内或指针后，以及步骤或参考。层级为：
++
++- **步骤**——文件内，首要
++- **参考**，文件内——次要
++- **参考**，已披露——在**上下文指针**后
++
++没有**步骤**的 Skill 只使用后两层——这常是正当的扁平同级集合（例如审查的每一条规则同处一层），并非坏味道。层级独立于调用：无论内容全是步骤、全是参考还是两者兼具，Skill 都可以模型调用或用户调用。当 Skill 有步骤时，本应披露的文件内参考会掩埋它们，使注意到它们变成掷硬币——这是方差杠杆，而不只是可读性问题。让梯子顶部清晰；尽可能将内容沿梯子下推。
++
++*避免使用*：结构、组织、布局
++
++### 步骤
++
++Agent 按顺序执行的动作——当 Skill 有它们时，是内容的首要层级，也是它们在 SKILL.md 中赢得位置的部分。不是每个 Skill 都有步骤：一个 Skill 可以全是步骤（`tdd`）、全是**参考**（审查），或两者兼具，与调用无关。每一步以清晰或模糊的**完成条件**结束。
++
++*避免使用*：工作流、指令、编排
++
++### 参考
++
++Agent 按需查阅的材料——定义、事实、参数、示例、条件指令。当 Skill 有**步骤**时它次于步骤；当 Skill 没有步骤时它就是全部内容；或它完全位于任何 Skill 之外——参见**外部参考**。它通过**上下文指针**抵达，是**渐进式披露**的首要候选。
++
++*避免使用*：辅助材料、文档、背景
++
++### 外部参考
++
++位于 Skill 系统之外的**参考**——普通文件，没有**描述**，没有**步骤**，不可调用——任一 Skill 都可以指向它。它是无需自行触发的共享参考的归宿，也是两项**用户调用** Skill 唯一能使用的共享归宿，因为二者都没有描述，不能互相触发。
++
++*避免使用*：文档、资源、知识库
++
++### 渐进式披露
++
++将**参考**沿梯子下移——从 SKILL.md 移至**上下文指针**之后——以使顶层保持清晰。它主要不是 token 优化；它是保护**信息层级**的方式。它由**分支**许可：披露只有部分分支需要的内容，内联每条路径需要的内容；若指针在必须取得的材料上触发不可靠，强化措辞，只有失败时才将材料拉回内联。
++
++*避免使用*：延迟加载、分块
++
++### 共置
++
++将 Agent 同时需要的材料放在同一位置——把概念的定义、规则与注意事项放在一个标题下，而非分散于文件中——使阅读一部分时同时获得相邻内容。它是**信息层级**的文件内伙伴：层级决定一项内容放*多低*，共置决定它抵达后*与什么放在一起*。不存在一套用于**参考**正文的正确格式公式；检验是 Skill 应读起来像为 Agent 编写的文档，而分组材料在分散材料不具备这种效果时就应如此。它不同于**重复**：重复是在两处复述一个含义，分散则是将一个含义碎裂到多处。
++
++*避免使用*：分组、聚类、内聚
++
++### 蔓延
++
++*失效模式。* 一个单纯过长的 Skill——SKILL.md 的行数太多——与这些行是否过时或重复无关。即使全部内容都活跃且唯一，Skill 也会蔓延。它耗费可读性（Agent 在行动前要穿过更多内容，注意力在多余内容上变薄）、可维护性（每增加一行就多一行要保持**相关**）和 token。解法是**信息层级**：在**上下文指针**后下推**参考**，并按**分支**或序列拆分，使每条路径只携带所需内容。它不同于**沉积**（来自过时积累的长度）和**重复**（来自反复含义的长度）——无论原因，蔓延就是长度本身。
++
++*避免使用*：膨胀、长度、尺寸、冗长
++
++## 引导
++
++将 Agent 运行时行为塑向**可预测性**的杠杆。
++
++### 分支
++
++Skill 可被调用的一种不同方式——它处理的一个情形——因此不同运行会穿过不同路径。步骤很多的 Skill 可带有多个分支；线性 Skill 没有分支。
++
++*避免使用*：路径、情形、分叉
++
++### 主导词
++
++模型预训练中已有的紧凑概念——也称为 *Leitwort*——Agent 在执行 Skill 时借它思考。它通过调动模型已有先验，用最少 token 编码一项行为原则（例如 *lesson*、*proximal zone of development*、*fog of war*、*tracer bullets*）。应把它作为 token 反复出现，绝非作为句子反复出现；它在 Skill 中累积为分布式定义，并锚定整片行为区域。创造自己的词也可行，前提是清晰定义；但自造词不会调动先验——你要用定义 token 支付预训练词免费提供的东西。先使用已有词。
++
++主导词两次服务于**可预测性**。在正文中，它锚定**执行**——概念每次出现，Agent 都抵达相同行为；在扁平参考中，它将注意力聚焦在要寻找的一类事物，为每次运行调动正确检查。在**描述**中，它锚定**调用**——不仅在 Skill 内：当同一词出现在你的提示、文档和代码库中，Agent 会将共享语言与 Skill 连接，更可靠地触发它。用你真正会在想要该 Skill 时使用的主导词来书写描述。
++
++*避免使用*：关键字、术语、主题
++
++### 完成条件
++
++告知 Agent 一项工作单元已完成的条件——它据以判断的目标。两项性质使它成为杠杆，而非仅是一种质量。其**清晰度**（Agent 能否分辨完成与未完成？）抵抗**提前完成**——模糊的界限（“已理解”）允许 Agent 宣布完成并滑到下一步；该轴需要*步骤*才能生效，因为提前完成是步骤之间的失效。其**要求度**（它要求多少）设定**基础工作**——“已说明每一个修改的模型”会在“生成变更清单”不会的地方强制彻底工作；此轴*不*受步骤约束：它也可约束一组扁平参考，这正是没有步骤的 Skill 仍可带有穷尽门槛（“应用每一条规则”）的方式。最强的条件既可检查又穷尽。
++
++*避免使用*：完成条件、退出条件、停止规则
++
++### 基础工作
++
++Agent 在单一步骤内暗中所做的工作——读文件、探索代码库、变更、挖掘所需内容，而不是把它卸给用户。它存在于步骤结构之下：从不写成自己的步骤，潜藏在措辞中，由 Agent 而非 Skill 控制。它是**完成后步骤**跨步骤拉力在单步骤内的对应物。由**主导词**（*comprehensive*、*thorough*）或要求工作穷尽的**完成条件**提升——包括对扁平参考应用要求度轴，它驱动一个扁平参考 Skill 覆盖全部层级。当需求缺失，或**提前完成**截短步骤时，它会变薄。
++
++*避免使用*：范围、投入、勤勉、覆盖率
++
++### 完成后步骤
++
++当前步骤之后的**步骤**。它们可见时会把 Agent 向前拉入**提前完成**——看得越多，拉力越强；防御方法是把步骤序列拆成两段，从而隐藏它们。
++
++*避免使用*：视野、战争迷雾、前瞻
++
++### 提前完成
++
++*失效模式。* 在当前步骤真正完成前结束它，因为 Agent 的注意力从工作滑向了完成。它是步骤之间的失效：需要存在**步骤**才会发生——没有步骤的 Skill 过早退出并非提前完成，而是在未满足需求下的稀薄**基础工作**。这是两股力量的拉锯：可见的**完成后步骤**（向前拉力）和**完成条件**的清晰度（阻力——清晰、可检查的门槛能守住；模糊门槛会失守）。模糊是必要条件：清晰界限无论后续步骤可见多少都能抵抗拉力，所以从不匆忙的步骤不需要防御。有两个杠杆可守住会匆忙的步骤，但要按顺序使用：**先收紧界限**——这是局部且廉价的。仅当条件不可避免地模糊，*并且*确实观察到匆忙时，才**隐藏后续步骤**——隐藏只有跨越真实上下文边界（用户调用交接或子 Agent 派发）才有效；内联模型调用会让后续步骤留在上下文中，无法清除任何内容。它是基础工作变薄的一种原因，但不同于它：即使步骤运行至完全完成，基础工作仍可能变薄。
++
++*避免使用*：过早闭合、匆忙、赶工、走捷径
++
++### 否定
++
++*失效模式。* 通过禁止来引导——告诉 Agent*不要*做什么——会把被禁止行为拖进上下文，使它更容易可得，而不是更难。*不要想一头大象*，上下文里就只剩大象；*永远不要写冗长注释*，冗长正是 Agent 刚读到的模式。否定是一个弱修饰词，会被强烈激活的概念压过，因此禁令半读起来像是在指示做那件事。它的**主导词**是*大象*：禁令带入框架的任何对象。解法：提示**正向**目标——描述目标行为（“写一行注释”），使禁止的行为从未被说出。禁止只有作为无法正向表述的行为的硬护栏时才配存在；即使如此，也应与正向目标配对，使注意力落在应做之事上。
++
++*避免使用*：讽刺反弹、不提示、粉红大象
++
++## 剪枝
++
++保持 Skill 精简——每一种补救措施都与它修复的失效配对。
++
++### 单一事实来源
++
++每层含义恰好位于一个权威位置的理想状态，因此改变 Skill 行为时只需改一处。**重复**是对它的违背。
++
++*避免使用*：归宿、规范位置
++
++### 重复
++
++*失效模式。* 同一含义有多个**单一事实来源**。它消耗维护（改一处就必须改其他处）、消耗 token，并抬高突出度——重复一个含义会让它在层级上加权超过真实等级。它是**主导词**的意外反面：主导词通过重复 token 有意地提升注意力，绝不重复含义。
++
++*避免使用*：重复陈述、冗余
++
++### 相关性
++
++一行是否仍与 Skill 的工作有关——决定保留什么的镜头。一行失去相关性，要么是从未与任务有关（纯粹说明，或本应披露的**分支**），要么是变得过时：它描述的行为或世界改变后逐渐失准。较短的 Skill 更容易保持相关，因为检查每一行的成本更低。它不同于**无效操作**：相关性问的是一行是否与任务有关，而不是它是否改变行为。
++
++*避免使用*：承重、陈旧、新鲜度
++
++### 沉积
++
++*失效模式。* 旧内容层在 Skill 中沉淀而从不清除，因为添加感觉安全、删除感觉有风险——于是过时和无关的行积累起来，你不得不向下挖穿它们才能找到仍活跃的内容。没有剪枝纪律的任何 Skill 的默认命运；是**相关性**的缓慢侵蚀，与**重复**反复同一含义不同。
++
++*避免使用*：积累、膨胀、杂物、腐烂
++
++### 无效操作
++
++*失效模式。* 一条指令不改变任何事，因为模型默认已经会这样做；你付出负荷来告诉它本会做的事。测试是：与默认值相比，这一行会改变行为吗？一行可以完全**相关**却仍是无效操作。使**主导词**免费有效的同一先验，也使无效操作毫无价值。
++
++主导词是一种*技巧*；无效操作是对一行的*判决*——二者交叉。一个弱到无法击败默认值的主导词就是无效操作（当模型已经相当彻底时的 *be thorough*），修复是换一个能通过判决的更强词（*relentless*），不是改用其他技巧。因此，无效操作测试——与默认值相比，这一行会改变行为吗？——也是评定主导词是否配得上反复出现的办法。这是模型相对的，不是读者相对的：两人若对一行是否无效操作意见不同，分歧的是默认值，应通过运行 Skill 而非辩论解决。
++
++*避免使用*：冗余指令、重述显而易见之事、絮叨
+--- /dev/null
++++ b/skills/my-writing-for-agents/SKILL.md
+@@ -0,0 +1,90 @@
++---
++name: my-writing-for-agents
++description: 在 my-review-instructions 流程中作为指定阶段的方法被调用。
++---
++
++# My Writing Great Skills
++
++本 Skill 只负责 Skill 的调用描述、信息层级、完成条件、措辞和可验证性。它不判断 Skill 是否应存在、是否职责重叠、是否应迁入 runtime，也不凭静态文字证明行为有效；这些属于 `my-review-instructions`。直接以 `review` 使用时，只输出这一层的指令设计发现，不扩张为根本性审查。
++
++Skill 的存在，是为了从随机系统中驯服出确定性。根本美德是 **可预测性**：每一次运行采用相同的**过程**，而不是产出相同的结果；下列每个杠杆都服务于它。
++
++编写 Skill 时，把每一行都视为强 Agent 会认真执行的约束：逐行判断它是否改变必要行为，删除默认能力已经覆盖的说明，并消除重复、冲突与过度限定。模型越来越智能意味着规则要更谨慎、更精简，而不是堆叠更多限制。这项逐行必要性原则可借用于起草 MDC，但 Agent 项目规则的存在性、宿主作用域、权威与冲突审查属于 `my-review-instructions`。
++
++**粗体术语**在 [`GLOSSARY.md`](GLOSSARY.md) 中定义；请查阅该文件获得完整含义。
++
++## 调用
++
++调用能力由**宿主 policy**决定，不由 `description` 是否存在决定。`description` 始终是宿主可见的能力摘要；宿主允许隐式调用时，它也参与候选匹配，宿主禁止隐式调用时，它仍服务 UI、搜索和人工选择，但不会自行授权模型调用。
++
++- **模型调用**：宿主 policy 允许隐式选择。描述使用精简、可区分的触发条件，代价是候选上下文与误路由风险。
++- **用户调用**：宿主 policy 要求显式选择。Cursor 与 Claude 使用 `disable-model-invocation: true`；Codex 使用 `agents/openai.yaml` 的 `allow_implicit_invocation: false`。此时仍保留一行准确 description，不把它误当成自动调用开关。
++
++另一项 Skill 抵达它时，使用 composition edge 与 composed-body 指针；需要交给用户显式选择时，在可移植源码中使用 `{{skill-call:my-name}}`，由安装投影生成目标宿主语法。
++
++当用户调用的 Skill 多到超出你的记忆能力时，堆积的认知负荷可由**路由 Skill**解决：一个用户调用的 Skill，列出其他 Skill 及各自应在何时使用。
++
++## 编写描述
++
++允许隐式调用时，**描述**有两项工作：说明 Skill 是什么，并列出应触发它的**分支**。显式调用时，它只需准确概括能力。无论哪种模式，描述都应比正文更严格删减：
++
++- **把 Skill 的主导词前置**——描述在此承担调用工作。
++- **一个分支只保留一个触发条件。** 把同一分支换个名字的同义说法是**重复**——“使用 TDD 构建功能……要求测试先行开发”是在重复同一个分支。应合并它们；只保留真正不同的分支。
++- **删去正文已经具备的身份说明。** 描述仅保留触发条件，以及任何“当另一项 Skill 需要……”的抵达条款。
++
++## 信息层级
++
++Skill 由两类可自由混合的内容构成：**步骤**和**参考**。它可以全是步骤、全是参考，或两者兼具。核心决策是用哪一种，以及每种应在**信息层级**的何处——这是一架按 Agent 对材料的即时需要程度排序的梯子：
++
++1. **Skill 内步骤**——`SKILL.md` 中按顺序执行的动作，是首要层级：Agent 要做什么、按什么顺序做。每一步以**完成条件**结束，即判定工作完成的条件。条件应当*可检查*（Agent 能否区分完成与未完成？）；在重要处还应当*穷尽*（“已说明每一个修改的模型”，而不是“生成变更清单”），因为模糊条件会招致**提前完成**。
++2. **Skill 内参考**——`SKILL.md` 中按需查阅的定义、规则或事实。它常常是正当的扁平同级集合（例如一次审查中的所有规则同处一层）——这没有问题，不是坏味道。*本 Skill 全是参考。*
++3. **外部参考**——从 `SKILL.md` 推送到单独文件、通过**上下文指针**抵达的参考，只在指针触发时加载。（范围从*已披露*参考——如仍属于该 Skill 的同级 `GLOSSARY.md`——到位于 Skill 系统外、可被任一 Skill 指向的完整**外部参考**。）
++
++要求严格的完成条件会驱动彻底的**基础工作**——Agent 在工作中进行的挖掘——无论 Skill 是否有步骤皆如此；因为“应用每一条规则”对扁平参考的约束，与“完成每一步”对顺序步骤的约束同样有效。
++
++下推得太少，顶层会膨胀；下推得太多，又会隐藏 Agent 实际需要的材料。这种张力正是全部决策所在。
++
++**渐进式披露**是沿梯子向下移动——从 `SKILL.md` 移至链接文件——从而让顶层保持清晰。机制：在 Skill 文件夹中放置一个以内容命名的链接 `.md` 文件（本 Skill 将完整定义披露到 `GLOSSARY.md`）。有些 Skill 有多种用法，每种不同用法都是一个**分支**：不同运行走过其中不同路径。分支是最干净的披露检验：每个分支都需要的内容内联，只有部分分支需要的内容放到指针之后。**上下文指针**的*措辞*而非目标决定 Agent 在何时、以多高可靠性抵达材料。
++
++梯子决定一项内容应当*下放多远*，而**共置**决定它到达该处后*与什么放在一起*：应将一个概念的定义、规则与注意事项置于同一标题下，而非分散各处；如此阅读某一部分就会同时带上邻近内容。
++
++## 何时拆分
++
++**粒度**是划分 Skill 的精细程度，每一次切分都要消耗两类负荷之一，因此只能在切分值得时进行。有两种切分：
++
++- **按调用拆分**——当存在一个应当独自触发的不同**主导词**，或另一项 Skill 必须抵达它时，拆出一个**模型调用**的 Skill。新 Skill 始终加载的**描述**会消耗**上下文负荷**，因此这种独立可达性必须值得付出代价。
++- **按序列拆分**——当仍在前方的**步骤**（某一步的**完成后步骤**）会诱使 Agent 仓促完成眼前的一步（**提前完成**）时，拆开一串步骤。让后续步骤离开视野，能促使 Agent 在当前任务上做更多**基础工作**。
++
++## 剪枝
++
++让每层含义保持在**单一事实来源**中：一个权威位置，因此变更行为时只需改一处。
++
++生成计划、Spec 或 Ticket 的 Skill 复用[最终态写作](references/shared/final-state-writing.md)，不重复定义这项规则。
++
++逐行检查**相关性**：它是否仍与该 Skill 的工作有关？
++
++接着逐句搜寻**无效操作**，而非只逐行检查：孤立地对每个句子进行无效操作测试；一个句子未通过时，删除整句而不是仅删几个词。要果断——多数未通过的散文应被删除，而不是改写。
++
++## 主导词
++
++**主导词**是模型预训练中已有的紧凑概念，Agent 在执行 Skill 时会借其思考（例如 *lesson*、*fog of war*、*tracer bullets*）。它会在全文反复出现（但不一定如此——强有力的主导词可能只需一次），累积成分布式定义，并以最少 token 锚定整片行为区域，因为它会调动已有先验。
++
++它以两种方式服务可预测性。在正文中，它锚定**执行**：Agent 每次看到该词，都会抵达相同行为。在描述中，它锚定**调用**：当同一个词出现在你的提示、文档和代码中，Agent 会将这种共享语言与该 Skill 连接起来，更可靠地触发它。
++
++寻找重构 Skill 以采用主导词的机会。在三处完整拼出的三元组（**重复**）、一条描述花一整句指向一个想法——都在等待被**折叠**成单一 token。示例：
++
++- “快速、确定、低开销” -> *tight*——把某一阶段反复表述的一项质量——折叠为一个预训练词（一个 *tight* 循环）。
++- “你相信的循环” -> *red*——将模糊的门槛转换为二元、可观察的状态（循环会在 bug 上变为 *red*，或者不会）。
++
++你会赢得两次：token 更少，且 Agent 的思考有了更锐利的挂钩。假设每个 Skill 都藏有能被主导词淘汰的重述——去找出来。
++
++## 失效模式
++
++用它们诊断用户可能遇到的 Skill 问题。
++
++- **提前完成**——在一步真正完成前结束它，注意力滑向了*完成这件事*。按顺序防御：先收紧完成条件（廉价、局部）；仅当条件无法进一步变清晰且确实观察到匆忙时，才通过拆分隐藏完成后步骤（序列切分）。
++- **重复**——同一含义存在于多个位置。它消耗维护与 token，并把某个含义在层级中的突出度抬高到超过其真实等级。
++- **沉积**——由于添加看似安全、删除看似有风险而沉淀下来的过时层。没有剪枝纪律的任何 Skill 的默认命运。
++- **蔓延**——即使每一行都活跃且唯一，Skill 仍然太长。它损害可读性与可维护性并浪费 token。解法是梯子：在指针后披露**参考**，并按**分支**或序列拆分，使每条路径只携带它需要的内容。
++- **无效操作**——模型默认已经会遵守的一行，所以你付出负荷却没有传达任何内容。测试是：与默认行为相比，它是否改变了行为？弱主导词（模型已经相当彻底时的 *be thorough*）是无效操作；修复方式是使用更强的词（*relentless*），而不是换一种技巧。
++- **否定**——通过禁止来引导会适得其反：*不要想一头大象*会说出大象，让它更容易被想到，而不是更难。应提示**正向**目标——陈述目标行为，使被禁止的行为不被说出；只有在无法正向表述的硬护栏中才保留禁止，即便如此也应与要做什么配对。
+--- /dev/null
++++ b/skills/my-writing-for-agents/agents/openai.yaml
+@@ -0,0 +1,5 @@
++interface:
++  display_name: "Writing Great Skills"
++  short_description: "Principles for predictable skills"
++policy:
++  allow_implicit_invocation: true
+--- /dev/null
++++ b/tests/test_skill_packaging_v2.py
+@@ -0,0 +1,46 @@
++import unittest
++import tempfile
++from pathlib import Path
++
++from tools.workflow_lib.composition import load_composition_manifest, validate_composition_manifest
++from tools.workflow_lib.release import stage_release_tree
++from tools.workflow_lib.installer import install_release, verify_installed_state, load_install_state
++
++ROOT = Path(__file__).resolve().parents[1]
++MODEL_ENTRIES = {
++    'my-grilling', 'my-domain-modeling', 'my-codebase-design', 'my-tdd',
++    'my-code-review', 'my-review-design', 'my-to-spec', 'my-to-tickets',
++    'my-implement', 'my-prototype', 'my-writing-for-agents',
++}
++MANUAL_ENTRIES = {
++    'my-ask-matt', 'my-setup', 'my-install', 'my-grill-me', 'my-grill-with-docs',
++    'my-handoff', 'my-research', 'my-diagnosing-bugs', 'my-resolving-merge-conflicts',
++    'my-triage', 'my-wayfinder', 'my-wizard', 'my-to-questionnaire', 'my-teach',
++    'my-tech-design', 'my-test-report', 'my-edit-article', 'my-humanizer',
++    'my-improve-codebase-architecture', 'my-review-artifact', 'my-review-instructions',
++}
++
++
++class PackagingV2Tests(unittest.TestCase):
++    def test_catalog_and_invocation_graph_match_approved_spec(self):
++        manifest = load_composition_manifest(ROOT / 'composition/manifest.json')
++        validate_composition_manifest(manifest, ROOT / 'skills')
++        self.assertEqual(MODEL_ENTRIES | MANUAL_ENTRIES,
++                         {p.name for p in (ROOT / 'skills').iterdir() if p.is_dir()})
++        self.assertEqual(MODEL_ENTRIES,
++                         {edge.skill for edges in manifest.callers.values() for edge in edges})
++        self.assertEqual((MODEL_ENTRIES | MANUAL_ENTRIES) - {'my-ask-matt'},
++                         set(manifest.routable_entries['my-ask-matt']))
++        self.assertEqual({'my-tdd', 'my-code-review'},
++                         {e.skill for e in manifest.callers['my-implement']})
++        self.assertEqual([('my-implement', 'chain')],
++                         [(e.skill, e.kind) for e in manifest.callers['my-to-tickets']])
++
++    def test_resources_are_bundled_without_composed_bodies(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            staged = Path(tmp) / 'release'
++            manifest = stage_release_tree(ROOT, staged)
++            self.assertEqual([], list((staged / 'skills').glob('*/references/composed')))
++            self.assertTrue((staged / 'skills/my-review-artifact/references/shared/humanizer.md').is_file())
++            self.assertTrue((staged / 'skills/my-wayfinder/references/shared/research-method.md').is_file())
++            self.assertEqual(MODEL_ENTRIES, set(manifest['invocable_skills']))

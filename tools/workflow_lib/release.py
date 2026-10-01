@@ -13,7 +13,7 @@ from typing import Callable
 
 from .composition import (
     CompositionManifest,
-    compose_dependency_references,
+    model_invocable_skills,
     load_composition_manifest,
     resolve_transitive_closure,
     validate_composition_manifest,
@@ -191,26 +191,6 @@ def _declared_generated_targets(
     targets = {skill: set() for skill in skill_names}
     if composition is not None:
         validate_composition_manifest(composition, skills_dir)
-        declared_dependencies = {
-            caller: resolve_transitive_closure(composition, caller)
-            for caller in composition.callers
-        }
-        for caller, dependencies in declared_dependencies.items():
-            for dependency in sorted(set(dependencies)):
-                source = (skills_dir / dependency).resolve()
-                for path in walk_skill_sources(source):
-                    relative = path.relative_to(source)
-                    if relative == Path("agents/openai.yaml"):
-                        continue
-                    if relative.name == "SKILL.md":
-                        relative = relative.with_name("COMPOSED.md")
-                    targets[caller].add(
-                        str(
-                            Path("references/composed")
-                            / dependency
-                            / relative
-                        )
-                    )
     if resources is not None:
         _, effective_consumers = resource_consumer_maps(
             resources, skill_names, composition, repo_root
@@ -436,6 +416,8 @@ def validate_skills(
         _validate_direct_resource_consumers(resources, source_inventories)
     seen: set[str] = set()
     for skill_dir in skill_dirs:
+        if (skill_dir / "references/composed").exists():
+            raise ReleaseError(f"{skill_dir.name}: 不允许正文副本 references/composed")
         skill_file = skill_dir / "SKILL.md"
         if not skill_file.is_file():
             raise ReleaseError(f"{skill_dir.name}: 缺少 SKILL.md")
@@ -449,8 +431,10 @@ def validate_skills(
         seen.add(name)
         if not metadata.get("description"):
             raise ReleaseError(f"{name}: 缺少 description")
-        if metadata.get("disable-model-invocation") != "true":
-            raise ReleaseError(f"{name}: 必须设置 disable-model-invocation: true")
+        invocable = name in model_invocable_skills(composition)
+        expected = None if invocable else "true"
+        if metadata.get("disable-model-invocation") != expected:
+            raise ReleaseError(f"{name}: disable-model-invocation 与组合清单不一致")
         if len(text.splitlines()) > 500:
             raise ReleaseError(f"{name}: SKILL.md 超过 500 行")
         skill_root = skill_dir.resolve()
@@ -500,102 +484,13 @@ def _validate_staged_references(staged_skills_dir: Path) -> None:
                     raise ReleaseError(
                         f"{skill_dir.name}: {source} 引用不存在：{reference}"
                     )
-        composed = skill_dir / "references" / "composed"
-        if composed.is_dir():
-            forbidden = sorted(composed.rglob("agents/openai.yaml"))
-            if forbidden:
-                raise ReleaseError(
-                    f"{skill_dir.name}: 组合目录包含运行时元数据："
-                    f"{forbidden[0].relative_to(skill_dir)}"
-                )
-            invocable = sorted(composed.rglob("SKILL.md"))
-            if invocable:
-                raise ReleaseError(
-                    f"{skill_dir.name}: 组合目录包含可注册 Skill："
-                    f"{invocable[0].relative_to(skill_dir)}"
-                )
-            named_composed = [
-                path
-                for path in sorted(composed.rglob("COMPOSED.md"))
-                if re.search(r"(?m)^name:\s*", path.read_text())
-            ]
-            if named_composed:
-                raise ReleaseError(
-                    f"{skill_dir.name}: 组合正文包含可注册 name："
-                    f"{named_composed[0].relative_to(skill_dir)}"
-                )
-            embedded_resources = [
-                path
-                for path in sorted(composed.rglob("*"))
-                if path.is_dir()
-                and path.name in {"policies", "shared"}
-                and path.parent.name == "references"
-            ]
-            if embedded_resources:
-                raise ReleaseError(
-                    f"{skill_dir.name}: 组合目录包含重复共享资源："
-                    f"{embedded_resources[0].relative_to(skill_dir)}"
-                )
-
-
-def _rewrite_composed_resource_links(skill_dir: Path) -> None:
-    """Point composed references at the host Skill's shared resource bundle."""
-    composed = skill_dir / "references" / "composed"
-    if not composed.is_dir():
-        return
-    root = skill_dir.resolve()
-
-    def rewrite(markdown: Path, text: str) -> str:
-        def replace(match: re.Match[str]) -> str:
-            target = match.group("target")
-            wrapped = target.startswith("<") and target.endswith(">")
-            value = target[1:-1] if wrapped else target
-            if value.startswith(("http://", "https://")):
-                return match.group(0)
-            path, separator, fragment = value.partition("#")
-            candidate = (markdown.parent / path).resolve()
-            try:
-                parts = candidate.relative_to(root).parts
-            except ValueError:
-                return match.group(0)
-            resource_start = next(
-                (
-                    index
-                    for index in range(len(parts) - 1)
-                    if parts[index] == "references"
-                    and parts[index + 1] in {"policies", "shared"}
-                ),
-                None,
-            )
-            if resource_start is None:
-                return match.group(0)
-            destination = root.joinpath(*parts[resource_start:])
-            if not destination.is_file():
-                raise ReleaseError(
-                    f"{skill_dir.name}: {markdown.relative_to(skill_dir)} "
-                    f"组合引用的共享资源未打包：{value}"
-                )
-            source = markdown.parent.resolve().relative_to(root)
-            target_path = destination.relative_to(root)
-            rewritten = os.path.relpath(target_path, source).replace(os.sep, "/")
-            if separator:
-                rewritten += separator + fragment
-            if wrapped:
-                rewritten = f"<{rewritten}>"
-            return f"{match.group('prefix')}{rewritten}{match.group('suffix')}"
-
-        return MARKDOWN_LINK_PATTERN.sub(replace, text)
-
-    for markdown in sorted(composed.rglob("*.md")):
-        markdown.write_text(rewrite(markdown, markdown.read_text()))
-
 
 def _manifest_for_staged_tree(
     staged_skills_dir: Path,
     staged_runtime_dir: Path,
     *,
     upstream_id: str,
-    composed: dict[str, list[str]],
+    invocable_skills: set[str],
     shared_resources: dict[str, list[str]],
     resource_consumers: dict[str, dict[str, list[str]]],
 ) -> dict[str, object]:
@@ -623,7 +518,8 @@ def _manifest_for_staged_tree(
         "upstream_id": upstream_id,
         "skills": portable_skills,
         "runtime": runtime,
-        "composed": composed,
+        "composed": {},
+        "invocable_skills": sorted(invocable_skills),
         "shared_resources": shared_resources,
         "resource_consumers": resource_consumers,
         "target_manifests": target_manifests,
@@ -668,28 +564,6 @@ def _stage_release_tree(
     for source in sorted(runtime_library.glob("*.py")):
         shutil.copy2(source, staged_runtime / "tools" / "workflow_lib" / source.name)
 
-    composed: dict[str, list[str]] = {}
-    if composition is not None:
-        materialized: set[str] = set()
-
-        def materialize(caller: str) -> None:
-            if caller in materialized:
-                return
-            for edge in composition.callers.get(caller, ()):
-                materialize(edge.skill)
-            dependencies = resolve_transitive_closure(composition, caller)
-            if dependencies:
-                compose_dependency_references(
-                    staged_skills,
-                    staged_skills / caller,
-                    dependencies,
-                )
-                composed[caller] = dependencies
-            materialized.add(caller)
-
-        for caller in sorted(composition.callers):
-            materialize(caller)
-
     shared_resources: dict[str, list[str]] = {}
     resource_consumers: dict[str, dict[str, list[str]]] = {
         "direct": {},
@@ -720,15 +594,13 @@ def _stage_release_tree(
             )
             if written:
                 shared_resources[skill_dir.name] = written
-    for skill_dir in skill_dirs:
-        _rewrite_composed_resource_links(staged_skills / skill_dir.name)
 
     _validate_staged_references(staged_skills)
     return _manifest_for_staged_tree(
         staged_skills,
         staged_runtime,
         upstream_id=upstream_id,
-        composed=composed,
+        invocable_skills=model_invocable_skills(composition),
         shared_resources=shared_resources,
         resource_consumers=resource_consumers,
     )
@@ -808,6 +680,7 @@ def build_release(
     resources_manifest_path: Path | None = None,
     source_gate: Callable[[Path], None] | None = None,
     current_pointer: Path | None = None,
+    agent_homes: list[Path] | None = None,
 ) -> Path:
     """Validate one stable source snapshot and build an immutable release."""
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", release_id):
@@ -837,11 +710,24 @@ def build_release(
     # the CLI, while allowing deliberately minimal unit fixtures.
     from .validator import preflight_build
 
+    from .installer import load_install_state, verify_release
     releases_dir.mkdir(parents=True, exist_ok=True)
     release = releases_dir / release_id
     staged = releases_dir / f".{release_id}.staging"
     try:
         with exclusive_lock(releases_dir, RELEASES_MUTATION_LOCK):
+            referenced = set()
+            for home in agent_homes or []:
+                state = load_install_state(home / "my-matt-workflow/install-state.json")
+                if state is not None:
+                    referenced.add(state["release_id"])
+            previous = None
+            if current_pointer is not None and current_pointer.is_file():
+                pointer_data = json.loads(current_pointer.read_text())
+                previous = pointer_data.get("release_id")
+            elif releases_dir.is_dir():
+                old = [p for p in releases_dir.iterdir() if p.is_dir() and (p / "manifest.json").is_file()]
+                previous = max(old, key=lambda p: p.stat().st_mtime_ns).name if old else None
             if release.exists():
                 raise ReleaseError(f"release 已存在：{release_id}")
             # A prior-looking directory without this process's capability is
@@ -976,6 +862,11 @@ def build_release(
                 raise snapshot_error or SourceSnapshotChanged(
                     "无法取得稳定的 build source 快照"
                 )
+            keep = referenced | {release_id, previous}
+            for candidate in sorted(releases_dir.iterdir()):
+                if candidate.is_dir() and not candidate.name.startswith(".") and candidate.name not in keep:
+                    verify_release(candidate)
+                    quarantine_and_remove(releases_dir, candidate, purpose="release")
     except FilesystemSafetyError as exc:
         raise ReleaseError(str(exc)) from exc
     return release

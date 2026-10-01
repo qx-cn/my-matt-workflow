@@ -1,7 +1,6 @@
 ---
 name: my-to-spec
-description: 将当前对话整理为 Spec，并按项目配置保存或发布；不重新访谈，只综合已有讨论。
-disable-model-invocation: true
+description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段的工作单元被调用。
 ---
 
 本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
@@ -20,7 +19,7 @@ disable-model-invocation: true
 
 5. 使用下列模板撰写 Spec。
 
-6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，读取[设计成立性](references/composed/my-review-design/COMPOSED.md)并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
+6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，调用 {{skill-call:my-review-design}}并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
 
 7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。修订版还须核对修订索引与前版、当前正文和验收一致，确认没有遗漏行为变化、把旧状态误写成当前要求，或让索引产生正文没有的约束。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
 

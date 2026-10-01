@@ -5,47 +5,47 @@
       "source": "resources/humanizer.md",
       "release_path": "references/shared/humanizer.md",
       "consumers": [
-        "my-to-spec",
-        "my-to-tickets",
-        "my-domain-modeling",
         "my-code-review",
-        "my-humanizer"
+        "my-domain-modeling",
+        "my-humanizer",
+        "my-review-artifact",
+        "my-to-spec",
+        "my-to-tickets"
       ]
     },
     "final-state-writing": {
       "source": "resources/final-state-writing.md",
       "release_path": "references/shared/final-state-writing.md",
       "consumers": [
+        "my-ask-matt",
+        "my-codebase-design",
         "my-grilling",
+        "my-review-artifact",
+        "my-review-design",
         "my-tech-design",
+        "my-test-report",
         "my-to-spec",
         "my-to-tickets",
-        "my-codebase-design",
-        "my-writing-great-skills",
-        "my-review-design",
-        "my-test-report",
-        "my-final-state-writing"
+        "my-writing-for-agents"
       ]
     },
     "artifact-finalization": {
       "source": "resources/artifact-finalization.md",
       "release_path": "references/shared/artifact-finalization.md",
       "consumers": [
-        "my-to-spec",
+        "my-ask-matt",
         "my-handoff",
-        "my-final-state-writing",
-        "my-artifact-finalization"
+        "my-review-artifact",
+        "my-to-spec"
       ]
     },
     "first-principles-reasoning": {
       "source": "resources/first-principles-reasoning.md",
       "release_path": "references/shared/first-principles-reasoning.md",
       "consumers": [
-        "my-first-principles-review",
         "my-grill-with-docs",
         "my-review-design",
-        "my-review-agent-rules",
-        "my-review-skill",
+        "my-review-instructions",
         "my-to-spec",
         "my-to-tickets"
       ]
@@ -54,7 +54,8 @@
       "source": "resources/visual-communication.md",
       "release_path": "references/shared/visual-communication.md",
       "consumers": [
-        "my-visual-communication",
+        "my-ask-matt",
+        "my-review-artifact",
         "my-teach",
         "my-test-report"
       ]
@@ -63,15 +64,14 @@
       "source": "resources/reader-first-writing.md",
       "release_path": "references/shared/reader-first-writing.md",
       "consumers": [
+        "my-ask-matt",
         "my-code-review",
         "my-diagnosing-bugs",
         "my-domain-modeling",
         "my-edit-article",
-        "my-reader-first-writing",
-        "my-final-state-writing",
         "my-improve-codebase-architecture",
         "my-prototype",
-        "my-research",
+        "my-review-artifact",
         "my-review-design",
         "my-teach",
         "my-tech-design",
@@ -99,7 +99,6 @@
         "my-domain-modeling",
         "my-edit-article",
         "my-grilling",
-        "my-review-agent-rules",
         "my-to-tickets"
       ]
     },
@@ -107,11 +106,12 @@
       "source": "resources/adapters/composition.md",
       "release_path": "references/shared/adapters/composition.md",
       "consumers": [
+        "my-ask-matt",
         "my-grill-me",
         "my-grill-with-docs",
-        "my-ask-matt",
+        "my-improve-codebase-architecture",
         "my-wayfinder",
-        "my-improve-codebase-architecture"
+        "my-writing-for-agents"
       ]
     },
     "adapter-ticket-selection": {
@@ -129,7 +129,6 @@
         "my-ask-matt",
         "my-grill-with-docs",
         "my-implement",
-        "my-requirement-analysis",
         "my-setup",
         "my-tdd",
         "my-to-spec",
@@ -147,22 +146,22 @@
       "source": "resources/adapters/write-actions.md",
       "release_path": "references/shared/adapters/write-actions.md",
       "consumers": [
+        "my-resolving-merge-conflicts",
         "my-to-spec",
         "my-to-tickets",
-        "my-wayfinder",
-        "my-resolving-merge-conflicts"
+        "my-wayfinder"
       ]
     },
     "adapter-artifact-access": {
       "source": "resources/adapters/artifact-access.md",
       "release_path": "references/shared/adapters/artifact-access.md",
       "consumers": [
-        "my-grill-with-docs",
         "my-code-review",
-        "my-review-design",
-        "my-domain-modeling",
-        "my-tdd",
         "my-diagnosing-bugs",
+        "my-domain-modeling",
+        "my-grill-with-docs",
+        "my-review-design",
+        "my-tdd",
         "my-wayfinder"
       ]
     },
@@ -189,10 +188,10 @@
       "source": "resources/adapters/project-rules.md",
       "release_path": "references/shared/adapters/project-rules.md",
       "consumers": [
-        "my-to-spec",
-        "my-to-tickets",
         "my-code-review",
-        "my-review-agent-rules"
+        "my-review-instructions",
+        "my-to-spec",
+        "my-to-tickets"
       ]
     },
     "adapter-implementation-session": {
@@ -213,8 +212,7 @@
       "source": "resources/adapters/specialized-review-session.md",
       "release_path": "references/shared/adapters/specialized-review-session.md",
       "consumers": [
-        "my-review-agent-rules",
-        "my-review-skill"
+        "my-review-instructions"
       ]
     },
     "policies": {
@@ -225,6 +223,40 @@
         "my-handoff",
         "my-resolving-merge-conflicts",
         "my-wayfinder"
+      ]
+    },
+    "requirement-analysis": {
+      "source": "resources/requirement-analysis.md",
+      "release_path": "references/shared/requirement-analysis.md",
+      "consumers": [
+        "my-grill-with-docs"
+      ]
+    },
+    "requirement-reviewer-brief": {
+      "source": "resources/requirement-reviewer-brief.md",
+      "release_path": "references/shared/requirement-reviewer-brief.md",
+      "consumers": []
+    },
+    "research-method": {
+      "source": "resources/research-method.md",
+      "release_path": "references/shared/research-method.md",
+      "consumers": [
+        "my-research",
+        "my-wayfinder"
+      ]
+    },
+    "agent-rule-applicability": {
+      "source": "resources/agent-rule-applicability.md",
+      "release_path": "references/shared/agent-rule-applicability.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "project-rule-review": {
+      "source": "resources/project-rule-review.md",
+      "release_path": "references/shared/project-rule-review.md",
+      "consumers": [
+        "my-review-instructions"
       ]
     }
   }

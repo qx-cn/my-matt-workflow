@@ -672,8 +672,8 @@ class ProfileTests(unittest.TestCase):
                 self.assertNotRegex(text, r"manual`：输出对应的.*随后停止")
 
         implement = (root / "my-implement/SKILL.md").read_text()
-        self.assertIn("references/composed/my-tdd/COMPOSED.md", implement)
-        self.assertIn("references/composed/my-code-review/COMPOSED.md", implement)
+        self.assertIn("{{skill-call:my-tdd}}", implement)
+        self.assertIn("{{skill-call:my-code-review}}", implement)
         self.assertNotIn("composition_policy", implement)
 
         wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
@@ -685,7 +685,7 @@ class ProfileTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         text = (root / "skills/my-grill-me/SKILL.md").read_text()
 
-        self.assertIn("references/composed/my-grilling/COMPOSED.md", text)
+        self.assertIn("{{skill-call:my-grilling}}", text)
         self.assertIn("立即提出第一个问题", text)
         self.assertNotIn("输出 `/my-grilling`", text)
         self.assertNotIn("输出 `$my-grilling`", text)
@@ -1183,7 +1183,6 @@ class ProfileTests(unittest.TestCase):
             "my-ask-matt",
             "my-grill-with-docs",
             "my-implement",
-            "my-requirement-analysis",
             "my-setup",
             "my-tdd",
             "my-to-spec",
@@ -1500,7 +1499,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("Review-Snapshot: <content_id>", review)
         self.assertIn("旧 receipt 立即失效", review)
         self.assertIn("内容快照由 runtime 管理", implement)
-        self.assertIn("代码审查方法", implement)
+        self.assertIn("{{skill-call:my-code-review}}", implement)
         for runtime_detail in (
             "run-start",
             "run-record",
@@ -2402,8 +2401,9 @@ class InstallerTests(unittest.TestCase):
 
 
 class ReleaseTests(unittest.TestCase):
-    def test_all_skills_have_manual_only_openai_metadata(self):
+    def test_all_skills_have_manifest_invocation_metadata(self):
         root = Path(__file__).resolve().parents[1] / "skills"
+        from tests.test_skill_packaging_v2 import MODEL_ENTRIES
         failures = []
         for skill_dir in sorted(root.iterdir()):
             if not skill_dir.is_dir():
@@ -2413,7 +2413,8 @@ class ReleaseTests(unittest.TestCase):
                 failures.append(f"{skill_dir.name}: missing")
                 continue
             text = metadata.read_text()
-            if "allow_implicit_invocation: false" not in text:
+            expected = "true" if skill_dir.name in MODEL_ENTRIES else "false"
+            if f"allow_implicit_invocation: {expected}" not in text:
                 failures.append(f"{skill_dir.name}: implicit")
         self.assertEqual([], failures)
 
@@ -2455,7 +2456,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertNotIn("my-tech-design", composition["callers"])
         self.assertTrue(
             all(
-                "my-tech-design" not in entries
+                "my-tech-design" in entries
                 for entries in composition["routable_entries"].values()
             )
         )
@@ -2694,13 +2695,8 @@ render_root: 学生课程
                 "references/shared/final-state-writing.md",
                 "未发现影响方案成立或实施的实质问题",
             ],
-            "my-reader-first-writing": [
-                "只读评审",
+            "my-review-artifact": [
                 "references/shared/reader-first-writing.md",
-                "No findings.",
-            ],
-            "my-artifact-finalization": [
-                "只读评审",
                 "references/shared/artifact-finalization.md",
                 "No findings.",
             ],
@@ -2720,7 +2716,7 @@ render_root: 学生课程
         ).read_text()
         self.assertIn("Force Push", conflict_policy)
         self.assertIn("回滚", conflict_policy)
-        self.assertEqual(39, len(validate_skills(root)))
+        self.assertEqual(32, len(validate_skills(root)))
 
     def test_release_skills_do_not_repeat_project_policy_footer(self):
         source_skills = Path(__file__).parents[1] / "skills"
@@ -2777,70 +2773,16 @@ render_root: 学生课程
 
             self.assertTrue((release / "skills/my-demo/SKILL.md").is_file())
 
-    def test_build_materializes_composition_and_shared_resources(self):
+    def test_build_materializes_shared_resources_without_body_copies(self):
         root = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as tmp:
-            release = build_release(
-                root / "skills",
-                Path(tmp) / "releases",
-                release_id="composed-v1",
-                upstream_id="local-matt-skills",
-                repo_root=root,
-            )
-            self.assertTrue(
-                (
-                    release
-                    / "skills/my-implement/references/composed/my-tdd/COMPOSED.md"
-                ).is_file()
-            )
-            self.assertTrue(
-                (
-                    release
-                    / "skills/my-to-spec/references/shared/humanizer.md"
-                ).is_file()
-            )
-            self.assertTrue(
-                (
-                    release / "skills/my-implement/references/shared/humanizer.md"
-                ).is_file()
-            )
-            self.assertIn(
-                "../../shared/humanizer.md",
-                (
-                    release
-                    / "skills/my-implement/references/composed/my-code-review/COMPOSED.md"
-                ).read_text(),
-            )
-            self.assertEqual(
-                [],
-                list(
-                    release.glob(
-                        "skills/*/references/composed/**/references/policies"
-                    )
-                )
-                + list(
-                    release.glob(
-                        "skills/*/references/composed/**/references/shared"
-                    )
-                ),
-            )
-            manifest = json.loads((release / "manifest.json").read_text())
-            self.assertEqual(
-                ["my-code-review", "my-review-design", "my-tdd"],
-                manifest["composed"]["my-implement"],
-            )
-            self.assertEqual(
-                ["my-tdd"],
-                manifest["resource_consumers"]["direct"]["adapter-work-scope"],
-            )
-            self.assertIn(
-                "my-implement",
-                manifest["resource_consumers"]["effective"]["adapter-work-scope"],
-            )
-            self.assertIn(
-                "my-to-spec",
-                manifest["resource_consumers"]["effective"]["instruction-authority"],
-            )
+            release = build_release(root / "skills", Path(tmp) / "releases",
+                                    release_id="resources-v2", upstream_id="local-matt-skills", repo_root=root)
+            self.assertFalse((release / "skills/my-implement/references/composed").exists())
+            self.assertTrue((release / "skills/my-implement/references/shared/humanizer.md").is_file())
+            body = (release / "skills/my-implement/SKILL.md").read_text()
+            self.assertIn("{{skill-call:my-tdd}}", body)
+            self.assertIn("{{skill-call:my-code-review}}", body)
 
     def test_release_bundles_policies_only_for_explicit_consumers(self):
         root = Path(__file__).resolve().parents[1]
@@ -3155,6 +3097,7 @@ class WorkflowCliTests(unittest.TestCase):
             root = Path(tmp)
             workflow = self._workflow(root)
             skill_file = workflow / "skills" / "my-demo" / "SKILL.md"
+            agent_home = root / "agent"
             for release_id, description in [
                 ("v1", "Demo skill v1"),
                 ("v2", "Demo skill v2"),
@@ -3174,7 +3117,10 @@ class WorkflowCliTests(unittest.TestCase):
                     release_id=release_id,
                     upstream_id="local-matt-skills",
                     repo_root=workflow,
+                    agent_homes=[agent_home],
                 )
+                if release_id == "v1":
+                    install_release(workflow / "releases/v1", agent_home)
             (workflow / "current.json").write_text('{"release_id": "v3"}\n')
 
             agent_home = root / "agent"

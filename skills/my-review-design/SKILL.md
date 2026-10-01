@@ -1,7 +1,6 @@
 ---
 name: my-review-design
-description: 对已形成的 Spec、技术方案或架构设计做专项只读成立性评审；需要固定快照和综合交付验收时使用 my-review-artifact。
-disable-model-invocation: true
+description: 在 my-to-spec、my-review-artifact 流程中作为指定阶段的方法被调用。
 ---
 
 # 评审已形成方案

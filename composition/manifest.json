@@ -2,87 +2,171 @@
   "version": 2,
   "callers": {
     "my-grill-me": [
-      {"skill": "my-grilling", "when": "always", "kind": "method"}
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "always"
+      }
     ],
     "my-grill-with-docs": [
-      {"skill": "my-grilling", "when": "always", "kind": "method"},
-      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"},
-      {"skill": "my-requirement-analysis", "when": "complex-or-ambiguous-request", "kind": "method"}
-    ],
-    "my-implement": [
-      {"skill": "my-tdd", "when": "tdd-phase", "kind": "method"},
-      {"skill": "my-code-review", "when": "review-phase", "kind": "method"},
-      {"skill": "my-review-design", "when": "repair-plan-phase", "kind": "method"}
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "always"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "domain-vocabulary"
+      },
+      {
+        "skill": "my-to-spec",
+        "kind": "chain",
+        "when": "chain-phase"
+      }
     ],
     "my-to-spec": [
-      {"skill": "my-review-design", "when": "load-bearing-design", "kind": "method"}
+      {
+        "skill": "my-review-design",
+        "kind": "method",
+        "when": "load-bearing-design"
+      },
+      {
+        "skill": "my-to-tickets",
+        "kind": "chain",
+        "when": "chain-phase"
+      }
     ],
-    "my-prototype": [
-      {"skill": "my-implement", "when": "approved-production-absorption", "kind": "handoff"}
+    "my-to-tickets": [
+      {
+        "skill": "my-implement",
+        "kind": "chain",
+        "when": "chain-phase"
+      }
+    ],
+    "my-implement": [
+      {
+        "skill": "my-tdd",
+        "kind": "method",
+        "when": "tdd-phase"
+      },
+      {
+        "skill": "my-code-review",
+        "kind": "method",
+        "when": "review-phase"
+      }
     ],
     "my-review-artifact": [
-      {"skill": "my-final-state-writing", "when": "final-deliverable", "kind": "method"},
-      {"skill": "my-visual-communication", "when": "complex-human-facing", "kind": "method"},
-      {"skill": "my-humanizer", "when": "human-facing-prose", "kind": "method"},
-      {"skill": "my-reader-first-writing", "when": "reader-facing", "kind": "method"},
-      {"skill": "my-artifact-finalization", "when": "load-bearing-deliverable", "kind": "method"},
-      {"skill": "my-review-design", "when": "design-artifact", "kind": "method"}
+      {
+        "skill": "my-review-design",
+        "kind": "method",
+        "when": "design-artifact"
+      }
     ],
-    "my-review-skill": [
-      {"skill": "my-writing-great-skills", "when": "instruction-design-after-existence-gate", "kind": "method"}
+    "my-review-instructions": [
+      {
+        "skill": "my-writing-for-agents",
+        "kind": "method",
+        "when": "method-phase"
+      }
     ],
     "my-triage": [
-      {"skill": "my-grilling", "when": "missing-information", "kind": "method"},
-      {"skill": "my-domain-modeling", "when": "domain-vocabulary", "kind": "method"},
-      {"skill": "my-to-tickets", "when": "confirmed-local-brief", "kind": "handoff"}
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "missing-information"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "domain-vocabulary"
+      },
+      {
+        "skill": "my-to-tickets",
+        "kind": "handoff",
+        "when": "confirmed-local-brief"
+      }
     ],
     "my-wayfinder": [
-      {"skill": "my-grilling", "when": "grilling-decision", "kind": "method"},
-      {"skill": "my-domain-modeling", "when": "domain-decision", "kind": "method"},
-      {"skill": "my-research", "when": "research-ticket", "kind": "method"},
-      {"skill": "my-prototype", "when": "prototype-ticket", "kind": "method"},
-      {"skill": "my-to-spec", "when": "handoff-to-spec", "kind": "handoff"}
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "grilling-decision"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "domain-decision"
+      },
+      {
+        "skill": "my-prototype",
+        "kind": "method",
+        "when": "prototype-ticket"
+      },
+      {
+        "skill": "my-to-spec",
+        "kind": "handoff",
+        "when": "handoff-to-spec"
+      }
+    ],
+    "my-prototype": [
+      {
+        "skill": "my-implement",
+        "kind": "handoff",
+        "when": "approved-production-absorption"
+      }
     ],
     "my-improve-codebase-architecture": [
-      {"skill": "my-codebase-design", "when": "design-vocabulary", "kind": "method"},
-      {"skill": "my-grill-with-docs", "when": "selected-candidate", "kind": "method"}
+      {
+        "skill": "my-codebase-design",
+        "kind": "method",
+        "when": "design-vocabulary"
+      },
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "method-phase"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "method-phase"
+      }
     ]
   },
   "routable_entries": {
     "my-ask-matt": [
-      "my-artifact-finalization",
       "my-code-review",
       "my-codebase-design",
       "my-diagnosing-bugs",
       "my-domain-modeling",
       "my-edit-article",
-      "my-final-state-writing",
-      "my-grill-with-docs",
       "my-grill-me",
+      "my-grill-with-docs",
+      "my-grilling",
       "my-handoff",
       "my-humanizer",
       "my-implement",
       "my-improve-codebase-architecture",
+      "my-install",
       "my-prototype",
-      "my-reader-first-writing",
       "my-research",
       "my-resolving-merge-conflicts",
       "my-review-artifact",
-      "my-review-agent-rules",
       "my-review-design",
-      "my-review-skill",
+      "my-review-instructions",
       "my-setup",
       "my-tdd",
       "my-teach",
+      "my-tech-design",
       "my-test-report",
       "my-to-questionnaire",
       "my-to-spec",
       "my-to-tickets",
       "my-triage",
-      "my-visual-communication",
       "my-wayfinder",
       "my-wizard",
-      "my-writing-great-skills"
+      "my-writing-for-agents"
     ]
   }
 }

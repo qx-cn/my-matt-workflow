@@ -1,0 +1,91 @@
+{
+  "code_content_id": "5cd9d5d8b4a700c92089fc6c112006215a74c532c2f2db07873edba13a48ea43",
+  "design_gap": {
+    "evidence_refs": [
+      "snapshot:tools/workflow.py",
+      "snapshot:tools/workflow_lib/validator.py",
+      "snapshot:tools/workflow_lib/check.py",
+      "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+    ],
+    "root_cause": "catalog-build-evals-cleanup-dependency-cycle",
+    "summary": "Ticket09必须合并并删除my-review-agent-rules且构建安装件；固定基线的build/preflight与source_gate/check均验证evals中旧Skill路径和摘要。临时完整样例修改前37项eval有效，只删除该必删Skill就报source file is missing。09不包含evals，13拥有移除evals/check旧门禁但通过10/11/12依赖09，造成构建验收所需前置工作排在自身之后。Spec目标成立，需调整Ticket图和门禁迁移归属；候选源改动已全部撤回，不报告验收通过。"
+  },
+  "findings": [],
+  "follow_ons": [],
+  "review_id": "16286f78011b8dddabeedcd918a2be14",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "44507be4d296d8b0fdbf264156eff5c5"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-09#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A6",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/validator.py",
+          "snapshot:tools/workflow_lib/check.py",
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
+        ],
+        "probe": "downstream-owner",
+        "summary": "直接下游10/11只负责方法主链及上游吸收；最终旧evals校验清理由13拥有且依赖它们。当前09的可构建性无法作为仅建议推迟；需前移构建前置门禁和相应测试的迁移工作。"
+      }
+    ]
+  },
+  "status": "blocked-by-design"
+}

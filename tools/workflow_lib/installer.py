@@ -39,7 +39,7 @@ _MANAGED_SKILL = re.compile(r"my-[a-z0-9-]+")
 _RELEASE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
 _MANIFEST_FIELDS = {
     "release_id", "upstream_id", "skills", "runtime", "composed",
-    "shared_resources", "resource_consumers", "target_manifests",
+    "shared_resources", "resource_consumers", "target_manifests", "invocable_skills",
 }
 
 
@@ -271,6 +271,10 @@ def load_manifest(release: Path) -> dict:
         raise InstallError("release manifest 的 release_id、skills 或 runtime 无效")
     if release.name != release_id:
         raise InstallError("release manifest 的 release_id 与目录名不一致")
+    invocable = manifest.get("invocable_skills", [])
+    if (not isinstance(invocable, list) or any(not isinstance(n, str) for n in invocable)
+            or len(invocable) != len(set(invocable)) or not set(invocable) <= set(manifest["skills"])):
+        raise InstallError("release invocable_skills 与 Skill 集合不一致")
     if set(manifest) - _MANIFEST_FIELDS:
         raise InstallError("release manifest 包含未知字段")
     return manifest
@@ -491,7 +495,7 @@ def remove_verified_release(releases_dir: Path, release: Path) -> None:
 
 
 def validate_skill_metadata_for_target(
-    skill_dir: Path, target: str
+    skill_dir: Path, target: str, *, invocable: bool = False
 ) -> None:
     """Enforce target-specific manual invocation metadata."""
     if target not in {"cursor", "claude", "codex"}:
@@ -499,9 +503,9 @@ def validate_skill_metadata_for_target(
     if target in {"cursor", "claude"}:
         skill_file = skill_dir / "SKILL.md"
         text = skill_file.read_text() if skill_file.is_file() else ""
-        if not re.search(
-            r"(?m)^disable-model-invocation:\s*true\s*$", text
-        ):
+        text = text.split("---", 2)[1] if text.startswith("---") and len(text.split("---", 2)) == 3 else ""
+        disabled = re.search(r"(?m)^disable-model-invocation:\s*(\S+)\s*$", text)
+        if (disabled is not None if invocable else disabled is None or disabled.group(1) != "true"):
             raise InstallError(
                 f"{skill_dir.name}: {target} 目标要求 "
                 "disable-model-invocation: true"
@@ -509,12 +513,13 @@ def validate_skill_metadata_for_target(
         return
     metadata = skill_dir / "agents" / "openai.yaml"
     text = metadata.read_text() if metadata.is_file() else ""
+    expected = "true" if invocable else "false"
     if not re.search(
-        r"(?m)^\s*allow_implicit_invocation:\s*false\s*$", text
+        rf"(?m)^\s*allow_implicit_invocation:\s*{expected}\s*$", text
     ):
         raise InstallError(
             f"{skill_dir.name}: agents/openai.yaml 缺少 "
-            "allow_implicit_invocation: false"
+            f"allow_implicit_invocation: {expected}"
         )
 
 
@@ -709,7 +714,8 @@ def _install_release(
     if install_target is not None:
         for skill_name in sorted(manifest["skills"]):
             validate_skill_metadata_for_target(
-                release / "skills" / skill_name, install_target
+                release / "skills" / skill_name, install_target,
+                invocable=skill_name in manifest.get("invocable_skills", [])
             )
     state_home.mkdir(parents=True, exist_ok=True)
     skills_home = skills_home or state_home / "skills"

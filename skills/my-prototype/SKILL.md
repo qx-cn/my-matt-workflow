@@ -1,7 +1,6 @@
 ---
 name: my-prototype
-description: 用可抛弃原型回答一个难以仅靠讨论解决的设计问题
-disable-model-invocation: true
+description: 在 my-wayfinder 流程中作为指定阶段的方法被调用。
 ---
 
 # My Prototype
@@ -28,4 +27,4 @@ disable-model-invocation: true
 5. **展示状态。** 每次操作后（逻辑）或每次变体切换时（UI），打印或渲染完整相关状态，让用户看见变化。
 6. **以结论和交接结束。** 在 `.agent/work/<feature>/prototypes/prototypes-<feature>-<time-or-sequence>.md` 记录问题、结论、观察依据、不能外推的范围和被否定方案。保留结论后删除一次性代码；项目策略明确要求保留一手证据时，才把原型存入批准的位置。
 
-原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才读取 [my-implement handoff 正文](references/composed/my-implement/COMPOSED.md)；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。
+原型结论不会自动变成生产改动。只有当前范围已经包含已批准的 implementation work unit 时，才调用 {{skill-call:my-implement}}；跨会话执行则输出 `{{skill-call:my-implement}}` 并停止。否则只报告结论和建议的下一步，生产代码保持不变。

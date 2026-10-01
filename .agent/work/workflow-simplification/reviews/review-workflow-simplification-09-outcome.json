@@ -1,0 +1,7 @@
+{
+  "outcome": "blocked-by-design",
+  "test_receipt": null,
+  "review_receipt": null,
+  "code_receipt": null,
+  "blocker": "catalog-build-evals-cleanup-dependency-cycle: 09要求删除旧Skill并构建，但build/check仍依赖旧eval引用；移除旧门禁属于依赖09的13。需确认把构建前置校验迁移及其测试前移到09，保留13的最终删除与集成。证据：evidence-workflow-simplification-09-dependency.json；冻结审查 evidence 1f3c5faa568993fa198ea91bacd2d55721e21e5c7b67db84cf70042340766973。"
+}

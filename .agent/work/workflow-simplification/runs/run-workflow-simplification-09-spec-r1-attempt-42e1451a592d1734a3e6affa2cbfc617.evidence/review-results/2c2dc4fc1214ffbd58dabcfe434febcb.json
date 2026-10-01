@@ -1,0 +1,94 @@
+{
+  "code_content_id": "7163ef5c7c2466900714ded83daa3c91a5407dbf9d439c22375bd94e4e970ac0",
+  "design_gap": null,
+  "findings": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-09#A6"
+      ],
+      "baseline_reachable": true,
+      "id": "09-custom-home-retention",
+      "root_cause": "deploy-build-drops-explicit-agent-home",
+      "severity": "P1",
+      "summary": "tools/workflow.py:540,1036: deployment with --agent-home constructs a build Namespace without the selected home, and _build_release retains only default homes. After a default or another host advances releases, the new automatic pruning can remove a release still referenced by the explicitly selected custom host. Before pruning, include the deployment agent_home alongside standard homes and test an actual installed custom-home release survives later builds through this CLI seam."
+    }
+  ],
+  "follow_ons": [],
+  "review_id": "2c2dc4fc1214ffbd58dabcfe434febcb",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "a82f699a831710507622c0b3f6a9fe8a"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-09#A1",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A2",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A3",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A4",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A5",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A6",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-09#A7",
+        "evidence_refs": [
+          "snapshot:tests/test_skill_packaging_v2.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:composition/manifest.json"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/release.py",
+          "snapshot:tests/test_skill_packaging_v2.py"
+        ],
+        "probe": "downstream-owner",
+        "summary": "Code then fresh Spec pass on frozen snapshot: current 09 owns catalog, 22 edges, invocation metadata, shared bundles and retention. Direct successors 10 and 11 own workflow/method semantics; approved Ticket13 retains eval files and unused module cleanup. Custom deployment retention is a current A6 defect, not a future owner. Generated ignored Python cache should be removed before final source binding."
+      }
+    ]
+  },
+  "status": "findings"
+}

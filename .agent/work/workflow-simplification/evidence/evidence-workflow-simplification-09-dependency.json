@@ -1,0 +1,9 @@
+{
+  "before": "valid",
+  "baseline_result": "{'status': 'valid', 'evidence_level': 'deterministic-contract', 'scenarios': 37, 'required_scenarios': 36}",
+  "after": "EvalError: /private<temp>/evals/scenarios/agent-rule-review-root-before-wording.json.evidence.sources[0]: source file is missing: skills/my-review-agent-rules/SKILL.md",
+  "baseline_commit": "08e58eb2ac9743f06faf295031b4d4ff3e0a402d",
+  "change": "Delete only skills/my-review-agent-rules, required by Ticket 09 merge",
+  "call_path": "build -> build_release -> preflight_build -> validate_evals; build source_gate -> run_check -> validate_evals",
+  "ownership_conflict": "09 requires building new catalog but excludes evals; 13 owns removing evals-backed check and depends transitively on 09"
+}

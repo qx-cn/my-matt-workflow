@@ -12,7 +12,7 @@ from .resource_governance import (
     validate_resource_governance,
 )
 from .resources import ResourceError, load_resource_manifest
-from .portfolio import PortfolioError, validate_portfolio
+from .composition import load_composition_manifest, model_invocable_skills
 
 
 class ValidationError(RuntimeError):
@@ -88,17 +88,21 @@ def validate_manual_metadata(skills_dir: Path, *, expected_count: int | None) ->
         raise ValidationError(
             f"skills: expected {expected_count} manual-only skills, found {len(skill_dirs)}"
         )
+    manifest_path = skills_dir.parent / "composition/manifest.json"
+    manifest = load_composition_manifest(manifest_path) if manifest_path.is_file() else None
+    invocable = model_invocable_skills(manifest)
     for skill_dir in skill_dirs:
         metadata = skill_dir / "agents" / "openai.yaml"
         if not metadata.is_file():
             raise ValidationError(f"{skill_dir.name}: missing agents/openai.yaml")
+        expected = "true" if skill_dir.name in invocable else "false"
         if not re.search(
-            r"(?m)^\s*allow_implicit_invocation:\s*false\s*$",
+            rf"(?m)^\s*allow_implicit_invocation:\s*{expected}\s*$",
             metadata.read_text(),
         ):
             raise ValidationError(
                 f"{skill_dir.name}: agents/openai.yaml must set "
-                "allow_implicit_invocation: false"
+                f"allow_implicit_invocation: {expected}"
             )
 
 
@@ -160,10 +164,8 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
     except ReleaseError as exc:
         raise ValidationError(str(exc)) from exc
     canonical = (root / "composition" / "manifest.json").is_file()
-    portfolio = None
     if canonical:
         try:
-            portfolio = validate_portfolio(root)
             resource_manifest = load_resource_manifest(
                 root / "resources" / "manifest.json"
             )
@@ -172,10 +174,10 @@ def validate_repository(repo_root: Path) -> dict[str, int]:
                 resource_manifest,
                 root / "resources" / "governance.json",
             )
-        except (OSError, PortfolioError, ResourceError, ResourceGovernanceError) as exc:
+        except (OSError, ResourceError, ResourceGovernanceError) as exc:
             raise ValidationError(str(exc)) from exc
     validate_manual_metadata(
-        skills_dir, expected_count=len(portfolio.skills) if portfolio else None
+        skills_dir, expected_count=None
     )
     validate_markdown_references(root)
     validate_scripts(root)
@@ -199,21 +201,3 @@ def preflight_build(repo_root: Path, skills_dir: Path) -> None:
         return
 
     validate_repository(root)
-    from .evals import EvalError, validate_evals
-    from .behavior_evidence import BehaviorEvidenceError, validate_behavior_suite
-    from .smoke_registry import SmokeRegistryError, validate_smoke_registry
-
-    try:
-        validate_evals(root)
-    except EvalError as exc:
-        raise ValidationError(str(exc)) from exc
-    try:
-        validate_smoke_registry(root)
-    except SmokeRegistryError as exc:
-        raise ValidationError(str(exc)) from exc
-    try:
-        validate_behavior_suite(
-            root / "evals" / "agent-smokes" / "astra-behavior-suite.json"
-        )
-    except BehaviorEvidenceError as exc:
-        raise ValidationError(str(exc)) from exc
