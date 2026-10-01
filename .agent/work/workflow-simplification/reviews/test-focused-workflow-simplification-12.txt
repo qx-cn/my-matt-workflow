@@ -1,0 +1,10 @@
+.................................
+----------------------------------------------------------------------
+Ran 33 tests in 16.849s
+
+OK
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpte4rqir1/releases/r4
+INSTALLED r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmptn_c6ypw/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmptn_c6ypw/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmptn_c6ypw/repo/releases/r4
