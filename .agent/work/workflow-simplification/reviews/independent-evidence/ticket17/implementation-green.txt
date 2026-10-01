@@ -1,0 +1,8 @@
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.459s
+
+OK
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpv1o3mipa/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpv1o3mipa/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpv1o3mipa/repo/releases/r4

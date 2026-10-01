@@ -1,0 +1,12 @@
+test_can_install_an_older_release_for_rollback (tests.test_workflow.InstallerTests.test_can_install_an_older_release_for_rollback) ... ok
+test_recovers_persisted_interrupted_transaction (tests.test_workflow.InstallerTests.test_recovers_persisted_interrupted_transaction) ... ok
+test_v2_recovery_uses_recorded_split_skills_home_and_rejects_mismatch (tests.test_workflow.InstallerTests.test_v2_recovery_uses_recorded_split_skills_home_and_rejects_mismatch) ... ok
+test_v3_recovery_restores_legacy_skill_root (tests.test_workflow.InstallerTests.test_v3_recovery_restores_legacy_skill_root) ... ok
+test_invalid_recovery_journal_does_not_touch_skills (tests.test_workflow.InstallerTests.test_invalid_recovery_journal_does_not_touch_skills) ... ok
+test_v1_recovery_uses_install_state_split_skills_home (tests.test_workflow.InstallerTests.test_v1_recovery_uses_install_state_split_skills_home) ... ok
+test_v4_recovery_accepts_legitimate_transaction_content_drift (tests.test_security_hardening.SecurityHardeningTests.test_v4_recovery_accepts_legitimate_transaction_content_drift) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.045s
+
+OK

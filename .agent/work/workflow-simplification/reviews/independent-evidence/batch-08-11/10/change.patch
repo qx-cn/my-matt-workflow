@@ -1,0 +1,1821 @@
+diff --git a/policies/decision-taxonomy.md b/policies/decision-taxonomy.md
+index 343f3d6..c5a9b03 100644
+--- a/policies/decision-taxonomy.md
++++ b/policies/decision-taxonomy.md
+@@ -1,9 +1,5 @@
+-# 决策分类
++# 决策边界
+ 
+-自治只可处理可逆的执行细节：已批准 Ticket 内的实现选择、已验证证据的解释，以及不改变用户目标的顺序调整。`decision_policy: ask` 也不表示对每个普通技术细节暂停；在 `ready-frontier` 流程中，只对无法由 Ticket、计划或代码推断且会改变范围、公开接口、测试投资或风险承担的关键决定暂停。
++已批准范围内的可逆执行细节由 Agent 推进，能从环境查证的事实自行获取。承重未知、用户专属决定及写入动作按当前 Skill 根目录的 `references/shared/user-intervention.md`（找用户的唯一条件）处理；本文件不另定义确认清单。
+ 
+-调用方不得自行写“询问、继续或停止”的选择列表。先分类为 `routine`、`consequential` 或 `user-exclusive`，再执行 runtime `decision-gate` 返回的唯一动作。
+-
+-以下是用户专属产品决定，绝不因 `decision_policy: autonomous` 自动决定：目标或范围、用户体验取舍、成功指标、优先级、公开承诺、不可逆数据或兼容性选择，以及冲突的产品需求。遇到这类决定时保留问题和证据，等待用户；Wayfinder 的 `wayfinder-decision` Ticket 正是用来承载这些决定，不能转入实施池。
+-
+-写操作、外部发布、分支和提交的门槛仍由项目配置与[写操作边界](write-boundaries.md)独立决定；决策分类不放宽它们。
++Wayfinder 的决定工作仍由参与者代表自己的意见，不能把待用户回答的决定转为实施授权。
+diff --git a/policies/project-storage.md b/policies/project-storage.md
+index dfc2838..38f89b8 100644
+--- a/policies/project-storage.md
++++ b/policies/project-storage.md
+@@ -4,8 +4,9 @@
+ 
+ - `matt-workflow.md`：项目配置；
+ - `work/<topic>/<type>/`：所有本地工作产物；文件名使用 `<type>-<topic>-<time-or-sequence>.<extension>`。
++- `CONTEXT.md`：项目术语；`adr/NNNN-<slug>.md`：难以撤回的决定，不按 Topic 分片。
+ - `work/<topic>/handoffs/`：交接；由 `my-handoff` 只新增、不覆盖历史文件。
+-- `work/<topic>/prototypes/`、`researches/`、`learning/`、`domain/` 与 `architecture-reports/`：隔离原型、研究、项目学习、个人术语/ADR 候选和离线架构报告。
++- `work/<topic>/prototypes/`、`researches/`、`learning/` 与 `architecture-reports/`：隔离原型、研究、项目学习、离线架构报告。
+ 
+ 非项目交接写入系统临时目录。非项目学习内容写入安装配置指定的个人学习目录；未配置时使用当前工作目录。
+ 
+diff --git a/policies/write-boundaries.md b/policies/write-boundaries.md
+index 48220cf..c14edab 100644
+--- a/policies/write-boundaries.md
++++ b/policies/write-boundaries.md
+@@ -1,22 +1,5 @@
+-# 写操作边界
++# 写入边界
+ 
+-## 无需逐次确认
++授权和确认遵循当前 Skill 根目录的 `references/shared/user-intervention.md`（找用户的唯一条件）。普通已授权本地实施由 Agent 完成；文件生成不等于已获外部发布授权。
+ 
+-- 读取仓库与本地工具信息；
+-- 运行测试、类型检查和只读诊断；
+-- 写入已配置且被 Git 忽略的 `.agent/` 个人目录。
+-
+-## 按项目配置确认
+-
+-- 创建或切换分支；
+-- 创建 Commit；
+-- 修改团队跟踪的文档和配置；
+-- 发布 Spec/Ticket、修改 Tracker 标签或状态；
+-- Push、创建 PR/MR 或发送外部消息。
+-
+-## 固定禁止自动执行
+-
+-- Force Push；
+-- `git reset --hard`、`git clean` 等破坏性操作；
+-- 自动覆盖个人策略或未经审查合并上游变化；
+-- 向外部服务发送企业源码或内部信息。
++固定禁止自动执行：Force Push、reset hard或git clean等破坏性操作、覆盖个人策略或未经审查合并上游变化、向外部发送企业源码或内部信息。
+diff --git a/resources/adapters/artifact-review-session.md b/resources/adapters/artifact-review-session.md
+index 52156f2..4bf3297 100644
+--- a/resources/adapters/artifact-review-session.md
++++ b/resources/adapters/artifact-review-session.md
+@@ -1,23 +1,7 @@
+-# Artifact review session
++# 产物审查适配
+ 
+-本文件定义产物审查 Skill 与项目 runtime 的 session 接口；Skill 只消费固定审查单元并返回语义结果，不自行复制调度、快照或验证流程。
++从宿主安装状态取得绝对 runtime_entry，运行 artifact-review-open --artifact <path>（多个文件重复参数），设计类使用 --kind design。消费其固定review_unit、content_id和所需方法，不另建未绑定结论。
+ 
+-开始前从当前 Agent 的 `my-matt-workflow/install-state.json` 读取绝对 `runtime_entry`，然后运行：
++方法名和适用维度遵循[审查循环](../review-loop.md)的产物接口，不适用给理由。humanizer 是审查方法，不是工作流强制润色步骤。
+ 
+-```sh
+-python3 <runtime_entry> artifact-review-open --artifact <path> [--artifact <path> ...] [--kind general|design] [--parallel]
+-```
+-
+-`--kind` 默认为 `general`；技术方案、架构说明或设计文档使用 `design`，runtime 只在这种审查单元中加入 `my-review-design`。默认串行。只有用户明确要求并行时才传 `--parallel`；runtime 返回共享同一 `content_id` 的方法 lane，宿主负责按 `dispatch` 执行。结果 JSON 必须完整覆盖 `review_unit.required_checks`：
+-
+-```json
+-{"content_id":"<id>","checks":{"<method>":{"status":"pass|finding|inconclusive|not-applicable","reason":null}},"findings":[],"inconclusive":[]}
+-```
+-
+-`not-applicable` 必须提供非空 `reason`。每个 `finding` 或 `inconclusive` 项以 `checks` 数组标明它解释的方法；一个合并项可覆盖多个方法。提交并释放快照：
+-
+-```sh
+-python3 <runtime_entry> artifact-review-submit --artifact <path> [--artifact <path> ...] --snapshot-dir <dir> --result-file <json>
+-```
+-
+-runtime 会拒绝缺失方法、无解释的 finding/inconclusive，或已变化的源内容。直接调用 Skill 而宿主没有接入这些命令时，必须明确说明缺少 runtime session；不能虚构工作单元、固定快照或闭合结果。
++结果用 content_id、checks、findings、inconclusive；checks逐项闭合pass/finding/inconclusive/not-applicable。artifact-review-submit提交固定内容，快照和哈希由runtime验证，expect-content-id仍可用于验证/释放。文档轮次、日志和停止由[审查循环](../review-loop.md)约束，命令不计轮数；不得靠重新开快照重置文档限制。
+diff --git a/resources/adapters/assurance-levels.md b/resources/adapters/assurance-levels.md
+index 08a2f93..3ecd0f3 100644
+--- a/resources/adapters/assurance-levels.md
++++ b/resources/adapters/assurance-levels.md
+@@ -1,23 +1,9 @@
+-# 开发保证等级
++# 保证等级
+ 
+-`assurance_level` 与自治、写入和连续 Ticket 策略正交。它只决定完成当前工程任务需要多少持久产物与可恢复证据；更自动不代表可以降低保证，更严格的确认策略也不强制审计级流程。
++配置的 assurance_level 只是建议，Topic 实际等级在需求对齐点确认。只有 quick 与 standard。
+ 
+-## quick
++quick 必须同时满足：单会话完成；改动局部可撤回；不改持久结构、权限或对外API契约；预计一张 Ticket 足够。任一不满足就提议 standard。
+ 
+-只适用于单会话、影响局部、可逆、没有外部副作用，且不涉及安全边界、公开接口、数据语义、持久状态、迁移或兼容承诺的工作。以当前对话中的可追溯需求摘要作为 work unit，完成针对性测试和同会话代码自审；不强制版本化 Spec、Ticket 或 implementation journal。
++quick 不写 Spec/Ticket或实施记录，直接实施、针对性测试和自审，按[交付规则](../workflow-delivery.md)形成每条验收各自的测试/代码映射，再完成 Topic。
+ 
+-任一排除条件成立时至少升级为 `standard`。Agent 不得为了省步骤把未知风险分类为 quick。
+-
+-## standard
+-
+-默认等级。保留版本化 Spec；单一、单会话切片可直接实施并保存测试与 review 证据，多切片、跨上下文或有依赖图时必须生成 Ticket。存在 Ticket 时使用 implementation journal；没有 Ticket 时不得伪造 journal receipt，只报告实际运行证据。
+-
+-涉及公开接口、不可逆数据、安全/权限、持久恢复、外部副作用的未知响应、迁移或明确审计要求时升级为 `audited`。
+-
+-## audited
+-
+-使用完整 Spec/Ticket 血缘、规则解析、implementation journal、冻结代码与审查输入、runtime test/review/code receipts、受管 repair plan、submit/close 和恢复门禁。沿用现有 implementation session 合同。
+-
+-## 共同完成标准
+-
+-三个等级都必须满足当前范围的验收、运行必要测试、如实报告未验证项并完成代码审查。等级改变的是证据持久性和恢复强度，不降低正确性、安全性或用户授权边界。选择结果和升级原因写入当前 Spec、Ticket 或最终证据摘要；不得把同会话自审称为独立评审。
++standard 保留版本化 Spec 和依赖 Ticket，按顺序实施、测试、审查；多个 Ticket 全部完成后做整 Topic 测试和审查，再收尾。保证等级不放宽[找用户的条件](../user-intervention.md)，也不能把局部检查称为全量验证。
+diff --git a/resources/adapters/composition.md b/resources/adapters/composition.md
+index 5fd292e..9c6cf5c 100644
+--- a/resources/adapters/composition.md
++++ b/resources/adapters/composition.md
+@@ -1,9 +1,5 @@
+ # 组合调用
+ 
+-调用关系与调用权限以 `composition/manifest.json` 为唯一依据；路由索引不算调用边。
++调用关系和权限以 composition/manifest.json 为唯一依据，路由索引不算调用边。method在阶段内执行并返回；chain在已通过主链对齐后继续；handoff的确认依[找用户的条件](../user-intervention.md)。
+ 
+-- `method`：在当前阶段内调用对应 Skill，执行后返回调用方。
+-- `handoff`：主链之外的阶段交接，调用前向用户确认一次。
+-- `chain`：主链交接，在已确认的对齐点之后自动进行。
+-
+-调用方用宿主语法调用已安装的 Skill。源码中的 `{{skill-call:my-name}}` 由安装投影转换为 Codex 的 `$my-name` 或 Cursor/Claude 的 `/my-name`。被调用方是独立安装入口，不向调用方复制方法正文；共享资源按资源清单打包。
++调用源码用 {{skill-call:my-name}}，安装投影为 Codex 的 $my-name 或 Cursor/Claude 的 /my-name；调用已安装入口，共享资源按清单分发。主链的阶段结果供下一阶段直接使用，不要求用户手动切换。
+diff --git a/resources/adapters/implementation-session.md b/resources/adapters/implementation-session.md
+index 71cdfa2..b189adf 100644
+--- a/resources/adapters/implementation-session.md
++++ b/resources/adapters/implementation-session.md
+@@ -1,67 +1,7 @@
+-# Implementation session
++# 实施适配
+ 
+-本文件定义实施 Skill 与项目 runtime 的 session 接口；Skill 只消费工作单元并返回语义结果，不自行复制调度、快照、恢复或写入流程。
++从当前宿主 install-state.json 读取绝对 runtime_entry，不假设目标仓库自带工具。配置和 Topic 尚未迁移时按 runtime 提示处理，不把施工旧协议当成新工作流。
+ 
+-先从当前 Agent 的 `my-matt-workflow/install-state.json` 读取绝对 `runtime_entry`；不要假设目标仓库内存在本工作流的 `tools/`。然后运行：
++standard 使用 implement start/test/review/finish/status。start 生成执行简报，Agent 补写实施计划；恢复先读 status，按其当前动作继续。测试用 Ticket 声明命令，审查只消费 runtime 固定材料包，按[审查循环](../review-loop.md)派审查者并提交判断字段。结果 JSON 保留骨架预填身份；修复思路传 notes-file。内容变化后按 status 重新验证，达到停止边界按[找用户的条件](../user-intervention.md)处理。
+ 
+-```sh
+-python3 <runtime_entry> implementation-open --repo <repo> --ticket <ticket> --base <fixed-point> [--agent <agent>] [--path <path> ...]
+-```
+-
+-默认是串行且只接受一张 Ticket；串行时可用 `--path` 提供实际影响路径。只有用户明确要求并行时才传 `--parallel` 和多次 `--ticket`，且不传共享 `--path`；runtime 会用各 Ticket 的 `rule_scope` 解析规则，并仅在 Ticket 均已解除阻塞、属于同一 topic、具有具体且可证明互不重叠的写入范围时返回多个 lane，否则拒绝并行。宿主还必须能隔离 lane 的写入、构建和测试状态，才可并发执行 `lanes[*].work_unit`；无法证明隔离时按 lane 串行执行，不能假称并行。
+-
+-`implementation-open` 会通过可恢复事务领取 Ticket，并把 journal 留在 `admitted`。按实际阶段推进同一 journal：开始实现前记录 `implementing`，进入审查时记录 `reviewing`，只有测试与审查都绑定到最终代码内容后才记录 `committing`。
+-
+-每次恢复、CLI 校验错误或 repair-plan 审查通过后，先查询 runtime 的唯一粗粒度 gate；它只说明当前流程边界，不替 Agent 调度 TDD 切片：
+-
+-```sh
+-python3 <runtime_entry> implementation-next-action --journal <journal>
+-```
+-
+-```sh
+-python3 <runtime_entry> run-record <journal> --phase implementing
+-python3 <runtime_entry> run-record <journal> --phase reviewing
+-python3 <runtime_entry> run-code-receipt --journal <journal>
+-python3 <runtime_entry> run-review-open --journal <journal>
+-python3 <runtime_entry> run-test-evidence --journal <journal> -- <declared test argv...>
+-python3 <runtime_entry> run-review-submit --journal <journal> --snapshot-dir <review-snapshot-dir> --result-file <json>
+-# 或由已配置的独立执行适配器完成：
+-python3 <runtime_entry> run-review-evidence --journal <journal> --snapshot-dir <review-snapshot-dir> [--reviewer-session-id <new-session-id>] -- <declared-review-command>
+-python3 <runtime_entry> run-record <journal> --phase committing
+-```
+-
+-`implementation-next-action` 是恢复和推进 session 的高层入口；旧 `implementation-status` 保留兼容，两者返回相同的 `next_action` 与 `next_gate`。`run-code-receipt` 对 Ticket 声明的 `rule_scope`（含 `**` 等 glob）生成结构化 code receipt。`run-test-evidence` 只执行 work unit 已声明的 test command，保存 argv、真实 exit code 与 stdout/stderr digest，并返回 runtime 登记的 evidence id。`run-review-open` 冻结同一 code scope 及其固定基线副本，以及当前 Ticket 验收、直接下游 owner 和按 Ticket 声明的风险探针；语义方法由 runtime 固定为 `my-code-review`，并返回随机 `review_id`、只读 snapshot 与 `code_content_id`；reviewer 必须读取该 snapshot。
+-
+-宿主在同一次 `my-implement` 中自动应用组合的 `my-code-review` 方法，再用 `run-review-submit` 提交结果；无需用户再次手动调用 Skill。需要独立进程时可改用 profile 预先声明的 `review_commands` 与 `run-review-evidence`，后者通过 `MY_MATT_REVIEW_METHOD`、`MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID`、`MY_MATT_TICKET_BOUNDARY` 和 `MY_MATT_IMPLEMENTATION_SESSION_ID` 传递固定单元。传入 `--reviewer-session-id` 时，命令从只读 snapshot 目录运行，其中包含代码、基线、Spec、规则和 boundary manifest；结果必须使用同一不同的 ID 作为 `independent_session` provenance。两条路径使用相同结果协议：`status` 为 `pass | findings | inconclusive | blocked-by-design`。默认 `reviewer_provenance=self`，并覆盖当前 Ticket 每个验收与必需风险探针；finding 必须引用当前验收，follow-on 只能引用直接下游 owner，design gap 才使用 `blocked-by-design`。用户显式要求独立审查时才使用不同的 `independent_session` provenance；这证明 session 区分和冻结输入，不证明不存在其他隐藏上下文。
+-
+-runtime 登记每轮结果。`findings` 进入受管 repair-plan：运行时冻结方案和审查前代码，方案只经 `my-review-design` 自审通过后才可返回 `implementing`，此时 `implementation-next-action` 返回 `fix-approved-findings`；修复后必须重新测试、开新 code-review snapshot 并复审。默认只允许一轮修复；最终复审出现新的有效 finding 时，runtime 以带 finding receipt、repair-plan receipt 和 profile limit 的 `review-boundary-exhausted` Critical 登记 `blocked-by-review`。`full-auto` 可按 profile 的 `max_repair_rounds`（上限 5）继续；连续两轮出现同一 `root_cause` 时返回 `blocked-by-design`，`inconclusive` 返回 `blocked-by-evidence`。只有 `pass` 生成可用于完成的 `review_receipt`。普通 review result JSON/coverage 校验失败保留同一受管 snapshot，并由 status 返回 `correct-review-result`；代码漂移废弃旧 snapshot 并返回 `open-review`；只有可验证的 snapshot 完整性或归属损坏才登记正式 Critical。
+-
+-## 回合关闭
+-
+-runtime 不能观察或拦截宿主发送的聊天 final；宿主必须自行把 final 视为实施会话的终止动作。journal 处于 `admitted`、`testing`、`implementing`、`reviewing`、`committing` 或 repair-plan 流程时，只能继续工作或以 commentary 汇报进度，不得发送 final。局部测试通过、当前正在施工、尚待 receipt 或“下一步继续”均不是终止结果。
+-
+-只有以下任一条件成立才可发送 final：
+-
+-- 已提交并关闭实施会话，且按 [work scope](work-scope.md) 的 `next-ticket` transition 返回 `complete`；`ready-frontier` 或 `approved-plan` 返回下一张 Ticket 时，在同一实施任务继续。
+-- runtime 已登记正式 blocked outcome；final 必须说明 blocker、已登记证据和最小恢复条件。
+-- 用户明确要求暂停或停止；保留 journal 并如实说明未完成状态和恢复入口。
+-
+-`max_repair_rounds` 只限制同一审查 finding 的自动修复轮数，不限制正常 TDD 切片或 Ticket 推进。达到限制时登记 `blocked-by-review`，而不是以未提交的进度汇报结束回合。
+-
+-仅当 `implementation-next-action` 返回 `submit-completed`，或 runtime 已登记正式 Critical 时，把下面的 JSON 保存为文件并提交：
+-
+-```json
+-{"outcome":"completed|blocked-by-design|blocked-by-evidence","test_receipt":{"kind":"test","evidence_id":"<runtime evidence id>"},"review_receipt":{"kind":"review","evidence_id":"<runtime evidence id>"},"code_receipt":{"kind":"code","content_id":"<code-content-id>","sources":[]},"blocker":null}
+-```
+-
+-```sh
+-python3 <runtime_entry> implementation-submit --journal <journal> --result-file <json>
+-```
+-
+-`completed` 只能从 `committing` 提交，且 test/review receipt 必须引用该 journal 的 runtime evidence registry，并与当前 code receipt 绑定；旧字符串或调用者手拼的 pass dict 不能转换为完成证据。阻塞结果把三个 receipt 设为 `null` 并提供 blocker。runtime 会重新校验 Ticket definition、Spec lineage、profile、rules、standards/domain sources、review result、evidence records 与代码 receipt，并通过 WAL 协调 Ticket 和 journal 的终态投影。所有 lane 都提交后运行：
+-
+-```sh
+-python3 <runtime_entry> implementation-close --journal <journal> [--journal <journal> ...]
+-```
+-
+-只有全部 lane 都是 `completed` 才返回 `ready-for-integration`；这表示可进入集成，不表示集成已经发生。
++quick 从已确认需求直接实施、测试、自审，写[交付摘要](../workflow-delivery.md)，不建实施记录。Topic收尾和归档由 runtime 完成。多 Ticket 在批准范围依赖顺序逐张完成，末尾运行 topic test/review 后 topic complete。只有实际测试和审查闭合、适用完成动作成功才能交付；否则报告阻塞与最小恢复输入。
+diff --git a/resources/adapters/work-scope.md b/resources/adapters/work-scope.md
+index 8bdf992..1101526 100644
+--- a/resources/adapters/work-scope.md
++++ b/resources/adapters/work-scope.md
+@@ -1,13 +1,5 @@
+-# 工作范围适配
++# 实施范围
+ 
+-完成当前 Ticket 后，宿主 `my-implement` 必须通过安装 runtime 的 `next-ticket` 获取 transition；不得因单张 Ticket 已完成而自行结束。
++已通过对齐点2的 Spec/Ticket 定义当前实施范围；按依赖逐张完成，不自动扩大为新需求。恢复先读 implement status，完成后继续批准范围内的下一张。全部完成后多 Ticket 做 Topic test/review，再按交付规则收尾。
+ 
+-- `single-ticket`：返回 `complete`，在当前 Ticket 后停止。
+-- `ready-frontier`：重新读取当前 feature 的本地 Ticket，选择所有依赖已完成、未认领、可验收的 implementation Ticket；按 `sequence`、再按稳定 `id` 返回下一张。关键决策、规则冲突、不可推断的关键 seam、实质性测试修复取舍或新授权时传入 blocker 并暂停。
+-- `approved-plan`：启动时先调用 `ticket-scope` 生成包含 Ticket definition digest 的 scope artifact，并由宿主在用户批准该计划时保存；后续把该 JSON 文件作为 `next-ticket --scope-file` 传回 runtime。缺失、损坏、definition 漂移或旧 `--allowed-id` 列表均返回 `invalid`；运行期间新建 Ticket 不得扩大本次已批准范围。只有 artifact 范围内 Ticket 全部为不可变终态时才返回完成。
+-
+-`next-ticket` 是只读选择器。领取、验收勾选、状态和 journal 终态由 runtime lifecycle 通过可恢复 WAL 协调；在这些步骤完成前不得解锁下游 Ticket。依赖环或损坏 scope 返回 `invalid`，尚未完成但无候选返回 `blocked`，两者都不能冒充完成。
+-
+-实现发现设计不成立时，向 `next-ticket` 传入 `pause-for-revision` 并停止自动选择。先展示定向 Spec 修订并确认，再写回新 Spec revision 与受影响 Ticket；已完成 Ticket 留作历史，需要改变其结果或补齐未覆盖的公开能力时新增补偿或迁移 Ticket。只有受影响 Ticket 更新到当前有效血缘、验收和阻塞边并通过准入，才从 `revalidated` 回到 `implementing`。根目标失效时才由用户决定是否重走完整访谈。
+-
+-用户说「继续」或「提交并继续」只表示在当前已生效范围内推进；不升档、不改写 `work_scope_policy`，也不放宽为全自动连续执行。
++目标、验收或承重设计失效时按[找用户的条件](../user-intervention.md)处理修订；已完成工作保持历史，需要改变结果另建补偿或迁移。不能以局部测试或普通进度结束未闭环任务。
+diff --git a/resources/adapters/write-actions.md b/resources/adapters/write-actions.md
+index dcf17ce..47a5e6a 100644
+--- a/resources/adapters/write-actions.md
++++ b/resources/adapters/write-actions.md
+@@ -1,8 +1,3 @@
+-# 写操作 Gate
++# 写入确认
+ 
+-任何受 profile 控制的写操作先通过安装 runtime 的 `write-gate`，再执行；该命令只返回 `allow`、`confirm`、`deny` 或 `pause`，不会执行写入。
+-
+-- `branch` 读取 `branch_policy`；`commit` 读取 `commit_policy`；`external` 读取 `external_write_policy`；`docs` 读取 `docs_writeback`。
+-- `confirm` 必须等待用户，`deny` 不得执行，`allow` 可继续。
+-- `docs_writeback: allow` 表示用户确认修订后立即写回文档，不再询问文件写权限；`confirm` 写回前再确认写权限；`deny` 停止写回。
+-- 即使 `external_write_policy: allow`，裸 `--approved-scope` 也不能自证授权。external request 必须绑定 kind、target、operation、scope id 与宿主可信 confirmation receipt；当前 CLI 没有可验证的宿主信任通道，因此返回 `pause`，由宿主实时向用户确认。固定安全禁止项永远不可放宽。
++写入动作遵循[找用户的条件](../user-intervention.md)，用户确认后直接完成具体动作。已有本地文件授权不等于外部发布授权；先完成可审阅结果再处理适用确认。不另定义配置驱动的门槛。
+diff --git a/resources/governance.json b/resources/governance.json
+index 938dfa1..5f72017 100644
+--- a/resources/governance.json
++++ b/resources/governance.json
+@@ -31,11 +31,11 @@
+     },
+     "resources/instruction-authority.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::ProfileTests.test_decision_gate_maps_each_class_to_one_action"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/composition.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::ProfileTests.test_composition_callers_use_one_dispatch_channel"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/ticket-selection.md": {
+       "kind": "execution-protocol",
+@@ -43,15 +43,15 @@
+     },
+     "resources/adapters/assurance-levels.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::ProfileTests.test_assurance_levels_are_orthogonal_and_shared"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/work-scope.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::ProfileTests.test_continue_semantics_do_not_widen_work_scope_in_skills"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/write-actions.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::WriteGateTests.test_every_configured_write_policy_has_a_runtime_gate"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/artifact-access.md": {
+       "kind": "execution-protocol",
+@@ -71,11 +71,11 @@
+     },
+     "resources/adapters/implementation-session.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::ProfileTests.test_runtime_sessions_are_split_and_skills_remain_semantic"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/artifact-review-session.md": {
+       "kind": "execution-protocol",
+-      "validation": "tests/test_workflow.py::ProfileTests.test_runtime_sessions_are_split_and_skills_remain_semantic"
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     },
+     "resources/adapters/specialized-review-session.md": {
+       "kind": "execution-protocol",
+@@ -128,6 +128,18 @@
+     "resources/project-rule-review.md": {
+       "kind": "execution-protocol",
+       "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
++    },
++    "resources/user-intervention.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
++    },
++    "resources/review-loop.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
++    },
++    "resources/workflow-delivery.md": {
++      "kind": "execution-protocol",
++      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+     }
+   }
+ }
+diff --git a/resources/humanizer.md b/resources/humanizer.md
+index d3ef902..9321254 100644
+--- a/resources/humanizer.md
++++ b/resources/humanizer.md
+@@ -1,24 +1,5 @@
+-# humanizer_policy（文档与注释）
++# 自然表达
+ 
+-本文件是 `humanizer_policy` 服从规则的唯一真相源。生成类 Skill 与 `my-code-review` 只通过一级指针引用此处，不复制三档定义。改写过程见 `/my-humanizer`（先分类可改/冻结，再只改叙述）。
++my-humanizer 保留为手动入口，用户需要时使用；它不成为其他工作流写入前的强制步骤。普通输出采用平实语言；产物审查可按目标读者选择本方法。
+ 
+-## 何时加载
+-
+-写入或覆盖面向读者的工作产物之前加载本文件；按 `.agent/matt-workflow.md` 已解析的 `humanizer_policy` 执行。访谈提问、草稿讨论，以及访谈中由 `my-domain-modeling` 增量记录的个人术语表和 ADR 候选不调用。
+-
+-## 三档行为
+-
+-- `deny`：不主动调用 `/my-humanizer`；可提示用户自行手动调用。
+-- `confirm`：先调用 `/my-humanizer` 标出 AI 腔或给出改写建议；**未确认不得**整篇落笔；确认后再写入或覆盖。
+-- `allow`：可对叙述段自动 `/my-humanizer` 落笔。
+-
+-## 叙述段与契约段
+-
+-只动**叙述段**；任何取值下都**不得改契约段**。契约段被润色会导致 Agent 执行偏离。
+-
+-- **叙述段**：问题陈述、背景、利弊、「要构建什么」等给人读的说明。
+-- **契约段**：预设名、策略取值、验收条目、命令名、阻塞边、表格里的合法枚举值与预设字段组合，以及硬性「必须 / 不得」约束句。
+-
+-## 注释（仅 code-review）
+-
+-对新增或修改的注释做文案审阅时，同样服从上表三档。保留有意简短的领域用语，不强行扩写成说明书。
++改写只动叙述段：问题、背景、利弊与说明。命令、枚举、验收、阻塞边、事实和硬约束保持原义；简短领域术语保留，不能靠润色新增事实或消除未知。
+diff --git a/resources/instruction-authority.md b/resources/instruction-authority.md
+index 62861f8..507517c 100644
+--- a/resources/instruction-authority.md
++++ b/resources/instruction-authority.md
+@@ -1,21 +1,5 @@
+-# 指令权威与决策 Gate
++# 指令权威
+ 
+-先判断每条指令能决定什么，再处理先后顺序：
++平台与宿主硬约束优先；用户目标和明确授权决定范围；适用路径的原生项目规则约束实现与验证但不授权写入；已批准 Spec/Ticket 约束交付；runtime 负责机械状态与验证；共享规则再约束方法，Skill 示例和建议优先级最低。
+ 
+-1. 平台与宿主硬约束不可覆盖；
+-2. 当前用户目标与明确授权决定任务范围；
+-3. 适用路径内的原生项目规则约束实现和验证，但不能扩大任务或授予写权限；
+-4. 已批准 Spec 与 Ticket 约束交付内容；
+-5. profile 与 runtime gate 决定自治和写入；
+-6. shared policy 与 adapter 定义通用方法；
+-7. Skill 的建议、默认值和示例优先级最低。
+-
+-先按宿主原生的作用域与覆盖规则消解差异。仍无法同时满足的同级指令才算冲突；记录双方来源、受影响路径和无法兼容的具体要求，然后暂停。项目规则与用户目标冲突时同样明确报告，不得静默覆盖。
+-
+-## 决策分类
+-
+-- `routine`：已批准范围内的普通、可逆执行细节；直接继续。
+-- `consequential`：会改变目标、范围、公开接口、数据语义、测试投入或风险承担的承重决定。
+-- `user-exclusive`：产品取舍、成功指标、优先级、公开承诺，以及不可逆数据或兼容性选择；必须由用户决定。
+-
+-从安装状态读取 `runtime_entry`，运行 `python3 <runtime_entry> decision-gate --repo <repo> --class <routine|consequential|user-exclusive>`。只执行返回的唯一动作：`allow` 继续，`confirm` 带证据询问，`pause` 记录阻塞并停止。只有 profile 明确定义的 `branch`、`commit`、`external`、`docs` 四类写操作需要另行通过 `write-gate`；用户已授权的普通本地工作文件不使用一个并不存在的“通用写 gate”。decision gate 不能放宽前述四类 gate。
++按宿主目录和覆盖规则消解差异；无法兼容的冲突记录双方来源、影响路径和具体要求，交用户处理。能查证的事实自己查证；授权内可逆细节继续。用户决定和写入确认只依据[找用户的条件](user-intervention.md)，不另定义门槛。
+diff --git a/resources/manifest.json b/resources/manifest.json
+index 677c4b5..b034fb0 100644
+--- a/resources/manifest.json
++++ b/resources/manifest.json
+@@ -5,12 +5,8 @@
+       "source": "resources/humanizer.md",
+       "release_path": "references/shared/humanizer.md",
+       "consumers": [
+-        "my-code-review",
+-        "my-domain-modeling",
+         "my-humanizer",
+-        "my-review-artifact",
+-        "my-to-spec",
+-        "my-to-tickets"
++        "my-review-artifact"
+       ]
+     },
+     "final-state-writing": {
+@@ -20,6 +16,7 @@
+         "my-ask-matt",
+         "my-codebase-design",
+         "my-grilling",
++        "my-handoff",
+         "my-review-artifact",
+         "my-review-design",
+         "my-tech-design",
+@@ -34,7 +31,6 @@
+       "release_path": "references/shared/artifact-finalization.md",
+       "consumers": [
+         "my-ask-matt",
+-        "my-handoff",
+         "my-review-artifact",
+         "my-to-spec"
+       ]
+@@ -43,7 +39,6 @@
+       "source": "resources/first-principles-reasoning.md",
+       "release_path": "references/shared/first-principles-reasoning.md",
+       "consumers": [
+-        "my-grill-with-docs",
+         "my-review-design",
+         "my-review-instructions",
+         "my-to-spec",
+@@ -98,7 +93,7 @@
+         "my-diagnosing-bugs",
+         "my-domain-modeling",
+         "my-edit-article",
+-        "my-grilling",
++        "my-to-spec",
+         "my-to-tickets"
+       ]
+     },
+@@ -107,8 +102,6 @@
+       "release_path": "references/shared/adapters/composition.md",
+       "consumers": [
+         "my-ask-matt",
+-        "my-grill-me",
+-        "my-grill-with-docs",
+         "my-improve-codebase-architecture",
+         "my-wayfinder",
+         "my-writing-for-agents"
+@@ -118,7 +111,6 @@
+       "source": "resources/adapters/ticket-selection.md",
+       "release_path": "references/shared/adapters/ticket-selection.md",
+       "consumers": [
+-        "my-to-tickets",
+         "my-triage"
+       ]
+     },
+@@ -130,9 +122,7 @@
+         "my-grill-with-docs",
+         "my-implement",
+         "my-setup",
+-        "my-tdd",
+-        "my-to-spec",
+-        "my-to-tickets"
++        "my-tdd"
+       ]
+     },
+     "adapter-work-scope": {
+@@ -147,8 +137,6 @@
+       "release_path": "references/shared/adapters/write-actions.md",
+       "consumers": [
+         "my-resolving-merge-conflicts",
+-        "my-to-spec",
+-        "my-to-tickets",
+         "my-wayfinder"
+       ]
+     },
+@@ -159,7 +147,6 @@
+         "my-code-review",
+         "my-diagnosing-bugs",
+         "my-domain-modeling",
+-        "my-grill-with-docs",
+         "my-review-design",
+         "my-tdd",
+         "my-wayfinder"
+@@ -170,9 +157,11 @@
+       "release_path": "references/shared/adapters/artifact-storage.md",
+       "consumers": [
+         "my-edit-article",
++        "my-grill-with-docs",
+         "my-handoff",
+         "my-test-report",
+-        "my-to-questionnaire"
++        "my-to-questionnaire",
++        "my-to-spec"
+       ]
+     },
+     "testing-seams": {
+@@ -198,6 +187,7 @@
+       "source": "resources/adapters/implementation-session.md",
+       "release_path": "references/shared/adapters/implementation-session.md",
+       "consumers": [
++        "my-grill-with-docs",
+         "my-implement"
+       ]
+     },
+@@ -229,7 +219,8 @@
+       "source": "resources/requirement-analysis.md",
+       "release_path": "references/shared/requirement-analysis.md",
+       "consumers": [
+-        "my-grill-with-docs"
++        "my-grill-with-docs",
++        "my-grilling"
+       ]
+     },
+     "requirement-reviewer-brief": {
+@@ -258,6 +249,47 @@
+       "consumers": [
+         "my-review-instructions"
+       ]
++    },
++    "user-intervention": {
++      "source": "resources/user-intervention.md",
++      "release_path": "references/shared/user-intervention.md",
++      "consumers": [
++        "my-code-review",
++        "my-domain-modeling",
++        "my-grill-with-docs",
++        "my-grilling",
++        "my-handoff",
++        "my-implement",
++        "my-review-artifact",
++        "my-review-design",
++        "my-review-instructions",
++        "my-tech-design",
++        "my-to-spec",
++        "my-to-tickets"
++      ]
++    },
++    "review-loop": {
++      "source": "resources/review-loop.md",
++      "release_path": "references/shared/review-loop.md",
++      "consumers": [
++        "my-code-review",
++        "my-implement",
++        "my-review-artifact",
++        "my-review-design",
++        "my-review-instructions",
++        "my-tech-design",
++        "my-to-spec"
++      ]
++    },
++    "workflow-delivery": {
++      "source": "resources/workflow-delivery.md",
++      "release_path": "references/shared/workflow-delivery.md",
++      "consumers": [
++        "my-domain-modeling",
++        "my-grill-with-docs",
++        "my-implement",
++        "my-to-tickets"
++      ]
+     }
+   }
+ }
+diff --git a/resources/review-loop.md b/resources/review-loop.md
+new file mode 100644
+index 0000000..578acff
+--- /dev/null
++++ b/resources/review-loop.md
+@@ -0,0 +1,49 @@
++# 审查循环规则
++
++适用于 runtime 管理的 Ticket 与多 Ticket standard 整分支审查，以及设计、产物、指令、技术方案自检和主 Agent 临时派发的文档审查。runtime 管理内容绑定与两类代码审查计数；文档轮数由宿主记录，artifact-review 命令本身不计轮数。
++
++## 输入与独立性
++
++standard 下宿主派新上下文只读审查者，继承实施者的模型和思考档位，不为省额度降级；结果写实际模型。材料包包含冻结改动、当前验收（整分支为全部 Ticket 验收并集）、下游 Ticket、已决事项清单、本规则和结果骨架。审查者不读实施者总结或执行简报中的实施计划。派不出时完成增强自审并如实记录 `self` 与独立性缺口；不声称隔离。更强模型只能由用户临时指定。
++
++宿主在对齐点和用户裁决后向 `.agent/work/<topic>/decided/decided-<topic>.md` 追加已决事项。审查者不得重开；异议以 `inconclusive` 交给用户。
++
++## 第一轮、复审与修复
++
++第一轮穷尽整个固定范围，附覆盖清单：每条验收、每个 review probe、每个不变量均为无问题、对应 finding，或不适用（附理由）。阻断问题给出锚定对象、位置和行区间、出错路径、从正式基线可达的依据。
++
++只有阻断问题进入修复循环。建议不修复、不触发复审，留到交付摘要；下游 Ticket 拥有的未来能力归建议。只有建议时结论通过。复审仅检查本轮修复差异及可能受影响的地方；范围外新发现默认归建议。
++
++修复只改正、删除或收窄。需要新增规则、场景或要求时返回 `blocked-by-design`。修复前找出同一事实在其他位置的写法一起改；同一规则只在一个共享来源定义。思路写入命令的 `--notes-file`，不另写修复方案文档。
++
++## 轮数与停止
++
++每次 review 算一轮，每个对象最多4轮，最多3次修复。通过后内容改变，通过记录失效，再审占一轮。第4轮仍有阻断问题，或4轮已用完而当前内容没有有效通过记录时，停止并交用户决定；不会开第5轮。
++
++审查结论为 `blocked-by-design` 或 `inconclusive` 时，runtime 也进入需用户处理状态；文档同样停止交用户裁决。
++
++以下任一信号也停止：
++
++- 同一根因：连续两次复审有阻断问题，且落在紧邻的上一次修复差异内。
++- 同一处连续修改：相邻两次修复在同一文件的行区间重叠，均换算到它们之间快照的行号。
++- 前后矛盾：finding 的 `contradicts` 指向之前一轮的问题。
++- 体积膨胀：代码相对基线的增加行加删除行超过第一轮的1.5倍；文档以第一轮字节数为基准，多产物合并计算。
++
++runtime 进入需用户处理的状态后拒绝继续审查；整分支停止也阻止 Topic 完成。用户可接受现状、修订定义后重开，或放弃。Ticket/Spec 的有效定义修订可由 runtime reopen 重置历史，保留代码与基线；只改状态、认领或复选框不算定义变化。整分支重开也需首次审查或上次重开以来任一 Ticket/Spec 有有效变化。未通过的测试不能通过接受现状绕过。
++
++文档每个产物最多4轮；扩大范围、补审或“直到通过”不重置。宿主逐轮写 `.agent/work/<topic>/reviews/review-log-<topic>.md`：产物、轮次、阻断数、建议数、修改范围、体积；无 Topic 时在对话报告这些字段。汇报已用轮数与剩余额度，不作趋势判断。
++
++## 产物审查接口
++
++artifact-review 方法名为 reader-first-writing、final-state-writing、visual-communication、artifact-finalization、humanizer；设计类再加 review-design。保留 expect-content-id；只接受普通产物或设计，不提供修复方案类型、并行或 Topic 参数，命令不计轮数。
++
++## 结果
++
++runtime 骨架预填 `unit_id`、`content_id`、`round`、`acceptance`、`probes`、`downstream_tickets`。审查者只填写判断字段：
++
++- `status`: pass/findings/blocked-by-design/inconclusive；
++- `reviewer`: provenance=independent/self，及实际 model；
++- `coverage`: target、result=ok/finding/not-applicable、finding_id或reason；
++- `findings`: id、severity=blocking/advisory、summary、anchor、location、failure_path、reachability、可选contradicts/downstream_ticket。
++
++阻断项必须有位置、出错路径和可达性；pass 不含阻断项。保留预填身份与内容不变，按 runtime 返回的材料和格式提交。停止时遵循[找用户的条件](user-intervention.md)。
+diff --git a/resources/user-intervention.md b/resources/user-intervention.md
+new file mode 100644
+index 0000000..20e3cae
+--- /dev/null
++++ b/resources/user-intervention.md
+@@ -0,0 +1,14 @@
++# 找用户的条件
++
++这是工作流请求用户决定或授权的唯一清单。已确认的授权继续有效，能从代码、文件或工具查证的事实由 Agent 查证；其他可逆实施细节直接推进。
++
++- 对齐点1：需求摘要和 quick/standard 等级；对齐点2：Spec 与逐 Ticket 行为、依赖、测试命令和测试边界。
++- 用户专属决定：产品取舍、成功指标、优先级、不可逆承诺。
++- Ticket 或整分支审查需要用户处理；文档审查达到上限或出现[审查停止信号](review-loop.md)。
++- 推送、建 MR、写外部系统，每次都问。
++- 修改 `.agent/` 之外、Spec 没有写明的项目文档。
++- setup 写入前、migrate apply 前，各问一次。
++- 主链之外的阶段交接：triage 到 to-tickets、wayfinder 到 to-spec、prototype 到 implement。问一次，同意后直接调用。
++- 环境阻塞：说明缺少的输入或权限及最小恢复动作。
++
++用户临时要求更严格时照做。对齐后不为执行已确认的后续阶段再次询问，也不要求用户逐段手动调用。输出用平实中文说明需决定的事项，不向用户转述内部状态名。
+diff --git a/resources/workflow-delivery.md b/resources/workflow-delivery.md
+new file mode 100644
+index 0000000..a6028eb
+--- /dev/null
++++ b/resources/workflow-delivery.md
+@@ -0,0 +1,24 @@
++# 交付与长期知识
++
++Topic 收尾时，Agent 将已确认的项目术语沉淀到 `.agent/CONTEXT.md`，把难以撤回且存在真实权衡的决定写到 `.agent/adr/NNNN-<slug>.md`；不把临时步骤、未确认推断或实现细节变成术语。已有知识先核对，按需新增；无新增时明确写无。
++
++交付摘要写入 `.agent/work/<topic>/deliveries/deliveries-<topic>-01.md`，各节标题固定：
++
++## 改动概述
++具体改变及用户可观察结果。
++## 测试结果
++实际命令、结果及证据。
++## 审查发现与修复
++来源、实际模型、已用轮数和剩余额度、阻断问题及修复依据。
++## 建议
++未进入修复循环的建议，包括下游 owner。
++## 已知问题
++接受或仍存在的问题；没有就写无。
++## 长期知识沉淀
++术语/ADR位置和依据；没有就写无。
++## 用户介入记录
++次数和原因。
++## 未验证项
++证据边界与缺口；没有就写无。
++
++quick 另加“验收对照”：逐条写验收→测试→代码位置，多条验收不能共用同一个测试。只有观测到的测试和运行能作为证据；文本审查通过不能写成模型行为效果已验证。my-test-report 保留为手动正式测试报告入口。
+diff --git a/skills/my-code-review/SKILL.md b/skills/my-code-review/SKILL.md
+index 9e8b39f..d61e346 100644
+--- a/skills/my-code-review/SKILL.md
++++ b/skills/my-code-review/SKILL.md
+@@ -3,28 +3,32 @@ name: my-code-review
+ description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ ---
+ 
++遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
++
++遵循[指令权威](references/shared/instruction-authority.md)。
++
+ # 代码审查
+ 
+ 只读审查用户指定的变更并返回作者会实际修复的发现；不修改文件、提交代码或发布评论。输出前按[面向读者写作](references/shared/reader-first-writing.md)确定实现者和合并决策者要据此做什么。
+ 
+-本 Skill 有两个输入入口：独立调用时从用户指定的固定点创建 review snapshot；作为 `my-implement` 方法时，只消费 runtime `run-review-open` 提供且 `method=my-code-review` 的只读审查单元。组合模式不得另建 snapshot、另选基线或生成第二份未绑定的审查结论。
++本 Skill 有两个输入入口：独立调用时从用户指定的固定点创建 review snapshot；作为 `my-implement` 方法时，只消费 runtime implement review 提供的只读材料包。组合模式不得另建 snapshot、另选基线或生成第二份未绑定的审查结论。
+ 
+ 对固定点与当前完整工作树之间的同一内容快照做两个顺序独立的审查 pass：
+ 
+ - **Code**——实现本身是否正确、稳健、安全、高效、兼容、可测试且易维护，并符合仓库 Standards？
+ - **Spec**——实现是否完整、准确地满足原始 Issue、PRD 或 Spec，且没有范围蔓延？
+ 
+-在同一次调用中依次完成 Code pass 与 Spec pass。第二遍重新从同一快照和必要来源建立候选，不把第一遍的候选清单或结论作为输入；这是一种顺序复核，不声称上下文隔离。完成后并列汇总。它们是一次 review 的内部方法，不是新 Skill 入口：`composition_policy` 为 `manual` 或 `automatic` 都必须在同一次调用中完成。
++在同一次调用中依次完成 Code pass 与 Spec pass。第二遍重新从同一快照和必要来源建立候选，不把第一遍的候选清单或结论作为输入；这是一种顺序复核，不声称上下文隔离。完成后并列汇总。它们是一次 review 的内部方法，不是新 Skill 入口：两遍在同一次审查调用内完成。
+ 
+ ## 审查对象
+ 
+-独立调用时，用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时，把选择审查基线分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)运行 `decision-gate`：`allow` 时采用 profile 的 `default_base_branch` 并记录依据，`confirm` 时询问固定点，`pause` 时停止。组合模式直接采用审查单元中已固定的代码范围和 `code_content_id`，不运行这项基线选择。
++独立调用时，用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时使用配置的 default_base_branch 并记录依据；会改变目标范围的分歧依共同确认条件处理。组合模式直接采用审查单元中已固定的代码范围和 `content_id`，不运行这项基线选择。
+ 
+-独立调用时，用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。组合模式改为验证审查单元的 `method`、`review_id`、`code_content_id`、`ticket_boundary` 与 artifacts，并从只读 snapshot 取证。
++独立调用时，用户显式指定的任何 fixed-point（包括 commit、tag、分支或其他 ref）都保持权威，不得替换。仅在用户未指定而采用默认基线分支时，若其 configured upstream 存在并领先本地分支，则以上游 ref 比较；否则使用本地分支。将解析后的 ref 交给安装状态记录的 `runtime_entry`：`review-snapshot --repo <repo> --base <fixed-point>`。记录 `resolved_fixed_point`、`merge_base`、`head`、`content_id`、`change_sources` 和 `changes`。组合模式改为验证审查单元的 `unit_id`、`content_id`、`acceptance`、`probes`、`downstream_tickets` 与冻结材料，并从只读 snapshot 取证。
+ 
+ 快照必须覆盖 committed、staged、unstaged 与 untracked 内容：以 `git diff --binary <merge_base>` 读取所有 tracked 最终内容，以 `git log <merge_base>..HEAD --oneline` 读取 Commit 上下文，并读取 `change_sources.untracked` 中每个路径的完整内容。父仓未跟踪的嵌套 Git 工作树会在 receipt 中展开为逐文件路径，包括没有 HEAD 的 private workspace；只读取这些展开路径，不把目录占位或嵌套仓 HEAD 当成文件内容。二进制或无法直接阅读的文件记录类型、大小与可用检查结果，不得静默跳过。
+ 
+-两个维度必须使用同一 `content_id` 和 `changes` 路径集合。坏 ref 或 `status: empty` 在此失败；任何内容变化都要重建快照并重跑两个维度，旧 receipt 立即失效。
++两个维度必须使用同一 `content_id` 和 `changes` 路径集合。坏 ref 或 `status: empty` 在此失败；任何内容变化都要重建快照，旧 receipt 立即失效。两个维度的复审范围遵循共享审查循环。
+ 
+ ## 范围与来源
+ 
+@@ -43,11 +47,11 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ 
+ ## 双遍审查
+ 
+-**Code pass** 从完整快照、Commit 上下文和规则地图开始。检查完整 diff 及理解变更所需的周边代码、调用方和测试；发现首个问题后继续检查全部变更。系统检查逻辑正确性、边界条件、错误处理、资源生命周期、并发与一致性、安全、性能、兼容性、测试充分性、代码设计与可维护性，同时检查仓库 Standards、Fowler code smells、函数/变量/类型命名和注释。仓库 Standards 优先；smell、命名或注释只有造成可观察风险时才报告。注释还要与代码行为一致，并按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，保留简短领域用语。
++**Code pass** 从完整快照、Commit 上下文和规则地图开始。第一轮检查完整 diff 及理解变更所需的周边代码、调用方和测试，发现首个问题后继续检查全部变更；复审按共享规则限定影响范围。系统检查逻辑正确性、边界条件、错误处理、资源生命周期、并发与一致性、安全、性能、兼容性、测试充分性、代码设计与可维护性，同时检查仓库 Standards、Fowler code smells、函数/变量/类型命名和注释。仓库 Standards 优先；smell、命名或注释只有造成可观察风险时才报告。注释还要与代码行为一致，使用平实语言，保留简短领域用语。
+ 
+-**Spec pass** 重新从同一 `content_id` 的完整快照、Commit 上下文和 Spec 开始，不读取 Code pass 的候选清单或结论。先在内部把每条规范性要求映射到实现与测试证据；缺少或冲突的证据成为候选 finding，但不输出这份检查清单。由此检查遗漏、部分实现、错误行为和范围蔓延；每项引用 Spec 位置，并检查注释是否与 Spec、ADR 或相关文档一致。
++**Spec pass** 重新从同一 `content_id` 的完整快照、Commit 上下文和 Spec 开始，不读取 Code pass 的候选清单或结论。先在内部把每条规范性要求映射到实现与测试证据；缺少或冲突的证据成为候选 finding，但不向用户输出这份检查清单；runtime 结果骨架中的 coverage 仍须填写。由此检查遗漏、部分实现、错误行为和范围蔓延；每项引用 Spec 位置，并检查注释是否与 Spec、ADR 或相关文档一致。
+ 
+-作为 implementation 方法时，先为每个候选确定 owner：当前 Ticket 未兑现的可观察保证才是 finding；直接下游 Ticket 拥有的未来消费者能力写为 follow-on；找不到既有 owner 的真实风险写为 design gap。不得因为当前 Ticket 产生资格而要求它实现后续消费者、coordinator、outbox 或回执。
++作为 implementation 方法时，先为每个候选确定 owner：当前 Ticket 未兑现的可观察保证才是 finding；直接下游 Ticket 拥有的未来消费者能力写为建议；找不到既有 owner 的真实风险写为 design gap。不得因为当前 Ticket 产生资格而要求它实现后续消费者、coordinator、outbox 或回执。
+ 
+ 高风险变更按实际风险加深对应检查；低风险变更不为并行而增加 reviewer。
+ 
+@@ -63,7 +67,7 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ 
+ `change-only` finding 还必须证明失败场景能从 review unit 的正式 `base_sha` 到当前快照到达；不得把同一未提交工作树的中间 schema、临时迁移或已被替换的施工状态当作受支持来源。无法证明正式基线可达时降为 `inconclusive`，不下 blocker 结论。
+ 
+-严重度使用 `P0`（安全越权、数据丢失或破坏、不可恢复故障或核心路径普遍失败）、`P1`（合并前应修复的真实 Bug 或需求偏差）、`P2`（值得修复的局部缺陷或维护/测试风险）；P0/P1 是 blocker。置信度只用 `high` / `medium`，低置信度候选不进入 findings；仅当证据缺口影响合并判断时，才在结尾写简短 residual risk。
++严重度使用 `P0`（安全越权、数据丢失或破坏、不可恢复故障或核心路径普遍失败）、`P1`（合并前应修复的真实 Bug 或需求偏差）、`P2`（值得修复的局部缺陷或维护/测试风险）；P0/P1 是 blocker，映射为结果骨架的 blocking；P2 映射为 advisory。置信度只用 `high` / `medium`，低置信度候选不进入 findings；仅当证据缺口影响合并判断时，才在结尾写简短 residual risk。
+ 
+ 双遍审查完成后按主要原因归类：没有 Spec 也成立的实现或工程问题归 Code；必须依据 Spec 才成立的遗漏、错误需求行为或范围蔓延归 Spec。同一失败链只保留最接近根因的一项，另一维不重复。
+ 
+@@ -81,4 +85,4 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ 一个短段落，包含失败场景或不变量、Spec 证据、影响及最小验证方式。
+ ```
+ 
+-无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。作为 `my-implement` 方法时，按 runtime schema 返回 finding、follow-on 或 design gap。finding 必须引用当前 `acceptance_id`；follow-on 必须引用 `ticket_boundary` 中直接下游 owner 的验收。默认 `reviewer_provenance.kind=self`：覆盖每一条当前验收与每个必需风险探针，证据只引用 snapshot、Spec 或已登记测试；这是增强自审，不称为独立审查。仅用户显式要求时，才由不携带实施对话、既有候选或自审结论的新 session 返回 `independent_session`。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。
++无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。作为 `my-implement` 方法时，使用共享规则规定的结果骨架，阻断项锚定当前验收或不变量；下游建议标 downstream_ticket，设计缺口以 blocked-by-design 说明。独立性、覆盖和实际模型按共享审查规则记录；使用 runtime 的结果骨架提交判断。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。
+diff --git a/skills/my-domain-modeling/ADR-FORMAT.md b/skills/my-domain-modeling/ADR-FORMAT.md
+index fe3eaba..b25089e 100644
+--- a/skills/my-domain-modeling/ADR-FORMAT.md
++++ b/skills/my-domain-modeling/ADR-FORMAT.md
+@@ -1,47 +1,7 @@
+-# ADR 格式
++# 项目 ADR
+ 
+-个人 ADR 候选存放在 `.agent/work/<topic>/domain/adr/`，文件名为 `domain-<topic>-<NN>-<slug>.md`。项目已有正式 ADR 目录时先读取它；写回团队目录须遵守项目的确认策略。
++位置 `.agent/adr/NNNN-<slug>.md`；首次有值得保留的决定才创建目录，扫描最大编号加一，不覆盖历史。
+ 
+-只在首次确有 ADR 时创建 `.agent/work/<topic>/domain/adr/`。
++用短标题及一个段落记录背景、实际决定、依据与真实权衡。只有会帮助后续决定时才加备选、后果或取代关系；难以撤回、未来读者会意外、有真实权衡三项必须同时满足。
+ 
+-## 模板
+-
+-```md
+-# {决策的简短标题}
+-
+-{一到三句话：背景是什么、决定了什么、为什么。}
+-```
+-
+-就是这样。ADR 可以只有一个段落；价值在于记录**做过**什么决定和**为什么**，而非填满各种章节。
+-
+-## 可选章节
+-
+-只有在确实增加价值时才加入，多数 ADR 不需要：
+-
+-- **状态** frontmatter（`proposed | accepted | deprecated | superseded by ADR-NNNN`）：适合决定被重新审视时。
+-- **考虑过的选项**：仅在被否决的替代方案值得记住时使用。
+-- **后果**：仅在需要指出不明显的下游影响时使用。
+-
+-## 编号
+-
+-扫描个人候选目录或项目配置的正式 ADR 目录，取现有最大编号加一。个人候选写回团队前应重新核对团队目录，避免与其他人新增的 ADR 冲突。
+-
+-## 何时建议 ADR
+-
+-必须同时满足以下三项：
+-
+-1. **难以逆转**：以后改变主意的成本很高。
+-2. **缺少背景会令人意外**：未来读者看见代码会问“他们为什么这样做？”
+-3. **源于真实权衡**：存在真实替代方案，并因具体原因选择其一。
+-
+-若决定容易逆转，就跳过——以后自然会改回来；若并不令人意外，没人会追问；若没有真实替代方案，除了“我们做了显而易见的事”就无须记录。
+-
+-### 符合条件的例子
+-
+-- **架构形状。** “使用 monorepo。”“写模型采用事件溯源，读模型投影到 Postgres。”
+-- **上下文之间的集成模式。** “订单与计费通过领域事件通信，而非同步 HTTP。”
+-- **会造成锁定的技术选择。** 数据库、消息总线、身份认证提供方、部署目标；不是每个库，只记录替换成本高的选择。
+-- **边界与范围决策。** “客户数据归 Customer 上下文所有；其他上下文只能以 ID 引用。”明确的“不做什么”和“做什么”同样有价值。
+-- **刻意偏离显然路径。** “因为 X 使用手写 SQL 而非 ORM。”任何合理读者会预期相反选择的事项，都能阻止下一位工程师把有意设计当作错误“修复”。
+-- **代码中不可见的约束。** “因合规要求不能使用 AWS。”“由于合作方 API 合同，响应时间必须低于 200ms。”
+-- **不明显的被否决方案。** 若曾考虑 GraphQL 却因微妙原因选择 REST，应记录；否则六个月后又会有人提出 GraphQL。
++例：订单写模型采用事件溯源，读模型投影到 Postgres，因为审计恢复要求优先于实现简单性；保留为何未采用单表覆盖的依据。
+diff --git a/skills/my-domain-modeling/CONTEXT-FORMAT.md b/skills/my-domain-modeling/CONTEXT-FORMAT.md
+index 708d6f1..ffc69cf 100644
+--- a/skills/my-domain-modeling/CONTEXT-FORMAT.md
++++ b/skills/my-domain-modeling/CONTEXT-FORMAT.md
+@@ -1,62 +1,7 @@
+-# 个人术语表格式
++# 项目术语表
+ 
+-默认个人术语表位于 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`。项目已有正式术语表时先读取它；本文件用于记录尚未写回团队文档、或项目未指定正式位置的已解决术语。
++唯一位置 `.agent/CONTEXT.md`。首次有已解决项目术语时按需创建；多上下文在同一文件按标题分组，不按 Topic 生成文件。
+ 
+-## 结构
++每个术语用一两句话定义是什么、适用边界和容易混淆的概念；同义词明确选择及避免用词。只收录项目特有概念，不复述通用编程知识、不放实现步骤。
+ 
+-```md
+-# {领域上下文名称}
+-
+-{用一到两句话说明该上下文是什么、为何存在。}
+-
+-## 语言
+-
+-**订单**：
+-{用一到两句话说明该术语。}
+-_避免使用_：采购、交易
+-
+-**发票**：
+-交付后向客户发出的付款请求。
+-_避免使用_：账单、付款申请
+-
+-**客户**：
+-下订单的个人或组织。
+-_避免使用_：Client、买方、账户
+-```
+-
+-## 规则
+-
+-- **要有取舍。** 同一概念存在多个词时，选出最佳用词，其他词写在 `_避免使用_` 下。
+-- **定义要紧凑。** 最多一到两句话；定义它**是什么**，而非它做什么。
+-- **只收录此项目上下文特有的术语。** 即使项目大量使用，通用编程概念（超时、错误类型、工具模式）也不应收录。添加前先问：这是该上下文独有的概念，还是通用编程概念？只有前者属于术语表。
+-- 自然出现术语簇时，**按子标题分组**；若所有术语属于一个连贯领域，平铺列表即可。
+-
+-## 单上下文与多上下文仓库
+-
+-**单一上下文（大多数仓库）：** 使用一个 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`，或项目配置指定的一份正式术语表。
+-
+-**多个上下文：** 在 `.agent/work/<topic>/domain/domain-<topic>-context-map.md` 维护上下文、位置和它们的关系；若团队已有映射文件，优先读取并遵循团队格式：
+-
+-```md
+-# 上下文映射
+-
+-## 上下文
+-
+-- [订单](./ordering-glossary.md) — 接收并跟踪客户订单
+-- [计费](./billing-glossary.md) — 生成发票并处理付款
+-- [履约](./fulfillment-glossary.md) — 管理仓库拣货和发货
+-
+-## 关系
+-
+-- **订单 → 履约**：订单发出 `OrderPlaced` 事件；履约消费该事件并开始拣货
+-- **履约 → 计费**：履约发出 `ShipmentDispatched` 事件；计费消费该事件并生成发票
+-- **订单 ↔ 计费**：共享 `CustomerId` 与 `Money` 类型
+-```
+-
+-本 Skill 按以下方式判断结构：
+-
+-- 项目配置或已有团队映射表列出了多个上下文时，先读取它以定位上下文；
+-- 只有一份正式或个人术语表时，视作单一上下文；
+-- 两者都没有时，在第一个术语解决后按需创建 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`。
+-
+-多个上下文并存时，判断当前议题属于哪个上下文；仍不明确时将归属选择分类为 `consequential`，执行 runtime `decision-gate` 的唯一结果，不自行列出多种动作。
++例：**客户**：下订单的个人或组织；系统登录主体称为用户，两者可以不同。避免将账户混用于这两个概念。
+diff --git a/skills/my-domain-modeling/SKILL.md b/skills/my-domain-modeling/SKILL.md
+index 5449ce9..258fcfd 100644
+--- a/skills/my-domain-modeling/SKILL.md
++++ b/skills/my-domain-modeling/SKILL.md
+@@ -3,58 +3,14 @@ name: my-domain-modeling
+ description: 在 my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
+ ---
+ 
+-# My Domain Modeling
++遵循[指令权威](references/shared/instruction-authority.md)。
+ 
+-在设计过程中主动构建并收紧项目领域模型。这是一项**主动**的纪律：挑战术语、构造边缘场景，并在术语或决策结晶时立即记录。（其他 Skill 为取得词汇而阅读项目术语表不属于本 Skill；本 Skill 用于改变模型，而不仅是使用模型。）
++# 项目领域模型
+ 
+-术语表或 ADR 面向未来维护者时，按[面向读者写作](references/shared/reader-first-writing.md)说明定义、适用边界，以及这项决定为何不应被无依据地重新争论。
++先读取 `.agent/CONTEXT.md`、`.agent/adr/`、配置列出的领域来源及相关代码，遵循[产物访问](references/shared/adapters/artifact-access.md)。主动质疑冲突术语，用具体边缘场景区分概念，并将用户描述与代码交叉验证；涉及用户决定时遵循[找用户的条件](references/shared/user-intervention.md)。
+ 
+-## 文件结构
++术语解决后按 [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) 更新项目级 `.agent/CONTEXT.md`；只写项目词汇、定义和边界，不存实现细节。多上下文在同一文件按领域分节；不按 Topic 分片。未来维护者需要据此理解和判断，按[面向读者写作](references/shared/reader-first-writing.md)表达。
+ 
+-首先读取项目配置列出的正式术语表、ADR 和相关代码。项目正式文档位置因仓库而异，不假设根目录存在 `CONTEXT.md` 或固定 `docs/adr/`；项目配置未列出时，按当前 topic 使用下列个人目录：
++难以撤回、缺少背景会让未来维护者意外、且有真实替代权衡的决定，按 [ADR-FORMAT.md](ADR-FORMAT.md) 写 `.agent/adr/NNNN-<slug>.md`。三项缺一就不写。先扫描已有编号与决定，保留依据及被拒替代方案；不是模板填充。
+ 
+-```text
+-.agent/work/<topic>/domain/
+-├── domain-<topic>-glossary.md
+-└── adr/
+-    ├── domain-<topic>-0001-event-sourced-orders.md
+-    └── domain-<topic>-0002-postgres-for-write-model.md
+-```
+-
+-按需创建文件：只有内容可写时才创建。首个术语解决后才创建 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；首次需要 ADR 才创建 `.agent/work/<topic>/domain/adr/`。若仓库存在多个领域上下文，以项目配置和目录边界确定术语及 ADR 的归属；仍不明确时，将归属选择分类为 `consequential`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)执行 `allow | confirm | pause` 的唯一结果。
+-
+-读取既有个人术语表或 ADR 时，遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。
+-
+-## 会话期间
+-
+-### 对照术语表提出质疑
+-
+-当用户所用术语与既有语言冲突，立即指出：“术语表将‘取消’定义为 X，但你似乎在说 Y；究竟是哪一个？”
+-
+-### 收紧模糊语言
+-
+-当用户使用含糊或多义术语时，提出精确、规范的名称：“你说的是‘账户’，是 Customer 还是 User？它们不同。”
+-
+-### 讨论具体场景
+-
+-讨论领域关系时，用具体场景压测它们。构造探查边缘情况的场景，迫使概念之间的边界变得精确。
+-
+-### 与代码交叉验证
+-
+-用户说明某事如何工作时，检查代码是否一致。发现矛盾时明确展示，例如：“代码会取消整张 Order，但你刚说可以部分取消；哪个是正确行为？”
+-
+-### 就地更新个人术语表
+-
+-术语一经解决，立即按 [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) 的格式写入 `.agent/work/<topic>/domain/domain-<topic>-glossary.md`；不要批量积压。这个增量记录不代表整体讨论已经最终确认，按 [humanizer](references/shared/humanizer.md) 的个人记录例外处理。个人术语表必须完全不含实现细节，不得把它当作 Spec、草稿本或实现决策库；它只是一份词汇表。
+-
+-正式团队术语文档是外部写入：按项目策略先预览、确认或依照已批准的无人值守计划写回；写入前按 [humanizer](references/shared/humanizer.md) 执行。个人术语表先记录，避免丢失本次会话结论。
+-
+-### 谨慎提出 ADR
+-
+-只有同时满足以下三项才建议创建 ADR：
+-
+-1. **难以逆转**：以后改变主意的成本很高。
+-2. **缺少背景会令人意外**：未来读者会问“他们为什么这样做？”
+-3. **源于真实权衡**：存在真实替代方案，并因具体原因选择其一。
+-
+-缺任何一项就不写 ADR。使用 [ADR-FORMAT.md](ADR-FORMAT.md) 的格式先写个人候选；写回团队 ADR 目录前遵守项目写入策略。
++Topic 收尾再核对哪些已确认知识值得长期保留，依[交付规则](references/shared/workflow-delivery.md)记录新增及依据。修改既有项目文档按共同确认条件处理。
+diff --git a/skills/my-grill-me/SKILL.md b/skills/my-grill-me/SKILL.md
+index 0ff3bee..eaf33ac 100644
+--- a/skills/my-grill-me/SKILL.md
++++ b/skills/my-grill-me/SKILL.md
+@@ -4,8 +4,6 @@ description: 通过高强度访谈打磨计划或设计。
+ disable-model-invocation: true
+ ---
+ 
+-本流程是 `my-grilling` 的薄入口。读取 `.agent/matt-workflow.md` 的 `composition_policy` 并遵循[组合调用](references/shared/adapters/composition.md)：
++# 无代码库访谈
+ 
+-- `my-grilling` 是内部方法：`automatic` 与 `manual` 都只调用 {{skill-call:my-grilling}}，执行后返回宿主；不要输出另一个 Skill 调用文本。
+-
+-调用方法后在本次流程中直接执行访谈，立即提出第一个问题。不要停在路由提示上。
++调用 {{skill-call:my-grilling}}，按轮提出互不依赖的问题并给推荐答案。完成后只输出目标、范围、约束与可观察验收的需求摘要，逐项标出原文或推断来源；不进入有代码库的主链。
+diff --git a/skills/my-grill-with-docs/SKILL.md b/skills/my-grill-with-docs/SKILL.md
+index ff0b86b..bce86ad 100644
+--- a/skills/my-grill-with-docs/SKILL.md
++++ b/skills/my-grill-with-docs/SKILL.md
+@@ -4,13 +4,16 @@ description: 通过高强度访谈澄清设计决定，并在过程中建立 ADR
+ disable-model-invocation: true
+ ---
+ 
+-本流程依赖 `my-grilling` 与 `my-domain-modeling`。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`，遵循[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)：
++# 从需求到交付
+ 
+-- `my-grilling` 与 `my-domain-modeling` 都是内部方法：`automatic` 与 `manual` 都调用当前阶段需要的 {{skill-call:my-grilling}} 和 {{skill-call:my-domain-modeling}}，执行后返回宿主；不要输出另一条 Skill 调用。
+-- 复杂、隐含或类比驱动的请求在摘要形成后读取[requirement-analysis](references/shared/requirement-analysis.md)，作为风险触发的方法返回宿主；普通请求不重复核对。
++调用 {{skill-call:my-grilling}} 访谈，调用 {{skill-call:my-domain-modeling}} 澄清领域术语与承重决定；方法完成后返回本流程。复杂或类比请求在摘要形成前读取[需求核对](references/shared/requirement-analysis.md)。共同遵循[找用户的条件](references/shared/user-intervention.md)。
+ 
+-本地适配：工作产物遵循 [工作产物访问](references/shared/adapters/artifact-access.md)。已解决的单个术语和满足条件的 ADR 候选可在访谈中写入个人工作区，避免结论丢失。
++没有代码库时采用 my-grill-me 的访谈用途，只产需求摘要，停止主链；不创建 Topic、Spec 或 Ticket。
+ 
+-用户以具体方案、类比或既有做法表达需求时，应用[第一性原理推理](references/shared/first-principles-reasoning.md)中的因果链，先把使用者可观察目标与所给手段分开。只有两者差异会改变目标、范围、约束或验收时才进入访谈；不要把“重新发明方案”变成每次请求的固定步骤。
++## 对齐点1
+ 
+-访谈结论经用户确认后，生成一份可追溯需求摘要：目标、范围、明确约束、可观察验收，以及每项来自用户原文、仓库事实还是尚未确认的推断。`quick` 且满足低风险准入时，输出 `{{skill-call:my-implement}}`；其他等级输出 `{{skill-call:my-to-spec}}`。正式 Spec 与可执行计划由 `my-to-spec` 生成；本 Skill 不创建它们。
++输出目标、范围、约束、可观察验收，逐项注明来自用户原文、仓库事实或待确认推断；按[保证等级](references/shared/adapters/assurance-levels.md)提议 quick/standard 及理由。按[产物存储](references/shared/adapters/artifact-storage.md)保存 `requirements/requirements-<topic>-01.md`。用户确认后执行 topic start；配置缺失时先完成 setup。
++
++quick 直接实施和自审，不创建 Spec/Ticket；遵循[实施适配](references/shared/adapters/implementation-session.md)与[交付规则](references/shared/workflow-delivery.md)，完成 Topic。
++
++standard 直接调用 {{skill-call:my-to-spec}}，由它继续 to-tickets；两者合并呈现对齐点2。用户确认后按依赖逐张实施。多 Ticket 全部完成后运行 topic test 和 topic review，沉淀长期知识、写摘要，再 topic complete。中间直接调用已确认阶段，用户无需手动切换 Skill。
+diff --git a/skills/my-grilling/SKILL.md b/skills/my-grilling/SKILL.md
+index 33cefea..a317815 100644
+--- a/skills/my-grilling/SKILL.md
++++ b/skills/my-grilling/SKILL.md
+@@ -3,12 +3,12 @@ name: my-grilling
+ description: 在 my-grill-me、my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。
+ ---
+ 
+-围绕会改变目标、范围、约束或验收的承重未知进行高强度访谈。沿决策树逐支前进，一次解决一个决定及其依赖；每个问题都给出推荐答案。
++# 访谈方法
+ 
+-每次只问一个问题，等待反馈后再继续。一次问多个问题会令人无所适从。
++围绕会改变目标、范围、约束或验收的承重未知追问。先查证环境中可获得的事实；用户需决定的事项遵循[找用户的条件](references/shared/user-intervention.md)。
+ 
+-能通过探索环境（文件系统、工具等）找到的**事实**，应自行查证而非提问。按[指令权威与决策 Gate](references/shared/instruction-authority.md)区分决定：已批准范围内普通、可逆的 `routine` 细节由 Agent 继续；`consequential` 只在 gate 返回 `confirm` 时询问；产品取舍、成功指标、优先级或不可逆承诺等 `user-exclusive` 决定必须由用户回答。
++每轮列出所有互不依赖的问题，每题附推荐答案和取舍依据；用户可全部采纳或只改几项。依赖其他答案的留下一轮，会大幅影响其他问题的单独问。例如先确定服务对象，再问依赖它的成功指标；部署路径与已有测试可独立核对时同轮问。
+ 
+-当目标、范围、明确约束和可观察验收均可追溯，且没有未处理的 `consequential` 或 `user-exclusive` 未知时，访谈完成。需要用户回答的决定尚未解决前不得执行该事项；不要为了“覆盖所有方面”继续询问普通实现细节。
++用户以具体方案或类比描述目标时，先分清目标与手段；复杂、隐含或类比请求在形成摘要前按[需求核对](references/shared/requirement-analysis.md)检查理解。只有会改变结果的歧义继续追问。
+ 
+-确认后按[最终态写作](references/shared/final-state-writing.md)收束当前有效决定，供后续产物使用。
++目标、范围、明确约束、可观察验收均可追溯且承重未知已解决时完成；按[最终态写作](references/shared/final-state-writing.md)收束决定，返回调用方，不因普通实现细节继续访谈。
+diff --git a/skills/my-handoff/SKILL.md b/skills/my-handoff/SKILL.md
+index 601f853..ebf846b 100644
+--- a/skills/my-handoff/SKILL.md
++++ b/skills/my-handoff/SKILL.md
+@@ -4,27 +4,10 @@ description: 为新的 Agent 会话生成精简且可恢复的上下文交接
+ disable-model-invocation: true
+ ---
+ 
+-# My Handoff
++# 交接
+ 
+-把当前会话压缩为一份 Markdown 交接，使新的 Agent 会话可以继续工作。若用户传入参数，将其视为下一会话的工作重点，并据此安排交接内容和建议的第一步。
++只用于换宿主、换目录或换人，或访谈结论尚未形成 Spec 但需要保存。实施恢复依靠提交与 runtime status。按[找用户的条件](references/shared/user-intervention.md)处理阶段交接。
+ 
+-交接包含：
++交接保留下一会话目标、已确认决定与范围外、当前状态与验证依据、剩余风险、相关材料位置和第一步。既有产物只引用；移除秘密和不必要个人信息。提交、远端、release与各宿主安装状态按实际证据分别说明，未知保持未知。
+ 
+-- 下一会话目标；
+-- 已确认决策和范围外内容；
+-- 当前状态、验证证据和剩余风险；
+-- 相关 Spec、Ticket、ADR、原型、Commit 或 diff 的路径/URL；
+-- 建议手动调用的 `my-*` Skills；
+-- 下一步具体动作。
+-
+-文档顶部必须写明 `Handoff-Status: draft | ready` 与 `Reader-Reconstruction: pass | inconclusive`。涉及软件交付状态时，只列与继续工作有关的状态面，且分别记录工作区、local commit、remote、release 和各安装宿主；不得把其中一个状态推断成另一个，缺少证据时标为 `unknown`。不适用的状态面不为凑格式而添加。
+-
+-已有产物只引用，不复制正文。移除密钥、密码、个人身份和不必要的企业内部信息。阶段边界与最小上下文遵循[上下文卫生](references/policies/context-hygiene.md)。
+-
+-## 最终校验
+-
+-保存或交给下一会话前，按[产物最终校验](references/shared/artifact-finalization.md)执行四项 gate。尤其要让未参与撰写的可用上下文仅凭交接重建下一会话目标、范围外、已确认决定、当前状态、剩余风险、证据和第一步，并逐一验证引用路径、URL、Commit 与当前状态。
+-
+-只有四项 gate 全部通过且读者重建使用独立的 fresh-context 时，才写 `Handoff-Status: ready`、`Reader-Reconstruction: pass` 并交给下一会话。没有独立上下文能力或任一 gate 未通过时，只能保存 `Handoff-Status: draft`、`Reader-Reconstruction: inconclusive` 的恢复草稿；草稿必须列出阻塞 gate、影响和解除动作，明确不可直接继续，不得输出 `resume-first-step`。承重事实无法确认时标为未知并说明解除方式。
+-
+-`my-handoff` 是项目交接目录的唯一管理者。需要保存时读取[工作产物存储](references/shared/adapters/artifact-storage.md)，使用 `type=handoffs` 和文件名 `handoffs-<topic>-<time-or-sequence>.md`；`<topic>` 使用简短的 kebab-case 名称，例如 `requirements-reset`。同一需求的后续交接只新增新文件，不覆盖历史记录，不同需求不得混放。没有项目时保存到操作系统临时目录并报告绝对路径，而非写入当前工作区。不要自动删除旧交接；只创建新文档并在新文档中引用前序交接。
++直接核对引用与事实，按[最终态写作](references/shared/final-state-writing.md)表达有效决定；不使用 ready/draft 或独立读者重建门槛。依[产物存储](references/shared/adapters/artifact-storage.md)新增 handoffs-<topic>-<time-or-sequence>.md，不覆盖历史；无项目则保存临时目录并报告路径。上下文选择遵循[上下文卫生](references/policies/context-hygiene.md)。
+diff --git a/skills/my-implement/SKILL.md b/skills/my-implement/SKILL.md
+index 74684ff..c6bc597 100644
+--- a/skills/my-implement/SKILL.md
++++ b/skills/my-implement/SKILL.md
+@@ -5,29 +5,14 @@ description: 在 my-to-tickets、my-prototype 流程中作为指定阶段的工
+ 
+ # 实施
+ 
+-先读取项目 `assurance_level` 并遵循[开发保证等级](references/shared/adapters/assurance-levels.md)。`quick` 以当前对话中已确认的可追溯需求摘要为工作单元，不伪造 runtime journal；完成针对性测试和同会话代码自审后按实际证据交付。`standard` 在存在 Ticket 时使用 runtime session；没有 Ticket 的单一切片以版本化 Spec 为边界并保存实际测试和 review 证据。`audited` 必须使用 runtime 提供的工作单元和完整 [implementation session](references/shared/adapters/implementation-session.md)。工作单元中的 Ticket、Spec、适用规则和允许范围始终是实施边界；使用 session 时调度、状态、恢复、写操作 gate 与内容快照由 runtime 管理，不在本 Skill 中重复编排。
++先读取[保证等级](references/shared/adapters/assurance-levels.md)、已确认需求和 runtime 执行简报；工作边界是当前 Topic/Ticket 与适用规则。[找用户的条件](references/shared/user-intervention.md)决定哪些事项交用户。
+ 
+-## 实施方法
++动手前在执行简报补写实施计划：文件和接口、每条验收对应的可观察测试断言、Spec 隐含但尚未覆盖的输入。quick 在对话中形成同等计划，不伪造 Ticket 或实施记录。
+ 
+-先把验收标准落实到可观察行为，并从计划、Ticket 与现有代码中选择稳定 seam。行为新增或修复默认按照 {{skill-call:my-tdd}}完成最小 red-green 切片；符合 TDD 例外时记录依据并采用等价验证策略。只实现当前行为所需内容，不预建尚未要求的抽象或能力。
++将验收落到稳定 seam，调用 {{skill-call:my-tdd}} 完成最小行为切片；适用例外时记录依据及等价验证。每片跑最快有效测试，工作单元结束验证受影响链路；整份计划结束或集成前跑声明全量测试。只做当前必要行为。
+ 
+-每个切片运行能最快证明该行为的最小针对性测试。工作单元结束时验证受影响模块或链路；只有整份计划结束、发布或合并前、仓库规则要求，或者风险证据表明影响面扩大时，才运行完整测试套件。
++按[实施适配](references/shared/adapters/implementation-session.md)获取和恢复状态，不在 Skill 复制 runtime 已强制的计数、事务或完成校验。调用 {{skill-call:my-code-review}}，遵循[审查循环](references/shared/review-loop.md)登记判断与处理阻断；建议留到摘要，不主动重构。
+ 
+-## 回合完成
++完成当前 Ticket 后在已确认范围内按依赖继续下一张。多张全部完成后做 Topic 测试和整分支审查。按[交付规则](references/shared/workflow-delivery.md)沉淀 CONTEXT/ADR、填写全部固定摘要节，再完成 Topic；未验收闭环只能报告进度。
+ 
+-使用 runtime session 时遵循[implementation session](references/shared/adapters/implementation-session.md)的回合关闭契约。已跑局部测试、正在施工或等待下一步都只是进度；可以用 commentary 汇报，但不得因此发送 final 或结束实施。恢复、普通校验错误或 repair-plan 通过后，向 runtime 查询当前 gate，并完成它指向的闭环；只有 runtime 已登记可关闭的结果并完成适用的范围 transition，才可对用户结束回合。无 runtime session 的 quick/standard 单切片只有在验收、必要测试、自审和证据摘要全部闭合后才能结束。
+-
+-实现与计划出现偏差时，按语义影响处理：
+-
+-- 可逆的局部实现细节仍满足 Spec：在当前工作单元内调整并补充证据。
+-- Ticket 拆分或依赖不成立，但 Spec 仍成立：返回 `blocked-by-design`，说明需要调整的 Ticket 图及证据。
+-- 目标、范围、公开接口、数据语义、验收或风险承担发生变化：返回 `blocked-by-design` 和 `pause-for-revision`，指出失效假设与最小 Spec 修订范围。
+-- 缺少环境、权限或可判定证据：返回 `blocked-by-evidence`，不要猜测通过。
+-
+-已完成 Ticket 是历史事实；后续需要改变其结果时，提出引用原 Ticket 的补偿或迁移工作，不改写历史验收。
+-
+-## 完成标准
+-
+-提交结果前，自动在 runtime 固定的审查单元上应用{{skill-call:my-code-review}}，不要求用户再次调用 Skill，也不要再生成另一份未绑定快照。默认以 `self` 提交增强自审覆盖；只有用户显式要求时才创建独立 reviewer session。把 `pass | findings | inconclusive | blocked-by-design` 的同一结果交回 runtime 登记，不得生成未绑定的“自审通过”结论。
+-
+-代码审查出现 finding 时，先进入 runtime 固定的 repair-plan 门：方案逐项覆盖当前 finding、验收、根因、最小改动、验证和不改范围，再由受管方案审查增强自审。方案通过前不改代码；通过后按 runtime gate 修复、测试并重新审查。默认仅允许这一轮修复；最终复审的新有效 finding 由 runtime 作为正式 `blocked-by-review` 登记。`full-auto` 最多允许 profile 声明的五轮。连续出现相同根因时停止逐点补丁并返回 `blocked-by-design`。只有验收标准全部满足、必要测试通过，并且 runtime 登记的 `my-code-review` pass receipt 没有未解决 blocker，才返回 `completed`；同时提供改动、测试和审查证据。否则返回上述阻塞状态及恢复所需的最小信息。
++已完成 Ticket 是历史事实，补偿或迁移另建工作；需求/范围/验收失效交用户修订。环境或证据缺失如实说明，不猜测通过。
+diff --git a/skills/my-review-artifact/SKILL.md b/skills/my-review-artifact/SKILL.md
+index 26aa1f0..f800e2f 100644
+--- a/skills/my-review-artifact/SKILL.md
++++ b/skills/my-review-artifact/SKILL.md
+@@ -4,6 +4,8 @@ description: 对一个固定版本的交付产物做综合只读审查，合并
+ disable-model-invocation: true
+ ---
+ 
++遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
++
+ # 综合审查产物
+ 
+ 审查 runtime 提供的固定 `review_unit`，并把结论连同其 `content_id` 交回 runtime 验证。快照生命周期、过期检查和执行调度由 runtime 管理；本 Skill 只决定审查什么以及哪些问题值得报告。开始与交付遵循 [artifact review session](references/shared/adapters/artifact-review-session.md)。
+diff --git a/skills/my-review-design/SKILL.md b/skills/my-review-design/SKILL.md
+index 0ef0824..54c8e92 100644
+--- a/skills/my-review-design/SKILL.md
++++ b/skills/my-review-design/SKILL.md
+@@ -3,6 +3,8 @@ name: my-review-design
+ description: 在 my-to-spec、my-review-artifact 流程中作为指定阶段的方法被调用。
+ ---
+ 
++遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
++
+ # 评审已形成方案
+ 
+ 本 Skill 只判断设计本身是否成立并足以进入实施，不承担整份产物的综合质量验收。需要固定审查快照、跨质量维度检查或正式交付结论时，使用 `my-review-artifact` 并声明 `artifact_kind=design`。
+diff --git a/skills/my-review-instructions/SKILL.md b/skills/my-review-instructions/SKILL.md
+index 5d4d102..0b63ac0 100644
+--- a/skills/my-review-instructions/SKILL.md
++++ b/skills/my-review-instructions/SKILL.md
+@@ -4,6 +4,8 @@ description: 只读审查 Skill、AGENTS.md、CLAUDE.md 或 Cursor 项目指令
+ disable-model-invocation: true
+ ---
+ 
++遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
++
+ # 审查 Agent 指令
+ 
+ 只读审查 Skill 或项目规则，不修改目标、发布结果或把“优化现有 Skill”预设为答案。合法结论包括保留、局部修复、重构、合并、外置为参考、改由 runtime 执行、退役，以及证据不足。
+@@ -27,7 +29,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
+ 
+ 先解析目标宿主以及目标 Skill、`agents/`、可达 references、scripts、assets、调用者、被调用项、runtime、eval 和已知失败反馈，得到完整且按绝对路径稳定排序的文件列表，再按[专项只读审查会话](references/shared/adapters/specialized-review-session.md)建立 snapshot。只读取返回的 `review_unit`、`content_id` 和只读 `snapshot_path`，不得继续从 live path 取证。
+ 
+-完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照并重跑审查。
++完成条件：runtime 返回 `status: ready`；每个已解析的行为依赖都恰好映射到一个 snapshot 条目；后续证据均来自该快照。若文件集合或内容变化，旧结论失效，重新构建快照，复审范围遵循共享审查循环。
+ 
+ ### 2. 重建 Job Contract
+ 
+diff --git a/skills/my-tech-design/SKILL.md b/skills/my-tech-design/SKILL.md
+index 95e3345..a486144 100644
+--- a/skills/my-tech-design/SKILL.md
++++ b/skills/my-tech-design/SKILL.md
+@@ -4,6 +4,8 @@ description: 将讨论与代码库事实整理为可评审的技术方案；支
+ disable-model-invocation: true
+ ---
+ 
++遵循[审查循环](references/shared/review-loop.md)，包括独立性、覆盖、建议归属、修复与停止；需用户处理时按[找用户的条件](references/shared/user-intervention.md)。
++
+ # 技术方案
+ 
+ 为不了解当前代码细节、但需要判断方案是否成立和风险是否可接受的工程师生成技术方案。它不是实现清单。
+diff --git a/skills/my-to-spec/SKILL.md b/skills/my-to-spec/SKILL.md
+index e37fa3a..5c32ddb 100644
+--- a/skills/my-to-spec/SKILL.md
++++ b/skills/my-to-spec/SKILL.md
+@@ -3,33 +3,17 @@ name: my-to-spec
+ description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段的工作单元被调用。
+ ---
+ 
+-本 Skill 从当前对话上下文和对代码库的理解中产出 Spec（也可称 PRD）。**不要重新访谈用户**；先按[最终态写作](references/shared/final-state-writing.md)收束当前有效内容。
++遵循[指令权威](references/shared/instruction-authority.md)。
+ 
+-读取 `.agent/matt-workflow.md`；其中定义任务后端、文档来源、外部写入确认策略、生效的 `humanizer_policy` 与[开发保证等级](references/shared/adapters/assurance-levels.md)。`default_execution_agent` 只用于后续 Ticket 的默认值，不为 Spec 分配执行 Agent。配置不存在时先运行 `{{skill-call:my-setup}}`。写入团队文档或外部 Tracker 前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
++# 整理 Spec
+ 
+-## 过程
++从已确认需求和代码库事实整理版本化 Spec（也可称 PRD），不重新访谈。不为 Spec 分配执行 Agent。先读取[最终态写作](references/shared/final-state-writing.md)、[项目规则解析](references/shared/adapters/project-rules.md)与既有 ADR；找用户按[共同条件](references/shared/user-intervention.md)。
+ 
+-1. 确定 Spec 血缘。首次产出分配稳定的 `spec_id` 与 `revision: 1`；修订时沿用 `spec_id`、递增 `revision`，并让 `supersedes` 指向上一版。每版新建文件，不覆盖历史版本；规范正文只写当前有效状态。若本地已有 `.agent/specs/<spec_id>.md`，先阅读全文并以它作为**已归档行为的当前权威基线**；本 Topic 的 Spec 是尚未归档变更的实施边界，不能默默覆盖长期 Spec。修订时阅读全文并与上一版的有效行为比较；上一版若以补充条款继承更早版本，先沿血缘读到能重建有效行为的基线。为新增、修改、移除的外部可观察行为建立非规范性的修订索引，逐项指向本版最终条款、前版依据及受影响验收；没有行为变化时明确写“无外部行为变化”。不要从文字 diff 推断语义变化，也不要把被移除的旧条款复制为本版要求。
++首次分配 spec_id/revision1；修订递增 revision，用 supersedes 指前版，每版新增 Topic 内文件，阅读全文比较有效行为并记修订索引。Topic Spec 是实施边界，不读取或发布长期 Spec。承重决定用[第一性原理推理](references/shared/first-principles-reasoning.md)连接目标、事实、机制、真实替代与可证伪验收；可逆实现细节留给实施。
+ 
+-2. 若尚未探索，先探索仓库以理解当前代码状态。整个 Spec 使用项目领域术语，并遵守所触及区域的 ADR。输出前按 [项目规则解析](references/shared/adapters/project-rules.md) 解析跨 Agent 的项目规则；每个承重实施决策必须给出影响区域、规则、约束和验证。每张 Ticket 的目标 Agent 及其原生规则留到 Ticket 阶段解析。普通、可逆的实现细节留给实施阶段。
++写清目标、范围、行为、不变量、验证策略及影响结果的未知。必要时调用 {{skill-call:my-review-design}}，遵循[审查循环](references/shared/review-loop.md)。来源与事实按[产物最终校验](references/shared/artifact-finalization.md)核对，承重未知保持可定位，不润色成确定结论。
+ 
+-3. 从已确认讨论中提取目标、范围外、外部可观察行为、不变量、验收标准和未知。用户故事只在角色差异会改变行为或验收时使用，不为“全面”而枚举同义场景。对承重决策应用[第一性原理推理](references/shared/first-principles-reasoning.md)，把目标、事实与约束、采用机制、最小反事实、可证伪预测和验收连成紧凑 reasoning record；普通可逆实现细节不生成空记录。
+-
+-4. 描述验证策略：优先复用现有测试 seam，并选择能证明外部行为的最高层验证。只有新增 seam 会改变架构、公开接口或测试投入时才作为承重决定交给用户；不要预设全项目必须收敛为一个 seam。
+-
+-5. 使用下列模板撰写 Spec。
+-
+-6. **设计 Gate**：先把候选 Spec 保持为 `status: draft`，不得发布、添加 agent-ready 标签或交给下游。若它改变公开接口、数据语义、持久状态、安全或权限边界、迁移/兼容承诺，或包含难以逆转的架构决定，调用 {{skill-call:my-review-design}}并对候选内容完成专项评审；需要文件输入时，只保存到个人工作区作为 draft。存在 blocker 时保留 draft 为待修订状态，不进入 Ticket 或实施；普通可逆实现细节不触发此 Gate。Gate 通过或无需触发后，才把候选状态晋升为 `current`。
+-
+-7. **写入前最终校验**：按[产物最终校验](references/shared/artifact-finalization.md)依次通过来源账本、内部一致性、读者重建和事实正确性 gate。修订版还须核对修订索引与前版、当前正文和验收一致，确认没有遗漏行为变化、把旧状态误写成当前要求，或让索引产生正文没有的约束。承重未知或矛盾未解除时不写入、不发布；本 Skill 不重新访谈，只报告需要回到上游确认的具体缺口。四项通过后，再按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`；润色若改变事实、结论或未知，重新校验。
+-
+-8. **写入**：仅写入 `status: current` 且已通过适用 Gate 的版本，根据 `task_backend` 保存：
+-   - `local`：写入 `.agent/work/<feature-slug>/specs/specs-<feature-slug>-<time-or-sequence>.md`；
+-   - `project-docs`：先展示补丁，确认后写入配置的项目文档位置；
+-   - `external`：先展示完整预览，确认后发布到配置的 Tracker；
+-   - `none`：只在当前会话输出。
+-
+-   对 external 后端，只有项目配置允许并在本次得到明确确认后，才添加项目配置的 agent-ready 标签；不得猜测 `ready-for-agent` 等标签名称。
++按[产物存储](references/shared/adapters/artifact-storage.md)保存 Topic specs，再直接调用 {{skill-call:my-to-tickets}}。Spec 与逐 Ticket 行为、依赖、测试命令和边界合并呈现对齐点2；用户确认前不实施，确认后由 to-tickets 直接继续 implement。
+ 
+ <spec-template>
+ 
+@@ -38,7 +22,7 @@ description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段
+ spec_id: <稳定 feature id>
+ revision: <正整数>
+ supersedes: <上一版路径、URL 或空>
+-status: <draft|current>
++status: current
+ ---
+ ```
+ 
+diff --git a/skills/my-to-tickets/SKILL.md b/skills/my-to-tickets/SKILL.md
+index e5b4e99..831f290 100644
+--- a/skills/my-to-tickets/SKILL.md
++++ b/skills/my-to-tickets/SKILL.md
+@@ -3,71 +3,18 @@ name: my-to-tickets
+ description: 在 my-to-spec、my-triage 流程中作为指定阶段的工作单元被调用。
+ ---
+ 
+-# 拆分 Ticket
+-
+-把计划、Spec 或对话拆成一组 **Ticket**：每张都是 tracer-bullet 纵向切片，并声明**阻塞**它的 Ticket。
+-
+-读取 `.agent/matt-workflow.md`（含生效的 `humanizer_policy` 与[开发保证等级](references/shared/adapters/assurance-levels.md)）；缺失时先运行 `{{skill-call:my-setup}}`。`quick` 不进入本 Skill；`standard` 仅在多切片、跨上下文或存在依赖图时拆 Ticket；`audited` 必须建立完整 Ticket 血缘。用户或已批准材料明确分配执行 Agent 时，该 Ticket 使用该值；否则使用项目的 `default_execution_agent`。`auto` 保留到实施开始时再绑定。发布到 Tracker 或项目文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+-
+-## 过程
+-
+-### 1. 收集上下文
+-
+-使用当前对话中已有的内容。若用户传入引用（Spec 路径、Issue 号或 URL），获取并阅读全文与评论。按[最终态写作](references/shared/final-state-writing.md)只将当前有效决定转成 Ticket。
+-
+-记录源 Spec 的 `spec_id`、`revision` 与路径/URL。没有正式 Spec 时，为已批准计划分配等价的稳定 id、revision 与可定位引用；不得创建无来源血缘的 `ready-for-agent` Ticket。
+-
+-### 2. 探索代码库（可选）
+-
+-若尚未探索代码库，则探索以理解当前状态。Ticket 标题和描述应使用项目领域术语，并遵守相关 ADR。先为每张 Ticket 确定 `execution_agent`，再按 [项目规则解析](references/shared/adapters/project-rules.md) 解析该目标的规则；`auto` 保持原值，但可用当前安装 Agent 收集初步证据。未解决的规则冲突不得生成 `ready-for-agent` Ticket。
+-
+-寻找 prefactor 机会，让实施更容易：“先让变更容易，再做容易的变更。”
+-
+-### 3. 起草纵向切片
+-
+-将工作拆成 **tracer bullet** Ticket。
++遵循[指令权威](references/shared/instruction-authority.md)。
+ 
+-<vertical-slice-rules>
+-
+-- 每个切片穿过每一层（schema、API、UI、测试）的狭窄但**完整**路径：是纵向，而非某层的水平切片；
+-- 完成的切片必须能独立演示或验证；
+-- 每个切片应能放进一个全新的上下文窗口完成；
+-- 所有 prefactoring 应先完成。
+-
+-</vertical-slice-rules>
+-
+-为每张 Ticket 给出**阻塞边**：即开始它之前必须完成的其他 Ticket。没有阻塞者可立即开始。若 Spec 要求持久化恢复或处理外部副作用的未知响应，在本地 Ticket 的 `review_probes` 分别声明 `recovery` 或 `unknown-response`；其他 Ticket 保持空列表，不猜测风险探针。
+-
+-**大范围重构是纵向切片的例外。** 大范围重构是一次机械变更——如改列名、重定共享符号——其 blast radius 覆盖整个代码库，单次编辑会同时破坏数千调用点，无法让任何纵向切片保持 green。不要强行改成 tracer bullet；使用 **expand–contract**：先 expand，在旧形式旁加入新形式而不破坏任何内容；再按 blast radius 分批迁移调用点（按 package 或目录），每批一张被 expand 阻塞的 Ticket。旧形式仍在，因此批次之间 CI 保持 green；最后在所有迁移批次完成后 contract，删除旧形式。若连批次都无法单独 green，仍保留顺序，但让它们共享集成分支，并让所有批次阻塞最后的 integrate-and-verify Ticket；只有最后一张承诺 green。
+-
+-### 4. 审阅拆分并按需确认
+-
+-将建议拆分以编号列表展示。每张 Ticket 都展示：
+-
+-- **标题**：简短描述名称；
+-- **被谁阻塞**：必须先完成的其他 Ticket（如有）；
+-- **交付什么**：该 Ticket 端到端实现的行为。
+-- **适用规则与影响区域**：规则来源、影响模块/目录/glob，以及由规则推出的实施约束。
+-
+-先自检粒度是否过粗或过细、阻塞边是否只依赖真正门槛，以及是否有应合并或再拆分的 Ticket。再建立不写入 Ticket 正文的 acceptance coverage：源 Spec 的每项验收至少有一个明确 owner，所有 Ticket 验收都能回指源验收或经批准的实施约束，不存在遗漏或无授权重复。按[第一性原理推理](references/shared/first-principles-reasoning.md)检查每个普通功能切片的端到端行为是否对验收作出必要贡献；保留上文大范围机械重构的 expand–contract 例外，不要求迁移批次直接产生新的用户可见能力。若这些都能从已批准 Spec、项目规则和代码推断，分类为 `routine`，按[指令权威与决策 Gate](references/shared/instruction-authority.md)继续保存可审阅草稿，不要求用户再次批准机械拆分。
+-
+-只有拆分暴露出会改变目标、范围、公开接口、数据语义、测试投入或风险承担的未知时，才分类为 `consequential` 并执行 `decision-gate`；`confirm` 时连同编号方案和具体分歧询问，`allow` 时记录依据后继续，`pause` 时停止。用户专属产品取舍分类为 `user-exclusive`，不得由自动策略决定。
+-
+-### 5. 保存或发布 Ticket
+-
+-输入是修订版 Spec 时，先用其修订索引核对前版与本版最终行为；旧 Spec 没有索引时直接比较有效条款，不因缺少索引猜测 Ticket 影响。向评审者展示“变化的行为/验收 → 受影响的未完成 Ticket → 处理方式”的简短映射，并列出需补偿的已完成 Ticket；无影响也明确说明依据。已完成 Ticket 保持 `complete` 且不改正文；需要撤销或迁移其结果时新增补偿 Ticket。受影响的未完成 Ticket 进入 `revising`，更新来源、验收和阻塞边，通过 `validate-ticket` 后标为 `revalidated`；不受影响的 Ticket 保留原血缘。不得删除历史 Ticket 或把完成记录改写成“未发生”。
++# 拆分 Ticket
+ 
+-**写入前**：按 [humanizer](references/shared/humanizer.md) 服从 `humanizer_policy`，再按配置后端保存：
++从当前有效 Spec 形成 tracer-bullet 纵向切片，每张穿过必要层次的完整路径、可独立演示验收、能在新上下文完成。声明真正阻塞边，不为顺序造依赖；机械大范围重构保留 expand–contract 例外：先兼容扩展、分批迁移、最后集成删除。
+ 
+-- **`local`** → 每张文件写入 `.agent/work/<feature-slug>/tickets/tickets-<feature-slug>-<NN>.md`，按依赖顺序从 `01` 编号（阻塞者优先）。每张的“被谁阻塞”列出依赖的编号/标题；使用 [Ticket 格式](TICKET-FORMATS.md) 的 `local` 小节，绝不合成一个总文件。
+-- **`external`** → 先按依赖顺序预览每张 Ticket；得到明确确认后依次创建，以便阻塞边引用真实标识。若平台支持，使用原生 blocking/sub-issue 关系；否则写入阻塞 Issue。只使用项目配置的标签。
+-- **`project-docs`** → 先展示符合项目既有格式的补丁，确认后写入。
+-- **`none`** → 只在会话中输出。
++先读 `.agent/matt-workflow.md`、源 Spec 血缘、[项目规则解析](references/shared/adapters/project-rules.md)和代码，按[最终态写作](references/shared/final-state-writing.md)处理有效要求。建立 acceptance coverage：源验收各有明确owner，Ticket验收可回指要求，避免遗漏或未授权重复；承重切片按[第一性原理推理](references/shared/first-principles-reasoning.md)核对必要贡献。
+ 
+-处理 **frontier**：所有阻塞者都完成的 Ticket。纯线性链即从上到下。
++## 对齐点2
+ 
+-不要关闭或修改任何父 Issue。
++与 Spec 一起呈现逐张标题、要实现的行为、依赖、影响区域、规则、test_commands 和测试边界。按[找用户的条件](references/shared/user-intervention.md)取得用户对整份 Spec/拆分的确认；不要把 Spec 已确认误当第二对齐点已通过，也不让用户逐段手动调用。
+ 
+-确定 backend 后读取 [Ticket 格式](TICKET-FORMATS.md) 中对应的一节，不加载其他 backend 的模板。本地格式必须保留实施准入字段 `spec_id`、`spec_revision` 与 `spec_ref`，以及历史字段 `supersedes_ticket` 与 `compensates`；进入实施前通过安装状态记录的 `runtime_entry` 运行 `validate-ticket <ticket-path>`。本地准入、引用校验与排序由 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 执行。
++按[Ticket 格式](TICKET-FORMATS.md)保存 local 文件，填写 spec_id、spec_revision、spec_ref。先为每张 Ticket 确定 `execution_agent`：用户或已批准材料明确分配时沿用，否则沿用项目的 default_execution_agent；auto 到开工才绑定实际宿主。Spec 要求持久化恢复或外部副作用未知响应时，review_probes 分别声明 recovery 或 unknown-response，其他保持空列表。测试断言可观察结果，不复刻内部算法。修订只更新受影响未完成工作，已完成Ticket保持历史；需要改变已完成结果时另建补偿或迁移。
+ 
+-无论采用何种形式，都避免具体文件路径和代码片段，它们很快会过期。例外是原型产生了比文字更精确的决策片段（状态机、reducer、schema、类型形状）：可内嵌并简要标注来自原型，但只保留决策丰富部分，而非可运行 demo。
++确认后直接调用 {{skill-call:my-implement}} 按依赖逐张完成。全部完成后多 Ticket 跑 Topic test/review，再依[交付规则](references/shared/workflow-delivery.md)收尾。quick 不进入本Skill。对外发布按共同确认条件；不修改父Issue。
+diff --git a/skills/my-to-tickets/TICKET-FORMATS.md b/skills/my-to-tickets/TICKET-FORMATS.md
+index aa1c11d..84693ed 100644
+--- a/skills/my-to-tickets/TICKET-FORMATS.md
++++ b/skills/my-to-tickets/TICKET-FORMATS.md
+@@ -21,6 +21,7 @@ blocked_by: []
+ claimed_by:
+ tags: []
+ sequence: <NN>
++test_commands: [<至少一条与项目配置匹配的命令>]
+ rule_sources: []
+ rule_scope: []
+ rule_constraints: []
+@@ -46,7 +47,7 @@ execution_agent: <auto|codex|cursor|claude>
+ - [ ] 验收标准 2
+ ```
+ 
+-`blocked_by` 必须是 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取时仅填写 `claimed_by`，完成阻塞 Ticket 时将其 `status` 设为 `complete`。正文状态行不能替代 frontmatter，也不能据此猜测旧 Ticket 类型。
++`blocked_by` 必须是 YAML 列表，使用已创建 Ticket 的唯一 id、路径或标题；无阻塞时保留 `[]`。领取、状态和验收勾选由 runtime 管理。正文状态行不能替代 frontmatter，也不能据此猜测旧 Ticket 类型。
+ 
+ 修订未完成 Ticket 时，`supersedes_ticket` 指向被替代项；补偿已完成工作时，`compensates` 指向历史 Ticket。新 Ticket 始终绑定当前 Spec revision。关闭前勾选全部验收项。
+ 
+diff --git a/tests/test_portfolio.py b/tests/test_portfolio.py
+index bdf77cd..a2b25f0 100644
+--- a/tests/test_portfolio.py
++++ b/tests/test_portfolio.py
+@@ -5,30 +5,26 @@ import unittest
+ from pathlib import Path
+ 
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ 
+ 
+ class PortfolioContractTests(unittest.TestCase):
+ 
+ 
+-
+     def test_ticket_contract_preserves_coverage_and_expand_contract_exception(self):
+         text = (ROOT / "skills/my-to-tickets/SKILL.md").read_text()
+         self.assertIn("acceptance coverage", text)
+         self.assertIn("expand–contract", text)
+ 
+ 
+-
+-
+-
+-
+     def test_artifact_storage_adapter_is_declared_for_writers(self):
+         manifest = json.loads((ROOT / "resources/manifest.json").read_text())
+         resource = manifest["resources"]["adapter-artifact-storage"]
+         self.assertEqual(
+             {
+                 "my-edit-article",
++                "my-grill-with-docs",
++                "my-to-spec",
+                 "my-handoff",
+                 "my-test-report",
+                 "my-to-questionnaire",
+diff --git a/tests/test_resources.py b/tests/test_resources.py
+index 1620ba1..06b0814 100644
+--- a/tests/test_resources.py
++++ b/tests/test_resources.py
+@@ -42,7 +42,6 @@ class SharedResourceTests(unittest.TestCase):
+         self.assertEqual(
+             {
+                 "my-to-spec",
+-                "my-handoff",
+                 "my-ask-matt",
+                 "my-review-artifact",
+             },
+@@ -109,13 +108,7 @@ class SharedResourceTests(unittest.TestCase):
+     def test_humanizer_is_bundled_only_for_consumers(self):
+         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+         with tempfile.TemporaryDirectory() as tmp:
+-            for name in (
+-                "my-to-spec",
+-                "my-to-tickets",
+-                "my-domain-modeling",
+-                "my-code-review",
+-                "my-humanizer",
+-            ):
++            for name in manifest.resources["humanizer"].consumers:
+                 consumer = Path(tmp) / name
+                 consumer.mkdir()
+                 bundle_resources_for_skill(manifest, ROOT, name, consumer)
+@@ -277,7 +270,7 @@ class SharedResourceTests(unittest.TestCase):
+                 "references/policies/merge-conflict-approval.md",
+             ),
+             "my-to-tickets": (
+-                "references/shared/adapters/ticket-selection.md",
++                "references/shared/user-intervention.md",
+             ),
+             "my-triage": (
+                 "references/shared/adapters/ticket-selection.md",
+@@ -318,7 +311,7 @@ class SharedResourceTests(unittest.TestCase):
+                 bundle_resources_for_skill(manifest, ROOT, skill, target)
+                 authority = target / "references/shared/instruction-authority.md"
+                 self.assertTrue(authority.is_file(), skill)
+-                self.assertIn("decision-gate", authority.read_text())
++                self.assertIn("user-intervention.md", authority.read_text())
+ 
+     def test_policies_are_bundled_only_for_explicit_consumers(self):
+         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+@@ -363,7 +356,7 @@ class SharedResourceTests(unittest.TestCase):
+             <= effective["adapter-work-scope"]
+         )
+         self.assertNotIn("my-triage", direct["adapter-write-actions"])
+-        self.assertIn("my-triage", effective["adapter-write-actions"])
++        self.assertIn("my-triage", effective["user-intervention"])
+         self.assertIn("my-to-spec", effective["instruction-authority"])
+ 
+         validate_skills(ROOT / "skills", repo_root=ROOT)
+diff --git a/tests/test_workflow.py b/tests/test_workflow.py
+index d900d80..6b5f1bf 100644
+--- a/tests/test_workflow.py
++++ b/tests/test_workflow.py
+@@ -526,18 +526,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertIn("路由索引", text)
+         self.assertIn("不要在本 Skill 内执行", text)
+ 
+-    def test_consumers_point_to_generated_resources(self):
+-        root = Path(__file__).resolve().parents[1] / "skills"
+-        for skill in (
+-            "my-to-spec",
+-            "my-to-tickets",
+-            "my-domain-modeling",
+-            "my-code-review",
+-        ):
+-            text = (root / skill / "SKILL.md").read_text()
+-            with self.subTest(skill=skill):
+-                self.assertIn("references/shared/humanizer.md", text)
+-                self.assertNotIn("../my-to-spec/humanizer.md", text)
+ 
+     def test_plan_skills_use_project_rule_adapter(self):
+         root = Path(__file__).resolve().parents[1]
+@@ -629,66 +617,6 @@ class ProfileTests(unittest.TestCase):
+             self.assertEqual(0, result.returncode, result.stderr)
+             self.assertIn('"detected_standards_sources": ["AGENTS.md"]', result.stdout)
+ 
+-    def test_composition_callers_use_one_dispatch_channel(self):
+-        root = Path(__file__).resolve().parents[1]
+-        expectations = {
+-            "my-grill-me": {
+-                "core": [
+-                    "composition_policy",
+-                    "执行后返回宿主",
+-                    "立即提出第一个问题",
+-                ],
+-                "adapters": ["composition.md"],
+-            },
+-            "my-grill-with-docs": {
+-                "core": ["composition_policy", "执行后返回宿主"],
+-                "adapters": ["composition.md", "artifact-access.md"],
+-            },
+-        }
+-
+-        for skill, expectation in expectations.items():
+-            text = (root / "skills" / skill / "SKILL.md").read_text()
+-            with self.subTest(skill=skill):
+-                for phrase in expectation["core"]:
+-                    self.assertIn(phrase, text)
+-                for adapter in expectation["adapters"]:
+-                    self.assertIn(
+-                        f"references/shared/adapters/{adapter}", text
+-                    )
+-                self.assertIn("automatic", text)
+-                self.assertIn("manual", text)
+-                self.assertNotIn("项目策略优先", text)
+-
+-    def test_internal_composition_methods_return_in_manual_mode(self):
+-        root = Path(__file__).resolve().parents[1] / "skills"
+-        for skill in (
+-            "my-grill-me",
+-            "my-grill-with-docs",
+-            "my-improve-codebase-architecture",
+-        ):
+-            text = (root / skill / "SKILL.md").read_text()
+-            with self.subTest(skill=skill):
+-                self.assertIn("执行后返回宿主", text)
+-                self.assertNotRegex(text, r"manual`：输出对应的.*随后停止")
+-
+-        implement = (root / "my-implement/SKILL.md").read_text()
+-        self.assertIn("{{skill-call:my-tdd}}", implement)
+-        self.assertIn("{{skill-call:my-code-review}}", implement)
+-        self.assertNotIn("composition_policy", implement)
+-
+-        wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
+-        self.assertIn("内部方法", wayfinder)
+-        self.assertIn("阶段交接", wayfinder)
+-        self.assertIn("my-to-spec", wayfinder)
+-
+-    def test_grill_me_manual_entry_executes_composed_interview_in_same_turn(self):
+-        root = Path(__file__).resolve().parents[1]
+-        text = (root / "skills/my-grill-me/SKILL.md").read_text()
+-
+-        self.assertIn("{{skill-call:my-grilling}}", text)
+-        self.assertIn("立即提出第一个问题", text)
+-        self.assertNotIn("输出 `/my-grilling`", text)
+-        self.assertNotIn("输出 `$my-grilling`", text)
+ 
+     def test_round_trips_supported_profile(self):
+         config = {
+@@ -996,12 +924,10 @@ class ProfileTests(unittest.TestCase):
+         prototype = (root / "my-prototype/LOGIC.md").read_text()
+         wayfinder = (root / "my-wayfinder/SKILL.md").read_text()
+ 
+-        self.assertIn("分类为 `routine`", tickets)
+         self.assertNotIn("反复迭代直至用户批准", tickets)
+         self.assertIn("不为普通、可逆的重排单独等待确认", article)
+         self.assertIn("继续穷尽当前授权范围内的只读证据", diagnosing)
+         self.assertIn("不因 `decision_policy: ask` 重复确认", diagnosing)
+-        self.assertIn("执行 `allow | confirm | pause` 的唯一结果", domain)
+         self.assertIn("视为 `routine`", prototype)
+         self.assertNotIn("按 `decision_policy` 询问后续方式", wayfinder)
+ 
+@@ -1010,9 +936,6 @@ class ProfileTests(unittest.TestCase):
+         implement = (root / "my-implement/SKILL.md").read_text()
+         design_twice = (root / "my-codebase-design/DESIGN-IT-TWICE.md").read_text()
+ 
+-        self.assertIn("最小针对性测试", implement)
+-        self.assertIn("受影响模块或链路", implement)
+-        self.assertIn("只有整份计划结束、发布或合并前", implement)
+         self.assertNotIn("结束时运行一次完整测试套件", implement)
+         self.assertIn("用户未禁止", design_twice)
+         self.assertIn("不设固定下限", design_twice)
+@@ -1133,8 +1056,6 @@ class ProfileTests(unittest.TestCase):
+             )
+         )
+         self.assertIn("继续", implement_contract)
+-        self.assertIn("不升档", implement_contract)
+-        self.assertIn("work_scope_policy", implement_contract)
+ 
+         router = (root / "my-ask-matt" / "SKILL.md").read_text()
+         self.assertIn("当前已批准范围内实施", router)
+@@ -1177,33 +1098,13 @@ class ProfileTests(unittest.TestCase):
+             Path(__file__).resolve().parents[1]
+             / "resources/adapters/assurance-levels.md"
+         ).read_text()
+-        for phrase in ("## quick", "## standard", "## audited", "正交"):
++        for phrase in ("quick", "standard"):
+             self.assertIn(phrase, adapter)
+-        for skill in (
+-            "my-ask-matt",
+-            "my-grill-with-docs",
+-            "my-implement",
+-            "my-setup",
+-            "my-tdd",
+-            "my-to-spec",
+-            "my-to-tickets",
+-        ):
+-            body = (
+-                Path(__file__).resolve().parents[1] / "skills" / skill / "SKILL.md"
+-            ).read_text()
+-            self.assertIn("references/shared/adapters/assurance-levels.md", body)
+-
+         setup = (
+             Path(__file__).resolve().parents[1] / "skills/my-setup/SKILL.md"
+         ).read_text()
+         self.assertIn("--assurance-level <confirmed-level>", setup)
+ 
+-        spec = (
+-            Path(__file__).resolve().parents[1] / "skills/my-to-spec/SKILL.md"
+-        ).read_text()
+-        self.assertLess(spec.index("**设计 Gate**"), spec.index("**写入**"))
+-        self.assertIn("status: <draft|current>", spec)
+-        self.assertIn("才把候选状态晋升为 `current`", spec)
+ 
+     def test_five_presets_match_spec_including_humanizer_defaults(self):
+         expected = {
+@@ -1350,56 +1251,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertNotIn("在 `supervised` 项目中", diagnosing)
+         self.assertNotIn("在 `unattended` 项目中", diagnosing)
+ 
+-    def test_humanizer_policy_source_of_truth_freezes_contracts(self):
+-        sot = (
+-            Path(__file__).resolve().parents[1]
+-            / "resources"
+-            / "humanizer.md"
+-        ).read_text()
+-        self.assertIn("humanizer_policy", sot)
+-        self.assertIn("`deny`", sot)
+-        self.assertIn("`confirm`", sot)
+-        self.assertIn("`allow`", sot)
+-        self.assertIn("/my-humanizer", sot)
+-        self.assertIn("叙述段", sot)
+-        self.assertIn("契约段", sot)
+-        self.assertIn("必须 / 不得", sot)
+-        self.assertIn("验收条目", sot)
+-        self.assertIn("未确认不得", sot)
+-        self.assertRegex(sot, r"不主动|跳过主动")
+-        self.assertIn("Agent 执行偏离", sot)
+-
+-    def test_doc_generation_skills_point_to_humanizer_at_write_step(self):
+-        root = Path(__file__).resolve().parents[1] / "skills"
+-        expectations = {
+-            "my-to-spec": (
+-                "[humanizer](references/shared/humanizer.md)",
+-                "写入前",
+-            ),
+-            "my-to-tickets": (
+-                "[humanizer](references/shared/humanizer.md)",
+-                "写入前",
+-            ),
+-        }
+-        for skill, (pointer, timing) in expectations.items():
+-            text = (root / skill / "SKILL.md").read_text()
+-            with self.subTest(skill=skill):
+-                self.assertIn("humanizer_policy", text)
+-                self.assertIn(pointer, text)
+-                self.assertIn(timing, text)
+-                self.assertNotIn("## humanizer", text)
+-
+-        grill = (root / "my-grill-with-docs/SKILL.md").read_text()
+-        domain = (root / "my-domain-modeling/SKILL.md").read_text()
+-        self.assertIn("单个术语", grill)
+-        self.assertIn("ADR 候选可在访谈中写入个人工作区", grill)
+-        self.assertIn("{{skill-call:my-to-spec}}", grill)
+-        self.assertIn("正式 Spec 与可执行计划由 `my-to-spec` 生成", grill)
+-        self.assertNotIn("输出可执行计划", grill)
+-        self.assertNotIn("团队文档、最终 Spec 与最终计划", grill)
+-        self.assertIn("立即", domain)
+-        self.assertIn("[humanizer](references/shared/humanizer.md)", domain)
+-        self.assertIn("个人记录例外", domain)
+ 
+     def test_code_review_skill_is_compact_and_signal_first(self):
+         text = (
+@@ -1413,10 +1264,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertIn("代码行为", text)
+         self.assertIn("Spec", text)
+         self.assertRegex(text, r"ADR|相关文档")
+-        self.assertIn("humanizer_policy", text)
+-        self.assertIn(
+-            "[humanizer](references/shared/humanizer.md)", text
+-        )
+         self.assertRegex(text, r"领域用语|简短")
+         self.assertIn("函数", text)
+         self.assertIn("变量", text)
+@@ -1427,7 +1274,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertIn("证据", text)
+         self.assertIn("影响及最小验证方式", text)
+         self.assertIn("低风险变更不为并行而增加 reviewer", text)
+-        self.assertIn("manual` 或 `automatic` 都必须", text)
+         self.assertIn("## Code", text)
+         self.assertIn("## Spec", text)
+         self.assertNotIn("## Standards", text)
+@@ -1452,7 +1298,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertIn("**Code pass**", text)
+         self.assertIn("**Spec pass**", text)
+         self.assertIn("每条规范性要求映射到实现与测试证据", text)
+-        self.assertIn("不输出这份检查清单", text)
+         self.assertIn("同一失败链只保留", text)
+         self.assertIn("按主要原因归类", text)
+         self.assertIn("未评估：未找到可用 Spec", text)
+@@ -1466,7 +1311,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertIn("Review-Scope: <scope>", text)
+         self.assertIn("无内容的注释、命名或统计子节不生成", text)
+         self.assertIn("用户显式指定的任何 fixed-point", text)
+-        self.assertIn("method=my-code-review", text)
+         self.assertIn("组合模式不得另建 snapshot", text)
+         self.assertIn("不得替换", text)
+         self.assertIn("仅在用户未指定而采用默认基线分支时", text)
+@@ -1489,45 +1333,6 @@ class ProfileTests(unittest.TestCase):
+         self.assertIn("专业术语首次出现时用白话解释", text)
+         self.assertIn("不能仅因“动词＋宾语”形式", text)
+ 
+-    def test_implementation_method_defers_snapshot_and_journal_mechanics_to_runtime(self):
+-        root = Path(__file__).resolve().parents[1]
+-        review = (root / "skills/my-code-review/SKILL.md").read_text()
+-        implement = (root / "skills/my-implement/SKILL.md").read_text()
+-
+-        for source in ("committed", "staged", "unstaged", "untracked"):
+-            self.assertIn(source, review)
+-        self.assertIn("Review-Snapshot: <content_id>", review)
+-        self.assertIn("旧 receipt 立即失效", review)
+-        self.assertIn("内容快照由 runtime 管理", implement)
+-        self.assertIn("{{skill-call:my-code-review}}", implement)
+-        for runtime_detail in (
+-            "run-start",
+-            "run-record",
+-            "review-snapshot",
+-            "ticket-transition",
+-            "worktree",
+-            "parallel_mode",
+-        ):
+-            self.assertNotIn(runtime_detail, implement)
+-
+-    def test_spec_and_handoff_apply_finalization_gate(self):
+-        root = Path(__file__).resolve().parents[1] / "skills"
+-        for skill in ("my-to-spec", "my-handoff"):
+-            text = (root / skill / "SKILL.md").read_text()
+-            with self.subTest(skill=skill):
+-                self.assertIn(
+-                    "references/shared/artifact-finalization.md",
+-                    text,
+-                )
+-                self.assertIn("最终校验", text)
+-
+-        spec = (root / "my-to-spec/SKILL.md").read_text()
+-        self.assertIn("依据与未知", spec)
+-        handoff = (root / "my-handoff/SKILL.md").read_text()
+-        self.assertIn("fresh-context", handoff)
+-        self.assertIn("Handoff-Status: draft | ready", handoff)
+-        self.assertIn("Reader-Reconstruction: pass | inconclusive", handoff)
+-        self.assertIn("不得输出 `resume-first-step`", handoff)
+ 
+     def test_standalone_design_review_stays_focused(self):
+         root = Path(__file__).resolve().parents[1] / "skills"
+@@ -1549,24 +1354,8 @@ class ProfileTests(unittest.TestCase):
+             self.assertIn(field, tickets)
+         self.assertNotIn("很长、带编号", spec)
+         self.assertNotIn("理想数量是一个", spec)
+-        self.assertIn("pause-for-revision", implement)
+-        self.assertIn("blocked-by-design", implement)
+         self.assertIn("补偿", implement)
+ 
+-    def test_runtime_adapters_own_spec_writeback_and_resume_policy(self):
+-        root = Path(__file__).resolve().parents[1]
+-        implement = (root / "skills/my-implement/SKILL.md").read_text()
+-        write_actions = (root / "resources/adapters/write-actions.md").read_text()
+-        work_scope = (root / "resources/adapters/work-scope.md").read_text()
+-
+-        self.assertIn("最小 Spec 修订范围", implement)
+-        self.assertIn("补偿", implement)
+-        self.assertNotIn("docs_writeback", implement)
+-        self.assertNotIn("写回与准入完成前不得恢复实施", implement)
+-        self.assertIn("文件写权限", write_actions)
+-        self.assertIn("确认修订后立即写回", write_actions)
+-        self.assertIn("写回", work_scope)
+-        self.assertIn("pause-for-revision", work_scope)
+ 
+     def test_artifact_review_skill_contains_method_not_runtime_runbook(self):
+         root = Path(__file__).resolve().parents[1]
+@@ -1588,46 +1377,6 @@ class ProfileTests(unittest.TestCase):
+         ):
+             self.assertNotIn(runtime_detail, review)
+ 
+-    def test_runtime_sessions_are_split_and_skills_remain_semantic(self):
+-        root = Path(__file__).resolve().parents[1]
+-        implementation_session = (
+-            root / "resources/adapters/implementation-session.md"
+-        ).read_text()
+-        artifact_review_session = (
+-            root / "resources/adapters/artifact-review-session.md"
+-        ).read_text()
+-        implement = (root / "skills/my-implement/SKILL.md").read_text()
+-        review = (root / "skills/my-review-artifact/SKILL.md").read_text()
+-
+-        for command in (
+-            "implementation-open",
+-            "implementation-submit",
+-            "implementation-close",
+-        ):
+-            self.assertIn(command, implementation_session)
+-            self.assertNotIn(command, artifact_review_session)
+-            self.assertNotIn(command, implement)
+-            self.assertNotIn(command, review)
+-        for command in (
+-            "artifact-review-open",
+-            "artifact-review-submit",
+-        ):
+-            self.assertIn(command, artifact_review_session)
+-            self.assertNotIn(command, implementation_session)
+-            self.assertNotIn(command, implement)
+-            self.assertNotIn(command, review)
+-        self.assertIn("默认是串行", implementation_session)
+-        self.assertIn("用户明确要求并行", implementation_session)
+-        self.assertIn("默认串行", artifact_review_session)
+-        self.assertIn("用户明确要求并行", artifact_review_session)
+-        self.assertIn("references/shared/adapters/implementation-session.md", implement)
+-        self.assertIn("references/shared/adapters/artifact-review-session.md", review)
+-        self.assertIn("MY_MATT_REVIEW_METHOD", implementation_session)
+-        self.assertIn("语义方法由 runtime 固定", implementation_session)
+-        self.assertIn("不要再生成另一份未绑定快照", implement)
+-        self.assertIn("required_checks", review)
+-        self.assertIn("未全部闭合时不得输出 `No findings.`", review)
+-
+ 
+ class GitIgnoreRepositoryTests(unittest.TestCase):
+     def test_non_git_project_keeps_agent_directory_without_gitignore(self):
+@@ -2779,7 +2528,7 @@ render_root: 学生课程
+             release = build_release(root / "skills", Path(tmp) / "releases",
+                                     release_id="resources-v2", upstream_id="local-matt-skills", repo_root=root)
+             self.assertFalse((release / "skills/my-implement/references/composed").exists())
+-            self.assertTrue((release / "skills/my-implement/references/shared/humanizer.md").is_file())
++            self.assertTrue((release / "skills/my-implement/references/shared/review-loop.md").is_file())
+             body = (release / "skills/my-implement/SKILL.md").read_text()
+             self.assertIn("{{skill-call:my-tdd}}", body)
+             self.assertIn("{{skill-call:my-code-review}}", body)
+@@ -2827,9 +2576,8 @@ render_root: 学生课程
+                     "implementation-session.md",
+                 },
+                 "my-review-artifact": {"artifact-review-session.md"},
+-                "my-grill-me": {"composition.md"},
++                "my-grill-me": set(),
+                 "my-grill-with-docs": {
+-                    "composition.md",
+                     "artifact-access.md",
+                 },
+             }
+diff --git a/tests/test_workflow_texts_v2.py b/tests/test_workflow_texts_v2.py
+new file mode 100644
+index 0000000..ad90888
+--- /dev/null
++++ b/tests/test_workflow_texts_v2.py
+@@ -0,0 +1,44 @@
++import json
++import tempfile
++import unittest
++from pathlib import Path
++
++from tools.workflow_lib.installer import install_release, load_install_state, verify_installed_state
++from tools.workflow_lib.release import stage_release_tree
++
++ROOT = Path(__file__).resolve().parents[1]
++REVIEW_ENTRIES = (
++    'my-implement', 'my-code-review', 'my-review-design',
++    'my-review-artifact', 'my-review-instructions', 'my-tech-design',
++)
++
++
++class WorkflowTextPackagingTests(unittest.TestCase):
++    def test_shared_workflow_contracts_survive_host_projection(self):
++        """Observe installed resource closure, not keyword-based semantic grading."""
++        with tempfile.TemporaryDirectory() as tmp:
++            release = Path(tmp) / 'workflow-texts'
++            manifest = stage_release_tree(ROOT, release)
++            (release / 'manifest.json').write_text(json.dumps(
++                {'release_id': release.name, **manifest}))
++            for host in ('codex', 'cursor', 'claude'):
++                home = Path(tmp) / host
++                install_release(release, home, target=host)
++                state = load_install_state(home / 'my-matt-workflow/install-state.json')
++                verify_installed_state(state)
++                for entry in REVIEW_ENTRIES:
++                    shared = home / 'skills' / entry / 'references/shared'
++                    self.assertTrue((shared / 'review-loop.md').is_file(), (host, entry))
++                    self.assertTrue((shared / 'user-intervention.md').is_file(), (host, entry))
++                for entry in ('my-grill-with-docs', 'my-to-spec', 'my-to-tickets', 'my-implement'):
++                    shared = home / 'skills' / entry / 'references/shared'
++                    self.assertTrue((shared / 'workflow-delivery.md').is_file(), (host, entry))
++                # Policies use a Skill-root pointer because resources are copied verbatim.
++                # Every actual policy consumer must receive its target on all hosts.
++                for skill in (home / 'skills').iterdir():
++                    policies = skill / 'references/policies'
++                    if any('references/shared/user-intervention.md' in p.read_text()
++                           for p in policies.glob('*.md')):
++                        self.assertTrue((skill / 'references/shared/user-intervention.md').is_file(),
++                                        (host, skill.name))
++                self.assertFalse(list((home / 'skills').glob('*/references/composed')))

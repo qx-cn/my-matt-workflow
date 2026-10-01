@@ -1,0 +1,13 @@
+{
+  "review_id": "b767a3637f6cfb1d5cc1c8b454faf39d",
+  "status": "pass",
+  "code_content_id": "dd63548317bdee47a1eeaf6694441390f6c4dcbbe322304888339554cf13bad0",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "independent-repair-ticket17"
+  },
+  "findings": [],
+  "follow_ons": [],
+  "design_gap": null,
+  "self_review_coverage": null
+}

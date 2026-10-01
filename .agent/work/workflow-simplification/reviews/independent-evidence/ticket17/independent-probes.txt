@@ -1,0 +1,14 @@
+[
+  {
+    "probe": "rollback-after-skill-move",
+    "status": "pass"
+  },
+  {
+    "probe": "hard-interruption-retry",
+    "status": "pass"
+  },
+  {
+    "probe": "registry-write-failure-preserves-install-and-retry",
+    "status": "pass"
+  }
+]

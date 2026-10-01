@@ -1,0 +1,22 @@
+test_build_retains_current_previous_and_installed_releases (tests.test_skill_packaging_v2.PackagingV2Tests.test_build_retains_current_previous_and_installed_releases) ... ok
+test_catalog_and_invocation_graph_match_approved_spec (tests.test_skill_packaging_v2.PackagingV2Tests.test_catalog_and_invocation_graph_match_approved_spec) ... ok
+test_deploy_preserves_release_referenced_by_explicit_custom_home (tests.test_skill_packaging_v2.PackagingV2Tests.test_deploy_preserves_release_referenced_by_explicit_custom_home) ... ok
+test_invalid_catalog_metadata_and_links_are_rejected_without_evals (tests.test_skill_packaging_v2.PackagingV2Tests.test_invalid_catalog_metadata_and_links_are_rejected_without_evals) ... ok
+test_resources_are_bundled_without_composed_bodies (tests.test_skill_packaging_v2.PackagingV2Tests.test_resources_are_bundled_without_composed_bodies) ... ok
+test_three_host_installs_use_declared_invocation_permissions (tests.test_skill_packaging_v2.PackagingV2Tests.test_three_host_installs_use_declared_invocation_permissions) ... ok
+test_cleanup_lock_rejects_install_before_side_effects_then_retry_succeeds (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_cleanup_lock_rejects_install_before_side_effects_then_retry_succeeds) ... ok
+test_corrupt_reference_registry_stops_deletion_and_install (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_corrupt_reference_registry_stops_deletion_and_install) ... ok
+test_install_during_source_gate_is_retained (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_install_during_source_gate_is_retained) ... ok
+test_plain_build_preserves_custom_install_and_allows_reinstall (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_plain_build_preserves_custom_install_and_allows_reinstall) ... ok
+test_unindexed_legacy_release_is_preserved (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_unindexed_legacy_release_is_preserved) ... ok
+test_upgrade_does_not_pin_obsolete_release (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_upgrade_does_not_pin_obsolete_release) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 9.394s
+
+OK
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpsvqcrftr/releases/r4
+INSTALLED r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpfsls9p84/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpfsls9p84/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpfsls9p84/repo/releases/r4

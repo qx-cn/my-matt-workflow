@@ -1,0 +1,10 @@
+HOST PASS codex 32
+HOST PASS cursor 32
+HOST PASS claude 32
+FAULT rejected installed tamper InstallError 托管 Skill ownership 已漂移：my-tdd
+KNOWN HOME retained ['r1', 'r2', 'r3']
+/private/tmp/reviewer09/current/releases/custom-r2
+/private/tmp/reviewer09/current/releases/custom-r3
+CUSTOM reference source exists False
+CUSTOM verify failure InstallError release 目录无效或为 symlink
+CUSTOM next install failure InstallError release 目录无效或为 symlink

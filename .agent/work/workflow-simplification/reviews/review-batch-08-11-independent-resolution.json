@@ -1,0 +1,29 @@
+{
+  "kind": "independent-review-repair-resolution",
+  "original_review": "review-batch-08-11-independent.json",
+  "original_review_unchanged": true,
+  "compensation_ticket": "workflow-simplification-17",
+  "resolved_findings": [
+    "09-C1",
+    "09-C2"
+  ],
+  "status": "resolved",
+  "test_receipt": {
+    "evidence_id": "b36dcebc6407cdc303d8e40d5569f84707fb7334354094f30a006afa1b3dba78",
+    "kind": "test"
+  },
+  "review_receipt": {
+    "evidence_id": "5def9a1807d8b077e423c5b06a165967a125dcc4a62afebde835f246fc699384",
+    "kind": "review"
+  },
+  "code_content_id": "dd63548317bdee47a1eeaf6694441390f6c4dcbbe322304888339554cf13bad0",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "independent-repair-ticket17"
+  },
+  "reviewer_session_mapping": {
+    "independent-repair-ticket17": "/root/independent_repair_ticket17"
+  },
+  "result": "review-workflow-simplification-17-independent.json",
+  "evidence": "independent-evidence/ticket17/"
+}

@@ -1,0 +1,9 @@
+# Ticket17 修复计划
+
+根因09-C1：只有固定home采样；09-C2：source gate前的引用过期，install与清理无共同锁。
+
+在release根建立外置引用登记，记受协议管理的release及安装state_home，install在短引用锁下先登记home再执行既有单宿主事务；登记失败不改变安装，安装失败多余home不pin release。build的耗时gate保持既有build锁，清理阶段另外取得同一短引用锁，重新读取登记与实际install-state再删除。引用以source所属release根为准，旧登记home不等于永久release pin。记录损坏停止清理，未登记旧release无法证明无自定义安装引用，保守保留。没有新增命令或公开参数。
+
+四项验收采用真实build/install/verify公共库边界；gate回调作为确定性交错，不sleep碰运气。锁冲突在任何安装副作用前拒绝，重试可成功。整仓全量测试与独立复审关闭同一补偿切片，保持其他Ticket及原审核不变。
+
+设计成立性增强自审：pass。共同锁仅覆盖引用/安装/删除，不涵盖耗时gate，因此gate期间的安装可以成功，不与build大锁产生自锁；固定锁顺序引用→install或build→引用，无install→build路径。外置登记不修改immutable release内容；legacy保守保留是不能证明无引用时的安全边界。最小替代仅添加build参数无法修复普通build或竞态；仅重读引用不消除读后install竞态。无承重未知或新产品裁决。

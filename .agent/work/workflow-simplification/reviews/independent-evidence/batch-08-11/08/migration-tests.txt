@@ -1,0 +1,18 @@
+test_apply_backs_up_converts_and_keeps_completed_history (test_migration.MigrationTests.test_apply_backs_up_converts_and_keeps_completed_history) ... ok
+test_commit_failure_preserves_backup_and_allows_retry (test_migration.MigrationTests.test_commit_failure_preserves_backup_and_allows_retry) ... ok
+test_conflicting_knowledge_and_nonlocal_backend_are_reported (test_migration.MigrationTests.test_conflicting_knowledge_and_nonlocal_backend_are_reported) ... ok
+test_empty_tests_missing_baseline_and_archive_collision_are_not_guessed (test_migration.MigrationTests.test_empty_tests_missing_baseline_and_archive_collision_are_not_guessed) ... ok
+test_incomplete_config_is_reported_without_planning_or_writes (test_migration.MigrationTests.test_incomplete_config_is_reported_without_planning_or_writes) ... ok
+test_migrated_active_ticket_runs_tests_review_and_finish (test_migration.MigrationTests.test_migrated_active_ticket_runs_tests_review_and_finish) ... ok
+test_migrated_blocker_can_be_accepted_after_tests (test_migration.MigrationTests.test_migrated_blocker_can_be_accepted_after_tests) ... ok
+test_migrated_blocker_can_reopen_after_definition_revision (test_migration.MigrationTests.test_migrated_blocker_can_reopen_after_definition_revision) ... ok
+test_preview_is_zero_write_and_lists_blocked_topic (test_migration.MigrationTests.test_preview_is_zero_write_and_lists_blocked_topic) ... ok
+test_private_migration_commits_metadata_and_excludes_git_from_backup (test_migration.MigrationTests.test_private_migration_commits_metadata_and_excludes_git_from_backup) ... ok
+test_project_and_topic_legacy_gates_are_read_only (test_migration.MigrationTests.test_project_and_topic_legacy_gates_are_read_only) ... ok
+test_spec_and_ticket_fields_are_inferred_only_from_unique_sources (test_migration.MigrationTests.test_spec_and_ticket_fields_are_inferred_only_from_unique_sources) ... ok
+test_topic_adr_is_merged_and_conflicting_adr_is_not_overwritten (test_migration.MigrationTests.test_topic_adr_is_merged_and_conflicting_adr_is_not_overwritten) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 10.779s
+
+OK

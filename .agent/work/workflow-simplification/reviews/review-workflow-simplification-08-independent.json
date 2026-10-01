@@ -1,0 +1,146 @@
+{
+  "ticket_id": "workflow-simplification-08",
+  "status": "pass",
+  "artifact_content_id": "74bc1c7eb2d55a245af37e30b75672d7a1b89e9946d85bd43dc17292033b10fb",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "/root/independent_batch_ticket08",
+    "model": null
+  },
+  "findings": [],
+  "follow_ons": [],
+  "coverage": [
+    {
+      "acceptance_id": "workflow-simplification-08#A1",
+      "target": "项目/Topic 旧格式拒绝、非法新配置、历史与 archive",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log",
+        "test_project_and_topic_legacy_gates_are_read_only; probes.log invalid new config; test_topic_lifecycle.py (18 pass); test_work_overview.py (17 pass)"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-08#A2",
+      "target": "零写入摘要、先备份、排除 git/旧备份、忽略规则与 I-A1",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log",
+        "test_preview_is_zero_write_and_lists_blocked_topic; test_apply_backs_up_converts_and_keeps_completed_history; test_private_migration_commits_metadata_and_excludes_git_from_backup; probes.log metadata clean"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-08#A3",
+      "target": "九键 schema 2、audited 转 standard、非 local 拒绝、唯一字段推断、全量测试空集合拒绝",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log",
+        "test_conflicting_knowledge_and_nonlocal_backend_are_reported; test_spec_and_ticket_fields_are_inferred_only_from_unique_sources; test_empty_tests_missing_baseline_and_archive_collision_are_not_guessed; test_incomplete_config_is_reported_without_planning_or_writes"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-08#A4",
+      "target": "AC-35 A–E 状态续跑、接受/修订 reopen、归档和拒绝",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log",
+        "test_migrated_active_ticket_runs_tests_review_and_finish; test_migrated_blocker_can_be_accepted_after_tests; test_migrated_blocker_can_reopen_after_definition_revision; test_apply_backs_up_converts_and_keeps_completed_history; test_preview_is_zero_write_and_lists_blocked_topic"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-08#A5",
+      "target": "旧基线、清空证据、转换后定义、完成历史和交接字节保持",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log",
+        "test_migrated_active_ticket_runs_tests_review_and_finish; test_empty_tests_missing_baseline_and_archive_collision_are_not_guessed; probes.log mixed completed history and handoff bytes preserved"
+      ]
+    },
+    {
+      "acceptance_id": "workflow-simplification-08#A6",
+      "target": "术语/ADR 合并、冲突拒绝、长期 Spec 仅留备份、归档重名、幂等",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log",
+        "test_topic_adr_is_merged_and_conflicting_adr_is_not_overwritten; test_conflicting_knowledge_and_nonlocal_backend_are_reported; test_apply_backs_up_converts_and_keeps_completed_history; test_empty_tests_missing_baseline_and_archive_collision_are_not_guessed"
+      ]
+    },
+    {
+      "probe": "recovery",
+      "result": "pass",
+      "evidence": [
+        "/private/tmp/reviewer08-isolated/migration-tests.log: test_commit_failure_preserves_backup_and_allows_retry",
+        "/private/tmp/reviewer08-isolated/probes.py",
+        "/private/tmp/reviewer08-isolated/probes.log"
+      ],
+      "observed": "Git pre-commit failure leaves HEAD and unrelated staged content intact; original config restored; backup retained; retry succeeds; metadata clean. Successful migration also preserves unrelated staged content, mixed completed Ticket/record bytes and handoff bytes."
+    }
+  ],
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_migration.py -v",
+      "cwd": "/private/tmp/reviewer08-isolated/current",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer08-isolated/migration-tests.log",
+      "count": 13
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_topic_lifecycle.py -v",
+      "cwd": "/private/tmp/reviewer08-isolated/current",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer08-isolated/topic-tests.log",
+      "count": 18
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_work_overview.py -v",
+      "cwd": "/private/tmp/reviewer08-isolated/current",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer08-isolated/overview-tests.log",
+      "count": 17
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer08-isolated/probes.py",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer08-isolated/probes.log",
+      "operation_cwd": "/private/tmp/reviewer08-isolated/probe-project"
+    }
+  ],
+  "limitations": [
+    "Change-only review of the original delivery 8b9fc05a38d9cb4a0b0ce8b5e2b1d11a67508514..08e58eb2ac9743f06faf295031b4d4ff3e0a402d; no implementation history, prior review/delivery reports or live source consulted. All 771 inventory hashes checked before reconstruction from snapshot_path.",
+    "Reviewed all 8 changed files plus configuration, Ticket admission/definition/test/completion/review and lifecycle callers. Code pass preceded independently rebuilt Spec requirement mapping.",
+    "Public CLI probes operated only isolated fixture projects. Source fixture baseline.bundle and legacy_project are present at the formal review base; scenarios do not rely on an intermediate implementation schema.",
+    "48 focused tests and additional recovery CLI probes passed; full repository suite and downstream Ticket 09–14 behavior were not claimed."
+  ],
+  "retained_evidence": [
+    {
+      "original_path": "/private/tmp/reviewer08-isolated/migration-tests.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/08/migration-tests.txt",
+      "sha256": "73f4e5a5252ec9557f53852017665af7dee943582cbcc8a7446d29b4548c3b12",
+      "size": 2151
+    },
+    {
+      "original_path": "/private/tmp/reviewer08-isolated/topic-tests.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/08/topic-tests.txt",
+      "sha256": "7a707c30ca3cad7aed17938e4cf068b10c9a7d11433889085eacbb69b7b1fd34",
+      "size": 2782
+    },
+    {
+      "original_path": "/private/tmp/reviewer08-isolated/overview-tests.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/08/overview-tests.txt",
+      "sha256": "0a7bb7ccdb0747da1ed7fd550583c1e196849d7d777b0ee0b8be7d5b0cd20fc2",
+      "size": 2851
+    },
+    {
+      "original_path": "/private/tmp/reviewer08-isolated/probes.py",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/08/probes.py",
+      "sha256": "c44df8c1114ca9bd5db83b2b990d0d3f22e1faffbd535d5046425ed55ae8d3b8",
+      "size": 2903
+    },
+    {
+      "original_path": "/private/tmp/reviewer08-isolated/probes.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/08/probes.txt",
+      "sha256": "7d5146f435f2edd5579a4dddada33e060e222d3f0a3d7173ec15bb61d09bdae6",
+      "size": 4908
+    }
+  ]
+}

@@ -163,3 +163,120 @@ class PackagingV2Tests(unittest.TestCase):
             state = load_install_state(home / 'my-matt-workflow/install-state.json')
             verify_installed_state(state)
             self.assertEqual('r4', state['release_id'])
+
+
+class ReleaseReferenceRegressionTests(unittest.TestCase):
+    def fixture(self, root):
+        source = root / 'skills/my-a'
+        source.mkdir(parents=True)
+        (source / 'SKILL.md').write_text('---\nname: my-a\ndescription: test\ndisable-model-invocation: true\n---\n# Test\n')
+
+    def build(self, root, name, **kwargs):
+        return build_release(root / 'skills', root / 'releases', release_id=name,
+                             upstream_id='test', repo_root=root,
+                             current_pointer=root / 'current.json', **kwargs)
+
+    def test_plain_build_preserves_custom_install_and_allows_reinstall(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            self.fixture(root)
+            home = Path(tmp) / 'custom-home'
+            old = self.build(root, 'r1')
+            install_release(old, home)
+            with patch.object(workflow, 'ROOT', root), \
+                    patch.object(workflow, 'AGENT_STATE_HOMES', {}), \
+                    patch.object(workflow, '_run_all_up_gate'):
+                for name in ['r2', 'r3', 'r4']:
+                    workflow.command_build(argparse.Namespace(release_id=name, upstream_id='test'))
+            verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+            install_release(old, home)
+            self.assertEqual({'r1', 'r3', 'r4'}, {p.name for p in (root / 'releases').iterdir() if p.is_dir()})
+
+    def test_install_during_source_gate_is_retained(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            self.fixture(root)
+            home = Path(tmp) / 'custom-home'
+            old = self.build(root, 'r1')
+            self.build(root, 'r2')
+            def gate(snapshot):
+                install_release(old, home)
+                verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+            self.build(root, 'r3', source_gate=gate, agent_homes=[home])
+            verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+            install_release(old, home)
+            self.assertTrue(old.is_dir())
+
+    def test_upgrade_does_not_pin_obsolete_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            self.fixture(root)
+            home = Path(tmp) / 'host'
+            first = self.build(root, 'r1')
+            install_release(first, home)
+            second = self.build(root, 'r2')
+            install_release(second, home)
+            self.build(root, 'r3')
+            self.build(root, 'r4')
+            self.assertFalse(first.exists())
+            self.assertEqual({'r2', 'r3', 'r4'}, {p.name for p in (root / 'releases').iterdir() if p.is_dir()})
+            verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+
+    def test_unindexed_legacy_release_is_preserved(self):
+        from tools.workflow_lib.release_references import REGISTRY_FILE
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            self.fixture(root)
+            home = Path(tmp) / 'host'
+            old = self.build(root, 'legacy')
+            install_release(old, home)
+            # A legacy tree has an install receipt but no discovery registry.
+            (root / 'releases' / REGISTRY_FILE).unlink()
+            self.build(root, 'r2')
+            self.build(root, 'r3')
+            self.build(root, 'r4')
+            verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+            self.assertTrue(old.exists())
+
+    def test_corrupt_reference_registry_stops_deletion_and_install(self):
+        from tools.workflow_lib.installer import InstallError
+        from tools.workflow_lib.release_references import REGISTRY_FILE
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            self.fixture(root)
+            home = Path(tmp) / 'host'
+            first = self.build(root, 'r1')
+            install_release(first, home)
+            second = self.build(root, 'r2')
+            state = home / 'my-matt-workflow/install-state.json'
+            before = state.read_bytes()
+            (root / 'releases' / REGISTRY_FILE).write_text('broken')
+            with self.assertRaises(InstallError):
+                install_release(second, home)
+            self.assertEqual(before, state.read_bytes())
+            with self.assertRaises(ReleaseError):
+                self.build(root, 'r3')
+            verify_installed_state(load_install_state(state))
+            self.assertTrue(first.is_dir())
+
+    def test_cleanup_lock_rejects_install_before_side_effects_then_retry_succeeds(self):
+        from tools.workflow_lib.installer import InstallError
+        from tools.workflow_lib.fs_safety import exclusive_lock
+        from tools.workflow_lib.release_references import REFERENCE_LOCK
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            self.fixture(root)
+            home = Path(tmp) / 'host'
+            first = self.build(root, 'r1')
+            install_release(first, home)
+            second = self.build(root, 'r2')
+            state = home / 'my-matt-workflow/install-state.json'
+            before = state.read_bytes()
+            with exclusive_lock(root / 'releases', REFERENCE_LOCK):
+                with self.assertRaises(InstallError):
+                    install_release(second, home)
+            self.assertEqual(before, state.read_bytes())
+            verify_installed_state(load_install_state(state))
+            install_release(second, home)
+            verify_installed_state(load_install_state(state))
+            self.assertEqual('r2', load_install_state(state)['release_id'])

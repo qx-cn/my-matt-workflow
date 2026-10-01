@@ -1,0 +1,22 @@
+test_active_journal_reuses_runtime_action_and_exposes_stale_sources (test_work_overview.WorkOverviewTests.test_active_journal_reuses_runtime_action_and_exposes_stale_sources) ... ok
+test_cli_has_readable_and_machine_readable_views (test_work_overview.WorkOverviewTests.test_cli_has_readable_and_machine_readable_views) ... ok
+test_current_claim_is_visible_despite_unrelated_historical_problems (test_work_overview.WorkOverviewTests.test_current_claim_is_visible_despite_unrelated_historical_problems) ... ok
+test_default_overview_reports_symlink_topic (test_work_overview.WorkOverviewTests.test_default_overview_reports_symlink_topic) ... ok
+test_duplicate_active_journal_for_one_claim_blocks_next_action (test_work_overview.WorkOverviewTests.test_duplicate_active_journal_for_one_claim_blocks_next_action) ... ok
+test_duplicate_current_revision_does_not_select_arbitrarily (test_work_overview.WorkOverviewTests.test_duplicate_current_revision_does_not_select_arbitrarily) ... ok
+test_external_backend_is_explicitly_unsupported (test_work_overview.WorkOverviewTests.test_external_backend_is_explicitly_unsupported) ... ok
+test_historical_spec_status_is_shown_without_claiming_current (test_work_overview.WorkOverviewTests.test_historical_spec_status_is_shown_without_claiming_current) ... ok
+test_invalid_claimed_by_is_reported_without_crashing (test_work_overview.WorkOverviewTests.test_invalid_claimed_by_is_reported_without_crashing) ... ok
+test_invalid_dependency_graph_preserves_current_ticket_and_claim (test_work_overview.WorkOverviewTests.test_invalid_dependency_graph_preserves_current_ticket_and_claim) ... ok
+test_invalid_ready_candidate_preserves_current_ticket_and_claim (test_work_overview.WorkOverviewTests.test_invalid_ready_candidate_preserves_current_ticket_and_claim) ... ok
+test_invalid_ready_ticket_does_not_hide_independent_candidate (test_work_overview.WorkOverviewTests.test_invalid_ready_ticket_does_not_hide_independent_candidate) ... ok
+test_malformed_attempt_id_is_reported_instead_of_crashing (test_work_overview.WorkOverviewTests.test_malformed_attempt_id_is_reported_instead_of_crashing) ... ok
+test_malformed_phase_is_reported_instead_of_crashing (test_work_overview.WorkOverviewTests.test_malformed_phase_is_reported_instead_of_crashing) ... ok
+test_malformed_submission_is_reported_not_hidden_as_history (test_work_overview.WorkOverviewTests.test_malformed_submission_is_reported_not_hidden_as_history) ... ok
+test_reports_latest_spec_and_ready_frontier_without_writes (test_work_overview.WorkOverviewTests.test_reports_latest_spec_and_ready_frontier_without_writes) ... ok
+test_submitted_outcome_must_match_terminal_phase (test_work_overview.WorkOverviewTests.test_submitted_outcome_must_match_terminal_phase) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.244s
+
+OK

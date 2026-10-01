@@ -1,0 +1,36 @@
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_u92sbcc/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_u92sbcc/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_u92sbcc/repo/releases/r4
+test_plain_build_preserves_custom_install_and_allows_reinstall (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_plain_build_preserves_custom_install_and_allows_reinstall) ... ERROR
+test_install_during_source_gate_is_retained (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_install_during_source_gate_is_retained) ... ERROR
+
+======================================================================
+ERROR: test_plain_build_preserves_custom_install_and_allows_reinstall (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_plain_build_preserves_custom_install_and_allows_reinstall)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/workflow17-independent-base/tests/test_skill_packaging_v2.py", line 191, in test_plain_build_preserves_custom_install_and_allows_reinstall
+    verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/workflow17-independent-base/tools/workflow_lib/installer.py", line 189, in verify_installed_state
+    source_release = verify_release(source)
+  File "/private/tmp/workflow17-independent-base/tools/workflow_lib/installer.py", line 285, in verify_release
+    raise InstallError("release 目录无效或为 symlink")
+tools.workflow_lib.installer.InstallError: release 目录无效或为 symlink
+
+======================================================================
+ERROR: test_install_during_source_gate_is_retained (tests.test_skill_packaging_v2.ReleaseReferenceRegressionTests.test_install_during_source_gate_is_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/workflow17-independent-base/tests/test_skill_packaging_v2.py", line 206, in test_install_during_source_gate_is_retained
+    verify_installed_state(load_install_state(home / 'my-matt-workflow/install-state.json'))
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/workflow17-independent-base/tools/workflow_lib/installer.py", line 189, in verify_installed_state
+    source_release = verify_release(source)
+  File "/private/tmp/workflow17-independent-base/tools/workflow_lib/installer.py", line 285, in verify_release
+    raise InstallError("release 目录无效或为 symlink")
+tools.workflow_lib.installer.InstallError: release 目录无效或为 symlink
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.378s
+
+FAILED (errors=2)

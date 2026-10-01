@@ -1,0 +1,405 @@
+{
+  "kind": "supplementary-independent-batch-review",
+  "review_complete": true,
+  "quality_status": "unresolved-findings",
+  "review_scope": "change-only",
+  "original_completion_unchanged": true,
+  "source_code_changed": false,
+  "current_workspace_head": "c19707c6ce851cd5ac7ad5f403e2eb765125d467",
+  "reviewer_policy": "four fresh sessions, fork_turns=none; no implementation dialogue or prior findings; inherited model, exact variant and reasoning not observable",
+  "tickets": [
+    {
+      "ticket_id": "workflow-simplification-08",
+      "base_sha": "8b9fc05a38d9cb4a0b0ce8b5e2b1d11a67508514",
+      "head": "08e58eb2ac9743f06faf295031b4d4ff3e0a402d",
+      "status": "pass",
+      "reviewer_provenance": {
+        "kind": "independent_session",
+        "session_id": "/root/independent_batch_ticket08",
+        "model": null
+      },
+      "artifact_content_id": "74bc1c7eb2d55a245af37e30b75672d7a1b89e9946d85bd43dc17292033b10fb",
+      "snapshot_finalization": {
+        "content_id": "74bc1c7eb2d55a245af37e30b75672d7a1b89e9946d85bd43dc17292033b10fb",
+        "expected_content_id": "74bc1c7eb2d55a245af37e30b75672d7a1b89e9946d85bd43dc17292033b10fb",
+        "released": true,
+        "status": "match"
+      },
+      "counts": {
+        "Code": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        },
+        "Spec": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        }
+      },
+      "findings": [],
+      "result": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-08-independent.json",
+      "report": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-08-independent.md",
+      "result_sha256": "54ab4b8a85437f8ec19628ffba6127ffe100fc10434a36ed23de77e627d6bc6a",
+      "tests": [
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_migration.py -v",
+          "cwd": "/private/tmp/reviewer08-isolated/current",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer08-isolated/migration-tests.log",
+          "count": 13
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_topic_lifecycle.py -v",
+          "cwd": "/private/tmp/reviewer08-isolated/current",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer08-isolated/topic-tests.log",
+          "count": 18
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_work_overview.py -v",
+          "cwd": "/private/tmp/reviewer08-isolated/current",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer08-isolated/overview-tests.log",
+          "count": 17
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer08-isolated/probes.py",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer08-isolated/probes.log",
+          "operation_cwd": "/private/tmp/reviewer08-isolated/probe-project"
+        }
+      ]
+    },
+    {
+      "ticket_id": "workflow-simplification-09",
+      "base_sha": "08e58eb2ac9743f06faf295031b4d4ff3e0a402d",
+      "head": "07bafb3092405476ce65e8cc2496a72eae833956",
+      "status": "findings",
+      "reviewer_provenance": {
+        "kind": "independent_session",
+        "session_id": "/root/independent_batch_ticket09",
+        "model": null
+      },
+      "artifact_content_id": "020573b6e2892257b2846dfbbae26b68801cb06b39962944cf93134f6b10b517",
+      "snapshot_finalization": {
+        "content_id": "020573b6e2892257b2846dfbbae26b68801cb06b39962944cf93134f6b10b517",
+        "expected_content_id": "020573b6e2892257b2846dfbbae26b68801cb06b39962944cf93134f6b10b517",
+        "released": true,
+        "status": "match"
+      },
+      "counts": {
+        "Code": {
+          "P0": 0,
+          "P1": 2,
+          "P2": 0
+        },
+        "Spec": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        }
+      },
+      "findings": [
+        {
+          "id": "09-C1",
+          "dimension": "Code",
+          "severity": "P1",
+          "confidence": "high",
+          "acceptance_ids": [
+            "AC-40"
+          ],
+          "summary": "普通 build 无法保护自定义安装根引用的 release",
+          "location": {
+            "repo_path": "tools/workflow.py",
+            "line_start": 553,
+            "line_end": 554
+          },
+          "failure_path": "基线支持 install --agent-home <custom>；安装旧版后连续普通 build 两次，旧版不再是 previous，且 custom 不在固定 AGENT_STATE_HOMES 中，自动清理删除其 source。build parser 没有 --agent-home，无法传入保护；之后 verify_installed_state 和 install_release 均失败。",
+          "baseline_reachability": "已由正式 base_sha 冻结代码实际 build 39 Skill release old-r1/old-r2，并 codex install 到 baseline-custom；基线 receipt 验证通过。当前冻结代码对同一 releases 根 build new-r3 后删除 old-r1，基线 receipt 无法再验证。基线 build 无自动清理。",
+          "evidence": [
+            "snapshot current tools/workflow.py:553-554; build parser:1317-1320; install parser supports --agent-home",
+            "snapshot current tools/workflow_lib/release.py:865-869",
+            "/private/tmp/reviewer09/base-probe.log",
+            "/private/tmp/reviewer09/race-probe.log",
+            "/private/tmp/reviewer09/probes.log",
+            "/private/tmp/reviewer09/build-custom-argument.log"
+          ],
+          "verification": "base_probe.py 与 race_probe.py exit 0 复现；probes.py 通过真实 command_build 调用（仅替换重复的全量测试 gate 与系统固定 home 边界）复现 CURRENT source exists False、verify 与 next install 失败；build --agent-home 实际 CLI exit 2。应让构建能够获知所有受支持安装根，在不能证明无引用时避免删除。"
+        },
+        {
+          "id": "09-C2",
+          "dimension": "Code",
+          "severity": "P1",
+          "confidence": "high",
+          "acceptance_ids": [
+            "AC-40"
+          ],
+          "summary": "构建前读取的安装引用在清理时已过期",
+          "location": {
+            "repo_path": "tools/workflow_lib/release.py",
+            "line_start": 719,
+            "line_end": 723
+          },
+          "failure_path": "build 在 source_gate 前读取宿主 install-state；source_gate 运行期间 install 可完成，因为 install_release 只持有 state_dir/install 锁，不参与 releases mutation 锁。此后 build 用旧 referenced 集合删除刚安装的非 previous release，刚验证过的安装立即不可验证/升级。",
+          "baseline_reachability": "正式 baseline 实际构建 r1/r2/r3，r3 的 source_gate 中安装 r1，基线全部保留且 receipt 有效。当前冻结代码对同一 release 根构建 r4：传入同一宿主 home，source_gate 内安装 baseline r2并验证成功；随后自动清理删除 r2，receipt 验证失败。只改变为新增自动清理逻辑，未使用施工中间 schema。",
+          "evidence": [
+            "snapshot current tools/workflow_lib/release.py:718-723,746-749,865-869",
+            "snapshot current tools/workflow_lib/installer.py:897-920",
+            "/private/tmp/reviewer09/base-race.log",
+            "/private/tmp/reviewer09/current-formal-race.log",
+            "/private/tmp/reviewer09/race-probe.log"
+          ],
+          "verification": "base_race.py 与 current-formal-race subprocess 实际 build/install/verify exit 0；日志先显示 baseline r2 install verified，随后 BASE release r2 deleted True 与 InstallError。应把安装、引用读取及删除置于共同同步边界，避免只在耗时构建开始时采样引用。"
+        }
+      ],
+      "result": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-09-independent.json",
+      "report": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-09-independent.md",
+      "result_sha256": "5cd273b71e42429e99daf52e2b91b2b814db594a520750648a1352c762dd9021",
+      "tests": [
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests",
+          "cwd": "/private/tmp/reviewer09/current",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/unittest.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/probes.py",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/probes.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/base_probe.py",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/base-probe.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/race_probe.py",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/race-probe.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/defect_probes.py",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/defect-probes.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/base_race.py",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/base-race.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 - (actual current build of baseline r4 with install during source_gate)",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "/private/tmp/reviewer09/current-formal-race.log"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/workflow.py build --agent-home /private/tmp/reviewer09/custom-home",
+          "cwd": "/private/tmp/reviewer09/current",
+          "exit_code": 2,
+          "log": "/private/tmp/reviewer09/build-custom-argument.log"
+        }
+      ]
+    },
+    {
+      "ticket_id": "workflow-simplification-10",
+      "base_sha": "07bafb3092405476ce65e8cc2496a72eae833956",
+      "head": "19012332ec5bc23e053639a55cfd7ce603eb39b1",
+      "status": "pass",
+      "reviewer_provenance": {
+        "kind": "independent_session",
+        "session_id": "/root/independent_batch_ticket10",
+        "model": null
+      },
+      "artifact_content_id": "faf61c751c7694d67b2e457df83d5b1488ab379649d7378c55dae3bd03ebc3f9",
+      "snapshot_finalization": {
+        "content_id": "faf61c751c7694d67b2e457df83d5b1488ab379649d7378c55dae3bd03ebc3f9",
+        "expected_content_id": "faf61c751c7694d67b2e457df83d5b1488ab379649d7378c55dae3bd03ebc3f9",
+        "released": true,
+        "status": "match"
+      },
+      "counts": {
+        "Code": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        },
+        "Spec": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        }
+      },
+      "findings": [],
+      "result": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-10-independent.json",
+      "report": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-10-independent.md",
+      "result_sha256": "084931b2673272be6e214287fd3d3555dd41e53e79a54d23c09ef39999ce7f19",
+      "tests": [
+        {
+          "command": "python3 inventory sha256/size check over unit-10 artifacts",
+          "cwd": "/private/tmp/workflow-independent-batch08-11",
+          "exit_code": 0,
+          "log": "755 artifacts checked; 0 integrity mismatches"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_workflow_texts_v2.py",
+          "cwd": "/private/tmp/workflow-ticket10-audit-current",
+          "exit_code": 0,
+          "log": "Ran 1 test in 4.890s; OK; temporary codex/cursor/claude installed resource closure and ownership verified"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_resources.py",
+          "cwd": "/private/tmp/workflow-ticket10-audit-current",
+          "exit_code": 0,
+          "log": "Ran 20 tests in 0.411s; OK"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 (stage_release_tree -> install_release -> verify_installed_state -> _validate_staged_references for codex/cursor/claude)",
+          "cwd": "/private/tmp/workflow-ticket10-audit-current",
+          "exit_code": 0,
+          "log": "codex 32 Skill installed; all prose Markdown references resolve\ncursor 32 Skill installed; all prose Markdown references resolve\nclaude 32 Skill installed; all prose Markdown references resolve"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests python3 -m unittest test_workflow.ReleaseTests.test_build_materializes_plan_2_adapters_for_declared_consumers test_workflow.ReleaseTests.test_build_includes_shared_resources",
+          "cwd": "/private/tmp/workflow-ticket10-audit-current",
+          "exit_code": 1,
+          "log": "First target passed. Second selector was reviewer typo: ReleaseTests has no test_build_includes_shared_resources; this is a test invocation error, not product failure. Corrected below."
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests python3 -m unittest test_workflow.ReleaseTests.test_build_materializes_plan_2_adapters_for_declared_consumers",
+          "cwd": "/private/tmp/workflow-ticket10-audit-current",
+          "exit_code": 0,
+          "log": "Ran 1 test in 1.241s; OK"
+        }
+      ]
+    },
+    {
+      "ticket_id": "workflow-simplification-11",
+      "base_sha": "19012332ec5bc23e053639a55cfd7ce603eb39b1",
+      "head": "c19707c6ce851cd5ac7ad5f403e2eb765125d467",
+      "status": "pass",
+      "reviewer_provenance": {
+        "kind": "independent_session",
+        "session_id": "/root/independent_batch_ticket11",
+        "model": null
+      },
+      "artifact_content_id": "3a17243004d42583213e5fbe2d35dc7dcfb373b7c9e707b2fcae946015480673",
+      "snapshot_finalization": {
+        "content_id": "3a17243004d42583213e5fbe2d35dc7dcfb373b7c9e707b2fcae946015480673",
+        "expected_content_id": "3a17243004d42583213e5fbe2d35dc7dcfb373b7c9e707b2fcae946015480673",
+        "released": true,
+        "status": "match"
+      },
+      "counts": {
+        "Code": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        },
+        "Spec": {
+          "P0": 0,
+          "P1": 0,
+          "P2": 0
+        }
+      },
+      "findings": [],
+      "result": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-11-independent.json",
+      "report": ".agent/work/workflow-simplification/reviews/review-workflow-simplification-11-independent.md",
+      "result_sha256": "3e9ab5f113dd078fcb113d2c4fc47a576ef0fb2963dc141447ce6add2b79f2b7",
+      "tests": [
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_resources tests.test_portfolio",
+          "cwd": "/private/tmp/ticket11-independent-validation",
+          "exit_code": 0,
+          "log": "Ran 29 tests in 0.412s; OK"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_workflow.ReleaseTests.test_build_materializes_shared_resources_without_body_copies tests.test_workflow.ReleaseTests.test_release_bundles_policies_only_for_explicit_consumers tests.test_workflow.ReleaseTests.test_build_materializes_plan_2_adapters_for_declared_consumers tests.test_workflow.ReleaseTests.test_build_does_not_materialize_routable_entries_for_router",
+          "cwd": "/private/tmp/ticket11-independent-validation",
+          "exit_code": 0,
+          "log": "Ran 4 tests in 4.459s; OK"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 - <<PY (inline verification: stage_release_tree; copy staged skill tree for codex/cursor/claude; project_skill_directory per skill; assert expanded call macros, invocation metadata, bundled testing-seams/composition/assurance resources) PY",
+          "cwd": "/private/tmp/ticket11-independent-validation",
+          "exit_code": 0,
+          "log": "codex, cursor, claude: six affected skills call projection and invocation metadata valid; required resources bundled",
+          "validation_kind": "temporary build/projection only; no real host install"
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 - <<PY (verify all 759 snapshot artifact sizes/SHA256; compare frozen eight Skill directories baseline/current) PY",
+          "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+          "exit_code": 0,
+          "log": "759 artifacts match before and after validation; frozen eight Skill changed files: []"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "09-C1",
+      "dimension": "Code",
+      "severity": "P1",
+      "confidence": "high",
+      "acceptance_ids": [
+        "AC-40"
+      ],
+      "summary": "普通 build 无法保护自定义安装根引用的 release",
+      "location": {
+        "repo_path": "tools/workflow.py",
+        "line_start": 553,
+        "line_end": 554
+      },
+      "failure_path": "基线支持 install --agent-home <custom>；安装旧版后连续普通 build 两次，旧版不再是 previous，且 custom 不在固定 AGENT_STATE_HOMES 中，自动清理删除其 source。build parser 没有 --agent-home，无法传入保护；之后 verify_installed_state 和 install_release 均失败。",
+      "baseline_reachability": "已由正式 base_sha 冻结代码实际 build 39 Skill release old-r1/old-r2，并 codex install 到 baseline-custom；基线 receipt 验证通过。当前冻结代码对同一 releases 根 build new-r3 后删除 old-r1，基线 receipt 无法再验证。基线 build 无自动清理。",
+      "evidence": [
+        "snapshot current tools/workflow.py:553-554; build parser:1317-1320; install parser supports --agent-home",
+        "snapshot current tools/workflow_lib/release.py:865-869",
+        "/private/tmp/reviewer09/base-probe.log",
+        "/private/tmp/reviewer09/race-probe.log",
+        "/private/tmp/reviewer09/probes.log",
+        "/private/tmp/reviewer09/build-custom-argument.log"
+      ],
+      "verification": "base_probe.py 与 race_probe.py exit 0 复现；probes.py 通过真实 command_build 调用（仅替换重复的全量测试 gate 与系统固定 home 边界）复现 CURRENT source exists False、verify 与 next install 失败；build --agent-home 实际 CLI exit 2。应让构建能够获知所有受支持安装根，在不能证明无引用时避免删除。",
+      "ticket_id": "workflow-simplification-09"
+    },
+    {
+      "id": "09-C2",
+      "dimension": "Code",
+      "severity": "P1",
+      "confidence": "high",
+      "acceptance_ids": [
+        "AC-40"
+      ],
+      "summary": "构建前读取的安装引用在清理时已过期",
+      "location": {
+        "repo_path": "tools/workflow_lib/release.py",
+        "line_start": 719,
+        "line_end": 723
+      },
+      "failure_path": "build 在 source_gate 前读取宿主 install-state；source_gate 运行期间 install 可完成，因为 install_release 只持有 state_dir/install 锁，不参与 releases mutation 锁。此后 build 用旧 referenced 集合删除刚安装的非 previous release，刚验证过的安装立即不可验证/升级。",
+      "baseline_reachability": "正式 baseline 实际构建 r1/r2/r3，r3 的 source_gate 中安装 r1，基线全部保留且 receipt 有效。当前冻结代码对同一 release 根构建 r4：传入同一宿主 home，source_gate 内安装 baseline r2并验证成功；随后自动清理删除 r2，receipt 验证失败。只改变为新增自动清理逻辑，未使用施工中间 schema。",
+      "evidence": [
+        "snapshot current tools/workflow_lib/release.py:718-723,746-749,865-869",
+        "snapshot current tools/workflow_lib/installer.py:897-920",
+        "/private/tmp/reviewer09/base-race.log",
+        "/private/tmp/reviewer09/current-formal-race.log",
+        "/private/tmp/reviewer09/race-probe.log"
+      ],
+      "verification": "base_race.py 与 current-formal-race subprocess 实际 build/install/verify exit 0；日志先显示 baseline r2 install verified，随后 BASE release r2 deleted True 与 InstallError。应把安装、引用读取及删除置于共同同步边界，避免只在耗时构建开始时采样引用。",
+      "ticket_id": "workflow-simplification-09"
+    }
+  ],
+  "limitations": [
+    "Each Ticket was reviewed from recorded implementation base to its original delivery commit; later consumers and unfinished12/13/14 remain outside scope.",
+    "Frozen source/Spec review and selected tests are not model behavior effectiveness evidence.",
+    "No historical completion receipt was replaced by this supplemental audit."
+  ]
+}

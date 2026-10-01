@@ -23,6 +23,7 @@ from .fs_safety import (
     verify_owned_directory,
     verify_owned_directory_identity,
 )
+from .release_references import REFERENCE_LOCK, remember_installation
 from .projection import (
     TARGETS,
     directory_inventory,
@@ -905,15 +906,20 @@ def install_release(
     skills_home: Path | None = None,
 ) -> None:
     """Install under a single-writer lock for the selected state home."""
+    verify_release(release)
     state_dir = state_home / "my-matt-workflow"
     state_dir.mkdir(parents=True, exist_ok=True)
     try:
-        with exclusive_lock(state_dir, "install"):
-            _install_release(
-                release,
-                state_home,
-                target=target,
-                skills_home=skills_home,
-            )
+        # This short lock is also held while cleanup reads receipts and deletes.
+        # The build/source gate uses a different lock and can run concurrently.
+        with exclusive_lock(release.resolve().parent, REFERENCE_LOCK):
+            with exclusive_lock(state_dir, "install"):
+                remember_installation(release.resolve().parent, state_home)
+                _install_release(
+                    release,
+                    state_home,
+                    target=target,
+                    skills_home=skills_home,
+                )
     except FilesystemSafetyError as exc:
         raise InstallError(str(exc)) from exc

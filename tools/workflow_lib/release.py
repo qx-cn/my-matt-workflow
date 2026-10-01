@@ -32,6 +32,7 @@ from .fs_safety import (
     register_owned_directory,
     release_ownership,
 )
+from .release_references import REFERENCE_LOCK, read_references, write_references
 from .projection import (
     TARGETS,
     directory_inventory,
@@ -716,11 +717,6 @@ def build_release(
     staged = releases_dir / f".{release_id}.staging"
     try:
         with exclusive_lock(releases_dir, RELEASES_MUTATION_LOCK):
-            referenced = set()
-            for home in agent_homes or []:
-                state = load_install_state(home / "my-matt-workflow/install-state.json")
-                if state is not None:
-                    referenced.add(state["release_id"])
             previous = None
             if current_pointer is not None and current_pointer.is_file():
                 pointer_data = json.loads(current_pointer.read_text())
@@ -862,11 +858,28 @@ def build_release(
                 raise snapshot_error or SourceSnapshotChanged(
                     "无法取得稳定的 build source 快照"
                 )
-            keep = referenced | {release_id, previous}
-            for candidate in sorted(releases_dir.iterdir()):
-                if candidate.is_dir() and not candidate.name.startswith(".") and candidate.name not in keep:
-                    verify_release(candidate)
-                    quarantine_and_remove(releases_dir, candidate, purpose="release")
+            with exclusive_lock(releases_dir, REFERENCE_LOCK):
+                registry = read_references(releases_dir)
+                homes = {Path(x) for x in registry["state_homes"]} | set(agent_homes or [])
+                referenced = set()
+                for home in homes:
+                    state = load_install_state(home / "my-matt-workflow/install-state.json")
+                    if state is not None and Path(state["source"]).resolve().parent == releases_dir.resolve():
+                        referenced.add(Path(state["source"]).name)
+                managed = set(registry["managed_releases"]) | {release_id}
+                # Unregistered legacy releases may have receipts in unknown homes.
+                # Only this protocol's releases have a complete installation index.
+                keep = referenced | {release_id, previous}
+                registry["managed_releases"] = sorted(managed)
+                registry["state_homes"] = sorted(str(home.resolve()) for home in homes)
+                write_references(releases_dir, registry)
+                for candidate in sorted(releases_dir.iterdir()):
+                    if (candidate.is_dir() and not candidate.name.startswith(".")
+                            and candidate.name in managed and candidate.name not in keep):
+                        verify_release(candidate)
+                        quarantine_and_remove(releases_dir, candidate, purpose="release")
+                registry["managed_releases"] = sorted(x for x in managed if (releases_dir / x).is_dir())
+                write_references(releases_dir, registry)
     except FilesystemSafetyError as exc:
         raise ReleaseError(str(exc)) from exc
     return release

@@ -1,0 +1,274 @@
+{
+  "ticket_id": "workflow-simplification-11",
+  "status": "pass",
+  "artifact_content_id": "3a17243004d42583213e5fbe2d35dc7dcfb373b7c9e707b2fcae946015480673",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "/root/independent_batch_ticket11",
+    "model": null
+  },
+  "findings": [],
+  "follow_ons": [],
+  "coverage": [
+    {
+      "target": "AC-1",
+      "spec_acceptance": "AC-32",
+      "result": "ok",
+      "evidence": [
+        {
+          "repo_path": "skills/my-tdd/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/551-SKILL.md",
+          "line_start": 30,
+          "line_end": 36,
+          "meaning": "red与green两步，只把重构留给审查建议；例外仍要求等价验证"
+        },
+        {
+          "repo_path": "skills/my-implement/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/526-SKILL.md",
+          "line_start": 12,
+          "line_end": 14,
+          "meaning": "真实调用TDD，审查建议不进入主动重构"
+        },
+        {
+          "repo_path": "resources/testing-seams.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/494-testing-seams.md",
+          "line_start": 7,
+          "line_end": 9,
+          "meaning": "稳定seam与适配器/替身语义保留；末句为既有测试的行为稳定性，没有另一个重构步骤"
+        },
+        {
+          "repo_path": "skills/my-tdd/agents/openai.yaml",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/552-openai.yaml",
+          "line_start": 1,
+          "line_end": 5,
+          "meaning": "宿主摘要同步red-green"
+        }
+      ],
+      "verification": "通读测试参考与mocking、implement和共享seam，不把描述内部重构耐受性当作循环要求；资源/打包及三宿主检查通过。"
+    },
+    {
+      "target": "AC-2",
+      "spec_acceptance": "AC-32",
+      "result": "ok",
+      "evidence": [
+        {
+          "repo_path": "skills/my-writing-for-agents/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/595-SKILL.md",
+          "line_start": 8,
+          "line_end": 38,
+          "meaning": "适用三种文档、默认删除；指针、两类负担、三级分层、先收紧完成条件再按实证拆分、熟悉概念与正向目标、单一来源与整句剪枝、调用模式均有可执行定义"
+        },
+        {
+          "repo_path": "composition/manifest.json",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/378-manifest.json",
+          "line_start": 77,
+          "line_end": 86,
+          "meaning": "writing-for-agents为review-instructions内部method"
+        },
+        {
+          "repo_path": "resources/adapters/composition.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/472-composition.md",
+          "line_start": 3,
+          "line_end": 5,
+          "meaning": "调用权威及实际三宿主语法"
+        }
+      ],
+      "verification": "Spec 593–600逐条语义重建映射；熟悉关键词并非新增宿主调用权限，实际安装元数据由组合清单决定。"
+    },
+    {
+      "target": "AC-3",
+      "spec_acceptance": "AC-32",
+      "result": "ok",
+      "evidence": [
+        {
+          "repo_path": "skills/my-review-instructions/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/547-SKILL.md",
+          "line_start": 11,
+          "line_end": 15,
+          "meaning": "skill/project-rules及codex/cursor/claude参数、项目规则分支与统一写作方法"
+        },
+        {
+          "repo_path": "skills/my-review-instructions/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/547-SKILL.md",
+          "line_start": 64,
+          "line_end": 68,
+          "meaning": "只在KEEP/TARGETED_FIX应用默认删除及写作全部约束"
+        },
+        {
+          "repo_path": "resources/project-rule-review.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/488-project-rule-review.md",
+          "line_start": 5,
+          "line_end": 75,
+          "meaning": "合并后Rule Survey、契约、权威、作用域、证据、Finding Gate仍保留"
+        },
+        {
+          "repo_path": "resources/agent-rule-applicability.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/479-agent-rule-applicability.md",
+          "line_start": 6,
+          "line_end": 11,
+          "meaning": "各宿主scope/metadata和null语义"
+        }
+      ],
+      "verification": "正常Skill请求、项目规则请求、证据不足/不保留目标请求的控制路径均沿现有Gate走查；未以模型运行效果推断正确。"
+    },
+    {
+      "target": "AC-4",
+      "spec_acceptance": "AC-32",
+      "result": "ok",
+      "evidence": [
+        {
+          "repo_path": "skills/my-ask-matt/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/498-SKILL.md",
+          "line_start": 22,
+          "line_end": 30,
+          "meaning": "明确首项优先，五条件顺序完整；除继续外披露原始信息丢失，压缩明确保留内容；路由不启动目标任务"
+        }
+      ],
+      "verification": "按多条件同时成立、无后续价值、跨宿主、可独立完成、兜底压缩语义逐项走查；首项优先导致空间够时继续是Spec明确结果。"
+    },
+    {
+      "target": "AC-5",
+      "spec_acceptance": "AC-32",
+      "result": "ok",
+      "evidence": [
+        {
+          "repo_path": "skills/my-improve-codebase-architecture/CONTENT.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/528-CONTENT.md",
+          "line_start": 5,
+          "line_end": 7,
+          "meaning": "显式方向优先，否则约20提交反复热点，分散才扩大；历史不足与项目选择说明"
+        },
+        {
+          "repo_path": "skills/my-improve-codebase-architecture/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/531-SKILL.md",
+          "line_start": 11,
+          "line_end": 17,
+          "meaning": "实际content入口读取CONTENT，frontend不扫描"
+        },
+        {
+          "repo_path": "skills/my-to-spec/SKILL.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/579-SKILL.md",
+          "line_start": 8,
+          "line_end": 12,
+          "meaning": "开头仅称版本化Spec，PRD别称删除"
+        }
+      ],
+      "verification": "用户指定模块路径不受20限制；默认content与full都会读取新规则，frontend不承担新扫描；未添加文字镜像测试。"
+    },
+    {
+      "target": "frozen-eight-skills",
+      "result": "ok",
+      "evidence": [
+        {
+          "repo_path": "specs-workflow-simplification.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/751-specs-workflow-simplification.md",
+          "line_start": 587,
+          "line_end": 589,
+          "meaning": "冻结Skill与许可全局改动"
+        }
+      ],
+      "verification": "八个冻结Skill目录所有artifact逐文件比较正式base与head的SHA256，零变更；共享testing-seams变化保留稳定行为语义，没有夹带冻结方法改写。"
+    },
+    {
+      "target": "downstream-owner:workflow-simplification-12",
+      "result": "not-applicable",
+      "reason": "技术方案文档契约为明确后继owner，本Ticket不扩大实施范围。",
+      "evidence": [
+        {
+          "repo_path": "tickets-workflow-simplification-12.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/756-tickets-workflow-simplification-12.md",
+          "line_start": 41,
+          "line_end": 45,
+          "meaning": "技术方案各验收及未实测外部工具边界"
+        }
+      ]
+    },
+    {
+      "target": "downstream-owner:workflow-simplification-13",
+      "result": "not-applicable",
+      "reason": "最终旧接口/配置/政策/evals清理及全量行为验证由13承担；正式10基线既存问题不归11新引入。",
+      "evidence": [
+        {
+          "repo_path": "tickets-workflow-simplification-13.md",
+          "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-3a17243004d4-fl8xhqbo/757-tickets-workflow-simplification-13.md",
+          "line_start": 41,
+          "line_end": 47,
+          "meaning": "CLI精确清理、旧配置/政策、全量集成和冻结终检验收"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_resources tests.test_portfolio",
+      "cwd": "/private/tmp/ticket11-independent-validation",
+      "exit_code": 0,
+      "log": "Ran 29 tests in 0.412s; OK"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_workflow.ReleaseTests.test_build_materializes_shared_resources_without_body_copies tests.test_workflow.ReleaseTests.test_release_bundles_policies_only_for_explicit_consumers tests.test_workflow.ReleaseTests.test_build_materializes_plan_2_adapters_for_declared_consumers tests.test_workflow.ReleaseTests.test_build_does_not_materialize_routable_entries_for_router",
+      "cwd": "/private/tmp/ticket11-independent-validation",
+      "exit_code": 0,
+      "log": "Ran 4 tests in 4.459s; OK"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 - <<PY (inline verification: stage_release_tree; copy staged skill tree for codex/cursor/claude; project_skill_directory per skill; assert expanded call macros, invocation metadata, bundled testing-seams/composition/assurance resources) PY",
+      "cwd": "/private/tmp/ticket11-independent-validation",
+      "exit_code": 0,
+      "log": "codex, cursor, claude: six affected skills call projection and invocation metadata valid; required resources bundled",
+      "validation_kind": "temporary build/projection only; no real host install"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 - <<PY (verify all 759 snapshot artifact sizes/SHA256; compare frozen eight Skill directories baseline/current) PY",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "759 artifacts match before and after validation; frozen eight Skill changed files: []"
+    }
+  ],
+  "limitations": [
+    "模型效果未验证：未运行comparative或实际Agent执行；仅证明文档要求及调用/资源/投影结构一致。",
+    "只审正式base到原交付head的13条change；Spec pass重新从冻结Spec与实现建立候选，不以Code候选清单为输入；顺序双遍不宣称遍间上下文隔离。",
+    "未运行整仓全量或Python 3.10/3.14双版本检查：本次文本方法与打包资源验证已针对实际风险，最终全量由Ticket13承担。",
+    "未读取实施对话、live源码、既有自审/独立报告或交付回执；snapshot_path为唯一代码与规范取证来源。"
+  ],
+  "review_metadata": {
+    "base_sha": "19012332ec5bc23e053639a55cfd7ce603eb39b1",
+    "head": "c19707c6ce851cd5ac7ad5f403e2eb765125d467",
+    "review_scope": "change-only",
+    "changes_reviewed": [
+      "resources/manifest.json",
+      "resources/testing-seams.md",
+      "skills/my-ask-matt/SKILL.md",
+      "skills/my-improve-codebase-architecture/CONTENT.md",
+      "skills/my-review-instructions/SKILL.md",
+      "skills/my-tdd/SKILL.md",
+      "skills/my-tdd/agents/openai.yaml",
+      "skills/my-to-spec/SKILL.md",
+      "skills/my-writing-for-agents/GLOSSARY.md",
+      "skills/my-writing-for-agents/SKILL.md",
+      "tests/test_portfolio.py",
+      "tests/test_resources.py",
+      "tests/test_workflow.py"
+    ],
+    "artifact_inventory_count": 759,
+    "integrity": "all hash and size matches",
+    "pass_order": [
+      "Code",
+      "Spec"
+    ],
+    "counts": {
+      "Code": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "blocker": false
+      },
+      "Spec": {
+        "P0": 0,
+        "P1": 0,
+        "P2": 0,
+        "blocker": false
+      }
+    }
+  }
+}

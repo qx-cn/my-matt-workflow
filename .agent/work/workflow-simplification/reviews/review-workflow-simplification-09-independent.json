@@ -1,0 +1,263 @@
+{
+  "ticket_id": "workflow-simplification-09",
+  "status": "findings",
+  "artifact_content_id": "020573b6e2892257b2846dfbbae26b68801cb06b39962944cf93134f6b10b517",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "/root/independent_batch_ticket09",
+    "model": null
+  },
+  "findings": [
+    {
+      "id": "09-C1",
+      "dimension": "Code",
+      "severity": "P1",
+      "confidence": "high",
+      "acceptance_ids": [
+        "AC-40"
+      ],
+      "summary": "普通 build 无法保护自定义安装根引用的 release",
+      "location": {
+        "repo_path": "tools/workflow.py",
+        "line_start": 553,
+        "line_end": 554
+      },
+      "failure_path": "基线支持 install --agent-home <custom>；安装旧版后连续普通 build 两次，旧版不再是 previous，且 custom 不在固定 AGENT_STATE_HOMES 中，自动清理删除其 source。build parser 没有 --agent-home，无法传入保护；之后 verify_installed_state 和 install_release 均失败。",
+      "baseline_reachability": "已由正式 base_sha 冻结代码实际 build 39 Skill release old-r1/old-r2，并 codex install 到 baseline-custom；基线 receipt 验证通过。当前冻结代码对同一 releases 根 build new-r3 后删除 old-r1，基线 receipt 无法再验证。基线 build 无自动清理。",
+      "evidence": [
+        "snapshot current tools/workflow.py:553-554; build parser:1317-1320; install parser supports --agent-home",
+        "snapshot current tools/workflow_lib/release.py:865-869",
+        "/private/tmp/reviewer09/base-probe.log",
+        "/private/tmp/reviewer09/race-probe.log",
+        "/private/tmp/reviewer09/probes.log",
+        "/private/tmp/reviewer09/build-custom-argument.log"
+      ],
+      "verification": "base_probe.py 与 race_probe.py exit 0 复现；probes.py 通过真实 command_build 调用（仅替换重复的全量测试 gate 与系统固定 home 边界）复现 CURRENT source exists False、verify 与 next install 失败；build --agent-home 实际 CLI exit 2。应让构建能够获知所有受支持安装根，在不能证明无引用时避免删除。"
+    },
+    {
+      "id": "09-C2",
+      "dimension": "Code",
+      "severity": "P1",
+      "confidence": "high",
+      "acceptance_ids": [
+        "AC-40"
+      ],
+      "summary": "构建前读取的安装引用在清理时已过期",
+      "location": {
+        "repo_path": "tools/workflow_lib/release.py",
+        "line_start": 719,
+        "line_end": 723
+      },
+      "failure_path": "build 在 source_gate 前读取宿主 install-state；source_gate 运行期间 install 可完成，因为 install_release 只持有 state_dir/install 锁，不参与 releases mutation 锁。此后 build 用旧 referenced 集合删除刚安装的非 previous release，刚验证过的安装立即不可验证/升级。",
+      "baseline_reachability": "正式 baseline 实际构建 r1/r2/r3，r3 的 source_gate 中安装 r1，基线全部保留且 receipt 有效。当前冻结代码对同一 release 根构建 r4：传入同一宿主 home，source_gate 内安装 baseline r2并验证成功；随后自动清理删除 r2，receipt 验证失败。只改变为新增自动清理逻辑，未使用施工中间 schema。",
+      "evidence": [
+        "snapshot current tools/workflow_lib/release.py:718-723,746-749,865-869",
+        "snapshot current tools/workflow_lib/installer.py:897-920",
+        "/private/tmp/reviewer09/base-race.log",
+        "/private/tmp/reviewer09/current-formal-race.log",
+        "/private/tmp/reviewer09/race-probe.log"
+      ],
+      "verification": "base_race.py 与 current-formal-race subprocess 实际 build/install/verify exit 0；日志先显示 baseline r2 install verified，随后 BASE release r2 deleted True 与 InstallError。应把安装、引用读取及删除置于共同同步边界，避免只在耗时构建开始时采样引用。"
+    }
+  ],
+  "follow_ons": [
+    {
+      "owner": "workflow-simplification-10",
+      "scope": "正文主链、统一确认与审查循环；09 不要求实现"
+    },
+    {
+      "owner": "workflow-simplification-11",
+      "scope": "五项上游方法吸收；09 只交付结构与引用"
+    },
+    {
+      "owner": "workflow-simplification-12",
+      "scope": "技术方案契约及写作要求"
+    },
+    {
+      "owner": "workflow-simplification-13",
+      "scope": "旧 evals/命令模块删除、最终 CLI/Python 双版本集成与最终冻结核对"
+    }
+  ],
+  "coverage": [
+    {
+      "acceptance_ids": [
+        "AC-29",
+        "09-AC-1",
+        "09-AC-4"
+      ],
+      "evidence": "完整 76 diff；32 source/产物目录，全部重命名、删除与资源 manifest/governance；真实三宿主安装无 composed；资源闭包/本地链接构建校验；portfolio 模块删除及全树引用搜索。"
+    },
+    {
+      "acceptance_ids": [
+        "AC-30",
+        "09-AC-2",
+        "09-AC-3"
+      ],
+      "evidence": "冻结组合清单逐边对照 22 精确边、11 invocable、31 routes；真实 codex/cursor/claude build install verify；411 tests 内精确集合与全部宿主元数据断言；独立缺陷注入拒绝错元数据。"
+    },
+    {
+      "acceptance_ids": [
+        "AC-31",
+        "09-AC-5"
+      ],
+      "evidence": "8 冻结 Skill 全文/支持文件与正式 baseline 比较，4 不变，4 仅许可全局差异；research 逐段迁入共享资源且 reader-first-writing 相对链接按迁移位置调整；wayfinder 指向相同资源。"
+    },
+    {
+      "acceptance_ids": [
+        "AC-40",
+        "09-AC-6"
+      ],
+      "evidence": "指定宿主保留 r1/r2/r3；自定义根与实际 source gate 安装交错缺陷由 09-C1/C2覆盖；基线构建/安装实际可达已验证。"
+    },
+    {
+      "acceptance_ids": [
+        "09-AC-7"
+      ],
+      "evidence": "无旧 eval 校验调用 preflight/build source gate 静态路径审读；迁移后当前完整 411 unittest 通过；完整新集合、元数据、本地链接及 symlink 缺陷实际 build 拒绝且无 bad release；eval 历史未改动，最终删除属于13。"
+    }
+  ],
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests",
+      "cwd": "/private/tmp/reviewer09/current",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/unittest.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/probes.py",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/probes.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/base_probe.py",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/base-probe.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/race_probe.py",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/race-probe.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/defect_probes.py",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/defect-probes.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/reviewer09/base_race.py",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/base-race.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 - (actual current build of baseline r4 with install during source_gate)",
+      "cwd": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow",
+      "exit_code": 0,
+      "log": "/private/tmp/reviewer09/current-formal-race.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/workflow.py build --agent-home /private/tmp/reviewer09/custom-home",
+      "cwd": "/private/tmp/reviewer09/current",
+      "exit_code": 2,
+      "log": "/private/tmp/reviewer09/build-custom-argument.log"
+    }
+  ],
+  "limitations": [
+    "只在 Python 3.14.4 执行；3.10 最终集成属于 Ticket13，未在本轮声明验证。",
+    "真实系统宿主目录与 external systems 未读取/写入；所有执行与故障注入均在 /private/tmp/reviewer09。",
+    "精确 CLI helper 自定义根探针替换了重复执行的全量 unittest gate 与固定系统 home 字典；其他 build/preflight/install/verify/删除保持真实实现。",
+    "Code 与 Spec 同快照顺序独立重建候选；两条清理失败链以 Code 根因归类，不在 Spec 重复。"
+  ],
+  "review_scope": "change-only",
+  "base_sha": "08e58eb2ac9743f06faf295031b4d4ff3e0a402d",
+  "head": "07bafb3092405476ce65e8cc2496a72eae833956",
+  "artifact_integrity": {
+    "checked": 762,
+    "changes_reviewed": 76,
+    "source": "snapshot_path only"
+  },
+  "retained_evidence": [
+    {
+      "original_path": "/private/tmp/reviewer09/race-probe.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/race-probe.txt",
+      "sha256": "c611fda7ac8cb34755a4490938954c76b3de0392751f1f29e23a29cee6c42a91",
+      "size": 262
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/build-custom-argument.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/build-custom-argument.txt",
+      "sha256": "262a91af4de6a7d8e2b8d9d401cb30fab20523c3984978a9e0e2f1efa195f561",
+      "size": 957
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/base_race.py",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/base_race.py",
+      "sha256": "26aec0a685f2e3902854f6ddcaba450fadb2a9b06a474094e5518770921a1e66",
+      "size": 723
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/current-formal-race.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/current-formal-race.txt",
+      "sha256": "a18ba7f7eedc2e585cb0393633e6cb60ffa7ae008da309c92b2faf41cb99f7df",
+      "size": 152
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/base_probe.py",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/base_probe.py",
+      "sha256": "8da9fb1b12d7dcc4ed9faa6f70e2c9cd18e0d12456eed5a347e1240943343a31",
+      "size": 644
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/probes.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/probes.txt",
+      "sha256": "6dcb281e468477ce17e4f7794e63d107700f421526e9b3bb9d7b8bc53c14cfa6",
+      "size": 470
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/base-probe.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/base-probe.txt",
+      "sha256": "1898bbd0a86d90416ef2dc1a3bb19ac62d204ab98bf294b1de4cfbcfd565d114",
+      "size": 48
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/defect_probes.py",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/defect_probes.py",
+      "sha256": "6101163609d4018ad39d0c16a175efdede63a7fd5d46337691aedeba8544e3fb",
+      "size": 1129
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/base-race.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/base-race.txt",
+      "sha256": "718716f700a1893932d12b33c2d794ac3910bcd33d1ca6292f9c2a6f8f04da55",
+      "size": 62
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/probes.py",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/probes.py",
+      "sha256": "535bf8589e4cc2501799ba9953764c83a1a8e7f5bc6e33dd1af29cec365ab324",
+      "size": 3049
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/defect-probes.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/defect-probes.txt",
+      "sha256": "fe0ae904e2127b839cfb9c72de3794875f6b6a1a673f0474d0e0e08c8007efb9",
+      "size": 451
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/race_probe.py",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/race_probe.py",
+      "sha256": "d71fb5caed6a1d2edf9394c5ae44113bdfae22333a7076da843a49241dd5c21f",
+      "size": 1625
+    },
+    {
+      "original_path": "/private/tmp/reviewer09/unittest.log",
+      "retained_path": ".agent/work/workflow-simplification/reviews/independent-evidence/batch-08-11/09/unittest.txt",
+      "sha256": "f5e217ab39a81e67cad1b9d9325185771403d78502240818d7300f7e81147b90",
+      "size": 987
+    }
+  ]
+}

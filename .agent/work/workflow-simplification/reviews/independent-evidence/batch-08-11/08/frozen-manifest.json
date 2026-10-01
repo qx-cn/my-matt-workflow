@@ -1,0 +1,4644 @@
+{
+  "ticket_id": "workflow-simplification-08",
+  "base_sha": "8b9fc05a38d9cb4a0b0ce8b5e2b1d11a67508514",
+  "head": "08e58eb2ac9743f06faf295031b4d4ff3e0a402d",
+  "artifact_content_id": "74bc1c7eb2d55a245af37e30b75672d7a1b89e9946d85bd43dc17292033b10fb",
+  "source_changes": [
+    "tests/test_migration.py",
+    "tests/test_topic_lifecycle.py",
+    "tests/test_work_overview.py",
+    "tools/workflow.py",
+    "tools/workflow_lib/migration.py",
+    "tools/workflow_lib/ticket_implementation.py",
+    "tools/workflow_lib/ticket_resolution.py",
+    "tools/workflow_lib/topic_service.py"
+  ],
+  "artifacts": [
+    {
+      "group": "current",
+      "repo_path": ".github/workflows/check.yml",
+      "sha256": "a5b63441b3260e575dd1930f0ecf243beb04395e68aca1a38109acf20d87512d",
+      "size": 405
+    },
+    {
+      "group": "current",
+      "repo_path": ".gitignore",
+      "sha256": "088b78e9095f650f7d61e2f61269845ac19501b4cb1b0b2224d287b663ef936e",
+      "size": 635
+    },
+    {
+      "group": "current",
+      "repo_path": "README.md",
+      "sha256": "c91ee52c271c6370cfc50e08df252df5c1cb8929d149e6b044920dcb36f89bca",
+      "size": 9389
+    },
+    {
+      "group": "current",
+      "repo_path": "chatgpt/custom-instructions.md",
+      "sha256": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778",
+      "size": 1219
+    },
+    {
+      "group": "current",
+      "repo_path": "composition/manifest.json",
+      "sha256": "7554cf7bc25da55eaefe5dde5b429bf93ffeee80ea7c36e7f63c9d602bbb5598",
+      "size": 3453
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/VALIDATION.md",
+      "sha256": "b53a9fdd609b292207716dbe8d023f534aa867a6bce6544038402e97dc4170b8",
+      "size": 2683
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/agent-rule-review.md",
+      "sha256": "50ae8a213cb29b14995a8e178f37b7f2c1ddfc05e26e8ee8a64af1bad8943f74",
+      "size": 1243
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/astra-behavior-suite.json",
+      "sha256": "4fa65381baa72ab022ec64a440d41eaaba5b675d0e62525fa1ec5c56676d9a74",
+      "size": 5972
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/astra-evidence.schema.json",
+      "sha256": "5be94f6cd5c6b89886a109c084e7e13f91cc82724b2fc590532083d416492b13",
+      "size": 1346
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/code-review-signal-quality.md",
+      "sha256": "abc866d2c0978c356e6d7bed54005821d798ed707b2cd0c6ce00824fd36ec901",
+      "size": 2588
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/execution-evidence-registry.json",
+      "sha256": "7aae0c9795ac2243505a4b797593feadc7e2ae8e20dc5ace2d7f9f3f0bf3186f",
+      "size": 36
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/grill-spec-boundary.md",
+      "sha256": "d7bfc1e2ecad13217a1bcd7ad69ec3cb7a9ef0a62687a56e0be8fb9dfc33844b",
+      "size": 1360
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/implementation-turn-closure.md",
+      "sha256": "f7adab84664489e22e0bd30a02d8973d4ed7f28d608c84fd6cdd1557d37e7ebc",
+      "size": 2835
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/main-workflow-fresh-context.md",
+      "sha256": "d29ff5ef47140ed99a4759436d4dfb91716e2251f0e6b98a1672c29c047e2917",
+      "size": 1949
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/skill-review-root-cause.md",
+      "sha256": "612f1ad591c34b346a7185244e488c48664925d0c6fef730aa94d11816c3550a",
+      "size": 1386
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/agent-smokes/teach-course-quality.md",
+      "sha256": "45d7e1fc0c5344334282406c61bbd7562446e1a914d1c997b242d8507f30fb19",
+      "size": 2512
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/backend.mdc",
+      "sha256": "df055d4ac440c0981ec658ee7efe53adf4898e67bc3dfd4deb4b60a6ff36c668",
+      "size": 106
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/broken.mdc",
+      "sha256": "6a597da6315cf73953421bd0e539b1b068f57cd38f40624d7825cc9babc382b9",
+      "size": 96
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/generated-safety.mdc",
+      "sha256": "10b83f4e46419dbaa40c2f3727e0cb4e1a48d23ab0d9de6e405b11c61febcb28",
+      "size": 240
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/manual.mdc",
+      "sha256": "8c25156afc67d307c22cdd76c0d648a87ca7daeb91f0dc406e2665e6088d56d4",
+      "size": 77
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/agent-rule-review/project/AGENTS.md",
+      "sha256": "4cac0f20ae25d2cf815e24d6cddc462f658ebe8e0d9f3eec156c232f711f8830",
+      "size": 163
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/change-only/baseline/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "size": 13
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/change-only/baseline/pricing.py",
+      "sha256": "3dbf1383c61c79ee4425879445c0f948d3a42a11337fa0c09aa0433015a07d61",
+      "size": 293
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/change-only/baseline/specs/checkout.md",
+      "sha256": "9be084daf64feee6800252764f5c7b6b3d2351a55c6af1c7ab3391f0695180ea",
+      "size": 262
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/change-only/candidate/pricing.py",
+      "sha256": "ccf5ab64c8180d48ead0c918465e14461af48937b96ab6a494a7e3dbc64b40f5",
+      "size": 433
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/change-only/candidate/test_pricing.py",
+      "sha256": "f20f0006c96425ba8b1d52c8c1ae00f4c76593a420522b66060ec46ff029d7e5",
+      "size": 337
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/touched-context/baseline/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "size": 13
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/touched-context/baseline/inventory.py",
+      "sha256": "1e17de47a736587238851e6e1b1e11423edd88bf7d901c8d9ea4a3ad73dcc74f",
+      "size": 289
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/touched-context/baseline/specs/bulk-reservation.md",
+      "sha256": "d906c502c7d1868a30e3180b81e11767a56bb74d0580af09eac1349beb772a8e",
+      "size": 189
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/touched-context/candidate/inventory.py",
+      "sha256": "a247219e9b87153578ea0aadf6fbcc9ed917e45048680e37101f052f9620f6d7",
+      "size": 428
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/without-spec/baseline/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "size": 13
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/without-spec/baseline/pricing.py",
+      "sha256": "b990c2a0c0f0c432eda83c25983d7f74999c231174b58091c2eec72549dd94ff",
+      "size": 163
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/code-review/without-spec/candidate/pricing.py",
+      "sha256": "ac90a7ad5f973cded9591ef555593785c7be9bf473c17c5beef3723e6eb9d004",
+      "size": 229
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/main-workflow/app.py",
+      "sha256": "7052b32d6e2fbe77e979586b2a5d86c86902e931b3105141c337e74183533905",
+      "size": 136
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/main-workflow/requirements.md",
+      "sha256": "9cf76deaa425a9ce328b19768a8a69ce4cba3de3740811aaccfbc35f951d37f2",
+      "size": 725
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/main-workflow/test_app.py",
+      "sha256": "950e029e528064f09ea78ffdd2022a0a88afe23573eba148c0e68459ecf2c2fc",
+      "size": 548
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/matt-workflow.md",
+      "sha256": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "size": 476
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/specs/specs-turn-closure-01.md",
+      "sha256": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "size": 157
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md",
+      "sha256": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "size": 502
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md",
+      "sha256": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "size": 504
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/AGENTS.md",
+      "sha256": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "size": 97
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-teach/bad-author-centered.content.md",
+      "sha256": "60d5c5d5433f9c74b93d39a5fad925d1572dfa598a66186058863c106b6aa46c",
+      "size": 1245
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-teach/source-heavy/MISSION.md",
+      "sha256": "43b679793051f5553396a1cfc80f5dc735a8cdc29b1c1ec26ca74736d01c8a42",
+      "size": 519
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-teach/source-heavy/RESOURCES.md",
+      "sha256": "fb10ac49c705feec5a3e0bbeb68aa6eb72d996ec9cee66371ff9aabfea8b7bfe",
+      "size": 490
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/my-teach/source-heavy/source-notes.md",
+      "sha256": "42fb3ca78fb5f46f5ab5a577f634545d976d7dad08dc89b22dfaa43098760ad0",
+      "size": 783
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/fixtures/skill-review/runtime-owned-safety/SKILL.md",
+      "sha256": "5af6b3fa4aec33804137886136507d8254fb36eebca894141f7668013497ccad",
+      "size": 542
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/agent-rule-review-root-before-wording.json",
+      "sha256": "7f17d1f7715b6fd971937ab4d72039c7429d746fe20257688ac472c21e10ec29",
+      "size": 1287
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/artifact-review-design-method-boundary.json",
+      "sha256": "f826ceefc401bb5294eeea7fd3448153fd4fa817eedf5964229ca9f09730ff13",
+      "size": 1313
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/artifact-review-method-boundary.json",
+      "sha256": "09f87be8a824f9ab8891353742e3d6e8517e2e71b7d161dae01734421810b516",
+      "size": 1121
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/artifact-review-repair-plan-method-boundary.json",
+      "sha256": "d82597105c40c09d4e14c37adc9bba3024f691b7fa214e6dcbcd5104da642795",
+      "size": 975
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/diagnosing-bugs-no-red-loop.json",
+      "sha256": "412b52589af331c58119f432eb188389aff6802e56d7ca2016e3b1c38302f1b4",
+      "size": 597
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-causal-gap.json",
+      "sha256": "55f3ea760c6c80280744946fa9f46c3c5fa16ea4b2ab3ebf1260f364503724ac",
+      "size": 707
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-evidence-mismatch.json",
+      "sha256": "25cbf7230c9b1a7f5a377364fe234eb0de4e432cde8fb7ce14a5ee3d9d51fde3",
+      "size": 730
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-evidence-over-falsifiability.json",
+      "sha256": "97aad5f9ceb4449ae899a13257c3fef3c28c71a34f0d69ca5e8b77d923988f46",
+      "size": 753
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-goal-substitution.json",
+      "sha256": "2f4590ab9531e030bf23529cb59a12f8029064660537f2b4a4d508ce0e55e431",
+      "size": 729
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-pseudo-constraint.json",
+      "sha256": "42ea56230f2ef99624276f51e5f68238694c68ee4590e643ed8bac982fbf481f",
+      "size": 729
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-sound-proposal.json",
+      "sha256": "5d0f295a52ca8b5978733cbf2693ca48b45501c5099e304df4b59c84072a98cc",
+      "size": 708
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/first-principles-unnecessary-complexity.json",
+      "sha256": "54457151e0c60b7778e111d3d8f8b7b21a93bdd65b517e8ec870c5c13ac6e780",
+      "size": 751
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/grilling-one-question-hitl.json",
+      "sha256": "bb6e0d5ce27b4e9ee4c3d455aab474b09ca14249dd739a7a317199d4200ac5e9",
+      "size": 565
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/handoff-decision-mismatch.json",
+      "sha256": "50b1ca9cfb1b7081aee44f2b1c1fcbc2693d20bcfdac9fe12538c71119be06d3",
+      "size": 1232
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/handoff-draft-not-deliver.json",
+      "sha256": "f71a729f0611c668f8318328adccc7b5961c6a44c8f983a2a076d85cf1806600",
+      "size": 1360
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/handoff-first-step-not-actionable.json",
+      "sha256": "cfa4397bed529fd403d980c71732d9a75f3ec7b58ca0dddc538c354f23f275d0",
+      "size": 1207
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/handoff-goal-mismatch.json",
+      "sha256": "13ffeb0ccb5f8b90761e7ce4eb06e95618a4f98d8c82db6dbf98f14515e3e24c",
+      "size": 1178
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/handoff-round-trip.json",
+      "sha256": "767e68645307e84d53be395d48053fe638ce2967bf4b460b87c5789f1117d271",
+      "size": 1803
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/handoff-state-stale.json",
+      "sha256": "20f80e4dcbab26bad2d81433fa20142514862390bc5a4007c591dba800a419e7",
+      "size": 1262
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/implementation-review-baseline-reachability.json",
+      "sha256": "491604f1ba04e405052c34bdfa30596f943d1fd78663bcfb4f9639c84a19d6f4",
+      "size": 891
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/implementation-review-repeated-root-cause.json",
+      "sha256": "de6d293d3a917e4e18700f0131c62fc92f1d235a2152c7c516123bb4ad291c42",
+      "size": 883
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/implementation-turn-active-session.json",
+      "sha256": "c8c14922b535f865920065725475c428fb42566e7060df2c1ab308eece8768c0",
+      "size": 676
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/implementation-turn-ready-frontier-continue.json",
+      "sha256": "6f57f4f08a1b17808f0dc23cb8db5df07d0ccf3ecc704d1fa427b9848b37cdca",
+      "size": 702
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/implementation-turn-repair-limit-blocked.json",
+      "sha256": "3f01d446518d2c20209b1652a06620010f13bc7535ec65c800d06a0bb28f332c",
+      "size": 694
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/implementation-turn-single-ticket-complete.json",
+      "sha256": "61ea9189962da81b63673780b0913da67955c5f40eaea7ba98c39f3ec90f9e44",
+      "size": 678
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/main-workflow-fresh-context.json",
+      "sha256": "85d3eb1044e67b05cce9599eed6b4e0b81ba2a8266c986fb26cb5eb3648e4700",
+      "size": 1304
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/requirement-analysis-clear-request.json",
+      "sha256": "a8470bbbf94440dc7f632769aaba7051125d493f16493114589c88f89fd10a72",
+      "size": 744
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/requirement-analysis-misleading-analogy.json",
+      "sha256": "5d7920f675bd428bce153bc609ef5e827e67fbf8b262a2b22345114a0b1b88b2",
+      "size": 770
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/rule-plan-ticket-loop.json",
+      "sha256": "91e09ad7935e3547bac203f78efb0971c94f332d4e9e546bae4e7aa2f5f85dcd",
+      "size": 919
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/skill-review-root-before-wording.json",
+      "sha256": "1c27590b4cd58b69bf0cc2404d90bd6e0c17da87e8a82d93bdec7add0005955c",
+      "size": 1044
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/tdd-seam-pressure.json",
+      "sha256": "46e7316a8cd719a48fcdce85bb1addf57c6ebee841f79ce1b01a1e980085c99b",
+      "size": 571
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/ticket-expand-contract-accepted.json",
+      "sha256": "897669d5be5f590b3c133869d7b3b5d72780eec55af8ffcac7a10637de690ff0",
+      "size": 692
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/ticket-expand-contract-requires-compatibility.json",
+      "sha256": "7598636c9be3b15444b2ab9c1ea260b71c2d66cb3cb59673c53c1dc1459f4664",
+      "size": 730
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/ticket-horizontal-slice-rejected.json",
+      "sha256": "7d00bc4a3e7392b74cfc27a8f6cd48c4f3423c2d106492f7438c545be6356f9c",
+      "size": 687
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/ticket-integrate-and-verify-fallback.json",
+      "sha256": "fdf3ae43c70e837cca064c729e01bcc278ca7f62d7cd6bfb670b213c9cd5e6cf",
+      "size": 716
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/ticket-vertical-slice-accepted.json",
+      "sha256": "9354279684723733882d3b6f4ad7508ab4381b7456e1654b5fa3ef91343d0d19",
+      "size": 684
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/scenarios/writing-great-skills-baseline-discipline.json",
+      "sha256": "c955695e208930ce70861eacf0dc765adccb74fced0a41fc8448e4361e8fad22",
+      "size": 729
+    },
+    {
+      "group": "current",
+      "repo_path": "evals/smoke-registry.json",
+      "sha256": "c9f95408e0a657a3d6328f0619c0abf6afc998770225f7ec13c5227ee526bee8",
+      "size": 2161
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/context-hygiene.md",
+      "sha256": "495ecf2731144e4386a0c03adcd58959e049b6bf8f44778c6fd7ce318c80a4cb",
+      "size": 708
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/decision-taxonomy.md",
+      "sha256": "94e2cbd19d657c70aeec1146c568e53f8216de67ed11be0e401c95540e1b4025",
+      "size": 1158
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/enterprise-safety.md",
+      "sha256": "46a1057c309abf8070e07d8fd2c78259bc29e6b3f60312464a6d1886bdf4cb13",
+      "size": 724
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/merge-conflict-approval.md",
+      "sha256": "6df8c55daf4c215f3c5522d43cc8379031332d0726cff7a2e88821730d7cb557",
+      "size": 556
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/project-discovery.md",
+      "sha256": "b3bbd2ccd83970e56fb3bebe352fc897f1c8a13f80301c9a222ae9d97917e15e",
+      "size": 706
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/project-storage.md",
+      "sha256": "22583837e16134324d886f1782b7033e5e5621c6a8b434a75cc34e85d2fa54c6",
+      "size": 951
+    },
+    {
+      "group": "current",
+      "repo_path": "policies/write-boundaries.md",
+      "sha256": "bfbb1820f6862226ca93da2b613bf5cf0e9959b7fe18350306b95a8450b7db26",
+      "size": 632
+    },
+    {
+      "group": "current",
+      "repo_path": "portfolio/manifest.json",
+      "sha256": "470c0c2f74112f9e197a688d26b970d08ec5a8e475915f24c967f0883f197ec6",
+      "size": 27646
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/artifact-access.md",
+      "sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38",
+      "size": 515
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/artifact-review-session.md",
+      "sha256": "095b92b59d115d32ee7ae0b4f6adad4b03f3a4d9008cbb1681d98dadfcc043e0",
+      "size": 1589
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/artifact-storage.md",
+      "sha256": "44085cded50be3d93cb37234d3f3c3aadc4593917bd76867d33541fa52f7c5d0",
+      "size": 762
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/assurance-levels.md",
+      "sha256": "c0dca56c3dc137c32455b5b347c4765a43dd60a84b1e89ed8f163640f2ad08d5",
+      "size": 1842
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/composition.md",
+      "sha256": "92d639a62c26a9bad9f3e1c1d1f1333b7c8094edd0044c669f4eb42b700f8b70",
+      "size": 1776
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/implementation-session.md",
+      "sha256": "68d47b43eed33017b1d63f6f5b3978bc74e2cc96280ffa4ae6096fa2623c55e9",
+      "size": 7884
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/project-rules.md",
+      "sha256": "93634da040174e9e3cda64f0b6e8bef38cf97406ec4adf3f85433e796cd1bf25",
+      "size": 3925
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/specialized-review-session.md",
+      "sha256": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8",
+      "size": 1083
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/ticket-selection.md",
+      "sha256": "bf22137c3ff0e17caf94bef47119767d94e23828b070818ec782e0f7b661413b",
+      "size": 2535
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/work-scope.md",
+      "sha256": "74c9fa17a459e8a036446351bbec104adea1714a14c1c37070be65aaa959a94c",
+      "size": 2037
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/adapters/write-actions.md",
+      "sha256": "499f06d0e8bd075a99bad0809ad59322dca85e16e32b9e1914599047fda35a8f",
+      "size": 929
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/artifact-finalization.md",
+      "sha256": "2a06d1a6290fb51a0237223288dcfc7b19b751df650538b5d239e1987fefb354",
+      "size": 2677
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/document-rendering.md",
+      "sha256": "ef0867f4d9bbba54bdd5331e4fe042d56b709e64231dd3ce82c9925fc510547e",
+      "size": 3292
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/final-state-writing.md",
+      "sha256": "bc10b125ba429ce5ab7872bd9bee93cbaeb12cd3970ba1109396521d29aff455",
+      "size": 378
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/first-principles-reasoning.md",
+      "sha256": "bf84ac64d48c24243a72f7132f5f26f5cb0d3593e6cb113c90ea20dd3da5d459",
+      "size": 1776
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/governance.json",
+      "sha256": "80be17d0d99267a8aecfa992316f91d6c66144d3ce14d8ec32c4d66da3104fd9",
+      "size": 5086
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/humanizer.md",
+      "sha256": "3b4a153a12ededf30fbd1bebd404584994edcec1f18eef9712b541019aeb8ac4",
+      "size": 1464
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/instruction-authority.md",
+      "sha256": "451ad82cdc9b521803502b7b04b5ebb17619ad98c0da18486663b815fde3ac9e",
+      "size": 1682
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/manifest.json",
+      "sha256": "c976b3edac99cdc48073c8f59619d559466c01c9498cc49e405a6f66b8c13696",
+      "size": 6719
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/reader-first-writing.md",
+      "sha256": "733c260b1f3e6428828d8b5ecfef1ed960793a94211dda8b36e8f887bc61eb17",
+      "size": 2776
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/testing-seams.md",
+      "sha256": "c8e39b60a94e82b25d0881553b24018c5ffe2597b426a13c6bc3982e4d848d4e",
+      "size": 1096
+    },
+    {
+      "group": "current",
+      "repo_path": "resources/visual-communication.md",
+      "sha256": "dead28509ba10a2c4736866210fb91e6df5bc470371fee44c9b58f6427986d27",
+      "size": 2286
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-artifact-finalization/SKILL.md",
+      "sha256": "5eabdffb47191bdd99d3311a0e1ad58b6b37f65b85ff9b2a36b884bb256a7ba7",
+      "size": 1162
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-artifact-finalization/agents/openai.yaml",
+      "sha256": "c33231f2bfeadce2922cc44b4375b87ddf0a2afd6ac84b3d53d36b8e8a05e2b5",
+      "size": 282
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-ask-matt/SKILL.md",
+      "sha256": "1457a0f3c1ed834f8f65382b4139337559dbf4fe1d4adef0f051609d81521c84",
+      "size": 4129
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-ask-matt/agents/openai.yaml",
+      "sha256": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c",
+      "size": 137
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-code-review/SKILL.md",
+      "sha256": "4effff4adaf204217a18716f118dd6f91c72dfc197f6358cf5cdc83d0d3e4782",
+      "size": 9427
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-code-review/agents/openai.yaml",
+      "sha256": "01b2ebccfde9d4b2d6b155bd7b53b236351ab2e8db6c8958e6562de9492b913a",
+      "size": 138
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-codebase-design/DEEPENING.md",
+      "sha256": "ba1554116824e873a31f13f8eb27c07b871b0aec67c6d40aeeff89653674533c",
+      "size": 2213
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-codebase-design/DESIGN-IT-TWICE.md",
+      "sha256": "53add89fcd450aab37ba3f017dad8dfcd3c261b1692ecc3684551d534bfb056c",
+      "size": 2906
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-codebase-design/SKILL.md",
+      "sha256": "727ed2e2cc2ecb72a339a474beadf8550a09aee0f5e23a68c03f27f3ffc4cfc3",
+      "size": 6244
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-codebase-design/agents/openai.yaml",
+      "sha256": "0c24ffe790dc0aa8291bc52076db14f8a718b96cc7ab402381a26ee81ce579a9",
+      "size": 145
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-diagnosing-bugs/SKILL.md",
+      "sha256": "c5e7874956a6edd8407cd23fb825b1f5eb076a038b31e0941c894d85aaae9182",
+      "size": 9449
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-diagnosing-bugs/agents/openai.yaml",
+      "sha256": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+      "size": 146
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-diagnosing-bugs/scripts/hitl-loop.template.sh",
+      "sha256": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+      "size": 1160
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-domain-modeling/ADR-FORMAT.md",
+      "sha256": "d032f6a96b24664ce37c8e1d3b083b3090bd39e9377e532a85b04b220454ef9a",
+      "size": 2709
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-domain-modeling/CONTEXT-FORMAT.md",
+      "sha256": "9e9f1ffc7c4dd3ece312753a959c64362316ce0cf52337c7a64e82c076b73a3b",
+      "size": 2740
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-domain-modeling/SKILL.md",
+      "sha256": "47a5c3069c5751ffac702904c020d7c30ec23346708b51cac7ef018a695b02c5",
+      "size": 3723
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-domain-modeling/agents/openai.yaml",
+      "sha256": "3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb",
+      "size": 144
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-edit-article/SKILL.md",
+      "sha256": "95e4ed12afe70ca823c12ab5711cd5918f75dd8bbf8c338304e9d27f69cf88cb",
+      "size": 1481
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-edit-article/agents/openai.yaml",
+      "sha256": "4873c8a1310b0159b404b42de01ba069b899dda4a4d2bd214c6881bc6305d45d",
+      "size": 145
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-final-state-writing/SKILL.md",
+      "sha256": "8862b5484e98669020b87b5c6210e56cefeb060767d331ab2dde06a3ed5d314a",
+      "size": 1334
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-final-state-writing/agents/openai.yaml",
+      "sha256": "84be2b037de14798d5bd9b64e65a98f20c9889ed593c5262aff709eb888613ee",
+      "size": 271
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-first-principles-review/SKILL.md",
+      "sha256": "e9ef9d174fe9757fcad824f929bd1c13b6d14c6e6eadaef27a6b060d552c3df0",
+      "size": 2423
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-first-principles-review/agents/openai.yaml",
+      "sha256": "566013da460aa29a93e504892abef724f86edbe6176bda0bbfca4649ffb1fa06",
+      "size": 275
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-grill-me/SKILL.md",
+      "sha256": "2ecf54120f727b8071ff750582d35d17a1834b472855df1082bfc7b74977183b",
+      "size": 612
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-grill-me/agents/openai.yaml",
+      "sha256": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b",
+      "size": 137
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-grill-with-docs/SKILL.md",
+      "sha256": "de7965cc1b1ff9fdac99fe8ed141f1e134b4f4564764e7613bc6508f001d0d05",
+      "size": 1982
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-grill-with-docs/agents/openai.yaml",
+      "sha256": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9",
+      "size": 145
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-grilling/SKILL.md",
+      "sha256": "fd51e42079a653b0731cf24153b37c05064636804342911ba0e8ad173cf6cf23",
+      "size": 1265
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-grilling/agents/openai.yaml",
+      "sha256": "7b6a632a92aa599776dfb602d8260a75f6740f73277d523b9dc92584b584a3ef",
+      "size": 148
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-handoff/SKILL.md",
+      "sha256": "451cd8172fc89eaded3da6dea446efa8ef7db926e533d1798624ee3e1774ea54",
+      "size": 2693
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-handoff/agents/openai.yaml",
+      "sha256": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28",
+      "size": 141
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-humanizer/PATTERNS.md",
+      "sha256": "a0e26ffa6ab2b057a3aefedb64634c2cee149707616efec277f2de9544246dd5",
+      "size": 4361
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-humanizer/SKILL.md",
+      "sha256": "fb8100fa4bc4dc24bd0eda61957c7f658361fa07474d286d2b268ce46c43df7f",
+      "size": 3569
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-humanizer/agents/openai.yaml",
+      "sha256": "026777f2a53fed1827286c68a181f04f6f79ffd47fc9ecbcc783da5abcb5427a",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-implement/SKILL.md",
+      "sha256": "15ce61a84c7cdcb574cc512bd8e8e40411bb74f94d6540e1342ba4f38796cfe6",
+      "size": 4391
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-implement/agents/openai.yaml",
+      "sha256": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc",
+      "size": 139
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-improve-codebase-architecture/CONTENT.md",
+      "sha256": "7c67cf8547837adbf842bc383cc941c413cb50898f4f5bd7290b14b0fdb3e8a7",
+      "size": 2024
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-improve-codebase-architecture/FRONTEND.md",
+      "sha256": "18f1f95e14e10108e33254af145b1ebe246d5783109f53ef67ad3f252845b4d2",
+      "size": 944
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-improve-codebase-architecture/HTML-REPORT.md",
+      "sha256": "bca090791b946d1338b22cad4a83defb1709997f5052c168a4bd9376b3be2ddc",
+      "size": 6445
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-improve-codebase-architecture/SKILL.md",
+      "sha256": "2da6fe1283bea5625d9f4a9bdacc4a8eb6b65ca32d30b2ee1d9fe7a0ec86f1e0",
+      "size": 2257
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-improve-codebase-architecture/agents/openai.yaml",
+      "sha256": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1",
+      "size": 166
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-install/SKILL.md",
+      "sha256": "5a9950821da4412dca302cdb7c14de6eeb28c73309d2536fb8b86d685ffbeff4",
+      "size": 1793
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-install/agents/openai.yaml",
+      "sha256": "695f55f8bcadbd5c539a48d299e16597252692d2ec28bc54e1996f1a5e5fc3c4",
+      "size": 136
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-prototype/LOGIC.md",
+      "sha256": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+      "size": 5272
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-prototype/SKILL.md",
+      "sha256": "3339910c51a98eb113b62b6ff2600b133ee8bbe8c61a045c6f6315edbd90ba70",
+      "size": 2850
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-prototype/UI.md",
+      "sha256": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+      "size": 6022
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-prototype/agents/openai.yaml",
+      "sha256": "6b2d4fa3345bda08b144147a563dafeb1e42d7bd47898d1c21f1493845f22d6a",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-reader-first-writing/SKILL.md",
+      "sha256": "b9f0831a29af665eea472152e76625f28c2be7e3071dd249bb7b5a1028e1af9c",
+      "size": 1022
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-reader-first-writing/agents/openai.yaml",
+      "sha256": "f72b4df04790e64066af541a6fe4b7b6f0fb9ecc0fa2cadf668148eef13d7589",
+      "size": 279
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-requirement-analysis/SKILL.md",
+      "sha256": "83f2560d9afb5df33a51bb4dd2e67828c6169189ea78d87847bb17f6a9c86c80",
+      "size": 2097
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-requirement-analysis/agents/openai.yaml",
+      "sha256": "49419793ab6865791a09ed9757de81fc50cd2c9440f2e0e1d7a1cb5476f88a0d",
+      "size": 253
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-requirement-analysis/references/reviewer-brief.md",
+      "sha256": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a",
+      "size": 869
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-research/SKILL.md",
+      "sha256": "4c1cba82bd6d4d28f903422741165fc6817026780746a7f7df036d93418b7594",
+      "size": 986
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-research/agents/openai.yaml",
+      "sha256": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+      "size": 137
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-resolving-merge-conflicts/SKILL.md",
+      "sha256": "beacba9d37fd14c16f175b34954b3f947b5fa2ae06bbcb5b0bb59476e60e29d1",
+      "size": 933
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-resolving-merge-conflicts/agents/openai.yaml",
+      "sha256": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+      "size": 154
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-agent-rules/SKILL.md",
+      "sha256": "aa4bcc47dd0d0d583563c05dc99ad95b2962724fa3752dde15e1102f4ff95382",
+      "size": 6595
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-agent-rules/agents/openai.yaml",
+      "sha256": "f68afbff616ce6d80639e7419e143c346a268a06be55265b3403259577698d04",
+      "size": 253
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-artifact/SKILL.md",
+      "sha256": "f7c83ae206a0caf992e522808568822f12a20c9348788b6897fd99609e45c08d",
+      "size": 2637
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-artifact/agents/openai.yaml",
+      "sha256": "7acd9b3610f05929004d067765194584d73ed78e53d335e111d7496df56a71d7",
+      "size": 279
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-design/SKILL.md",
+      "sha256": "adfbad22aa54ad4f07a726f2311408a34ffc6f869278b69cb346aedac35c5beb",
+      "size": 3773
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-design/agents/openai.yaml",
+      "sha256": "bae00856f8e5705f0d9ae26a4c6bf31102d989c3969a425973bbe47239aaee11",
+      "size": 281
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-skill/SKILL.md",
+      "sha256": "a9ca8e642b64a277c7fcd3a193d38789d1a725a65f0ad8544830eb2f1dc0fc67",
+      "size": 7325
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-review-skill/agents/openai.yaml",
+      "sha256": "ac5d17b6d53cb7361a683b82be4a214abf45b9c198ad20e7e32f0e37b8b3d0a9",
+      "size": 231
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-setup/SKILL.md",
+      "sha256": "2a1f804873fb7e177e035aa6a89c0e70689b04730c0a1b12248073c6a90c7570",
+      "size": 4647
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-setup/agents/openai.yaml",
+      "sha256": "e3ae4343a3c46e00c1bf630327290b62165713e9abbfff45f20e0994fcca8074",
+      "size": 138
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tdd/SKILL.md",
+      "sha256": "9aa876d2229f316487edf3cbd95428b92dbb251022bb86d386e826d31c8967f7",
+      "size": 3455
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tdd/agents/openai.yaml",
+      "sha256": "00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c",
+      "size": 130
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tdd/mocking.md",
+      "sha256": "672be095a8663b2e21922882ad48d50889d1a9a0277eaa86a30fe76d1bd2bd2d",
+      "size": 217
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tdd/tests.md",
+      "sha256": "3545ac462e7158d3c1831b936b9b6b6e8ccf079f326766ca8b775a5eaf0af307",
+      "size": 2265
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/CONTENT.md",
+      "sha256": "d447f0b25f6a90380a421b3fe42ab483c77e9f1348b5dc713d0766093a485764",
+      "size": 4318
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/FRONTEND.md",
+      "sha256": "83a8edbcb58d3f8c18eee07a3e1b5d42ce6160a618c6344595d4009729e558e3",
+      "size": 3125
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/GLOSSARY-FORMAT.md",
+      "sha256": "0adaa5a845dfcc1af249c44d35f430d8f4874a35a749c72dde933fad1c674900",
+      "size": 2021
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/LEARNING-RECORD-FORMAT.md",
+      "sha256": "199a482e092be0e19ed58e6000b7aac5b6dacb392d7f36a135ff9d5530fe0e61",
+      "size": 2658
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/MISSION-FORMAT.md",
+      "sha256": "34795a146494816b55a6ef7d83c62624e14f59b599850f02fce59944d3751947",
+      "size": 1501
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/RESOURCES-FORMAT.md",
+      "sha256": "e66202357468ab6d49a0c9ba911adf1ca5de2f8eafbb6bf3f8d363f378b6e3b6",
+      "size": 1861
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/SKILL.md",
+      "sha256": "3eaa0d9e13a3d50bc0b7cc044e9c1f36f73d816199d235c13c1415417eb36c6d",
+      "size": 2590
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/agents/openai.yaml",
+      "sha256": "d38a4924ccbae2d2ddbb1df048bd9d03b3563d92a52979ef50cf0dfbfbac0273",
+      "size": 177
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/assets/TEMPLATE.html",
+      "sha256": "73bd4eb8c8b432f8a421f50c942b375a964d149e49b0642d4d84fc8af183cb64",
+      "size": 1203
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/assets/course.css",
+      "sha256": "71f5f1f46135ac3b5e7af445872baaae3985478efe32cdd462324e7b37595895",
+      "size": 8047
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/assets/course.js",
+      "sha256": "86ff93c58bc839f86b3c058eaea6d1056aeb29f78324dea479b27f1fca226de8",
+      "size": 2550
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/references/course-quality.md",
+      "sha256": "02a35c583a3f477dc9df782099d590f8be8dee3b6f07eb8f1bb0c23555b944c2",
+      "size": 2790
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/scripts/check_content.py",
+      "sha256": "dfeb85cb4c9b1e388fde9e31383cedb10a5936e2bc69fa4d3b9251035850c72a",
+      "size": 8144
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-teach/scripts/check_html.py",
+      "sha256": "c483ac4649518d788635e8ab66bccdbdea3d39f2935e4acf5722943f87711809",
+      "size": 8450
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tech-design/CONTENT.md",
+      "sha256": "d1b433fc9caeeedc02b23d72498782eb07c66894a98d246d6f203faa6e24d521",
+      "size": 3358
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tech-design/FRONTEND.md",
+      "sha256": "3aa2583b5462798641c7a8720fdb7871f1f127cf6319fa6e30490cb41904430e",
+      "size": 2077
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tech-design/SKILL.md",
+      "sha256": "733d92aab39334ddc2babe9ad77555ca68e57468de2b8ba9f0713755d7731691",
+      "size": 1943
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tech-design/agents/openai.yaml",
+      "sha256": "d8167fd6d59ca1bee2a79f3d1620bd8d131f1befe078ed9101887a5ff62c15d1",
+      "size": 272
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tech-design/assets/TEMPLATE.html",
+      "sha256": "84fe7962df9e5bfaf582152c9bf84988acf6e151b9e98fb964b7a2b8580775c4",
+      "size": 13735
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-tech-design/scripts/check_html.py",
+      "sha256": "68bde5d8a2ecebbb61f39371eaaa2c0f25d6901993284dffabf44e373b68b071",
+      "size": 4669
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-test-report/SKILL.md",
+      "sha256": "3188710f22c085d061c7ca7153418d4fafbacd2008cf5de738362c9856d91026",
+      "size": 7465
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-test-report/agents/openai.yaml",
+      "sha256": "7a384f6b6006e54ba591e79090e11f72d7db406eba3a2750e2b4ddee1e40a8a7",
+      "size": 257
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-questionnaire/SKILL.md",
+      "sha256": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+      "size": 3424
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-questionnaire/agents/openai.yaml",
+      "sha256": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+      "size": 157
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-spec/SKILL.md",
+      "sha256": "91bb1a11c0eb8442c07e971d380386ce85a67aca83347aa619912720a693aad5",
+      "size": 8013
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-spec/agents/openai.yaml",
+      "sha256": "1c5b4d1e3d8e52287ef19cc2742fdbbfae1914ac75d33af3e4c8174f08cc55bb",
+      "size": 135
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-tickets/SKILL.md",
+      "sha256": "b69492584d46929381e58805c8ebd27df1a60ab5c2aef9da2ca5862b5e214b7e",
+      "size": 7688
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-tickets/TICKET-FORMATS.md",
+      "sha256": "e3ad04186409ce8cc4dfb58dc94c887a95b0e0d78fbb0890462289e52c6cf238",
+      "size": 2223
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-to-tickets/agents/openai.yaml",
+      "sha256": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090",
+      "size": 146
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-triage/AGENT-BRIEF.md",
+      "sha256": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+      "size": 7277
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-triage/OUT-OF-SCOPE.md",
+      "sha256": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+      "size": 4201
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-triage/SKILL.md",
+      "sha256": "612a6b22a2f2e6cc6d9153bc92e6f0c5e8fe66a97634a5e16f9c3c44773d5840",
+      "size": 7793
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-triage/agents/openai.yaml",
+      "sha256": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+      "size": 135
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-visual-communication/SKILL.md",
+      "sha256": "cfbf91eca8b449c3a387081073b8413e808813bd9be4f7b18d672964504db2ba",
+      "size": 1147
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-visual-communication/agents/openai.yaml",
+      "sha256": "65b9d8fec6750892c0b96a87ee745a301d0cdbed74b5a228d68b4029ee3337ee",
+      "size": 271
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-wayfinder/SKILL.md",
+      "sha256": "1a61d6b8c560afd9cb1635ebb4c8138b8e75d37bbe81e01e8dd6bf1f11cdc2b5",
+      "size": 8421
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-wayfinder/agents/openai.yaml",
+      "sha256": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+      "size": 144
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-wayfinder/references/map-and-ticket-format.md",
+      "sha256": "94f8413502a7f2d870d2c8460f90cdcc92d415122ae1a3309b8af774de5e3dd3",
+      "size": 4889
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-wizard/SKILL.md",
+      "sha256": "626d1a6aae4965b2b72f491b75aa70bbc08cf3704efab50edddbf5a1892a9cbd",
+      "size": 4747
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-wizard/agents/openai.yaml",
+      "sha256": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+      "size": 124
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-wizard/template.sh",
+      "sha256": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+      "size": 8941
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-writing-great-skills/GLOSSARY.md",
+      "sha256": "857a1adc7c7915ef2a7306c60f7295be70d8a1049689cdc261d5b1cd25b87165",
+      "size": 16591
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-writing-great-skills/SKILL.md",
+      "sha256": "fff1b3dfa16a55da2248ff6dda6c3f3b88409b5e8ab1d02978c1c36e7c86a790",
+      "size": 10032
+    },
+    {
+      "group": "current",
+      "repo_path": "skills/my-writing-great-skills/agents/openai.yaml",
+      "sha256": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d",
+      "size": 150
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/architecture_application.json",
+      "sha256": "c42bd7cb1f096283c01620e50837edf1d04c2874e49dab05c021d51cd0a5952a",
+      "size": 6486
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/codebase_design_order_submission.json",
+      "sha256": "6e03842817b7cf7631e8a56e99d1ffd40ea0d2d8a144ded8e14f6bfa8c2a198f",
+      "size": 2555
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/domain_modeling_application.json",
+      "sha256": "e36d4c7c4f006ff20d95cf0ea8d6caf28c5c55935c05047b013ee68f46ce360b",
+      "size": 3515
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/grilling_application.json",
+      "sha256": "10020aa94c442a088dbc83730ba21ea9f0ef446767b6148f26dee942ad3318f1",
+      "size": 3759
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/questionnaire_application.json",
+      "sha256": "6eec5fa58f0518c297f1ca41bd771ea3c3c0bd6c2e61ca8314287283e46fc430",
+      "size": 3907
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/task_12_application.json",
+      "sha256": "b53ddb59bd585a8659959b3c375cd30ea7b7ea9e4586b73bd76eb946b3f2e6d7",
+      "size": 13140
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/tdd_application.json",
+      "sha256": "db90cfd5570807c6ac00626df538ffea4f45e7d201be57344dd75a5105a5cb62",
+      "size": 3358
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/teach_application.json",
+      "sha256": "38d443b8974aebfe0f61d96ca0e6d8e3b202b15a5fefcef9ec070650877b0890",
+      "size": 6096
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/triage_workflow_application.json",
+      "sha256": "ee096273a61e5a7c35b605a7a5dfc0ecf4fc92a63836b912eb5233ca3d83cec8",
+      "size": 5802
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/wizard_application.json",
+      "sha256": "e4f6b2810faae86edfd56b98bc8dc588d8dfb81329acbe3613f97085cb4b276b",
+      "size": 5212
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/README.md",
+      "sha256": "b0470d8b2f32024aabb17076e7bfc85288f1f7ca0a2c8913564ee42e01020585",
+      "size": 3102
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/baseline.bundle",
+      "sha256": "bcf4934e14c3971233c35783867ba1c890d8bc5915aead164cd14c4139c9de0d",
+      "size": 4377
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/baseline.json",
+      "sha256": "3cf6ab88c31ae07149b59eeb08aa7f553297ae7a13ebe700c3390b483fdab687",
+      "size": 19675
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/generation.json",
+      "sha256": "7030f0794f5a09bddd93961e7e401726cee6ec83879be88a8f3e493da67a02b0",
+      "size": 119258
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/matt-workflow.md",
+      "sha256": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+      "size": 1452
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-a.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-b.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-c.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-d.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-e.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/contexts/contexts-legacy-a-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-02.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-03.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json",
+      "sha256": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "size": 337
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/dfdab5fd13e9b6d727d6d1a34a062268ae281f1099acc45d92bf8ac76301b913.json",
+      "sha256": "b88eddeb5eb22db663ab69701e91eae493bd7382bbdaa72e3ec68945cd680b5a",
+      "size": 4613
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-results/d30f270e1ae5fec9b08b234e849a3908.json",
+      "sha256": "47530d4e74975daf71410ed690f1b79f0c87333e1c3614835816cb0c13c59604",
+      "size": 646
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.json",
+      "sha256": "7f5bcf3e5bc90a31c1e73aec8e745454feb7ce86a8b36cf38a6343724cc411fe",
+      "size": 7372
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-03-spec-r1.json",
+      "sha256": "feb3b3fe8a3759fb055e2be0a74b346164d3c37dc70c613e502d5f774e5d07c1",
+      "size": 4603
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/specs/specs-legacy-a-01.md",
+      "sha256": "5d71acde259d0dc2f3b05278352eeffb8d1dddbb18e1e5125406cdc1c8f3e291",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-01.md",
+      "sha256": "231e334ca2e3fa38d11b40232089079f8ee3e15f6726c5a7342e30f430f5d1e9",
+      "size": 522
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-02.md",
+      "sha256": "47434a02cd59978b663c64b0e062b3145802ba546de77f181ed7f88b7524af47",
+      "size": 516
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md",
+      "sha256": "712613d09cc3162989a28397d6d7df84dc1e73659f6ce3581d8f1e42498f8bb5",
+      "size": 552
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/contexts/contexts-legacy-b-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/locks/legacy-b-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/run-legacy-b-01-spec-r1.json",
+      "sha256": "fc678fdb6dbe3781f6d812d3da1143b8427cda2dd55a057bd13cf7d597ce634a",
+      "size": 4960
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/specs/specs-legacy-b-01.md",
+      "sha256": "9b6c15c87c20d4f31d26672b5ee69883cf92c7cdb487beb0f66e63d3b39367c2",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/tickets/tickets-legacy-b-01.md",
+      "sha256": "3a801e043941a1a6ad0c439e26168535df2034885bd5b98a0c1ba61f28634600",
+      "size": 525
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/contexts/contexts-legacy-c-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/locks/legacy-c-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/run-legacy-c-01-spec-r1.json",
+      "sha256": "18e4d41742c311509645672f845bfe89a51c2ebd113dbc8870bf871a2db90c61",
+      "size": 4960
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/specs/specs-legacy-c-01.md",
+      "sha256": "a88e4aefa56845dc1727b235a4550ec5d40333d57569565fd91d9213948cc001",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/tickets/tickets-legacy-c-01.md",
+      "sha256": "71056bda201df6296b7cccb256bf3d0402b6f0e4c3e1f6accdbc669272a3cc8c",
+      "size": 519
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/contexts/contexts-legacy-d-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/locks/legacy-d-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json",
+      "sha256": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "size": 337
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/e9d496eab8b8465f861a4e903a2eff316c8ea207b3a6ab4b991c99a91ab4de67.json",
+      "sha256": "29f75df5b8f0c2cbcfc22bc41da2a9f51053f5032ce284c73d04a70fbd171ad5",
+      "size": 4613
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-results/4ee325b1bba83eb08622d2416e2298bf.json",
+      "sha256": "0f99df10673b967c3c8a1a54f76b5aa50beec61a7982c410cf055072eb8f325d",
+      "size": 646
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.json",
+      "sha256": "514b0f1d73af2f4e6acc0f891186fe5c08c6c9153a02eacd6d47f5c28104034f",
+      "size": 7372
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/specs/specs-legacy-d-01.md",
+      "sha256": "5b4cad5073f8d44904b84b1b5d7f5c1c47bf14606f482dc0898c538b4d707949",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/tickets/tickets-legacy-d-01.md",
+      "sha256": "a210c9a9272baa88c16d846c705fe2d242b2ae5b6e7220c55fe592657ed6262a",
+      "size": 516
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/contexts/contexts-legacy-e-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-02.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-01-spec-r1.json",
+      "sha256": "cbf2c44b9f5108a2bad6d48747b217de1949c85ab44d3b34e1d3af552be31558",
+      "size": 4603
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-02-spec-r1.json",
+      "sha256": "4a44609a5514bb7968553fed996737ba69290a9c4aae2ceff6b4993e046005cc",
+      "size": 4960
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/specs/specs-legacy-e-01.md",
+      "sha256": "5cca50d8569089d03544122fc991065d72bb28b8eb2192c6a67723c3906fe551",
+      "size": 143
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-01.md",
+      "sha256": "9536956876e566757dee9d9a0058205453ec78d150fbbd39596f530fd79393b1",
+      "size": 552
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md",
+      "sha256": "5fad145b5705c526b492b10755f81c4d20a05a38d1d0ead19fcf82b8e2fd7053",
+      "size": 525
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.gitignore",
+      "sha256": "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793",
+      "size": 19
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/AGENTS.md",
+      "sha256": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+      "size": 54
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "sha256": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "size": 56
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "sha256": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "size": 181
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/matt-workflow.md",
+      "sha256": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "size": 476
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/specs/specs-turn-closure-01.md",
+      "sha256": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "size": 157
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md",
+      "sha256": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "size": 502
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md",
+      "sha256": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "size": 504
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/AGENTS.md",
+      "sha256": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "size": 97
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/fixtures/writing_great_skills_wording.json",
+      "sha256": "87f28b236e7bcde665da11d4b5b77858819b3b7d0ee85f6f43eb09066a5ed7ff",
+      "size": 11385
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_behavior_evidence.py",
+      "sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "size": 13477
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_composition.py",
+      "sha256": "e5aa209665a3458811ed0dda43ed3be93313713d4c22cc8ef2a203a07afc96f8",
+      "size": 17260
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_doctor.py",
+      "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "size": 2391
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_evals.py",
+      "sha256": "a9b53195a6dddf4b7996352044709e5b284a652c4a0b5e26a87a8efee4fec018",
+      "size": 29937
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_evidence_records.py",
+      "sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "size": 1511
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_implement_finish.py",
+      "sha256": "5a86f0188a5366377c4e45d9cdc13285b0a7e4824879210852513e61f95288ba",
+      "size": 6341
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_implement_lifecycle.py",
+      "sha256": "50da13e19e9e8f85e37fffae62e8ce9019d9da42c36bbb6665a13dfba54740a2",
+      "size": 18098
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_implement_review.py",
+      "sha256": "fbed4c58425aa01e0be5a45300e23bead5c1ac2858339dd4f688b3ca1eb86ae4",
+      "size": 16950
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_implementation_service.py",
+      "sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "size": 1548
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_lifecycle_hardening.py",
+      "sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "size": 20705
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_migration.py",
+      "sha256": "d660a09fe455963640243aefdf1941cfa15df1ce2f439e2859db9f6995cd7e58",
+      "size": 14381
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_portfolio.py",
+      "sha256": "8b4838b500e588cfc77a08f0be27f61eb2d4bbc62f16c23e6c2d362c8c77ecfc",
+      "size": 12384
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_repair_plans.py",
+      "sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "size": 1610
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_resources.py",
+      "sha256": "01739b59dd57529b81447a01f0fa44b4ec4b259da6f6ec6585e315b44b797e60",
+      "size": 24191
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_review_resolution.py",
+      "sha256": "ab7015db1059223ca1a9229385278c910dbf8ef18231a540bceadace94e3019b",
+      "size": 11344
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_review_results.py",
+      "sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "size": 2324
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_review_snapshot.py",
+      "sha256": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "size": 8343
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_run_journal.py",
+      "sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "size": 48385
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_security_hardening.py",
+      "sha256": "665dd01ad50cf00151c46f89581e1e8985a67fb763f3fd2a6e6fdb8723e9fbd1",
+      "size": 24146
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_teach_quality.py",
+      "sha256": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "size": 9297
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_topic_branch.py",
+      "sha256": "28594477f0ac4003f934c2fac2fb780a9055b091f20c4cf77289c0df8456b345",
+      "size": 13420
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_topic_lifecycle.py",
+      "sha256": "5b71dc7d507f8977eacbe3fae00cbb30980b4c1cdfab12c6275869574cdbd75c",
+      "size": 16284
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_work_overview.py",
+      "sha256": "b04eb661aa24a3a93af370f3a4883cd122fad173faa50008af6d0534d57e4baa",
+      "size": 21899
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_workflow.py",
+      "sha256": "46315d9edb1883993e1845bbbc30b5aa72fc928efbbe05a901f8f540e10bbc62",
+      "size": 139530
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_workflow_baseline.py",
+      "sha256": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "size": 5580
+    },
+    {
+      "group": "current",
+      "repo_path": "tests/test_workflow_cli_hardening.py",
+      "sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "size": 4114
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow.py",
+      "sha256": "97f19a322ad0cad10cd33c437d1c3894b5e264a14ca01f5b874b7894023b6ba5",
+      "size": 63796
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/branch_review.py",
+      "sha256": "5e7f3a523ca89069a9e81f1679be7efac7b60d161eeb22f1db5ed69fd594ebb7",
+      "size": 12885
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/migration.py",
+      "sha256": "9f6bf74c5de0170b205a73af0fc71332ec210e61cb694f0f0e46a89bea2e069b",
+      "size": 17923
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/review_loop.py",
+      "sha256": "7bf1cec7851d2da13b31d71c960138bbe067ec10b8a3295a0f4cd77e08b5293f",
+      "size": 4427
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/ticket_completion.py",
+      "sha256": "f4ea4ca506ba15781809c0e9a5d223e7cdd5a1b5ed780d83c29b9797d6b12abb",
+      "size": 4870
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/ticket_implementation.py",
+      "sha256": "ca75142f7fe3e86e0223d8dbf2b46fb421f7a37011d7805f16694f69c044ea57",
+      "size": 17460
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/ticket_resolution.py",
+      "sha256": "e706df825f59354c50db7bc7d9e94c515078b8d72734e6d60ace07691e30ea9b",
+      "size": 2706
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/ticket_review.py",
+      "sha256": "6ab14da54bed0491b54f3778d05a428936d8a3e71d0d4f2d7886528724e7273d",
+      "size": 20199
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/topic_service.py",
+      "sha256": "2b9071421525bfe48827bf397cc332e6526773efadde939a2524b25a7c7d012a",
+      "size": 27128
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566
+    },
+    {
+      "group": "current",
+      "repo_path": "tools/workflow_lib/write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463
+    },
+    {
+      "group": "baseline",
+      "repo_path": ".github/workflows/check.yml",
+      "sha256": "a5b63441b3260e575dd1930f0ecf243beb04395e68aca1a38109acf20d87512d",
+      "size": 405
+    },
+    {
+      "group": "baseline",
+      "repo_path": ".gitignore",
+      "sha256": "088b78e9095f650f7d61e2f61269845ac19501b4cb1b0b2224d287b663ef936e",
+      "size": 635
+    },
+    {
+      "group": "baseline",
+      "repo_path": "README.md",
+      "sha256": "c91ee52c271c6370cfc50e08df252df5c1cb8929d149e6b044920dcb36f89bca",
+      "size": 9389
+    },
+    {
+      "group": "baseline",
+      "repo_path": "chatgpt/custom-instructions.md",
+      "sha256": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778",
+      "size": 1219
+    },
+    {
+      "group": "baseline",
+      "repo_path": "composition/manifest.json",
+      "sha256": "7554cf7bc25da55eaefe5dde5b429bf93ffeee80ea7c36e7f63c9d602bbb5598",
+      "size": 3453
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/VALIDATION.md",
+      "sha256": "b53a9fdd609b292207716dbe8d023f534aa867a6bce6544038402e97dc4170b8",
+      "size": 2683
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/agent-rule-review.md",
+      "sha256": "50ae8a213cb29b14995a8e178f37b7f2c1ddfc05e26e8ee8a64af1bad8943f74",
+      "size": 1243
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/astra-behavior-suite.json",
+      "sha256": "4fa65381baa72ab022ec64a440d41eaaba5b675d0e62525fa1ec5c56676d9a74",
+      "size": 5972
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/astra-evidence.schema.json",
+      "sha256": "5be94f6cd5c6b89886a109c084e7e13f91cc82724b2fc590532083d416492b13",
+      "size": 1346
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/code-review-signal-quality.md",
+      "sha256": "abc866d2c0978c356e6d7bed54005821d798ed707b2cd0c6ce00824fd36ec901",
+      "size": 2588
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/execution-evidence-registry.json",
+      "sha256": "7aae0c9795ac2243505a4b797593feadc7e2ae8e20dc5ace2d7f9f3f0bf3186f",
+      "size": 36
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/grill-spec-boundary.md",
+      "sha256": "d7bfc1e2ecad13217a1bcd7ad69ec3cb7a9ef0a62687a56e0be8fb9dfc33844b",
+      "size": 1360
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/implementation-turn-closure.md",
+      "sha256": "f7adab84664489e22e0bd30a02d8973d4ed7f28d608c84fd6cdd1557d37e7ebc",
+      "size": 2835
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/main-workflow-fresh-context.md",
+      "sha256": "d29ff5ef47140ed99a4759436d4dfb91716e2251f0e6b98a1672c29c047e2917",
+      "size": 1949
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/skill-review-root-cause.md",
+      "sha256": "612f1ad591c34b346a7185244e488c48664925d0c6fef730aa94d11816c3550a",
+      "size": 1386
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/agent-smokes/teach-course-quality.md",
+      "sha256": "45d7e1fc0c5344334282406c61bbd7562446e1a914d1c997b242d8507f30fb19",
+      "size": 2512
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/backend.mdc",
+      "sha256": "df055d4ac440c0981ec658ee7efe53adf4898e67bc3dfd4deb4b60a6ff36c668",
+      "size": 106
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/broken.mdc",
+      "sha256": "6a597da6315cf73953421bd0e539b1b068f57cd38f40624d7825cc9babc382b9",
+      "size": 96
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/generated-safety.mdc",
+      "sha256": "10b83f4e46419dbaa40c2f3727e0cb4e1a48d23ab0d9de6e405b11c61febcb28",
+      "size": 240
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/agent-rule-review/project/.cursor/rules/manual.mdc",
+      "sha256": "8c25156afc67d307c22cdd76c0d648a87ca7daeb91f0dc406e2665e6088d56d4",
+      "size": 77
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/agent-rule-review/project/AGENTS.md",
+      "sha256": "4cac0f20ae25d2cf815e24d6cddc462f658ebe8e0d9f3eec156c232f711f8830",
+      "size": 163
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/change-only/baseline/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "size": 13
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/change-only/baseline/pricing.py",
+      "sha256": "3dbf1383c61c79ee4425879445c0f948d3a42a11337fa0c09aa0433015a07d61",
+      "size": 293
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/change-only/baseline/specs/checkout.md",
+      "sha256": "9be084daf64feee6800252764f5c7b6b3d2351a55c6af1c7ab3391f0695180ea",
+      "size": 262
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/change-only/candidate/pricing.py",
+      "sha256": "ccf5ab64c8180d48ead0c918465e14461af48937b96ab6a494a7e3dbc64b40f5",
+      "size": 433
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/change-only/candidate/test_pricing.py",
+      "sha256": "f20f0006c96425ba8b1d52c8c1ae00f4c76593a420522b66060ec46ff029d7e5",
+      "size": 337
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/touched-context/baseline/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "size": 13
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/touched-context/baseline/inventory.py",
+      "sha256": "1e17de47a736587238851e6e1b1e11423edd88bf7d901c8d9ea4a3ad73dcc74f",
+      "size": 289
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/touched-context/baseline/specs/bulk-reservation.md",
+      "sha256": "d906c502c7d1868a30e3180b81e11767a56bb74d0580af09eac1349beb772a8e",
+      "size": 189
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/touched-context/candidate/inventory.py",
+      "sha256": "a247219e9b87153578ea0aadf6fbcc9ed917e45048680e37101f052f9620f6d7",
+      "size": 428
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/without-spec/baseline/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "size": 13
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/without-spec/baseline/pricing.py",
+      "sha256": "b990c2a0c0f0c432eda83c25983d7f74999c231174b58091c2eec72549dd94ff",
+      "size": 163
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/code-review/without-spec/candidate/pricing.py",
+      "sha256": "ac90a7ad5f973cded9591ef555593785c7be9bf473c17c5beef3723e6eb9d004",
+      "size": 229
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/main-workflow/app.py",
+      "sha256": "7052b32d6e2fbe77e979586b2a5d86c86902e931b3105141c337e74183533905",
+      "size": 136
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/main-workflow/requirements.md",
+      "sha256": "9cf76deaa425a9ce328b19768a8a69ce4cba3de3740811aaccfbc35f951d37f2",
+      "size": 725
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/main-workflow/test_app.py",
+      "sha256": "950e029e528064f09ea78ffdd2022a0a88afe23573eba148c0e68459ecf2c2fc",
+      "size": 548
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/matt-workflow.md",
+      "sha256": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "size": 476
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/specs/specs-turn-closure-01.md",
+      "sha256": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "size": 157
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md",
+      "sha256": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "size": 502
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md",
+      "sha256": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "size": 504
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/AGENTS.md",
+      "sha256": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "size": 97
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-implement/unfinished-session/test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-teach/bad-author-centered.content.md",
+      "sha256": "60d5c5d5433f9c74b93d39a5fad925d1572dfa598a66186058863c106b6aa46c",
+      "size": 1245
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-teach/source-heavy/MISSION.md",
+      "sha256": "43b679793051f5553396a1cfc80f5dc735a8cdc29b1c1ec26ca74736d01c8a42",
+      "size": 519
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-teach/source-heavy/RESOURCES.md",
+      "sha256": "fb10ac49c705feec5a3e0bbeb68aa6eb72d996ec9cee66371ff9aabfea8b7bfe",
+      "size": 490
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/my-teach/source-heavy/source-notes.md",
+      "sha256": "42fb3ca78fb5f46f5ab5a577f634545d976d7dad08dc89b22dfaa43098760ad0",
+      "size": 783
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/fixtures/skill-review/runtime-owned-safety/SKILL.md",
+      "sha256": "5af6b3fa4aec33804137886136507d8254fb36eebca894141f7668013497ccad",
+      "size": 542
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/agent-rule-review-root-before-wording.json",
+      "sha256": "7f17d1f7715b6fd971937ab4d72039c7429d746fe20257688ac472c21e10ec29",
+      "size": 1287
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/artifact-review-design-method-boundary.json",
+      "sha256": "f826ceefc401bb5294eeea7fd3448153fd4fa817eedf5964229ca9f09730ff13",
+      "size": 1313
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/artifact-review-method-boundary.json",
+      "sha256": "09f87be8a824f9ab8891353742e3d6e8517e2e71b7d161dae01734421810b516",
+      "size": 1121
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/artifact-review-repair-plan-method-boundary.json",
+      "sha256": "d82597105c40c09d4e14c37adc9bba3024f691b7fa214e6dcbcd5104da642795",
+      "size": 975
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/diagnosing-bugs-no-red-loop.json",
+      "sha256": "412b52589af331c58119f432eb188389aff6802e56d7ca2016e3b1c38302f1b4",
+      "size": 597
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-causal-gap.json",
+      "sha256": "55f3ea760c6c80280744946fa9f46c3c5fa16ea4b2ab3ebf1260f364503724ac",
+      "size": 707
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-evidence-mismatch.json",
+      "sha256": "25cbf7230c9b1a7f5a377364fe234eb0de4e432cde8fb7ce14a5ee3d9d51fde3",
+      "size": 730
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-evidence-over-falsifiability.json",
+      "sha256": "97aad5f9ceb4449ae899a13257c3fef3c28c71a34f0d69ca5e8b77d923988f46",
+      "size": 753
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-goal-substitution.json",
+      "sha256": "2f4590ab9531e030bf23529cb59a12f8029064660537f2b4a4d508ce0e55e431",
+      "size": 729
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-pseudo-constraint.json",
+      "sha256": "42ea56230f2ef99624276f51e5f68238694c68ee4590e643ed8bac982fbf481f",
+      "size": 729
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-sound-proposal.json",
+      "sha256": "5d0f295a52ca8b5978733cbf2693ca48b45501c5099e304df4b59c84072a98cc",
+      "size": 708
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/first-principles-unnecessary-complexity.json",
+      "sha256": "54457151e0c60b7778e111d3d8f8b7b21a93bdd65b517e8ec870c5c13ac6e780",
+      "size": 751
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/grilling-one-question-hitl.json",
+      "sha256": "bb6e0d5ce27b4e9ee4c3d455aab474b09ca14249dd739a7a317199d4200ac5e9",
+      "size": 565
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/handoff-decision-mismatch.json",
+      "sha256": "50b1ca9cfb1b7081aee44f2b1c1fcbc2693d20bcfdac9fe12538c71119be06d3",
+      "size": 1232
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/handoff-draft-not-deliver.json",
+      "sha256": "f71a729f0611c668f8318328adccc7b5961c6a44c8f983a2a076d85cf1806600",
+      "size": 1360
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/handoff-first-step-not-actionable.json",
+      "sha256": "cfa4397bed529fd403d980c71732d9a75f3ec7b58ca0dddc538c354f23f275d0",
+      "size": 1207
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/handoff-goal-mismatch.json",
+      "sha256": "13ffeb0ccb5f8b90761e7ce4eb06e95618a4f98d8c82db6dbf98f14515e3e24c",
+      "size": 1178
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/handoff-round-trip.json",
+      "sha256": "767e68645307e84d53be395d48053fe638ce2967bf4b460b87c5789f1117d271",
+      "size": 1803
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/handoff-state-stale.json",
+      "sha256": "20f80e4dcbab26bad2d81433fa20142514862390bc5a4007c591dba800a419e7",
+      "size": 1262
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/implementation-review-baseline-reachability.json",
+      "sha256": "491604f1ba04e405052c34bdfa30596f943d1fd78663bcfb4f9639c84a19d6f4",
+      "size": 891
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/implementation-review-repeated-root-cause.json",
+      "sha256": "de6d293d3a917e4e18700f0131c62fc92f1d235a2152c7c516123bb4ad291c42",
+      "size": 883
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/implementation-turn-active-session.json",
+      "sha256": "c8c14922b535f865920065725475c428fb42566e7060df2c1ab308eece8768c0",
+      "size": 676
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/implementation-turn-ready-frontier-continue.json",
+      "sha256": "6f57f4f08a1b17808f0dc23cb8db5df07d0ccf3ecc704d1fa427b9848b37cdca",
+      "size": 702
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/implementation-turn-repair-limit-blocked.json",
+      "sha256": "3f01d446518d2c20209b1652a06620010f13bc7535ec65c800d06a0bb28f332c",
+      "size": 694
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/implementation-turn-single-ticket-complete.json",
+      "sha256": "61ea9189962da81b63673780b0913da67955c5f40eaea7ba98c39f3ec90f9e44",
+      "size": 678
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/main-workflow-fresh-context.json",
+      "sha256": "85d3eb1044e67b05cce9599eed6b4e0b81ba2a8266c986fb26cb5eb3648e4700",
+      "size": 1304
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/requirement-analysis-clear-request.json",
+      "sha256": "a8470bbbf94440dc7f632769aaba7051125d493f16493114589c88f89fd10a72",
+      "size": 744
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/requirement-analysis-misleading-analogy.json",
+      "sha256": "5d7920f675bd428bce153bc609ef5e827e67fbf8b262a2b22345114a0b1b88b2",
+      "size": 770
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/rule-plan-ticket-loop.json",
+      "sha256": "91e09ad7935e3547bac203f78efb0971c94f332d4e9e546bae4e7aa2f5f85dcd",
+      "size": 919
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/skill-review-root-before-wording.json",
+      "sha256": "1c27590b4cd58b69bf0cc2404d90bd6e0c17da87e8a82d93bdec7add0005955c",
+      "size": 1044
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/tdd-seam-pressure.json",
+      "sha256": "46e7316a8cd719a48fcdce85bb1addf57c6ebee841f79ce1b01a1e980085c99b",
+      "size": 571
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/ticket-expand-contract-accepted.json",
+      "sha256": "897669d5be5f590b3c133869d7b3b5d72780eec55af8ffcac7a10637de690ff0",
+      "size": 692
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/ticket-expand-contract-requires-compatibility.json",
+      "sha256": "7598636c9be3b15444b2ab9c1ea260b71c2d66cb3cb59673c53c1dc1459f4664",
+      "size": 730
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/ticket-horizontal-slice-rejected.json",
+      "sha256": "7d00bc4a3e7392b74cfc27a8f6cd48c4f3423c2d106492f7438c545be6356f9c",
+      "size": 687
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/ticket-integrate-and-verify-fallback.json",
+      "sha256": "fdf3ae43c70e837cca064c729e01bcc278ca7f62d7cd6bfb670b213c9cd5e6cf",
+      "size": 716
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/ticket-vertical-slice-accepted.json",
+      "sha256": "9354279684723733882d3b6f4ad7508ab4381b7456e1654b5fa3ef91343d0d19",
+      "size": 684
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/scenarios/writing-great-skills-baseline-discipline.json",
+      "sha256": "c955695e208930ce70861eacf0dc765adccb74fced0a41fc8448e4361e8fad22",
+      "size": 729
+    },
+    {
+      "group": "baseline",
+      "repo_path": "evals/smoke-registry.json",
+      "sha256": "c9f95408e0a657a3d6328f0619c0abf6afc998770225f7ec13c5227ee526bee8",
+      "size": 2161
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/context-hygiene.md",
+      "sha256": "495ecf2731144e4386a0c03adcd58959e049b6bf8f44778c6fd7ce318c80a4cb",
+      "size": 708
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/decision-taxonomy.md",
+      "sha256": "94e2cbd19d657c70aeec1146c568e53f8216de67ed11be0e401c95540e1b4025",
+      "size": 1158
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/enterprise-safety.md",
+      "sha256": "46a1057c309abf8070e07d8fd2c78259bc29e6b3f60312464a6d1886bdf4cb13",
+      "size": 724
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/merge-conflict-approval.md",
+      "sha256": "6df8c55daf4c215f3c5522d43cc8379031332d0726cff7a2e88821730d7cb557",
+      "size": 556
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/project-discovery.md",
+      "sha256": "b3bbd2ccd83970e56fb3bebe352fc897f1c8a13f80301c9a222ae9d97917e15e",
+      "size": 706
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/project-storage.md",
+      "sha256": "22583837e16134324d886f1782b7033e5e5621c6a8b434a75cc34e85d2fa54c6",
+      "size": 951
+    },
+    {
+      "group": "baseline",
+      "repo_path": "policies/write-boundaries.md",
+      "sha256": "bfbb1820f6862226ca93da2b613bf5cf0e9959b7fe18350306b95a8450b7db26",
+      "size": 632
+    },
+    {
+      "group": "baseline",
+      "repo_path": "portfolio/manifest.json",
+      "sha256": "470c0c2f74112f9e197a688d26b970d08ec5a8e475915f24c967f0883f197ec6",
+      "size": 27646
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/artifact-access.md",
+      "sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38",
+      "size": 515
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/artifact-review-session.md",
+      "sha256": "095b92b59d115d32ee7ae0b4f6adad4b03f3a4d9008cbb1681d98dadfcc043e0",
+      "size": 1589
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/artifact-storage.md",
+      "sha256": "44085cded50be3d93cb37234d3f3c3aadc4593917bd76867d33541fa52f7c5d0",
+      "size": 762
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/assurance-levels.md",
+      "sha256": "c0dca56c3dc137c32455b5b347c4765a43dd60a84b1e89ed8f163640f2ad08d5",
+      "size": 1842
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/composition.md",
+      "sha256": "92d639a62c26a9bad9f3e1c1d1f1333b7c8094edd0044c669f4eb42b700f8b70",
+      "size": 1776
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/implementation-session.md",
+      "sha256": "68d47b43eed33017b1d63f6f5b3978bc74e2cc96280ffa4ae6096fa2623c55e9",
+      "size": 7884
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/project-rules.md",
+      "sha256": "93634da040174e9e3cda64f0b6e8bef38cf97406ec4adf3f85433e796cd1bf25",
+      "size": 3925
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/specialized-review-session.md",
+      "sha256": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8",
+      "size": 1083
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/ticket-selection.md",
+      "sha256": "bf22137c3ff0e17caf94bef47119767d94e23828b070818ec782e0f7b661413b",
+      "size": 2535
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/work-scope.md",
+      "sha256": "74c9fa17a459e8a036446351bbec104adea1714a14c1c37070be65aaa959a94c",
+      "size": 2037
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/adapters/write-actions.md",
+      "sha256": "499f06d0e8bd075a99bad0809ad59322dca85e16e32b9e1914599047fda35a8f",
+      "size": 929
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/artifact-finalization.md",
+      "sha256": "2a06d1a6290fb51a0237223288dcfc7b19b751df650538b5d239e1987fefb354",
+      "size": 2677
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/document-rendering.md",
+      "sha256": "ef0867f4d9bbba54bdd5331e4fe042d56b709e64231dd3ce82c9925fc510547e",
+      "size": 3292
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/final-state-writing.md",
+      "sha256": "bc10b125ba429ce5ab7872bd9bee93cbaeb12cd3970ba1109396521d29aff455",
+      "size": 378
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/first-principles-reasoning.md",
+      "sha256": "bf84ac64d48c24243a72f7132f5f26f5cb0d3593e6cb113c90ea20dd3da5d459",
+      "size": 1776
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/governance.json",
+      "sha256": "80be17d0d99267a8aecfa992316f91d6c66144d3ce14d8ec32c4d66da3104fd9",
+      "size": 5086
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/humanizer.md",
+      "sha256": "3b4a153a12ededf30fbd1bebd404584994edcec1f18eef9712b541019aeb8ac4",
+      "size": 1464
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/instruction-authority.md",
+      "sha256": "451ad82cdc9b521803502b7b04b5ebb17619ad98c0da18486663b815fde3ac9e",
+      "size": 1682
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/manifest.json",
+      "sha256": "c976b3edac99cdc48073c8f59619d559466c01c9498cc49e405a6f66b8c13696",
+      "size": 6719
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/reader-first-writing.md",
+      "sha256": "733c260b1f3e6428828d8b5ecfef1ed960793a94211dda8b36e8f887bc61eb17",
+      "size": 2776
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/testing-seams.md",
+      "sha256": "c8e39b60a94e82b25d0881553b24018c5ffe2597b426a13c6bc3982e4d848d4e",
+      "size": 1096
+    },
+    {
+      "group": "baseline",
+      "repo_path": "resources/visual-communication.md",
+      "sha256": "dead28509ba10a2c4736866210fb91e6df5bc470371fee44c9b58f6427986d27",
+      "size": 2286
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-artifact-finalization/SKILL.md",
+      "sha256": "5eabdffb47191bdd99d3311a0e1ad58b6b37f65b85ff9b2a36b884bb256a7ba7",
+      "size": 1162
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-artifact-finalization/agents/openai.yaml",
+      "sha256": "c33231f2bfeadce2922cc44b4375b87ddf0a2afd6ac84b3d53d36b8e8a05e2b5",
+      "size": 282
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-ask-matt/SKILL.md",
+      "sha256": "1457a0f3c1ed834f8f65382b4139337559dbf4fe1d4adef0f051609d81521c84",
+      "size": 4129
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-ask-matt/agents/openai.yaml",
+      "sha256": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c",
+      "size": 137
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-code-review/SKILL.md",
+      "sha256": "4effff4adaf204217a18716f118dd6f91c72dfc197f6358cf5cdc83d0d3e4782",
+      "size": 9427
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-code-review/agents/openai.yaml",
+      "sha256": "01b2ebccfde9d4b2d6b155bd7b53b236351ab2e8db6c8958e6562de9492b913a",
+      "size": 138
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-codebase-design/DEEPENING.md",
+      "sha256": "ba1554116824e873a31f13f8eb27c07b871b0aec67c6d40aeeff89653674533c",
+      "size": 2213
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-codebase-design/DESIGN-IT-TWICE.md",
+      "sha256": "53add89fcd450aab37ba3f017dad8dfcd3c261b1692ecc3684551d534bfb056c",
+      "size": 2906
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-codebase-design/SKILL.md",
+      "sha256": "727ed2e2cc2ecb72a339a474beadf8550a09aee0f5e23a68c03f27f3ffc4cfc3",
+      "size": 6244
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-codebase-design/agents/openai.yaml",
+      "sha256": "0c24ffe790dc0aa8291bc52076db14f8a718b96cc7ab402381a26ee81ce579a9",
+      "size": 145
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-diagnosing-bugs/SKILL.md",
+      "sha256": "c5e7874956a6edd8407cd23fb825b1f5eb076a038b31e0941c894d85aaae9182",
+      "size": 9449
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-diagnosing-bugs/agents/openai.yaml",
+      "sha256": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+      "size": 146
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-diagnosing-bugs/scripts/hitl-loop.template.sh",
+      "sha256": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+      "size": 1160
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-domain-modeling/ADR-FORMAT.md",
+      "sha256": "d032f6a96b24664ce37c8e1d3b083b3090bd39e9377e532a85b04b220454ef9a",
+      "size": 2709
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-domain-modeling/CONTEXT-FORMAT.md",
+      "sha256": "9e9f1ffc7c4dd3ece312753a959c64362316ce0cf52337c7a64e82c076b73a3b",
+      "size": 2740
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-domain-modeling/SKILL.md",
+      "sha256": "47a5c3069c5751ffac702904c020d7c30ec23346708b51cac7ef018a695b02c5",
+      "size": 3723
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-domain-modeling/agents/openai.yaml",
+      "sha256": "3c8eed94d070a1226e45f0611ca1054c878b2b7a5a4732e534fe444698235cdb",
+      "size": 144
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-edit-article/SKILL.md",
+      "sha256": "95e4ed12afe70ca823c12ab5711cd5918f75dd8bbf8c338304e9d27f69cf88cb",
+      "size": 1481
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-edit-article/agents/openai.yaml",
+      "sha256": "4873c8a1310b0159b404b42de01ba069b899dda4a4d2bd214c6881bc6305d45d",
+      "size": 145
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-final-state-writing/SKILL.md",
+      "sha256": "8862b5484e98669020b87b5c6210e56cefeb060767d331ab2dde06a3ed5d314a",
+      "size": 1334
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-final-state-writing/agents/openai.yaml",
+      "sha256": "84be2b037de14798d5bd9b64e65a98f20c9889ed593c5262aff709eb888613ee",
+      "size": 271
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-first-principles-review/SKILL.md",
+      "sha256": "e9ef9d174fe9757fcad824f929bd1c13b6d14c6e6eadaef27a6b060d552c3df0",
+      "size": 2423
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-first-principles-review/agents/openai.yaml",
+      "sha256": "566013da460aa29a93e504892abef724f86edbe6176bda0bbfca4649ffb1fa06",
+      "size": 275
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-grill-me/SKILL.md",
+      "sha256": "2ecf54120f727b8071ff750582d35d17a1834b472855df1082bfc7b74977183b",
+      "size": 612
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-grill-me/agents/openai.yaml",
+      "sha256": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b",
+      "size": 137
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-grill-with-docs/SKILL.md",
+      "sha256": "de7965cc1b1ff9fdac99fe8ed141f1e134b4f4564764e7613bc6508f001d0d05",
+      "size": 1982
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-grill-with-docs/agents/openai.yaml",
+      "sha256": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9",
+      "size": 145
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-grilling/SKILL.md",
+      "sha256": "fd51e42079a653b0731cf24153b37c05064636804342911ba0e8ad173cf6cf23",
+      "size": 1265
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-grilling/agents/openai.yaml",
+      "sha256": "7b6a632a92aa599776dfb602d8260a75f6740f73277d523b9dc92584b584a3ef",
+      "size": 148
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-handoff/SKILL.md",
+      "sha256": "451cd8172fc89eaded3da6dea446efa8ef7db926e533d1798624ee3e1774ea54",
+      "size": 2693
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-handoff/agents/openai.yaml",
+      "sha256": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28",
+      "size": 141
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-humanizer/PATTERNS.md",
+      "sha256": "a0e26ffa6ab2b057a3aefedb64634c2cee149707616efec277f2de9544246dd5",
+      "size": 4361
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-humanizer/SKILL.md",
+      "sha256": "fb8100fa4bc4dc24bd0eda61957c7f658361fa07474d286d2b268ce46c43df7f",
+      "size": 3569
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-humanizer/agents/openai.yaml",
+      "sha256": "026777f2a53fed1827286c68a181f04f6f79ffd47fc9ecbcc783da5abcb5427a",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-implement/SKILL.md",
+      "sha256": "15ce61a84c7cdcb574cc512bd8e8e40411bb74f94d6540e1342ba4f38796cfe6",
+      "size": 4391
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-implement/agents/openai.yaml",
+      "sha256": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc",
+      "size": 139
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-improve-codebase-architecture/CONTENT.md",
+      "sha256": "7c67cf8547837adbf842bc383cc941c413cb50898f4f5bd7290b14b0fdb3e8a7",
+      "size": 2024
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-improve-codebase-architecture/FRONTEND.md",
+      "sha256": "18f1f95e14e10108e33254af145b1ebe246d5783109f53ef67ad3f252845b4d2",
+      "size": 944
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-improve-codebase-architecture/HTML-REPORT.md",
+      "sha256": "bca090791b946d1338b22cad4a83defb1709997f5052c168a4bd9376b3be2ddc",
+      "size": 6445
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-improve-codebase-architecture/SKILL.md",
+      "sha256": "2da6fe1283bea5625d9f4a9bdacc4a8eb6b65ca32d30b2ee1d9fe7a0ec86f1e0",
+      "size": 2257
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-improve-codebase-architecture/agents/openai.yaml",
+      "sha256": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1",
+      "size": 166
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-install/SKILL.md",
+      "sha256": "5a9950821da4412dca302cdb7c14de6eeb28c73309d2536fb8b86d685ffbeff4",
+      "size": 1793
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-install/agents/openai.yaml",
+      "sha256": "695f55f8bcadbd5c539a48d299e16597252692d2ec28bc54e1996f1a5e5fc3c4",
+      "size": 136
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-prototype/LOGIC.md",
+      "sha256": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+      "size": 5272
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-prototype/SKILL.md",
+      "sha256": "3339910c51a98eb113b62b6ff2600b133ee8bbe8c61a045c6f6315edbd90ba70",
+      "size": 2850
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-prototype/UI.md",
+      "sha256": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+      "size": 6022
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-prototype/agents/openai.yaml",
+      "sha256": "6b2d4fa3345bda08b144147a563dafeb1e42d7bd47898d1c21f1493845f22d6a",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-reader-first-writing/SKILL.md",
+      "sha256": "b9f0831a29af665eea472152e76625f28c2be7e3071dd249bb7b5a1028e1af9c",
+      "size": 1022
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-reader-first-writing/agents/openai.yaml",
+      "sha256": "f72b4df04790e64066af541a6fe4b7b6f0fb9ecc0fa2cadf668148eef13d7589",
+      "size": 279
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-requirement-analysis/SKILL.md",
+      "sha256": "83f2560d9afb5df33a51bb4dd2e67828c6169189ea78d87847bb17f6a9c86c80",
+      "size": 2097
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-requirement-analysis/agents/openai.yaml",
+      "sha256": "49419793ab6865791a09ed9757de81fc50cd2c9440f2e0e1d7a1cb5476f88a0d",
+      "size": 253
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-requirement-analysis/references/reviewer-brief.md",
+      "sha256": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a",
+      "size": 869
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-research/SKILL.md",
+      "sha256": "4c1cba82bd6d4d28f903422741165fc6817026780746a7f7df036d93418b7594",
+      "size": 986
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-research/agents/openai.yaml",
+      "sha256": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+      "size": 137
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-resolving-merge-conflicts/SKILL.md",
+      "sha256": "beacba9d37fd14c16f175b34954b3f947b5fa2ae06bbcb5b0bb59476e60e29d1",
+      "size": 933
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-resolving-merge-conflicts/agents/openai.yaml",
+      "sha256": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+      "size": 154
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-agent-rules/SKILL.md",
+      "sha256": "aa4bcc47dd0d0d583563c05dc99ad95b2962724fa3752dde15e1102f4ff95382",
+      "size": 6595
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-agent-rules/agents/openai.yaml",
+      "sha256": "f68afbff616ce6d80639e7419e143c346a268a06be55265b3403259577698d04",
+      "size": 253
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-artifact/SKILL.md",
+      "sha256": "f7c83ae206a0caf992e522808568822f12a20c9348788b6897fd99609e45c08d",
+      "size": 2637
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-artifact/agents/openai.yaml",
+      "sha256": "7acd9b3610f05929004d067765194584d73ed78e53d335e111d7496df56a71d7",
+      "size": 279
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-design/SKILL.md",
+      "sha256": "adfbad22aa54ad4f07a726f2311408a34ffc6f869278b69cb346aedac35c5beb",
+      "size": 3773
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-design/agents/openai.yaml",
+      "sha256": "bae00856f8e5705f0d9ae26a4c6bf31102d989c3969a425973bbe47239aaee11",
+      "size": 281
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-skill/SKILL.md",
+      "sha256": "a9ca8e642b64a277c7fcd3a193d38789d1a725a65f0ad8544830eb2f1dc0fc67",
+      "size": 7325
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-review-skill/agents/openai.yaml",
+      "sha256": "ac5d17b6d53cb7361a683b82be4a214abf45b9c198ad20e7e32f0e37b8b3d0a9",
+      "size": 231
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-setup/SKILL.md",
+      "sha256": "2a1f804873fb7e177e035aa6a89c0e70689b04730c0a1b12248073c6a90c7570",
+      "size": 4647
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-setup/agents/openai.yaml",
+      "sha256": "e3ae4343a3c46e00c1bf630327290b62165713e9abbfff45f20e0994fcca8074",
+      "size": 138
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tdd/SKILL.md",
+      "sha256": "9aa876d2229f316487edf3cbd95428b92dbb251022bb86d386e826d31c8967f7",
+      "size": 3455
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tdd/agents/openai.yaml",
+      "sha256": "00be42a1828a07fdbcd33a4f5fad8360256986f7ff85aafac919db9910ee186c",
+      "size": 130
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tdd/mocking.md",
+      "sha256": "672be095a8663b2e21922882ad48d50889d1a9a0277eaa86a30fe76d1bd2bd2d",
+      "size": 217
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tdd/tests.md",
+      "sha256": "3545ac462e7158d3c1831b936b9b6b6e8ccf079f326766ca8b775a5eaf0af307",
+      "size": 2265
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/CONTENT.md",
+      "sha256": "d447f0b25f6a90380a421b3fe42ab483c77e9f1348b5dc713d0766093a485764",
+      "size": 4318
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/FRONTEND.md",
+      "sha256": "83a8edbcb58d3f8c18eee07a3e1b5d42ce6160a618c6344595d4009729e558e3",
+      "size": 3125
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/GLOSSARY-FORMAT.md",
+      "sha256": "0adaa5a845dfcc1af249c44d35f430d8f4874a35a749c72dde933fad1c674900",
+      "size": 2021
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/LEARNING-RECORD-FORMAT.md",
+      "sha256": "199a482e092be0e19ed58e6000b7aac5b6dacb392d7f36a135ff9d5530fe0e61",
+      "size": 2658
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/MISSION-FORMAT.md",
+      "sha256": "34795a146494816b55a6ef7d83c62624e14f59b599850f02fce59944d3751947",
+      "size": 1501
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/RESOURCES-FORMAT.md",
+      "sha256": "e66202357468ab6d49a0c9ba911adf1ca5de2f8eafbb6bf3f8d363f378b6e3b6",
+      "size": 1861
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/SKILL.md",
+      "sha256": "3eaa0d9e13a3d50bc0b7cc044e9c1f36f73d816199d235c13c1415417eb36c6d",
+      "size": 2590
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/agents/openai.yaml",
+      "sha256": "d38a4924ccbae2d2ddbb1df048bd9d03b3563d92a52979ef50cf0dfbfbac0273",
+      "size": 177
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/assets/TEMPLATE.html",
+      "sha256": "73bd4eb8c8b432f8a421f50c942b375a964d149e49b0642d4d84fc8af183cb64",
+      "size": 1203
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/assets/course.css",
+      "sha256": "71f5f1f46135ac3b5e7af445872baaae3985478efe32cdd462324e7b37595895",
+      "size": 8047
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/assets/course.js",
+      "sha256": "86ff93c58bc839f86b3c058eaea6d1056aeb29f78324dea479b27f1fca226de8",
+      "size": 2550
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/references/course-quality.md",
+      "sha256": "02a35c583a3f477dc9df782099d590f8be8dee3b6f07eb8f1bb0c23555b944c2",
+      "size": 2790
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/scripts/check_content.py",
+      "sha256": "dfeb85cb4c9b1e388fde9e31383cedb10a5936e2bc69fa4d3b9251035850c72a",
+      "size": 8144
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-teach/scripts/check_html.py",
+      "sha256": "c483ac4649518d788635e8ab66bccdbdea3d39f2935e4acf5722943f87711809",
+      "size": 8450
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tech-design/CONTENT.md",
+      "sha256": "d1b433fc9caeeedc02b23d72498782eb07c66894a98d246d6f203faa6e24d521",
+      "size": 3358
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tech-design/FRONTEND.md",
+      "sha256": "3aa2583b5462798641c7a8720fdb7871f1f127cf6319fa6e30490cb41904430e",
+      "size": 2077
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tech-design/SKILL.md",
+      "sha256": "733d92aab39334ddc2babe9ad77555ca68e57468de2b8ba9f0713755d7731691",
+      "size": 1943
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tech-design/agents/openai.yaml",
+      "sha256": "d8167fd6d59ca1bee2a79f3d1620bd8d131f1befe078ed9101887a5ff62c15d1",
+      "size": 272
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tech-design/assets/TEMPLATE.html",
+      "sha256": "84fe7962df9e5bfaf582152c9bf84988acf6e151b9e98fb964b7a2b8580775c4",
+      "size": 13735
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-tech-design/scripts/check_html.py",
+      "sha256": "68bde5d8a2ecebbb61f39371eaaa2c0f25d6901993284dffabf44e373b68b071",
+      "size": 4669
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-test-report/SKILL.md",
+      "sha256": "3188710f22c085d061c7ca7153418d4fafbacd2008cf5de738362c9856d91026",
+      "size": 7465
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-test-report/agents/openai.yaml",
+      "sha256": "7a384f6b6006e54ba591e79090e11f72d7db406eba3a2750e2b4ddee1e40a8a7",
+      "size": 257
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-questionnaire/SKILL.md",
+      "sha256": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+      "size": 3424
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-questionnaire/agents/openai.yaml",
+      "sha256": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+      "size": 157
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-spec/SKILL.md",
+      "sha256": "91bb1a11c0eb8442c07e971d380386ce85a67aca83347aa619912720a693aad5",
+      "size": 8013
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-spec/agents/openai.yaml",
+      "sha256": "1c5b4d1e3d8e52287ef19cc2742fdbbfae1914ac75d33af3e4c8174f08cc55bb",
+      "size": 135
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-tickets/SKILL.md",
+      "sha256": "b69492584d46929381e58805c8ebd27df1a60ab5c2aef9da2ca5862b5e214b7e",
+      "size": 7688
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-tickets/TICKET-FORMATS.md",
+      "sha256": "e3ad04186409ce8cc4dfb58dc94c887a95b0e0d78fbb0890462289e52c6cf238",
+      "size": 2223
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-to-tickets/agents/openai.yaml",
+      "sha256": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090",
+      "size": 146
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-triage/AGENT-BRIEF.md",
+      "sha256": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+      "size": 7277
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-triage/OUT-OF-SCOPE.md",
+      "sha256": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+      "size": 4201
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-triage/SKILL.md",
+      "sha256": "612a6b22a2f2e6cc6d9153bc92e6f0c5e8fe66a97634a5e16f9c3c44773d5840",
+      "size": 7793
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-triage/agents/openai.yaml",
+      "sha256": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+      "size": 135
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-visual-communication/SKILL.md",
+      "sha256": "cfbf91eca8b449c3a387081073b8413e808813bd9be4f7b18d672964504db2ba",
+      "size": 1147
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-visual-communication/agents/openai.yaml",
+      "sha256": "65b9d8fec6750892c0b96a87ee745a301d0cdbed74b5a228d68b4029ee3337ee",
+      "size": 271
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-wayfinder/SKILL.md",
+      "sha256": "1a61d6b8c560afd9cb1635ebb4c8138b8e75d37bbe81e01e8dd6bf1f11cdc2b5",
+      "size": 8421
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-wayfinder/agents/openai.yaml",
+      "sha256": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+      "size": 144
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-wayfinder/references/map-and-ticket-format.md",
+      "sha256": "94f8413502a7f2d870d2c8460f90cdcc92d415122ae1a3309b8af774de5e3dd3",
+      "size": 4889
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-wizard/SKILL.md",
+      "sha256": "626d1a6aae4965b2b72f491b75aa70bbc08cf3704efab50edddbf5a1892a9cbd",
+      "size": 4747
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-wizard/agents/openai.yaml",
+      "sha256": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+      "size": 124
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-wizard/template.sh",
+      "sha256": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+      "size": 8941
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-writing-great-skills/GLOSSARY.md",
+      "sha256": "857a1adc7c7915ef2a7306c60f7295be70d8a1049689cdc261d5b1cd25b87165",
+      "size": 16591
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-writing-great-skills/SKILL.md",
+      "sha256": "fff1b3dfa16a55da2248ff6dda6c3f3b88409b5e8ab1d02978c1c36e7c86a790",
+      "size": 10032
+    },
+    {
+      "group": "baseline",
+      "repo_path": "skills/my-writing-great-skills/agents/openai.yaml",
+      "sha256": "b3c555d2654ec61aed78f8435f583c6a0cd6bf980d71317724682ad20075c33d",
+      "size": 150
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/architecture_application.json",
+      "sha256": "c42bd7cb1f096283c01620e50837edf1d04c2874e49dab05c021d51cd0a5952a",
+      "size": 6486
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/codebase_design_order_submission.json",
+      "sha256": "6e03842817b7cf7631e8a56e99d1ffd40ea0d2d8a144ded8e14f6bfa8c2a198f",
+      "size": 2555
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/domain_modeling_application.json",
+      "sha256": "e36d4c7c4f006ff20d95cf0ea8d6caf28c5c55935c05047b013ee68f46ce360b",
+      "size": 3515
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/grilling_application.json",
+      "sha256": "10020aa94c442a088dbc83730ba21ea9f0ef446767b6148f26dee942ad3318f1",
+      "size": 3759
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/questionnaire_application.json",
+      "sha256": "6eec5fa58f0518c297f1ca41bd771ea3c3c0bd6c2e61ca8314287283e46fc430",
+      "size": 3907
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/task_12_application.json",
+      "sha256": "b53ddb59bd585a8659959b3c375cd30ea7b7ea9e4586b73bd76eb946b3f2e6d7",
+      "size": 13140
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/tdd_application.json",
+      "sha256": "db90cfd5570807c6ac00626df538ffea4f45e7d201be57344dd75a5105a5cb62",
+      "size": 3358
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/teach_application.json",
+      "sha256": "38d443b8974aebfe0f61d96ca0e6d8e3b202b15a5fefcef9ec070650877b0890",
+      "size": 6096
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/triage_workflow_application.json",
+      "sha256": "ee096273a61e5a7c35b605a7a5dfc0ecf4fc92a63836b912eb5233ca3d83cec8",
+      "size": 5802
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/wizard_application.json",
+      "sha256": "e4f6b2810faae86edfd56b98bc8dc588d8dfb81329acbe3613f97085cb4b276b",
+      "size": 5212
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/README.md",
+      "sha256": "b0470d8b2f32024aabb17076e7bfc85288f1f7ca0a2c8913564ee42e01020585",
+      "size": 3102
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/baseline.bundle",
+      "sha256": "bcf4934e14c3971233c35783867ba1c890d8bc5915aead164cd14c4139c9de0d",
+      "size": 4377
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/baseline.json",
+      "sha256": "3cf6ab88c31ae07149b59eeb08aa7f553297ae7a13ebe700c3390b483fdab687",
+      "size": 19675
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/generation.json",
+      "sha256": "7030f0794f5a09bddd93961e7e401726cee6ec83879be88a8f3e493da67a02b0",
+      "size": 119258
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/matt-workflow.md",
+      "sha256": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+      "size": 1452
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-a.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-b.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-c.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-d.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-e.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/contexts/contexts-legacy-a-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-02.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-03.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json",
+      "sha256": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "size": 337
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/dfdab5fd13e9b6d727d6d1a34a062268ae281f1099acc45d92bf8ac76301b913.json",
+      "sha256": "b88eddeb5eb22db663ab69701e91eae493bd7382bbdaa72e3ec68945cd680b5a",
+      "size": 4613
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-results/d30f270e1ae5fec9b08b234e849a3908.json",
+      "sha256": "47530d4e74975daf71410ed690f1b79f0c87333e1c3614835816cb0c13c59604",
+      "size": 646
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.json",
+      "sha256": "7f5bcf3e5bc90a31c1e73aec8e745454feb7ce86a8b36cf38a6343724cc411fe",
+      "size": 7372
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-03-spec-r1.json",
+      "sha256": "feb3b3fe8a3759fb055e2be0a74b346164d3c37dc70c613e502d5f774e5d07c1",
+      "size": 4603
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/specs/specs-legacy-a-01.md",
+      "sha256": "5d71acde259d0dc2f3b05278352eeffb8d1dddbb18e1e5125406cdc1c8f3e291",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-01.md",
+      "sha256": "231e334ca2e3fa38d11b40232089079f8ee3e15f6726c5a7342e30f430f5d1e9",
+      "size": 522
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-02.md",
+      "sha256": "47434a02cd59978b663c64b0e062b3145802ba546de77f181ed7f88b7524af47",
+      "size": 516
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md",
+      "sha256": "712613d09cc3162989a28397d6d7df84dc1e73659f6ce3581d8f1e42498f8bb5",
+      "size": 552
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/contexts/contexts-legacy-b-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/locks/legacy-b-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/run-legacy-b-01-spec-r1.json",
+      "sha256": "fc678fdb6dbe3781f6d812d3da1143b8427cda2dd55a057bd13cf7d597ce634a",
+      "size": 4960
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/specs/specs-legacy-b-01.md",
+      "sha256": "9b6c15c87c20d4f31d26672b5ee69883cf92c7cdb487beb0f66e63d3b39367c2",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/tickets/tickets-legacy-b-01.md",
+      "sha256": "3a801e043941a1a6ad0c439e26168535df2034885bd5b98a0c1ba61f28634600",
+      "size": 525
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/contexts/contexts-legacy-c-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/locks/legacy-c-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/run-legacy-c-01-spec-r1.json",
+      "sha256": "18e4d41742c311509645672f845bfe89a51c2ebd113dbc8870bf871a2db90c61",
+      "size": 4960
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/specs/specs-legacy-c-01.md",
+      "sha256": "a88e4aefa56845dc1727b235a4550ec5d40333d57569565fd91d9213948cc001",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/tickets/tickets-legacy-c-01.md",
+      "sha256": "71056bda201df6296b7cccb256bf3d0402b6f0e4c3e1f6accdbc669272a3cc8c",
+      "size": 519
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/contexts/contexts-legacy-d-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/locks/legacy-d-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json",
+      "sha256": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "size": 337
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/e9d496eab8b8465f861a4e903a2eff316c8ea207b3a6ab4b991c99a91ab4de67.json",
+      "sha256": "29f75df5b8f0c2cbcfc22bc41da2a9f51053f5032ce284c73d04a70fbd171ad5",
+      "size": 4613
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-results/4ee325b1bba83eb08622d2416e2298bf.json",
+      "sha256": "0f99df10673b967c3c8a1a54f76b5aa50beec61a7982c410cf055072eb8f325d",
+      "size": 646
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.json",
+      "sha256": "514b0f1d73af2f4e6acc0f891186fe5c08c6c9153a02eacd6d47f5c28104034f",
+      "size": 7372
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/specs/specs-legacy-d-01.md",
+      "sha256": "5b4cad5073f8d44904b84b1b5d7f5c1c47bf14606f482dc0898c538b4d707949",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/tickets/tickets-legacy-d-01.md",
+      "sha256": "a210c9a9272baa88c16d846c705fe2d242b2ae5b6e7220c55fe592657ed6262a",
+      "size": 516
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/contexts/contexts-legacy-e-01.md",
+      "sha256": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "size": 63
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "sha256": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-01.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-02.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-01-spec-r1.json",
+      "sha256": "cbf2c44b9f5108a2bad6d48747b217de1949c85ab44d3b34e1d3af552be31558",
+      "size": 4603
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-02-spec-r1.json",
+      "sha256": "4a44609a5514bb7968553fed996737ba69290a9c4aae2ceff6b4993e046005cc",
+      "size": 4960
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/specs/specs-legacy-e-01.md",
+      "sha256": "5cca50d8569089d03544122fc991065d72bb28b8eb2192c6a67723c3906fe551",
+      "size": 143
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-01.md",
+      "sha256": "9536956876e566757dee9d9a0058205453ec78d150fbbd39596f530fd79393b1",
+      "size": 552
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md",
+      "sha256": "5fad145b5705c526b492b10755f81c4d20a05a38d1d0ead19fcf82b8e2fd7053",
+      "size": 525
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/.gitignore",
+      "sha256": "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793",
+      "size": 19
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/AGENTS.md",
+      "sha256": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+      "size": 54
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "sha256": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "size": 56
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "sha256": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "size": 181
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/matt-workflow.md",
+      "sha256": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "size": 476
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/specs/specs-turn-closure-01.md",
+      "sha256": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "size": 157
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md",
+      "sha256": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "size": 502
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md",
+      "sha256": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "size": 504
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/AGENTS.md",
+      "sha256": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "size": 97
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "size": 144
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "size": 1595
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "size": 372
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/fixtures/writing_great_skills_wording.json",
+      "sha256": "87f28b236e7bcde665da11d4b5b77858819b3b7d0ee85f6f43eb09066a5ed7ff",
+      "size": 11385
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_behavior_evidence.py",
+      "sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "size": 13477
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_composition.py",
+      "sha256": "e5aa209665a3458811ed0dda43ed3be93313713d4c22cc8ef2a203a07afc96f8",
+      "size": 17260
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_doctor.py",
+      "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "size": 2391
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_evals.py",
+      "sha256": "a9b53195a6dddf4b7996352044709e5b284a652c4a0b5e26a87a8efee4fec018",
+      "size": 29937
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_evidence_records.py",
+      "sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "size": 1511
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_implement_finish.py",
+      "sha256": "5a86f0188a5366377c4e45d9cdc13285b0a7e4824879210852513e61f95288ba",
+      "size": 6341
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_implement_lifecycle.py",
+      "sha256": "50da13e19e9e8f85e37fffae62e8ce9019d9da42c36bbb6665a13dfba54740a2",
+      "size": 18098
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_implement_review.py",
+      "sha256": "fbed4c58425aa01e0be5a45300e23bead5c1ac2858339dd4f688b3ca1eb86ae4",
+      "size": 16950
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_implementation_service.py",
+      "sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "size": 1548
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_lifecycle_hardening.py",
+      "sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "size": 20705
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_portfolio.py",
+      "sha256": "8b4838b500e588cfc77a08f0be27f61eb2d4bbc62f16c23e6c2d362c8c77ecfc",
+      "size": 12384
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_repair_plans.py",
+      "sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "size": 1610
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_resources.py",
+      "sha256": "01739b59dd57529b81447a01f0fa44b4ec4b259da6f6ec6585e315b44b797e60",
+      "size": 24191
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_review_resolution.py",
+      "sha256": "ab7015db1059223ca1a9229385278c910dbf8ef18231a540bceadace94e3019b",
+      "size": 11344
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_review_results.py",
+      "sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "size": 2324
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_review_snapshot.py",
+      "sha256": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "size": 8343
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_run_journal.py",
+      "sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "size": 48385
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_security_hardening.py",
+      "sha256": "665dd01ad50cf00151c46f89581e1e8985a67fb763f3fd2a6e6fdb8723e9fbd1",
+      "size": 24146
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_teach_quality.py",
+      "sha256": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "size": 9297
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_topic_branch.py",
+      "sha256": "28594477f0ac4003f934c2fac2fb780a9055b091f20c4cf77289c0df8456b345",
+      "size": 13420
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_topic_lifecycle.py",
+      "sha256": "1f6c595689e033dfef83098e472bf53c8cee5b5d2baea4f533cc9e00abfded85",
+      "size": 16191
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_work_overview.py",
+      "sha256": "809fcc43d6bfcc9c52a443510bbecb915a9002cd1d60fc5b6c7a30f123974209",
+      "size": 21690
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_workflow.py",
+      "sha256": "46315d9edb1883993e1845bbbc30b5aa72fc928efbbe05a901f8f540e10bbc62",
+      "size": 139530
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_workflow_baseline.py",
+      "sha256": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "size": 5580
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tests/test_workflow_cli_hardening.py",
+      "sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "size": 4114
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/__init__.py",
+      "sha256": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "size": 30
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/capture_legacy_fixtures.py",
+      "sha256": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "size": 12475
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/capture_workflow_baseline.py",
+      "sha256": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "size": 2877
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow.py",
+      "sha256": "d7291c3239e9134a350be7cf133f859addaf276bdd003a56dc969cdcc0d72c61",
+      "size": 63232
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/__init__.py",
+      "sha256": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "size": 53
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/artifact_review.py",
+      "sha256": "e7a5b4da3f7f416a38c8dfa7971ff5e8e2694a510fb7e90ae98032731718bd9c",
+      "size": 12515
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/behavior_evidence.py",
+      "sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "size": 9592
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/branch_review.py",
+      "sha256": "5e7f3a523ca89069a9e81f1679be7efac7b60d161eeb22f1db5ed69fd594ebb7",
+      "size": 12885
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/check.py",
+      "sha256": "130992a324957325152a1fdafc7102bb4e5d1784d2bb2f2f3df3b3e1da60e32f",
+      "size": 4589
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/composition.py",
+      "sha256": "07fff8de15b2da697b56226629d0afef40673daaf5f5b3f558a0ca8f867e51c9",
+      "size": 11658
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/decision_gates.py",
+      "sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "size": 1395
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/doctor.py",
+      "sha256": "a04411d6d1aff60975db1862b9f467aa134e8b35df7c759e935cd8e178cad78b",
+      "size": 4684
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/evals.py",
+      "sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "size": 45791
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/evidence_records.py",
+      "sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "size": 2002
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/fs_safety.py",
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "size": 11363
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/implementation_service.py",
+      "sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "size": 2091
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/installer.py",
+      "sha256": "c9b246bcda961e5820ac52910f4f0b74820b558aadb571c9070333cebb763f9d",
+      "size": 40444
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/lifecycle.py",
+      "sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "size": 13570
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/portfolio.py",
+      "sha256": "7147889222e4ee4429b4353202ca6a94aac7a9073a6b0568ab1b34b539d89ce5",
+      "size": 11818
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/profile.py",
+      "sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "size": 19291
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/projection.py",
+      "sha256": "7c09ba46b06ee4f420c71f913bf133095a7eae4f882bcd6c825d177c8ada7652",
+      "size": 2832
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/release.py",
+      "sha256": "99a1a209283b7b83703ebda6b6e037901a3b454c93e270529e7c3bfac3dd8bcd",
+      "size": 38679
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/repair_plans.py",
+      "sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "size": 2111
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/resource_governance.py",
+      "sha256": "90e08bba308fe92307a786ed13ae065369f84599924e19add095658267b94769",
+      "size": 6723
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/resources.py",
+      "sha256": "614be9d4e3bf92b6a235b7b507de69ea81b782baef255fd3ceeb58666892a743",
+      "size": 6080
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/review_loop.py",
+      "sha256": "7bf1cec7851d2da13b31d71c960138bbe067ec10b8a3295a0f4cd77e08b5293f",
+      "size": 4427
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/review_results.py",
+      "sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "size": 9058
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/review_snapshot.py",
+      "sha256": "fe88e8dfb19edb775ef82b2befd568795bc2ffbebd7345f609a0d1fbc65888be",
+      "size": 8753
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/rules.py",
+      "sha256": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "size": 18966
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/run_journal.py",
+      "sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "size": 90852
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/smoke_registry.py",
+      "sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "size": 4327
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/source_walker.py",
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "size": 5488
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/spec_archive.py",
+      "sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "size": 20746
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/ticket_completion.py",
+      "sha256": "f4ea4ca506ba15781809c0e9a5d223e7cdd5a1b5ed780d83c29b9797d6b12abb",
+      "size": 4870
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/ticket_implementation.py",
+      "sha256": "f12982f6ae6e8e8453c1108830a0d542fcb67a4ae7bc34d969baa9a40f44d243",
+      "size": 17369
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/ticket_resolution.py",
+      "sha256": "25517c839eb604afdc7ae01e3d0af82693ea3feede91c342279f79ca34d29cf1",
+      "size": 2528
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/ticket_review.py",
+      "sha256": "6ab14da54bed0491b54f3778d05a428936d8a3e71d0d4f2d7886528724e7273d",
+      "size": 20199
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/tickets.py",
+      "sha256": "897f321d9b257c53f015f7b0705827c04333bb554ad7a2f8ef8918c606cb3c5e",
+      "size": 18235
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/topic_archive.py",
+      "sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "size": 28111
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/topic_service.py",
+      "sha256": "2b1895e20f9ac28e735fbccb910f7b05c0638ef3fd192b004d161d4224f7143c",
+      "size": 26848
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/transitions.py",
+      "sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "size": 4227
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/validator.py",
+      "sha256": "ed587869dc73b35c8b36be2d5c46b0729b5c8a6a206bf1ce95fa306f3cd9fceb",
+      "size": 8094
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/work_artifacts.py",
+      "sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "size": 16047
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/work_overview.py",
+      "sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "size": 18566
+    },
+    {
+      "group": "baseline",
+      "repo_path": "tools/workflow_lib/write_gates.py",
+      "sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "size": 2463
+    },
+    {
+      "group": "inputs",
+      "repo_path": "change.patch",
+      "sha256": "7b806246e290f794419e9d450535787bc03f1cdeda393fd1711df0d3e8ccb11b",
+      "size": 40431
+    },
+    {
+      "group": "inputs",
+      "repo_path": "commits.txt",
+      "sha256": "a33215bd866ea173b641fd045c491034ac3d927ac501643c4caab2b114c80b5f",
+      "size": 113
+    },
+    {
+      "group": "inputs",
+      "repo_path": "matt-workflow.md",
+      "sha256": "c9bdbc78b7c367b59f94cc157264f826b93ca0813e0e89c9c26fbdc111878eda",
+      "size": 1471
+    },
+    {
+      "group": "inputs",
+      "repo_path": "specs-workflow-simplification.md",
+      "sha256": "ce2412a7dcde61e294425e073a7a8417d51b3690a998ef1f3d682afa47b86532",
+      "size": 61007
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-08.md",
+      "sha256": "86f5d53f9e859eb5083982f960096bf6d94f0df12f69355aa330dfa219f29b59",
+      "size": 3457
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-09.md",
+      "sha256": "4db5470c15a8619d746c8547e39a0e02f4188ca4240e62ed4d8d25ceee3ee4d0",
+      "size": 4258
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-10.md",
+      "sha256": "afd04347f12cef310c473b2f5694fa5fe2dd663ef7accbb61d4bbf565a2e8246",
+      "size": 3990
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-11.md",
+      "sha256": "4b9647800fdf1c18cfe7ffca33b1569d8e233b31f3d727b85195c4a3a7ff395b",
+      "size": 2922
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-12.md",
+      "sha256": "c09642c38653c639d26ccd392252f9d4ec0fbda68d52fd6db40e5bc5ddd5aac6",
+      "size": 3167
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-13.md",
+      "sha256": "4a54a5a14dafeeb435be6905890d6a1121277d6def89dc3e56b3d4ca85dc2af6",
+      "size": 4402
+    },
+    {
+      "group": "inputs",
+      "repo_path": "tickets-workflow-simplification-14.md",
+      "sha256": "5a624b223dc6a1bb1edfbf88e17b85f5c41350be7991fae6b1658676868c6ada",
+      "size": 3061
+    }
+  ]
+}

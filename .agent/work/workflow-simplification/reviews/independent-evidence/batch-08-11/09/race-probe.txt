@@ -1,0 +1,5 @@
+BASE-REACHABILITY old-r1 deleted True
+BASE receipt unusable InstallError release 目录无效或为 symlink
+RACE installed and verified during gate r1
+RACE configured-home source exists False
+RACE receipt unusable InstallError release 目录无效或为 symlink

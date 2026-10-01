@@ -1,0 +1,524 @@
+diff --git a/resources/manifest.json b/resources/manifest.json
+index b034fb0..2f49563 100644
+--- a/resources/manifest.json
++++ b/resources/manifest.json
+@@ -22,8 +22,7 @@
+         "my-tech-design",
+         "my-test-report",
+         "my-to-spec",
+-        "my-to-tickets",
+-        "my-writing-for-agents"
++        "my-to-tickets"
+       ]
+     },
+     "artifact-finalization": {
+@@ -209,7 +208,6 @@
+       "source_dir": "policies",
+       "release_path": "references/policies",
+       "consumers": [
+-        "my-ask-matt",
+         "my-handoff",
+         "my-resolving-merge-conflicts",
+         "my-wayfinder"
+diff --git a/resources/testing-seams.md b/resources/testing-seams.md
+index 57b2ae9..e90fafc 100644
+--- a/resources/testing-seams.md
++++ b/resources/testing-seams.md
+@@ -6,4 +6,4 @@
+ 
+ Adapter 把不可控系统边界变成可替换 port。时间、随机数、文件系统、数据库与第三方 API 可在这个边界使用 fake、测试数据库或 mock；项目自有的普通模块和内部协作者使用真实实现。一个 mock 只代表测试替身，不证明抽象值得存在；生产 seam 应由真实变化轴或至少两个实际 adapter 证明。
+ 
+-选择替身时保留边界语义：具体操作接口优于带条件分支的通用 fetcher；断言可观察请求与结果，不复刻实现算法。测试结束后，重构可以改变内部结构，只要同一 seam 上的行为保持不变。
++选择替身时保留边界语义：具体操作接口优于带条件分支的通用 fetcher；断言可观察请求与结果，不复刻实现算法。既有测试应能承受同一 seam 下不改变行为的内部改动。
+diff --git a/skills/my-ask-matt/SKILL.md b/skills/my-ask-matt/SKILL.md
+index 4c158a8..553bcd6 100644
+--- a/skills/my-ask-matt/SKILL.md
++++ b/skills/my-ask-matt/SKILL.md
+@@ -6,7 +6,7 @@ disable-model-invocation: true
+ 
+ # 询问 Matt
+ 
+-这是个人 Skill 的路由索引。读取 `.agent/matt-workflow.md` 的 `composition_policy`、`assurance_level`、[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
++这是个人 Skill 的路由索引。读取 `.agent/matt-workflow.md` 的 `assurance_level`、[开发保证等级](references/shared/adapters/assurance-levels.md)与[组合调用](references/shared/adapters/composition.md)，选出一个下一跳，输出其 `{{skill-call:...}}` 调用并停止；不要在本 Skill 内执行目标正文。源码只保留可移植宏，安装投影分别为 Cursor / Claude 与 Codex 生成宿主语法。
+ 
+ ## 主流程
+ 
+@@ -14,10 +14,20 @@ disable-model-invocation: true
+ 
+ 1. 有代码库的想法用 `{{skill-call:my-grill-with-docs}}`；没有代码库用 `{{skill-call:my-grill-me}}`。两者共享内部访谈方法，需要澄清领域语言时使用 `{{skill-call:my-domain-modeling}}`。
+ 2. 纸面讨论无法回答逻辑或界面问题时，用 `{{skill-call:my-handoff}}` 跨会话保存上下文，再用 `{{skill-call:my-prototype}}` 得出可运行证据。
+-3. `quick` 且通过低风险准入时，可从已确认需求摘要直接用 `{{skill-call:my-implement}}`；`standard` 先用 `{{skill-call:my-to-spec}}`，仅在多切片、跨上下文或存在依赖图时再用 `{{skill-call:my-to-tickets}}`；`audited` 依次使用 Spec、Tickets 和完整 implementation session。实施阶段统一由 `{{skill-call:my-implement}}` 在当前已批准范围内实施。明确只要求 TDD 方法教学或单独循环时可进入 `{{skill-call:my-tdd}}`。
++3. `quick` 且通过低风险准入时，可从已确认需求摘要直接用 `{{skill-call:my-implement}}`；`standard` 依次用 `{{skill-call:my-to-spec}}` 和 `{{skill-call:my-to-tickets}}`，合并对齐后逐张实施。实施阶段统一由 `{{skill-call:my-implement}}` 在当前已批准范围内实施。明确只要求 TDD 方法教学或单独循环时可进入 `{{skill-call:my-tdd}}`。
+ 4. 交付需要证据报告时，以 `{{skill-call:my-test-report}}` 收束需求、改动、测试与缺口。它是按需尾段，不把未执行测试写成通过。
+ 
+-阶段边界遵循[上下文卫生](references/policies/context-hygiene.md)。上下文接近限制时用 `{{skill-call:my-handoff}}`，在新会话继续。
++## 阶段边界
++
++按顺序判断，第一个成立项就是选择；多个条件同时成立也只取首项：
++
++1. 下一阶段需要原始上下文，或者空间还够 → 继续。
++2. 上下文对后续已经没用 → 清空。
++3. 要换宿主、换目录或仓库、交给同事、分出支线任务 → 交接。
++4. 任务不需要人干预就能完成 → 交给子 Agent。
++5. 以上都不是 → 压缩上下文，并说明要保留什么。
++
++除继续外，其他选择都损失一部分原始信息，应说明哪些原始信息会丢失；压缩时明确保留目标、已确认决定、证据位置、未知和下一步中仍有用的内容。这里给出阶段选择，不在路由入口启动目标任务。
+ 
+ ## 情境入口
+ 
+diff --git a/skills/my-improve-codebase-architecture/CONTENT.md b/skills/my-improve-codebase-architecture/CONTENT.md
+index 7cd7f50..07c79f1 100644
+--- a/skills/my-improve-codebase-architecture/CONTENT.md
++++ b/skills/my-improve-codebase-architecture/CONTENT.md
+@@ -4,7 +4,7 @@
+ 
+ ## 范围与证据
+ 
+-用户给出模块、子系统或痛点时采用该范围；否则用足够长的 Git 历史找反复变动的热点，热点不明显再扩大。读取项目配置指定的领域术语、相关 ADR、规则和测试，不假设固定存在 `CONTEXT.md` 或 `docs/adr/`。
++用户给出模块、子系统或痛点时采用该范围；否则先查看最近约 20 个 Git 提交，从反复改动的热点入手；热点分散时才扩大范围。历史不足 20 个时使用实际可用提交并说明；“20”是本项目的选择，上游没有给出这个数字。读取项目配置指定的领域术语、相关 ADR、规则和测试，不假设固定存在 `CONTEXT.md` 或 `docs/adr/`。
+ 
+ 使用 `my-codebase-design` 的模块、接口、深度、接缝、适配器、杠杆、局部性词汇。探索理解摩擦：
+ 
+diff --git a/skills/my-review-instructions/SKILL.md b/skills/my-review-instructions/SKILL.md
+index 0b63ac0..5e88e84 100644
+--- a/skills/my-review-instructions/SKILL.md
++++ b/skills/my-review-instructions/SKILL.md
+@@ -63,7 +63,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
+ 
+ ### 6. 最后检查指令设计
+ 
+-仅当存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，调用并应用 {{skill-call:my-writing-for-agents}}，检查调用、信息层级、完成条件、主导词、单一事实来源和失效模式。若结论是其他归宿，不输出即将随重构消失的文字建议。
++仅当存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，调用并应用 {{skill-call:my-writing-for-agents}}，按该方法默认删除，并检查指针触发、信息负担与分层、完成条件、熟悉概念词与正向目标、单一事实来源及调用方式。若结论是其他归宿，不输出即将随重构消失的文字建议。
+ 
+ 完成条件：所有进入报告的候选都通过下方 Finding Gate，并按根因去重。
+ 
+diff --git a/skills/my-tdd/SKILL.md b/skills/my-tdd/SKILL.md
+index b1dda84..17e00b3 100644
+--- a/skills/my-tdd/SKILL.md
++++ b/skills/my-tdd/SKILL.md
+@@ -5,7 +5,7 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
+ 
+ # 测试驱动开发
+ 
+-TDD 是 red → green → refactor 循环。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。在主实施流程中按[开发保证等级](references/shared/adapters/assurance-levels.md)选择证据强度。
++TDD 是 red → green 循环。本 Skill 只保留循环与完成门；测试形状见 [tests.md](tests.md)，seam、adapter 与 mock 的单一事实来源见[测试 Seam 合同](references/shared/testing-seams.md)。在主实施流程中按[开发保证等级](references/shared/adapters/assurance-levels.md)选择证据强度。
+ 
+ 探索代码库时，读取已有的项目领域术语与 ADR，使测试名称和接口词汇匹配项目语言，并尊重所涉及区域的 ADR。
+ 
+@@ -31,6 +31,6 @@ TDD 是 red → green → refactor 循环。本 Skill 只保留循环与完成
+ 
+ - **先 red，后 green。** 先写失败测试，再只写足以通过的代码。不要预判未来测试或加入推测性功能。
+ - **一次一个切片。** 每轮一个 seam、一个测试、一个最小实现。
+-- **再 refactor。** green 后在同一行为 seam 下消除重复、改善名称与内部结构；每次小步重跑测试，保持 green。重构不增加新行为，新行为回到下一轮 red。
++重构属于审查阶段，只作为建议提出，留给后续工作，不进入本次红绿循环。
+ 
+-行为新增或修复默认让每项验收经历可观察 red、最小 green 与保持 green 的必要 refactor。已有充分行为覆盖的小修、characterization、机械重构、配置/文档变更，或暂时无法建立 red 的诊断工作，可以采用等价验证策略；必须说明为何 TDD 不适用、运行最接近风险的验证，并且不能把未验证行为或推测性抽象带入当前切片。完成判断依据是验收与证据，不把 runtime 无法证明的 red 历史伪装成 receipt。
++行为新增或修复默认让每项验收经历可观察 red 与最小 green。已有充分行为覆盖的小修、characterization、机械重构、配置/文档变更，或暂时无法建立 red 的诊断工作，可以采用等价验证策略；必须说明为何 TDD 不适用、运行最接近风险的验证，并且不能把未验证行为或推测性抽象带入当前切片。完成判断依据是验收与证据，不把 runtime 无法证明的 red 历史伪装成 receipt。
+diff --git a/skills/my-tdd/agents/openai.yaml b/skills/my-tdd/agents/openai.yaml
+index 87f0e97..50f5c72 100644
+--- a/skills/my-tdd/agents/openai.yaml
++++ b/skills/my-tdd/agents/openai.yaml
+@@ -1,5 +1,5 @@
+ interface:
+   display_name: "TDD"
+-  short_description: "Test-driven red-green-refactor"
++  short_description: "Test-driven red-green"
+ policy:
+   allow_implicit_invocation: true
+diff --git a/skills/my-to-spec/SKILL.md b/skills/my-to-spec/SKILL.md
+index 5c32ddb..90dd27f 100644
+--- a/skills/my-to-spec/SKILL.md
++++ b/skills/my-to-spec/SKILL.md
+@@ -7,7 +7,7 @@ description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段
+ 
+ # 整理 Spec
+ 
+-从已确认需求和代码库事实整理版本化 Spec（也可称 PRD），不重新访谈。不为 Spec 分配执行 Agent。先读取[最终态写作](references/shared/final-state-writing.md)、[项目规则解析](references/shared/adapters/project-rules.md)与既有 ADR；找用户按[共同条件](references/shared/user-intervention.md)。
++从已确认需求和代码库事实整理版本化 Spec，不重新访谈。不为 Spec 分配执行 Agent。先读取[最终态写作](references/shared/final-state-writing.md)、[项目规则解析](references/shared/adapters/project-rules.md)与既有 ADR；找用户按[共同条件](references/shared/user-intervention.md)。
+ 
+ 首次分配 spec_id/revision1；修订递增 revision，用 supersedes 指前版，每版新增 Topic 内文件，阅读全文比较有效行为并记修订索引。Topic Spec 是实施边界，不读取或发布长期 Spec。承重决定用[第一性原理推理](references/shared/first-principles-reasoning.md)连接目标、事实、机制、真实替代与可证伪验收；可逆实现细节留给实施。
+ 
+diff --git a/skills/my-writing-for-agents/GLOSSARY.md b/skills/my-writing-for-agents/GLOSSARY.md
+index d0910a3..7dcd597 100644
+--- a/skills/my-writing-for-agents/GLOSSARY.md
++++ b/skills/my-writing-for-agents/GLOSSARY.md
+@@ -1,201 +1,13 @@
+-# 术语表——构建优秀 Skill
+-
+-这是使一个 Skill 出色的领域模型。Skill 的存在，是为了从随机系统中驯服出确定性；根本美德是**可预测性**，下列每个术语都是作用于它的杠杆。这是 [`writing-great-skills`](SKILL.md) 的已披露参考。
+-
+-术语按轴线分组：**调用**（如何抵达 Skill）、**信息层级**（如何组织内容）、**引导**（如何塑造 Agent 的运行时行为）及**剪枝**（如何保持精简）。每一种**失效模式**都与修复它的杠杆放在一起，并标记为*失效模式*。
+-
+-任何定义中的**粗体术语**也在本术语表中定义；请按其标题查找。
+-
+-## 可预测性
+-
+-Skill 使 Agent 在每一次运行中以相同*方式*行动的程度——过程相同，而非输出相同（头脑风暴 Skill 应当*可预测地*发散；它的 token 会变化，行为不会）。它是所有其他术语服务的根本美德；成本与可维护性是它的症状，而不是竞争对手。
+-
+-*避免使用*：一致性、可靠性、健壮性、输出确定性
+-
+-## 调用
+-
+-如何抵达一个 Skill，以及选择时需要付出的两类负荷。
+-
+-### 模型调用
+-
+-宿主 policy 允许模型隐式选择的 Skill。**描述**帮助候选匹配，但不是调用开关；真正的开关是目标宿主的 invocation policy。模型调用用候选上下文与误路由风险交换自主发现能力。
+-
+-*避免使用*：能力、工具、功能
+-
+-### 用户调用
+-
+-宿主 policy 要求显式选择的 Skill。它仍保留准确的**描述**供 UI、搜索和人工判断使用，但描述不会绕过 policy 触发模型调用。其他 Skill 若需复用其方法，按组合清单使用宿主调用语法；若需把下一阶段交给用户，输出可移植调用宏。
+-
+-*避免使用*：流程、工作流、命令
+-
+-### 描述
+-
+-Skill 的宿主可见能力摘要。宿主允许隐式调用时，它参与候选匹配；宿主禁止隐式调用时，它服务 UI、搜索和人工选择。它影响发现质量与候选**上下文负荷**，但其存在本身不决定调用模式。
+-
+-*避免使用*：frontmatter、摘要
+-
+-### 上下文指针
+-
+-保留在 Agent 上下文中的参考，它指明某项上下文外材料，并编码抵达它的条件。**描述**是顶层上下文指针（上下文窗口 → Skill）；指向已披露文件的指针是低一层的同一对象。决定 Agent*何时*抵达及抵达*多可靠*的是它的措辞，而不是目标。必须取得的目标若藏在措辞薄弱的指针后，是一个方差 bug：先修复措辞；仅当强化失败时才把材料内联。
+-
+-*避免使用*：链接、引用、导入
+-
+-### 上下文负荷
+-
+-候选 Skill 的**描述**进入 Agent 上下文时造成的 token 与注意力成本。宿主如何选择和加载候选决定实际成本；不能通过删除用户调用 Skill 的准确摘要来假装成本为零。
+-
+-*避免使用*：token 成本、上下文膨胀
+-
+-### 认知负荷
+-
+-**用户调用** Skill 施加在人类身上的成本——必须在脑中保留什么：有哪些 Skill，以及何时抵达每一个（人类是索引）。**模型调用**借由 Agent 可发现性移除它；它也是拆分出更多用户调用 Skill 的制动器。它不是要最小化的成本：它是人类能动性的代价，也是有些 Skill 保持用户调用的原因。在人类判断重要处承担它；不重要处则移除它。
+-
+-*避免使用*：人类索引、负担、开销
+-
+-### 路由 Skill
+-
+-一项**用户调用** Skill，它的工作是指向其他显式入口——逐一说明其名称及何时抵达——使人类只需记住一个入口。它只输出下一跳的可移植调用宏并停止，不执行目标 Skill。这是用户调用 Skill 增多时**认知负荷**的解法。
+-
+-*避免使用*：分发器、菜单、注册表、索引、路由流程
+-
+-### 粒度
+-
+-划分 Skill 的精细程度。更细的划分会消耗两类负荷之一：更多**模型调用** Skill 消耗**上下文负荷**（更多描述挤占窗口并竞争注意力）；更多**用户调用** Skill 消耗**认知负荷**（人类要记住和抵达的更多）。两种切分指导划分。按**调用**，当有不同的**主导词**可独自触发它——你确实在提示中使用的触发词——时，拆出模型调用 Skill。按**序列**，在需要隐藏某一步的**完成后步骤**时拆分一串**步骤**，因为在它自己的上下文中隔离该步骤会清除后续内容。警惕反向操作：合并序列会将每一步的完成后步骤暴露给后续步骤，招致提前完成。
+-
+-*避免使用*：分块、模块化
+-
+-## 信息层级
+-
+-Skill 内容的组织方式，以及每一项应在梯子上放多低。
+-
+-### 信息层级
+-
+-按 Agent 对它的即时需要程度排序的 Skill 内容——一架单独的梯子，由两种切分产生：文件内或指针后，以及步骤或参考。层级为：
+-
+-- **步骤**——文件内，首要
+-- **参考**，文件内——次要
+-- **参考**，已披露——在**上下文指针**后
+-
+-没有**步骤**的 Skill 只使用后两层——这常是正当的扁平同级集合（例如审查的每一条规则同处一层），并非坏味道。层级独立于调用：无论内容全是步骤、全是参考还是两者兼具，Skill 都可以模型调用或用户调用。当 Skill 有步骤时，本应披露的文件内参考会掩埋它们，使注意到它们变成掷硬币——这是方差杠杆，而不只是可读性问题。让梯子顶部清晰；尽可能将内容沿梯子下推。
+-
+-*避免使用*：结构、组织、布局
+-
+-### 步骤
+-
+-Agent 按顺序执行的动作——当 Skill 有它们时，是内容的首要层级，也是它们在 SKILL.md 中赢得位置的部分。不是每个 Skill 都有步骤：一个 Skill 可以全是步骤（`tdd`）、全是**参考**（审查），或两者兼具，与调用无关。每一步以清晰或模糊的**完成条件**结束。
+-
+-*避免使用*：工作流、指令、编排
+-
+-### 参考
+-
+-Agent 按需查阅的材料——定义、事实、参数、示例、条件指令。当 Skill 有**步骤**时它次于步骤；当 Skill 没有步骤时它就是全部内容；或它完全位于任何 Skill 之外——参见**外部参考**。它通过**上下文指针**抵达，是**渐进式披露**的首要候选。
+-
+-*避免使用*：辅助材料、文档、背景
+-
+-### 外部参考
+-
+-位于 Skill 系统之外的**参考**——普通文件，没有**描述**，没有**步骤**，不可调用——任一 Skill 都可以指向它。它是无需自行触发的共享参考的归宿，也是两项**用户调用** Skill 唯一能使用的共享归宿，因为二者都没有描述，不能互相触发。
+-
+-*避免使用*：文档、资源、知识库
+-
+-### 渐进式披露
+-
+-将**参考**沿梯子下移——从 SKILL.md 移至**上下文指针**之后——以使顶层保持清晰。它主要不是 token 优化；它是保护**信息层级**的方式。它由**分支**许可：披露只有部分分支需要的内容，内联每条路径需要的内容；若指针在必须取得的材料上触发不可靠，强化措辞，只有失败时才将材料拉回内联。
+-
+-*避免使用*：延迟加载、分块
+-
+-### 共置
+-
+-将 Agent 同时需要的材料放在同一位置——把概念的定义、规则与注意事项放在一个标题下，而非分散于文件中——使阅读一部分时同时获得相邻内容。它是**信息层级**的文件内伙伴：层级决定一项内容放*多低*，共置决定它抵达后*与什么放在一起*。不存在一套用于**参考**正文的正确格式公式；检验是 Skill 应读起来像为 Agent 编写的文档，而分组材料在分散材料不具备这种效果时就应如此。它不同于**重复**：重复是在两处复述一个含义，分散则是将一个含义碎裂到多处。
+-
+-*避免使用*：分组、聚类、内聚
+-
+-### 蔓延
+-
+-*失效模式。* 一个单纯过长的 Skill——SKILL.md 的行数太多——与这些行是否过时或重复无关。即使全部内容都活跃且唯一，Skill 也会蔓延。它耗费可读性（Agent 在行动前要穿过更多内容，注意力在多余内容上变薄）、可维护性（每增加一行就多一行要保持**相关**）和 token。解法是**信息层级**：在**上下文指针**后下推**参考**，并按**分支**或序列拆分，使每条路径只携带所需内容。它不同于**沉积**（来自过时积累的长度）和**重复**（来自反复含义的长度）——无论原因，蔓延就是长度本身。
+-
+-*避免使用*：膨胀、长度、尺寸、冗长
+-
+-## 引导
+-
+-将 Agent 运行时行为塑向**可预测性**的杠杆。
+-
+-### 分支
+-
+-Skill 可被调用的一种不同方式——它处理的一个情形——因此不同运行会穿过不同路径。步骤很多的 Skill 可带有多个分支；线性 Skill 没有分支。
+-
+-*避免使用*：路径、情形、分叉
+-
+-### 主导词
+-
+-模型预训练中已有的紧凑概念——也称为 *Leitwort*——Agent 在执行 Skill 时借它思考。它通过调动模型已有先验，用最少 token 编码一项行为原则（例如 *lesson*、*proximal zone of development*、*fog of war*、*tracer bullets*）。应把它作为 token 反复出现，绝非作为句子反复出现；它在 Skill 中累积为分布式定义，并锚定整片行为区域。创造自己的词也可行，前提是清晰定义；但自造词不会调动先验——你要用定义 token 支付预训练词免费提供的东西。先使用已有词。
+-
+-主导词两次服务于**可预测性**。在正文中，它锚定**执行**——概念每次出现，Agent 都抵达相同行为；在扁平参考中，它将注意力聚焦在要寻找的一类事物，为每次运行调动正确检查。在**描述**中，它锚定**调用**——不仅在 Skill 内：当同一词出现在你的提示、文档和代码库中，Agent 会将共享语言与 Skill 连接，更可靠地触发它。用你真正会在想要该 Skill 时使用的主导词来书写描述。
+-
+-*避免使用*：关键字、术语、主题
+-
+-### 完成条件
+-
+-告知 Agent 一项工作单元已完成的条件——它据以判断的目标。两项性质使它成为杠杆，而非仅是一种质量。其**清晰度**（Agent 能否分辨完成与未完成？）抵抗**提前完成**——模糊的界限（“已理解”）允许 Agent 宣布完成并滑到下一步；该轴需要*步骤*才能生效，因为提前完成是步骤之间的失效。其**要求度**（它要求多少）设定**基础工作**——“已说明每一个修改的模型”会在“生成变更清单”不会的地方强制彻底工作；此轴*不*受步骤约束：它也可约束一组扁平参考，这正是没有步骤的 Skill 仍可带有穷尽门槛（“应用每一条规则”）的方式。最强的条件既可检查又穷尽。
+-
+-*避免使用*：完成条件、退出条件、停止规则
+-
+-### 基础工作
+-
+-Agent 在单一步骤内暗中所做的工作——读文件、探索代码库、变更、挖掘所需内容，而不是把它卸给用户。它存在于步骤结构之下：从不写成自己的步骤，潜藏在措辞中，由 Agent 而非 Skill 控制。它是**完成后步骤**跨步骤拉力在单步骤内的对应物。由**主导词**（*comprehensive*、*thorough*）或要求工作穷尽的**完成条件**提升——包括对扁平参考应用要求度轴，它驱动一个扁平参考 Skill 覆盖全部层级。当需求缺失，或**提前完成**截短步骤时，它会变薄。
+-
+-*避免使用*：范围、投入、勤勉、覆盖率
+-
+-### 完成后步骤
+-
+-当前步骤之后的**步骤**。它们可见时会把 Agent 向前拉入**提前完成**——看得越多，拉力越强；防御方法是把步骤序列拆成两段，从而隐藏它们。
+-
+-*避免使用*：视野、战争迷雾、前瞻
+-
+-### 提前完成
+-
+-*失效模式。* 在当前步骤真正完成前结束它，因为 Agent 的注意力从工作滑向了完成。它是步骤之间的失效：需要存在**步骤**才会发生——没有步骤的 Skill 过早退出并非提前完成，而是在未满足需求下的稀薄**基础工作**。这是两股力量的拉锯：可见的**完成后步骤**（向前拉力）和**完成条件**的清晰度（阻力——清晰、可检查的门槛能守住；模糊门槛会失守）。模糊是必要条件：清晰界限无论后续步骤可见多少都能抵抗拉力，所以从不匆忙的步骤不需要防御。有两个杠杆可守住会匆忙的步骤，但要按顺序使用：**先收紧界限**——这是局部且廉价的。仅当条件不可避免地模糊，*并且*确实观察到匆忙时，才**隐藏后续步骤**——隐藏只有跨越真实上下文边界（用户调用交接或子 Agent 派发）才有效；内联模型调用会让后续步骤留在上下文中，无法清除任何内容。它是基础工作变薄的一种原因，但不同于它：即使步骤运行至完全完成，基础工作仍可能变薄。
+-
+-*避免使用*：过早闭合、匆忙、赶工、走捷径
+-
+-### 否定
+-
+-*失效模式。* 通过禁止来引导——告诉 Agent*不要*做什么——会把被禁止行为拖进上下文，使它更容易可得，而不是更难。*不要想一头大象*，上下文里就只剩大象；*永远不要写冗长注释*，冗长正是 Agent 刚读到的模式。否定是一个弱修饰词，会被强烈激活的概念压过，因此禁令半读起来像是在指示做那件事。它的**主导词**是*大象*：禁令带入框架的任何对象。解法：提示**正向**目标——描述目标行为（“写一行注释”），使禁止的行为从未被说出。禁止只有作为无法正向表述的行为的硬护栏时才配存在；即使如此，也应与正向目标配对，使注意力落在应做之事上。
+-
+-*避免使用*：讽刺反弹、不提示、粉红大象
+-
+-## 剪枝
+-
+-保持 Skill 精简——每一种补救措施都与它修复的失效配对。
+-
+-### 单一事实来源
+-
+-每层含义恰好位于一个权威位置的理想状态，因此改变 Skill 行为时只需改一处。**重复**是对它的违背。
+-
+-*避免使用*：归宿、规范位置
+-
+-### 重复
+-
+-*失效模式。* 同一含义有多个**单一事实来源**。它消耗维护（改一处就必须改其他处）、消耗 token，并抬高突出度——重复一个含义会让它在层级上加权超过真实等级。它是**主导词**的意外反面：主导词通过重复 token 有意地提升注意力，绝不重复含义。
+-
+-*避免使用*：重复陈述、冗余
+-
+-### 相关性
+-
+-一行是否仍与 Skill 的工作有关——决定保留什么的镜头。一行失去相关性，要么是从未与任务有关（纯粹说明，或本应披露的**分支**），要么是变得过时：它描述的行为或世界改变后逐渐失准。较短的 Skill 更容易保持相关，因为检查每一行的成本更低。它不同于**无效操作**：相关性问的是一行是否与任务有关，而不是它是否改变行为。
+-
+-*避免使用*：承重、陈旧、新鲜度
+-
+-### 沉积
+-
+-*失效模式。* 旧内容层在 Skill 中沉淀而从不清除，因为添加感觉安全、删除感觉有风险——于是过时和无关的行积累起来，你不得不向下挖穿它们才能找到仍活跃的内容。没有剪枝纪律的任何 Skill 的默认命运；是**相关性**的缓慢侵蚀，与**重复**反复同一含义不同。
+-
+-*避免使用*：积累、膨胀、杂物、腐烂
+-
+-### 无效操作
+-
+-*失效模式。* 一条指令不改变任何事，因为模型默认已经会这样做；你付出负荷来告诉它本会做的事。测试是：与默认值相比，这一行会改变行为吗？一行可以完全**相关**却仍是无效操作。使**主导词**免费有效的同一先验，也使无效操作毫无价值。
+-
+-主导词是一种*技巧*；无效操作是对一行的*判决*——二者交叉。一个弱到无法击败默认值的主导词就是无效操作（当模型已经相当彻底时的 *be thorough*），修复是换一个能通过判决的更强词（*relentless*），不是改用其他技巧。因此，无效操作测试——与默认值相比，这一行会改变行为吗？——也是评定主导词是否配得上反复出现的办法。这是模型相对的，不是读者相对的：两人若对一行是否无效操作意见不同，分歧的是默认值，应通过运行 Skill 而非辩论解决。
+-
+-*避免使用*：冗余指令、重述显而易见之事、絮叨
++# 指令诊断术语
++
++用于讨论具体结构问题；方法和完成条件以 [SKILL.md](SKILL.md) 为准。
++
++- **上下文指针**：把读取条件与目标连接起来的一行，例如描述或文件引用。
++- **上下文负担**：常驻指令占用的注意力与上下文空间。
++- **认知负担**：人需要记住有哪些入口、何时选择它们的成本。
++- **步骤/参考**：前者安排动作，后者提供条件性材料。
++- **提前完成**：当前步骤尚未满足完成条件就滑向后续步骤。
++- **重复**：同一意思在多个位置被定义。
++- **沉积**：过时内容累积而未被删除。
++- **无效操作**：指令相对模型默认行为没有改变动作或判断。
++- **蔓延**：仍有用途的内容过长，使当前路径携带不需要的材料。
+diff --git a/skills/my-writing-for-agents/SKILL.md b/skills/my-writing-for-agents/SKILL.md
+index 4750624..c4ece5a 100644
+--- a/skills/my-writing-for-agents/SKILL.md
++++ b/skills/my-writing-for-agents/SKILL.md
+@@ -3,88 +3,36 @@ name: my-writing-for-agents
+ description: 在 my-review-instructions 流程中作为指定阶段的方法被调用。
+ ---
+ 
+-# My Writing Great Skills
++# 为 Agent 编写指令
+ 
+-本 Skill 只负责 Skill 的调用描述、信息层级、完成条件、措辞和可验证性。它不判断 Skill 是否应存在、是否职责重叠、是否应迁入 runtime，也不凭静态文字证明行为有效；这些属于 `my-review-instructions`。直接以 `review` 使用时，只输出这一层的指令设计发现，不扩张为根本性审查。
++适用于 Skill、AGENTS.md、CLAUDE.md。默认动作是删除：逐句保留会改变目标 Agent 必要行为的内容，先去掉过时、重复、可自行查证及模型默认能力已覆盖的句子，再判断是否需要改写。静态文字审查只能证明结构与可解析性，行为增益的证据边界由 my-review-instructions 判断。
+ 
+-Skill 的存在，是为了从随机系统中驯服出确定性。根本美德是 **可预测性**：每一次运行采用相同的**过程**，而不是产出相同的结果；下列每个杠杆都服务于它。
++## 指针与调用
+ 
+-编写 Skill 时，把每一行都视为强 Agent 会认真执行的约束：逐行判断它是否改变必要行为，删除默认能力已经覆盖的说明，并消除重复、冲突与过度限定。模型越来越智能意味着规则要更谨慎、更精简，而不是堆叠更多限制。这项逐行必要性原则可借用于起草 MDC，但 Agent 项目规则的存在性、宿主作用域、权威与冲突审查属于 `my-review-instructions`。
++Skill 描述，以及 AGENTS.md 中指向某份文档的那一行，都是上下文指针。先写熟悉的关键词和目标，再写需要读取的情形；每种情形只保留一个触发条件，删除正文已有的身份信息。例如“迁移数据库时读取 migration.md 的回滚约束”，将触发与目标放在同一行。
+ 
+-**粗体术语**在 [`GLOSSARY.md`](GLOSSARY.md) 中定义；请查阅该文件获得完整含义。
++只有 Agent 或其他 Skill 需要触发时才设置模型调用；权限以组合清单及[宿主投影](references/shared/adapters/composition.md)为准。两个手动 Skill 共用的内容放普通文件。手动入口多时用路由 Skill 索引，让人只在需要判断的地方记住入口。
+ 
+-## 调用
++完成条件：每个指针都能判断何时读、读来做什么；调用方式与真实消费者匹配。
+ 
+-调用能力由**宿主 policy**决定，不由 `description` 是否存在决定。`description` 始终是宿主可见的能力摘要；宿主允许隐式调用时，它也参与候选匹配，宿主禁止隐式调用时，它仍服务 UI、搜索和人工选择，但不会自行授权模型调用。
++## 信息负担与分层
+ 
+-- **模型调用**：宿主 policy 允许隐式选择。描述使用精简、可区分的触发条件，代价是候选上下文与误路由风险。
+-- **用户调用**：宿主 policy 要求显式选择。Cursor 与 Claude 使用 `disable-model-invocation: true`；Codex 使用 `agents/openai.yaml` 的 `allow_implicit_invocation: false`。此时仍保留一行准确 description，不把它误当成自动调用开关。
++常驻内容带来上下文负担；让人记住哪些文档存在带来认知负担。认知负担只花在需要人判断的地方。
+ 
+-另一项 Skill 抵达它时，按[组合调用](references/shared/adapters/composition.md)使用宿主调用语法；源码使用 `{{skill-call:my-name}}`，由安装投影生成目标宿主语法。
++区分文件内步骤、文件内参考、外置参考。所有情形都要用的内容留在文件内，只有部分情形需要的放外置参考并写触发指针。同一概念的定义、规则与注意事项集中；过长时按情形或按顺序拆分，不让每条路径携带无关材料。
+ 
+-当用户调用的 Skill 多到超出你的记忆能力时，堆积的认知负荷可由**路由 Skill**解决：一个用户调用的 Skill，列出其他 Skill 及各自应在何时使用。
++完成条件：每份材料都有明确读取情形，每个意思只有一个定义位置。
+ 
+-## 编写描述
++## 完成条件与表达
+ 
+-允许隐式调用时，**描述**有两项工作：说明 Skill 是什么，并列出应触发它的**分支**。显式调用时，它只需准确概括能力。无论哪种模式，描述都应比正文更严格删减：
++每一步以可判定的完成条件结束，先写清条件。例如“每项验收已关联独立测试证据”比“理解验收”可判定。只有条件确实写不清、且已观察到提前收工时，才把后续步骤拆到新上下文；单纯变长或担心匆忙不足以拆分。
+ 
+-- **把 Skill 的主导词前置**——描述在此承担调用工作。
+-- **一个分支只保留一个触发条件。** 把同一分支换个名字的同义说法是**重复**——“使用 TDD 构建功能……要求测试先行开发”是在重复同一个分支。应合并它们；只保留真正不同的分支。
+-- **删去正文已经具备的身份说明。** 描述仅保留触发条件，以及任何“当另一项 Skill 需要……”的抵达条款。
++用模型熟悉的概念词作关键词，如 tracer bullet、red/green；尽量表达正向目标。只有无法正向表达的硬约束才用禁令，同时给出要达到的目标。
+ 
+-## 信息层级
++完成条件：Agent 能区分完成与未完成；每个硬约束有明确目标，拆分有实际依据。
+ 
+-Skill 由两类可自由混合的内容构成：**步骤**和**参考**。它可以全是步骤、全是参考，或两者兼具。核心决策是用哪一种，以及每种应在**信息层级**的何处——这是一架按 Agent 对材料的即时需要程度排序的梯子：
++## 剪枝交付
+ 
+-1. **Skill 内步骤**——`SKILL.md` 中按顺序执行的动作，是首要层级：Agent 要做什么、按什么顺序做。每一步以**完成条件**结束，即判定工作完成的条件。条件应当*可检查*（Agent 能否区分完成与未完成？）；在重要处还应当*穷尽*（“已说明每一个修改的模型”，而不是“生成变更清单”），因为模糊条件会招致**提前完成**。
+-2. **Skill 内参考**——`SKILL.md` 中按需查阅的定义、规则或事实。它常常是正当的扁平同级集合（例如一次审查中的所有规则同处一层）——这没有问题，不是坏味道。*本 Skill 全是参考。*
+-3. **外部参考**——从 `SKILL.md` 推送到单独文件、通过**上下文指针**抵达的参考，只在指针触发时加载。（范围从*已披露*参考——如仍属于该 Skill 的同级 `GLOSSARY.md`——到位于 Skill 系统外、可被任一 Skill 指向的完整**外部参考**。）
++逐句检查相关性与必要行为贡献。环境可查的事实交给查证，模型默认会做的事整句删除，重复规则改为指向唯一来源。只有仍影响触发、动作或完成度时才保留。
+ 
+-要求严格的完成条件会驱动彻底的**基础工作**——Agent 在工作中进行的挖掘——无论 Skill 是否有步骤皆如此；因为“应用每一条规则”对扁平参考的约束，与“完成每一步”对顺序步骤的约束同样有效。
+-
+-下推得太少，顶层会膨胀；下推得太多，又会隐藏 Agent 实际需要的材料。这种张力正是全部决策所在。
+-
+-**渐进式披露**是沿梯子向下移动——从 `SKILL.md` 移至链接文件——从而让顶层保持清晰。机制：在 Skill 文件夹中放置一个以内容命名的链接 `.md` 文件（本 Skill 将完整定义披露到 `GLOSSARY.md`）。有些 Skill 有多种用法，每种不同用法都是一个**分支**：不同运行走过其中不同路径。分支是最干净的披露检验：每个分支都需要的内容内联，只有部分分支需要的内容放到指针之后。**上下文指针**的*措辞*而非目标决定 Agent 在何时、以多高可靠性抵达材料。
+-
+-梯子决定一项内容应当*下放多远*，而**共置**决定它到达该处后*与什么放在一起*：应将一个概念的定义、规则与注意事项置于同一标题下，而非分散各处；如此阅读某一部分就会同时带上邻近内容。
+-
+-## 何时拆分
+-
+-**粒度**是划分 Skill 的精细程度，每一次切分都要消耗两类负荷之一，因此只能在切分值得时进行。有两种切分：
+-
+-- **按调用拆分**——当存在一个应当独自触发的不同**主导词**，或另一项 Skill 必须抵达它时，拆出一个**模型调用**的 Skill。新 Skill 始终加载的**描述**会消耗**上下文负荷**，因此这种独立可达性必须值得付出代价。
+-- **按序列拆分**——当仍在前方的**步骤**（某一步的**完成后步骤**）会诱使 Agent 仓促完成眼前的一步（**提前完成**）时，拆开一串步骤。让后续步骤离开视野，能促使 Agent 在当前任务上做更多**基础工作**。
+-
+-## 剪枝
+-
+-让每层含义保持在**单一事实来源**中：一个权威位置，因此变更行为时只需改一处。
+-
+-生成计划、Spec 或 Ticket 的 Skill 复用[最终态写作](references/shared/final-state-writing.md)，不重复定义这项规则。
+-
+-逐行检查**相关性**：它是否仍与该 Skill 的工作有关？
+-
+-接着逐句搜寻**无效操作**，而非只逐行检查：孤立地对每个句子进行无效操作测试；一个句子未通过时，删除整句而不是仅删几个词。要果断——多数未通过的散文应被删除，而不是改写。
+-
+-## 主导词
+-
+-**主导词**是模型预训练中已有的紧凑概念，Agent 在执行 Skill 时会借其思考（例如 *lesson*、*fog of war*、*tracer bullets*）。它会在全文反复出现（但不一定如此——强有力的主导词可能只需一次），累积成分布式定义，并以最少 token 锚定整片行为区域，因为它会调动已有先验。
+-
+-它以两种方式服务可预测性。在正文中，它锚定**执行**：Agent 每次看到该词，都会抵达相同行为。在描述中，它锚定**调用**：当同一个词出现在你的提示、文档和代码中，Agent 会将这种共享语言与该 Skill 连接起来，更可靠地触发它。
+-
+-寻找重构 Skill 以采用主导词的机会。在三处完整拼出的三元组（**重复**）、一条描述花一整句指向一个想法——都在等待被**折叠**成单一 token。示例：
+-
+-- “快速、确定、低开销” -> *tight*——把某一阶段反复表述的一项质量——折叠为一个预训练词（一个 *tight* 循环）。
+-- “你相信的循环” -> *red*——将模糊的门槛转换为二元、可观察的状态（循环会在 bug 上变为 *red*，或者不会）。
+-
+-你会赢得两次：token 更少，且 Agent 的思考有了更锐利的挂钩。假设每个 Skill 都藏有能被主导词淘汰的重述——去找出来。
+-
+-## 失效模式
+-
+-用它们诊断用户可能遇到的 Skill 问题。
+-
+-- **提前完成**——在一步真正完成前结束它，注意力滑向了*完成这件事*。按顺序防御：先收紧完成条件（廉价、局部）；仅当条件无法进一步变清晰且确实观察到匆忙时，才通过拆分隐藏完成后步骤（序列切分）。
+-- **重复**——同一含义存在于多个位置。它消耗维护与 token，并把某个含义在层级中的突出度抬高到超过其真实等级。
+-- **沉积**——由于添加看似安全、删除看似有风险而沉淀下来的过时层。没有剪枝纪律的任何 Skill 的默认命运。
+-- **蔓延**——即使每一行都活跃且唯一，Skill 仍然太长。它损害可读性与可维护性并浪费 token。解法是梯子：在指针后披露**参考**，并按**分支**或序列拆分，使每条路径只携带它需要的内容。
+-- **无效操作**——模型默认已经会遵守的一行，所以你付出负荷却没有传达任何内容。测试是：与默认行为相比，它是否改变了行为？弱主导词（模型已经相当彻底时的 *be thorough*）是无效操作；修复方式是使用更强的词（*relentless*），而不是换一种技巧。
+-- **否定**——通过禁止来引导会适得其反：*不要想一头大象*会说出大象，让它更容易被想到，而不是更难。应提示**正向**目标——陈述目标行为，使被禁止的行为不被说出；只有在无法正向表述的硬护栏中才保留禁止，即便如此也应与要做什么配对。
++完成条件：交付保留、删除或改写的具体依据；未知保持未知，静态检查不写成模型效果已验证。需要诊断术语时再读 [GLOSSARY.md](GLOSSARY.md)。
+diff --git a/tests/test_portfolio.py b/tests/test_portfolio.py
+index a2b25f0..2bd2bb8 100644
+--- a/tests/test_portfolio.py
++++ b/tests/test_portfolio.py
+@@ -77,17 +77,6 @@ class PortfolioContractTests(unittest.TestCase):
+             self.assertIn(command, wizard)
+ 
+     def test_writing_tdd_and_design_contracts_match_runtime_model(self):
+-        writing = (ROOT / "skills/my-writing-for-agents/SKILL.md").read_text()
+-        glossary = (ROOT / "skills/my-writing-for-agents/GLOSSARY.md").read_text()
+-        self.assertIn("调用能力由**宿主 policy**决定", writing)
+-        self.assertIn("只负责 Skill 的调用描述、信息层级", writing)
+-        self.assertIn("不扩张为根本性审查", writing)
+-        self.assertNotIn("存在本身*就是*调用轴", glossary)
+-
+-        tdd = (ROOT / "skills/my-tdd/SKILL.md").read_text()
+-        self.assertIn("red → green → refactor", tdd)
+-        self.assertIn("references/shared/testing-seams.md", tdd)
+-        self.assertNotIn("重构不属于循环", tdd)
+         tests_reference = (ROOT / "skills/my-tdd/tests.md").read_text()
+         deepening = (ROOT / "skills/my-codebase-design/DEEPENING.md").read_text()
+         self.assertIn("module boundary under test", tests_reference)
+diff --git a/tests/test_resources.py b/tests/test_resources.py
+index 06b0814..f062c57 100644
+--- a/tests/test_resources.py
++++ b/tests/test_resources.py
+@@ -263,7 +263,7 @@ class SharedResourceTests(unittest.TestCase):
+         expectations = {
+             "my-ask-matt": (
+                 "references/shared/adapters/composition.md",
+-                "references/policies/context-hygiene.md",
++                "references/shared/adapters/assurance-levels.md",
+             ),
+             "my-handoff": ("references/policies/context-hygiene.md",),
+             "my-resolving-merge-conflicts": (
+@@ -318,7 +318,6 @@ class SharedResourceTests(unittest.TestCase):
+         effective = self._effective_consumers()
+         with tempfile.TemporaryDirectory() as tmp:
+             for skill, policy in {
+-                "my-ask-matt": "context-hygiene.md",
+                 "my-handoff": "context-hygiene.md",
+                 "my-resolving-merge-conflicts": "merge-conflict-approval.md",
+                 "my-wayfinder": "decision-taxonomy.md",
+diff --git a/tests/test_workflow.py b/tests/test_workflow.py
+index 6b5f1bf..5f2678d 100644
+--- a/tests/test_workflow.py
++++ b/tests/test_workflow.py
+@@ -2544,7 +2544,6 @@ render_root: 学生课程
+                 repo_root=root,
+             )
+             for skill in (
+-                "my-ask-matt",
+                 "my-handoff",
+                 "my-resolving-merge-conflicts",
+                 "my-wayfinder",

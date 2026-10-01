@@ -1,0 +1,46 @@
+{
+  "outcome": "completed",
+  "test_receipt": {
+    "evidence_id": "b36dcebc6407cdc303d8e40d5569f84707fb7334354094f30a006afa1b3dba78",
+    "kind": "test"
+  },
+  "review_receipt": {
+    "evidence_id": "5def9a1807d8b077e423c5b06a165967a125dcc4a62afebde835f246fc699384",
+    "kind": "review"
+  },
+  "code_receipt": {
+    "content_id": "dd63548317bdee47a1eeaf6694441390f6c4dcbbe322304888339554cf13bad0",
+    "kind": "code",
+    "sources": [
+      {
+        "kind": "code-source",
+        "path": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_skill_packaging_v2.py",
+        "repo_path": "tests/test_skill_packaging_v2.py",
+        "sha256": "36a551406fa014d488676994647f911fb12c37f4b445ee84b1d512a3394b1f64",
+        "size": 15664
+      },
+      {
+        "kind": "code-source",
+        "path": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tools/workflow_lib/installer.py",
+        "repo_path": "tools/workflow_lib/installer.py",
+        "sha256": "d3ee3e196cb7943e7fe27c9f7eb8301d6e6c80fe927f770aa510d0a4bec44f35",
+        "size": 41583
+      },
+      {
+        "kind": "code-source",
+        "path": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tools/workflow_lib/release.py",
+        "repo_path": "tools/workflow_lib/release.py",
+        "sha256": "f1753722f240a2dfacd66b0f26ed7da5707de706c27861858e7902b2a192784d",
+        "size": 35687
+      },
+      {
+        "kind": "code-source",
+        "path": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tools/workflow_lib/release_references.py",
+        "repo_path": "tools/workflow_lib/release_references.py",
+        "sha256": "f42cb6063848f2357da3405c6944441f216dc21dc53b5e0d808b4e7d29f56792",
+        "size": 2667
+      }
+    ]
+  },
+  "blocker": null
+}

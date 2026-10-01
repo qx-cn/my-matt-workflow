@@ -1,0 +1,5 @@
+FAULT catalog rejected CompositionError Skill 集合与组合清单不一致：['my-extra']
+FAULT metadata rejected ValidationError my-tdd: disable-model-invocation 与组合清单不一致
+FAULT link rejected ValidationError my-tdd: SKILL.md 引用不存在：missing.md
+FAULT symlink rejected ValidationError my-tdd: source inventory symlink 可能越界：escape.md
+Python 3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]
