@@ -89,7 +89,6 @@
       "release_path": "references/shared/instruction-authority.md",
       "consumers": [
         "my-code-review",
-        "my-diagnosing-bugs",
         "my-domain-modeling",
         "my-edit-article",
         "my-to-spec",
@@ -253,6 +252,7 @@
       "release_path": "references/shared/user-intervention.md",
       "consumers": [
         "my-code-review",
+        "my-diagnosing-bugs",
         "my-domain-modeling",
         "my-grill-with-docs",
         "my-grilling",
@@ -261,6 +261,7 @@
         "my-review-artifact",
         "my-review-design",
         "my-review-instructions",
+        "my-setup",
         "my-tech-design",
         "my-to-spec",
         "my-to-tickets"

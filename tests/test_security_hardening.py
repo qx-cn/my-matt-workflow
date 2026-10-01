@@ -26,10 +26,6 @@ from tools.workflow_lib.release import (
     source_manifest,
     validate_skills,
 )
-from tools.workflow_lib.work_artifacts import (
-    WorkArtifactError,
-    apply_work_artifact_migration,
-)
 
 
 class SecurityHardeningTests(unittest.TestCase):
@@ -217,26 +213,6 @@ class SecurityHardeningTests(unittest.TestCase):
                 "$my-next", (root / "codex/skills/my-demo/SKILL.md").read_text()
             )
 
-    def test_work_artifact_traversal_journal_keeps_repo_victim(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            repo = Path(tmp)
-            victim = repo / "victim"
-            victim.write_text("sentinel", encoding="utf-8")
-            transaction = repo / ".agent/.work-artifact-transaction"
-            transaction.mkdir(parents=True)
-            (transaction / "journal.json").write_text(json.dumps({
-                "version": 1,
-                "moves": [{"from": ".agent/work/topic/spec.md", "to": ".agent/../victim"}],
-            }), encoding="utf-8")
-            register_owned_directory(
-                repo / ".agent", transaction, purpose="work-artifact-transaction"
-            )
-
-            with self.assertRaises(WorkArtifactError):
-                apply_work_artifact_migration(repo)
-
-            self.assertEqual("sentinel", victim.read_text(encoding="utf-8"))
-            self.assertTrue(transaction.exists())
 
     def test_forged_review_marker_cannot_authorize_recursive_delete(self):
         with tempfile.TemporaryDirectory() as tmp:

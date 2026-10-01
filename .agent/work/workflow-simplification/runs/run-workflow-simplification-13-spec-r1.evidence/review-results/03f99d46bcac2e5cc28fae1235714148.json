@@ -1,0 +1,115 @@
+{
+  "code_content_id": "81e150abf8341881a9d45fc93ed78e168ebe182866730669ddacb1e73386723c",
+  "design_gap": null,
+  "findings": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-13#A6"
+      ],
+      "baseline_reachable": true,
+      "id": "13-S1",
+      "root_cause": "unobserved-document-errors-reported-as-zero",
+      "severity": "P2",
+      "summary": "tools/workflow_lib/topic_service.py:418：文档Topic没有状态文件，metrics.record_command_error不会记录其失败；先对文档Topic运行不适用的topic review再complete，command_errors仍为0。基线e822677该值为null；新计数调用在当前差异中引入假零，违反A6不可观察填null。仅对level=None保持null，不扩大日志采集。"
+    }
+  ],
+  "follow_ons": [],
+  "review_id": "03f99d46bcac2e5cc28fae1235714148",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "8e86bbb773c34e8e01117541867181e9"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-13#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tools/workflow_lib/artifact_review.py",
+          "snapshot:tests/test_final_integration.py",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow.py",
+          "snapshot:tests/test_final_integration.py",
+          "snapshot:resources/adapters/ticket-selection.md",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A3",
+        "evidence_refs": [
+          "snapshot:.gitignore",
+          "snapshot:tools/workflow_lib/check.py",
+          "snapshot:tests/fixtures/workflow_simplification/baseline.json",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A4",
+        "evidence_refs": [
+          "snapshot:tests/test_implement_lifecycle.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tests/test_migration.py",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/text_measurement.py",
+          "snapshot:tests/test_text_measurement.py",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A6",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/metrics.py",
+          "snapshot:tools/workflow_lib/topic_service.py",
+          "snapshot:tests/test_final_integration.py",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A7",
+        "evidence_refs": [
+          "snapshot:skills/my-diagnosing-bugs/SKILL.md",
+          "snapshot:tests/fixtures/workflow_simplification/baseline.json",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-13#A8",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/check.py",
+          "snapshot:.github/workflows/check.yml",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "snapshot:tools/workflow.py"
+        ],
+        "probe": "downstream-owner",
+        "summary": "Ticket14负责README与本仓库schema2配置，当前不替它迁移本仓库或改写施工历史。"
+      },
+      {
+        "evidence_refs": [
+          "snapshot:tests/test_migration.py",
+          "snapshot:tests/test_topic_branch.py",
+          "test:57a2643ca4437afbabc62267ec2ce279d0abc121e80773fafbac0241a9bd9a54"
+        ],
+        "probe": "recovery",
+        "summary": "保留新迁移、测试中断、private元数据提交重试、重开/停止行为测试；旧施工工具删除glob兼容只在临时副本修正并验证未知scope仍拒绝，宿主与源runtime未改变。"
+      }
+    ]
+  },
+  "status": "findings"
+}

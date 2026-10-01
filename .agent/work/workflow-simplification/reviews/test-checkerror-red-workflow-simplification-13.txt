@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_check_test_failures_are_not_command_errors (test_final_integration.MetricsBehaviorTests.test_check_test_failures_are_not_command_errors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_final_integration.py", line 104, in test_check_test_failures_are_not_command_errors
+    self.assertEqual(0, command_error_count(fixture.repo, 'change'))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.383s
+
+FAILED (failures=1)

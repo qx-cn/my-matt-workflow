@@ -7,7 +7,7 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-10", "workflow-simplification-11", "workflow-simplification-12"]
 claimed_by:
 tags: []
@@ -37,11 +37,11 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] 最终 CLI help 精确等于保留加新增命令，删除清单中每个命令均报未知；不存在旧版包新门面；artifact-review 保留旧参数和 expect-content-id，去掉 repair-plan/parallel/topic，按新方法名工作且不计轮数。
-- [ ] runtime 不读写长期 Spec，删除全部旧归档接口、长期发布链与已删除命令对应模块/测试；skills/resources/policies 不再出现已删除配置键和命令引用。
-- [ ] 样例已保留后删除 evals 及 fixture ignore 例外；确认 check 只运行 tests，完成剩余旧模块/命令清理和全量集成。构建前置静态校验及对应测试沿用 09 的已交付结果，不再加载 evals 或行为证据注册表。
-- [ ] 以 unittest 和 subprocess 在临时 git 仓库验证 quick/standard、private/shared，各 AC 缺陷注入及 M2–M5 每行迁移/前置条件、不变量；测试随各切片已交付，此处补跨切片缺口并运行全量。
-- [ ] 提供主链字符数测量函数及口径测试，Cursor 安装件 Markdown 传递闭包按内容去重，总数不超过 35000；测试注释写 Ticket 01 真实旧基线，不得删承重内容达标。
-- [ ] 度量每条包含第 11 节全部字段，Ticket/Topic/quick 的 kind/outcome、不可观察 null 和 self/independent/mixed 来源正确；metrics 按 Topic 汇总，command_errors 不含测试失败。
-- [ ] 最终对 8 个冻结 Skill 比较施工前正文，仅许可全局改动；method 移动、合并、资源和全局清理都没有夹带冻结方法改写。
-- [ ] Python 3.10 与 3.14 上 check 通过，执行前后被跟踪文件零变化；CI 保持 check 后 git diff exit-code 的验证，未运行的版本明确报告未验证。
+- [x] 最终 CLI help 精确等于保留加新增命令，删除清单中每个命令均报未知；不存在旧版包新门面；artifact-review 保留旧参数和 expect-content-id，去掉 repair-plan/parallel/topic，按新方法名工作且不计轮数。
+- [x] runtime 不读写长期 Spec，删除全部旧归档接口、长期发布链与已删除命令对应模块/测试；skills/resources/policies 不再出现已删除配置键和命令引用。
+- [x] 样例已保留后删除 evals 及 fixture ignore 例外；确认 check 只运行 tests，完成剩余旧模块/命令清理和全量集成。构建前置静态校验及对应测试沿用 09 的已交付结果，不再加载 evals 或行为证据注册表。
+- [x] 以 unittest 和 subprocess 在临时 git 仓库验证 quick/standard、private/shared，各 AC 缺陷注入及 M2–M5 每行迁移/前置条件、不变量；测试随各切片已交付，此处补跨切片缺口并运行全量。
+- [x] 提供主链字符数测量函数及口径测试，Cursor 安装件 Markdown 传递闭包按内容去重，总数不超过 35000；测试注释写 Ticket 01 真实旧基线，不得删承重内容达标。
+- [x] 度量每条包含第 11 节全部字段，Ticket/Topic/quick 的 kind/outcome、不可观察 null 和 self/independent/mixed 来源正确；metrics 按 Topic 汇总，command_errors 不含测试失败。
+- [x] 最终对 8 个冻结 Skill 比较施工前正文，仅许可全局改动；method 移动、合并、资源和全局清理都没有夹带冻结方法改写。
+- [x] Python 3.10 与 3.14 上 check 通过，执行前后被跟踪文件零变化；CI 保持 check 后 git diff exit-code 的验证，未运行的版本明确报告未验证。

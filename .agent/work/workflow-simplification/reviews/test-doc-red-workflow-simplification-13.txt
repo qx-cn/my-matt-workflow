@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_document_completion_keeps_unobserved_errors_unknown (test_final_integration.MetricsBehaviorTests.test_document_completion_keeps_unobserved_errors_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_final_integration.py", line 99, in test_document_completion_keeps_unobserved_errors_unknown
+    self.assertIsNone(row['command_errors'])
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 is not None
+
+----------------------------------------------------------------------
+Ran 1 test in 0.379s
+
+FAILED (failures=1)

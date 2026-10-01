@@ -1,0 +1,154 @@
+{
+  "baseline": "40e51afc02c1c16d4672a1f82a582d85180fb9e5",
+  "skills": [
+    "my-diagnosing-bugs",
+    "my-resolving-merge-conflicts",
+    "my-triage",
+    "my-wayfinder",
+    "my-wizard",
+    "my-research",
+    "my-prototype",
+    "my-to-questionnaire"
+  ],
+  "classification": "Only invocation metadata, deleted keys/commands, Skill calls replacing body copies, stage handoff and research-method extraction; complete comparison reviewed",
+  "files": [
+    {
+      "path": "skills/my-diagnosing-bugs/SKILL.md",
+      "baseline_sha256": "c5e7874956a6edd8407cd23fb825b1f5eb076a038b31e0941c894d85aaae9182",
+      "current_sha256": "eeed63b2d062a4823c120079bb3fdf300100447024ee0becd241b2185724853c",
+      "changed": true
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/agents/openai.yaml",
+      "baseline_sha256": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+      "current_sha256": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+      "changed": false
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/scripts/hitl-loop.template.sh",
+      "baseline_sha256": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+      "current_sha256": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+      "changed": false
+    },
+    {
+      "path": "skills/my-resolving-merge-conflicts/SKILL.md",
+      "baseline_sha256": "beacba9d37fd14c16f175b34954b3f947b5fa2ae06bbcb5b0bb59476e60e29d1",
+      "current_sha256": "beacba9d37fd14c16f175b34954b3f947b5fa2ae06bbcb5b0bb59476e60e29d1",
+      "changed": false
+    },
+    {
+      "path": "skills/my-resolving-merge-conflicts/agents/openai.yaml",
+      "baseline_sha256": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+      "current_sha256": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+      "changed": false
+    },
+    {
+      "path": "skills/my-triage/AGENT-BRIEF.md",
+      "baseline_sha256": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+      "current_sha256": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+      "changed": false
+    },
+    {
+      "path": "skills/my-triage/OUT-OF-SCOPE.md",
+      "baseline_sha256": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+      "current_sha256": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+      "changed": false
+    },
+    {
+      "path": "skills/my-triage/SKILL.md",
+      "baseline_sha256": "612a6b22a2f2e6cc6d9153bc92e6f0c5e8fe66a97634a5e16f9c3c44773d5840",
+      "current_sha256": "79987834e5304cbeb5292ad01e78579e3cdf47548f3bdb76a17ec026de9a87ec",
+      "changed": true
+    },
+    {
+      "path": "skills/my-triage/agents/openai.yaml",
+      "baseline_sha256": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+      "current_sha256": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+      "changed": false
+    },
+    {
+      "path": "skills/my-wayfinder/SKILL.md",
+      "baseline_sha256": "1a61d6b8c560afd9cb1635ebb4c8138b8e75d37bbe81e01e8dd6bf1f11cdc2b5",
+      "current_sha256": "06bbd0cec20b7423180ce5e3cf33c9c056256daa0eec7474185430c4535d6bb4",
+      "changed": true
+    },
+    {
+      "path": "skills/my-wayfinder/agents/openai.yaml",
+      "baseline_sha256": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+      "current_sha256": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+      "changed": false
+    },
+    {
+      "path": "skills/my-wayfinder/references/map-and-ticket-format.md",
+      "baseline_sha256": "94f8413502a7f2d870d2c8460f90cdcc92d415122ae1a3309b8af774de5e3dd3",
+      "current_sha256": "d8170d1077adc763977a1205bb5e23e753fc0518f75a06a6b2021dd8e2c6c3e2",
+      "changed": true
+    },
+    {
+      "path": "skills/my-wizard/SKILL.md",
+      "baseline_sha256": "626d1a6aae4965b2b72f491b75aa70bbc08cf3704efab50edddbf5a1892a9cbd",
+      "current_sha256": "626d1a6aae4965b2b72f491b75aa70bbc08cf3704efab50edddbf5a1892a9cbd",
+      "changed": false
+    },
+    {
+      "path": "skills/my-wizard/agents/openai.yaml",
+      "baseline_sha256": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+      "current_sha256": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+      "changed": false
+    },
+    {
+      "path": "skills/my-wizard/template.sh",
+      "baseline_sha256": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+      "current_sha256": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+      "changed": false
+    },
+    {
+      "path": "skills/my-research/SKILL.md",
+      "baseline_sha256": "4c1cba82bd6d4d28f903422741165fc6817026780746a7f7df036d93418b7594",
+      "current_sha256": "16bd12f202a84c6054e531a2ab2f6013d6295a843b5b48cbfa5027618c26ee12",
+      "changed": true
+    },
+    {
+      "path": "skills/my-research/agents/openai.yaml",
+      "baseline_sha256": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+      "current_sha256": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+      "changed": false
+    },
+    {
+      "path": "skills/my-prototype/LOGIC.md",
+      "baseline_sha256": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+      "current_sha256": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+      "changed": false
+    },
+    {
+      "path": "skills/my-prototype/SKILL.md",
+      "baseline_sha256": "3339910c51a98eb113b62b6ff2600b133ee8bbe8c61a045c6f6315edbd90ba70",
+      "current_sha256": "9dbb4c403c649501d3b7f2586779289df23cbf38797366edfde8773e3049b61a",
+      "changed": true
+    },
+    {
+      "path": "skills/my-prototype/UI.md",
+      "baseline_sha256": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+      "current_sha256": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+      "changed": false
+    },
+    {
+      "path": "skills/my-prototype/agents/openai.yaml",
+      "baseline_sha256": "6b2d4fa3345bda08b144147a563dafeb1e42d7bd47898d1c21f1493845f22d6a",
+      "current_sha256": "fc7126c462962a94f2ce916b2f51c995b26a0a8aec9f670ae40d43482da15c01",
+      "changed": true
+    },
+    {
+      "path": "skills/my-to-questionnaire/SKILL.md",
+      "baseline_sha256": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+      "current_sha256": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+      "changed": false
+    },
+    {
+      "path": "skills/my-to-questionnaire/agents/openai.yaml",
+      "baseline_sha256": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+      "current_sha256": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+      "changed": false
+    }
+  ]
+}

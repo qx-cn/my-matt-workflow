@@ -7,9 +7,10 @@ import re
 
 from . import ticket_implementation as impl, ticket_review as review, topic_service as topics
 from .tickets import frontmatter
+from .metrics import provenance, command_error_count
 
 
-def metric(unit, outcome, verdict):
+def metric(unit, outcome, verdict, repo=None):
     findings = [f for r in unit.get('reviews', []) for f in r.get('result', {}).get('findings', [])]
     return {'kind': 'ticket', 'topic': unit['topic'], 'ticket': unit['ticket'], 'level': 'standard',
             'started_at': unit['started_at'], 'finished_at': topics.now(), 'outcome': outcome,
@@ -17,10 +18,10 @@ def metric(unit, outcome, verdict):
             'review_rounds': len(unit.get('reviews', [])),
             'findings': {s: sum(f.get('severity') == s for f in findings) for s in ('blocking', 'advisory')},
             'repair_rounds': sum(bool(r.get('repair')) for r in unit.get('reviews', [])),
-            'needs_user_count': unit.get('needs_user_count', 0), 'command_errors': None,
+            'needs_user_count': unit.get('needs_user_count', 0), 'command_errors': command_error_count(repo, unit['topic'], unit['started_at'], unit.get('ticket')) if repo else None,
             # Opening a review consumes a round even if no verdict comes back.
             # Accepting after that interruption must not invent a reviewer result.
-            'reviewer_provenance': verdict.get('reviewer', {}).get('provenance'), 'tests_configured': True}
+            'reviewer_provenance': provenance(unit.get('reviews', [])), 'tests_configured': True}
 
 
 def finish(repo, ticket=None, topic=None, notes_file=None):
@@ -49,7 +50,7 @@ def commit_completion(repo, config, topic, path, unit, record, verdict, notes, o
     dirty = topics.content_dirty(repo)
     if dirty and unit.get('commit'):
         raise topics.TopicError('Ticket 已做代码提交；新增内容请另建 Ticket')
-    completion_metric = metric(unit, outcome, verdict)
+    completion_metric = metric(unit, outcome, verdict, repo)
     message = f"{unit['ticket']}: {value['title']}" + ('\n\n' + notes if notes.strip() else '')
     # In private mode retain the successful code commit before metadata commit.
     # A metadata hook failure may retry without producing another code commit.

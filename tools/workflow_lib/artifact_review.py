@@ -23,16 +23,15 @@ class ArtifactReviewError(ValueError):
 _SNAPSHOT_PREFIX = "my-matt-review-"
 _UNIT_FILE = ".review-unit.json"
 REQUIRED_REVIEW_CHECKS = (
-    "my-final-state-writing",
-    "my-reader-first-writing",
-    "my-visual-communication",
-    "my-humanizer",
-    "my-artifact-finalization",
+    "final-state-writing",
+    "reader-first-writing",
+    "visual-communication",
+    "humanizer",
+    "artifact-finalization",
 )
 ARTIFACT_REQUIRED_CHECKS = {
     "general": REQUIRED_REVIEW_CHECKS,
-    "design": REQUIRED_REVIEW_CHECKS + ("my-review-design",),
-    "repair-plan": ("my-review-design",),
+    "design": REQUIRED_REVIEW_CHECKS + ("review-design",),
 }
 ARTIFACT_KINDS = frozenset(ARTIFACT_REQUIRED_CHECKS)
 REVIEW_CHECK_STATUSES = frozenset(
@@ -73,7 +72,6 @@ def build_artifact_review_snapshot(
     artifacts: list[Path],
     *,
     snapshot_root: Path | None = None,
-    parallel: bool = False,
     artifact_kind: str = "general",
 ) -> dict[str, object]:
     """Capture one immutable byte copy for every reviewer to consume."""
@@ -114,7 +112,7 @@ def build_artifact_review_snapshot(
         {
             "lane_id": check,
             "method": check,
-            "depends_on": [] if parallel or index == 0 else [required_checks[index - 1]],
+            "depends_on": [] if index == 0 else [required_checks[index - 1]],
         }
         for index, check in enumerate(required_checks)
     ]
@@ -122,9 +120,9 @@ def build_artifact_review_snapshot(
         "content_id": content_id,
         "artifact_kind": artifact_kind,
         "artifacts": frozen,
-        "execution_mode": "parallel" if parallel else "serial",
+        "execution_mode": "serial",
         "required_checks": list(required_checks),
-        "dispatch": {"mode": "parallel" if parallel else "serial", "lanes": lanes},
+        "dispatch": {"mode": "serial", "lanes": lanes},
     }
     try:
         marker = directory / _UNIT_FILE

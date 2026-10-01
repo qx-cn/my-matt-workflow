@@ -1,6 +1,0 @@
----
-globs: src/backend/**
-alwaysApply: false
----
-
-Backend changes must run the focused API contract test.

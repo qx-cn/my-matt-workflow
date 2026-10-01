@@ -1,0 +1,9 @@
+{
+  "purpose": "Temporary construction compatibility for wholly deleted declared scopes; no installed or production runtime changes",
+  "source_runtime": "/Users/sherly/.codex/my-matt-workflow/runtime/20261001-082647/tools/workflow.py",
+  "temporary_runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/workflow13-construction-in0g9797/tools/workflow.py",
+  "changed_file": "tools/workflow_lib/run_journal.py",
+  "original_sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+  "temporary_sha256": "ce506551d4e9202f2f5a36ac8bb6dd8c2e6bc9f100756991793cbd0e930393c0",
+  "behavior": "Accept an absent scope only if its frozen base_sha contains matching tracked files; unknown/typo scopes still fail. All other test/review/finish gates are unchanged."
+}

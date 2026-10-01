@@ -301,7 +301,6 @@ class SharedResourceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             for skill in (
                 "my-code-review",
-                "my-diagnosing-bugs",
                 "my-domain-modeling",
                 "my-edit-article",
                 "my-to-tickets",

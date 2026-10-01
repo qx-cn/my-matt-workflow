@@ -1,0 +1,659 @@
+{
+  "base_sha": "e822677965a7fcbdd98522032d10019d5fd485ff",
+  "deleted_files": [
+    {
+      "path": "evals/VALIDATION.md",
+      "baseline_sha256": "b53a9fdd609b292207716dbe8d023f534aa867a6bce6544038402e97dc4170b8",
+      "bytes": 2683,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/agent-rule-review.md",
+      "baseline_sha256": "50ae8a213cb29b14995a8e178f37b7f2c1ddfc05e26e8ee8a64af1bad8943f74",
+      "bytes": 1243,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/astra-behavior-suite.json",
+      "baseline_sha256": "4fa65381baa72ab022ec64a440d41eaaba5b675d0e62525fa1ec5c56676d9a74",
+      "bytes": 5972,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/astra-evidence.schema.json",
+      "baseline_sha256": "5be94f6cd5c6b89886a109c084e7e13f91cc82724b2fc590532083d416492b13",
+      "bytes": 1346,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/code-review-signal-quality.md",
+      "baseline_sha256": "abc866d2c0978c356e6d7bed54005821d798ed707b2cd0c6ce00824fd36ec901",
+      "bytes": 2588,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/execution-evidence-registry.json",
+      "baseline_sha256": "7aae0c9795ac2243505a4b797593feadc7e2ae8e20dc5ace2d7f9f3f0bf3186f",
+      "bytes": 36,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/grill-spec-boundary.md",
+      "baseline_sha256": "d7bfc1e2ecad13217a1bcd7ad69ec3cb7a9ef0a62687a56e0be8fb9dfc33844b",
+      "bytes": 1360,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/implementation-turn-closure.md",
+      "baseline_sha256": "f7adab84664489e22e0bd30a02d8973d4ed7f28d608c84fd6cdd1557d37e7ebc",
+      "bytes": 2835,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/main-workflow-fresh-context.md",
+      "baseline_sha256": "d29ff5ef47140ed99a4759436d4dfb91716e2251f0e6b98a1672c29c047e2917",
+      "bytes": 1949,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/skill-review-root-cause.md",
+      "baseline_sha256": "612f1ad591c34b346a7185244e488c48664925d0c6fef730aa94d11816c3550a",
+      "bytes": 1386,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/agent-smokes/teach-course-quality.md",
+      "baseline_sha256": "45d7e1fc0c5344334282406c61bbd7562446e1a914d1c997b242d8507f30fb19",
+      "bytes": 2512,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/agent-rule-review/project/.cursor/rules/backend.mdc",
+      "baseline_sha256": "df055d4ac440c0981ec658ee7efe53adf4898e67bc3dfd4deb4b60a6ff36c668",
+      "bytes": 106,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/agent-rule-review/project/.cursor/rules/broken.mdc",
+      "baseline_sha256": "6a597da6315cf73953421bd0e539b1b068f57cd38f40624d7825cc9babc382b9",
+      "bytes": 96,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/agent-rule-review/project/.cursor/rules/generated-safety.mdc",
+      "baseline_sha256": "10b83f4e46419dbaa40c2f3727e0cb4e1a48d23ab0d9de6e405b11c61febcb28",
+      "bytes": 240,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/agent-rule-review/project/.cursor/rules/manual.mdc",
+      "baseline_sha256": "8c25156afc67d307c22cdd76c0d648a87ca7daeb91f0dc406e2665e6088d56d4",
+      "bytes": 77,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/agent-rule-review/project/AGENTS.md",
+      "baseline_sha256": "4cac0f20ae25d2cf815e24d6cddc462f658ebe8e0d9f3eec156c232f711f8830",
+      "bytes": 163,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/change-only/baseline/.gitignore",
+      "baseline_sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "bytes": 13,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/change-only/baseline/pricing.py",
+      "baseline_sha256": "3dbf1383c61c79ee4425879445c0f948d3a42a11337fa0c09aa0433015a07d61",
+      "bytes": 293,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/change-only/baseline/specs/checkout.md",
+      "baseline_sha256": "9be084daf64feee6800252764f5c7b6b3d2351a55c6af1c7ab3391f0695180ea",
+      "bytes": 262,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/change-only/candidate/pricing.py",
+      "baseline_sha256": "ccf5ab64c8180d48ead0c918465e14461af48937b96ab6a494a7e3dbc64b40f5",
+      "bytes": 433,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/change-only/candidate/test_pricing.py",
+      "baseline_sha256": "f20f0006c96425ba8b1d52c8c1ae00f4c76593a420522b66060ec46ff029d7e5",
+      "bytes": 337,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/touched-context/baseline/.gitignore",
+      "baseline_sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "bytes": 13,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/touched-context/baseline/inventory.py",
+      "baseline_sha256": "1e17de47a736587238851e6e1b1e11423edd88bf7d901c8d9ea4a3ad73dcc74f",
+      "bytes": 289,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/touched-context/baseline/specs/bulk-reservation.md",
+      "baseline_sha256": "d906c502c7d1868a30e3180b81e11767a56bb74d0580af09eac1349beb772a8e",
+      "bytes": 189,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/touched-context/candidate/inventory.py",
+      "baseline_sha256": "a247219e9b87153578ea0aadf6fbcc9ed917e45048680e37101f052f9620f6d7",
+      "bytes": 428,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/without-spec/baseline/.gitignore",
+      "baseline_sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "bytes": 13,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/without-spec/baseline/pricing.py",
+      "baseline_sha256": "b990c2a0c0f0c432eda83c25983d7f74999c231174b58091c2eec72549dd94ff",
+      "bytes": 163,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/code-review/without-spec/candidate/pricing.py",
+      "baseline_sha256": "ac90a7ad5f973cded9591ef555593785c7be9bf473c17c5beef3723e6eb9d004",
+      "bytes": 229,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/main-workflow/app.py",
+      "baseline_sha256": "7052b32d6e2fbe77e979586b2a5d86c86902e931b3105141c337e74183533905",
+      "bytes": 136,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/main-workflow/requirements.md",
+      "baseline_sha256": "9cf76deaa425a9ce328b19768a8a69ce4cba3de3740811aaccfbc35f951d37f2",
+      "bytes": 725,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/main-workflow/test_app.py",
+      "baseline_sha256": "950e029e528064f09ea78ffdd2022a0a88afe23573eba148c0e68459ecf2c2fc",
+      "bytes": 548,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/.agent/matt-workflow.md",
+      "baseline_sha256": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "bytes": 476,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/specs/specs-turn-closure-01.md",
+      "baseline_sha256": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "bytes": 157,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md",
+      "baseline_sha256": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "bytes": 502,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md",
+      "baseline_sha256": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "bytes": 504,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/AGENTS.md",
+      "baseline_sha256": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "bytes": 97,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/app.py",
+      "baseline_sha256": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "bytes": 144,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/review.py",
+      "baseline_sha256": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "bytes": 1595,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-implement/unfinished-session/test_app.py",
+      "baseline_sha256": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "bytes": 372,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-teach/bad-author-centered.content.md",
+      "baseline_sha256": "60d5c5d5433f9c74b93d39a5fad925d1572dfa598a66186058863c106b6aa46c",
+      "bytes": 1245,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-teach/source-heavy/MISSION.md",
+      "baseline_sha256": "43b679793051f5553396a1cfc80f5dc735a8cdc29b1c1ec26ca74736d01c8a42",
+      "bytes": 519,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-teach/source-heavy/RESOURCES.md",
+      "baseline_sha256": "fb10ac49c705feec5a3e0bbeb68aa6eb72d996ec9cee66371ff9aabfea8b7bfe",
+      "bytes": 490,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/my-teach/source-heavy/source-notes.md",
+      "baseline_sha256": "42fb3ca78fb5f46f5ab5a577f634545d976d7dad08dc89b22dfaa43098760ad0",
+      "bytes": 783,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/fixtures/skill-review/runtime-owned-safety/SKILL.md",
+      "baseline_sha256": "5af6b3fa4aec33804137886136507d8254fb36eebca894141f7668013497ccad",
+      "bytes": 542,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/agent-rule-review-root-before-wording.json",
+      "baseline_sha256": "7f17d1f7715b6fd971937ab4d72039c7429d746fe20257688ac472c21e10ec29",
+      "bytes": 1287,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/artifact-review-design-method-boundary.json",
+      "baseline_sha256": "f826ceefc401bb5294eeea7fd3448153fd4fa817eedf5964229ca9f09730ff13",
+      "bytes": 1313,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/artifact-review-method-boundary.json",
+      "baseline_sha256": "09f87be8a824f9ab8891353742e3d6e8517e2e71b7d161dae01734421810b516",
+      "bytes": 1121,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/artifact-review-repair-plan-method-boundary.json",
+      "baseline_sha256": "d82597105c40c09d4e14c37adc9bba3024f691b7fa214e6dcbcd5104da642795",
+      "bytes": 975,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/diagnosing-bugs-no-red-loop.json",
+      "baseline_sha256": "412b52589af331c58119f432eb188389aff6802e56d7ca2016e3b1c38302f1b4",
+      "bytes": 597,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-causal-gap.json",
+      "baseline_sha256": "55f3ea760c6c80280744946fa9f46c3c5fa16ea4b2ab3ebf1260f364503724ac",
+      "bytes": 707,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-evidence-mismatch.json",
+      "baseline_sha256": "25cbf7230c9b1a7f5a377364fe234eb0de4e432cde8fb7ce14a5ee3d9d51fde3",
+      "bytes": 730,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-evidence-over-falsifiability.json",
+      "baseline_sha256": "97aad5f9ceb4449ae899a13257c3fef3c28c71a34f0d69ca5e8b77d923988f46",
+      "bytes": 753,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-goal-substitution.json",
+      "baseline_sha256": "2f4590ab9531e030bf23529cb59a12f8029064660537f2b4a4d508ce0e55e431",
+      "bytes": 729,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-pseudo-constraint.json",
+      "baseline_sha256": "42ea56230f2ef99624276f51e5f68238694c68ee4590e643ed8bac982fbf481f",
+      "bytes": 729,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-sound-proposal.json",
+      "baseline_sha256": "5d0f295a52ca8b5978733cbf2693ca48b45501c5099e304df4b59c84072a98cc",
+      "bytes": 708,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/first-principles-unnecessary-complexity.json",
+      "baseline_sha256": "54457151e0c60b7778e111d3d8f8b7b21a93bdd65b517e8ec870c5c13ac6e780",
+      "bytes": 751,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/grilling-one-question-hitl.json",
+      "baseline_sha256": "bb6e0d5ce27b4e9ee4c3d455aab474b09ca14249dd739a7a317199d4200ac5e9",
+      "bytes": 565,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/handoff-decision-mismatch.json",
+      "baseline_sha256": "50b1ca9cfb1b7081aee44f2b1c1fcbc2693d20bcfdac9fe12538c71119be06d3",
+      "bytes": 1232,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/handoff-draft-not-deliver.json",
+      "baseline_sha256": "f71a729f0611c668f8318328adccc7b5961c6a44c8f983a2a076d85cf1806600",
+      "bytes": 1360,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/handoff-first-step-not-actionable.json",
+      "baseline_sha256": "cfa4397bed529fd403d980c71732d9a75f3ec7b58ca0dddc538c354f23f275d0",
+      "bytes": 1207,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/handoff-goal-mismatch.json",
+      "baseline_sha256": "13ffeb0ccb5f8b90761e7ce4eb06e95618a4f98d8c82db6dbf98f14515e3e24c",
+      "bytes": 1178,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/handoff-round-trip.json",
+      "baseline_sha256": "767e68645307e84d53be395d48053fe638ce2967bf4b460b87c5789f1117d271",
+      "bytes": 1803,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/handoff-state-stale.json",
+      "baseline_sha256": "20f80e4dcbab26bad2d81433fa20142514862390bc5a4007c591dba800a419e7",
+      "bytes": 1262,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/implementation-review-baseline-reachability.json",
+      "baseline_sha256": "491604f1ba04e405052c34bdfa30596f943d1fd78663bcfb4f9639c84a19d6f4",
+      "bytes": 891,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/implementation-review-repeated-root-cause.json",
+      "baseline_sha256": "de6d293d3a917e4e18700f0131c62fc92f1d235a2152c7c516123bb4ad291c42",
+      "bytes": 883,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/implementation-turn-active-session.json",
+      "baseline_sha256": "c8c14922b535f865920065725475c428fb42566e7060df2c1ab308eece8768c0",
+      "bytes": 676,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/implementation-turn-ready-frontier-continue.json",
+      "baseline_sha256": "6f57f4f08a1b17808f0dc23cb8db5df07d0ccf3ecc704d1fa427b9848b37cdca",
+      "bytes": 702,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/implementation-turn-repair-limit-blocked.json",
+      "baseline_sha256": "3f01d446518d2c20209b1652a06620010f13bc7535ec65c800d06a0bb28f332c",
+      "bytes": 694,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/implementation-turn-single-ticket-complete.json",
+      "baseline_sha256": "61ea9189962da81b63673780b0913da67955c5f40eaea7ba98c39f3ec90f9e44",
+      "bytes": 678,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/main-workflow-fresh-context.json",
+      "baseline_sha256": "85d3eb1044e67b05cce9599eed6b4e0b81ba2a8266c986fb26cb5eb3648e4700",
+      "bytes": 1304,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/requirement-analysis-clear-request.json",
+      "baseline_sha256": "a8470bbbf94440dc7f632769aaba7051125d493f16493114589c88f89fd10a72",
+      "bytes": 744,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/requirement-analysis-misleading-analogy.json",
+      "baseline_sha256": "5d7920f675bd428bce153bc609ef5e827e67fbf8b262a2b22345114a0b1b88b2",
+      "bytes": 770,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/rule-plan-ticket-loop.json",
+      "baseline_sha256": "91e09ad7935e3547bac203f78efb0971c94f332d4e9e546bae4e7aa2f5f85dcd",
+      "bytes": 919,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/skill-review-root-before-wording.json",
+      "baseline_sha256": "1c27590b4cd58b69bf0cc2404d90bd6e0c17da87e8a82d93bdec7add0005955c",
+      "bytes": 1044,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/tdd-seam-pressure.json",
+      "baseline_sha256": "46e7316a8cd719a48fcdce85bb1addf57c6ebee841f79ce1b01a1e980085c99b",
+      "bytes": 571,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/ticket-expand-contract-accepted.json",
+      "baseline_sha256": "897669d5be5f590b3c133869d7b3b5d72780eec55af8ffcac7a10637de690ff0",
+      "bytes": 692,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/ticket-expand-contract-requires-compatibility.json",
+      "baseline_sha256": "7598636c9be3b15444b2ab9c1ea260b71c2d66cb3cb59673c53c1dc1459f4664",
+      "bytes": 730,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/ticket-horizontal-slice-rejected.json",
+      "baseline_sha256": "7d00bc4a3e7392b74cfc27a8f6cd48c4f3423c2d106492f7438c545be6356f9c",
+      "bytes": 687,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/ticket-integrate-and-verify-fallback.json",
+      "baseline_sha256": "fdf3ae43c70e837cca064c729e01bcc278ca7f62d7cd6bfb670b213c9cd5e6cf",
+      "bytes": 716,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/ticket-vertical-slice-accepted.json",
+      "baseline_sha256": "9354279684723733882d3b6f4ad7508ab4381b7456e1654b5fa3ef91343d0d19",
+      "bytes": 684,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/scenarios/writing-great-skills-baseline-discipline.json",
+      "baseline_sha256": "c955695e208930ce70861eacf0dc765adccb74fced0a41fc8448e4361e8fad22",
+      "bytes": 729,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "evals/smoke-registry.json",
+      "baseline_sha256": "c9f95408e0a657a3d6328f0619c0abf6afc998770225f7ec13c5227ee526bee8",
+      "bytes": 2161,
+      "disposition": "retired eval scenario"
+    },
+    {
+      "path": "tests/test_behavior_evidence.py",
+      "baseline_sha256": "3372826d4d1174f0ecdf299ecd501290536c85aa1f6ff1d4e170afeb51c7aa62",
+      "bytes": 13477,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_evals.py",
+      "baseline_sha256": "4ecc776e613274387d2458a855c2cab650944d08411249684acd9e12b8519398",
+      "bytes": 14322,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_evidence_records.py",
+      "baseline_sha256": "0f5078627b558a2ecedcc9994127a8e3f93ac36b91ae0a3dab7d098929ce4e64",
+      "bytes": 1511,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_implementation_service.py",
+      "baseline_sha256": "227c6cbbc8b99060033a241ab6b85e0a581ad8d275666aeca76e90124d7fcf08",
+      "bytes": 1548,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_lifecycle_hardening.py",
+      "baseline_sha256": "e73c7e3e1f4a13333486e3959a6ca59a3aff188b422ebad08c832b092ce3a192",
+      "bytes": 20705,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_repair_plans.py",
+      "baseline_sha256": "5a1e0bd1effb063f87c847aaa827b0ae799e8d4fae5be9d6831141a513087ac6",
+      "bytes": 1610,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_review_results.py",
+      "baseline_sha256": "f89f5d26ea49ee019b56e1610f808dfe49863bd1aa586a1b1bbd3cfe2e0ed34d",
+      "bytes": 2324,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_run_journal.py",
+      "baseline_sha256": "f591d8b3143c6f75e03c351c7768d9f6a5da5ba6342b6f13c4aa44cee0485a2e",
+      "bytes": 48385,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_work_overview.py",
+      "baseline_sha256": "b04eb661aa24a3a93af370f3a4883cd122fad173faa50008af6d0534d57e4baa",
+      "bytes": 21899,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tests/test_workflow_cli_hardening.py",
+      "baseline_sha256": "08b66eb26e7d63a922bda6cf149fa69210ad8df6ea4e2c35b4a8e43084e4f43f",
+      "bytes": 4114,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/behavior_evidence.py",
+      "baseline_sha256": "a603ea8291ee02fa116d762708b908bf12fe2c8e6ae055f1862af1195d398cea",
+      "bytes": 9592,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/decision_gates.py",
+      "baseline_sha256": "bcd678cfda38f87cb8aef6fa13fbedcbdbfeb6068bcb44b085da5508951b6476",
+      "bytes": 1395,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/evals.py",
+      "baseline_sha256": "bc17301041ba1ba4a8f2cd292d7b93d7bfd504441b6b67e4f02ed756a2f9dbcb",
+      "bytes": 45791,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/evidence_records.py",
+      "baseline_sha256": "613447ba7d7d44a721f847b4bfdf5188e37c257de50dab8bea5704feea5a37ad",
+      "bytes": 2002,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/implementation_service.py",
+      "baseline_sha256": "086f20a984d5c50bc67a698002b4389c70810aef7e438497f68b4c730b101c3a",
+      "bytes": 2091,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/lifecycle.py",
+      "baseline_sha256": "f33b496865d6d81cdc1923354ad6965d8e9c00a3c92cfeb29ff2717fec55f7a3",
+      "bytes": 13570,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/profile.py",
+      "baseline_sha256": "0d67343a96cd31b9d6cd66c0feb5e72f946a74ea9b08cac5819f0e89c8f9614e",
+      "bytes": 19291,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/repair_plans.py",
+      "baseline_sha256": "e407d92af5f906749eca9dd23388fc4780494b4d897d22c60f40a081ffe13ae9",
+      "bytes": 2111,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/review_results.py",
+      "baseline_sha256": "db8178153d0cc62bc850d74f58125435003eb79ac7d985ce46f6bc894f2cd07f",
+      "bytes": 9058,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/run_journal.py",
+      "baseline_sha256": "f6b050de3c31b4277bdab59b0c3f23533810db6b5fa158623b3dad5470fa32a1",
+      "bytes": 90852,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/smoke_registry.py",
+      "baseline_sha256": "b49e060521627fbe34890f3f73ae4874632bd0e04bd485db3f25e4dbcaa3354e",
+      "bytes": 4327,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/spec_archive.py",
+      "baseline_sha256": "28567c251b3d22b6f240ef0b8c594ec88acde3539521bbdd4b1d4c0306eccbdb",
+      "bytes": 20746,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/topic_archive.py",
+      "baseline_sha256": "1afd1bc880272e5f082f08e176213368e75c374ec04bee42ec80633e3d0e6177",
+      "bytes": 28111,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/transitions.py",
+      "baseline_sha256": "893033df7a0747045d8a7e78dbae934c91713569e89aa5fa72f1d1d336aab170",
+      "bytes": 4227,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/work_artifacts.py",
+      "baseline_sha256": "39173508e02be70f77287e2b3aab6bcd5e88b1f53d4c0d0051a4add246ef7d6e",
+      "bytes": 16047,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/work_overview.py",
+      "baseline_sha256": "eee680d072bcd2eb8b398ee249d43ba006ddd069221eb8a80d313b73a4434822",
+      "bytes": 18566,
+      "disposition": "retired old runtime API or tests"
+    },
+    {
+      "path": "tools/workflow_lib/write_gates.py",
+      "baseline_sha256": "061b72b08f37e9defd718226e695412fba9dcd5c7454c81280fb1534d0a451ed",
+      "bytes": 2463,
+      "disposition": "retired old runtime API or tests"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "python_3_10": {
+    "version": "3.10.21",
+    "result": {
+      "status": "valid",
+      "tests": {
+        "evidence_level": "unit",
+        "status": "valid"
+      }
+    },
+    "exit_code": 0,
+    "runtime": "temporary standalone with verified release SHA256"
+  },
+  "python_3_14": {
+    "version": "3.14.4",
+    "result": {
+      "status": "valid",
+      "tests": {
+        "evidence_level": "unit",
+        "status": "valid"
+      }
+    },
+    "exit_code": 0
+  },
+  "tracked_files_unchanged": true,
+  "tracked_inventory_sha256": "054dd6e6f9cd52b43e50097cb7a5ce41ccd8b4df8bffb4630175835d01e6e09c",
+  "formal_test_receipt": {
+    "evidence_id": "9733f714ce67e52ee0ef7daa907161d9cd900734286a8da6b258bd9fed1b454e",
+    "kind": "test"
+  },
+  "final_review_receipt": {
+    "evidence_id": "f2a9eb333f54765f65f709e02760b2becaab4ad95a83ee777c62053b6cc7f79c",
+    "kind": "review"
+  },
+  "targeted_tests": {
+    "count": 12,
+    "status": "pass"
+  },
+  "source_validation": "VALID skills=32",
+  "temporary_python_download_sha256": "cee232aabfb6790eec78f3cca935caeb7bd4eedca4dcb0a10dbcdb4302320b38"
+}

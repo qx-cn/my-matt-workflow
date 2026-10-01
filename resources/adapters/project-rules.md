@@ -2,7 +2,7 @@
 
 规则的权力边界与冲突处理遵循[指令权威](../instruction-authority.md)。
 
-`default_execution_agent` 只为未显式分配的 Ticket 提供 `execution_agent` 初值。只有 Ticket 的 `execution_agent` 选择执行 Agent：`auto` 在 `run-start` 绑定当前 Agent，run context 固定本次执行结果；后续实施和审查只使用该值。规划可用当前安装状态的 `installed_agent` 收集初步规则证据，但这不分配执行 Agent，也不能代替每张 Ticket 在实施前的规则解析；明确指定的 Agent 与当前环境不一致时停止，不得混读多个 Agent 的专属规则。
+`default_execution_agent` 只为未显式分配的 Ticket 提供 `execution_agent` 初值。只有 Ticket 的 `execution_agent` 选择执行 Agent：`auto` 在 `implement start` 绑定当前 Agent，实施记录固定本次执行结果；后续实施和审查只使用该值。规划可用当前安装状态的 `installed_agent` 收集初步规则证据，但这不分配执行 Agent，也不能代替每张 Ticket 在实施前的规则解析；明确指定的 Agent 与当前环境不一致时停止，不得混读多个 Agent 的专属规则。
 
 共享标准来自贡献规范、编码规范与相关 ADR。跨 Agent 约束若维护在 `AGENTS.md`，非 Codex Agent 只能把它作为 workflow 约定读取；这不改变各宿主自身的原生规则发现方式。
 

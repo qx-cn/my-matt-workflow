@@ -408,23 +408,21 @@ def complete(repo, topic=None, accepted_reason=None, known_issues=None):
             raise TopicError(f"测试改变了内容：{command}；请检查后重新运行 topic complete")
     original_summary = summary.read_bytes() if summary else None
     original_branch = (path / "branch-review.json").read_bytes() if multi else None
+    from .metrics import command_error_count
     finished = now()
     record = {"kind": "quick" if quick else "topic", "topic": topic, "ticket": None,
               "level": value.get("level"), "started_at": value.get("started_at"),
               "finished_at": finished, "outcome": "accepted" if accepted_reason is not None else "complete",
               "test_runs": value.get("test_runs", 0) if quick else None,
               "review_rounds": None, "findings": {"blocking": None, "advisory": None},
-              "repair_rounds": None, "needs_user_count": None, "command_errors": None,
+              "repair_rounds": None, "needs_user_count": None,
+              "command_errors": command_error_count(repo, topic, value.get("started_at")) if value.get("level") is not None else None,
               "reviewer_provenance": "self" if quick else None,
               "tests_configured": bool(tests) if quick else None}
     metrics = repo / ".agent/metrics.jsonl"
     original_metrics = metrics.read_bytes() if metrics.exists() else None
-    if branch_unit is not None:
-        from .ticket_completion import metric
-        test_unit = json.loads(branch_review.tests_record(repo, topic).read_text())
-        counts = metric({**branch_unit, 'ticket': None, 'tests': test_unit['tests']}, record['outcome'], branch_unit['reviews'][-1])
-        for key in ('test_runs','review_rounds','findings','repair_rounds','needs_user_count','reviewer_provenance','tests_configured'):
-            record[key] = counts[key]
+    from .metrics import topic_observations
+    record.update(topic_observations(repo, topic, value, config))
     private = config["agent_directory_mode"] == "private"
     # In private mode commit content first. If the metadata commit fails,
     # record that commit so recovery cannot create a second quick code commit.
@@ -505,6 +503,9 @@ def abandon(repo, topic=None, reason=''):
                   finished_at=value['finished_at'],outcome='abandoned',test_runs=None,review_rounds=None,
                   findings=dict(blocking=None,advisory=None),repair_rounds=None,needs_user_count=None,
                   command_errors=None,reviewer_provenance=None,tests_configured=None)
+    from .metrics import command_error_count, topic_observations
+    record['command_errors'] = command_error_count(repo,topic,value.get('started_at'))
+    record.update(topic_observations(repo,topic,value,config))
     try:
         (path/STATE_FILE).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
         with metrics.open('a') as stream: stream.write(json.dumps(record,ensure_ascii=False)+'\n')

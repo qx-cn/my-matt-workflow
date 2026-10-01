@@ -5,7 +5,7 @@
 下列内容即使像 AI 腔也**不要**当文风问题清理：
 
 - 命令、CLI 标志、脚本入口、workflow 子命令
-- 策略键与合法取值（如 `humanizer_policy: confirm`）
+- 配置键与合法取值
 - Ticket / Spec 的 frontmatter、字段名、枚举、`blocked_by`、验收复选框原文
 - 硬性「必须 / 不得」及同等约束句
 - 代码块、标识符、API 名、错误码

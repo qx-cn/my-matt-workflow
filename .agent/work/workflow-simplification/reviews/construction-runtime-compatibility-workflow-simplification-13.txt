@@ -1,0 +1,29 @@
+from pathlib import Path
+import hashlib,json,shutil,tempfile
+source=Path('/Users/sherly/.codex/my-matt-workflow/runtime/20261001-082647')
+target=Path(tempfile.mkdtemp(prefix='workflow13-construction-'))
+shutil.copytree(source/'tools',target/'tools')
+p=target/'tools/workflow_lib/run_journal.py'
+original=p.read_bytes();text=original.decode()
+text=text.replace('def _scope_files(repo: Path, paths: list[object]) -> list[Path]:','def _scope_files(repo: Path, paths: list[object], base_sha: str | None = None) -> list[Path]:')
+text=text.replace('''        if not matched:
+            raise RunJournalError(f"code scope 不存在：{raw}")''','''        if not matched:
+            # A declared scope may be entirely removed by this Ticket. Accept
+            # absence only when the fixed Git baseline proves the scope existed.
+            import fnmatch
+            baseline = subprocess.run(
+                ["git", "ls-tree", "-rz", "--name-only", base_sha],
+                cwd=repo, capture_output=True, check=False,
+            ) if base_sha else None
+            deleted_scope = baseline is not None and baseline.returncode == 0 and any(
+                fnmatch.fnmatchcase(name, raw) or name.startswith(raw.rstrip("/") + "/")
+                for name in baseline.stdout.decode().split("\\0") if name
+            )
+            if not deleted_scope:
+                raise RunJournalError(f"code scope 不存在：{raw}")''')
+text=text.replace('_scope_files(repo, scope)','_scope_files(repo, scope, str(context.get("base_sha", "")))')
+assert text!=original.decode();p.write_text(text)
+record={'purpose':'Temporary construction compatibility for wholly deleted declared scopes; no installed or production runtime changes','source_runtime':str(source/'tools/workflow.py'),'temporary_runtime':str(target/'tools/workflow.py'),'changed_file':'tools/workflow_lib/run_journal.py','original_sha256':hashlib.sha256(original).hexdigest(),'temporary_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'behavior':'Accept an absent scope only if its frozen base_sha contains matching tracked files; unknown/typo scopes still fail. All other test/review/finish gates are unchanged.'}
+Path('/tmp/workflow13-adapter.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+Path('/tmp/workflow13-runtime-path.txt').write_text(str(target/'tools/workflow.py'))
+print(record['temporary_runtime'])

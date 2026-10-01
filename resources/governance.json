@@ -39,7 +39,7 @@
     },
     "resources/adapters/ticket-selection.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_ready_ticket_requires_rule_evidence"
+      "validation": "tests/test_implement_lifecycle.py::ImplementationTests.test_start_guards_dependencies_content_and_quick"
     },
     "resources/adapters/assurance-levels.md": {
       "kind": "execution-protocol",
@@ -67,7 +67,7 @@
     },
     "resources/adapters/project-rules.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ProfileTests.test_plan_skills_use_project_rule_adapter"
+      "validation": "tests/test_implement_lifecycle.py::ImplementationTests.test_dependency_commit_and_rules_are_in_brief"
     },
     "resources/adapters/implementation-session.md": {
       "kind": "execution-protocol",
@@ -107,7 +107,7 @@
     },
     "policies/write-boundaries.md": {
       "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::WriteGateTests.test_every_configured_write_policy_has_a_runtime_gate"
+      "validation": "tests/test_implement_finish.py::FinishTests.test_five_steps_finish_commits_once_and_archives_single_ticket"
     },
     "resources/requirement-analysis.md": {
       "kind": "execution-protocol",

@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import hashlib
 import re
-from dataclasses import dataclass
 from pathlib import Path
 
 from .rules import EXECUTION_AGENT_POLICIES
@@ -20,26 +19,7 @@ _ACCEPTANCE = re.compile(
     r"^\s*- \[(?P<state>[ xX])\]\s+(?P<text>.+)$", re.MULTILINE
 )
 REVIEW_PROBES = frozenset({"recovery", "unknown-response"})
-IMPLEMENTATION_ENTRY_STATUSES = {"ready-for-agent", "revalidated"}
-TICKET_STATUS_TRANSITIONS = {
-    "ready-for-agent": {"implementing"},
-    "implementing": {"complete", "blocked-by-design"},
-    "blocked-by-design": {"revising"},
-    "revising": {"revalidated"},
-    "revalidated": {"implementing"},
-    "complete": set(),
-}
-
-
-@dataclass(frozen=True)
-class TicketCandidate:
-    """A locally stored implementation Ticket eligible for deterministic ordering."""
-
-    identifier: str
-    path: Path
-    sequence: int
-
-
+IMPLEMENTATION_ENTRY_STATUSES = {"ready-for-agent"}
 def _value(raw: str) -> object:
     value = raw.strip()
     if value.startswith("[") and value.endswith("]"):
@@ -196,6 +176,10 @@ def validate_spec_lineage(
     }
 
 
+def _unchecked_acceptance(path):
+    return any(match['state'] == ' ' for match in _CHECKBOX.finditer(path.read_text()))
+
+
 def validate_ready_ticket(
     path: Path, *, dependency_statuses: dict[str, str] | None = None
 ) -> dict[str, object]:
@@ -276,178 +260,3 @@ def review_probes(ticket: dict[str, object], path: Path) -> list[str]:
     if len(set(declared)) != len(declared):
         raise TicketError(f"Ticket review_probes 不得重复：{path}")
     return sorted(declared)
-
-
-def validate_ticket_transition(path: Path, target_status: str) -> dict[str, object]:
-    """Validate one explicit implementation Ticket state change without writing it."""
-    ticket = frontmatter(path)
-    if ticket.get("ticket_kind") != "implementation":
-        raise TicketError("只有 implementation Ticket 可使用实施状态迁移")
-    current = ticket.get("status")
-    if current not in TICKET_STATUS_TRANSITIONS:
-        raise TicketError(f"未知 implementation Ticket 状态：{current}")
-    if target_status not in TICKET_STATUS_TRANSITIONS[current]:
-        raise TicketError(f"非法 Ticket 状态迁移：{current} -> {target_status}")
-    if target_status == "implementing" and current in IMPLEMENTATION_ENTRY_STATUSES:
-        records, _ = ticket_scope_state(path.parent)
-        validate_ready_ticket(
-            path,
-            dependency_statuses={
-                identifier: str(metadata.get("status"))
-                for identifier, (_, metadata) in records.items()
-            },
-        )
-    if target_status == "revalidated":
-        _admission_fields(ticket, path)
-    if target_status == "complete" and _unchecked_acceptance(path):
-        raise TicketError("验收标准尚未全部勾选，Ticket 不得进入 complete")
-    return {
-        "status": "allow",
-        "path": str(path),
-        "from": current,
-        "to": target_status,
-    }
-
-
-def _sequence(ticket: dict[str, object], path: Path) -> int:
-    value = ticket.get("sequence")
-    if isinstance(value, str) and value.isdigit():
-        return int(value)
-    if isinstance(value, int):
-        return value
-    raise TicketError(f"Ticket 缺少有效 sequence：{path}")
-
-
-def _unchecked_acceptance(path: Path) -> bool:
-    return any(match["state"] == " " for match in _CHECKBOX.finditer(path.read_text(encoding="utf-8")))
-
-
-def _ticket_records(tickets_dir: Path) -> dict[str, tuple[Path, dict[str, object]]]:
-    records: dict[str, tuple[Path, dict[str, object]]] = {}
-    for path in sorted(tickets_dir.glob("*.md")):
-        ticket = frontmatter(path)
-        identifier = ticket.get("id")
-        if not isinstance(identifier, str) or not identifier:
-            raise TicketError(f"Ticket 缺少有效 id：{path}")
-        if identifier in records:
-            raise TicketError(f"Ticket id 重复：{identifier}")
-        records[identifier] = (path, ticket)
-    return records
-
-
-def _validate_dependency_graph(
-    records: dict[str, tuple[Path, dict[str, object]]]
-) -> None:
-    graph: dict[str, list[str]] = {}
-    for identifier, (path, ticket) in records.items():
-        blocked_by = ticket.get("blocked_by")
-        if not isinstance(blocked_by, list) or not all(
-            isinstance(item, str) and item for item in blocked_by
-        ):
-            raise TicketError(f"Ticket blocked_by 必须是字符串列表：{path}")
-        missing = [blocker for blocker in blocked_by if blocker not in records]
-        if missing:
-            raise TicketError(f"Ticket 依赖不存在：{identifier} -> {', '.join(missing)}")
-        graph[identifier] = blocked_by
-
-    state: dict[str, int] = {}
-
-    def visit(identifier: str, chain: list[str]) -> None:
-        if state.get(identifier) == 1:
-            start = chain.index(identifier)
-            cycle = chain[start:] + [identifier]
-            raise TicketError(f"Ticket 依赖环：{' -> '.join(cycle)}")
-        if state.get(identifier) == 2:
-            return
-        state[identifier] = 1
-        for dependency in graph[identifier]:
-            visit(dependency, [*chain, identifier])
-        state[identifier] = 2
-
-    for identifier in graph:
-        visit(identifier, [])
-
-
-def ticket_scope_state(
-    tickets_dir: Path, *, allowed_ids: set[str] | None = None
-) -> tuple[dict[str, tuple[Path, dict[str, object]]], set[str]]:
-    if not tickets_dir.is_dir():
-        raise TicketError(f"Ticket 目录不存在：{tickets_dir}")
-    records = _ticket_records(tickets_dir)
-    _validate_dependency_graph(records)
-    scope = set(records) if allowed_ids is None else set(allowed_ids)
-    missing = scope - set(records)
-    if missing:
-        raise TicketError(f"批准范围包含不存在的 Ticket：{', '.join(sorted(missing))}")
-    return records, scope
-
-
-def eligible_local_tickets(tickets_dir: Path, *, allowed_ids: set[str] | None = None) -> list[TicketCandidate]:
-    """Return ready local implementation Tickets in stable workflow order.
-
-    This is intentionally read-only: claiming, completing, and committing stay
-    in the host workflow, so selecting the next Ticket cannot mutate a project.
-    """
-    records, scope = ticket_scope_state(tickets_dir, allowed_ids=allowed_ids)
-    candidates: list[TicketCandidate] = []
-    for identifier in records:
-        if identifier not in scope:
-            continue
-        candidate = eligible_ticket_candidate(identifier, records)
-        if candidate is not None:
-            candidates.append(candidate)
-    return sorted(candidates, key=lambda candidate: (candidate.sequence, candidate.identifier))
-
-
-def eligible_ticket_candidate(
-    identifier: str, records: dict[str, tuple[Path, dict[str, object]]]
-) -> TicketCandidate | None:
-    """Check one candidate without discarding unrelated Ticket state."""
-    path, ticket = records[identifier]
-    if ticket.get("ticket_kind") != "implementation":
-        return None
-    status = ticket.get("status")
-    if not isinstance(status, str):
-        raise TicketError(f"Ticket status 必须是字符串：{path}")
-    if status not in IMPLEMENTATION_ENTRY_STATUSES:
-        return None
-    claimed_by = ticket.get("claimed_by")
-    if claimed_by is not None and not isinstance(claimed_by, str):
-        raise TicketError(f"Ticket claimed_by 必须是字符串：{path}")
-    if claimed_by not in {None, ""}:
-        return None
-    blocked_by = ticket.get("blocked_by")
-    if not isinstance(blocked_by, list) or not all(
-        isinstance(blocker, str) and blocker for blocker in blocked_by
-    ):
-        raise TicketError(f"Ticket blocked_by 必须是字符串列表：{path}")
-    missing = [blocker for blocker in blocked_by if blocker not in records]
-    if missing:
-        raise TicketError(f"Ticket 依赖不存在：{identifier} -> {', '.join(missing)}")
-    if any(records[blocker][1].get("status") != "complete" for blocker in blocked_by):
-        return None
-    if not _unchecked_acceptance(path):
-        return None
-    validate_ready_ticket(
-        path,
-        dependency_statuses={key: str(metadata.get("status")) for key, (_, metadata) in records.items()},
-    )
-    return TicketCandidate(identifier, path, _sequence(ticket, path))
-
-
-def implementation_ticket_ids(tickets_dir: Path) -> list[str]:
-    """Return the immutable local implementation scope in stable id order."""
-    if not tickets_dir.is_dir():
-        raise TicketError(f"Ticket 目录不存在：{tickets_dir}")
-    identifiers: set[str] = set()
-    for path in sorted(tickets_dir.glob("*.md")):
-        ticket = frontmatter(path)
-        if ticket.get("ticket_kind") != "implementation":
-            continue
-        identifier = ticket.get("id")
-        if not isinstance(identifier, str) or not identifier:
-            raise TicketError(f"Ticket 缺少有效 id：{path}")
-        if identifier in identifiers:
-            raise TicketError(f"Ticket id 重复：{identifier}")
-        identifiers.add(identifier)
-    return sorted(identifiers)
