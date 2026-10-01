@@ -1,0 +1,37 @@
+........FF.....
+======================================================================
+FAIL: test_migrated_ready_ticket_preserves_plain_spec_acceptance (test_migration.MigrationTests.test_migrated_ready_ticket_preserves_plain_spec_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_migration.py", line 159, in test_migrated_ready_ticket_preserves_plain_spec_acceptance
+    opened = self.finish_ready_ticket()
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_migration.py", line 133, in finish_ready_ticket
+    opened = json.loads(self.cli('implement', 'start', '--ticket', 'legacy-a-01',
+                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 '--agent', 'codex').stdout)
+                                 ^^^^^^^^^^^^^^^^^^^
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_migration.py", line 34, in cli
+    self.assertEqual(ok, result.returncode == 0, result.stderr + result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True != False : Spec 缺少可识别验收（AC 编号或复选框）
+
+
+======================================================================
+FAIL: test_migrated_topic_closes_without_replacing_completed_history (test_migration.MigrationTests.test_migrated_topic_closes_without_replacing_completed_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_migration.py", line 175, in test_migrated_topic_closes_without_replacing_completed_history
+    opened = json.loads(self.cli('topic', 'review', '--topic', 'legacy-a',
+                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 '--reviewer-model', 'test').stdout)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_migration.py", line 34, in cli
+    self.assertEqual(ok, result.returncode == 0, result.stderr + result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True != False : [Errno 2] No such file or directory: '/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpt2r83aeh/project/.agent/work/legacy-a/implementations/legacy-a-02.json'
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 10.208s
+
+FAILED (failures=2)

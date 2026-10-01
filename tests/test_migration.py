@@ -100,6 +100,9 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(before, self.files())
 
     def test_migrated_active_ticket_runs_tests_review_and_finish(self):
+        self.finish_migrated_active_ticket()
+
+    def finish_migrated_active_ticket(self):
         self.cli('migrate', '--apply')
         active = self.repo / '.agent/work/legacy-a/implementations/legacy-a-03.json'
         unit = json.loads(active.read_text())
@@ -128,6 +131,79 @@ class MigrationTests(unittest.TestCase):
         self.cli('implement', 'test', '--ticket', 'legacy-b-01')
         self.cli('resolve', '--ticket', 'legacy-b-01', '--accept', '--reason', 'fixture acceptance')
         self.assertEqual('', self.git('status', '--porcelain', '--', '.agent'))
+
+    def finish_ready_ticket(self):
+        opened = json.loads(self.cli('implement', 'start', '--ticket', 'legacy-a-01',
+                                     '--agent', 'codex').stdout)
+        self.cli('implement', 'test', '--ticket', 'legacy-a-01')
+        review = json.loads(self.cli('implement', 'review', '--ticket', 'legacy-a-01',
+                                     '--reviewer-model', 'test').stdout)
+        self.submit_pass(review, 'implement', 'review', '--ticket', 'legacy-a-01')
+        ticket = self.repo / '.agent/work/legacy-a/tickets/tickets-legacy-a-01.md'
+        ticket.write_text(ticket.read_text().replace('- [ ]', '- [x]'))
+        self.cli('implement', 'finish', '--ticket', 'legacy-a-01')
+        return opened
+
+    def submit_pass(self, opened, *command):
+        manifest = json.loads(Path(opened['manifest']).read_text())
+        result_file = Path(opened['result_file'])
+        result = json.loads(result_file.read_text())
+        result.update(status='pass', reviewer={'provenance': 'self', 'model': 'test'},
+                      coverage=[{'target': t, 'result': 'ok'} for t in manifest['coverage_targets']])
+        result_file.write_text(json.dumps(result))
+        self.cli(*command, '--submit', str(result_file))
+        return manifest
+
+    def test_migrated_ready_ticket_preserves_plain_spec_acceptance(self):
+        root = self.repo / '.agent/work/legacy-a'
+        spec = root / 'specs/specs-legacy-a-01.md'
+        original = spec.read_bytes()
+        self.finish_migrated_active_ticket()
+        opened = self.finish_ready_ticket()
+        self.assertEqual(original, spec.read_bytes())
+        self.assertIn('- 去掉名字首尾空白后输出问候。', Path(opened['briefing']).read_text())
+
+    def test_migrated_topic_closes_without_replacing_completed_history(self):
+        root = self.repo / '.agent/work/legacy-a'
+        spec = root / 'specs/specs-legacy-a-01.md'
+        completed = root / 'tickets/tickets-legacy-a-02.md'
+        completed.write_text(completed.read_text().replace('execution_agent: codex', 'execution_agent: auto'))
+        config = self.repo / '.agent/matt-workflow.md'
+        config.write_text(config.read_text().replace('default_execution_agent: codex',
+                                                    'default_execution_agent: claude'))
+        journal = root / 'runs/run-legacy-a-02-spec-r1.json'
+        preserved = {p.relative_to(root): p.read_bytes() for p in (completed, journal, spec)}
+        self.finish_migrated_active_ticket()
+        self.finish_ready_ticket()
+        self.cli('topic', 'test', '--topic', 'legacy-a')
+        unknown = json.loads(journal.read_text())
+        unknown['context']['ticket']['execution_agent'] = None
+        journal.write_text(json.dumps(unknown))
+        rejected = self.cli('topic', 'review', '--topic', 'legacy-a',
+                            '--reviewer-model', 'test', ok=False)
+        self.assertIn('历史执行 Agent 无法唯一确定', rejected.stderr)
+        journal.write_bytes(preserved[journal.relative_to(root)])
+        opened = json.loads(self.cli('topic', 'review', '--topic', 'legacy-a',
+                                     '--reviewer-model', 'test').stdout)
+        manifest = self.submit_pass(opened, 'topic', 'review', '--topic', 'legacy-a')
+        self.assertIn('legacy-a-02#A1', {a['id'] for a in manifest['acceptance']})
+        self.assertIn('AGENTS.md', Path(manifest['inputs'][0]['snapshot_path']).read_text())
+        rules = {entry['ticket']: entry['rules'] for entry in manifest['rule_map']}
+        self.assertEqual(rules['legacy-a-01'], rules['legacy-a-02'])
+        self.assertFalse((root / 'implementations/legacy-a-02.json').exists())
+        deliveries = root / 'deliveries'
+        deliveries.mkdir(exist_ok=True)
+        headings = ('改动概述', '测试结果', '审查发现与修复', '建议', '已知问题',
+                    '长期知识沉淀', '用户介入记录', '未验证项')
+        (deliveries / 'deliveries-legacy-a-01.md').write_text(
+            '\n'.join('## ' + heading + '\nFixture evidence' for heading in headings))
+        self.cli('topic', 'complete', '--topic', 'legacy-a')
+        archive = self.repo / '.agent/archive/legacy-a'
+        self.assertFalse(root.exists())
+        for relative, original in preserved.items():
+            self.assertEqual(original, (archive / relative).read_bytes())
+        self.assertFalse((archive / 'implementations/legacy-a-02.json').exists())
+        self.assertEqual('', self.git('status', '--porcelain'))
 
     def test_migrated_blocker_can_reopen_after_definition_revision(self):
         self.cli('migrate', '--apply')

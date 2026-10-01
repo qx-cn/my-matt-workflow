@@ -1,0 +1,27 @@
+{
+  "scope": "standard single slice under workflow-simplification Spec revision 1",
+  "reviewer_provenance": "self",
+  "base_sha": "4009709499498f5bed77e413ab4b3d4f503a7c2b",
+  "source_sha256": {
+    "tools/workflow_lib/ticket_implementation.py": "c245d7680eeb4ab40e8bd0ff39462054ab57f188a09a88c0ded0e68a3b5e20af",
+    "tools/workflow_lib/branch_review.py": "3c910e9145c8d090368acb3941f2f82bc5592c65f79def61618ef010d6a28f24",
+    "tests/test_migration.py": "20cb3fc78251d7aa4c58e02b6fb74998ec91a46d4a8206557fd497c632f2d362"
+  },
+  "tests": {
+    "migration_red_exit": 1,
+    "migration_green_exit": 0,
+    "migration_test_count": 15,
+    "check_exit": 0,
+    "validate_skills": 32,
+    "diff_check_exit": 0,
+    "python": "3.14.4"
+  },
+  "review": {
+    "Code": "pass",
+    "Spec": "pass",
+    "unresolved_findings": []
+  },
+  "runtime_completion_receipt": null,
+  "history_preserved": true,
+  "real_host_installation_performed": false
+}

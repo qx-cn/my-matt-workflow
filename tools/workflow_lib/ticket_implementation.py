@@ -124,7 +124,7 @@ def definition(repo, path):
 
 
 def spec_acceptance(text):
-    """Keep Spec acceptance bullets and their continuations in the briefing."""
+    """Extract tagged acceptance; retain older Spec formats without rewriting."""
     output = []
     collecting = False
     for line in text.splitlines():
@@ -135,7 +135,11 @@ def spec_acceptance(text):
         if collecting:
             output.append(line)
     if not output:
-        raise topics.TopicError("Spec 缺少可识别验收（AC 编号或复选框）")
+        if not text.strip():
+            raise topics.TopicError("Spec 内容为空")
+        # v1 accepted ordinary prose and bullets. Carry the original document
+        # into the briefing rather than guessing which lines are acceptance.
+        return text
     return "\n".join(output)
 
 

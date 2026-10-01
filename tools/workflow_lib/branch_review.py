@@ -9,6 +9,7 @@ import shutil
 import uuid
 
 from . import topic_service as topics, ticket_implementation as impl, ticket_review as reviews, review_loop
+from .rules import EXECUTION_AGENTS
 
 
 def load(repo, topic=None, all_complete=True):
@@ -67,7 +68,20 @@ def materials(repo, config, topic, tickets):
     rules, sources, specs, acceptance, probes, scope = [], [], [], [], [], []
     for identifier, (path, value) in tickets.items():
         stored = impl.record_path(repo, topic, identifier)
-        agent = json.loads(stored.read_text())['execution_agent']
+        if stored.is_file():
+            agent = json.loads(stored.read_text())['execution_agent']
+        else:
+            # Migration preserves completed v1 journals without creating v2
+            # implementation records. Read their binding, not today's default.
+            history = (topics.topic_path(repo, topic) / 'runs').glob(f'run-{identifier}-spec-r*.json')
+            agents = {json.loads(p.read_text()).get('context', {}).get('ticket', {}).get('execution_agent')
+                      for p in history}
+            agents.discard(None)
+            if not agents:
+                agents = {value.get('execution_agent')}
+            if len(agents) != 1 or not agents <= EXECUTION_AGENTS:
+                raise topics.TopicError(f'{identifier} 历史执行 Agent 无法唯一确定；请核对旧实施记录')
+            agent = agents.pop()
         mapped, text = impl.rule_material(repo, config, value, agent)
         rules.append({'ticket': identifier, 'rules': mapped})
         sources.extend(text)
