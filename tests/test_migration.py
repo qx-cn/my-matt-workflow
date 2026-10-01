@@ -28,11 +28,8 @@ class MigrationTests(unittest.TestCase):
         return subprocess.check_output(['git', *args], cwd=self.repo, text=True).strip()
 
     def cli(self, *args, ok=True):
-        result = subprocess.run([sys.executable, str(CLI), *args, '--repo', str(self.repo)],
-                                capture_output=True, text=True,
-                                env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'})
-        self.assertEqual(ok, result.returncode == 0, result.stderr + result.stdout)
-        return result
+        import test_topic_lifecycle
+        return test_topic_lifecycle.TopicLifecycleTests.cli(self,*args,ok=ok)
 
     def files(self):
         return {str(p.relative_to(self.repo)): hashlib.sha256(p.read_bytes()).hexdigest()

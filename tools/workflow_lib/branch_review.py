@@ -12,7 +12,7 @@ from . import topic_service as topics, ticket_implementation as impl, ticket_rev
 from .rules import EXECUTION_AGENTS
 
 
-def load(repo, topic=None, all_complete=True):
+def load(repo, topic=None, all_complete=True, batch=False):
     repo = topics.safe_repo(repo)
     config = topics.read_config(repo)
     topic = topics.select_topic(repo, topic)
@@ -23,6 +23,22 @@ def load(repo, topic=None, all_complete=True):
         raise topics.TopicError('Topic 不存在')
     state = topics.state(root)
     tickets = impl.records(repo, topic)
+    from . import batches
+    if batch:
+        value, unit = batches.active(repo, topic)
+        subset = {t:tickets[t] for t in unit['tickets']}
+        if all_complete and any(v['status'] != 'complete' for _,v in subset.values()):
+            raise topics.TopicError('批次审查要求全部 Ticket 已提交')
+        if unit['status'] in ('closed','needs-user'):
+            raise topics.TopicError('当前批次不能继续审查；请 batch status')
+        unit['status'] = 'reviewing'
+        if unit['id'] == value['batches'][-1]['id']:
+            unit['topic_changes'] = topics.git(repo,'diff','--name-only',state['baseline'],'HEAD').stdout.decode().splitlines()
+        return repo, config, topic, root, subset, unit, root/'batches'/f"{unit['id']}.json"
+    if batches.enabled(repo, topic):
+        value, last = batches.active(repo, topic)
+        if last['id'] != value['batches'][-1]['id']:
+            raise topics.TopicError('整分支审查只能在最后一个批次收口前执行')
     if state.get('level') != 'standard' or len(tickets) < 2:
         raise topics.TopicError('topic review 只用于多 Ticket standard')
     if all_complete and any(v['status'] != 'complete' for _, v in tickets.values()):
@@ -66,6 +82,7 @@ def test(repo, topic=None):
 
 def materials(repo, config, topic, tickets):
     rules, sources, specs, acceptance, probes, scope = [], [], [], [], [], []
+    ticket_documents, impacts = [], []
     for identifier, (path, value) in tickets.items():
         stored = impl.record_path(repo, topic, identifier)
         if stored.is_file():
@@ -82,6 +99,15 @@ def materials(repo, config, topic, tickets):
             if len(agents) != 1 or not agents <= EXECUTION_AGENTS:
                 raise topics.TopicError(f'{identifier} 历史执行 Agent 无法唯一确定；请核对旧实施记录')
             agent = agents.pop()
+        ticket_documents.append(path.read_text())
+        history = json.loads(stored.read_text()) if stored.is_file() else {}
+        self_text = history.get('self_review',{}).get('text','')
+        headings = list(topics.summary_headings(self_text))
+        lines = self_text.splitlines()
+        for title,index in headings:
+            if title == '影响面':
+                end = next((j for _,j in headings if j>index),len(lines))
+                impacts.append(f"### {identifier}（实施者声明，待核实）\n"+'\n'.join(lines[index+1:end]))
         mapped, text = impl.rule_material(repo, config, value, agent)
         rules.append({'ticket': identifier, 'rules': mapped})
         sources.extend(text)
@@ -90,7 +116,7 @@ def materials(repo, config, topic, tickets):
         probes.extend(value['review_probes'])
         scope.extend(value['rule_scope'])
     return dict(rule_map=rules, rules='\n\n'.join(sources), specs='\n\n'.join(specs),
-                acceptance=acceptance, probes=list(dict.fromkeys(probes)), scope=scope)
+                acceptance=acceptance, probes=list(dict.fromkeys(probes)), scope=scope,ticket_documents='\n\n'.join(ticket_documents),impacts='\n\n'.join(impacts))
 
 
 def current_manifest(repo, config, topic, root, tickets, unit):
@@ -104,6 +130,8 @@ def current_manifest(repo, config, topic, root, tickets, unit):
     for entry in manifest['inputs'] + [e for c in manifest['changes'] for e in (c['base'], c['current']) if e]:
         if reviews.digest(Path(entry['snapshot_path']).read_bytes()) != entry['sha256']:
             raise topics.TopicError('snapshot: 整分支冻结材料已变化')
+    if manifest.get('head') and topics.git(repo,'rev-parse','HEAD').stdout.decode().strip() != manifest['head']:
+        raise topics.TopicError('HEAD 已变化；请对变化部分复审')
     if topics.content_id(repo) != manifest['content_id']:
         raise topics.TopicError('content_id: 内容已变化，请 topic test/review')
     if definition(repo, tickets) != active['definition'] or config != active['config']:
@@ -118,8 +146,11 @@ def current_manifest(repo, config, topic, root, tickets, unit):
 
 
 def require_pass(repo, config, topic, root, tickets, unit):
+    accepted = unit.get('acceptance',{})
+    if accepted.get('head') == topics.git(repo,'rev-parse','HEAD').stdout.decode().strip() and accepted.get('content_id') == topics.content_id(repo):
+        return dict(status='accepted',reason=accepted['reason'])
     if unit['status'] == 'needs-user':
-        raise topics.TopicError('整分支 needs-user：' + unit['stop_reason'])
+        raise topics.TopicError('审查需要用户裁决：' + unit['stop_reason'])
     manifest = current_manifest(repo, config, topic, root, tickets, unit)
     entry = unit['reviews'][-1]
     accepted = root / 'reviews' / f"accepted-{manifest['unit_id']}.json"
@@ -129,8 +160,13 @@ def require_pass(repo, config, topic, root, tickets, unit):
     return entry
 
 
-def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_id=None):
-    repo, config, topic, root, tickets, unit, record = load(repo, topic)
+def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_id=None, batch=False, initiated_by=None, reason=None):
+    repo, config, topic, root, tickets, unit, record = load(repo, topic, batch=batch)
+    from . import batches
+    if not batch and batches.enabled(repo,topic) and not submit:
+        if initiated_by not in ("user","agent") or not reason or not reason.strip():
+            raise topics.TopicError("整分支审查必须记录发起者 user/agent 和理由")
+        unit.update(initiated_by=initiated_by,reason=reason)
     if unit['status'] == 'needs-user':
         raise topics.TopicError('整分支 needs-user：' + unit['stop_reason'])
     if not submit:
@@ -140,8 +176,13 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
             except (topics.TopicError, OSError, ValueError):
                 review_loop.stop(unit, None, record, '轮数耗尽：4 轮后没有当前有效通过记录')
             raise topics.TopicError('轮数上限为 4；拒绝第 5 轮')
-    if not tests_passed(repo, config, topic):
-        raise topics.TopicError('test: 整分支审查需要当前全量测试通过记录')
+    if batches.enabled(repo,topic):
+        _, current_batch = batches.active(repo,topic)
+        passed = batches.tests_passed(repo,config,topic,current_batch)
+    else:
+        passed = tests_passed(repo,config,topic)
+    if not passed:
+        raise topics.TopicError('test: 审查需要当前全量测试相对基线无新增失败记录')
     if submit:
         manifest = current_manifest(repo, config, topic, root, tickets, unit)
         result = reviews.validate_result(json.loads(Path(submit).read_text()), manifest)
@@ -162,6 +203,11 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         unit['reviews'][-1] = entry
         reason = review_loop.signals(unit, manifest, result, repair)
         if reason:
+            if not batch and batches.enabled(repo,topic):
+                plan, last = batches.active(repo,topic)
+                last.update(status='needs-user',stop_reason=reason)
+                last.setdefault('definition',{t:unit['definition'][t] for t in last['tickets']})
+                batches.save(repo,topic,plan)
             review_loop.stop(unit, None, record, reason)
         else:
             impl.write_json(record, unit)
@@ -196,8 +242,12 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         skeleton = dict(unit_id=unit_id,content_id=identity,round=len(unit['reviews'])+1,
                         acceptance=material['acceptance'],probes=material['probes'],downstream_tickets=[],
                         status=None,reviewer=dict(provenance=None,model=None),coverage=[],findings=[])
-        manifest = {**{k:skeleton[k] for k in reviews.PREFILLED}, 'baseline':unit['baseline'], 'topic':topic,
-                    'changes':changes,'inputs':inputs,'rule_map':material['rule_map'],'review_context':context,
+        inputs.extend([reviews.frozen_file(directory,'tickets.md',material['ticket_documents'].encode()),
+                       reviews.frozen_file(directory,'impact-declarations.md',material['impacts'].encode())])
+        repository = reviews.freeze_repository(directory,current)
+        inputs.extend(repository)
+        manifest = {**{k:skeleton[k] for k in reviews.PREFILLED},'repository':repository, 'baseline':unit['baseline'], 'topic':topic,
+                    'head':topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),'topic_changes':unit.get('topic_changes',[]),'repository_files': sorted(current),'changes':changes,'inputs':inputs,'rule_map':material['rule_map'],'review_context':context,
                     'coverage_targets':[a['id'] for a in material['acceptance']] + material['probes']
                         + sorted(set(re.findall(r'\*\*(I-(?:[A-Z]+)?[0-9]+)\*\*',material['specs'])))}
         path = directory / 'manifest.json'
@@ -226,6 +276,9 @@ def resolve(repo, topic=None, accept=False, reason=''):
     repo, config, topic, root, tickets, unit, record = load(repo,topic)
     if accept:
         if unit['status']!='needs-user': raise topics.TopicError('branch accept 只接受 needs-user')
+        from . import batches
+        if batches.enabled(repo,topic):
+            return batches.close(repo,topic,accept=True,reason=reason)
         if not tests_passed(repo,config,topic): raise topics.TopicError('test: 接受必须有当前全量测试通过记录')
         known = [f for f in unit['reviews'][-1].get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('view') == 'spec-challenge']
         return topics.complete(repo,topic,accepted_reason=reason,known_issues=known)
@@ -235,6 +288,19 @@ def resolve(repo, topic=None, accept=False, reason=''):
     materials(repo,config,topic,tickets)
     unit.update(definition=definition(repo,tickets),reviews=[],status='implementing')
     for key in ('active_review','stop_reason','first_review_volume'): unit.pop(key,None)
+    from . import batches
+    if batches.enabled(repo,topic):
+        plan,current=batches.active(repo,topic)
+        if current['status']=='needs-user':
+            subset={t:tickets[t] for t in current['tickets']}
+            changed=definition(repo,subset)
+            if current.get('definition') and changed != current['definition']:
+                current.update(definition=changed,reviews=[],status='reviewing')
+                for key in ('active_review','first_review_volume','stop_reason','acceptance'):current.pop(key,None)
+            elif not current.get('definition'):
+                current['status']='open'
+            current.setdefault('decisions',[]).append(dict(action='branch-reopen',reason=reason,at=topics.now()))
+            batches.save(repo,topic,plan)
     unit.setdefault('decisions',[]).append(dict(action='reopen',reason=reason,at=topics.now()))
     impl.write_json(record,unit)
     return dict(topic=topic,status='implementing',rounds_used=0,reason=reason)

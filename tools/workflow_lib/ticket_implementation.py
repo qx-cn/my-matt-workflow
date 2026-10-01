@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import shlex
 import subprocess
+import shutil
 import uuid
 
 from . import topic_service as topics
@@ -79,6 +80,11 @@ def validate(repo, path, config=None):
             argv = shlex.split(command)
         except ValueError as exc:
             raise topics.TopicError(f"test_commands：{exc}") from exc
+        if not argv or any(token.lower() in {'todo','tbd','<command>','<test-command>'} for token in argv):
+            raise topics.TopicError(f'test_commands 占位符不可执行：{command}')
+        executable = (repo / argv[0]) if '/' in argv[0] else None
+        if (executable and not executable.is_file()) or (not executable and not shutil.which(argv[0])):
+            raise topics.TopicError(f'test_commands 无法执行：{argv[0]}')
         if not argv or not argv_matches(argv, config["test_commands"]):
             raise topics.TopicError(f"test_commands 未匹配配置：{command}")
     if value["status"] == "ready-for-agent":
@@ -157,7 +163,8 @@ def rule_material(repo, config, value, agent):
 
 
 def admission_inputs(repo, path, topic):
-    return {"config": topics.read_config(repo), "definition": definition(repo, path),
+    from . import batches
+    return {"batch_plan": batches.read(repo,topic) if batches.enabled(repo,topic) else None, "config": topics.read_config(repo), "definition": definition(repo, path),
             "tickets": {key: value for key, (_, value) in records(repo, topic).items()},
             "topic": topics.state(topics.topic_path(repo, topic))}
 
@@ -213,8 +220,13 @@ def start(repo, ticket=None, topic=None, agent=None):
     if pending:
         fork = topics.git(repo, "merge-base", "HEAD", base_branch).stdout.decode().strip()
         state = {"status": "active", "level": "standard", "started_at": topics.now(), "baseline": fork, "test_runs": 0}
+    from . import batches
+    batch_id = batches.before_start(repo, topic, value['id'])
     unit = {"ticket": value["id"], "topic": topic, "baseline": baseline, "started_at": topics.now(),
             "execution_agent": agent, "definition": definition(repo, path), "tests": []}
+    if batch_id:
+        unit['batch_id'] = batch_id
+        unit['implementation_session_id'] = batches.read(repo,topic)['implementation_session_id']
     brief = root / "briefings" / f"briefing-{value['id']}.md"
     parts = [f"# {value['id']} 执行简报", "## Ticket", path.read_text(),
              "## Spec 验收", spec_section,
@@ -321,15 +333,23 @@ def status(repo, ticket=None, topic=None):
     passed = tests_passed(repo, unit)
     definition_changed = definition(repo, path) != unit["definition"]
     command = "review" if passed else "test"
-    if passed:
+    if unit.get("batch_id") and passed:
+        command = "self-review" if unit.get("self_review",{}).get("content_id") != topics.content_id(repo) else "finish"
+    if passed and (not unit.get("batch_id") or unit.get("reviews")):
         from . import ticket_review
         try:
             ticket_review.require_pass(repo, config, topic, path, unit)
             command = "finish"
         except (topics.TopicError, OSError, ValueError):
-            pass
+            command = "review"
+    if passed:
+        from . import batches
+        try:batches.require_self(repo,unit)
+        except topics.TopicError:command='self-review'
     next_command = f"workflow.py implement {command} --repo {shlex.quote(str(repo))} --ticket {unit['ticket']}"
-    if frontmatter(path)['status'] == 'needs-user' and passed:
+    if command == 'review' and unit.get('high_risk_reason'):
+        next_command += ' --reason '+shlex.quote(unit['high_risk_reason'])
+    if frontmatter(path)['status'] == 'needs-user' and passed and command != 'self-review':
         next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --accept --reason '<理由>'"
     if definition_changed:
         next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --reopen --reason '<理由>'"

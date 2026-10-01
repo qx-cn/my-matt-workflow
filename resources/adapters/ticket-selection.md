@@ -8,6 +8,6 @@
 
 Wayfinder frontier 只包括 `ticket_kind: wayfinder-decision`、`status: open`、显式未认领且所有 `blocked_by` Ticket 已 `complete` 的 Ticket；其选择规则与 implementation 完全独立。读取 frontier 时按稳定排序（`sequence` 升序、再按 id 字典序）输出；用户明确指定不合格 Ticket 时报告全部缺项并停止，不得静默回退或重选。
 
-implementation Ticket 的主路径为 `ready-for-agent → implementing → complete`，由 `implement` 命令校验。审查停止进入 `needs-user`，由 `resolve` 接受或重开；已完成记录不改写，后续改变用补偿或迁移 Ticket。
+implementation Ticket 的主路径为 `ready-for-agent → implementing → complete`，由 `implement` 命令校验。审查停止进入 `needs-user`，由 `resolve` 接受或重开；批次收口前 complete 表示已提交、待批次收口，审查修复留本批次；批次收口后已完成记录不改写，后续改变用补偿或迁移 Ticket。可选整分支审查的修复由最后批次承接，是唯一例外。
 
 关闭 implementation Ticket 前，所有验收复选框必须勾选；否则保留开放状态并说明未完成项。用户专属产品取舍不由这个机械门槛代替。

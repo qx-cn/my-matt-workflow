@@ -11,7 +11,7 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
 
 只读审查用户指定的变更并返回作者会实际修复的发现；不修改文件、提交代码或发布评论。输出前按[面向读者写作](references/shared/reader-first-writing.md)确定实现者和合并决策者要据此做什么。
 
-本 Skill 有两个输入入口：独立调用时从用户指定的固定点创建 review snapshot；作为 `my-implement` 方法时，只消费 runtime implement review 提供的只读材料包。组合模式不得另建 snapshot、另选基线或生成第二份未绑定的审查结论。
+本 Skill 有两个输入入口：独立调用时从用户指定的固定点创建 review snapshot；作为 `my-implement` 方法时，只消费 runtime batch review、按需 implement review 或 topic review 提供的只读材料包。组合模式不得另建 snapshot、另选基线或生成第二份未绑定的审查结论。
 
 ## 审查对象
 

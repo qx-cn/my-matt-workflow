@@ -270,6 +270,7 @@ def status(repo, topic=None):
     advisories = []
     known_issues = []
     decisions_needed = []
+    unverified = []
     for record in ((archive if archive.exists() else path) / "implementations").glob("*.json"):
         implementation = json.loads(record.read_text())
         known_issues.extend(implementation.get("known_issues", []))
@@ -287,8 +288,19 @@ def status(repo, topic=None):
             decisions_needed.extend(dict(finding=f, decision='请决定修订 Spec、接受风险或按原 Spec 继续') for f in latest_findings if f.get('view') == 'spec-challenge')
         if branch.get('status') == 'needs-user' and value['status'] != 'archived':
             command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --branch --topic {topic} --accept --reason '<理由>'"
+    from . import batches
+    if batches.enabled(repo,topic) and value['status'] != 'archived':
+        pending_batches = [b for b in batches.read(repo,topic)['batches'] if b['status'] != 'closed']
+        baseline_file=path/'test-baseline.json'
+        if baseline_file.exists():
+            unverified=[dict(command=r['command'],note='基线环境缺失，无法验证') for r in json.loads(baseline_file.read_text())['results'] if r['unavailable']]
+        if pending_batches:
+            batch_status = batches.status(repo,topic)
+            command = batch_status['next_command']
+            decisions_needed.extend(batch_status['decisions_needed'])
+            unverified = batch_status['unverified']
     return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
-            "decisions_needed": decisions_needed,
+            "decisions_needed": decisions_needed, "unverified": unverified,
             "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
             "next_command": command}
 
@@ -328,7 +340,8 @@ def check_summary(path, quick):
         raise TopicError(f"缺少交付摘要：{summary}")
     text = summary.read_text()
     sections = {title for title, _ in summary_headings(text)}
-    missing = set(HEADINGS + (("验收对照",) if quick else ())) - sections
+    from .batches import SELF_SECTIONS
+    missing = set(HEADINGS + (SELF_SECTIONS if quick else ())) - sections
     if missing:
         raise TopicError(f"交付摘要缺少章节：{', '.join(sorted(missing))}")
     return summary
@@ -365,6 +378,14 @@ def complete(repo, topic=None, accepted_reason=None, known_issues=None):
     value = state(path)
     if value["status"] == "pending":
         raise TopicError("待补建 Topic 请先运行 implement start")
+    from . import batches
+    batching = batches.enabled(repo,topic)
+    if batching:
+        confirmed = batches.read(repo,topic)['batches']
+        if any(b['status'] != 'closed' for b in confirmed):
+            raise TopicError('批次尚未收口；请运行 batch status')
+        if confirmed[-1].get('content_id') != content_id(repo):
+            raise TopicError('批次收口后代码已变化；请建立补偿或迁移 Ticket，不能直接归档')
     quick = value.get("level") == "quick"
     multi = False
     branch_unit = None
@@ -375,7 +396,7 @@ def complete(repo, topic=None, accepted_reason=None, known_issues=None):
         tickets = impl.records(repo, topic)
         if not tickets:
             raise TopicError("standard 没有 Ticket；请拆分 Ticket 或 topic abandon")
-        multi = len(tickets) > 1
+        multi = len(tickets) > 1 and not batching
         if any(t[1].get('status') != 'complete' for t in tickets.values()):
             raise TopicError("Ticket 尚未 complete；请运行 implement status")
         if not multi and content_dirty(repo):

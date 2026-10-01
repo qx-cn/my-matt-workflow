@@ -9,7 +9,7 @@ import unittest
 
 CLI = Path(__file__).resolve().parents[1] / "tools/workflow.py"
 HEADINGS = ["改动概述", "测试结果", "审查发现与修复", "建议", "已知问题",
-            "长期知识沉淀", "用户介入记录", "未验证项", "验收对照"]
+            "长期知识沉淀", "用户介入记录", "未验证项", "验收对照", "现状核实", "影响面", "对抗检查", "简洁与约定", "已知缺口"]
 
 
 class TopicLifecycleTests(unittest.TestCase):
@@ -36,6 +36,22 @@ class TopicLifecycleTests(unittest.TestCase):
         result = subprocess.run([sys.executable, str(CLI), *arguments],
                                 capture_output=True, text=True,
                                 env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
+        # Legacy ongoing-session cases predate batch metadata; provide the now
+        # required enhanced self-review explicitly in their test fixture.
+        if args[:2] == ('implement','test') and result.returncode == 0:
+            units=list((self.repo/'.agent/work').glob('*/implementations/*.json'))
+            selected=args[args.index('--ticket')+1] if '--ticket' in args else None
+            for record in units:
+                unit=json.loads(record.read_text())
+                if unit.get('batch_id') or selected and unit.get('ticket') != selected:continue
+                ticket_path=record.parent.parent/'tickets'/f"tickets-{unit['ticket']}.md"
+                from tools.workflow_lib.tickets import frontmatter
+                if not ticket_path.exists() or frontmatter(ticket_path).get('status') not in ('implementing','needs-user'):continue
+                from tools.workflow_lib.batches import SELF_SECTIONS
+                notes=self.repo/'.agent/legacy-self.md'
+                notes.write_text('\n'.join(f'## {h}\n无：旧协议迁移测试夹具。' for h in SELF_SECTIONS))
+                reviewed=subprocess.run([sys.executable,str(CLI),'implement','self-review','--repo',str(self.repo),'--ticket',unit['ticket'],'--notes-file',str(notes)],capture_output=True,text=True)
+                self.assertEqual(0,reviewed.returncode,reviewed.stderr)
         if ok:
             self.assertEqual(0, result.returncode, result.stderr)
         else:
@@ -166,7 +182,7 @@ class TopicLifecycleTests(unittest.TestCase):
     def test_quick_summary_and_test_failure_leave_active(self):
         self.setup_config(tests=("python3 -c 'raise SystemExit(7)'",))
         self.cli("topic", "start", "--topic", "change", "--level", "quick")
-        self.summary(headings=HEADINGS[:-1])
+        self.summary(headings=[h for h in HEADINGS if h != "验收对照"])
         self.assertIn("验收对照", self.cli("topic", "complete", ok=False).stderr)
         self.summary()
         result = self.cli("topic", "complete", ok=False)

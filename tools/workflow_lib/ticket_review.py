@@ -74,9 +74,22 @@ def loop_rules():
     return (Path(__file__).resolve().parents[2] / 'resources' / 'review-loop.md').read_text()
 
 
-def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_session_id=None):
+def freeze_repository(directory, files):
+    return [dict(path=name, **frozen_file(directory,f'repository-{index:05d}',data,mode))
+            for index,(name,(mode,data)) in enumerate(sorted(files.items()))]
+
+
+def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_session_id=None, reason=None):
     repo, config, topic, path, unit, record = impl.load_active(repo, ticket, topic)
     value = frontmatter(path)
+    if unit.get('batch_id'):
+        from . import batches
+        batches.require_self(repo,unit)
+        if not reason or not reason.strip():
+            raise topics.TopicError('高风险 Ticket 审查需要触发理由 --reason')
+        unit['high_risk_reason'] = reason
+        unit['self_review']['text'] += '\n高风险审查触发理由：'+reason
+
     if value['status'] != 'implementing':
         raise topics.TopicError('implement review 只接受 implementing')
     if not isinstance(reviewer_model, str) or not reviewer_model.strip():
@@ -121,7 +134,11 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
                     'downstream_tickets': downstream(repo, topic, unit['ticket']),
                     'status': None, 'reviewer': {'provenance': None, 'model': None},
                     'coverage': [], 'findings': []}
-        manifest = {**{k: skeleton[k] for k in PREFILLED}, 'ticket': unit['ticket'],
+        inputs.extend([frozen_file(directory,'ticket.md',path.read_bytes()),
+                       frozen_file(directory,'impact-declarations.md',('实施者声明，待核实\n'+unit.get('self_review',{}).get('text','')).encode())])
+        repository = freeze_repository(directory,current)
+        inputs.extend(repository)
+        manifest = {**{k: skeleton[k] for k in PREFILLED}, 'repository': repository, 'ticket': unit['ticket'],
                     'baseline': unit['baseline'], 'changes': changes,
                     'outside_scope': [c['path'] for c in changes if not any(fnmatch.fnmatchcase(c['path'], s) for s in value['rule_scope'])],
                     'inputs': inputs, 'rule_map': rules, 'review_context': review_context,
@@ -327,6 +344,13 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
     else:
         impl.write_json(accepted, entry)
     unit['reviews'][-1] = entry
+    if unit.get('batch_id'):
+        from . import batches
+        plan, batch = batches.active(repo,topic,unit['batch_id'])
+        existing = [r for r in batch.get('high_risk_reviews',[]) if r['unit_id'] != entry['unit_id']]
+        batch['high_risk_reviews'] = existing + [dict(entry,ticket=unit['ticket'],reason=unit['high_risk_reason'])]
+        if any(f.get('view') == 'spec-challenge' for f in result['findings']):batch['status'] = 'needs-user'
+        batches.save(repo,topic,plan)
     reason = review_loop.signals(unit, manifest, result, repair)
     if reason:
         review_loop.stop(unit, path, record, reason)
@@ -335,7 +359,7 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
     return {**entry, 'rounds_used': manifest['round'], 'rounds_remaining': max(0, 4 - manifest['round'])}
 
 
-def review(repo, ticket=None, topic=None, submit=None, reviewer_model=None, reviewer_session_id=None):
+def review(repo, ticket=None, topic=None, submit=None, reviewer_model=None, reviewer_session_id=None, reason=None):
     if submit:
         return submit_review(repo, ticket, topic, submit)
-    return open_review(repo, ticket, topic, reviewer_model, reviewer_session_id)
+    return open_review(repo, ticket, topic, reviewer_model, reviewer_session_id, reason)

@@ -422,7 +422,7 @@ def command_topic(args: argparse.Namespace) -> None:
         elif args.topic_action == "test":
             report = branch_review.test(Path(args.repo), args.topic)
         elif args.topic_action == "review":
-            report = branch_review.review(Path(args.repo), args.topic, args.submit, args.reviewer_model, args.reviewer_session_id)
+            report = branch_review.review(Path(args.repo), args.topic, args.submit, args.reviewer_model, args.reviewer_session_id, initiated_by=args.initiated_by, reason=args.reason)
         elif args.topic_action == "abandon":
             report = topic_service.abandon(Path(args.repo), args.topic, args.reason)
         else:
@@ -443,15 +443,36 @@ def command_resolve(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def command_batch(args):
+    from workflow_lib import batches
+    try:
+        repo=Path(args.repo)
+        if args.batch_action == 'plan':
+            groups=json.loads(Path(args.groups_file).read_text()) if args.groups_file else None
+            report=batches.plan(repo,args.topic,groups,args.reason)
+        elif args.batch_action == 'status':report=batches.status(repo,args.topic)
+        elif args.batch_action == 'test':report=batches.test(repo,args.topic)
+        elif args.batch_action == 'review':report=branch_review.review(repo,args.topic,args.submit,args.reviewer_model,args.reviewer_session_id,batch=True)
+        elif args.batch_action == 'reopen':report=batches.reopen(repo,args.topic,args.reason)
+        elif args.batch_action == 'repair':report=batches.repair(repo,args.topic,args.notes_file)
+        else:report=batches.close(repo,args.topic,args.batch_action=='accept',args.reason)
+    except (TicketError,RuleError,topic_service.TopicError,OSError,ValueError) as exc:
+        raise SystemExit(str(exc))
+    print(json.dumps(report,ensure_ascii=False,indent=2))
+
+
 def command_implement(args: argparse.Namespace) -> None:
     try:
         if args.implement_action == "start":
             report = ticket_implementation.start(Path(args.repo), args.ticket, args.topic, args.agent)
         elif args.implement_action == "review":
-            report = ticket_review.review(Path(args.repo), args.ticket, args.topic, args.submit, args.reviewer_model, args.reviewer_session_id)
+            report = ticket_review.review(Path(args.repo), args.ticket, args.topic, args.submit, args.reviewer_model, args.reviewer_session_id, args.reason)
         elif args.implement_action == "test":
             argv = args.argv[1:] if args.argv[:1] == ["--"] else args.argv
             report = ticket_implementation.test(Path(args.repo), args.ticket, args.topic, argv)
+        elif args.implement_action == "self-review":
+            from workflow_lib import batches
+            report = batches.self_review(Path(args.repo),args.ticket,args.topic,args.notes_file)
         elif args.implement_action == "finish":
             report = ticket_completion.finish(Path(args.repo), args.ticket, args.topic, args.notes_file)
         else:
@@ -584,13 +605,29 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--submit")
             command.add_argument("--reviewer-model")
             command.add_argument("--reviewer-session-id")
+            command.add_argument("--reason")
+            command.add_argument("--initiated-by", choices=("user","agent"))
         if action == "abandon":
             command.add_argument("--reason", required=True)
         command.set_defaults(func=command_topic)
 
+    batch = sub.add_parser('batch')
+    batch_actions=batch.add_subparsers(dest='batch_action',required=True)
+    for action in ('plan','status','test','review','repair','close','accept','reopen'):
+        command=batch_actions.add_parser(action)
+        command.add_argument('--repo',default='.')
+        command.add_argument('--topic')
+        command.add_argument('--reason',default='默认整个 Topic 一个批次')
+        command.add_argument('--groups-file')
+        command.add_argument('--notes-file')
+        command.add_argument('--submit')
+        command.add_argument('--reviewer-model')
+        command.add_argument('--reviewer-session-id')
+        command.set_defaults(func=command_batch)
+
     implement = sub.add_parser("implement")
     implement_actions = implement.add_subparsers(dest="implement_action", required=True)
-    for action in ("start", "test", "review", "finish", "status"):
+    for action in ("start", "test", "review", "self-review", "finish", "status"):
         command = implement_actions.add_parser(action)
         command.add_argument("--repo", default=".")
         command.add_argument("--topic")
@@ -601,9 +638,11 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--submit")
             command.add_argument("--reviewer-model")
             command.add_argument("--reviewer-session-id")
+            command.add_argument("--reason")
+            command.add_argument("--initiated-by", choices=("user","agent"))
         if action == "test":
             command.add_argument("argv", nargs=argparse.REMAINDER)
-        if action == "finish":
+        if action in ("finish", "self-review"):
             command.add_argument("--notes-file")
         command.set_defaults(func=command_implement)
 

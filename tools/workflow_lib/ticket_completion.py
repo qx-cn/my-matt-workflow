@@ -31,7 +31,15 @@ def finish(repo, ticket=None, topic=None, notes_file=None):
         raise topics.TopicError('finish 只接受 implementing')
     if not impl.tests_passed(repo, unit):
         raise topics.TopicError('test: 当前内容没有完整声明测试通过记录；请重新测试')
-    verdict = review.require_pass(repo, config, topic, path, unit)
+    from . import batches
+    batches.require_self(repo,unit)
+    if unit.get('batch_id'):
+        if unit.get('reviews'):
+            verdict = review.require_pass(repo,config,topic,path,unit)
+        else:
+            verdict = None
+    else:
+        verdict = review.require_pass(repo, config, topic, path, unit)
     if re.search(r'^\s*- \[ \]', path.read_text(), re.M):
         raise topics.TopicError('acceptance: 验收复选框必须全部勾选')
     repairs = any(r.get('repair') for r in unit.get('reviews', []))
@@ -83,6 +91,11 @@ def commit_completion(repo, config, topic, path, unit, record, verdict, notes, o
             else:
                 p.write_bytes(data)
         raise
+    if unit.get('batch_id'):
+        from . import batches
+        plan, batch = batches.active(repo,topic,unit['batch_id'])
+        batch.setdefault('submitted',{})[unit['ticket']] = dict(head=topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),at=topics.now())
+        batches.save(repo,topic,plan)
     return {'ticket': unit['ticket'], 'topic': topic, 'status': 'complete',
             'commit': unit.get('commit') or (topics.git(repo, 'rev-parse', 'HEAD').stdout.decode().strip() if dirty else None),
             'next_command': impl.next_start_command(repo, topic)}

@@ -1,7 +1,11 @@
 # 实施适配
 
-从当前宿主 install-state.json 读取绝对 runtime_entry，不假设目标仓库自带工具。配置和 Topic 尚未迁移时按 runtime 提示处理，不把施工旧协议当成新工作流。
+从宿主 install-state.json 读绝对 runtime_entry。恢复先读 status，按 next_command 继续；不用手写哈希或内容 id。
 
-standard 使用 implement start/test/review/finish/status。start 生成执行简报，Agent 补写实施计划；恢复先读 status，按其当前动作继续。测试用 Ticket 声明命令，审查只消费 runtime 固定材料包，按[审查循环](../review-loop.md)派审查者并提交判断字段。结果 JSON 保留骨架预填身份；修复思路传 notes-file。内容变化后按 status 重新验证，达到停止边界按[找用户的条件](../user-intervention.md)处理。
+standard 的已确认划分用 `batch plan --groups-file <JSON数组> --reason <理由>` 保存；默认整个 Topic 一个批次。一个会话依依赖顺序执行 implement start/test/self-review/finish：定向命令，六节增强自审传 notes-file，逐张本地提交，已提交 Ticket 等批次收口。高风险 Ticket 可额外 implement review --reason <触发理由> --reviewer-model <实际模型>；不能替代批次审查。
 
-quick 从已确认需求直接实施、测试、自审，写[交付摘要](../workflow-delivery.md)，不建实施记录。Topic收尾和归档由 runtime 完成。多 Ticket 在批准范围依赖顺序逐张完成，末尾运行 topic test/review 后 topic complete。只有实际测试和审查闭合、适用完成动作成功才能交付；否则报告阻塞与最小恢复输入。
+全部提交后 batch test/review（宿主派新上下文，提交预填结果骨架），修复用 batch repair --notes-file 引用发现 id，然后重新测试、复审、batch close。全量测试相对首次基线没有新增失败才可收口；基线已有失败与无法运行命令进入摘要。内容或 HEAD 变化需要复审。批次收口后历史不可改写，另建补偿或迁移；可选整分支修复落最后批次。
+
+多批次最后收口前可 topic review --initiated-by user|agent --reason <理由>，以 Topic 基线到当前提交审查。未执行不阻断完成；执行了需当前通过记录。所有批次收口后 topic complete。不具备新上下文时如实记 self 并披露独立性缺口。规则只在[审查循环](../review-loop.md)定义。
+
+quick 不建 Spec/Ticket，直接实施、定向测试和同会话六节自审，写[交付摘要](../workflow-delivery.md)；归档仍由 runtime 完成。旧版已有实施历史可恢复原 Ticket 协议，不虚构新的批次审查记录。

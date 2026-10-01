@@ -15,7 +15,19 @@ class ImplementationTests(unittest.TestCase):
     def cli(self, *args, ok=True):
         if args[:2] == ("implement", "start") and "--agent" not in args:
             args = (*args, "--agent", "codex")
-        return topic_tests.TopicLifecycleTests.cli(self, *args, ok=ok)
+        result = topic_tests.TopicLifecycleTests.cli(self, *args, ok=ok)
+        # These tests exercise pre-existing v2 implementation histories. New
+        # batch protocol is exercised independently by test_batches.
+        if args[:2] == ('implement','start') and result.returncode == 0 and not getattr(self,'batch_model',False):
+            output=json.loads(result.stdout)
+            root=self.repo/'.agent/work'/output['topic']
+            (root/'batches.json').unlink(missing_ok=True)
+            import shutil
+            shutil.rmtree(root/'batches',ignore_errors=True)
+            record=root/'implementations'/f"{output['ticket']}.json"
+            unit=json.loads(record.read_text());unit.pop('batch_id',None)
+            record.write_text(json.dumps(unit))
+        return result
     setup_config = topic_tests.TopicLifecycleTests.setup_config
     def ticket(self, topic="feature", number=1, commands=None, dependencies=(), status="ready-for-agent"):
         root = self.repo / f".agent/work/{topic}"
@@ -148,6 +160,9 @@ class ImplementationTests(unittest.TestCase):
         equivalent = 'python3 -c "' + script.replace('"', '\\"') + '"'
         self.ticket(commands=[command, command, equivalent])
         self.cli('implement', 'start', '--ticket', 'feature-01')
+        # The first full baseline run has consumed the fixture counter. Reset
+        # this probe so its formal targeted run still exercises partial failure.
+        (self.repo/'.agent/counter').unlink(missing_ok=True)
         failed = self.cli('implement', 'test', ok=False)
         self.assertIn('9', failed.stderr)
         self.assertFalse(json.loads(self.cli('implement', 'status').stdout)['tests_passed'])

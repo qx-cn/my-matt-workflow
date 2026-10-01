@@ -9,7 +9,7 @@
 首次使用项目时调用 `my-setup`，探测并展示配置，确认一次后写入。日常由 `my-ask-matt` 帮助选择入口；组合清单中的被调用 Skill 可以由模型调用，其余入口由用户手动调用。Matt 原生 Skills 仅用于升级比较，运行时使用本包的 `my-*`。
 
 - **quick**：单会话能完成、局部可撤回、不改持久化结构、权限或对外 API 契约，且预计一张 Ticket 就能做完；不写 Spec 或 Ticket，Agent 完成测试和同会话自审。
-- **standard**：以版本化 Spec 和 Ticket 切片实施；每张 Ticket 经过测试与审查，再提交完成。
+- **standard**：以版本化 Spec 和 Ticket 切片实施；每张 Ticket 定向测试、六节增强自审、本地提交；批次末全量测试与基线比较、独立批次审查后收口。
 
 Topic 是 `.agent/work/<topic>/` 下的一项工作。文档与进度按类型分目录保存；术语和决定集中沉淀到 `.agent/CONTEXT.md` 与 `.agent/adr/`。`topic complete` 负责收尾、归档及记录度量。`my-handoff` 用于换宿主、目录或人员，或保存尚未形成 Spec 的访谈结论。
 
@@ -77,7 +77,7 @@ python3 tools/workflow.py resolve --repo <project> --ticket <topic>-01 --reopen 
 
 接受仍需当前内容通过全量测试；重开要求 Ticket 或来源 Spec 的定义变化。已完成 Ticket 是历史，后续改变通过补偿或迁移工作表达。
 
-standard 多 Ticket 完成后，通过 `topic test`、`topic review`（及 `--submit`）验证整分支，再运行 `topic complete`。单 Ticket 不要求整分支审查。quick 与 standard 的交付摘要须有：改动概述、测试结果、审查发现与修复、建议、已知问题、长期知识沉淀、用户介入记录、未验证项；quick 还需验收对照。quick 未配置测试时必须如实标记。文档 Topic 可直接收尾。
+standard 默认整个 Topic 一个批次；确认划分用 `batch plan` 保存。逐张 `implement start/test/self-review/finish` 后执行 `batch test/review`（及 `--submit`）、修复提交 `batch repair --notes-file`、复审与 `batch close`。所有批次收口后 `topic complete`。高风险 Ticket 可在提交前额外 `implement review --reason`，多数不需要；整分支审查可选，在最后批次收口前 `topic review --initiated-by user|agent --reason`，不能替代批次审查。全量基线已有失败不阻断，新增失败阻断；基线无法运行的命令须披露。旧版已有实施历史保持原 Ticket 恢复协议。quick 与 standard 的交付摘要须有：改动概述、测试结果、审查发现与修复、建议、已知问题、长期知识沉淀、用户介入记录、未验证项；quick 还需六节增强自审（验收对照、现状核实、影响面、对抗检查、简洁与约定、已知缺口）。quick 未配置测试时必须如实标记。文档 Topic 可直接收尾。
 
 整分支停止后用 `resolve --branch --accept|--reopen --reason <原因>` 处理。停止整个 Topic 用 `topic abandon --reason <原因>`，归档历史并保留未提交内容；同名归档不覆盖。
 
