@@ -87,6 +87,7 @@ class PackagingV2Tests(unittest.TestCase):
             ('my-grill-with-docs', 'my-domain-modeling', 'method'),
             ('my-grill-with-docs', 'my-to-spec', 'chain'),
             ('my-to-spec', 'my-review-design', 'method'),
+            ('my-tech-design', 'my-review-design', 'method'),
             ('my-to-spec', 'my-to-tickets', 'chain'),
             ('my-to-tickets', 'my-implement', 'chain'),
             ('my-implement', 'my-tdd', 'method'),

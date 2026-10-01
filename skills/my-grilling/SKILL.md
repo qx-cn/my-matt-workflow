@@ -11,4 +11,6 @@ description: 在 my-grill-me、my-grill-with-docs、my-triage、my-wayfinder、m
 
 用户以具体方案或类比描述目标时，先分清目标与手段；复杂、隐含或类比请求在形成摘要前按[需求核对](references/shared/requirement-analysis.md)检查理解。只有会改变结果的歧义继续追问。
 
+结束需求摘要新增“待在代码中核实的现状假设”，供 Spec 现状事实逐条核实；能在访谈阶段查到的事实当场查证，不问用户。
+
 目标、范围、明确约束、可观察验收均可追溯且承重未知已解决时完成；按[最终态写作](references/shared/final-state-writing.md)收束决定，返回调用方，不因普通实现细节继续访谈。

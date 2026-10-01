@@ -245,8 +245,6 @@ def submit_artifact_review_result(
 ) -> dict[str, object]:
     """Require complete method closure, then verify and release the snapshot."""
     expected_fields = {"content_id", "checks", "findings", "inconclusive"}
-    if set(result) != expected_fields:
-        raise ArtifactReviewError("artifact review result 字段无效")
     directory = snapshot_dir.resolve()
     marker = directory / _UNIT_FILE
     try:
@@ -256,6 +254,10 @@ def submit_artifact_review_result(
     if not isinstance(unit, dict) or result.get("content_id") != unit.get("content_id"):
         raise ArtifactReviewError("artifact review result 与 review_unit content_id 不匹配")
     required = unit.get("required_checks")
+    if isinstance(required,list) and 'review-design' in required:
+        expected_fields.add('design_report')
+    if set(result) != expected_fields:
+        raise ArtifactReviewError("artifact review result 字段无效；设计结果必须包含 design_report 四部分")
     checks = result.get("checks")
     if not isinstance(required, list) or not all(isinstance(item, str) for item in required):
         raise ArtifactReviewError("review_unit.required_checks 无效")
@@ -300,6 +302,8 @@ def submit_artifact_review_result(
         raise ArtifactReviewError("finding 状态必须由 findings 完整解释")
     if covered_inconclusive != inconclusive_checks:
         raise ArtifactReviewError("inconclusive 状态必须由 inconclusive 项完整解释")
+    if 'review-design' in required:
+        validate_design_report(result['design_report'],checks['review-design']['status'])
     verification = finalize_artifact_review_snapshot(
         artifacts, str(result["content_id"]), directory
     )
@@ -310,4 +314,52 @@ def submit_artifact_review_result(
         "findings": result["findings"],
         "inconclusive": result["inconclusive"],
         "released": verification["released"],
+        **({'design_report':result['design_report']} if 'design_report' in result else {}),
     }
+
+
+def validate_design_report(report, status):
+    """Structural closure; the host remains responsible for evidence quality and rounds."""
+    fields={'assertions','findings','excluded_risks','semantic_assumptions'}
+    if not isinstance(report,dict) or set(report)!=fields:
+        raise ArtifactReviewError('design_report 必须包含 assertions/findings/excluded_risks/semantic_assumptions')
+    for field,value in report.items():
+        if isinstance(value,dict) and set(value)=={'none'} and isinstance(value['none'],str) and value['none'].strip():
+            continue
+        if not isinstance(value,list) or not value:
+            raise ArtifactReviewError(f'design_report.{field} 无内容时须提供 none 理由')
+    findings=report['findings'] if isinstance(report['findings'],list) else []
+    ids=set()
+    for finding in findings:
+        if not isinstance(finding,dict):
+            raise ArtifactReviewError('design_report.findings 项无效')
+        for field in ('id','location','basis','summary'):
+            if not isinstance(finding.get(field),str) or not finding[field].strip():
+                raise ArtifactReviewError(f'design_report.findings.{field} 缺失')
+        if finding['id'] in ids:
+            raise ArtifactReviewError('design_report.findings.id 重复')
+        ids.add(finding['id'])
+        if finding.get('view') not in {'correctness','impact','spec-challenge'} or finding.get('severity') not in {'blocking','advisory'}:
+            raise ArtifactReviewError('design_report.findings.view/severity 无效')
+        if status=='pass' and (finding['severity']=='blocking' or finding['view']=='spec-challenge' or finding.get('disposition')=='fix-in-batch'):
+            raise ArtifactReviewError('设计审查不能带阻断或挑战通过')
+        if finding['severity']=='advisory':
+            if finding.get('disposition') not in {'fix-in-batch','defer','decline'}:
+                raise ArtifactReviewError('design_report.findings.disposition 缺失')
+            if finding['disposition'] in {'defer','decline'} and not finding.get('owner' if finding['disposition']=='defer' else 'reason'):
+                raise ArtifactReviewError('design_report.findings advisory 缺归属或理由')
+    for assertion in report['assertions'] if isinstance(report['assertions'],list) else []:
+        if not isinstance(assertion,dict) or not assertion.get('assertion') or assertion.get('status') not in {'verified','mismatch','unknown'}:
+            raise ArtifactReviewError('design_report.assertions.assertion/status 无效')
+        if assertion['status']=='verified' and not assertion.get('evidence'):
+            raise ArtifactReviewError('design_report.assertions.evidence 缺失')
+        if assertion['status']=='mismatch' and assertion.get('finding_id') not in ids:
+            raise ArtifactReviewError('design_report.assertions.finding_id 缺少对应发现')
+    for risk in report['excluded_risks'] if isinstance(report['excluded_risks'],list) else []:
+        if not isinstance(risk,dict) or any(not isinstance(risk.get(k),str) or not risk[k].strip() for k in ('risk','reason','evidence')):
+            raise ArtifactReviewError('design_report.excluded_risks 必须有 risk/reason/evidence')
+    for assumption in report['semantic_assumptions'] if isinstance(report['semantic_assumptions'],list) else []:
+        if not isinstance(assumption,str) or not assumption.strip():
+            raise ArtifactReviewError('design_report.semantic_assumptions 须明确假设与需用户决定的内容')
+    if status=='pass' and isinstance(report['semantic_assumptions'],list):
+        raise ArtifactReviewError('需求语义假设仍待用户确认，不能记通过')

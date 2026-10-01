@@ -12,8 +12,8 @@ disable-model-invocation: true
 
 ## 对齐点1
 
-输出目标、范围、约束、可观察验收，逐项注明来自用户原文、仓库事实或待确认推断；按[保证等级](references/shared/adapters/assurance-levels.md)提议 quick/standard 及理由。按[产物存储](references/shared/adapters/artifact-storage.md)保存 `requirements/requirements-<topic>-01.md`。用户确认后执行 topic start；配置缺失时先完成 setup。
+输出目标、范围、约束、可观察验收与“待在代码中核实的现状假设”（能直接查到的先查证，不问用户），逐项注明来自用户原文、仓库事实或待确认推断；按[保证等级](references/shared/adapters/assurance-levels.md)提议 quick/standard 及理由。按[产物存储](references/shared/adapters/artifact-storage.md)保存 `requirements/requirements-<topic>-01.md`。用户确认后执行 topic start；配置缺失时先完成 setup。
 
 quick 直接实施和自审，不创建 Spec/Ticket；遵循[实施适配](references/shared/adapters/implementation-session.md)与[交付规则](references/shared/workflow-delivery.md)，完成 Topic。
 
-standard 直接调用 {{skill-call:my-to-spec}}，由它继续 to-tickets；两者合并呈现对齐点2。用户确认后按依赖逐张实施。多 Ticket 全部完成后运行 topic test 和 topic review，沉淀长期知识、写摘要，再 topic complete。中间直接调用已确认阶段，用户无需手动切换 Skill。
+standard 直接调用 {{skill-call:my-to-spec}}，由它继续 to-tickets；两者合并呈现对齐点2。用户确认后按依赖逐张实施。逐张定向测试、自审、本地提交；批次末 batch test/review/close。整分支审查可选、不能替代批次审查；全部批次收口后沉淀长期知识、写摘要，再 topic complete。中间直接调用已确认阶段，用户无需手动切换 Skill。

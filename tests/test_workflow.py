@@ -704,7 +704,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertIn(".comparison { grid-template-columns: 1fr; }", template_text)
         self.assertNotIn("window.print", template_text)
         self.assertNotIn("@media print", template_text)
-        self.assertNotIn("my-tech-design", composition["callers"])
+        self.assertEqual([{"skill":"my-review-design", "kind":"method", "when":"load-bearing-design"}], composition["callers"]["my-tech-design"])
         self.assertTrue(
             all(
                 "my-tech-design" in entries
@@ -942,9 +942,10 @@ render_root: 学生课程
             ],
             "my-edit-article": ["articles", "默认生成新稿", "原地修改"],
             "my-review-design": [
-                "只评审，不修改文档，不重新展开访谈",
-                "references/shared/final-state-writing.md",
-                "未发现影响方案成立或实施的实质问题",
+                "只评审，不改文档、不重新访谈",
+                "读代码核实承重现状断言是必做项",
+                "已考察但排除的风险",
+                "待用户确认的需求语义假设",
             ],
             "my-review-artifact": [
                 "references/shared/reader-first-writing.md",

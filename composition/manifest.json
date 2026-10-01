@@ -132,6 +132,13 @@
         "kind": "method",
         "when": "method-phase"
       }
+    ],
+    "my-tech-design": [
+      {
+        "skill": "my-review-design",
+        "kind": "method",
+        "when": "load-bearing-design"
+      }
     ]
   },
   "routable_entries": {

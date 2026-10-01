@@ -7,6 +7,8 @@ description: 在 my-to-spec、my-triage 流程中作为指定阶段的工作单�
 
 # 拆分 Ticket
 
+只负责切分和覆盖，不执行设计审查。拆分发现设计问题时退回 Spec 修订，不在 Ticket 正文补设计。每张 Ticket 完成后系统必须一致、可发布；明知留下可达缺陷等后续修复，仅在对齐点2明确确认且中间状态有开关或其他隔离手段时允许。正文不写死非契约性内部函数名、局部算法步骤。
+
 从当前有效 Spec 形成 tracer-bullet 纵向切片，每张穿过必要层次的完整路径、可独立演示验收、能在新上下文完成。声明真正阻塞边，不为顺序造依赖；机械大范围重构保留 expand–contract 例外：先兼容扩展、分批迁移、最后集成删除。
 
 先读 `.agent/matt-workflow.md`、源 Spec 血缘、[项目规则解析](references/shared/adapters/project-rules.md)和代码，按[最终态写作](references/shared/final-state-writing.md)处理有效要求。建立 acceptance coverage：源验收各有明确owner，Ticket验收可回指要求，避免遗漏或未授权重复；承重切片按[第一性原理推理](references/shared/first-principles-reasoning.md)核对必要贡献。

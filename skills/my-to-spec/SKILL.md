@@ -9,9 +9,11 @@ description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段�
 
 从已确认需求和代码库事实整理版本化 Spec，不重新访谈。不为 Spec 分配执行 Agent。先读取[最终态写作](references/shared/final-state-writing.md)、[项目规则解析](references/shared/adapters/project-rules.md)与既有 ADR；找用户按[共同条件](references/shared/user-intervention.md)。
 
-首次分配 spec_id/revision1；修订递增 revision，用 supersedes 指前版，每版新增 Topic 内文件，阅读全文比较有效行为并记修订索引。Topic Spec 是实施边界，不读取或发布长期 Spec。承重决定用[第一性原理推理](references/shared/first-principles-reasoning.md)连接目标、事实、机制、真实替代与可证伪验收；可逆实现细节留给实施。
+首次分配 spec_id/revision1；修订递增 revision，用 supersedes 指前版，每版新增 Topic 内文件，整合全部修改，不追加“第 N 轮修正”等补丁段落。被替代版本改为 superseded，同一 spec_id 只有一个 current；阅读全文比较有效行为并记修订索引。Topic Spec 是实施边界，不读取或发布长期 Spec。承重决定用[第一性原理推理](references/shared/first-principles-reasoning.md)连接目标、事实、机制、真实替代与可证伪验收；可逆实现细节留给实施。
 
-写清目标、范围、行为、不变量、验证策略及影响结果的未知。必要时调用 {{skill-call:my-review-design}}，遵循[审查循环](references/shared/review-loop.md)。来源与事实按[产物最终校验](references/shared/artifact-finalization.md)核对，承重未知保持可定位，不润色成确定结论。
+写清目标、范围、行为、不变量、验证策略及影响结果的未知。作者逐条核实承重现状断言并完成写作自检。篇幅参考上限为 3,000 + 预计 Ticket 数 × 1,000 字符；超出时在开头说明规模或风险理由。承重决定论证只写一到两句，详细推理写 ADR 或 Topic 决定记录。
+
+涉及持久状态或存量数据、并发与锁、对外契约（接口、消息、表结构、配置键、错误码）、发布与回滚兼容、改变其他模块既有行为中的任一类，定稿前自动调用 {{skill-call:my-review-design}}，作为拆 Ticket 前唯一独立设计关口。派新上下文审查者，派不出时增强自审并如实记 self。均不涉及时写“未触发设计审查”及理由。遵循[审查循环](references/shared/review-loop.md)的一次全面审查加最多一次复审；挑战和需求语义假设在下一个已有对齐点交用户，裁决写入已决事项，后续不得重开。来源与事实按[产物最终校验](references/shared/artifact-finalization.md)核对，承重未知保持可定位，不润色成确定结论。
 
 按[产物存储](references/shared/adapters/artifact-storage.md)保存 Topic specs，再直接调用 {{skill-call:my-to-tickets}}。Spec 与逐 Ticket 行为、依赖、测试命令和边界合并呈现对齐点2；用户确认前不实施，确认后由 to-tickets 直接继续 implement。
 
@@ -34,6 +36,14 @@ status: current
 
 从用户视角描述完成后能观察到的结果，以及如何判断目标达成。
 
+## 现状事实
+
+逐条列现有系统行为、数据、接口的断言，附模块、函数、接口名或实际查询/执行结果等可定位依据。无法核实的断言放入“依据与未知”，不写成事实。
+
+## 系统影响
+
+逐项写调用方与消费者、存量数据与迁移、发布与回滚期间新旧版本并存、并发与锁、权限、性能与数据量、可观测性；不涉及的项写“无”并附一句理由。
+
 ## 范围边界
 
 列出范围内与范围外。只保留能阻止误实现的边界。
@@ -50,21 +60,7 @@ status: current
 
 只列会改变架构、公开接口、数据语义、兼容方式、测试投入或风险承担的已确认决定。普通可逆实现细节不进入 Spec。
 
-- 要构建或修改的模块；
-- 要修改的模块接口；
-- 开发者做出的技术澄清；
-- 架构决策；
-- Schema 变更；
-- API 契约；
-- 具体交互。
-
-**不要**写具体文件路径或代码片段；它们很快会过期。
-
-每项决策应说明适用规则和影响区域；影响区域可使用模块、目录或 glob，不将具体文件路径写成不可变承诺。
-
-每项承重决策还应引用它服务的目标或验收，说明可定位的事实与约束、采用机制、被排除的最小替代方案，以及什么观察会推翻该选择、由哪项验证捕获。没有真实替代成本时省略替代方案，不为模板完整制造内容。
-
-例外：若原型产出了比文字更精确地编码决策的片段（状态机、reducer、schema、类型形状），可内嵌到相应决策，并简要说明来自原型。只保留含决策的信息，不要粘贴可运行 demo。
+每项说明目标/验收、可定位事实、选择及最小替代的取舍、推翻条件和验证；普通内部函数名、算法步骤和文件布局不写成契约。事实依据可以引用代码位置。原型精确编码决定的状态、schema 或类型片段可保留，并注明来源。
 
 ## 验证策略
 

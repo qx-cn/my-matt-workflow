@@ -149,10 +149,11 @@ def spec_acceptance(text):
     return "\n".join(output)
 
 
-def rule_material(repo, config, value, agent):
-    rules = resolve_rules(repo, agent, value["rule_scope"])
+def rule_material(repo, config, value, agent, paths=None):
+    # Hints and legacy scope are not boundaries; use actual paths, or the repository at start.
+    rules = resolve_rules(repo, agent, list(paths) if paths is not None else topics.content_paths(repo))
     sources = []
-    references = [*value["rule_sources"], *config["standards_sources"], *config["domain_sources"],
+    references = [*value.get("rule_sources",[]), *config["standards_sources"], *config["domain_sources"],
                   *(r["source"] for r in rules)]
     for ref in dict.fromkeys(references):
         source = repo / ref

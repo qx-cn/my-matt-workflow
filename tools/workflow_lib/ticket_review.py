@@ -121,7 +121,7 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
                     mode, data = files[name]
                     item[side] = frozen_file(directory, f'{i:04d}-{side}', data, mode)
             changes.append(item)
-        rules, sources = impl.rule_material(repo, config, value, unit['execution_agent'])
+        rules, sources = impl.rule_material(repo, config, value, unit['execution_agent'], [c['path'] for c in changes])
         spec = (repo / value['spec_ref']).read_text()
         decided = root / 'decided' / f'decided-{topic}.md'
         inputs = [frozen_file(directory, 'rules.md', '\n\n'.join(sources).encode()),
@@ -140,7 +140,8 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
         inputs.extend(repository)
         manifest = {**{k: skeleton[k] for k in PREFILLED}, 'repository': repository, 'ticket': unit['ticket'],
                     'baseline': unit['baseline'], 'changes': changes,
-                    'outside_scope': [c['path'] for c in changes if not any(fnmatch.fnmatchcase(c['path'], s) for s in value['rule_scope'])],
+                    'outside_legacy_hint_scope': [c['path'] for c in changes if value.get('rule_scope') and not any(fnmatch.fnmatchcase(c['path'], s) for s in value['rule_scope'])],
+                    'scope_note': '旧 rule_scope 仅供参考，不是写入边界；新 Ticket 无提示不标记范围外',
                     'inputs': inputs, 'rule_map': rules, 'review_context': review_context,
                     'coverage_targets': [a['id'] for a in skeleton['acceptance']] + skeleton['probes']
                         + sorted(set(re.findall(r'\*\*(I-(?:[A-Z]+)?[0-9]+)\*\*', spec)))}
@@ -295,7 +296,7 @@ def current_manifest(repo, config, topic, path, unit):
         raise topics.TopicError('acceptance: Ticket 或 Spec 定义已变化，请重新 review')
     if config != active['config']:
         raise topics.TopicError('rules: 配置已变化，请重新 review')
-    rules, sources = impl.rule_material(repo, config, frontmatter(path), unit['execution_agent'])
+    rules, sources = impl.rule_material(repo, config, frontmatter(path), unit['execution_agent'], [c['path'] for c in manifest['changes']])
     if rules != manifest['rule_map'] or digest('\n\n'.join(sources).encode()) != manifest['inputs'][0]['sha256']:
         raise topics.TopicError('rules: 适用规则已变化，请重新 review')
     decided = topics.topic_path(repo, topic) / 'decided' / f'decided-{topic}.md'

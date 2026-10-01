@@ -50,7 +50,7 @@ class ReviewTests(unittest.TestCase):
         report = self.review()
         package = json.loads(Path(report["manifest"]).read_text())
         self.assertEqual({"code.txt", "outside.txt", "untracked.txt"}, {c["path"] for c in package["changes"]})
-        self.assertEqual(["outside.txt", "untracked.txt"], package["outside_scope"])
+        self.assertEqual(["outside.txt", "untracked.txt"], package["outside_legacy_hint_scope"])
         change = next(c for c in package["changes"] if c["path"] == "code.txt")
         self.assertEqual("final unstaged change", Path(change["current"]["snapshot_path"]).read_text())
         self.assertNotEqual(Path(change["base"]["snapshot_path"]).read_text(), "committed change")
@@ -290,7 +290,7 @@ class ReviewTests(unittest.TestCase):
         old = changes["tests/fixtures/demo/.agent/config.md"]
         self.assertEqual("fixture baseline", Path(old["base"]["snapshot_path"]).read_text())
         self.assertEqual("fixture modified", Path(old["current"]["snapshot_path"]).read_text())
-        self.assertEqual(sorted(changes), manifest["outside_scope"])
+        self.assertEqual(sorted(changes), manifest["outside_legacy_hint_scope"])
 
 
 if __name__ == "__main__":

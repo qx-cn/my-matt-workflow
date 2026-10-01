@@ -103,13 +103,13 @@ def materials(repo, config, topic, tickets):
         history = json.loads(stored.read_text()) if stored.is_file() else {}
         self_text = history.get('self_review',{}).get('text','')
         impacts.append(f"### {identifier}（实施者声明，待核实）\n" + impl.section_text(self_text, '影响面'))
-        mapped, text = impl.rule_material(repo, config, value, agent)
+        mapped, text = impl.rule_material(repo, config, value, agent, topics.git(repo,'diff','--name-only', topics.state(topics.topic_path(repo,topic))['baseline']).stdout.decode().splitlines())
         rules.append({'ticket': identifier, 'rules': mapped})
         sources.extend(text)
         specs.append((repo / value['spec_ref']).read_text())
         acceptance.extend(reviews.targets(path))
         probes.extend(value['review_probes'])
-        scope.extend(value['rule_scope'])
+        scope.extend(value.get('rule_scope', []))
     return dict(rule_map=rules, rules='\n\n'.join(sources), specs='\n\n'.join(specs),
                 acceptance=acceptance, probes=list(dict.fromkeys(probes)), scope=scope,ticket_documents='\n\n'.join(ticket_documents),impacts='\n\n'.join(impacts))
 

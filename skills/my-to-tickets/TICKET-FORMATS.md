@@ -22,10 +22,7 @@ claimed_by:
 tags: []
 sequence: <NN>
 test_commands: [<至少一条与项目配置匹配的命令>]
-rule_sources: []
-rule_scope: []
-rule_constraints: []
-rule_conflicts: []
+touchpoints: [] # 可选：模块、目录、契约；非约束性提示，不是写入边界
 review_probes: [] # 仅 recovery、unknown-response；按 Spec 声明
 execution_agent: <auto|codex|cursor|claude>
 ---
@@ -34,12 +31,9 @@ execution_agent: <auto|codex|cursor|claude>
 
 **要构建什么：** 从用户视角描述该 Ticket 端到端实现的行为，而非逐层实现清单。
 
-## 适用规则与影响区域
+## 触点提示（可选、非约束性）
 
-- 规则来源：
-- 影响区域：
-- 实施约束：
-- 验证：
+预计涉及的模块、目录或契约；适用规则由 runtime 开工时按实际路径解析。
 
 ## 验收标准
 
@@ -88,3 +82,5 @@ execution_agent: <auto|codex|cursor|claude>
 ## project-docs 与 none
 
 `project-docs` 遵循项目既有格式，但仍完整保留 Spec 血缘、端到端行为、验收标准、阻塞边、适用规则与影响区域。`none` 使用相同信息结构，只在会话中输出。
+
+旧 Ticket 的 rule_sources、rule_scope、rule_constraints、rule_conflicts 继续可读；新 Ticket 不强制这些字段。触点提示不授权扩展 Spec 范围，不限制为固定写入路径。

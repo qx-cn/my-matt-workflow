@@ -82,6 +82,26 @@ class BatchTests(unittest.TestCase):
         self.assertIn('CONTRACT_CALLER_SENTINEL',frozen)
         self.assertIn('ROLLING_SENTINEL',frozen)
 
+    def test_new_ticket_without_legacy_rule_fields_uses_actual_repository_rules(self):
+        self.setup()
+        p=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md'
+        import re
+        p.write_text(re.sub(r'^rule_(sources|scope|constraints|conflicts):.*\n','',p.read_text(),flags=re.M))
+        (self.repo/'nested').mkdir()
+        (self.repo/'nested/AGENTS.md').write_text('ACTUAL_PATH_RULE_SENTINEL')
+        (self.repo/'nested/client.py').write_text('initial')
+        self.git('add','nested');self.git('commit','-m','existing nested caller')
+        report=json.loads(self.cli('implement','start','--ticket','feature-01').stdout)
+        self.assertIn('ACTUAL_PATH_RULE_SENTINEL',Path(report['briefing']).read_text())
+        (self.repo/'nested/client.py').write_text('changed')
+        self.cli('implement','test');self.self_review()
+        p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.cli('implement','finish')
+        report=self.review()
+        manifest=json.loads(Path(report['manifest']).read_text())
+        rules=Path(manifest['inputs'][0]['snapshot_path']).read_text()
+        self.assertIn('ACTUAL_PATH_RULE_SENTINEL',rules)
+
     def test_clean_three_ticket_batch_one_dispatch_and_topic_completion(self):
         self.setup(3)
         for i in range(1,4):self.implement(i)

@@ -27,7 +27,7 @@ Spec 不声明执行 Agent；输出前只解析跨 Agent 的项目规则与 ADR�
 - **约束**：由规则推出的可执行设计或测试要求；
 - **验证**：证明该项满足约束的测试、检查或人工验证。
 
-相关规则未读取、存在未解决冲突，或计划项缺少上述四项时，不得生成 `ready-for-agent` Ticket。
+计划中的规则证据供切分参考，不强制写入 Ticket frontmatter；新 Ticket 不要求 rule_sources/rule_scope/rule_constraints/rule_conflicts。旧字段兼容读取，未解决冲突仍阻止开工。runtime 开工按实际路径解析；无路径声明时保守覆盖现有仓库文件，审查按实际改动路径重新核对。触点提示只是非约束性上下文。
 
 ## 实施与审查
 

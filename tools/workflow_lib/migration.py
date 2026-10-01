@@ -135,7 +135,7 @@ def convert_topic(repo, root, config):
             value['test_commands'] = commands
         # Do not guess rule scope, dependency edges, or Spec ownership.
         required = ('ticket_kind', 'spec_id', 'spec_revision', 'spec_ref', 'blocked_by',
-                    'rule_sources', 'rule_scope', 'rule_constraints', 'rule_conflicts', 'execution_agent')
+                    'execution_agent')
         missing = [key for key in required if key not in value]
         if missing:
             raise topics.TopicError(f'{path.name} 无法唯一推断字段：{missing}')

@@ -99,12 +99,11 @@ def _admission_fields(ticket: dict[str, object], path: Path) -> dict[str, object
         raise TicketError(
             "ready-for-agent Ticket 的 execution_agent 必须是 auto、codex、cursor 或 claude"
         )
-    for field in ("rule_sources", "rule_scope", "rule_constraints", "rule_conflicts"):
-        if not isinstance(ticket.get(field), list):
-            raise TicketError(f"ready-for-agent Ticket 必须声明 {field} 列表")
-    if not ticket["rule_sources"] or not ticket["rule_scope"] or not ticket["rule_constraints"]:
-        raise TicketError("ready-for-agent Ticket 必须具备规则来源、作用范围和派生约束")
-    if ticket["rule_conflicts"]:
+    for field in ("rule_sources", "rule_scope", "rule_constraints", "rule_conflicts", "touchpoints"):
+        if field in ticket and (not isinstance(ticket[field], list) or
+                                not all(isinstance(x,str) and x.strip() for x in ticket[field])):
+            raise TicketError(f"Ticket {field} 必须是字符串列表")
+    if ticket.get("rule_conflicts"):
         raise TicketError("存在未解决 rule_conflicts，Ticket 不得进入实施")
     review_probes(ticket, path)
     spec_id = ticket.get("spec_id")

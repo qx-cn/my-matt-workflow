@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # 交接
 
-只用于换宿主、换目录或换人，或访谈结论尚未形成 Spec 但需要保存。实施恢复依靠提交与 runtime status。按[找用户的条件](references/shared/user-intervention.md)处理阶段交接。
+只用于换宿主、换目录或换人，或访谈结论尚未形成 Spec 但需要保存。涉及实施进度时先运行 runtime status 并引用其输出/证据位置，以它为准，不手工转述 Ticket 或批次完成状态。实施恢复依靠提交与 runtime status。按[找用户的条件](references/shared/user-intervention.md)处理阶段交接。
 
 交接保留下一会话目标、已确认决定与范围外、当前状态与验证依据、剩余风险、相关材料位置和第一步。既有产物只引用；移除秘密和不必要个人信息。提交、远端、release与各宿主安装状态按实际证据分别说明，未知保持未知。
 

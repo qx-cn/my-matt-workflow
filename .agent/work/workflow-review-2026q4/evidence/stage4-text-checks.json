@@ -1,0 +1,8 @@
+{
+  "design_checks": true,
+  "design_report": true,
+  "mandatory_code": true,
+  "document_budget": true,
+  "trigger_notes": true,
+  "single_loop_source": true
+}
