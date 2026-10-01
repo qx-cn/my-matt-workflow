@@ -23,7 +23,10 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
             raise topics.TopicError('accept 只接受 needs-user')
         if not impl.tests_passed(repo, unit):
             raise topics.TopicError('test: 接受必须有当前完整声明测试通过记录')
-        latest = unit.get('reviews', [])[-1]
+        reviews = unit.get('reviews', [])
+        if not reviews and not unit.get('migrated'):
+            raise topics.TopicError('accept 缺少审查或迁移阻塞记录')
+        latest = reviews[-1] if reviews else {}
         known = [f for f in latest.get('result', {}).get('findings', []) if f['severity'] == 'blocking']
         unit['known_issues'] = known
         unit.setdefault('decisions', []).append(dict(action='accept', reason=reason, at=topics.now()))

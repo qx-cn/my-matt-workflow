@@ -1,0 +1,103 @@
+{
+  "review_id": "d559c0c3e430910747b37a528ad9bd72",
+  "status": "findings",
+  "code_content_id": "62feacf1bdcd818ddd0f60c4f6a35aaa1bc36a2f580b7ed400529be094c1ad64",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "f002399007e74f927a008ca768246638"
+  },
+  "follow_ons": [],
+  "design_gap": null,
+  "findings": [
+    {
+      "id": "08-overview-v2-fixture",
+      "root_cause": "overview-v2-fixture-missing-declaration",
+      "severity": "P1",
+      "baseline_reachable": true,
+      "acceptance_ids": [
+        "workflow-simplification-08#A1"
+      ],
+      "summary": "tests/test_work_overview.py:415 uses a v1 Ticket without test_commands while expecting v2 pending. New legacy_topic gate intentionally marks it 需要迁移, so the declared suite and nested non-Git check fail. Preserve gate behavior and give this v2 CLI fixture an explicit test declaration; retain captured legacy fixtures unchanged."
+    },
+    {
+      "id": "08-incomplete-config-preview",
+      "root_cause": "migration-continues-after-config-validation-failure",
+      "severity": "P2",
+      "baseline_reachable": true,
+      "acceptance_ids": [
+        "workflow-simplification-08#A3"
+      ],
+      "summary": "tools/workflow_lib/migration.py:199 catches missing/invalid config fields but continues into convert_topic and full_tests. Removing test_commands from the captured v1 profile leads to uncaught KeyError rather than an unresolved summary. End planning at the invalid project config boundary; preview remains zero-write and apply refuses."
+    }
+  ],
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-08#A1",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-08#A2",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-08#A3",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-08#A4",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-08#A5",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-08#A6",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py",
+          "snapshot:tools/workflow_lib/topic_service.py"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "probe": "downstream-owner",
+        "summary": "Frozen Code and Spec passes: migration-only scope; baseline/definition recovery, failed commit rollback, current tests gates, and unchanged direct successor 09 ownership. Two actionable current findings are recorded; captured A–E fixtures remain unchanged.",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py"
+        ]
+      },
+      {
+        "probe": "recovery",
+        "summary": "Frozen Code and Spec passes: migration-only scope; baseline/definition recovery, failed commit rollback, current tests gates, and unchanged direct successor 09 ownership. Two actionable current findings are recorded; captured A–E fixtures remain unchanged.",
+        "evidence_refs": [
+          "snapshot:tools/workflow_lib/migration.py",
+          "snapshot:tests/test_migration.py"
+        ]
+      }
+    ]
+  }
+}

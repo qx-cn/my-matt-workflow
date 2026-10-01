@@ -413,7 +413,9 @@ class WorkOverviewTests(unittest.TestCase):
             repo = self._repo(Path(tmp))
             topic = repo / ".agent" / "work" / "feature"
             self._spec(topic, "02", 2)
-            self._ticket(topic, "first", 1)
+            ticket = self._ticket(topic, "first", 1)
+            ticket.write_text(ticket.read_text().replace('ticket_kind: implementation\n',
+                                                         'ticket_kind: implementation\ntest_commands: []\n'))
             from tools.workflow_lib.topic_service import render_config
             (repo / ".agent/matt-workflow.md").write_text(render_config({
                 "schema_version": 2, "task_backend": "local", "agent_directory_mode": "shared",

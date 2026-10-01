@@ -1,0 +1,17 @@
+{
+  "approved_scope": {
+    "allowed_ids": [
+      "workflow-simplification-08"
+    ],
+    "definitions": {
+      "workflow-simplification-08": "5b76cf2e778bb2744d78acb72eea2967af9b6bcc51b65decd1ed840c31c1fc2f"
+    },
+    "kind": "approved-ticket-scope",
+    "schema_version": 1,
+    "scope_id": "54eb3d9a4e4a6bf50183d2f396a1d3965778b01467d88a8eb5e42ce8d0866d27",
+    "tickets_dir": "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/.agent/work/workflow-simplification/tickets"
+  },
+  "ticket_ids": [
+    "workflow-simplification-08"
+  ]
+}

@@ -27,6 +27,8 @@ def ticket_path(repo, identifier):
     if not match or int(match[2]) == 0:
         raise topics.TopicError("ticket id 必须为 <topic>-<NN>，NN 从 01 开始")
     topic = match[1]
+    from .migration import require_topic
+    require_topic(topics.topic_path(repo, topic))
     if topics.topic_path(repo, topic, True).exists():
         raise topics.TopicError("Topic 已归档，只读")
     path = topics.topic_path(repo, topic) / "tickets" / f"tickets-{identifier}.md"

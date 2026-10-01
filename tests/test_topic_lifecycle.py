@@ -141,7 +141,7 @@ class TopicLifecycleTests(unittest.TestCase):
         (self.repo / ".agent/work/docs").mkdir(parents=True)
         pending = self.repo / ".agent/work/pending/tickets"
         pending.mkdir(parents=True)
-        (pending / "tickets-pending-01.md").write_text("ticket")
+        (pending / "tickets-pending-01.md").write_text('---\nid: pending-01\nstatus: ready-for-agent\ntest_commands: ["python3 -c \'pass\'"]\n---\nTicket\n')
         self.cli("topic", "start", "--topic", "change", "--level", "quick")
         result = json.loads(self.cli("work-overview", "--json").stdout)
         self.assertEqual({"docs": "document", "pending": "pending", "change": "active"},

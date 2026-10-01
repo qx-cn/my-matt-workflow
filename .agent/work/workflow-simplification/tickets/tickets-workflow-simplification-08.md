@@ -7,7 +7,7 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-07"]
 claimed_by:
 tags: []
@@ -37,9 +37,9 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] 项目级旧配置或长期 Spec 使全部读取配置的代表命令停止并提示 migrate，文件不变；非法新配置指出字段。Topic 级旧格式只阻止该 Topic，overview 标需要迁移；历史记录和 archive 不误报。
-- [ ] migrate 默认列出文件、转换类别及无法自动判断项，零写入；apply 先备份 agent，排除 git 与已有备份，写入备份忽略规则，转换后满足 I-A1。
-- [ ] 配置转换为九键 schema 2，audited 转 standard，非 local 列为无法自动迁移；Spec/Ticket 仅在可唯一推断时补字段，测试声明取全量集合，空集合不猜。
-- [ ] AC-35 A–E 样例全部满足预期：A 的实施中 Ticket 能走完测试审查 finish；B 测试后可 accept 或修订 reopen；C 变 implementing；D 完成历史保留且直接迁移归档；E 整 Topic 拒绝自动迁移。
-- [ ] 实施中记录沿用旧基线、测试/审查证据清空；无基线不猜；定义快照绑定转换后文件。已完成 Ticket 和其记录正文不改写，交接原样保留。
-- [ ] 分片术语与 ADR 合并到项目级位置，冲突列出不自动合并；长期 Spec 只在备份保留；归档重名拒绝；第二次运行除 E 外无需迁移。
+- [x] 项目级旧配置或长期 Spec 使全部读取配置的代表命令停止并提示 migrate，文件不变；非法新配置指出字段。Topic 级旧格式只阻止该 Topic，overview 标需要迁移；历史记录和 archive 不误报。
+- [x] migrate 默认列出文件、转换类别及无法自动判断项，零写入；apply 先备份 agent，排除 git 与已有备份，写入备份忽略规则，转换后满足 I-A1。
+- [x] 配置转换为九键 schema 2，audited 转 standard，非 local 列为无法自动迁移；Spec/Ticket 仅在可唯一推断时补字段，测试声明取全量集合，空集合不猜。
+- [x] AC-35 A–E 样例全部满足预期：A 的实施中 Ticket 能走完测试审查 finish；B 测试后可 accept 或修订 reopen；C 变 implementing；D 完成历史保留且直接迁移归档；E 整 Topic 拒绝自动迁移。
+- [x] 实施中记录沿用旧基线、测试/审查证据清空；无基线不猜；定义快照绑定转换后文件。已完成 Ticket 和其记录正文不改写，交接原样保留。
+- [x] 分片术语与 ADR 合并到项目级位置，冲突列出不自动合并；长期 Spec 只在备份保留；归档重名拒绝；第二次运行除 E 外无需迁移。

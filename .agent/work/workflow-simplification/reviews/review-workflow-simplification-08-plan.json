@@ -1,0 +1,11 @@
+{
+  "content_id": "0d7629f96f3121489d093e072fb6462df3d7dd3b368e18d9c0ff3c35e5eb430d",
+  "checks": {
+    "my-review-design": {
+      "status": "pass",
+      "reason": null
+    }
+  },
+  "findings": [],
+  "inconclusive": []
+}

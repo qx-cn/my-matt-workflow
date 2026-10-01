@@ -98,7 +98,7 @@ from workflow_lib.tickets import (
 )
 from workflow_lib.transitions import create_approved_scope, ticket_transition
 from workflow_lib.write_gates import resolve_write_gate
-from workflow_lib import topic_service, ticket_implementation, ticket_review, ticket_completion, ticket_resolution, branch_review
+from workflow_lib import topic_service, ticket_implementation, ticket_review, ticket_completion, ticket_resolution, branch_review, migration
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -619,6 +619,7 @@ def command_decision_gate(args: argparse.Namespace) -> None:
 def command_validate_ticket(args: argparse.Namespace) -> None:
     try:
         repo = topic_service.safe_repo(Path(args.repo))
+        topic_service.read_config(repo)
         path = Path(args.path).resolve() if args.path else ticket_implementation.select(repo, args.ticket)[1]
         report = ticket_implementation.validate(repo, path)
     except (TicketError, topic_service.TopicError, OSError, ValueError) as exc:
@@ -1047,6 +1048,14 @@ def command_refresh_project(args: argparse.Namespace) -> None:
     command_legacy_setup(args)
 
 
+def command_migrate(args: argparse.Namespace) -> None:
+    try:
+        report = migration.migrate(Path(args.repo), args.apply)
+    except (TicketError, topic_service.TopicError, OSError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
 def command_setup(args: argparse.Namespace) -> None:
     try:
         removed_flags = ("preset", "branch_policy", "commit_policy", "external_write_policy",
@@ -1216,6 +1225,11 @@ def _add_profile_arguments(command: argparse.ArgumentParser) -> None:
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser()
     sub = result.add_subparsers(dest="command", required=True)
+
+    migrate = sub.add_parser("migrate")
+    migrate.add_argument("--repo", default=".")
+    migrate.add_argument("--apply", action="store_true")
+    migrate.set_defaults(func=command_migrate)
 
     setup = sub.add_parser("setup")
     _add_profile_arguments(setup)

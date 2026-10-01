@@ -88,6 +88,8 @@ def validate_config(config):
 
 
 def read_config(repo):
+    if (repo / '.agent/specs').exists():
+        raise TopicError('项目级旧 Spec：请运行 migrate')
     path = repo / ".agent/matt-workflow.md"
     try:
         lines = path.read_text().splitlines()
@@ -159,6 +161,8 @@ def topic_path(repo, topic, archived=False):
 def state(path):
     if not path.is_dir():
         raise TopicError(f"Topic 不存在：{path.name}")
+    from .migration import require_topic
+    require_topic(path)
     state_path = path / STATE_FILE
     if state_path.exists():
         try:
@@ -286,7 +290,8 @@ def overview(repo, topic=None):
     read_config(repo)
     work = repo / ".agent/work"
     paths = [topic_path(repo, topic)] if topic else sorted(work.iterdir()) if work.exists() else []
-    return {"topics": [{"topic": p.name, **state(p)} for p in paths if p.is_dir()
+    from .migration import legacy_topic
+    return {"topics": [{"topic": p.name, **({'status': '需要迁移', 'level': None} if legacy_topic(p) else state(p))} for p in paths if p.is_dir()
                        and not topic_path(repo, p.name, True).exists()]}
 
 
