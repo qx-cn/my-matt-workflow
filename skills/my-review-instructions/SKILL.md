@@ -63,7 +63,7 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 
 ### 6. 最后检查指令设计
 
-仅当存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，调用并应用 {{skill-call:my-writing-for-agents}}，检查调用、信息层级、完成条件、主导词、单一事实来源和失效模式。若结论是其他归宿，不输出即将随重构消失的文字建议。
+仅当存在性 Gate 得出 `KEEP` 或 `TARGETED_FIX` 时，调用并应用 {{skill-call:my-writing-for-agents}}，按该方法默认删除，并检查指针触发、信息负担与分层、完成条件、熟悉概念词与正向目标、单一事实来源及调用方式。若结论是其他归宿，不输出即将随重构消失的文字建议。
 
 完成条件：所有进入报告的候选都通过下方 Finding Gate，并按根因去重。
 

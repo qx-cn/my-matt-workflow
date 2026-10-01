@@ -1,0 +1,69 @@
+{
+  "review_id": "b8e4a5eced1540c48a4245cc94e788ad",
+  "status": "pass",
+  "code_content_id": "be2c35f08e09922bdea65cbc0e78e12dff87a42472c98539409523d81cd7b01f",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "fb587008f5c223b15aa9e8b1a4e99edc"
+  },
+  "findings": [],
+  "follow_ons": [],
+  "design_gap": null,
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-11#A1",
+        "evidence_refs": [
+          "snapshot:skills/my-tdd/SKILL.md",
+          "snapshot:skills/my-tdd/agents/openai.yaml",
+          "snapshot:resources/testing-seams.md",
+          "test:8b5ec9cbc6dd3d2587601a23941ec8655e50dd1a6addc36c45aad6cde9a953ae"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-11#A2",
+        "evidence_refs": [
+          "snapshot:skills/my-writing-for-agents/SKILL.md",
+          "snapshot:skills/my-writing-for-agents/GLOSSARY.md",
+          "test:8b5ec9cbc6dd3d2587601a23941ec8655e50dd1a6addc36c45aad6cde9a953ae"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-11#A3",
+        "evidence_refs": [
+          "snapshot:skills/my-review-instructions/SKILL.md",
+          "snapshot:resources/project-rule-review.md",
+          "snapshot:resources/agent-rule-applicability.md",
+          "test:8b5ec9cbc6dd3d2587601a23941ec8655e50dd1a6addc36c45aad6cde9a953ae"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-11#A4",
+        "evidence_refs": [
+          "snapshot:skills/my-ask-matt/SKILL.md",
+          "snapshot:resources/manifest.json",
+          "test:8b5ec9cbc6dd3d2587601a23941ec8655e50dd1a6addc36c45aad6cde9a953ae"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-11#A5",
+        "evidence_refs": [
+          "snapshot:skills/my-improve-codebase-architecture/CONTENT.md",
+          "snapshot:skills/my-to-spec/SKILL.md",
+          "test:8b5ec9cbc6dd3d2587601a23941ec8655e50dd1a6addc36c45aad6cde9a953ae"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "probe": "downstream-owner",
+        "summary": "直接后继13负责最终旧命令、配置和政策清理及跨切片集成；本轮不改运行时或冻结方法，其余现存旧引用不扩张当前五项验收。",
+        "evidence_refs": [
+          "spec:.agent/work/workflow-simplification/specs/specs-workflow-simplification.md",
+          "snapshot:resources/manifest.json",
+          "snapshot:skills/my-ask-matt/SKILL.md"
+        ]
+      }
+    ]
+  }
+}

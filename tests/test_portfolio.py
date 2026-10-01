@@ -77,17 +77,6 @@ class PortfolioContractTests(unittest.TestCase):
             self.assertIn(command, wizard)
 
     def test_writing_tdd_and_design_contracts_match_runtime_model(self):
-        writing = (ROOT / "skills/my-writing-for-agents/SKILL.md").read_text()
-        glossary = (ROOT / "skills/my-writing-for-agents/GLOSSARY.md").read_text()
-        self.assertIn("调用能力由**宿主 policy**决定", writing)
-        self.assertIn("只负责 Skill 的调用描述、信息层级", writing)
-        self.assertIn("不扩张为根本性审查", writing)
-        self.assertNotIn("存在本身*就是*调用轴", glossary)
-
-        tdd = (ROOT / "skills/my-tdd/SKILL.md").read_text()
-        self.assertIn("red → green → refactor", tdd)
-        self.assertIn("references/shared/testing-seams.md", tdd)
-        self.assertNotIn("重构不属于循环", tdd)
         tests_reference = (ROOT / "skills/my-tdd/tests.md").read_text()
         deepening = (ROOT / "skills/my-codebase-design/DEEPENING.md").read_text()
         self.assertIn("module boundary under test", tests_reference)

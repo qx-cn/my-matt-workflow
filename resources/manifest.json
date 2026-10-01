@@ -22,8 +22,7 @@
         "my-tech-design",
         "my-test-report",
         "my-to-spec",
-        "my-to-tickets",
-        "my-writing-for-agents"
+        "my-to-tickets"
       ]
     },
     "artifact-finalization": {
@@ -209,7 +208,6 @@
       "source_dir": "policies",
       "release_path": "references/policies",
       "consumers": [
-        "my-ask-matt",
         "my-handoff",
         "my-resolving-merge-conflicts",
         "my-wayfinder"

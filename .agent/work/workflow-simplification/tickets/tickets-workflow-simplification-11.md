@@ -7,7 +7,7 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-09"]
 claimed_by:
 tags: []
@@ -37,8 +37,8 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] TDD 红绿循环不含重构，重构只作为审查建议；相关调用与资源不保留旧循环要求。
-- [ ] writing-for-agents 面向 Skill、AGENTS、CLAUDE，默认删除；包含指针触发、两类负担、信息分层、可判定完成条件、熟悉关键词与正向目标、剪枝和调用方式的全部要求。
-- [ ] review-instructions 采用 writing-for-agents 方法，以宿主参数处理差异；合并后保留必要审查目标。
-- [ ] ask-matt 在阶段边界按 Spec 五条顺序取首个成立项，除继续外说明原始信息损失，压缩时说明保留内容。
-- [ ] architecture 用户未指定方向先查约 20 个提交的反复热点，分散时才扩大；数字注明项目选择；to-spec 删除 PRD 别称。
+- [x] TDD 红绿循环不含重构，重构只作为审查建议；相关调用与资源不保留旧循环要求。
+- [x] writing-for-agents 面向 Skill、AGENTS、CLAUDE，默认删除；包含指针触发、两类负担、信息分层、可判定完成条件、熟悉关键词与正向目标、剪枝和调用方式的全部要求。
+- [x] review-instructions 采用 writing-for-agents 方法，以宿主参数处理差异；合并后保留必要审查目标。
+- [x] ask-matt 在阶段边界按 Spec 五条顺序取首个成立项，除继续外说明原始信息损失，压缩时说明保留内容。
+- [x] architecture 用户未指定方向先查约 20 个提交的反复热点，分散时才扩大；数字注明项目选择；to-spec 删除 PRD 别称。

@@ -2544,7 +2544,6 @@ render_root: 学生课程
                 repo_root=root,
             )
             for skill in (
-                "my-ask-matt",
                 "my-handoff",
                 "my-resolving-merge-conflicts",
                 "my-wayfinder",

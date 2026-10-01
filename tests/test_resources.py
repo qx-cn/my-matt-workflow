@@ -263,7 +263,7 @@ class SharedResourceTests(unittest.TestCase):
         expectations = {
             "my-ask-matt": (
                 "references/shared/adapters/composition.md",
-                "references/policies/context-hygiene.md",
+                "references/shared/adapters/assurance-levels.md",
             ),
             "my-handoff": ("references/policies/context-hygiene.md",),
             "my-resolving-merge-conflicts": (
@@ -318,7 +318,6 @@ class SharedResourceTests(unittest.TestCase):
         effective = self._effective_consumers()
         with tempfile.TemporaryDirectory() as tmp:
             for skill, policy in {
-                "my-ask-matt": "context-hygiene.md",
                 "my-handoff": "context-hygiene.md",
                 "my-resolving-merge-conflicts": "merge-conflict-approval.md",
                 "my-wayfinder": "decision-taxonomy.md",
