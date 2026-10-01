@@ -32,6 +32,31 @@ MANUAL_ENTRIES = {
 
 
 class PackagingV2Tests(unittest.TestCase):
+    def test_build_gate_retains_configuration_without_topic_state(self):
+        from tools.workflow_lib.topic_service import read_config
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'repo'
+            source = root / 'skills/my-a'
+            source.mkdir(parents=True)
+            (source / 'SKILL.md').write_text(
+                '---\nname: my-a\ndescription: test\n'
+                'disable-model-invocation: true\n---\n# Test\n')
+            agent = root / '.agent'
+            (agent / 'work').mkdir(parents=True)
+            shutil.copy2(ROOT / '.agent/matt-workflow.md', agent / 'matt-workflow.md')
+            (agent / 'work/state.json').write_text('{}')
+            expected = read_config(root)
+
+            def gate(snapshot):
+                self.assertEqual(expected, read_config(snapshot))
+                self.assertFalse((snapshot / '.agent/work').exists())
+
+            release = build_release(
+                root / 'skills', root / 'releases', release_id='config-gate',
+                upstream_id='test', repo_root=root, source_gate=gate)
+            self.assertFalse((release / '.agent').exists())
+
     def test_invalid_catalog_metadata_and_links_are_rejected_without_evals(self):
         for defect in ['catalog', 'metadata', 'link']:
             with self.subTest(defect=defect), tempfile.TemporaryDirectory() as tmp:

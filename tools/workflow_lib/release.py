@@ -70,7 +70,14 @@ def _snapshot_inventory(root: Path) -> dict[str, str]:
     try:
         for path in sorted(root.rglob("*")):
             relative = path.relative_to(root)
-            if not relative.parts or relative.parts[0] in _SNAPSHOT_IGNORED_ROOTS:
+            if not relative.parts:
+                continue
+            # The source gate needs repository configuration, but mutable
+            # Topic state and history must stay outside the build snapshot.
+            if (
+                relative.parts[0] in _SNAPSHOT_IGNORED_ROOTS
+                and relative != Path(".agent/matt-workflow.md")
+            ):
                 continue
             if ignored_source(relative):
                 continue
