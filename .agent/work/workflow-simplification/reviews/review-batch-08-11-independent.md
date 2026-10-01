@@ -42,9 +42,9 @@ No findings.
 
 ## 逐张报告
 
-- [Ticket 08](/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/.agent/work/workflow-simplification/reviews/review-workflow-simplification-08-independent.md)
-- [Ticket 09](/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/.agent/work/workflow-simplification/reviews/review-workflow-simplification-09-independent.md)
-- [Ticket 10](/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/.agent/work/workflow-simplification/reviews/review-workflow-simplification-10-independent.md)
-- [Ticket 11](/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/.agent/work/workflow-simplification/reviews/review-workflow-simplification-11-independent.md)
+- [Ticket 08](review-workflow-simplification-08-independent.md)
+- [Ticket 09](review-workflow-simplification-09-independent.md)
+- [Ticket 10](review-workflow-simplification-10-independent.md)
+- [Ticket 11](review-workflow-simplification-11-independent.md)
 
-[结构化汇总](/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/.agent/work/workflow-simplification/reviews/review-batch-08-11-independent.json)
+[结构化汇总](review-batch-08-11-independent.json)
