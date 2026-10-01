@@ -48,6 +48,8 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
         raise topics.TopicError('reopen 要求 Ticket 稳定定义或 Spec 变化；状态、认领、勾选不算')
     impl.validate(repo, path, config)
     impl.rule_material(repo, config, frontmatter(path), unit['execution_agent'])
+    from .quality_metrics import preserve_history
+    preserve_history(unit)
     unit.update(definition=changed, tests=[], reviews=[])
     for key in ('test_run', 'active_review', 'first_review_volume', 'stop_reason'):
         unit.pop(key, None)

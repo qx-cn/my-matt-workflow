@@ -161,7 +161,7 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
                   'definition': starting_definition, 'config': config}
         unit.setdefault('first_review_volume', review_loop.volume(manifest))
         unit['active_review'] = active
-        unit.setdefault('reviews', []).append({'unit_id': unit_id, 'content_id': identity, 'round': skeleton['round'], 'status': 'open', 'manifest': str(manifest_path)})
+        unit.setdefault('reviews', []).append({'unit_id': unit_id, 'content_id': identity, 'round': skeleton['round'], 'status': 'open', 'manifest': str(manifest_path), 'review_context':review_context, 'review_series':unit.get('reviews',[{}])[0].get('review_series',unit_id) if unit.get('reviews') else unit_id})
         impl.write_json(record, unit)
         return {**active, **{k: skeleton[k] for k in PREFILLED}, 'rounds_used': skeleton['round'], 'rounds_remaining': max(0, 4 - skeleton['round'])}
     except Exception:
@@ -337,7 +337,7 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
         status = 'pass'
     repair = review_loop.repair_for(unit, manifest)
     entry = {'manifest': unit['active_review']['manifest'], 'repair': repair, 'unit_id': manifest['unit_id'], 'content_id': manifest['content_id'], 'round': manifest['round'],
-             'status': status, 'reviewer': result['reviewer'], 'result': result}
+             'status': status, 'reviewer': result['reviewer'], 'result': result, 'review_context':manifest['review_context'], 'review_series':unit['reviews'][-1].get('review_series',manifest['unit_id'])}
     accepted = topics.topic_path(repo, topic) / 'reviews' / f"accepted-{manifest['unit_id']}.json"
     if accepted.exists():
         if json.loads(accepted.read_text()) != entry:

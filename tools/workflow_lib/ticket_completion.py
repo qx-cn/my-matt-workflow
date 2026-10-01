@@ -12,7 +12,8 @@ from .metrics import provenance, command_error_count
 
 def metric(unit, outcome, verdict, repo=None):
     findings = [f for r in unit.get('reviews', []) for f in r.get('result', {}).get('findings', [])]
-    return {'kind': 'ticket', 'topic': unit['topic'], 'ticket': unit['ticket'], 'level': 'standard',
+    from .quality_metrics import ticket_fields
+    return {**ticket_fields(unit),'kind': 'ticket', 'topic': unit['topic'], 'ticket': unit['ticket'], 'level': 'standard',
             'started_at': unit['started_at'], 'finished_at': topics.now(), 'outcome': outcome,
             'test_runs': len({t.get('run_id', t.get('finished_at')) for t in unit['tests']}),
             'review_rounds': len(unit.get('reviews', [])),

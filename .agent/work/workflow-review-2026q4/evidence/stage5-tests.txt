@@ -1,0 +1,16 @@
+..................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 274 tests in 240.142s
+
+OK
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp1dgbgy2i/releases/r4
+INSTALLED r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpc89ykfal/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpc89ykfal/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpc89ykfal/repo/releases/r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmppr4n2pvh/workflow/releases/v1
+INSTALLED v1
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpw8mcg_su/workflow/releases/v2
+INSTALLED v2
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_74u9qwa/workflow/releases/v1
+INSTALLED v1

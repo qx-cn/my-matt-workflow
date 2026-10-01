@@ -267,6 +267,7 @@ def status(repo, topic=None):
     if value["status"] == "pending":
         from .ticket_implementation import next_start_command
         command = next_start_command(repo, topic)
+    batch_status = None
     advisories = []
     known_issues = []
     decisions_needed = []
@@ -301,6 +302,7 @@ def status(repo, topic=None):
             unverified = batch_status['unverified']
     return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
             "decisions_needed": decisions_needed, "unverified": unverified,
+            "batch_status":batch_status,
             "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
             "next_command": command}
 

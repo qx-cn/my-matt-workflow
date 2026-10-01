@@ -190,7 +190,7 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         repair = review_loop.repair_for(unit, manifest)
         entry = dict(manifest=unit['active_review']['manifest'], repair=repair, unit_id=manifest['unit_id'],
                      content_id=manifest['content_id'], round=manifest['round'], status=status,
-                     reviewer=result['reviewer'], result=result)
+                     reviewer=result['reviewer'], result=result,review_context=manifest['review_context'],review_series=unit['reviews'][-1].get('review_series',manifest['unit_id']))
         accepted = root / 'reviews' / f"accepted-{manifest['unit_id']}.json"
         if accepted.exists() and json.loads(accepted.read_text()) != entry:
             raise topics.TopicError('unit_id: 当前单元已登记不同结果')
@@ -258,7 +258,7 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         unit.setdefault('definition',frozen_definition)
         unit.setdefault('first_review_volume',review_loop.volume(manifest))
         unit['active_review'] = active
-        unit['reviews'].append(dict(unit_id=unit_id,content_id=identity,round=skeleton['round'],status='open',manifest=str(path)))
+        unit['reviews'].append(dict(unit_id=unit_id,content_id=identity,round=skeleton['round'],status='open',manifest=str(path),review_context=context,review_series=unit['reviews'][0].get('review_series',unit_id) if unit['reviews'] else unit_id))
         impl.write_json(record,unit)
         return {**active,**{k:skeleton[k] for k in reviews.PREFILLED},'rounds_used':skeleton['round'],'rounds_remaining':4-skeleton['round']}
     except Exception:
@@ -281,6 +281,8 @@ def resolve(repo, topic=None, accept=False, reason=''):
         raise topics.TopicError('reopen 要求首次审查或最近 reopen 后 Ticket/Spec 稳定定义变化')
     for path, _ in tickets.values(): impl.validate(repo,path,config)
     materials(repo,config,topic,tickets)
+    from .quality_metrics import preserve_history
+    preserve_history(unit)
     unit.update(definition=definition(repo,tickets),reviews=[],status='implementing')
     for key in ('active_review','stop_reason','first_review_volume'): unit.pop(key,None)
     from . import batches
@@ -290,6 +292,8 @@ def resolve(repo, topic=None, accept=False, reason=''):
             subset={t:tickets[t] for t in current['tickets']}
             changed=definition(repo,subset)
             if current.get('definition') and changed != current['definition']:
+                from .quality_metrics import preserve_history
+                preserve_history(current)
                 current.update(definition=changed,reviews=[],status='reviewing')
                 for key in ('active_review','first_review_volume','stop_reason','acceptance'):current.pop(key,None)
             elif not current.get('definition'):

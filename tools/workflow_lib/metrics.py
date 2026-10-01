@@ -5,7 +5,7 @@ from . import topic_service as topics
 
 FIELDS = ('kind','topic','ticket','level','started_at','finished_at','outcome','test_runs',
           'review_rounds','findings','repair_rounds','needs_user_count','command_errors',
-          'reviewer_provenance','tests_configured')
+          'reviewer_provenance','tests_configured','finding_counts','batches','high_risk_reviews','whole_branch_review')
 
 def provenance(reviews):
     sources = {r.get('result', {}).get('reviewer', {}).get('provenance') for r in reviews}
@@ -30,7 +30,12 @@ def summarize(repo, topic=None):
         if topic is None or value['topic'] == topic:
             records.append(value)
     groups = {}
-    for name in sorted({r['topic'] for r in records}):
+    from . import quality_metrics as quality
+    escaped=quality.escapes(repo,topic)
+    roots=[p.name for parent in (repo/'.agent/work',repo/'.agent/archive') if parent.exists() for p in parent.iterdir() if p.is_dir()]
+    names={r['topic'] for r in records}|{r['topic'] for r in escaped}|set(roots)
+    if topic is not None:names={topic}
+    for name in sorted(names):
         rows = [r for r in records if r['topic'] == name]
         counts = {}
         for key in ('test_runs','review_rounds','repair_rounds','needs_user_count','command_errors'):
@@ -41,7 +46,10 @@ def summarize(repo, topic=None):
                         'reviewer_provenance': provenance(sources),
                         'outcomes': {o: sum(r.get('outcome') == o for r in rows)
                                      for o in ('complete','accepted','abandoned')}}
-    return {'records': records, 'topics': groups}
+        defects=[r for r in escaped if r['topic']==name]
+        groups[name].update(quality=quality.observations(quality.topic_root(repo,name)),escaped_defects=len(defects),
+            escaped_by_expected_layer={layer:sum(r['expected_layer']==layer for r in defects) for layer in quality.LAYERS})
+    return {'records': records, 'topics': groups, 'escaped_defects':escaped}
 
 def command_error_count(repo, topic, started_at=None, ticket=None):
     path = Path(repo) / '.agent/command-errors.jsonl'
@@ -87,10 +95,12 @@ def record_command_error(argv, parsed=None):
 def topic_observations(repo, topic, value, config):
     """Read available observations without inventing reviews for a document Topic."""
     root = topics.topic_path(repo, topic)
+    from .quality_metrics import empty_fields, observations
+    extra=observations(root) if value.get('level')=='standard' else empty_fields()
     if value.get('level') is None:
-        return {}
+        return extra
     if value['level'] == 'quick':
-        return {'test_runs': value.get('test_runs',0), 'reviewer_provenance':'self',
+        return {**extra,'test_runs': value.get('test_runs',0), 'reviewer_provenance':'self',
                 'tests_configured': bool(topics.full_tests(config))}
     # Ticket observations have their own records; Topic counters describe the
     # branch object and must not import child rounds or reviewer provenance.
@@ -103,7 +113,7 @@ def topic_observations(repo, topic, value, config):
         units.append(unit)
     reviews = [r for u in units for r in u.get('reviews',[])]
     findings = [f for r in reviews for f in r.get('result',{}).get('findings',[])]
-    return {'test_runs': sum(len({t.get('run_id',t.get('finished_at')) for t in u.get('tests',[])}) for u in units),
+    return {**extra,'test_runs': sum(len({t.get('run_id',t.get('finished_at')) for t in u.get('tests',[])}) for u in units),
             'review_rounds': len(reviews), 'findings': {s:sum(f.get('severity')==s for f in findings) for s in ('blocking','advisory')},
             'repair_rounds': sum(bool(r.get('repair')) for r in reviews),
             'needs_user_count': sum(u.get('needs_user_count',0) for u in units),

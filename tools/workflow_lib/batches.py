@@ -105,7 +105,7 @@ def before_start(repo, topic, ticket):
     return batch['id']
 
 
-def self_review(repo, ticket=None, topic=None, notes_file=None):
+def self_review(repo, ticket=None, topic=None, notes_file=None, findings_file=None, no_findings=False):
     repo, config, topic, path, unit, record = impl.load_active(repo,ticket,topic)
     text = Path(notes_file).read_text() if notes_file else ''
     sections = list(topics.summary_headings(text))
@@ -119,7 +119,21 @@ def self_review(repo, ticket=None, topic=None, notes_file=None):
             end=next((j for _,j in sections if j>index),len(lines))
             if not '\n'.join(lines[index+1:end]).strip():
                 raise topics.TopicError(f'self-review {title}: 内容不能为空；无内容说明理由')
+    findings=json.loads(Path(findings_file).read_text()) if findings_file else [] if no_findings else None
+    if findings_file and not isinstance(findings,list):
+        raise topics.TopicError('self-review.findings: 必须是 M2 发现数组')
+    if findings is not None:
+        from . import ticket_review as review
+        manifest=dict(unit_id='self-observation',content_id=topics.content_id(repo),round=0,acceptance=[],probes=[],
+            downstream_tickets=review.downstream(repo,topic,unit['ticket']),coverage_targets=[],
+            review_context=dict(provenance='self',model='实施者'))
+        result={k:manifest[k] for k in review.PREFILLED}
+        result.update(status='findings' if findings else 'pass',reviewer=manifest['review_context'],coverage=[],findings=findings)
+        review.validate_result(result,manifest)
+    history=unit.setdefault('self_reviews',[unit['self_review']] if 'self_review' in unit else [])
     unit['self_review']=dict(content_id=topics.content_id(repo),text=text,at=topics.now(),definition=impl.definition(repo,path))
+    if findings is not None:unit['self_review']['findings']=findings
+    history.append(unit['self_review'])
     impl.write_json(record,unit)
     return dict(ticket=unit['ticket'],self_review='已记录')
 
@@ -290,6 +304,8 @@ def reopen(repo,topic=None,reason=''):
     if not batch.get('definition') or changed==batch['definition']:
         raise topics.TopicError('reopen 要求 Ticket/Spec 有效定义修订；状态或勾选不算')
     for p,_ in subset.values():impl.validate(repo,p)
+    from .quality_metrics import preserve_history
+    preserve_history(batch)
     batch.update(definition=changed,reviews=[],status='reviewing')
     for key in ('active_review','first_review_volume','stop_reason','acceptance'):batch.pop(key,None)
     branch_file=topics.topic_path(repo,topic)/'branch-review.json'
@@ -297,6 +313,8 @@ def reopen(repo,topic=None,reason=''):
         branch=json.loads(branch_file.read_text())
         full_definition=branch_review.definition(repo,tickets)
         if branch.get('status')=='needs-user' and branch.get('definition') != full_definition:
+            from .quality_metrics import preserve_history
+            preserve_history(branch)
             branch.update(definition=full_definition,reviews=[],status='implementing')
             for key in ('active_review','first_review_volume','stop_reason','acceptance'):branch.pop(key,None)
             branch.setdefault('decisions',[]).append(dict(action='reopen',reason=reason,at=topics.now()))

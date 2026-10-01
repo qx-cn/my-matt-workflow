@@ -413,6 +413,13 @@ def command_setup(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
+def emit_status(args,report):
+    if getattr(args,'human',False):
+        from workflow_lib.status_text import render
+        print(render(report))
+    else:print(json.dumps(report,ensure_ascii=False,sort_keys=True))
+
+
 def command_topic(args: argparse.Namespace) -> None:
     try:
         if args.topic_action == "start":
@@ -429,7 +436,7 @@ def command_topic(args: argparse.Namespace) -> None:
             report = topic_service.complete(Path(args.repo), args.topic)
     except (TicketError, RuleError, topic_service.TopicError, OSError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
-    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    emit_status(args,report)
 
 
 def command_resolve(args: argparse.Namespace) -> None:
@@ -458,7 +465,7 @@ def command_batch(args):
         else:report=batches.close(repo,args.topic,args.batch_action=='accept',args.reason)
     except (TicketError,RuleError,topic_service.TopicError,OSError,ValueError) as exc:
         raise SystemExit(str(exc))
-    print(json.dumps(report,ensure_ascii=False,indent=2))
+    emit_status(args,report)
 
 
 def command_implement(args: argparse.Namespace) -> None:
@@ -472,14 +479,14 @@ def command_implement(args: argparse.Namespace) -> None:
             report = ticket_implementation.test(Path(args.repo), args.ticket, args.topic, argv)
         elif args.implement_action == "self-review":
             from workflow_lib import batches
-            report = batches.self_review(Path(args.repo),args.ticket,args.topic,args.notes_file)
+            report = batches.self_review(Path(args.repo),args.ticket,args.topic,args.notes_file,args.findings_file,args.no_findings)
         elif args.implement_action == "finish":
             report = ticket_completion.finish(Path(args.repo), args.ticket, args.topic, args.notes_file)
         else:
             report = ticket_implementation.status(Path(args.repo), args.ticket, args.topic)
     except (TicketError, topic_service.TopicError, RuleError, OSError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
-    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    emit_status(args,report)
 
 
 def _release_ids_referenced_by(agent_homes: set[Path]) -> set[str]:
@@ -574,9 +581,18 @@ def command_metrics(args):
     try:
         topic_service.read_config(topic_service.safe_repo(args.repo))
         report = summarize(Path(args.repo), args.topic)
-    except (topic_service.TopicError, OSError) as exc:
+    except (topic_service.TopicError, OSError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def command_escape(args):
+    from workflow_lib.quality_metrics import record_escape
+    try:
+        report=record_escape(Path(args.repo),args.topic,args.source,args.view,args.expected_layer,args.description,args.batch,args.ticket)
+    except (topic_service.TopicError,OSError,ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(report,ensure_ascii=False,sort_keys=True))
 
 
 def parser() -> argparse.ArgumentParser:
@@ -609,6 +625,7 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--initiated-by", choices=("user","agent"))
         if action == "abandon":
             command.add_argument("--reason", required=True)
+        if action == 'status':command.add_argument('--human',action='store_true')
         command.set_defaults(func=command_topic)
 
     batch = sub.add_parser('batch')
@@ -623,6 +640,7 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument('--submit')
         command.add_argument('--reviewer-model')
         command.add_argument('--reviewer-session-id')
+        if action == 'status':command.add_argument('--human',action='store_true')
         command.set_defaults(func=command_batch)
 
     implement = sub.add_parser("implement")
@@ -644,6 +662,11 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("argv", nargs=argparse.REMAINDER)
         if action in ("finish", "self-review"):
             command.add_argument("--notes-file")
+        if action == 'self-review':
+            observation=command.add_mutually_exclusive_group()
+            observation.add_argument('--findings-file')
+            observation.add_argument('--no-findings',action='store_true')
+        if action == 'status':command.add_argument('--human',action='store_true')
         command.set_defaults(func=command_implement)
 
     resolve = sub.add_parser("resolve")
@@ -759,6 +782,17 @@ def parser() -> argparse.ArgumentParser:
     metrics.add_argument("--repo", default=".")
     metrics.add_argument("--topic")
     metrics.set_defaults(func=command_metrics)
+    from workflow_lib.quality_metrics import VIEWS,LAYERS,ESCAPE_SOURCES
+    escaped=sub.add_parser('escape')
+    escaped.add_argument('--repo',default='.')
+    escaped.add_argument('--topic',required=True)
+    escaped.add_argument('--batch')
+    escaped.add_argument('--ticket')
+    escaped.add_argument('--source',choices=ESCAPE_SOURCES,required=True)
+    escaped.add_argument('--view',choices=VIEWS,required=True)
+    escaped.add_argument('--expected-layer',choices=LAYERS,required=True)
+    escaped.add_argument('--description',required=True)
+    escaped.set_defaults(func=command_escape)
     return result
 
 

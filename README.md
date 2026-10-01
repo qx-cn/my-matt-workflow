@@ -52,34 +52,51 @@ python3 tools/workflow.py setup --repo <project> --apply
 python3 tools/workflow.py topic start --repo <project> --topic <topic> --level quick
 python3 tools/workflow.py topic complete --repo <project> --topic <topic>
 
-# standard：已有Ticket时可自动补建Topic
+# standard：确认Spec/Ticket与批次划分后开始
+python3 tools/workflow.py topic start --repo <project> --topic <topic> --level standard
+python3 tools/workflow.py batch plan --repo <project> --topic <topic>
+# 分批时加 --groups-file <已确认的Ticket分组JSON> --reason <理由>
+
+# 对批次内每张Ticket按依赖重复；干净自审用--no-findings
 python3 tools/workflow.py implement start --repo <project> --ticket <topic>-01
 python3 tools/workflow.py implement test --repo <project> --ticket <topic>-01
-python3 tools/workflow.py implement review --repo <project> --ticket <topic>-01
-python3 tools/workflow.py implement review --repo <project> --ticket <topic>-01 --submit <result.json>
+python3 tools/workflow.py implement self-review --repo <project> --ticket <topic>-01 --notes-file <六节记录.md> --no-findings
 python3 tools/workflow.py implement finish --repo <project> --ticket <topic>-01
 
+# 全部Ticket提交后：全量测试、一次新上下文批次审查、收口
+python3 tools/workflow.py batch test --repo <project> --topic <topic>
+python3 tools/workflow.py batch review --repo <project> --topic <topic> --reviewer-model <实际模型> --reviewer-session-id <宿主的新上下文标识>
+python3 tools/workflow.py batch review --repo <project> --topic <topic> --submit <runtime返回的result_file>
+python3 tools/workflow.py batch close --repo <project> --topic <topic>
+# 所有批次收口，完成交付摘要后
+python3 tools/workflow.py topic complete --repo <project> --topic <topic>
+
 # 恢复状态与观察结果
-python3 tools/workflow.py topic status --repo <project> --topic <topic>
-python3 tools/workflow.py implement status --repo <project> --ticket <topic>-01
+python3 tools/workflow.py topic status --repo <project> --topic <topic> --human
+python3 tools/workflow.py implement status --repo <project> --ticket <topic>-01 --human
 python3 tools/workflow.py work-overview --repo <project> --json
 python3 tools/workflow.py metrics --repo <project> --topic <topic>
 ```
 
 `topic start` 必须指定 Topic；其他 Topic 操作在只有一个活动 Topic 时可以省略。Ticket id 包含 Topic，指定 `--ticket` 后无需另带 `--topic`；省略 Ticket 时选择该 Topic 唯一的活动 Ticket。多 Topic 时显式选择。
 
-`implement review` 冻结当前内容，输出材料包和结果骨架。审查者只读材料包，提交结果绑定同一内容；格式错误按字段修正。发现以 `location`、`view`（correctness/impact/spec/spec-challenge/maintainability）、`basis` 和 `severity` 登记，`anchor` 可选；advisory 必须附处置 `disposition`。验收覆盖仍必填；Spec 挑战交用户裁决。测试失败、审查后内容变化、越序或审查单元不匹配都不能继续完成。实施经过修复时，finish 需要 `--notes-file <文件>` 记录思路。审查停止后的 `needs-user` 由用户决定接受或重开：
+`batch review` 冻结提交范围、完整仓库、批次 Ticket/验收、有效 Spec、已决事项、项目规则与影响声明。新上下文审查者独立核实调用方与消费者。runtime 提供材料包和预填身份的结果骨架，Agent 填判断字段，提交时无需手抄哈希。发现用位置、五种视角（correctness/impact/spec/spec-challenge/maintainability）、依据和严重度登记，验收锚点可选；advisory 附 fix-in-batch/defer（建议归属）/decline（理由）。覆盖验收仍必填；Spec 导致可达故障时交用户裁决，不因符合 Spec 放行。
 
-```bash
-python3 tools/workflow.py resolve --repo <project> --ticket <topic>-01 --accept --reason <reason>
-python3 tools/workflow.py resolve --repo <project> --ticket <topic>-01 --reopen --reason <reason>
-```
+有阻断或本批次修复建议时，修改后用 `batch repair --notes-file <引用发现id的修复说明>` 提交，再 `batch test/review` 复审差异；不创建逐发现补偿 Ticket。内容变化使通过记录失效。批次收口之后才是不可改写历史，后续改变通过补偿或迁移 Ticket。
 
-接受仍需当前内容通过全量测试；重开要求 Ticket 或来源 Spec 的定义变化。已完成 Ticket 是历史，后续改变通过补偿或迁移工作表达。
+默认整个 Topic 一个批次。只有天然集成边界，或预计超过 8 张 Ticket / 20 个文件时考虑拆分；这是无实测依据的保守启发式，不是用户配置。划分与理由在对齐点2一起确认。未触发例外的干净批次只派一次审查子 Agent。
 
-standard 默认整个 Topic 一个批次；确认划分用 `batch plan` 保存。逐张 `implement start/test/self-review/finish` 后执行 `batch test/review`（及 `--submit`）、修复提交 `batch repair --notes-file`、复审与 `batch close`。所有批次收口后 `topic complete`。高风险 Ticket 可在提交前额外 `implement review --reason`，多数不需要；整分支审查可选，在最后批次收口前 `topic review --initiated-by user|agent --reason`，不能替代批次审查。全量基线已有失败不阻断，新增失败阻断；基线无法运行的命令须披露。旧版已有实施历史保持原 Ticket 恢复协议。quick 与 standard 的交付摘要须有：改动概述、测试结果、审查发现与修复、建议、已知问题、长期知识沉淀、用户介入记录、未验证项；quick 还需六节增强自审（验收对照、现状核实、影响面、对抗检查、简洁与约定、已知缺口）。quick 未配置测试时必须如实标记。文档 Topic 可直接收尾。
+高风险 Ticket（迁移/持久状态、并发/锁、对外契约、发布回滚兼容、权限安全边界）可在提交前额外运行 `implement review --reason <触发理由> --reviewer-model <实际模型> --reviewer-session-id <新上下文标识>`，结果仍用 `implement review --submit <结果文件>` 提交；多数 Ticket 不需要。阻断及本批次修复项处理后再提交，批次审查仍执行且范围不缩小。宿主派不出时如实记同会话自审，摘要披露独立性缺口。
 
-整分支停止后用 `resolve --branch --accept|--reopen --reason <原因>` 处理。停止整个 Topic 用 `topic abandon --reason <原因>`，归档历史并保留未提交内容；同名归档不覆盖。
+多批次最后一次批次审查包含整个 Topic 的改动清单。整分支审查可选，在最后批次收口前执行 `topic review --initiated-by user|agent --reason <理由>`，同样带实际模型和新上下文标识；不能替代批次审查。其修复由最后批次承接，允许涉及已收口批次代码；选择执行后也需通过才能最后收口。
+
+Topic 首个批次开工前在干净基线跑一次全量集合；每张 Ticket 只跑声明的定向命令。批次末新增失败阻断，基线已失败且仍失败的用例列“已知问题”；基线环境缺失无法运行的命令列“未验证项”，不能为变绿改无关文件/配置/环境。旧版已开始的实施历史沿原协议恢复；未开始的旧格式 Ticket 可直接进入新批次路径，rule_* 不再必填，触点提示非边界。
+
+Spec 定稿前遇到持久数据、锁/并发、外部契约、发布回滚兼容或改变其他模块行为，自动一次新上下文设计审查加最多一次差异复审；未触发要写理由。设计审查必须读代码核实事实，报告断言核验、发现、排除风险和待决语义假设四部分。挑战与假设在下一个已有对齐点交用户，已决事项不重开。保存设计报告到 Topic reviews，结构化 design_report 或完整四部分 Markdown 可供逃逸登记识别；无可识别记录标“未知”。
+
+审查停止时由用户决定接受、修订后重开或放弃：批次用 `batch accept|reopen --reason <裁决>`；高风险 Ticket 用 `resolve --ticket <id> --accept|--reopen --reason <裁决>`；整分支用 `resolve --branch --accept|--reopen --reason <裁决>`。接受不能绕过测试；停止整个 Topic 用 `topic abandon --reason <原因>`，历史归档且不覆盖。
+
+Agent 默认消费状态 JSON；给用户展示时用 topic/implement/batch status 的 `--human`，输出中文进度、需要决定的事项、未验证命令与下一步。quick 不建 Spec/Ticket，仍同会话自审六节。交付摘要包含改动概述、测试结果、审查发现与修复、建议、已知问题、长期知识沉淀、用户介入记录、未验证项；发现/修复按视角及自审/批次审查/用户来源分别统计，无可靠记录保持未知。
 
 旧格式项目用 `migrate --repo <project>` 预览备份、冲突和无法推断项，经确认后加 `--apply`。先解决无法自动迁移的事项；已完成历史保留。本仓库自身仅更新配置，不运行该迁移。
 
@@ -91,7 +108,16 @@ standard 默认整个 Topic 一个批次；确认划分用 `batch plan` 保存�
 Trigger: trader 的重复审查停止无法恢复，补充状态恢复契约。
 ```
 
-在度量证明有必要之前，不新增门禁。`.agent/metrics.jsonl` 记录 Ticket、Topic、quick 的测试、审查、修复、用户介入和命令错误；无法观察的字段为 null，命令错误不含测试失败，审查来源区分 self、independent 和 mixed。`metrics` 按 Topic 汇总。
+在度量证明有必要之前，不新增门禁。`.agent/metrics.jsonl` 记录 Ticket、Topic、quick 的测试、审查、修复、用户介入和命令错误；无法观察的字段为 null，命令错误不含测试失败，审查来源区分 self、independent 和 mixed。`metrics` 按 Topic 汇总，包括视角/来源/严重度的发现数、每批次独立审查子 Agent 数、高风险审查次数与其中有阻断的次数、可选整分支的发起方/理由/发现数。相同审查单元内同 id 的发现跨轮次只计一次；独立子 Agent 按宿主声明的新上下文标识去重，未取得上下文的旧记录保持未知。来源另列高风险、整分支和旧版逐 Ticket 审查，避免误算为自审或普通批次发现。
+
+自审发现用 `implement self-review --findings-file <M2发现数组.json>` 登记，确实无发现用 `--no-findings`；只有旧六节记录的数目保持未知。逃逸缺陷可登记活动或已归档 Topic：
+
+```bash
+python3 tools/workflow.py escape --repo <project> --topic <topic> --batch 01 --ticket <topic>-01 --source 人工评审 --view impact --expected-layer 批次审查 --description <具体缺陷>
+python3 tools/workflow.py metrics --repo <project> --topic <topic>
+```
+
+来源还可为外部审查工具、测试环境、生产、后续开发；本应捕获层还可为访谈、Spec 编写、设计审查、实施自审。批次/Ticket 可省略，登记自动附设计审查状态，不需用户补字段。metrics 列每 Topic 逃逸数及按本应捕获层分组。机械测试与一次模型演练不能证明真实项目审查更好，应通过后续逃逸数据观察。
 
 在本目录运行：
 
@@ -114,12 +140,12 @@ python3 tools/workflow.py prune-releases
 | 用途 | 命令 |
 |---|---|
 | 配置与迁移 | setup、migrate |
-| Topic与实施 | topic、implement、resolve、work-overview、metrics |
+| Topic与实施 | topic、batch、implement、resolve、work-overview、metrics、escape |
 | 检查与部署 | validate、check、doctor、build、install、deploy、prune-releases |
 | 规则与Ticket | resolve-rules、inspect-rules、validate-ticket |
 | 内容快照 | review-snapshot |
 | 工件审查 | artifact-review-snapshot、artifact-review-open、artifact-review-submit、artifact-review-verify、artifact-review-finalize |
 
-`artifact-review-*` 支持 general/design，用原参数和 `--expect-content-id` 绑定内容；串行执行所需方法，不累计审查轮数。独立工件审查与 Ticket/整分支审查各自使用其对应单元。
+`artifact-review-*` 支持 general/design；design 的结果额外含 design_report 四部分，无内容附理由。用原参数和 `--expect-content-id` 绑定内容；串行执行所需方法，不累计审查轮数。独立工件审查与 Ticket/整分支审查各自使用其对应单元。
 
 Codex 默认将 Skills 放在 `${CODEX_HOME:-~/.codex}/skills`，安装状态和版本化 runtime 放在 `${CODEX_HOME:-~/.codex}/my-matt-workflow`；Cursor、Claude 使用各自宿主目录。项目调用以安装状态中的 runtime_entry 为准。

@@ -13,7 +13,7 @@ CLI = ROOT / 'tools/workflow.py'
 COMMANDS = {'setup','validate','check','doctor','build','install','deploy','prune-releases',
  'resolve-rules','inspect-rules','validate-ticket','work-overview','review-snapshot',
  'artifact-review-snapshot','artifact-review-open','artifact-review-submit',
- 'artifact-review-verify','artifact-review-finalize','topic','implement','resolve','migrate','metrics','batch'}
+ 'artifact-review-verify','artifact-review-finalize','topic','implement','resolve','migrate','metrics','batch','escape'}
 REMOVED = ('refresh-project validate-evals validate-agent-evidence smoke decision-gate write-gate '
  'ticket-transition next-ticket ticket-scope run-context run-start implementation-open '
  'implementation-submit implementation-close implementation-status implementation-next-action '
