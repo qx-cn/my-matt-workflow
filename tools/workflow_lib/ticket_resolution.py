@@ -27,7 +27,7 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
         if not reviews and not unit.get('migrated'):
             raise topics.TopicError('accept 缺少审查或迁移阻塞记录')
         latest = reviews[-1] if reviews else {}
-        known = [f for f in latest.get('result', {}).get('findings', []) if f['severity'] == 'blocking']
+        known = [f for f in latest.get('result', {}).get('findings', []) if f['severity'] == 'blocking' or f.get('view') == 'spec-challenge']
         unit['known_issues'] = known
         unit.setdefault('decisions', []).append(dict(action='accept', reason=reason, at=topics.now()))
         notes = reason + '\n\n已知问题：\n' + json.dumps(known, ensure_ascii=False, indent=2)

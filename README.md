@@ -68,7 +68,7 @@ python3 tools/workflow.py metrics --repo <project> --topic <topic>
 
 `topic start` 必须指定 Topic；其他 Topic 操作在只有一个活动 Topic 时可以省略。Ticket id 包含 Topic，指定 `--ticket` 后无需另带 `--topic`；省略 Ticket 时选择该 Topic 唯一的活动 Ticket。多 Topic 时显式选择。
 
-`implement review` 冻结当前内容，输出材料包和结果骨架。审查者只读材料包，提交结果绑定同一内容；格式错误按字段修正。测试失败、审查后内容变化、越序或审查单元不匹配都不能继续完成。实施经过修复时，finish 需要 `--notes-file <文件>` 记录思路。审查停止后的 `needs-user` 由用户决定接受或重开：
+`implement review` 冻结当前内容，输出材料包和结果骨架。审查者只读材料包，提交结果绑定同一内容；格式错误按字段修正。发现以 `location`、`view`（correctness/impact/spec/spec-challenge/maintainability）、`basis` 和 `severity` 登记，`anchor` 可选；advisory 必须附处置 `disposition`。验收覆盖仍必填；Spec 挑战交用户裁决。测试失败、审查后内容变化、越序或审查单元不匹配都不能继续完成。实施经过修复时，finish 需要 `--notes-file <文件>` 记录思路。审查停止后的 `needs-user` 由用户决定接受或重开：
 
 ```bash
 python3 tools/workflow.py resolve --repo <project> --ticket <topic>-01 --accept --reason <reason>

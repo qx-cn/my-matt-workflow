@@ -99,7 +99,7 @@ class FinishTests(unittest.TestCase):
         self.start()
         (self.repo / 'code.txt').write_text('initial implementation')
         report = self.review()
-        finding = {'id': 'bug', 'severity': 'blocking', 'summary': 'marker failure',
+        finding = {'id': 'bug', 'severity': 'blocking', 'view': 'correctness', 'summary': 'marker failure',
                    'anchor': 'feature-01#A1', 'location': 'code.txt:1',
                    'failure_path': 'read marker then mismatch', 'reachability': 'normal read'}
         result = self.result(report, status='findings', findings=[finding])

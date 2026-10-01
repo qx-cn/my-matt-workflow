@@ -10,9 +10,9 @@ standard 下宿主派新上下文只读审查者，继承实施者的模型和�
 
 ## 第一轮、复审与修复
 
-第一轮穷尽整个固定范围，附覆盖清单：每条验收、每个 review probe、每个不变量均为无问题、对应 finding，或不适用（附理由）。阻断问题给出锚定对象、位置和行区间、出错路径、从正式基线可达的依据。
+第一轮穷尽整个固定范围，附覆盖清单：每条验收、每个 review probe、每个不变量均为无问题、对应 finding，或不适用（附理由）。发现给出位置、视角、依据与严重度。可达的出错路径或明确验收、不变量、项目规则足以成为阻断，不要求验收锚点。覆盖只是 spec 视角的一部分，不是发现准入门槛。
 
-只有阻断问题进入修复循环。建议不修复、不触发复审，留到交付摘要；下游 Ticket 拥有的未来能力归建议。只有建议时结论通过。复审仅检查本轮修复差异及可能受影响的地方；范围外新发现默认归建议。
+blocking 与 advisory/fix-in-batch 进入修复；fix-in-batch 限已触及代码。其他建议 defer（建议归属）或 decline（理由），留到交付摘要。不能因下游拥有能力而放行当前可达故障。只有无需修复的建议时通过。复审仅检查本轮修复差异及可能受影响的地方；范围外新发现默认归建议。
 
 修复只改正、删除或收窄。需要新增规则、场景或要求时返回 `blocked-by-design`。修复前找出同一事实在其他位置的写法一起改；同一规则只在一个共享来源定义。思路写入命令的 `--notes-file`，不另写修复方案文档。
 
@@ -44,6 +44,6 @@ runtime 骨架预填 `unit_id`、`content_id`、`round`、`acceptance`、`probes
 - `status`: pass/findings/blocked-by-design/inconclusive；
 - `reviewer`: provenance=independent/self，及实际 model；
 - `coverage`: target、result=ok/finding/not-applicable、finding_id或reason；
-- `findings`: id、severity=blocking/advisory、summary、anchor、location、failure_path、reachability、可选contradicts/downstream_ticket。
+- `findings`: id、severity=blocking/advisory、summary、location、view=correctness/impact/spec/spec-challenge/maintainability、basis（出错路径或被违反规则）。可选 anchor、failure_path、reachability、contradicts/downstream_ticket；advisory 必填 disposition=fix-in-batch/defer/decline，defer 附 owner，decline 附 reason。
 
-阻断项必须有位置、出错路径和可达性；pass 不含阻断项。保留预填身份与内容不变，按 runtime 返回的材料和格式提交。停止时遵循[找用户的条件](user-intervention.md)。
+发现必须有位置与依据；pass 不含阻断、待修复建议或 spec-challenge。spec-challenge 交用户决定修订 Spec、接受风险或按原 Spec 继续，不能以“Spec 要求如此”放行。影响面必查，独立核实调用方与消费者。保留预填身份与内容不变，按 runtime 返回的材料和格式提交。停止时遵循[找用户的条件](user-intervention.md)。

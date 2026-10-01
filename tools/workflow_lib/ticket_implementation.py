@@ -335,7 +335,8 @@ def status(repo, ticket=None, topic=None):
         next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --reopen --reason '<理由>'"
     return {"ticket": unit["ticket"], "topic": topic, "status": frontmatter(path)["status"],
             "baseline": unit["baseline"], "tests_passed": passed, "definition_changed": definition_changed,
-            "stop_reason": unit.get("stop_reason"), "rounds_used": len(unit.get("reviews", [])),
+            "stop_reason": unit.get("stop_reason"),
+            "decisions_needed": [dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for r in unit.get("reviews", [])[-1:] for f in r.get("result", {}).get("findings", []) if f.get("view") == "spec-challenge"], "rounds_used": len(unit.get("reviews", [])),
             "decisions": unit.get("decisions", []),
             "next_command": next_command}
 

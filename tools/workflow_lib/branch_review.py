@@ -147,7 +147,9 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         result = reviews.validate_result(json.loads(Path(submit).read_text()), manifest)
         review_loop.check_contradictions(unit, result)
         status = result['status']
-        if status == 'findings' and not any(f['severity']=='blocking' for f in result['findings']):
+        if any(f.get('view') == 'spec-challenge' for f in result['findings']):
+            status = 'blocked-by-design'
+        if status == 'findings' and not any(f['severity']=='blocking' or f.get('disposition') == 'fix-in-batch' for f in result['findings']):
             status = 'pass'
         repair = review_loop.repair_for(unit, manifest)
         entry = dict(manifest=unit['active_review']['manifest'], repair=repair, unit_id=manifest['unit_id'],
@@ -225,7 +227,7 @@ def resolve(repo, topic=None, accept=False, reason=''):
     if accept:
         if unit['status']!='needs-user': raise topics.TopicError('branch accept 只接受 needs-user')
         if not tests_passed(repo,config,topic): raise topics.TopicError('test: 接受必须有当前全量测试通过记录')
-        known = [f for f in unit['reviews'][-1].get('result',{}).get('findings',[]) if f['severity']=='blocking']
+        known = [f for f in unit['reviews'][-1].get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('view') == 'spec-challenge']
         return topics.complete(repo,topic,accepted_reason=reason,known_issues=known)
     if 'definition' not in unit or definition(repo,tickets)==unit['definition']:
         raise topics.TopicError('reopen 要求首次审查或最近 reopen 后 Ticket/Spec 稳定定义变化')

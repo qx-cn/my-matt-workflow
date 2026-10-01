@@ -13,13 +13,6 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
 
 本 Skill 有两个输入入口：独立调用时从用户指定的固定点创建 review snapshot；作为 `my-implement` 方法时，只消费 runtime implement review 提供的只读材料包。组合模式不得另建 snapshot、另选基线或生成第二份未绑定的审查结论。
 
-对固定点与当前完整工作树之间的同一内容快照做两个顺序独立的审查 pass：
-
-- **Code**——实现本身是否正确、稳健、安全、高效、兼容、可测试且易维护，并符合仓库 Standards？
-- **Spec**——实现是否完整、准确地满足原始 Issue、PRD 或 Spec，且没有范围蔓延？
-
-在同一次调用中依次完成 Code pass 与 Spec pass。第二遍重新从同一快照和必要来源建立候选，不把第一遍的候选清单或结论作为输入；这是一种顺序复核，不声称上下文隔离。完成后并列汇总。它们是一次 review 的内部方法，不是新 Skill 入口：两遍在同一次审查调用内完成。
-
 ## 审查对象
 
 独立调用时，用户说的固定点就是基线：Commit SHA、分支、tag、`main`、`HEAD~5` 等。若没有指定，优先使用实施开始记录的 `HEAD`。仍无法确定时使用配置的 default_base_branch 并记录依据；会改变目标范围的分歧依共同确认条件处理。组合模式直接采用审查单元中已固定的代码范围和 `content_id`，不运行这项基线选择。
@@ -28,11 +21,11 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
 
 快照必须覆盖 committed、staged、unstaged 与 untracked 内容：以 `git diff --binary <merge_base>` 读取所有 tracked 最终内容，以 `git log <merge_base>..HEAD --oneline` 读取 Commit 上下文，并读取 `change_sources.untracked` 中每个路径的完整内容。父仓未跟踪的嵌套 Git 工作树会在 receipt 中展开为逐文件路径，包括没有 HEAD 的 private workspace；只读取这些展开路径，不把目录占位或嵌套仓 HEAD 当成文件内容。二进制或无法直接阅读的文件记录类型、大小与可用检查结果，不得静默跳过。
 
-两个维度必须使用同一 `content_id` 和 `changes` 路径集合。坏 ref 或 `status: empty` 在此失败；任何内容变化都要重建快照，旧 receipt 立即失效。两个维度的复审范围遵循共享审查循环。
+全部视角必须使用同一 `content_id` 和 `changes` 路径集合。坏 ref 或 `status: empty` 在此失败；任何内容变化都要重建快照，旧 receipt 立即失效。复审范围遵循共享审查循环。
 
 ## 范围与来源
 
-调用者可指定 `review_scope=change-only|touched-context`。默认 `change-only`，只报告本次变更新引入或实质放大的问题；`touched-context` 还可报告变更调用路径上直接相关的重要既有问题，但必须标记“既有/非本次引入”。无关旧问题始终不报告。
+调用者可指定 `review_scope=change-only|touched-context`。默认 `touched-context`，报告本次引入、放大及直接调用路径上相关的重要既有问题；`change-only` 只报告本次引入或实质放大的问题，但必须标记“既有/非本次引入”。无关旧问题始终不报告。
 
 按 [项目规则解析](references/shared/adapters/project-rules.md) 发现并按实际变更路径匹配 Standards；存在 run context 时使用其中已固定的 `execution_agent`。
 
@@ -43,17 +36,17 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
 3. 与分支或功能匹配的 `.agent/work/`、`docs/`、`specs/` 下的 PRD/Spec；
 4. 若都没有，将 Spec 标记为“未评估：未找到可用 Spec”，无需确认，也不得暂停或缩减 Code 审查。
 
-读取 `.agent/work/` 产物时遵循[工作产物访问](references/shared/adapters/artifact-access.md)。没有 Spec 时只跳过 Spec；Code 仍完整执行。
+读取 `.agent/work/` 产物时遵循[工作产物访问](references/shared/adapters/artifact-access.md)。没有 Spec 时标明 spec 未评估，其他视角仍完整执行。
 
-## 双遍审查
+## 五个视角
 
-**Code pass** 从完整快照、Commit 上下文和规则地图开始。第一轮检查完整 diff 及理解变更所需的周边代码、调用方和测试，发现首个问题后继续检查全部变更；复审按共享规则限定影响范围。系统检查逻辑正确性、边界条件、错误处理、资源生命周期、并发与一致性、安全、性能、兼容性、测试充分性、代码设计与可维护性，同时检查仓库 Standards、Fowler code smells、函数/变量/类型命名和注释。仓库 Standards 优先；smell、命名或注释只有造成可观察风险时才报告。注释还要与代码行为一致，使用平实语言，保留简短领域用语。
+审查者按风险组织一次审查，不要求固定两遍仪式。第一轮穷尽固定范围，读取完整仓库的调用方、消费者、测试与项目规则；复审范围遵循共享规则。
 
-**Spec pass** 重新从同一 `content_id` 的完整快照、Commit 上下文和 Spec 开始，不读取 Code pass 的候选清单或结论。先在内部把每条规范性要求映射到实现与测试证据；缺少或冲突的证据成为候选 finding，但不向用户输出这份检查清单；runtime 结果骨架中的 coverage 仍须填写。由此检查遗漏、部分实现、错误行为和范围蔓延；每项引用 Spec 位置，并检查注释是否与 Spec、ADR 或相关文档一致。
-
-作为 implementation 方法时，先为每个候选确定 owner：当前 Ticket 未兑现的可观察保证才是 finding；直接下游 Ticket 拥有的未来消费者能力写为建议；找不到既有 owner 的真实风险写为 design gap。不得因为当前 Ticket 产生资格而要求它实现后续消费者、coordinator、outbox 或回执。
-
-高风险变更按实际风险加深对应检查；低风险变更不为并行而增加 reviewer。
+- correctness：逻辑、边界、错误处理、资源生命周期、并发、一致性、安全与性能。
+- impact：必查影响面。独立寻找改动契约的调用方与消费者，检查存量数据、发布和回滚期间新旧版本并存、锁与配置键、权限、性能及跨 Ticket 集成与遗留代码。实施者声明与理由不能替代核实或降低严重度。
+- spec：验收映射到代码与测试，输出每条验收覆盖。覆盖只是本视角的一部分，不是发现准入门槛。
+- spec-challenge：Spec 与现有系统冲突或照做会导致可达故障。不得以“Spec 要求如此”为由放行，交用户裁决；已决事项不重开。
+- maintainability：项目分层、命名、重复实现、推测性代码与测试质量；只报告有实质影响或违反项目规则的问题。
 
 ## Finding 准入与归类
 
@@ -69,20 +62,8 @@ description: 在 my-implement 流程中作为指定阶段的方法被调用。
 
 严重度使用 `P0`（安全越权、数据丢失或破坏、不可恢复故障或核心路径普遍失败）、`P1`（合并前应修复的真实 Bug 或需求偏差）、`P2`（值得修复的局部缺陷或维护/测试风险）；P0/P1 是 blocker，映射为结果骨架的 blocking；P2 映射为 advisory。置信度只用 `high` / `medium`，低置信度候选不进入 findings；仅当证据缺口影响合并判断时，才在结尾写简短 residual risk。
 
-双遍审查完成后按主要原因归类：没有 Spec 也成立的实现或工程问题归 Code；必须依据 Spec 才成立的遗漏、错误需求行为或范围蔓延归 Spec。同一失败链只保留最接近根因的一项，另一维不重复。
+同一失败链保留最接近根因的一项，标注主要视角。每条发现给出位置（文件与行区间或可定位契约）、视角、依据（正式基线可达路径或明确规则）和 blocking/advisory 严重度。无需验收编号；有编号可以保留 anchor。advisory 必须选择 fix-in-batch、defer（建议归属）或 decline（理由）。当前可达故障不能因为后续 Ticket 的归属降为建议。
 
 ## 输出
 
-报告开头写 `Review-Snapshot: <content_id>`、基线、`head` 和 `Review-Scope: <scope>`。只固定输出 `## Code` 与 `## Spec`；无内容的注释、命名或统计子节不生成。每维按严重度再按位置排列 findings：
-
-```text
-## Code
-[P1][high] 可行动标题 — path/to/file:line
-一个短段落，包含失败场景或不变量、证据、影响及最小验证方式。
-
-## Spec
-[P1][medium] 可行动标题 — path/to/file:line
-一个短段落，包含失败场景或不变量、Spec 证据、影响及最小验证方式。
-```
-
-无合格发现写 `No findings.`；无 Spec 写“未评估：未找到可用 Spec”，不伪造通过结论或 P0/P1/P2 零计数。作为 `my-implement` 方法时，使用共享规则规定的结果骨架，阻断项锚定当前验收或不变量；下游建议标 downstream_ticket，设计缺口以 blocked-by-design 说明。独立性、覆盖和实际模型按共享审查规则记录；使用 runtime 的结果骨架提交判断。最后用一行汇总：Code 始终列出 P0/P1/P2 数量与 blocker；Spec 已评估时列出对应数量与 blocker，未评估时只写状态。只在必要时追加 residual risk。不要复述审查过程、输出逐项通过清单、无影响建议、重复证据、完整命令流水或未经请求的修复代码。不得为缩短报告而截断通过准入的真实发现。
+独立调用报告 content_id、基线、HEAD、范围，按五个视角组织发现，并附验收覆盖。既有问题标注“既有/非本次引入”；无合格发现写“无发现”，无 Spec 写“未评估：未找到可用 Spec”。每条发现用具体失败场景说明证据、影响和验证方式，不报猜测与纯风格意见。组合模式使用 runtime 预填骨架，不手改身份或内容字段，如实记录模型、来源与独立性缺口。spec-challenge 用平实中文说明用户需要决定什么。不得截断真实发现。

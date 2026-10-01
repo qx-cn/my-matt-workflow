@@ -70,30 +70,8 @@ def downstream(repo, topic, identifier):
             for path, value in impl.records(repo, topic).values() if identifier in value['blocked_by']]
 
 
-# Ticket 09 will move this single runtime definition into the shared Skill resource.
-REVIEW_LOOP_RULES = """# 审查循环规则
-
-Ticket 审查覆盖 Ticket 基线以来全部内容改动；整分支审查用于多 Ticket standard Topic，覆盖 Topic 基线以来改动及全部 Ticket 验收。
-standard 审查由宿主派出新上下文；只读冻结材料，不读实施者总结或简报计划。继承实际模型和思考档位，记录实际模型；更强模型由用户指定。self 来源如实记录，不能称 independent。
-阻断问题必须违反明确验收或不变量，写明锚定对象、位置、出错路径和真实可达性；其余是 advisory。只有 blocking 进入修复循环，下游 owner 的未来能力记为 advisory。只有建议时通过。
-第一轮穷尽，覆盖每项验收、探针、不变量，标注 ok、finding 或 not-applicable 并说明原因。复审只看本轮修复差异及影响，范围外新问题默认 advisory。
-每个对象最多 4 轮，review 每次计一轮；修复最多 3 次。通过后内容变化即失效，重审占轮数，不重置。第4轮有阻断，或耗尽4轮且当前内容没有有效通过记录，进入 needs-user，拒绝第5轮。
-blocked-by-design、inconclusive 均进入 needs-user。存在以下停止信号也进入 needs-user：
-- 同一根因：连续两次复审的阻断问题落在紧挨的上次修复差异内。
-- 同一处连续修改：相邻修复在同一文件的区间重叠，换算到中间快照行号。
-- 前后矛盾：contradicts 指向之前问题。
-- 体积膨胀：增加行加删除行超过第一轮的1.5倍。
-needs-user 拒绝新审查；整分支 needs-user 时 topic complete 拒绝，status 显示原因。用户可接受现状、修订定义后 reopen 或放弃。
-reopen 要求 Ticket 稳定定义或 Spec 改动，不计 status、claimed_by、勾选。Ticket 审查保留代码和基线，重读定义并清空测试及审查历史、轮数和停止信号；整分支审查从首次开启或最近 reopen 后定义改变才可重开。
-修复只改正、删除、收窄。需要新增规则、场景或要求时 blocked-by-design。修复前同步同一事实在其他位置的写法，文档规则只定义一次。修复思路写 notes-file，不另写修复方案文档。
-已决事项不可重开，有异议为 inconclusive。报告写已用轮数和剩余额度，不写趋势。
-文档审查也受严重度、复审范围、修复约束、4轮上限及停止信号约束，runtime 不计数；扩大范围、补审、用户要求直到通过不重置。体积按第一轮字节数，多产物合计。Agent 在 reviews/review-log-<topic>.md 逐轮记产物、轮次、阻断数、建议数、修改范围、体积，无 Topic 在对话记录。达到上限或停止信号由用户裁决。
-artifact-review-* 不接受 topic，不计轮数。
-"""
-
-
 def loop_rules():
-    return REVIEW_LOOP_RULES
+    return (Path(__file__).resolve().parents[2] / 'resources' / 'review-loop.md').read_text()
 
 
 def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_session_id=None):
@@ -213,7 +191,7 @@ def validate_result(result, manifest):
         if not isinstance(finding, dict):
             errors.append(f'{prefix}: 必须是对象')
             continue
-        for key in ('id', 'summary', 'anchor'):
+        for key in ('id', 'summary', 'location'):
             if not nonempty(finding.get(key)):
                 errors.append(f'{prefix}.{key}: 必须非空')
         identifier = finding.get('id')
@@ -228,19 +206,27 @@ def validate_result(result, manifest):
             errors.append(f'{prefix}.contradicts: 必须是既有问题 id')
         if 'downstream_ticket' in finding:
             owner = next((t for t in manifest['downstream_tickets'] if t['id'] == finding['downstream_ticket']), None)
-            if not owner or finding.get('anchor') not in [a['id'] for a in owner['acceptance']]:
-                errors.append(f'{prefix}.downstream_ticket: 未引用真实下游验收')
+            if not owner:
+                errors.append(f'{prefix}.downstream_ticket: 未引用真实下游 Ticket')
+        if finding.get('view') not in ('correctness', 'impact', 'spec', 'spec-challenge', 'maintainability'):
+            errors.append(f'{prefix}.view: 非法视角')
         anchor = finding.get('anchor')
-        if not isinstance(anchor, str) or anchor not in expected | downstream:
-            errors.append(f'{prefix}.anchor: 未锚定当前验收、探针、不变量或下游验收')
-        if severity == 'blocking':
-            if isinstance(anchor, str) and anchor in downstream or finding.get('downstream_ticket'):
-                errors.append(f'{prefix}.severity: 下游问题只能是 advisory')
-            for key in ('location', 'failure_path', 'reachability'):
-                if not nonempty(finding.get(key)):
-                    errors.append(f'{prefix}.{key}: blocking 必须提供非空证据')
+        if 'anchor' in finding and not nonempty(anchor):
+            errors.append(f'{prefix}.anchor: 提供时必须非空')
+        evidence = finding.get('basis') or finding.get('failure_path')
+        if not nonempty(evidence):
+            errors.append(f'{prefix}.basis: 必须提供出错路径或被违反的规则')
+        if severity == 'advisory':
+            if finding.get('disposition') not in ('fix-in-batch', 'defer', 'decline'):
+                errors.append(f'{prefix}.disposition: advisory 必须提供有效处置')
+            if finding.get('disposition') == 'defer' and not nonempty(finding.get('owner')):
+                errors.append(f'{prefix}.owner: defer 必须建议归属')
+            if finding.get('disposition') == 'decline' and not nonempty(finding.get('reason')):
+                errors.append(f'{prefix}.reason: decline 必须说明理由')
     if result.get('status') == 'pass' and any(f.get('severity') == 'blocking' for f in by_id.values()):
         errors.append('status: pass 不能包含 blocking findings')
+    if result.get('status') == 'pass' and any(f.get('view') == 'spec-challenge' or f.get('disposition') == 'fix-in-batch' for f in by_id.values()):
+        errors.append('status: Spec 挑战或待修复建议不能通过')
     coverage = result.get('coverage')
     seen = set()
     if not isinstance(coverage, list):
@@ -263,7 +249,7 @@ def validate_result(result, manifest):
             errors.append(f'{prefix}.reason: 不适用必须说明原因')
         if judgement == 'finding':
             finding = by_id.get(item.get('finding_id')) if isinstance(item.get('finding_id'), str) else None
-            if not finding or finding.get('anchor') != target:
+            if not finding:
                 errors.append(f'{prefix}.finding_id: 未引用该 target 的 finding')
         elif any(f.get('anchor') == target and f.get('severity') == 'blocking' for f in by_id.values()):
             errors.append(f'{prefix}.result: 存在 blocking，不能声明 ok 或不适用')
@@ -327,7 +313,9 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
     result = validate_result(submitted, manifest)
     review_loop.check_contradictions(unit, result)
     status = result['status']
-    if status == 'findings' and not any(f['severity'] == 'blocking' for f in result['findings']):
+    if any(f.get('view') == 'spec-challenge' for f in result['findings']):
+        status = 'blocked-by-design'
+    if status == 'findings' and not any(f['severity'] == 'blocking' or f.get('disposition') == 'fix-in-batch' for f in result['findings']):
         status = 'pass'
     repair = review_loop.repair_for(unit, manifest)
     entry = {'manifest': unit['active_review']['manifest'], 'repair': repair, 'unit_id': manifest['unit_id'], 'content_id': manifest['content_id'], 'round': manifest['round'],

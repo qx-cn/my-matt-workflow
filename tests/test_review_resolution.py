@@ -17,7 +17,7 @@ class ResolutionTests(unittest.TestCase):
     submit = reviews.ReviewTests.submit
 
     def blocking(self, report, identifier='bug', location='code.txt:1', **extra):
-        finding = dict(id=identifier, severity='blocking', summary='marker mismatch',
+        finding = dict(id=identifier, severity='blocking',view='correctness', summary='marker mismatch',
                        anchor='feature-01#A1', location=location,
                        failure_path='read marker then mismatch', reachability='default read', **extra)
         result = self.result(report, status='findings', findings=[finding])

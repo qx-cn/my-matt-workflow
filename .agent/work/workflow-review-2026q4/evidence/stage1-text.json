@@ -1,0 +1,392 @@
+{
+  "characters": 31513,
+  "reachable_files": 77,
+  "unique_contents": 31,
+  "files": [
+    {
+      "path": "my-code-review/SKILL.md",
+      "characters": 3636,
+      "sha256": "007b0520ed07778df6f334b085f332ec96f6bbebd3e7111a4866a0e1726b84ef"
+    },
+    {
+      "path": "my-code-review/references/shared/adapters/artifact-access.md",
+      "characters": 273,
+      "sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38"
+    },
+    {
+      "path": "my-code-review/references/shared/adapters/project-rules.md",
+      "characters": 2239,
+      "sha256": "f811a724930d9c00d032e7dfb91d5196f80322258bdfeb5cfeb4210ffc43d7f5"
+    },
+    {
+      "path": "my-code-review/references/shared/instruction-authority.md",
+      "characters": 243,
+      "sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2"
+    },
+    {
+      "path": "my-code-review/references/shared/reader-first-writing.md",
+      "characters": 1218,
+      "sha256": "925fee70191ecabafd1162618a1e628207c5dcba9abc90fdcb7b6b87b070e5ff"
+    },
+    {
+      "path": "my-code-review/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-code-review/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-domain-modeling/ADR-FORMAT.md",
+      "characters": 216,
+      "sha256": "d788c9f024148ae86d671540a44b43ef343b2e2ab0eb700f500450b7fa090ead"
+    },
+    {
+      "path": "my-domain-modeling/CONTEXT-FORMAT.md",
+      "characters": 203,
+      "sha256": "d7587b1a6154767d934b38a82341ef5acad9733fdcd76a3707559f394245909c"
+    },
+    {
+      "path": "my-domain-modeling/SKILL.md",
+      "characters": 834,
+      "sha256": "69df2491a9dbda1f04b52617980f4dc306a69d9a200e007a5a19c2636326ba81"
+    },
+    {
+      "path": "my-domain-modeling/references/shared/adapters/artifact-access.md",
+      "characters": 273,
+      "sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38"
+    },
+    {
+      "path": "my-domain-modeling/references/shared/instruction-authority.md",
+      "characters": 243,
+      "sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2"
+    },
+    {
+      "path": "my-domain-modeling/references/shared/reader-first-writing.md",
+      "characters": 1218,
+      "sha256": "925fee70191ecabafd1162618a1e628207c5dcba9abc90fdcb7b6b87b070e5ff"
+    },
+    {
+      "path": "my-domain-modeling/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-domain-modeling/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-domain-modeling/references/shared/workflow-delivery.md",
+      "characters": 542,
+      "sha256": "5e6d5683ca055ffcce1f715f6d85f14304d5e3d7cc4b64e8f420117e261b4622"
+    },
+    {
+      "path": "my-grill-with-docs/SKILL.md",
+      "characters": 948,
+      "sha256": "c2901758da8e175fda07019cef168f5e16bcfb3f534a8061e83052d1e1bb7748"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/adapters/artifact-storage.md",
+      "characters": 348,
+      "sha256": "44085cded50be3d93cb37234d3f3c3aadc4593917bd76867d33541fa52f7c5d0"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/adapters/assurance-levels.md",
+      "characters": 389,
+      "sha256": "9f9254bc9eb1318bdfe5d67c2f6499648d7d621b0e34cf30b5382dd1d461b8fc"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/adapters/implementation-session.md",
+      "characters": 572,
+      "sha256": "6cec5d0680a773625e1bb3cc3f4287dc25ac491a42efc562aff90737a5804051"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/requirement-analysis.md",
+      "characters": 824,
+      "sha256": "0ac9343544d531349280c1f7107cdfb9fb3086658f67e60b45563b15b0d52168"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/requirement-reviewer-brief.md",
+      "characters": 385,
+      "sha256": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-grill-with-docs/references/shared/workflow-delivery.md",
+      "characters": 542,
+      "sha256": "5e6d5683ca055ffcce1f715f6d85f14304d5e3d7cc4b64e8f420117e261b4622"
+    },
+    {
+      "path": "my-grilling/SKILL.md",
+      "characters": 580,
+      "sha256": "c0f8e6343d5802b55c459d1f24e7e71c53b761c82a089fcfc152e7b6ec49d0ec"
+    },
+    {
+      "path": "my-grilling/references/shared/adapters/assurance-levels.md",
+      "characters": 389,
+      "sha256": "9f9254bc9eb1318bdfe5d67c2f6499648d7d621b0e34cf30b5382dd1d461b8fc"
+    },
+    {
+      "path": "my-grilling/references/shared/final-state-writing.md",
+      "characters": 343,
+      "sha256": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7"
+    },
+    {
+      "path": "my-grilling/references/shared/requirement-analysis.md",
+      "characters": 824,
+      "sha256": "0ac9343544d531349280c1f7107cdfb9fb3086658f67e60b45563b15b0d52168"
+    },
+    {
+      "path": "my-grilling/references/shared/requirement-reviewer-brief.md",
+      "characters": 385,
+      "sha256": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a"
+    },
+    {
+      "path": "my-grilling/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-grilling/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-grilling/references/shared/workflow-delivery.md",
+      "characters": 542,
+      "sha256": "5e6d5683ca055ffcce1f715f6d85f14304d5e3d7cc4b64e8f420117e261b4622"
+    },
+    {
+      "path": "my-implement/SKILL.md",
+      "characters": 850,
+      "sha256": "bae95b5851d4be93146bd92440d44c6d055ec789f2fbc055a4b3674497093619"
+    },
+    {
+      "path": "my-implement/references/shared/adapters/assurance-levels.md",
+      "characters": 389,
+      "sha256": "9f9254bc9eb1318bdfe5d67c2f6499648d7d621b0e34cf30b5382dd1d461b8fc"
+    },
+    {
+      "path": "my-implement/references/shared/adapters/implementation-session.md",
+      "characters": 572,
+      "sha256": "6cec5d0680a773625e1bb3cc3f4287dc25ac491a42efc562aff90737a5804051"
+    },
+    {
+      "path": "my-implement/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-implement/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-implement/references/shared/workflow-delivery.md",
+      "characters": 542,
+      "sha256": "5e6d5683ca055ffcce1f715f6d85f14304d5e3d7cc4b64e8f420117e261b4622"
+    },
+    {
+      "path": "my-review-design/SKILL.md",
+      "characters": 1720,
+      "sha256": "1a1e5c7e87e1d13331f1a58ada6701446c0000bb1ba3d2a1a0966c83d4a02177"
+    },
+    {
+      "path": "my-review-design/references/shared/adapters/artifact-access.md",
+      "characters": 273,
+      "sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38"
+    },
+    {
+      "path": "my-review-design/references/shared/artifact-finalization.md",
+      "characters": 1386,
+      "sha256": "a5a7b920a4b678e2b5688dc936a14132f1dedfb0bf5665502568e4cb15c5c671"
+    },
+    {
+      "path": "my-review-design/references/shared/final-state-writing.md",
+      "characters": 343,
+      "sha256": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7"
+    },
+    {
+      "path": "my-review-design/references/shared/first-principles-reasoning.md",
+      "characters": 1274,
+      "sha256": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6"
+    },
+    {
+      "path": "my-review-design/references/shared/instruction-authority.md",
+      "characters": 243,
+      "sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2"
+    },
+    {
+      "path": "my-review-design/references/shared/reader-first-writing.md",
+      "characters": 1218,
+      "sha256": "925fee70191ecabafd1162618a1e628207c5dcba9abc90fdcb7b6b87b070e5ff"
+    },
+    {
+      "path": "my-review-design/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-review-design/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-tdd/SKILL.md",
+      "characters": 1552,
+      "sha256": "9a49a66621ea8c3fed21ec580ff4e8b6fca76a44de1cd87e0e191ae5627f241b"
+    },
+    {
+      "path": "my-tdd/mocking.md",
+      "characters": 127,
+      "sha256": "672be095a8663b2e21922882ad48d50889d1a9a0277eaa86a30fe76d1bd2bd2d"
+    },
+    {
+      "path": "my-tdd/references/shared/adapters/artifact-access.md",
+      "characters": 273,
+      "sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38"
+    },
+    {
+      "path": "my-tdd/references/shared/adapters/assurance-levels.md",
+      "characters": 389,
+      "sha256": "9f9254bc9eb1318bdfe5d67c2f6499648d7d621b0e34cf30b5382dd1d461b8fc"
+    },
+    {
+      "path": "my-tdd/references/shared/adapters/work-scope.md",
+      "characters": 235,
+      "sha256": "526f387e8df1625117061140001562a7c02f8d27b718f1ca0fe92bb91c0c1268"
+    },
+    {
+      "path": "my-tdd/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-tdd/references/shared/testing-seams.md",
+      "characters": 436,
+      "sha256": "7852133fbf40fd5dc1fa7416dd87db09b92d7957371adb84fc7b98b6e964c62d"
+    },
+    {
+      "path": "my-tdd/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-tdd/references/shared/workflow-delivery.md",
+      "characters": 542,
+      "sha256": "5e6d5683ca055ffcce1f715f6d85f14304d5e3d7cc4b64e8f420117e261b4622"
+    },
+    {
+      "path": "my-tdd/tests.md",
+      "characters": 2265,
+      "sha256": "3545ac462e7158d3c1831b936b9b6b6e8ccf079f326766ca8b775a5eaf0af307"
+    },
+    {
+      "path": "my-to-spec/SKILL.md",
+      "characters": 2159,
+      "sha256": "78b039b51534744388559dbe37cfd4aef2efaa170e756ab00b895eb4788d8e89"
+    },
+    {
+      "path": "my-to-spec/references/shared/adapters/artifact-storage.md",
+      "characters": 348,
+      "sha256": "44085cded50be3d93cb37234d3f3c3aadc4593917bd76867d33541fa52f7c5d0"
+    },
+    {
+      "path": "my-to-spec/references/shared/adapters/project-rules.md",
+      "characters": 2239,
+      "sha256": "f811a724930d9c00d032e7dfb91d5196f80322258bdfeb5cfeb4210ffc43d7f5"
+    },
+    {
+      "path": "my-to-spec/references/shared/artifact-finalization.md",
+      "characters": 1386,
+      "sha256": "a5a7b920a4b678e2b5688dc936a14132f1dedfb0bf5665502568e4cb15c5c671"
+    },
+    {
+      "path": "my-to-spec/references/shared/final-state-writing.md",
+      "characters": 343,
+      "sha256": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7"
+    },
+    {
+      "path": "my-to-spec/references/shared/first-principles-reasoning.md",
+      "characters": 1274,
+      "sha256": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6"
+    },
+    {
+      "path": "my-to-spec/references/shared/instruction-authority.md",
+      "characters": 243,
+      "sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2"
+    },
+    {
+      "path": "my-to-spec/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-to-spec/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-to-tickets/SKILL.md",
+      "characters": 1208,
+      "sha256": "457312a5fc0272f72feb3c1c9b3d3e570035f1be10f1ef4698a42e49b30125d1"
+    },
+    {
+      "path": "my-to-tickets/TICKET-FORMATS.md",
+      "characters": 1389,
+      "sha256": "ab79b1f81a8f8aa6e3ed0fea4978e4cd8bd088470519ad40833899deb0c9d094"
+    },
+    {
+      "path": "my-to-tickets/references/shared/adapters/project-rules.md",
+      "characters": 2239,
+      "sha256": "f811a724930d9c00d032e7dfb91d5196f80322258bdfeb5cfeb4210ffc43d7f5"
+    },
+    {
+      "path": "my-to-tickets/references/shared/artifact-finalization.md",
+      "characters": 1386,
+      "sha256": "a5a7b920a4b678e2b5688dc936a14132f1dedfb0bf5665502568e4cb15c5c671"
+    },
+    {
+      "path": "my-to-tickets/references/shared/final-state-writing.md",
+      "characters": 343,
+      "sha256": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7"
+    },
+    {
+      "path": "my-to-tickets/references/shared/first-principles-reasoning.md",
+      "characters": 1274,
+      "sha256": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6"
+    },
+    {
+      "path": "my-to-tickets/references/shared/instruction-authority.md",
+      "characters": 243,
+      "sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2"
+    },
+    {
+      "path": "my-to-tickets/references/shared/review-loop.md",
+      "characters": 2601,
+      "sha256": "7cb395313834c51e1de695705661da3eb817a5b4ad400389bfb9128259c2a18c"
+    },
+    {
+      "path": "my-to-tickets/references/shared/user-intervention.md",
+      "characters": 518,
+      "sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45"
+    },
+    {
+      "path": "my-to-tickets/references/shared/workflow-delivery.md",
+      "characters": 542,
+      "sha256": "5e6d5683ca055ffcce1f715f6d85f14304d5e3d7cc4b64e8f420117e261b4622"
+    }
+  ]
+}

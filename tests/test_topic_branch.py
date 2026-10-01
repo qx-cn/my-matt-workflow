@@ -52,6 +52,22 @@ class BranchTests(unittest.TestCase):
         path.write_text(json.dumps(result))
         return self.cli('topic', 'review', '--submit', str(path), ok=ok)
 
+    def test_advisory_spec_challenge_is_visible_and_preserved_after_acceptance(self):
+        self.multi()
+        self.cli('topic','test')
+        report = self.branch_review()
+        finding = dict(id='challenge',severity='advisory',view='spec-challenge',summary='existing caller conflicts',
+                       location='Spec:behavior',basis='public caller reaches failure',disposition='defer',owner='user')
+        self.branch_submit(self.result(report,status='findings',findings=[finding]))
+        status = json.loads(self.cli('topic','status').stdout)
+        self.assertEqual(finding,status['decisions_needed'][0]['finding'])
+        self.assertIn(finding,status['advisories'])
+        self.cli('resolve','--branch','--accept','--reason','accept stated conflict')
+        summary=(self.repo/'.agent/archive/feature/deliveries/deliveries-feature-01.md').read_text()
+        self.assertIn('existing caller conflicts',summary)
+        self.assertIn('public caller reaches failure',summary)
+        self.assertEqual([], json.loads(self.cli('topic','status','--topic','feature').stdout)['decisions_needed'])
+
     def test_accept_unsubmitted_branch_reviews_in_both_modes(self):
         for mode in ('shared', 'private'):
             with self.subTest(mode=mode):
@@ -89,7 +105,7 @@ class BranchTests(unittest.TestCase):
                 self.assertEqual('second', Path(manifest['changes'][0]['current']['snapshot_path']).read_text())
                 result = self.result(report)
                 target = result['acceptance'][0]['id']
-                finding = dict(id='branch-bug',severity='blocking',summary='marker',anchor=target,
+                finding = dict(id='branch-bug',severity='blocking',view='correctness',summary='marker',anchor=target,
                                location='code.txt:1',failure_path='read marker',reachability='normal read')
                 result.update(status='findings',findings=[finding])
                 result['coverage'][0] = dict(target=target,result='finding',finding_id='branch-bug')

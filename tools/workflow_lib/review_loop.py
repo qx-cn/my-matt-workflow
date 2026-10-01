@@ -86,6 +86,8 @@ def check_contradictions(unit, result):
 
 
 def signals(unit, manifest, result, repair):
+    if any(f.get('view') == 'spec-challenge' for f in result['findings']):
+        return 'Spec 与现有系统冲突：请用户决定修订 Spec、接受风险或按原 Spec 继续'
     if result['status'] in ('blocked-by-design', 'inconclusive'):
         return result['status']
     if any(f.get('contradicts') for f in result['findings']):

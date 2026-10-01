@@ -572,6 +572,13 @@ def _stage_release_tree(
     for source in sorted(runtime_library.glob("*.py")):
         shutil.copy2(source, staged_runtime / "tools" / "workflow_lib" / source.name)
 
+    # Runtime consumes the canonical shared rule rather than embedding a copy.
+    loop_source = repo_root / 'resources' / 'review-loop.md'
+    if not loop_source.is_file():
+        loop_source = Path(__file__).resolve().parents[2] / 'resources' / 'review-loop.md'
+    (staged_runtime / 'resources').mkdir(exist_ok=True)
+    shutil.copy2(loop_source, staged_runtime / 'resources' / 'review-loop.md')
+
     shared_resources: dict[str, list[str]] = {}
     resource_consumers: dict[str, dict[str, list[str]]] = {
         "direct": {},

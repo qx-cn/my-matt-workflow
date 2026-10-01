@@ -64,7 +64,7 @@ class ReviewTests(unittest.TestCase):
     def test_pass_and_advisory_results_are_registered_truthfully(self):
         self.start()
         report = self.review()
-        result = self.result(report, status="findings", findings=[{"id": "suggestion", "severity": "advisory", "summary": "optional clarity", "anchor": "feature-01#A1"}])
+        result = self.result(report, status="findings", findings=[{"id": "suggestion", "severity": "advisory", "view": "maintainability", "location": "code.txt:1", "basis": "project rule", "disposition": "defer", "owner": "future cleanup", "summary": "optional clarity", "anchor": "feature-01#A1"}])
         output = json.loads(self.submit(result).stdout)
         self.assertEqual("pass", output["status"])
         self.assertEqual("self", output["reviewer"]["provenance"])
@@ -97,11 +97,11 @@ class ReviewTests(unittest.TestCase):
                                   ("reviewer", {"provenance": "self", "model": "different-model"}, "reviewer.model")]:
             broken = {**result, key: value}
             self.assertIn(field, self.submit(broken, ok=False).stderr)
-        finding = {"id": "bug", "severity": "blocking", "summary": "observable bug", "anchor": "feature-01#A1"}
+        finding = {"id": "bug", "severity": "blocking", "view": "correctness", "summary": "observable bug", "anchor": "feature-01#A1"}
         result["findings"] = [finding]
         result["coverage"][0] = {"target": "feature-01#A1", "result": "finding", "finding_id": "bug"}
         output = self.submit(result, ok=False).stderr
-        for field in ("status", "location", "failure_path", "reachability"):
+        for field in ("status", "location", "basis"):
             self.assertIn(field, output)
         result["status"] = "findings"
         finding.update(location="code.txt:1", failure_path="read code then fails", reachability="default operation reaches this file")
@@ -164,8 +164,7 @@ class ReviewTests(unittest.TestCase):
         report = self.review()
         manifest = json.loads(Path(report["manifest"]).read_text())
         loop = Path(next(i for i in manifest["inputs"] if Path(i["snapshot_path"]).name == "review-loop-rules.md")["snapshot_path"]).read_text()
-        for phrase in ("4", "needs-user", "同一根因", "1.5", "inconclusive"):
-            self.assertIn(phrase, loop)
+        self.assertEqual((Path(__file__).resolve().parents[1] / "resources/review-loop.md").read_text(), loop)
         result = self.result(report)
         self.assertIn("I-K1", self.submit(result, ok=False).stderr)
         result["coverage"].append({"target": "I-K1", "result": "not-applicable"})
@@ -236,7 +235,7 @@ class ReviewTests(unittest.TestCase):
         report = self.review()
         valid = self.result(report)
         cases = [({"coverage": [{"target": [], "result": "ok"}]}, "coverage"),
-                 ({"findings": [{"id": "bad", "anchor": [], "severity": "blocking", "summary": "bad"}]}, "anchor"),
+                 ({"findings": [{"id": "bad", "anchor": [], "severity": "blocking", "view": "correctness", "summary": "bad"}]}, "anchor"),
                  ({"findings": [{"id": {}, "anchor": "feature-01#A1", "severity": {}, "summary": None}]}, "findings"),
                  ({"reviewer": []}, "reviewer"), ({"coverage": "ok"}, "coverage"), ({"findings": {}}, "findings")]
         for mutation, field in cases:
@@ -261,6 +260,17 @@ class ReviewTests(unittest.TestCase):
         self.replace(path, "status", "needs-user")
         self.assertIn("implementing", self.cli("implement", "review", "--ticket", "feature-01",
                                               "--reviewer-model", "actual-host-model", ok=False).stderr)
+
+    def test_unanchored_spec_challenge_stops_with_user_decision(self):
+        self.start()
+        report = self.review()
+        result = self.result(report, status='findings', findings=[dict(id='challenge', view='spec-challenge',
+            severity='blocking', summary='Spec contradicts live caller', location='code.txt:1',
+            basis='default caller reaches a failure if the Spec is followed')])
+        self.submit(result)
+        status = json.loads(self.cli('implement', 'status').stdout)
+        self.assertEqual('needs-user', status['status'])
+        self.assertIn('用户决定', status['stop_reason'])
 
     def test_nested_agent_fixtures_remain_content_in_complete_review(self):
         fixture = self.repo / "tests/fixtures/demo/.agent/config.md"

@@ -269,18 +269,26 @@ def status(repo, topic=None):
         command = next_start_command(repo, topic)
     advisories = []
     known_issues = []
+    decisions_needed = []
     for record in ((archive if archive.exists() else path) / "implementations").glob("*.json"):
         implementation = json.loads(record.read_text())
         known_issues.extend(implementation.get("known_issues", []))
         for review in implementation.get("reviews", []):
+            if "accepted" != implementation.get("outcome") and value["status"] != "archived" and review == implementation.get("reviews", [])[-1]:
+                decisions_needed.extend(dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for f in review.get("result", {}).get("findings", []) if f.get("view") == "spec-challenge")
             advisories.extend(f for f in review.get("result", {}).get("findings", []) if f.get("severity") == "advisory")
     branch_file = (archive if archive.exists() else path) / 'branch-review.json'
     branch = json.loads(branch_file.read_text()) if branch_file.exists() else None
     if branch:
         known_issues.extend(branch.get('known_issues', []))
+        latest_findings = branch.get('reviews', [{}])[-1].get('result', {}).get('findings', []) if branch.get('reviews') else []
+        advisories.extend(f for f in latest_findings if f.get('severity') == 'advisory')
+        if branch.get('status') == 'needs-user' and value['status'] != 'archived':
+            decisions_needed.extend(dict(finding=f, decision='请决定修订 Spec、接受风险或按原 Spec 继续') for f in latest_findings if f.get('view') == 'spec-challenge')
         if branch.get('status') == 'needs-user' and value['status'] != 'archived':
             command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --branch --topic {topic} --accept --reason '<理由>'"
     return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
+            "decisions_needed": decisions_needed,
             "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
             "next_command": command}
 
