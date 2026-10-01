@@ -1,66 +1,125 @@
 # My Matt Workflow
 
-个人使用的 Matt Pocock 工作流适配包。
+个人使用的 Matt Pocock 工作流适配包，支持 Python 3.10+，可安装到 Codex、Cursor 和 Claude。
 
-支持 Python 3.10+。
+## 使用流程
 
-## 原则
+对齐点 1 是确认需求摘要与 quick/standard 等级：目标、范围、约束和可观察验收注明来源。standard 还有对齐点 2：一起审阅 Spec 与 Ticket 拆分，包括逐张行为、依赖、测试命令和测试边界；quick 在第一个对齐点后直接实施。已确认范围内的测试、审查和本地提交由 Agent 继续完成；目标、范围、接口或风险承担变化时，再找用户确认。工作流不推送、不建 MR、不写外部系统。
 
-- Matt 原生 Skills 只用于升级比较，不作为运行时依赖。
-- 所有 `my-*` Skills 都由用户手动调用。
-- 项目固定规则只配置一次，保存在 `.agent/matt-workflow.md`；`agent_directory_mode: private`（默认）使用无 remote 的嵌套 Git，`shared` 则由主仓库跟踪、提交和推送 `.agent/`。无 Git 项目同样使用 `.agent/` 保存文档与进度。
-- 没有外部 Tracker 时，Spec 和 Tickets 保存到 `.agent/work/`。
-- 所有本地工作产物按 `.agent/work/<topic>/<type>/` 保存；交接由 `my-handoff` 写入 `handoffs/handoffs-<topic>-<time-or-sequence>.md` 并保留历史。
-- `assurance_level` 与写入授权正交：`quick` 用于明确、低风险、单切片工作，`standard` 是默认层，`audited` 用于高风险、跨边界或明确要求完整可恢复审计链的工作。
-- 工作流源目录是唯一可编辑源；安装器可复制稳定 release 到 Codex、Cursor、Claude 或用户指定的 Skill 目录。
+首次使用项目时调用 `my-setup`，探测并展示配置，确认一次后写入。日常由 `my-ask-matt` 帮助选择入口；组合清单中的被调用 Skill 可以由模型调用，其余入口由用户手动调用。Matt 原生 Skills 仅用于升级比较，运行时使用本包的 `my-*`。
 
-## 维护命令
+- **quick**：单会话能完成、局部可撤回、不改持久化结构、权限或对外 API 契约，且预计一张 Ticket 就能做完；不写 Spec 或 Ticket，Agent 完成测试和同会话自审。
+- **standard**：以版本化 Spec 和 Ticket 切片实施；每张 Ticket 经过测试与审查，再提交完成。
+
+Topic 是 `.agent/work/<topic>/` 下的一项工作。文档与进度按类型分目录保存；术语和决定集中沉淀到 `.agent/CONTEXT.md` 与 `.agent/adr/`。`topic complete` 负责收尾、归档及记录度量。`my-handoff` 用于换宿主、目录或人员，或保存尚未形成 Spec 的访谈结论。
+
+## 项目配置
+
+`.agent/matt-workflow.md` 的 frontmatter 只有九个键：
+
+```yaml
+---
+schema_version: 2
+task_backend: "local"
+agent_directory_mode: "private"
+default_base_branch: "main"
+test_commands: ["python3 -m unittest discover -s tests"]
+standards_sources: []
+domain_sources: []
+default_execution_agent: "auto"
+assurance_level: "standard"
+---
+```
+
+`task_backend` 仅支持 `local`；`assurance_level` 为 `quick` 或 `standard`。`default_execution_agent` 可选 `auto`、`codex`、`cursor`、`claude`；auto 在开始 Ticket 时绑定实际 Agent。标准与领域来源填写项目中真实存在的文档路径。
+
+`agent_directory_mode: private`（默认）将 `.agent/` 初始化为无 remote 的本地嵌套 Git；`shared` 由主仓库跟踪。无 Git 项目同样使用 `.agent/` 保存文档和进度。setup 不改主仓库 `.gitignore`，已有归属冲突不自动删除。
+
+`test_commands` 中不以 ` *` 结尾的条目组成全量测试集合，standard 必须非空。以 ` *` 结尾的条目允许 `implement test -- <具体命令>` 匹配执行，但不能代替全量集合。Ticket 声明的测试必须与配置匹配。
+
+本仓库使用 local/shared/main/auto/standard，测试为完整 unittest。已有工作文档保持原格式；配置更新不会转换或归档它们。总览中的历史 Topic 可能显示“需要迁移”，不应据此自动迁移本仓库历史。
+
+## 项目命令
+
+下列示例使用源码入口。安装后的项目应从当前 Agent 的 `my-matt-workflow/install-state.json` 读取绝对 `runtime_entry`，用它替换 `tools/workflow.py`。
+
+```bash
+# 探测、展示；确认后以相同参数加 --apply
+python3 tools/workflow.py setup --repo <project>
+python3 tools/workflow.py setup --repo <project> --apply
+
+# 启动quick，完成改动、摘要和自审后收尾
+python3 tools/workflow.py topic start --repo <project> --topic <topic> --level quick
+python3 tools/workflow.py topic complete --repo <project> --topic <topic>
+
+# standard：已有Ticket时可自动补建Topic
+python3 tools/workflow.py implement start --repo <project> --ticket <topic>-01
+python3 tools/workflow.py implement test --repo <project> --ticket <topic>-01
+python3 tools/workflow.py implement review --repo <project> --ticket <topic>-01
+python3 tools/workflow.py implement review --repo <project> --ticket <topic>-01 --submit <result.json>
+python3 tools/workflow.py implement finish --repo <project> --ticket <topic>-01
+
+# 恢复状态与观察结果
+python3 tools/workflow.py topic status --repo <project> --topic <topic>
+python3 tools/workflow.py implement status --repo <project> --ticket <topic>-01
+python3 tools/workflow.py work-overview --repo <project> --json
+python3 tools/workflow.py metrics --repo <project> --topic <topic>
+```
+
+`topic start` 必须指定 Topic；其他 Topic 操作在只有一个活动 Topic 时可以省略。Ticket id 包含 Topic，指定 `--ticket` 后无需另带 `--topic`；省略 Ticket 时选择该 Topic 唯一的活动 Ticket。多 Topic 时显式选择。
+
+`implement review` 冻结当前内容，输出材料包和结果骨架。审查者只读材料包，提交结果绑定同一内容；格式错误按字段修正。测试失败、审查后内容变化、越序或审查单元不匹配都不能继续完成。实施经过修复时，finish 需要 `--notes-file <文件>` 记录思路。审查停止后的 `needs-user` 由用户决定接受或重开：
+
+```bash
+python3 tools/workflow.py resolve --repo <project> --ticket <topic>-01 --accept --reason <reason>
+python3 tools/workflow.py resolve --repo <project> --ticket <topic>-01 --reopen --reason <reason>
+```
+
+接受仍需当前内容通过全量测试；重开要求 Ticket 或来源 Spec 的定义变化。已完成 Ticket 是历史，后续改变通过补偿或迁移工作表达。
+
+standard 多 Ticket 完成后，通过 `topic test`、`topic review`（及 `--submit`）验证整分支，再运行 `topic complete`。单 Ticket 不要求整分支审查。quick 与 standard 的交付摘要须有：改动概述、测试结果、审查发现与修复、建议、已知问题、长期知识沉淀、用户介入记录、未验证项；quick 还需验收对照。quick 未配置测试时必须如实标记。文档 Topic 可直接收尾。
+
+整分支停止后用 `resolve --branch --accept|--reopen --reason <原因>` 处理。停止整个 Topic 用 `topic abandon --reason <原因>`，归档历史并保留未提交内容；同名归档不覆盖。
+
+旧格式项目用 `migrate --repo <project>` 预览备份、冲突和无法推断项，经确认后加 `--apply`。先解决无法自动迁移的事项；已完成历史保留。本仓库自身仅更新配置，不运行该迁移。
+
+## 维护与验证
+
+工作流源码是唯一可编辑源，安装件来自稳定 release。修改工作流的提交必须有一行 `Trigger:`，说明哪个项目的什么问题触发，例如：
+
+```text
+Trigger: trader 的重复审查停止无法恢复，补充状态恢复契约。
+```
+
+在度量证明有必要之前，不新增门禁。`.agent/metrics.jsonl` 记录 Ticket、Topic、quick 的测试、审查、修复、用户介入和命令错误；无法观察的字段为 null，命令错误不含测试失败，审查来源区分 self、independent 和 mixed。`metrics` 按 Topic 汇总。
 
 在本目录运行：
 
 ```bash
-python3 tools/workflow.py setup --repo <project>
 python3 tools/workflow.py validate
-python3 tools/workflow.py validate-evals
-python3 tools/workflow.py smoke
 python3 tools/workflow.py check
 python3 tools/workflow.py doctor
 python3 tools/workflow.py build --release-id <release-id>
 python3 tools/workflow.py install --target codex
 python3 tools/workflow.py deploy --target codex
 python3 tools/workflow.py prune-releases
-python3 tools/workflow.py resolve-rules --repo <project> --agent codex
-python3 tools/workflow.py validate-ticket <ticket-path>
-python3 tools/workflow.py work-overview --repo <project>
-python3 tools/workflow.py work-overview --repo <project> --topic <topic> --json
-python3 tools/workflow.py archive-spec --repo <project> --topic <topic> --spec-id <spec-id>
-python3 tools/workflow.py archive-topic --repo <project> --topic <topic>
-python3 tools/workflow.py archive-list --repo <project>
-python3 tools/workflow.py archive-show --repo <project> --topic <topic>
-python3 tools/workflow.py implementation-next-action --journal <run-journal>
-python3 tools/workflow.py run-code-receipt --journal <run-journal>
-python3 tools/workflow.py run-review-open --journal <run-journal>
-python3 tools/workflow.py run-test-evidence --journal <run-journal> -- <declared test argv...>
-python3 tools/workflow.py run-review-submit --journal <run-journal> --snapshot-dir <review-snapshot-dir> --result-file <json>
-python3 tools/workflow.py run-review-evidence --journal <run-journal> --snapshot-dir <review-snapshot-dir> -- <declared-review-command>
 ```
 
-`work-overview` 只读汇总 `local` 后端的 Spec 修订与状态、Ticket、实施会话、已有收据与下一动作。默认输出面向人的摘要，`--json` 输出相同内容供工具使用。它会标出冲突或无法判定的状态；收据存在只表示已登记，不单独证明测试或审查通过。活动实施会话的下一动作来自现有 `implementation-next-action` 判定；可开始的 Ticket 是手动候选，不代表自动扩大工作范围。
+`check` 只运行 tests 下的 unittest，包括静态校验和临时 Git 仓库中的 CLI 行为测试，不修改被跟踪文件。CI 在 Python 3.10 和 3.14 上运行 check，然后验证 `git diff --exit-code`。测试验证机械契约，不能替代真实的模型行为效果验证。
 
-本地长期 Spec 位于 `.agent/specs/<spec-id>.md`，是**已发布行为的当前权威文本**；旧版保存在 `.agent/specs/history/<spec-id>/<revision>.md`。活动 Topic 的版本化 Spec 是该变更的实施边界，发布前不会自动改变长期 Spec。合并时先通读原长期 Spec 与 Topic 的当前 Spec，将完整的现行行为写入 `.agent/work/<topic>/archive/canonical-spec.md`，核对新增、修改、移除行为及不变量。候选 frontmatter 使用 `spec_id`、顺序递增的 `revision`、`status: current`、`supersedes`（上一长期 Spec 即将保存的历史版本相对路径；首次为空）、`source_topic`、`source_spec_revision`、`source_spec_sha256`。独立审查结论写入同目录的 `spec-review.md`，`spec-review.json` 记录 `schema_version: 1`、`reviewer`、`verdict: No findings.`、`source_sha256`、`previous_sha256`（首次为 `none`）、`candidate_sha256`、`report_sha256`。`archive-spec` 默认只预览来源、候选哈希、审查状态和目标；审查记录与字节匹配后用 `--apply --expected-sha256 <预览的 candidate_sha256> --expected-previous-sha256 <预览的 previous_sha256，首次为 none>` 发布。命令只验证结构、完成状态、Ticket 血缘、已完成实施会话冻结的 Spec 哈希和 Ticket 定义，以及审查记录绑定；审查者独立性和文本是否忠实合并仍需人工核实。一个 Topic 对应一个 Spec id，且只能发布一次。发布前要求 Topic 的实施 Ticket 全部完成且验收项仍全部勾选、每张都有与其来源 Spec 和 Ticket 定义匹配的已完成实施会话，当前来源 Spec revision 至少有一张已完成 Ticket，且没有活动实施会话。发布事务会写入 `archive/publication.json`，区分 `publishing` 与 `published` 并支持同内容重试；实施入口在封存后拒绝新会话。没有运行记录的旧实施 Topic 当前不能通过发布门禁；人工补证入口需另行设计，不能仅凭 Ticket 勾选发布。此功能目前只支持 `local` 后端。
+`doctor` 只读诊断源树、current release 和宿主部署，分别报告有效、漂移、无效或未安装。`build` 从同一源码快照运行检查、打包、更新 current；保留当前版本、上一个版本和安装状态引用的版本。`deploy` 复用完整且与源树一致的当前 release，否则构建后安装；维护命令须在相应授权范围内执行。
 
-`archive-topic` 默认预览 Topic 的完成依据（含长期 Spec 发布版本）、目标目录、逐文件路径与哈希，以及 `tree_sha256`；核对后用 `--apply --expected-digest <预览的 tree_sha256>` 将整个目录移至 `.agent/archive/<topic>/`。含实施 Ticket 的 Topic 必须先成功执行 `archive-spec`；纯文档/研究 Topic 不需要长期 Spec，但须在 `archive/completion.json` 声明 `schema_version: 1`、`topic`、`status: complete`、`behavior_change: none` 和非空的 Topic 内 `evidence` 路径列表。证据必须是独立于 `archive/` 的非空文件。若其他活动 Topic、项目 profile 或当前长期 Spec 仍通过绝对路径、项目相对路径、相对链接或符号链接引用旧 Topic，先处理该引用。归档清单保存原路径、新路径及每个文件的哈希；`archive-list` 轻量列出归档路径和清单存在状态（不做完整核验，单份损坏归档不会挡住其他条目），`archive-show` 核验文件及完成会话的历史收据，并将历史 Ticket、会话及审查结果中的 Topic 内路径映射到归档目录，同时报告外部来源的失效或漂移。原始 Ticket、journal 和证据字节保持不变；归档历史不进入活动实施准入。
+完整顶层命令清单如下，各命令参数以 `--help` 为准：
 
-接续工作时先指定主题查看 `work-overview`。文本视图汇总已完成 Ticket 和历史会话的数量，完整记录仍在 `--json` 中。如果有一个来源一致、与当前 Ticket claim 匹配的活动会话，总览会指出它的下一动作；其他旧会话或旧文件的问题仍逐条显示，顶层状态仍为 `needs-attention`。看到问题时应按文件核查，不能把下一动作提示理解为已通过实施门禁。
+| 用途 | 命令 |
+|---|---|
+| 配置与迁移 | setup、migrate |
+| Topic与实施 | topic、implement、resolve、work-overview、metrics |
+| 检查与部署 | validate、check、doctor、build、install、deploy、prune-releases |
+| 规则与Ticket | resolve-rules、inspect-rules、validate-ticket |
+| 内容快照 | review-snapshot |
+| 工件审查 | artifact-review-snapshot、artifact-review-open、artifact-review-submit、artifact-review-verify、artifact-review-finalize |
 
-测试命令来自项目 profile 的 `test_commands`。`my-implement` 宿主可用 `run-review-submit` 登记组合的 `my-code-review` 结果；需要独立进程时，审查命令来自可选的 `review_commands`。runtime 只执行 work unit 建立时已冻结的精确 argv；审查命令从 `MY_MATT_REVIEW_ID`、`MY_MATT_REVIEW_SNAPSHOT`、`MY_MATT_CODE_CONTENT_ID` 读取当前审查单元，并在 stdout 输出结果 JSON。
+`artifact-review-*` 支持 general/design，用原参数和 `--expect-content-id` 绑定内容；串行执行所需方法，不累计审查轮数。独立工件审查与 Ticket/整分支审查各自使用其对应单元。
 
-`workflow.py check` 是源树的权威本地检查：它严格验证静态输入、确定性 contract、fresh-agent 验证计划与 digest 绑定的执行证据注册表，并运行完整单元测试；存在 `current.json` 时还会先校验 release 的校验和、缺失文件和额外文件，再比较其与源树是否一致。没有登记实际执行证据时，`execution_evidence.status` 明确为 `not-recorded`；存在记录时同时报告 `release_ids` 和相对 current release 的 `current|historical|mixed`，避免把旧 release 的运行记录解释为当前证据。这些状态不影响静态/确定性门禁的真实性，也不会被表述成 Agent 行为通过。尚未构建首个 release 时会明确报告 release 验证不适用。
-
-`workflow.py doctor` 是只读部署诊断：它分别报告源树、current release 与 Codex/Cursor/Claude 安装状态，明确区分 `valid`、`drift`、`invalid` 和 `not-installed`，不会自动安装或修复。
-
-`build` 会先取得 byte-exact 源码快照；若复制期间工作树发生变化则重试，完整源树门禁与打包都只读取同一快照。它跳过旧 `current.json` 的一致性比较，因此可用新 release 替换已过期或损坏的 current release。`build` 仅构建并更新 current 指针；`deploy` 会在当前 release 完整且与源树一致时复用它，否则保留损坏 release 供排查、构建新 release 后再安装。
-
-项目首次使用时手动运行 `/my-setup`。日常通过 `/my-ask-matt` 查询下一条命令，再手动调用推荐的 `/my-*`。
-
-Codex 默认把 Skills 安装到 `${CODEX_HOME:-~/.codex}/skills`，把安装状态和版本化 runtime 保存到 `${CODEX_HOME:-~/.codex}/my-matt-workflow`。旧版安装状态仍指向 `.agents/skills` 时，下一次安装会在同一事务中迁移已托管的 `my-*` Skills。安装后的 `install-state.json` 会记录绝对 `runtime_entry`，因此项目内命令不依赖当前工作目录中存在本仓库的 `tools/`。
+Codex 默认将 Skills 放在 `${CODEX_HOME:-~/.codex}/skills`，安装状态和版本化 runtime 放在 `${CODEX_HOME:-~/.codex}/my-matt-workflow`；Cursor、Claude 使用各自宿主目录。项目调用以安装状态中的 runtime_entry 为准。

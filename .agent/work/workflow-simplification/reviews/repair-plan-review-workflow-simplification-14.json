@@ -1,0 +1,31 @@
+{
+  "content_id": "e543e41b3f68c2ba53e86562171d8403a684cfb6ce819b7f249cbe3f3eecf4f8",
+  "checks": {
+    "final-state-writing": {
+      "status": "pass",
+      "reason": null
+    },
+    "reader-first-writing": {
+      "status": "pass",
+      "reason": null
+    },
+    "visual-communication": {
+      "status": "pass",
+      "reason": null
+    },
+    "humanizer": {
+      "status": "pass",
+      "reason": null
+    },
+    "artifact-finalization": {
+      "status": "pass",
+      "reason": null
+    },
+    "review-design": {
+      "status": "pass",
+      "reason": null
+    }
+  },
+  "findings": [],
+  "inconclusive": []
+}

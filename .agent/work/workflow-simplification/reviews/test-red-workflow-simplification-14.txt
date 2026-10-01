@@ -1,0 +1,17 @@
+E
+======================================================================
+ERROR: test_repository_configuration_matches_declared_full_tests (test_repository_configuration.RepositoryConfigurationTests.test_repository_configuration_matches_declared_full_tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tests/test_repository_configuration.py", line 14, in test_repository_configuration_matches_declared_full_tests
+    config = read_config(ROOT)
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tools/workflow_lib/topic_service.py", line 116, in read_config
+    return validate_config(config)
+  File "/Users/sherly/CS/wsp/ai/agent/my-matt-workflow/tools/workflow_lib/topic_service.py", line 63, in validate_config
+    raise TopicError("旧配置：请运行 workflow.py migrate --repo <路径>")
+tools.workflow_lib.topic_service.TopicError: 旧配置：请运行 workflow.py migrate --repo <路径>
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (errors=1)

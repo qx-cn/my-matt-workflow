@@ -1,0 +1,36 @@
+{
+  "content_id": "0a0398b365399f22c659e30e3b28220d64dd15ddcccf0558d6d02375195b02dd",
+  "checks": {
+    "final-state-writing": {
+      "status": "pass",
+      "reason": null
+    },
+    "reader-first-writing": {
+      "status": "pass",
+      "reason": null
+    },
+    "visual-communication": {
+      "status": "not-applicable",
+      "reason": "无复杂关系，配置示例与命令表已足够。"
+    },
+    "humanizer": {
+      "status": "pass",
+      "reason": null
+    },
+    "artifact-finalization": {
+      "status": "finding",
+      "reason": null
+    }
+  },
+  "findings": [
+    {
+      "id": "14-S1",
+      "checks": [
+        "artifact-finalization"
+      ],
+      "summary": "README使用流程误把两个对齐点写成Spec和技术方案。Spec第1节要求需求摘要/等级为第1点，standard的Spec及逐Ticket行为、依赖、测试命令和边界为第2点。违反Ticket14#A1；须更正并注明quick仅经过第1点。",
+      "severity": "P1"
+    }
+  ],
+  "inconclusive": []
+}

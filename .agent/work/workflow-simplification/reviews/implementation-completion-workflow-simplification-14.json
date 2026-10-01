@@ -1,0 +1,69 @@
+{
+  "kind": "host-managed-ticket-completion",
+  "ticket": "workflow-simplification-14",
+  "base_sha": "c04ce82686e3427ab83258a073cf7d1bae523e93",
+  "execution_agent": "codex",
+  "assurance_level": "standard",
+  "outcome": "completed",
+  "closed": true,
+  "approved_scope": [
+    "workflow-simplification-14"
+  ],
+  "scope_transition": "complete",
+  "construction_exception": "Ticket14 explicitly permits direct Spec implementation without replaced runtime; config v2 invalidates the installed legacy runtime profile contract",
+  "runtime_implementation_receipts": null,
+  "test_command": "python3 -m unittest discover -s tests",
+  "check": {
+    "status": "valid",
+    "tests": {
+      "evidence_level": "unit",
+      "status": "valid"
+    }
+  },
+  "check_exit_code": 0,
+  "tracked_files_unchanged": true,
+  "tracked_inventory_sha256": "76a11de742d15eed8416131bf207fa14ae9aabb8d685d65fe97fa2874c44a944",
+  "historical_files_unchanged": 492,
+  "reviewer_provenance": "self",
+  "review_snapshot_content_id": "3b9cb418c9acab15b33b3b009c9bf258563877dc7c9c1860b233a578866f6c4b",
+  "artifact_review_result": {
+    "checks": {
+      "artifact-finalization": {
+        "reason": null,
+        "status": "pass"
+      },
+      "final-state-writing": {
+        "reason": null,
+        "status": "pass"
+      },
+      "humanizer": {
+        "reason": null,
+        "status": "pass"
+      },
+      "reader-first-writing": {
+        "reason": null,
+        "status": "pass"
+      },
+      "visual-communication": {
+        "reason": "没有复杂状态或拓扑；配置示例和命令表降低阅读成本。",
+        "status": "not-applicable"
+      }
+    },
+    "content_id": "3b9cb418c9acab15b33b3b009c9bf258563877dc7c9c1860b233a578866f6c4b",
+    "findings": [],
+    "inconclusive": [],
+    "released": true,
+    "status": "accepted"
+  },
+  "review_rounds": 2,
+  "repair_rounds": 1,
+  "findings_resolved": [
+    "14-S1"
+  ],
+  "acceptance": [
+    "workflow-simplification-14#A1",
+    "workflow-simplification-14#A2",
+    "workflow-simplification-14#A3",
+    "workflow-simplification-14#A4"
+  ]
+}

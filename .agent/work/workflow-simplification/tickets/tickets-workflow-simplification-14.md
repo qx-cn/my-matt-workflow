@@ -7,7 +7,7 @@ spec_revision: 1
 spec_ref: ".agent/work/workflow-simplification/specs/specs-workflow-simplification.md"
 supersedes_ticket: []
 compensates: []
-status: "ready-for-agent"
+status: complete
 blocked_by: ["workflow-simplification-13"]
 claimed_by:
 tags: []
@@ -37,7 +37,7 @@ execution_agent: "auto"
 
 ## 验收标准
 
-- [ ] README 描述两个对齐点、quick/standard、新配置与实际命令；删掉长期 Spec、预设、旧审计/门禁、eval 和其他已移除功能的使用说明。
-- [ ] 维护章节明确修改工作流提交需有一行 Trigger，说明哪个项目的什么问题触发；度量证明必要前不新增门禁。
-- [ ] 本仓库配置改为 schema 2 九键，保留 local/shared/main/auto 和有效标准/领域来源；设置匹配全部 Ticket 声明的非空全量 unittest 命令，不保留预设正文。
-- [ ] 本仓库既有 work 文档及本次 Spec/Ticket 全文不转换、不归档；不操作宿主安装及其他项目迁移；最终 check 后被跟踪文件仍零变化。
+- [x] README 描述两个对齐点、quick/standard、新配置与实际命令；删掉长期 Spec、预设、旧审计/门禁、eval 和其他已移除功能的使用说明。
+- [x] 维护章节明确修改工作流提交需有一行 Trigger，说明哪个项目的什么问题触发；度量证明必要前不新增门禁。
+- [x] 本仓库配置改为 schema 2 九键，保留 local/shared/main/auto 和有效标准/领域来源；设置匹配全部 Ticket 声明的非空全量 unittest 命令，不保留预设正文。
+- [x] 本仓库既有 work 文档及本次 Spec/Ticket 全文不转换、不归档；不操作宿主安装及其他项目迁移；最终 check 后被跟踪文件仍零变化。
