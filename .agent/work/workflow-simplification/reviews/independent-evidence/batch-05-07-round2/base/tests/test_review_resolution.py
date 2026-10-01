@@ -24,40 +24,6 @@ class ResolutionTests(unittest.TestCase):
         result['coverage'][0] = dict(target='feature-01#A1', result='finding', finding_id=identifier)
         return result
 
-    def test_accept_unsubmitted_reviews_recovers_in_both_modes(self):
-        for mode in ('shared', 'private'):
-            with self.subTest(mode=mode):
-                self.setUp()
-                self.setup_config(mode, tests=("python3 -c 'pass'",))
-                ticket = self.ticket()
-                self.cli('implement', 'start', '--ticket', 'feature-01')
-                baseline = self.git('rev-parse', 'HEAD')
-                for _ in range(4):
-                    self.review()
-                self.cli('implement', 'review', '--reviewer-model', 'actual-host-model', ok=False)
-                self.assertEqual('needs-user', json.loads(self.cli('implement', 'status').stdout)['status'])
-                self.cli('resolve', '--ticket', 'feature-01', '--accept', '--reason', 'interrupted', ok=False)
-                self.assertIn('status: needs-user', ticket.read_text())
-                self.cli('implement', 'test')
-                # A failed metadata commit retains a retryable decision state.
-                git_dir = self.repo / '.agent/.git' if mode == 'private' else self.repo / '.git'
-                hook = git_dir / 'hooks/pre-commit'
-                hook.write_text('#!/bin/sh\nexit 1\n')
-                hook.chmod(0o755)
-                self.cli('resolve', '--ticket', 'feature-01', '--accept', '--reason', 'interrupted', ok=False)
-                self.assertIn('status: needs-user', ticket.read_text())
-                hook.unlink()
-                self.cli('resolve', '--ticket', 'feature-01', '--accept', '--reason', 'interrupted')
-                self.assertIn('status: complete', ticket.read_text())
-                metric = json.loads((self.repo / '.agent/metrics.jsonl').read_text().splitlines()[-1])
-                self.assertEqual(('accepted', 4, 1, None),
-                                 (metric['outcome'], metric['review_rounds'], metric['test_runs'], metric['reviewer_provenance']))
-                unit = json.loads((self.repo / '.agent/work/feature/implementations/feature-01.json').read_text())
-                self.assertEqual([], unit['known_issues'])
-                self.assertEqual(['interrupted'], [d['reason'] for d in unit['decisions']])
-                self.assertEqual('0' if mode == 'private' else '1', self.git('rev-list', '--count', baseline + '..HEAD'))
-                self.assertEqual('', self.git('status', '--porcelain', cwd=self.repo / '.agent' if mode == 'private' else self.repo))
-
     def test_four_passes_invalidate_then_fifth_stops_persistently(self):
         self.start()
         (self.repo / 'code.txt').write_text('first reviewed change')
@@ -110,19 +76,6 @@ class ResolutionTests(unittest.TestCase):
         self.cli('resolve', '--ticket', 'feature-01', '--accept', '--reason', 'approved exception')
         self.assertIn('approved exception', self.git('log', '-1', '--format=%B'))
         self.assertEqual('bug', json.loads(self.cli('topic', 'status').stdout)['known_issues'][0]['id'])
-        metric = json.loads((self.repo / '.agent/metrics.jsonl').read_text().splitlines()[-1])
-        self.assertEqual('self', metric['reviewer_provenance'])
-
-    def test_accept_preserves_submitted_independent_provenance(self):
-        self.start()
-        report = json.loads(self.cli('implement', 'review', '--reviewer-model', 'declared-model',
-                                     '--reviewer-session-id', 'different-review-session').stdout)
-        result = self.result(report, status='inconclusive')
-        result['reviewer'] = dict(provenance='independent', model='declared-model')
-        self.submit(result)
-        self.cli('resolve', '--ticket', 'feature-01', '--accept', '--reason', 'known uncertainty')
-        metric = json.loads((self.repo / '.agent/metrics.jsonl').read_text().splitlines()[-1])
-        self.assertEqual('independent', metric['reviewer_provenance'])
 
     def prepare_lines(self):
         (self.repo / 'code.txt').write_text('a\nb\nc\nd\ne\nf\n')

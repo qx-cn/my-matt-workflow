@@ -1,0 +1,72 @@
+{
+  "code_content_id": "2df35f55cd95d6b3000eef08687296da5c190db5373f7fd1df75b33ea3da6348",
+  "design_gap": null,
+  "findings": [
+    {
+      "acceptance_ids": [
+        "workflow-simplification-16#A1",
+        "workflow-simplification-16#A2",
+        "workflow-simplification-16#A3"
+      ],
+      "baseline_reachable": true,
+      "id": "batch05-07-open-review-accept",
+      "root_cause": "accept_treats_open_review_as_completed_verdict",
+      "severity": "P1",
+      "summary": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-30a78d596373-d4obhrme/154-ticket_completion.py:21 直接读取 verdict['reviewer']['provenance']，但 /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-30a78d596373-d4obhrme/157-ticket_review.py:168 与 /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-30a78d596373-d4obhrme/128-branch_review.py:200 登记的 open 轮次没有 reviewer。合法公开命令路径：start/test 后连续 review 四次未 submit，第五次 review 把对象置 needs-user；当前测试通过时 resolve --accept 经 /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-30a78d596373-d4obhrme/156-ticket_resolution.py:26-31 或 /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-30a78d596373-d4obhrme/160-topic_service.py:420 把最后一条 open 记录传给 metric，产生 KeyError: 'reviewer'（exit 1）。Ticket 在 /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-30a78d596373-d4obhrme/154-ticket_completion.py:61-66 已写成 complete，异常不在 :75 的回滚捕获集合内，故未提交、无 accepted 度量而不可再 accept；branch 也无法归档。已通过正式 base 的 frozen CLI 建立四条 open 记录后切换 final CLI，在 shared/private 两种模式复现 Ticket 问题；final 的 multi-Ticket branch 同样复现。请在写状态前处理未完成审查的合法接受路径，并保证失败回滚。"
+    }
+  ],
+  "follow_ons": [],
+  "review_id": "d54d176d9488e52ee2406538d995262f",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "9555a9cf680d4d371b3b9296b1e3180d"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-16#A1",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-16#A2",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-16#A3",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-16#A4",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py"
+        ],
+        "probe": "recovery",
+        "summary": "Public CLI interruption chain reproduced from retained frozen artifacts; compensation scope owns shared metric seam; no future owner expansion."
+      }
+    ]
+  },
+  "status": "findings"
+}

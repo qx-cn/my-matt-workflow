@@ -52,29 +52,6 @@ class BranchTests(unittest.TestCase):
         path.write_text(json.dumps(result))
         return self.cli('topic', 'review', '--submit', str(path), ok=ok)
 
-    def test_accept_unsubmitted_branch_reviews_in_both_modes(self):
-        for mode in ('shared', 'private'):
-            with self.subTest(mode=mode):
-                self.setUp()
-                baseline = self.multi(mode)
-                for _ in range(4):
-                    if _ == 0:
-                        self.cli('topic', 'test')
-                    self.branch_review()
-                self.cli('topic', 'review', '--reviewer-model', 'actual-host-model', ok=False)
-                self.assertIn('needs-user', self.cli('topic', 'status').stdout)
-                self.cli('resolve', '--branch', '--accept', '--reason', 'interrupted branch')
-                archive = self.repo / '.agent/archive/feature'
-                self.assertTrue(archive.is_dir())
-                unit = json.loads((archive / 'branch-review.json').read_text())
-                self.assertEqual('interrupted branch', unit['decisions'][-1]['reason'])
-                self.assertEqual([], unit['known_issues'])
-                metric = json.loads((self.repo / '.agent/metrics.jsonl').read_text().splitlines()[-1])
-                self.assertEqual(('accepted', 4, None), (metric['outcome'], metric['review_rounds'], metric['reviewer_provenance']))
-                self.assertIn('interrupted branch', (archive / 'deliveries/deliveries-feature-01.md').read_text())
-                self.assertEqual('2' if mode == 'private' else '3', self.git('rev-list', '--count', baseline + '..HEAD'))
-                self.assertEqual('', self.git('status', '--porcelain', cwd=self.repo / '.agent' if mode == 'private' else self.repo))
-
     def test_multi_with_branch_repair_closes_in_both_modes(self):
         for mode in ('shared', 'private'):
             with self.subTest(mode=mode):

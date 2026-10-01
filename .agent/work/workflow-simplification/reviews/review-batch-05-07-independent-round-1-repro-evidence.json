@@ -1,0 +1,543 @@
+{
+  "content_id": "30a78d5963739b3e64848e30d132bd8a0561f18569dc19419d6895bbe521bb45",
+  "commands": [
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "setup",
+        "--apply",
+        "--agent-directory-mode",
+        "shared",
+        "--test-command",
+        "python3 -c 'pass'"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "start",
+        "--ticket",
+        "feature-01"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseline\": \"7c0b370421763deb644ab18cd9e27f9d1a8b62d9\", \"briefing\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "test"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 0, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"exit_code\": 0, \"finished_at\": \"2026-10-01T00:01:44.444268+00:00\", \"output_tail\": \"\", \"progress\": false, \"run_id\": \"4299ff49213547dcac26ef64844873d4\"}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-20b68481d6b74c5aa8de5c1598ee0c37/manifest.json\", \"manifest_sha256\": \"10f197859d681152b119563bd9af024fcf7a9519126dc0f8086c3b0a222b9fc5\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/result-20b68481d6b74c5aa8de5c1598ee0c37.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-20b68481d6b74c5aa8de5c1598ee0c37\", \"unit_id\": \"20b68481d6b74c5aa8de5c1598ee0c37\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-2f3692419a7c4cdf8a737ebe4c7e6552/manifest.json\", \"manifest_sha256\": \"8d2fa4eab776086988a3a5d4226228d2db9a83e27c576889e95bfd97e3a58f59\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/result-2f3692419a7c4cdf8a737ebe4c7e6552.json\", \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-2f3692419a7c4cdf8a737ebe4c7e6552\", \"unit_id\": \"2f3692419a7c4cdf8a737ebe4c7e6552\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-4af1e94dd7874a1286304ea9a042f21d/manifest.json\", \"manifest_sha256\": \"66706894a6e91ff6ff2bfd52da5228691d12c6deff70a44fdd48bb2605b3237a\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/result-4af1e94dd7874a1286304ea9a042f21d.json\", \"round\": 3, \"rounds_remaining\": 1, \"rounds_used\": 3, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-4af1e94dd7874a1286304ea9a042f21d\", \"unit_id\": \"4af1e94dd7874a1286304ea9a042f21d\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-06b8f902cc5d4190a991cf8483b328cd/manifest.json\", \"manifest_sha256\": \"bd46251cbf4f2a26f1b2d322ae2cbd908a3b4bec72778bb8edcc181420a360ee\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/result-06b8f902cc5d4190a991cf8483b328cd.json\", \"round\": 4, \"rounds_remaining\": 0, \"rounds_used\": 4, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o/.agent/work/feature/reviews/feature-01-06b8f902cc5d4190a991cf8483b328cd\", \"unit_id\": \"06b8f902cc5d4190a991cf8483b328cd\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "轮数上限为 4；拒绝第 5 轮\n"
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseline\": \"7c0b370421763deb644ab18cd9e27f9d1a8b62d9\", \"decisions\": [], \"definition_changed\": false, \"next_command\": \"workflow.py resolve --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2ud15k9o --ticket feature-01 --accept --reason '<理由>'\", \"rounds_used\": 4, \"status\": \"needs-user\", \"stop_reason\": \"轮数耗尽：4 轮后没有当前有效通过记录\", \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-shared",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "resolve",
+        "--ticket",
+        "feature-01",
+        "--accept",
+        "--reason",
+        "accept interrupted review"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1556, in <module>\n    main()\n    ~~~~^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1552, in main\n    args.func(args)\n    ~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1093, in command_resolve\n    report = ticket_resolution.resolve(Path(args.repo), args.ticket, args.topic, args.accept, args.reason)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_resolution.py\", line 31, in resolve\n    return completion.commit_completion(repo, config, topic, path, unit, record, latest, notes, 'accepted')\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_completion.py\", line 66, in commit_completion\n    stream.write(json.dumps(metric(unit, outcome, verdict), ensure_ascii=False) + '\\n')\n                            ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_completion.py\", line 21, in metric\n    'reviewer_provenance': verdict['reviewer']['provenance'], 'tests_configured': True}\n                           ~~~~~~~^^^^^^^^^^^^\nKeyError: 'reviewer'\n"
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "setup",
+        "--apply",
+        "--agent-directory-mode",
+        "private",
+        "--test-command",
+        "python3 -c 'pass'"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"agent_directory\": {\"mode\": \"private\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"private\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "start",
+        "--ticket",
+        "feature-01"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseline\": \"48fcdd106465c34dbc4c4b38606615a2107d03b7\", \"briefing\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "test"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 0, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"exit_code\": 0, \"finished_at\": \"2026-10-01T00:01:46.692828+00:00\", \"output_tail\": \"\", \"progress\": false, \"run_id\": \"777be3e5b1d94b1a93c4bf9e7472c66c\"}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"private\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-f874442f38be4d8496e3b08654cc6914/manifest.json\", \"manifest_sha256\": \"3e4ff94aa62b42bcc581046560742914709f34305d5cab4eb87c45cb17b911fb\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/result-f874442f38be4d8496e3b08654cc6914.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-f874442f38be4d8496e3b08654cc6914\", \"unit_id\": \"f874442f38be4d8496e3b08654cc6914\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"private\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-1ab46640583745d6a0642671b341903a/manifest.json\", \"manifest_sha256\": \"2ce263d9602883538bf9b2cffd7921fe3220bdb9eab6c8668de766aa8588f223\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/result-1ab46640583745d6a0642671b341903a.json\", \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-1ab46640583745d6a0642671b341903a\", \"unit_id\": \"1ab46640583745d6a0642671b341903a\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"private\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-c889034ba43343ebab8a65fb73807e87/manifest.json\", \"manifest_sha256\": \"064864fff30fcc0df3dd435586c93f9f45b8daa2b5e2ee0715f8b20d87b50bb8\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/result-c889034ba43343ebab8a65fb73807e87.json\", \"round\": 3, \"rounds_remaining\": 1, \"rounds_used\": 3, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-c889034ba43343ebab8a65fb73807e87\", \"unit_id\": \"c889034ba43343ebab8a65fb73807e87\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/base/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"private\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'pass'\"]}, \"content_id\": \"661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-a83a63efca294ed19cbc68b3fa4a8d9d/manifest.json\", \"manifest_sha256\": \"7b7c36e2a94977fae7a80d8880998f1e300cecec6c82413cd695e26cf6835e40\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/result-a83a63efca294ed19cbc68b3fa4a8d9d.json\", \"round\": 4, \"rounds_remaining\": 0, \"rounds_used\": 4, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq/.agent/work/feature/reviews/feature-01-a83a63efca294ed19cbc68b3fa4a8d9d\", \"unit_id\": \"a83a63efca294ed19cbc68b3fa4a8d9d\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "轮数上限为 4；拒绝第 5 轮\n"
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseline\": \"48fcdd106465c34dbc4c4b38606615a2107d03b7\", \"decisions\": [], \"definition_changed\": false, \"next_command\": \"workflow.py resolve --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbet509jq --ticket feature-01 --accept --reason '<理由>'\", \"rounds_used\": 4, \"status\": \"needs-user\", \"stop_reason\": \"轮数耗尽：4 轮后没有当前有效通过记录\", \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "formal-base-to-final-ticket-private",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "resolve",
+        "--ticket",
+        "feature-01",
+        "--accept",
+        "--reason",
+        "accept interrupted review"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1556, in <module>\n    main()\n    ~~~~^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1552, in main\n    args.func(args)\n    ~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1093, in command_resolve\n    report = ticket_resolution.resolve(Path(args.repo), args.ticket, args.topic, args.accept, args.reason)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_resolution.py\", line 31, in resolve\n    return completion.commit_completion(repo, config, topic, path, unit, record, latest, notes, 'accepted')\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_completion.py\", line 66, in commit_completion\n    stream.write(json.dumps(metric(unit, outcome, verdict), ensure_ascii=False) + '\\n')\n                            ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_completion.py\", line 21, in metric\n    'reviewer_provenance': verdict['reviewer']['provenance'], 'tests_configured': True}\n                           ~~~~~~~^^^^^^^^^^^^\nKeyError: 'reviewer'\n"
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "setup",
+        "--apply",
+        "--agent-directory-mode",
+        "shared",
+        "--test-command",
+        "python3 -c 'print(\"full test\")'",
+        "--test-command",
+        "python3 -c *",
+        "--test-command",
+        "python3 -c 'pass'"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "start",
+        "--ticket",
+        "feature-01"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseline\": \"441a03f1b49072cc2893e8ced11188cc943a6106\", \"briefing\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "test"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 0, \"content_id\": \"496583683846e98cfe42fcb1e664470fd4aff962452ba6ad5dd9b40a75528ab0\", \"exit_code\": 0, \"finished_at\": \"2026-10-01T00:01:48.963139+00:00\", \"output_tail\": \"\", \"progress\": false, \"run_id\": \"8b37ccacb2324d10aa5c6f005c017bae\"}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"content_id\": \"496583683846e98cfe42fcb1e664470fd4aff962452ba6ad5dd9b40a75528ab0\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [{\"acceptance\": [{\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"id\": \"feature-02\"}], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/feature-01-3f611782a7ee419da3dd65ec9bed456d/manifest.json\", \"manifest_sha256\": \"1008e44053d96685f0f5dde033cfa2dae51d5a679ea07058f7034d9d36443b28\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/result-3f611782a7ee419da3dd65ec9bed456d.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/feature-01-3f611782a7ee419da3dd65ec9bed456d\", \"unit_id\": \"3f611782a7ee419da3dd65ec9bed456d\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--ticket",
+        "feature-01",
+        "--submit",
+        "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/result.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"content_id\": \"496583683846e98cfe42fcb1e664470fd4aff962452ba6ad5dd9b40a75528ab0\", \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/feature-01-3f611782a7ee419da3dd65ec9bed456d/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"content_id\": \"496583683846e98cfe42fcb1e664470fd4aff962452ba6ad5dd9b40a75528ab0\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [{\"acceptance\": [{\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"id\": \"feature-02\"}], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"actual-host-model\", \"provenance\": \"self\"}, \"round\": 1, \"status\": \"pass\", \"unit_id\": \"3f611782a7ee419da3dd65ec9bed456d\"}, \"reviewer\": {\"model\": \"actual-host-model\", \"provenance\": \"self\"}, \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"status\": \"pass\", \"unit_id\": \"3f611782a7ee419da3dd65ec9bed456d\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "finish"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"commit\": \"7c0dae9fd878fc1d8a623b4644fb6ab300b8b41e\", \"next_command\": \"workflow.py implement start --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb --ticket feature-02\", \"status\": \"complete\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "start",
+        "--ticket",
+        "feature-02"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseline\": \"7c0dae9fd878fc1d8a623b4644fb6ab300b8b41e\", \"briefing\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/briefings/briefing-feature-02.md\", \"ticket\": \"feature-02\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "test"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 0, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"exit_code\": 0, \"finished_at\": \"2026-10-01T00:01:50.133442+00:00\", \"output_tail\": \"\", \"progress\": false, \"run_id\": \"14f074957136415d9524433656547bd4\"}], \"tests_passed\": true, \"ticket\": \"feature-02\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"definition\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [\"feature-01\"], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-02\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"2\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/feature-02-f28a6a470da0430aa6f60e1900a52ed5/manifest.json\", \"manifest_sha256\": \"d9344b366936dc4bb38a98ceaf714cb1cfcec3bd4c943fa46e76e61994722c86\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/result-f28a6a470da0430aa6f60e1900a52ed5.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/feature-02-f28a6a470da0430aa6f60e1900a52ed5\", \"unit_id\": \"f28a6a470da0430aa6f60e1900a52ed5\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "review",
+        "--submit",
+        "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/result.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/feature-02-f28a6a470da0430aa6f60e1900a52ed5/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-02#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"actual-host-model\", \"provenance\": \"self\"}, \"round\": 1, \"status\": \"pass\", \"unit_id\": \"f28a6a470da0430aa6f60e1900a52ed5\"}, \"reviewer\": {\"model\": \"actual-host-model\", \"provenance\": \"self\"}, \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"status\": \"pass\", \"unit_id\": \"f28a6a470da0430aa6f60e1900a52ed5\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "implement",
+        "finish"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"commit\": \"90e0fa6576aee6f11f44d2c07a8b056668e8de57\", \"next_command\": \"workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb --topic feature\", \"status\": \"complete\", \"ticket\": \"feature-02\", \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "topic",
+        "test"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"tests\": [{\"argv\": [\"python3\", \"-c\", \"print(\\\"full test\\\")\"], \"command_index\": 0, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"exit_code\": 0, \"finished_at\": \"2026-10-01T00:01:51.063646+00:00\", \"output_tail\": \"full test\\n\", \"progress\": false, \"run_id\": \"0ef479b9dc314b19a6046b3a2f1f58c7\"}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 1, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"exit_code\": 0, \"finished_at\": \"2026-10-01T00:01:51.099612+00:00\", \"output_tail\": \"\", \"progress\": false, \"run_id\": \"0ef479b9dc314b19a6046b3a2f1f58c7\"}], \"tests_passed\": true, \"topic\": \"feature\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "topic",
+        "review",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}, {\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"feature-02\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [\"feature-01\"], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-02\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"2\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-2cb2ee16978343f199edca666fa1b865/manifest.json\", \"manifest_sha256\": \"d05bdf15efa6b87346e5ec52edb7ff7d6fd50786298ee2c929f332781940dc92\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/result-2cb2ee16978343f199edca666fa1b865.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-2cb2ee16978343f199edca666fa1b865\", \"unit_id\": \"2cb2ee16978343f199edca666fa1b865\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "topic",
+        "review",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}, {\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"feature-02\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [\"feature-01\"], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-02\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"2\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-eb270d8337ea4be88ba43948b679b3b6/manifest.json\", \"manifest_sha256\": \"93d4ea8ca8250961646fd326508e1d40ee08a0110e2151a0628f3c20406aff38\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/result-eb270d8337ea4be88ba43948b679b3b6.json\", \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-eb270d8337ea4be88ba43948b679b3b6\", \"unit_id\": \"eb270d8337ea4be88ba43948b679b3b6\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "topic",
+        "review",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}, {\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"feature-02\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [\"feature-01\"], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-02\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"2\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-08c8ca85ccb545088dc0e3ccf321117e/manifest.json\", \"manifest_sha256\": \"674adff8fa4577a8d221d275d15605e1f025472db808c089f0797a8dfa4cc70b\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/result-08c8ca85ccb545088dc0e3ccf321117e.json\", \"round\": 3, \"rounds_remaining\": 1, \"rounds_used\": 3, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-08c8ca85ccb545088dc0e3ccf321117e\", \"unit_id\": \"08c8ca85ccb545088dc0e3ccf321117e\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "topic",
+        "review",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}, {\"id\": \"feature-02#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -c 'print(\\\"full test\\\")'\", \"python3 -c *\", \"python3 -c 'pass'\"]}, \"content_id\": \"69f92f9fb6a5188efd1ea1f2393f899f0dd3440aab94f5f657689d7e7cbabbff\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}, \"feature-02\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [\"feature-01\"], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-02\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"2\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-458c211710da4e54b92b5947abbb3bdf/manifest.json\", \"manifest_sha256\": \"2718b899ac4d9b82ac28913494f4727405f6cf50ce1e19576bec30ba09adab86\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/result-458c211710da4e54b92b5947abbb3bdf.json\", \"round\": 4, \"rounds_remaining\": 0, \"rounds_used\": 4, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpctya42gb/.agent/work/feature/reviews/branch-458c211710da4e54b92b5947abbb3bdf\", \"unit_id\": \"458c211710da4e54b92b5947abbb3bdf\"}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "topic",
+        "review",
+        "--reviewer-model",
+        "actual-host-model"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "轮数上限为 4；拒绝第 5 轮\n"
+    },
+    {
+      "scenario": "final-open-branch",
+      "runtime": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py",
+      "args": [
+        "resolve",
+        "--branch",
+        "--accept",
+        "--reason",
+        "accept interrupted review"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1556, in <module>\n    main()\n    ~~~~^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1552, in main\n    args.func(args)\n    ~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow.py\", line 1091, in command_resolve\n    report = branch_review.resolve(Path(args.repo), args.topic, args.accept, args.reason)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/branch_review.py\", line 215, in resolve\n    return topics.complete(repo,topic,accepted_reason=reason,known_issues=known)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/topic_service.py\", line 420, in complete\n    counts = metric({**branch_unit, 'ticket': None, 'tests': test_unit['tests']}, record['outcome'], branch_unit['reviews'][-1])\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/batch057-independent-repro-ythlb7le/final/tools/workflow_lib/ticket_completion.py\", line 21, in metric\n    'reviewer_provenance': verdict['reviewer']['provenance'], 'tests_configured': True}\n                           ~~~~~~~^^^^^^^^^^^^\nKeyError: 'reviewer'\n"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "formal-base-to-final-ticket-shared",
+      "accept_exit_code": 1,
+      "ticket_status": "complete",
+      "metrics": "",
+      "agent_dirty": "?? .agent/"
+    },
+    {
+      "name": "formal-base-to-final-ticket-private",
+      "accept_exit_code": 1,
+      "ticket_status": "complete",
+      "metrics": "",
+      "agent_dirty": "?? matt-workflow.md\n?? metrics.jsonl\n?? work/"
+    },
+    {
+      "name": "final-open-branch",
+      "accept_exit_code": 1,
+      "topic_still_active": true,
+      "archived": false
+    }
+  ],
+  "driver_exit_code": 0
+}

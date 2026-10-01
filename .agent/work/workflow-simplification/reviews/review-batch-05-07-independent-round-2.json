@@ -1,0 +1,13 @@
+{
+  "review_id": "9e6bb53d1e4f4b0387a471ed63bcfddd",
+  "status": "pass",
+  "code_content_id": "6448d6ae5092bea8b8070fd11e072b48740ba6033dee3ec5bc01ef851e0c3cdd",
+  "reviewer_provenance": {
+    "kind": "independent_session",
+    "session_id": "batch05-07-independent-round2"
+  },
+  "findings": [],
+  "follow_ons": [],
+  "design_gap": null,
+  "self_review_coverage": null
+}

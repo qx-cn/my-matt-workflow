@@ -1,0 +1,64 @@
+{
+  "code_content_id": "67b82f9cccc69e8ab952edd7012b59740f82fcedf9d6026f9157ea1b28551cec",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [],
+  "review_id": "cb005a3121d5c5f246ac9df995e152a3",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "9555a9cf680d4d371b3b9296b1e3180d"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "workflow-simplification-16#A1",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "test:54d0ce8943d6bc08d123abc6e5c544f82792c33c86ec251e9cbf88b509b73770"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-16#A2",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "test:54d0ce8943d6bc08d123abc6e5c544f82792c33c86ec251e9cbf88b509b73770"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-16#A3",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "test:54d0ce8943d6bc08d123abc6e5c544f82792c33c86ec251e9cbf88b509b73770"
+        ]
+      },
+      {
+        "acceptance_id": "workflow-simplification-16#A4",
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "test:54d0ce8943d6bc08d123abc6e5c544f82792c33c86ec251e9cbf88b509b73770"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "evidence_refs": [
+          "snapshot:tests/test_review_resolution.py",
+          "snapshot:tests/test_topic_branch.py",
+          "snapshot:tools/workflow_lib/ticket_completion.py",
+          "test:54d0ce8943d6bc08d123abc6e5c544f82792c33c86ec251e9cbf88b509b73770"
+        ],
+        "probe": "recovery",
+        "summary": "Code then Spec review on frozen diff: public CLI shared/private interruption acceptance, failed Git commit rollback/retry, real unknown provenance and unchanged test/pass gates; full declared suite exit 0. Future owners 08–14 are unchanged."
+      }
+    ]
+  },
+  "status": "pass"
+}

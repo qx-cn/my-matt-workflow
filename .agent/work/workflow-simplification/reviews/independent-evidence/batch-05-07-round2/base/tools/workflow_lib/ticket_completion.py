@@ -18,9 +18,7 @@ def metric(unit, outcome, verdict):
             'findings': {s: sum(f.get('severity') == s for f in findings) for s in ('blocking', 'advisory')},
             'repair_rounds': sum(bool(r.get('repair')) for r in unit.get('reviews', [])),
             'needs_user_count': unit.get('needs_user_count', 0), 'command_errors': None,
-            # Opening a review consumes a round even if no verdict comes back.
-            # Accepting after that interruption must not invent a reviewer result.
-            'reviewer_provenance': verdict.get('reviewer', {}).get('provenance'), 'tests_configured': True}
+            'reviewer_provenance': verdict['reviewer']['provenance'], 'tests_configured': True}
 
 
 def finish(repo, ticket=None, topic=None, notes_file=None):
@@ -49,7 +47,6 @@ def commit_completion(repo, config, topic, path, unit, record, verdict, notes, o
     dirty = topics.content_dirty(repo)
     if dirty and unit.get('commit'):
         raise topics.TopicError('Ticket 已做代码提交；新增内容请另建 Ticket')
-    completion_metric = metric(unit, outcome, verdict)
     message = f"{unit['ticket']}: {value['title']}" + ('\n\n' + notes if notes.strip() else '')
     # In private mode retain the successful code commit before metadata commit.
     # A metadata hook failure may retry without producing another code commit.
@@ -66,7 +63,7 @@ def commit_completion(repo, config, topic, path, unit, record, verdict, notes, o
         unit['outcome'] = outcome
         impl.write_json(record, unit)
         with metrics.open('a') as stream:
-            stream.write(json.dumps(completion_metric, ensure_ascii=False) + '\n')
+            stream.write(json.dumps(metric(unit, outcome, verdict), ensure_ascii=False) + '\n')
         if private:
             topics.git(repo / '.agent', 'add', '--force', '--all', '--', '.')
             topics.git(repo / '.agent', 'commit', '-m', message)
