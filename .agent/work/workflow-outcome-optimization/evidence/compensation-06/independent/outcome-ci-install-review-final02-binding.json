@@ -1,0 +1,104 @@
+{
+  "at": "2026-10-02T16:16:17.663530+00:00",
+  "snapshots": [
+    {
+      "root": "/tmp/outcome-ci-install-final-01",
+      "manifest_sha256": "00f4a151d8bdbb1280734ec1a0748d0561ffc7b63d4a6257d4e32aeeae060c55",
+      "expected_manifest_sha256": "00f4a151d8bdbb1280734ec1a0748d0561ffc7b63d4a6257d4e32aeeae060c55",
+      "files": 285,
+      "mismatches": []
+    },
+    {
+      "root": "/tmp/outcome-ci-install-final-02",
+      "manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+      "expected_manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+      "files": 285,
+      "mismatches": []
+    }
+  ],
+  "changed": [
+    "tests/test_migration.py"
+  ],
+  "added": [],
+  "removed": [],
+  "unchanged_original_review_files": [
+    {
+      "path": "tools/workflow_lib/evidence.py",
+      "sha256": "73d08b8d7d7d0f5fda9035df9182bd1db7827c97899c6ba5314d02a616ac265b"
+    },
+    {
+      "path": "tools/workflow_lib/batches.py",
+      "sha256": "4b5037b2c4db17a17923f2b7cb26c3c7e2cada9b5423bd2a15f21603ec928aaf"
+    },
+    {
+      "path": "tools/workflow_lib/validator.py",
+      "sha256": "12dfbca5041ecf9a15fcbfba029186109659085935015cf0135617e89733089d"
+    },
+    {
+      "path": "tests/test_loader_report_compatibility.py",
+      "sha256": "28f49073c15c3e535991363c47e62ad4be26e96cdf9421f8eadcdadb5538ff1b"
+    },
+    {
+      "path": "tests/test_validator_markdown_scope.py",
+      "sha256": "dc71ec2bf6470fd669bbfb59a4af12d222f3d73d15ec3015d834c69051811099"
+    }
+  ],
+  "original_report": {
+    "path": "/tmp/outcome-ci-install-review-final.md",
+    "sha256": "4d4b94a893a13dbcebbf2a402418bff96cd3f4d1affbe120cc6792ecbbb1a792"
+  },
+  "scope": "Binding and test fixture only; original 7+2 group conclusions transfer only for identical reviewed files",
+  "fixture_review": {
+    "scope": "tests/test_migration.py:setUp only",
+    "clone": [
+      "git",
+      "-c",
+      "gc.auto=0",
+      "-c",
+      "maintenance.auto=false",
+      "clone",
+      "-q"
+    ],
+    "post_clone_local_config": [
+      [
+        "gc.auto",
+        "0"
+      ],
+      [
+        "maintenance.auto",
+        "false"
+      ]
+    ],
+    "clone_failure_propagation": "subprocess.run(check=True) unchanged",
+    "config_failure_propagation": "self.git uses subprocess.check_output; failures propagate",
+    "cleanup": "TemporaryDirectory and self.addCleanup(self.tmp.cleanup) unchanged",
+    "assertions": "all test methods unchanged",
+    "failure_suppression_added": false,
+    "production_changes": false,
+    "independent_tests_run": false
+  },
+  "verdict": "Binding and fixture supplemental review passed; no blocking finding",
+  "ending_verification": [
+    {
+      "root": "/tmp/outcome-ci-install-final-01",
+      "at": "2026-10-02T16:17:10.937628+00:00",
+      "manifest_sha256": "00f4a151d8bdbb1280734ec1a0748d0561ffc7b63d4a6257d4e32aeeae060c55",
+      "files": 285,
+      "mismatches": []
+    },
+    {
+      "root": "/tmp/outcome-ci-install-final-02",
+      "at": "2026-10-02T16:17:10.969209+00:00",
+      "manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+      "files": 285,
+      "mismatches": []
+    }
+  ],
+  "evidence_limits": {
+    "original_cleanup_Errno66": "Not independently reproduced in this supplemental review; no race stress or migration rerun",
+    "author_trace2": "User-provided evidence only; not independently rerun",
+    "guarantee": "No guarantee that all filesystem races have been eliminated",
+    "full_suite": "Root final deploy owns complete suite verification"
+  },
+  "original_report_unchanged": true
+}

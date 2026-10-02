@@ -1,0 +1,1557 @@
+{
+  "identity_predicate": {
+    "valid": [
+      "missing (unittest.loader._FailedTest)",
+      "missing (unittest.loader._FailedTest.missing)"
+    ],
+    "invalid": [
+      "unittest.loader._FailedTest",
+      "missing (fake.unittest.loader._FailedTest)",
+      "missing (unittest.loader._FailedTestish)",
+      "missing (unittest.loader._FailedTest.missing) garbage",
+      "missing (unittest.loader._FailedTest",
+      "missing (unittest.loader._FailedTest.)",
+      "missing (unittest.loader._FailedTest.foo bar)",
+      "missing (unittest.loader._FailedTest.missing)\nextra",
+      "test_unittest.loader._FailedTest.name (real.Behavior.test_case)"
+    ],
+    "checks": {
+      "anchored_exact_class": true
+    },
+    "passed": true,
+    "process_runs": []
+  },
+  "real_python39_all": {
+    "baseline": {
+      "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest)"
+      ],
+      "execution_observed": false,
+      "comparison_eligible": false,
+      "output_tail": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1032,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest)": "0e4f993011d87e3bafd6d047bc5735ee33f0cd9d8e36081bbe7ea2369e3f1238"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same": {
+      "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest)"
+      ],
+      "execution_observed": false,
+      "comparison_eligible": false,
+      "output_tail": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1032,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest)": "0e4f993011d87e3bafd6d047bc5735ee33f0cd9d8e36081bbe7ea2369e3f1238"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same_comparison": {
+      "new_failures": [],
+      "known_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "failure": "test_missing (unittest.loader._FailedTest)"
+        }
+      ],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "variants": {
+      "changed_dependency": {
+        "receipt": {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest)"
+          ],
+          "execution_observed": false,
+          "comparison_eligible": false,
+          "output_tail": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1032,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest)": "650c328ec00013fe275ec3f4853ebd0b49ec562f82d48cf9318ebd88217dc102"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "failure": "test_missing (unittest.loader._FailedTest)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite"
+          ]
+        }
+      },
+      "changed_stack": {
+        "receipt": {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest)"
+          ],
+          "execution_observed": false,
+          "comparison_eligible": false,
+          "output_tail": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\", line 127, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1247,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest)": "6c42878293fa8101c02e4d22454685d39b54b63e5c72aea93193dcfdd623c904"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "failure": "test_missing (unittest.loader._FailedTest)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite"
+          ]
+        }
+      },
+      "assertion": {
+        "receipt": {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest)"
+          ],
+          "execution_observed": false,
+          "comparison_eligible": false,
+          "output_tail": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1022,
+          "loader_dependency_fingerprints": {},
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "failure": "test_missing (unittest.loader._FailedTest)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite"
+          ]
+        }
+      }
+    },
+    "v3_misclassification_fixture": {
+      "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1032,
+      "loader_dependency_fingerprints": {},
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "v3_stale_comparison": {
+      "new_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "failure": "test_missing (unittest.loader._FailedTest)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "v3_assertion_comparison": {
+      "new_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "failure": "test_missing (unittest.loader._FailedTest)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "checks": {
+      "real_reports": true,
+      "changed_blocked": true,
+      "v3_empty_fingerprint_blocked": true
+    },
+    "passed": true,
+    "process_runs": [
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\", line 127, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmphgxe5wxo/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      }
+    ]
+  },
+  "real_python39_partial_verbose": {
+    "baseline": {
+      "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1127,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest)": "0d69ce6fc852638b3c27f8428c5f121f9c00008307ef486ba75279352d7cd074"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same": {
+      "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1127,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest)": "0d69ce6fc852638b3c27f8428c5f121f9c00008307ef486ba75279352d7cd074"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same_comparison": {
+      "new_failures": [],
+      "known_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+          "failure": "test_missing (unittest.loader._FailedTest)"
+        }
+      ],
+      "unverified": []
+    },
+    "variants": {
+      "changed_dependency": {
+        "receipt": {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite",
+            "-v"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest)"
+          ],
+          "execution_observed": true,
+          "comparison_eligible": true,
+          "output_tail": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1127,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest)": "61f464230a02db9d6aa1bcdb227e67c63beb013ac6a7203317e19673668b2974"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+              "failure": "test_missing (unittest.loader._FailedTest)",
+              "comparison": "loader-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite -v"
+          ]
+        }
+      },
+      "changed_stack": {
+        "receipt": {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite",
+            "-v"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest)"
+          ],
+          "execution_observed": true,
+          "comparison_eligible": true,
+          "output_tail": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\", line 127, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1342,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest)": "1daaa1ff44c34372f8771007eb29b234d1187c5d2b47cfc7c1c4a638d56dc8e0"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+              "failure": "test_missing (unittest.loader._FailedTest)",
+              "comparison": "loader-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite -v"
+          ]
+        }
+      },
+      "assertion": {
+        "receipt": {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite",
+            "-v"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest)"
+          ],
+          "execution_observed": true,
+          "comparison_eligible": true,
+          "output_tail": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1117,
+          "loader_dependency_fingerprints": {},
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+              "failure": "test_missing (unittest.loader._FailedTest)",
+              "comparison": "loader-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite -v"
+          ]
+        }
+      }
+    },
+    "v3_misclassification_fixture": {
+      "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1127,
+      "loader_dependency_fingerprints": {},
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "v3_stale_comparison": {
+      "new_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+          "failure": "test_missing (unittest.loader._FailedTest)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite -v"
+      ]
+    },
+    "v3_assertion_comparison": {
+      "new_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite -v",
+          "failure": "test_missing (unittest.loader._FailedTest)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite -v"
+      ]
+    },
+    "checks": {
+      "real_reports": true,
+      "changed_blocked": true,
+      "v3_empty_fingerprint_blocked": true
+    },
+    "passed": true,
+    "process_runs": [
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\", line 127, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest) ... ERROR\ntest_ok (test_real.ActualBehavior) ... ok\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpbnuqu5gx/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      }
+    ]
+  },
+  "real_python314_all_verbose": {
+    "baseline": {
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest.test_missing)"
+      ],
+      "execution_observed": false,
+      "comparison_eligible": false,
+      "output_tail": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1125,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest.test_missing)": "dc7435863b09840f7020825842e4bb344e4496cdbe590549e48931e01cb14037"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same": {
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest.test_missing)"
+      ],
+      "execution_observed": false,
+      "comparison_eligible": false,
+      "output_tail": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1125,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest.test_missing)": "dc7435863b09840f7020825842e4bb344e4496cdbe590549e48931e01cb14037"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same_comparison": {
+      "new_failures": [],
+      "known_failures": [
+        {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+          "failure": "test_missing (unittest.loader._FailedTest.test_missing)"
+        }
+      ],
+      "unverified": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v"
+      ]
+    },
+    "variants": {
+      "changed_dependency": {
+        "receipt": {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite",
+            "-v"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest.test_missing)"
+          ],
+          "execution_observed": false,
+          "comparison_eligible": false,
+          "output_tail": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1125,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest.test_missing)": "8738787f634af5bbaa4b7604ed18ba14ef7fe2bf2009720daee5a46dc1bd1ce8"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+              "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v"
+          ]
+        }
+      },
+      "changed_stack": {
+        "receipt": {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite",
+            "-v"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest.test_missing)"
+          ],
+          "execution_observed": false,
+          "comparison_eligible": false,
+          "output_tail": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1440,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest.test_missing)": "644fa81132df77b728bfba91be28441ef3732c5c139050b170bb7540f061f47e"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+              "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v"
+          ]
+        }
+      },
+      "assertion": {
+        "receipt": {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite",
+            "-v"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest.test_missing)"
+          ],
+          "execution_observed": false,
+          "comparison_eligible": false,
+          "output_tail": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\n           ^^^^^\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1132,
+          "loader_dependency_fingerprints": {},
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+              "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v"
+          ]
+        }
+      }
+    },
+    "v3_misclassification_fixture": {
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest.test_missing)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1125,
+      "loader_dependency_fingerprints": {},
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "v3_stale_comparison": {
+      "new_failures": [
+        {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+          "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v"
+      ]
+    },
+    "v3_assertion_comparison": {
+      "new_failures": [
+        {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v",
+          "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite -v"
+      ]
+    },
+    "checks": {
+      "real_reports": true,
+      "changed_blocked": true,
+      "v3_empty_fingerprint_blocked": true
+    },
+    "passed": true,
+    "process_runs": [
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test_missing (unittest.loader._FailedTest.test_missing) ... ERROR\n\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpql3w2kjn/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\n           ^^^^^\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      }
+    ]
+  },
+  "real_python314_partial": {
+    "baseline": {
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest.test_missing)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1062,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest.test_missing)": "38bc829e4b55c78aaecc3ee60c73b14dd9e821f31a3d94d16605e8449747b450"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same": {
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest.test_missing)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1062,
+      "loader_dependency_fingerprints": {
+        "test_missing (unittest.loader._FailedTest.test_missing)": "38bc829e4b55c78aaecc3ee60c73b14dd9e821f31a3d94d16605e8449747b450"
+      },
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "same_comparison": {
+      "new_failures": [],
+      "known_failures": [
+        {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+          "failure": "test_missing (unittest.loader._FailedTest.test_missing)"
+        }
+      ],
+      "unverified": []
+    },
+    "variants": {
+      "changed_dependency": {
+        "receipt": {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest.test_missing)"
+          ],
+          "execution_observed": true,
+          "comparison_eligible": true,
+          "output_tail": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1062,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest.test_missing)": "d8137856aef350fed138c0ac523f52083e823a0315ce0eb12381d7d79ca578d1"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+              "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+              "comparison": "loader-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite"
+          ]
+        }
+      },
+      "changed_stack": {
+        "receipt": {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest.test_missing)"
+          ],
+          "execution_observed": true,
+          "comparison_eligible": true,
+          "output_tail": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1377,
+          "loader_dependency_fingerprints": {
+            "test_missing (unittest.loader._FailedTest.test_missing)": "60409528d52a45c499a51d12935f75fc07d854587d8b1e6bece783e116a55736"
+          },
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+              "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+              "comparison": "loader-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite"
+          ]
+        }
+      },
+      "assertion": {
+        "receipt": {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "failures": [
+            "test_missing (unittest.loader._FailedTest.test_missing)"
+          ],
+          "execution_observed": true,
+          "comparison_eligible": true,
+          "output_tail": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\n           ^^^^^\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+          "output_complete": true,
+          "output_length": 1069,
+          "loader_dependency_fingerprints": {},
+          "dependency_proof_version": 3,
+          "unavailable": false
+        },
+        "comparison": {
+          "new_failures": [
+            {
+              "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+              "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+              "comparison": "loader-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite"
+          ]
+        }
+      }
+    },
+    "v3_misclassification_fixture": {
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite"
+      ],
+      "exit_code": 1,
+      "failures": [
+        "test_missing (unittest.loader._FailedTest.test_missing)"
+      ],
+      "execution_observed": true,
+      "comparison_eligible": true,
+      "output_tail": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n",
+      "output_complete": true,
+      "output_length": 1062,
+      "loader_dependency_fingerprints": {},
+      "dependency_proof_version": 3,
+      "unavailable": false
+    },
+    "v3_stale_comparison": {
+      "new_failures": [
+        {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+          "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite"
+      ]
+    },
+    "v3_assertion_comparison": {
+      "new_failures": [
+        {
+          "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite",
+          "failure": "test_missing (unittest.loader._FailedTest.test_missing)",
+          "comparison": "loader-identity-unverifiable"
+        }
+      ],
+      "known_failures": [],
+      "unverified": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14 -B -m unittest discover -s suite"
+      ]
+    },
+    "checks": {
+      "real_reports": true,
+      "changed_blocked": true,
+      "v3_empty_fingerprint_blocked": true
+    },
+    "passed": true,
+    "process_runs": [
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    import outcome_ci_review_changed_dependency\nModuleNotFoundError: No module named 'outcome_ci_review_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 4, in <module>\n    importlib.import_module(selected())\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'outcome_ci_review_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E.\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmp78sj08/suite/test_missing.py\", line 1, in <module>\n    assert False, 'actual module initialization assertion'\n           ^^^^^\nAssertionError: actual module initialization assertion\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (errors=1)\n"
+      }
+    ]
+  },
+  "strict_duplicate_truncated": {
+    "grammar_fixture_from_real_report": {
+      "missing (unittest.loader._FailedTest)": {
+        "complete": "E\n======================================================================\nERROR: missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 137, in loadTestsFromName\n    module = __import__(module_name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpi60vj8g7/test_missing.py\", line 1, in <module>\n    import outcome_ci_strict_missing\nModuleNotFoundError: No module named 'outcome_ci_strict_missing'\n\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nFAILED (errors=1)\n",
+        "duplicate": "EE\n======================================================================\nERROR: missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 137, in loadTestsFromName\n    module = __import__(module_name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpi60vj8g7/test_missing.py\", line 1, in <module>\n    import outcome_ci_strict_missing\nModuleNotFoundError: No module named 'outcome_ci_strict_missing'\n\n\n======================================================================\nERROR: missing (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: missing\nTraceback (most recent call last):\n  File \"behavior.py\", line 1, in <module>\n    assert False\nAssertionError: actual duplicate business failure\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (errors=2)\n",
+        "truncated_comparison": {
+          "new_failures": [
+            {
+              "command": "runner",
+              "failure": "missing (unittest.loader._FailedTest)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "runner"
+          ]
+        }
+      },
+      "missing (unittest.loader._FailedTest.missing)": {
+        "complete": "E\n======================================================================\nERROR: missing (unittest.loader._FailedTest.missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 137, in loadTestsFromName\n    module = __import__(module_name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpi60vj8g7/test_missing.py\", line 1, in <module>\n    import outcome_ci_strict_missing\nModuleNotFoundError: No module named 'outcome_ci_strict_missing'\n\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nFAILED (errors=1)\n",
+        "duplicate": "EE\n======================================================================\nERROR: missing (unittest.loader._FailedTest.missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 137, in loadTestsFromName\n    module = __import__(module_name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpi60vj8g7/test_missing.py\", line 1, in <module>\n    import outcome_ci_strict_missing\nModuleNotFoundError: No module named 'outcome_ci_strict_missing'\n\n\n======================================================================\nERROR: missing (unittest.loader._FailedTest.missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: missing\nTraceback (most recent call last):\n  File \"behavior.py\", line 1, in <module>\n    assert False\nAssertionError: actual duplicate business failure\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (errors=2)\n",
+        "truncated_comparison": {
+          "new_failures": [
+            {
+              "command": "runner",
+              "failure": "missing (unittest.loader._FailedTest.missing)",
+              "comparison": "baseline-identity-unverifiable"
+            }
+          ],
+          "known_failures": [],
+          "unverified": [
+            "runner"
+          ]
+        }
+      }
+    },
+    "checks": {
+      "complete_only": true,
+      "duplicate_rejected": true,
+      "v3_truncated_blocks": true
+    },
+    "passed": true,
+    "process_runs": [
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "-m",
+          "unittest",
+          "test_missing"
+        ],
+        "cwd": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpi60vj8g7",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "E\n======================================================================\nERROR: test_missing (unittest.loader._FailedTest.test_missing)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_missing\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 137, in loadTestsFromName\n    module = __import__(module_name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpi60vj8g7/test_missing.py\", line 1, in <module>\n    import outcome_ci_strict_missing\nModuleNotFoundError: No module named 'outcome_ci_strict_missing'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      }
+    ]
+  },
+  "validator_scope": {
+    "cases": {
+      "root_work_raw_missing": {
+        "relative": ".agent/work/topic/reviews/raw.md",
+        "target": "/tmp/outcome_ci_definitely_expired_701/report.md",
+        "expected": "pass",
+        "outcome": "pass",
+        "error": null
+      },
+      "root_work_embedded_fixture": {
+        "relative": ".agent/work/topic/evidence/project/README.md",
+        "target": "missing.md",
+        "expected": "pass",
+        "outcome": "pass",
+        "error": null
+      },
+      "missing:.agent/matt-workflow.md": {
+        "relative": ".agent/matt-workflow.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/matt-workflow.md: Markdown reference missing: missing.md"
+      },
+      "escape:.agent/matt-workflow.md": {
+        "relative": ".agent/matt-workflow.md",
+        "target": "../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/matt-workflow.md: Markdown reference escapes repository: ../../outside.md"
+      },
+      "missing:.agent/policy.md": {
+        "relative": ".agent/policy.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/policy.md: Markdown reference missing: missing.md"
+      },
+      "escape:.agent/policy.md": {
+        "relative": ".agent/policy.md",
+        "target": "../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/policy.md: Markdown reference escapes repository: ../../outside.md"
+      },
+      "missing:.agent/archive/topic/reviews/raw.md": {
+        "relative": ".agent/archive/topic/reviews/raw.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/archive/topic/reviews/raw.md: Markdown reference missing: missing.md"
+      },
+      "escape:.agent/archive/topic/reviews/raw.md": {
+        "relative": ".agent/archive/topic/reviews/raw.md",
+        "target": "../../../../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/archive/topic/reviews/raw.md: Markdown reference escapes repository: ../../../../../outside.md"
+      },
+      "missing:docs/formal.md": {
+        "relative": "docs/formal.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "docs/formal.md: Markdown reference missing: missing.md"
+      },
+      "escape:docs/formal.md": {
+        "relative": "docs/formal.md",
+        "target": "../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "docs/formal.md: Markdown reference escapes repository: ../../outside.md"
+      },
+      "missing:tests/fixtures/project/README.md": {
+        "relative": "tests/fixtures/project/README.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "tests/fixtures/project/README.md: Markdown reference missing: missing.md"
+      },
+      "escape:tests/fixtures/project/README.md": {
+        "relative": "tests/fixtures/project/README.md",
+        "target": "../../../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "tests/fixtures/project/README.md: Markdown reference escapes repository: ../../../../outside.md"
+      },
+      "missing:docs/.agent/work/topic/report.md": {
+        "relative": "docs/.agent/work/topic/report.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "docs/.agent/work/topic/report.md: Markdown reference missing: missing.md"
+      },
+      "escape:docs/.agent/work/topic/report.md": {
+        "relative": "docs/.agent/work/topic/report.md",
+        "target": "../../../../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "docs/.agent/work/topic/report.md: Markdown reference escapes repository: ../../../../../outside.md"
+      },
+      "missing:.agent/work-other/topic/report.md": {
+        "relative": ".agent/work-other/topic/report.md",
+        "target": "missing.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/work-other/topic/report.md: Markdown reference missing: missing.md"
+      },
+      "escape:.agent/work-other/topic/report.md": {
+        "relative": ".agent/work-other/topic/report.md",
+        "target": "../../../../outside.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/work-other/topic/report.md: Markdown reference escapes repository: ../../../../outside.md"
+      },
+      "config_absolute_escape": {
+        "relative": ".agent/matt-workflow.md",
+        "target": "/tmp/outcome_ci_absolute_external.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/matt-workflow.md: Markdown reference escapes repository: /tmp/outcome_ci_absolute_external.md"
+      },
+      "config_symlink_escape": {
+        "relative": ".agent/matt-workflow.md",
+        "target": "../linked.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": ".agent/matt-workflow.md: Markdown reference escapes repository: ../linked.md"
+      },
+      "formal_refs_missing_runtime": {
+        "relative": "README.md",
+        "target": ".agent/work/topic/nonexistent.md",
+        "expected": "reject",
+        "outcome": "reject",
+        "error": "README.md: Markdown reference missing: .agent/work/topic/nonexistent.md"
+      },
+      "config_valid": {
+        "relative": ".agent/matt-workflow.md",
+        "target": "../docs/existing.md",
+        "expected": "pass",
+        "outcome": "pass",
+        "error": null
+      },
+      "formal_valid": {
+        "relative": "README.md",
+        "target": "docs/existing.md#anchor",
+        "expected": "pass",
+        "outcome": "pass",
+        "error": null
+      },
+      "formal_https": {
+        "relative": "README.md",
+        "target": "https://example.invalid/current",
+        "expected": "pass",
+        "outcome": "pass",
+        "error": null
+      },
+      "fenced_example": {
+        "outcome": "pass"
+      }
+    },
+    "checks": {
+      "root_only_exclusion": true,
+      "formal_missing_and_escape_rejected": true,
+      "positive_links_preserved": true
+    },
+    "passed": true,
+    "process_runs": []
+  }
+}

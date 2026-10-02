@@ -1,0 +1,2662 @@
+{
+  "public_CLI_python39": {
+    "baseline": {
+      "completed": true,
+      "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+      "head": "37e19309df90530621d64a5a8b4173e5120cfa8a",
+      "commands": [
+        "/usr/bin/python3 -B -m unittest discover -s suite",
+        "python3 -c 'pass'"
+      ],
+      "results": [
+        {
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+          "environment": {
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "executable": "/usr/bin/python3"
+          },
+          "unavailable": false,
+          "comparison_eligible": false,
+          "execution_observed": false,
+          "output_complete": true,
+          "output_length": 1029,
+          "unavailable_loader_failures": [
+            "test_behavior (unittest.loader._FailedTest)"
+          ],
+          "loader_dependency_fingerprints": {
+            "test_behavior (unittest.loader._FailedTest)": "4d03291dc811d56c065ab75296fd769763cb0ca7594e8875580db9956a07851e"
+          },
+          "dependency_proof_version": 3,
+          "content_changed": false,
+          "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "failures": [
+            "test_behavior (unittest.loader._FailedTest)"
+          ]
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "exit_code": 0,
+          "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+          "environment": {
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "executable": "/opt/homebrew/bin/python3"
+          },
+          "unavailable": false,
+          "comparison_eligible": true,
+          "execution_observed": false,
+          "output_complete": true,
+          "output_length": 0,
+          "unavailable_loader_failures": [],
+          "loader_dependency_fingerprints": {},
+          "dependency_proof_version": 3,
+          "content_changed": false,
+          "output_tail": "",
+          "command": "python3 -c 'pass'",
+          "failures": []
+        }
+      ],
+      "at": "2026-10-02T16:08:41.771081+00:00",
+      "baseline": "37e19309df90530621d64a5a8b4173e5120cfa8a"
+    },
+    "same": {
+      "at": "2026-10-02T16:08:43.058217+00:00",
+      "commands": [
+        "/usr/bin/python3 -B -m unittest discover -s suite",
+        "python3 -c 'pass'"
+      ],
+      "completed": true,
+      "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+      "head": "0702fd9e6a04a8b4cdc00de5752262456bbff7ec",
+      "known_failures": [
+        {
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "failure": "test_behavior (unittest.loader._FailedTest)"
+        }
+      ],
+      "new_failures": [],
+      "results": [
+        {
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "comparison_eligible": false,
+          "content_changed": false,
+          "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/usr/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 1,
+          "failures": [
+            "test_behavior (unittest.loader._FailedTest)"
+          ],
+          "loader_dependency_fingerprints": {
+            "test_behavior (unittest.loader._FailedTest)": "4d03291dc811d56c065ab75296fd769763cb0ca7594e8875580db9956a07851e"
+          },
+          "output_complete": true,
+          "output_length": 1029,
+          "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "unavailable": false,
+          "unavailable_loader_failures": [
+            "test_behavior (unittest.loader._FailedTest)"
+          ]
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "command": "python3 -c 'pass'",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 0,
+          "failures": [],
+          "loader_dependency_fingerprints": {},
+          "output_complete": true,
+          "output_length": 0,
+          "output_tail": "",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        }
+      ],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "initial_review": {
+      "test_exit": 0,
+      "open_exit": 0,
+      "manifest": {
+        "unit_id": "d796229f8c084be99d0584f86522477c",
+        "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+        "round": 1,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "marker observed"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "repository": [
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/repository-00001",
+            "sha256": "0cc46576dfcc4412477b19db0401c717c4c4a5798bebfd1b2cfe668b4366f02a",
+            "size": 41,
+            "mode": "100644"
+          }
+        ],
+        "baseline": "37e19309df90530621d64a5a8b4173e5120cfa8a",
+        "topic": "feature",
+        "self_findings": [],
+        "head": "0702fd9e6a04a8b4cdc00de5752262456bbff7ec",
+        "topic_changes": [
+          ".agent/matt-workflow.md",
+          ".agent/metrics.jsonl",
+          ".agent/self.md",
+          ".agent/work/feature/batches.json",
+          ".agent/work/feature/batches/01.json",
+          ".agent/work/feature/briefings/briefing-feature-01.md",
+          ".agent/work/feature/implementations/feature-01.json",
+          ".agent/work/feature/specs/specs-feature-01.md",
+          ".agent/work/feature/test-baseline.json",
+          ".agent/work/feature/tickets/tickets-feature-01.md",
+          ".agent/work/feature/topic-state.json",
+          "code.txt"
+        ],
+        "repository_files": [
+          "code.txt",
+          "suite/test_behavior.py"
+        ],
+        "changes": [
+          {
+            "path": "code.txt",
+            "base": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/0000-base",
+              "sha256": "da68f54607d5f5644954096ce1597c006c5bb9f2497e07441bf064b81003ef8a",
+              "size": 8,
+              "mode": "100644"
+            },
+            "current": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/0000-current",
+              "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+              "size": 9,
+              "mode": "100644"
+            }
+          }
+        ],
+        "inputs": [
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/rules.md",
+            "sha256": "25a65fb31a987bcb400bcd5c098f95076861c080f66210332d94bb2af678441a",
+            "size": 135,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/specs.md",
+            "sha256": "145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6",
+            "size": 85,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/review-loop-rules.md",
+            "sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+            "size": 7081,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/decided.md",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/tickets.md",
+            "sha256": "5be880a0f19e19dc8a636c8ea532affa3b8fc1af050e8616fbe5706a0f0fb0c8",
+            "size": 613,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/impact-declarations.md",
+            "sha256": "0c10f4a0154a4fdf1cd940dedb7d2dd0cac009daad9107bcf9728dc84db324b3",
+            "size": 81,
+            "mode": "100644"
+          },
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/repository-00001",
+            "sha256": "0cc46576dfcc4412477b19db0401c717c4c4a5798bebfd1b2cfe668b4366f02a",
+            "size": 41,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/self-findings.json",
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "size": 2,
+            "mode": "100644"
+          }
+        ],
+        "rule_map": [
+          {
+            "ticket": "feature-01",
+            "rules": []
+          }
+        ],
+        "review_context": {
+          "provenance": "independent",
+          "model": "host",
+          "session_id": "independent-gate-fixture"
+        },
+        "coverage_targets": [
+          "feature-01#A1",
+          "recovery"
+        ]
+      },
+      "submit_exit": 0
+    },
+    "v3_cache_fixture": {
+      "baseline": {
+        "completed": true,
+        "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+        "head": "37e19309df90530621d64a5a8b4173e5120cfa8a",
+        "commands": [
+          "/usr/bin/python3 -B -m unittest discover -s suite",
+          "python3 -c 'pass'"
+        ],
+        "results": [
+          {
+            "argv": [
+              "/usr/bin/python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "suite"
+            ],
+            "exit_code": 1,
+            "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/usr/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": true,
+            "output_complete": true,
+            "output_length": 1029,
+            "unavailable_loader_failures": [
+              "test_behavior (unittest.loader._FailedTest)"
+            ],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+            "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+            "failures": [
+              "test_behavior (unittest.loader._FailedTest)"
+            ]
+          },
+          {
+            "argv": [
+              "python3",
+              "-c",
+              "pass"
+            ],
+            "exit_code": 0,
+            "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/opt/homebrew/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": false,
+            "output_complete": true,
+            "output_length": 0,
+            "unavailable_loader_failures": [],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "",
+            "command": "python3 -c 'pass'",
+            "failures": []
+          }
+        ],
+        "at": "2026-10-02T16:08:41.771081+00:00",
+        "baseline": "37e19309df90530621d64a5a8b4173e5120cfa8a"
+      },
+      "receipt": {
+        "completed": true,
+        "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+        "head": "0702fd9e6a04a8b4cdc00de5752262456bbff7ec",
+        "commands": [
+          "/usr/bin/python3 -B -m unittest discover -s suite",
+          "python3 -c 'pass'"
+        ],
+        "results": [
+          {
+            "argv": [
+              "/usr/bin/python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "suite"
+            ],
+            "exit_code": 1,
+            "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/usr/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": true,
+            "output_complete": true,
+            "output_length": 1029,
+            "unavailable_loader_failures": [
+              "test_behavior (unittest.loader._FailedTest)"
+            ],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+            "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+            "failures": [
+              "test_behavior (unittest.loader._FailedTest)"
+            ]
+          },
+          {
+            "argv": [
+              "python3",
+              "-c",
+              "pass"
+            ],
+            "exit_code": 0,
+            "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/opt/homebrew/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": false,
+            "output_complete": true,
+            "output_length": 0,
+            "unavailable_loader_failures": [],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "",
+            "command": "python3 -c 'pass'",
+            "failures": []
+          }
+        ],
+        "at": "2026-10-02T16:08:43.547816+00:00",
+        "new_failures": [],
+        "known_failures": [
+          {
+            "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+            "failure": "test_behavior (unittest.loader._FailedTest)"
+          }
+        ],
+        "unverified": [
+          "/usr/bin/python3 -B -m unittest discover -s suite"
+        ]
+      }
+    },
+    "v3_status": {
+      "batch": "01",
+      "decisions_needed": [],
+      "inputs_needed": [],
+      "next_command": "workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf --topic feature",
+      "self_findings": [],
+      "state": "审查中",
+      "tickets": [
+        "feature-01"
+      ],
+      "topic": "feature",
+      "unverified": []
+    },
+    "v3_close_exit": 1,
+    "variants": {
+      "dynamic": {
+        "receipt": {
+          "at": "2026-10-02T16:08:45.092164+00:00",
+          "commands": [
+            "/usr/bin/python3 -B -m unittest discover -s suite",
+            "python3 -c 'pass'"
+          ],
+          "completed": true,
+          "content_id": "197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9",
+          "head": "449d51d7d032463e86e43bcfd22591a54109a9c3",
+          "known_failures": [],
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "comparison": "baseline-identity-unverifiable",
+              "failure": "test_behavior (unittest.loader._FailedTest)"
+            }
+          ],
+          "results": [
+            {
+              "argv": [
+                "/usr/bin/python3",
+                "-B",
+                "-m",
+                "unittest",
+                "discover",
+                "-s",
+                "suite"
+              ],
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "comparison_eligible": false,
+              "content_changed": false,
+              "content_id": "197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/usr/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 1,
+              "failures": [
+                "test_behavior (unittest.loader._FailedTest)"
+              ],
+              "loader_dependency_fingerprints": {
+                "test_behavior (unittest.loader._FailedTest)": "286e89978f943daddae3f6e41e05d182619822ce653d43380a451790abb0d93a"
+              },
+              "output_complete": true,
+              "output_length": 1254,
+              "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\", line 6, in <module>\n    importlib.import_module(selected_plugin())\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\", line 127, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\nModuleNotFoundError: No module named 'outcome_ci_cli_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+              "unavailable": false,
+              "unavailable_loader_failures": [
+                "test_behavior (unittest.loader._FailedTest)"
+              ]
+            },
+            {
+              "argv": [
+                "python3",
+                "-c",
+                "pass"
+              ],
+              "command": "python3 -c 'pass'",
+              "comparison_eligible": true,
+              "content_changed": false,
+              "content_id": "197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/opt/homebrew/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 0,
+              "failures": [],
+              "loader_dependency_fingerprints": {},
+              "output_complete": true,
+              "output_length": 0,
+              "output_tail": "",
+              "unavailable": false,
+              "unavailable_loader_failures": []
+            }
+          ],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite"
+          ]
+        },
+        "review": {
+          "test_exit": 0,
+          "open_exit": 1
+        },
+        "close_exit": 1,
+        "marker": "selected_plugin entered"
+      },
+      "assertion": {
+        "receipt": {
+          "at": "2026-10-02T16:08:46.527923+00:00",
+          "commands": [
+            "/usr/bin/python3 -B -m unittest discover -s suite",
+            "python3 -c 'pass'"
+          ],
+          "completed": true,
+          "content_id": "df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8",
+          "head": "1aae6dddb09531b09bd934b105287dbc6b8ea1c5",
+          "known_failures": [],
+          "new_failures": [
+            {
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "comparison": "baseline-identity-unverifiable",
+              "failure": "test_behavior (unittest.loader._FailedTest)"
+            }
+          ],
+          "results": [
+            {
+              "argv": [
+                "/usr/bin/python3",
+                "-B",
+                "-m",
+                "unittest",
+                "discover",
+                "-s",
+                "suite"
+              ],
+              "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+              "comparison_eligible": false,
+              "content_changed": false,
+              "content_id": "df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/usr/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 1,
+              "failures": [
+                "test_behavior (unittest.loader._FailedTest)"
+              ],
+              "loader_dependency_fingerprints": {},
+              "output_complete": true,
+              "output_length": 1000,
+              "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 436, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\", line 3, in <module>\n    assert 7 == 8, 'actual business assertion'\nAssertionError: actual business assertion\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+              "unavailable": false,
+              "unavailable_loader_failures": []
+            },
+            {
+              "argv": [
+                "python3",
+                "-c",
+                "pass"
+              ],
+              "command": "python3 -c 'pass'",
+              "comparison_eligible": true,
+              "content_changed": false,
+              "content_id": "df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/opt/homebrew/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 0,
+              "failures": [],
+              "loader_dependency_fingerprints": {},
+              "output_complete": true,
+              "output_length": 0,
+              "output_tail": "",
+              "unavailable": false,
+              "unavailable_loader_failures": []
+            }
+          ],
+          "unverified": [
+            "/usr/bin/python3 -B -m unittest discover -s suite"
+          ]
+        },
+        "review": {
+          "test_exit": 0,
+          "open_exit": 1
+        },
+        "close_exit": 1,
+        "marker": "assertion reached"
+      }
+    },
+    "repair": {
+      "at": "2026-10-02T16:08:47.951287+00:00",
+      "commands": [
+        "/usr/bin/python3 -B -m unittest discover -s suite",
+        "python3 -c 'pass'"
+      ],
+      "completed": true,
+      "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+      "head": "443b3d59588d0582e4258e242ff363ccf82efaa4",
+      "known_failures": [],
+      "new_failures": [],
+      "results": [
+        {
+          "argv": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "command": "/usr/bin/python3 -B -m unittest discover -s suite",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/usr/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": true,
+          "exit_code": 0,
+          "failures": [],
+          "loader_dependency_fingerprints": {},
+          "output_complete": true,
+          "output_length": 98,
+          "output_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "command": "python3 -c 'pass'",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 0,
+          "failures": [],
+          "loader_dependency_fingerprints": {},
+          "output_complete": true,
+          "output_length": 0,
+          "output_tail": "",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        }
+      ],
+      "unverified": [
+        "/usr/bin/python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "repair_review": {
+      "test_exit": 0,
+      "open_exit": 0,
+      "manifest": {
+        "unit_id": "0bc291284c024803b4d701d6d195646b",
+        "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+        "round": 2,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "marker observed"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "repository": [
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/repository-00001",
+            "sha256": "ee0169f79e211509022e92b383e504b8d15ede6e98a9ab77f9040a86549b35ad",
+            "size": 113,
+            "mode": "100644"
+          }
+        ],
+        "baseline": "37e19309df90530621d64a5a8b4173e5120cfa8a",
+        "topic": "feature",
+        "self_findings": [],
+        "head": "443b3d59588d0582e4258e242ff363ccf82efaa4",
+        "topic_changes": [
+          ".agent/matt-workflow.md",
+          ".agent/metrics.jsonl",
+          ".agent/self.md",
+          ".agent/work/feature/batches.json",
+          ".agent/work/feature/batches/01.json",
+          ".agent/work/feature/briefings/briefing-feature-01.md",
+          ".agent/work/feature/implementations/feature-01.json",
+          ".agent/work/feature/specs/specs-feature-01.md",
+          ".agent/work/feature/test-baseline.json",
+          ".agent/work/feature/tickets/tickets-feature-01.md",
+          ".agent/work/feature/topic-state.json",
+          "code.txt",
+          "suite/test_behavior.py"
+        ],
+        "repository_files": [
+          "code.txt",
+          "suite/test_behavior.py"
+        ],
+        "changes": [
+          {
+            "path": "code.txt",
+            "base": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/0000-base",
+              "sha256": "da68f54607d5f5644954096ce1597c006c5bb9f2497e07441bf064b81003ef8a",
+              "size": 8,
+              "mode": "100644"
+            },
+            "current": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/0000-current",
+              "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+              "size": 9,
+              "mode": "100644"
+            }
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "base": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/0001-base",
+              "sha256": "0cc46576dfcc4412477b19db0401c717c4c4a5798bebfd1b2cfe668b4366f02a",
+              "size": 41,
+              "mode": "100644"
+            },
+            "current": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/0001-current",
+              "sha256": "ee0169f79e211509022e92b383e504b8d15ede6e98a9ab77f9040a86549b35ad",
+              "size": 113,
+              "mode": "100644"
+            }
+          }
+        ],
+        "inputs": [
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/rules.md",
+            "sha256": "25a65fb31a987bcb400bcd5c098f95076861c080f66210332d94bb2af678441a",
+            "size": 135,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/specs.md",
+            "sha256": "145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6",
+            "size": 85,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/review-loop-rules.md",
+            "sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+            "size": 7081,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/decided.md",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/tickets.md",
+            "sha256": "5be880a0f19e19dc8a636c8ea532affa3b8fc1af050e8616fbe5706a0f0fb0c8",
+            "size": 613,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/impact-declarations.md",
+            "sha256": "0c10f4a0154a4fdf1cd940dedb7d2dd0cac009daad9107bcf9728dc84db324b3",
+            "size": 81,
+            "mode": "100644"
+          },
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/repository-00001",
+            "sha256": "ee0169f79e211509022e92b383e504b8d15ede6e98a9ab77f9040a86549b35ad",
+            "size": 113,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/self-findings.json",
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "size": 2,
+            "mode": "100644"
+          }
+        ],
+        "rule_map": [
+          {
+            "ticket": "feature-01",
+            "rules": []
+          }
+        ],
+        "review_context": {
+          "provenance": "independent",
+          "model": "host",
+          "session_id": "independent-gate-fixture"
+        },
+        "coverage_targets": [
+          "feature-01#A1",
+          "recovery"
+        ]
+      },
+      "submit_exit": 0
+    },
+    "repair_close_exit": 0,
+    "checks": {
+      "v3_stale_blocks": true,
+      "real_dynamic_and_assertion_block": true,
+      "passing_repair_closes": true
+    },
+    "passed": true,
+    "cli_calls": [
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "setup",
+          "--apply",
+          "--agent-directory-mode",
+          "shared",
+          "--test-command",
+          "/usr/bin/python3 -B -m unittest discover -s suite",
+          "--test-command",
+          "python3 -c 'pass'",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "start",
+          "--ticket",
+          "feature-01",
+          "--agent",
+          "codex",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"baseline\": \"37e19309df90530621d64a5a8b4173e5120cfa8a\", \"briefing\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "test",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 0, \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"finished_at\": \"2026-10-02T16:08:41.996399+00:00\", \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"progress\": false, \"run_id\": \"04e2230a57034185aa0b7c5fdddc8382\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "self-review",
+          "--notes-file",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/self.md",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"self_review\": \"已记录\", \"ticket\": \"feature-01\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "finish",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"commit\": \"0702fd9e6a04a8b4cdc00de5752262456bbff7ec\", \"next_command\": \"workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf --topic feature\", \"status\": \"complete\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:43.058217+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"head\": \"0702fd9e6a04a8b4cdc00de5752262456bbff7ec\", \"known_failures\": [{\"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"failure\": \"test_behavior (unittest.loader._FailedTest)\"}], \"new_failures\": [], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest)\": \"4d03291dc811d56c065ab75296fd769763cb0ca7594e8875580db9956a07851e\"}, \"output_complete\": true, \"output_length\": 1029, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 436, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 377, in _get_module_from_name\\n    __import__(name)\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\\\", line 1, in <module>\\n    import outcome_ci_cli_missing_dependency\\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:43.547816+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"head\": \"0702fd9e6a04a8b4cdc00de5752262456bbff7ec\", \"known_failures\": [{\"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"failure\": \"test_behavior (unittest.loader._FailedTest)\"}], \"new_failures\": [], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest)\": \"4d03291dc811d56c065ab75296fd769763cb0ca7594e8875580db9956a07851e\"}, \"output_complete\": true, \"output_length\": 1029, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 436, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 377, in _get_module_from_name\\n    __import__(name)\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\\\", line 1, in <module>\\n    import outcome_ci_cli_missing_dependency\\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"]}, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/manifest.json\", \"manifest_sha256\": \"e9c2e05977bedc6a4c0ccfd84b07a5e48b25b567744bd86730a295114933c7dc\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/result-d796229f8c084be99d0584f86522477c.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c\", \"unit_id\": \"d796229f8c084be99d0584f86522477c\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--submit",
+          "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/result-d796229f8c084be99d0584f86522477c.json",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-d796229f8c084be99d0584f86522477c/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 1, \"status\": \"pass\", \"unit_id\": \"d796229f8c084be99d0584f86522477c\"}, \"review_context\": {\"model\": \"host\", \"provenance\": \"independent\", \"session_id\": \"independent-gate-fixture\"}, \"review_series\": \"d796229f8c084be99d0584f86522477c\", \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"status\": \"pass\", \"unit_id\": \"d796229f8c084be99d0584f86522477c\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "status",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf --topic feature\", \"self_findings\": [], \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": []}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:45.092164+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"head\": \"449d51d7d032463e86e43bcfd22591a54109a9c3\", \"known_failures\": [], \"new_failures\": [{\"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest)\"}], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest)\": \"286e89978f943daddae3f6e41e05d182619822ce653d43380a451790abb0d93a\"}, \"output_complete\": true, \"output_length\": 1254, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 436, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 377, in _get_module_from_name\\n    __import__(name)\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\\\", line 6, in <module>\\n    importlib.import_module(selected_plugin())\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\\\", line 127, in import_module\\n    return _bootstrap._gcd_import(name[level:], package, level)\\nModuleNotFoundError: No module named 'outcome_ci_cli_changed_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:45.591414+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"head\": \"449d51d7d032463e86e43bcfd22591a54109a9c3\", \"known_failures\": [], \"new_failures\": [{\"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest)\"}], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest)\": \"286e89978f943daddae3f6e41e05d182619822ce653d43380a451790abb0d93a\"}, \"output_complete\": true, \"output_length\": 1254, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 436, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 377, in _get_module_from_name\\n    __import__(name)\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\\\", line 6, in <module>\\n    importlib.import_module(selected_plugin())\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py\\\", line 127, in import_module\\n    return _bootstrap._gcd_import(name[level:], package, level)\\nModuleNotFoundError: No module named 'outcome_ci_cli_changed_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test: 审查需要当前全量测试相对基线无新增失败记录\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:46.527923+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"head\": \"1aae6dddb09531b09bd934b105287dbc6b8ea1c5\", \"known_failures\": [], \"new_failures\": [{\"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest)\"}], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest)\"], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 1000, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 436, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 377, in _get_module_from_name\\n    __import__(name)\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\\\", line 3, in <module>\\n    assert 7 == 8, 'actual business assertion'\\nAssertionError: actual business assertion\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:47.022910+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"head\": \"1aae6dddb09531b09bd934b105287dbc6b8ea1c5\", \"known_failures\": [], \"new_failures\": [{\"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest)\"}], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest)\"], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 1000, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 436, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py\\\", line 377, in _get_module_from_name\\n    __import__(name)\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/suite/test_behavior.py\\\", line 3, in <module>\\n    assert 7 == 8, 'actual business assertion'\\nAssertionError: actual business assertion\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test: 审查需要当前全量测试相对基线无新增失败记录\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:47.951287+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"head\": \"443b3d59588d0582e4258e242ff363ccf82efaa4\", \"known_failures\": [], \"new_failures\": [], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 98, \"output_tail\": \".\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nOK\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:48.429599+00:00\", \"commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"head\": \"443b3d59588d0582e4258e242ff363ccf82efaa4\", \"known_failures\": [], \"new_failures\": [], \"results\": [{\"argv\": [\"/usr/bin/python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"/usr/bin/python3 -B -m unittest discover -s suite\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/usr/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 98, \"output_tail\": \".\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nOK\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"/usr/bin/python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"/usr/bin/python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"]}, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/manifest.json\", \"manifest_sha256\": \"cb19950afb6ac853874d89abcd9cac6adedb812b39bd464372d68a85aad1e69d\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/result-0bc291284c024803b4d701d6d195646b.json\", \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b\", \"unit_id\": \"0bc291284c024803b4d701d6d195646b\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--submit",
+          "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/result-0bc291284c024803b4d701d6d195646b.json",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf/.agent/work/feature/reviews/branch-0bc291284c024803b4d701d6d195646b/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 2, \"status\": \"pass\", \"unit_id\": \"0bc291284c024803b4d701d6d195646b\"}, \"review_context\": {\"model\": \"host\", \"provenance\": \"independent\", \"session_id\": \"independent-gate-fixture\"}, \"review_series\": \"d796229f8c084be99d0584f86522477c\", \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"status\": \"pass\", \"unit_id\": \"0bc291284c024803b4d701d6d195646b\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"batch\": \"01\", \"next_command\": \"workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpcaczszwf --topic feature\", \"state\": \"已收口\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "public_CLI_python314": {
+    "baseline": {
+      "completed": true,
+      "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+      "head": "e5a0fa22b17e7ade1a9213d154b779c8eff3df06",
+      "commands": [
+        "python3 -B -m unittest discover -s suite",
+        "python3 -c 'pass'"
+      ],
+      "results": [
+        {
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "exit_code": 1,
+          "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+          "environment": {
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "executable": "/opt/homebrew/bin/python3"
+          },
+          "unavailable": false,
+          "comparison_eligible": false,
+          "execution_observed": false,
+          "output_complete": true,
+          "output_length": 1058,
+          "unavailable_loader_failures": [
+            "test_behavior (unittest.loader._FailedTest.test_behavior)"
+          ],
+          "loader_dependency_fingerprints": {
+            "test_behavior (unittest.loader._FailedTest.test_behavior)": "97258940e50d308d7686c168cad20fa63951b962e48b88ce3e1f432e40bd8a5a"
+          },
+          "dependency_proof_version": 3,
+          "content_changed": false,
+          "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "command": "python3 -B -m unittest discover -s suite",
+          "failures": [
+            "test_behavior (unittest.loader._FailedTest.test_behavior)"
+          ]
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "exit_code": 0,
+          "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+          "environment": {
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "executable": "/opt/homebrew/bin/python3"
+          },
+          "unavailable": false,
+          "comparison_eligible": true,
+          "execution_observed": false,
+          "output_complete": true,
+          "output_length": 0,
+          "unavailable_loader_failures": [],
+          "loader_dependency_fingerprints": {},
+          "dependency_proof_version": 3,
+          "content_changed": false,
+          "output_tail": "",
+          "command": "python3 -c 'pass'",
+          "failures": []
+        }
+      ],
+      "at": "2026-10-02T16:08:50.293948+00:00",
+      "baseline": "e5a0fa22b17e7ade1a9213d154b779c8eff3df06"
+    },
+    "same": {
+      "at": "2026-10-02T16:08:51.494982+00:00",
+      "commands": [
+        "python3 -B -m unittest discover -s suite",
+        "python3 -c 'pass'"
+      ],
+      "completed": true,
+      "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+      "head": "61a4042071edfd367afad1cb37ba08cb6405f913",
+      "known_failures": [
+        {
+          "command": "python3 -B -m unittest discover -s suite",
+          "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+        }
+      ],
+      "new_failures": [],
+      "results": [
+        {
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "command": "python3 -B -m unittest discover -s suite",
+          "comparison_eligible": false,
+          "content_changed": false,
+          "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 1,
+          "failures": [
+            "test_behavior (unittest.loader._FailedTest.test_behavior)"
+          ],
+          "loader_dependency_fingerprints": {
+            "test_behavior (unittest.loader._FailedTest.test_behavior)": "97258940e50d308d7686c168cad20fa63951b962e48b88ce3e1f432e40bd8a5a"
+          },
+          "output_complete": true,
+          "output_length": 1058,
+          "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+          "unavailable": false,
+          "unavailable_loader_failures": [
+            "test_behavior (unittest.loader._FailedTest.test_behavior)"
+          ]
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "command": "python3 -c 'pass'",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 0,
+          "failures": [],
+          "loader_dependency_fingerprints": {},
+          "output_complete": true,
+          "output_length": 0,
+          "output_tail": "",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        }
+      ],
+      "unverified": [
+        "python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "initial_review": {
+      "test_exit": 0,
+      "open_exit": 0,
+      "manifest": {
+        "unit_id": "a0927f824adc40b2956c1c7690a324dc",
+        "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+        "round": 1,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "marker observed"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "repository": [
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/repository-00001",
+            "sha256": "0cc46576dfcc4412477b19db0401c717c4c4a5798bebfd1b2cfe668b4366f02a",
+            "size": 41,
+            "mode": "100644"
+          }
+        ],
+        "baseline": "e5a0fa22b17e7ade1a9213d154b779c8eff3df06",
+        "topic": "feature",
+        "self_findings": [],
+        "head": "61a4042071edfd367afad1cb37ba08cb6405f913",
+        "topic_changes": [
+          ".agent/matt-workflow.md",
+          ".agent/metrics.jsonl",
+          ".agent/self.md",
+          ".agent/work/feature/batches.json",
+          ".agent/work/feature/batches/01.json",
+          ".agent/work/feature/briefings/briefing-feature-01.md",
+          ".agent/work/feature/implementations/feature-01.json",
+          ".agent/work/feature/specs/specs-feature-01.md",
+          ".agent/work/feature/test-baseline.json",
+          ".agent/work/feature/tickets/tickets-feature-01.md",
+          ".agent/work/feature/topic-state.json",
+          "code.txt"
+        ],
+        "repository_files": [
+          "code.txt",
+          "suite/test_behavior.py"
+        ],
+        "changes": [
+          {
+            "path": "code.txt",
+            "base": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/0000-base",
+              "sha256": "da68f54607d5f5644954096ce1597c006c5bb9f2497e07441bf064b81003ef8a",
+              "size": 8,
+              "mode": "100644"
+            },
+            "current": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/0000-current",
+              "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+              "size": 9,
+              "mode": "100644"
+            }
+          }
+        ],
+        "inputs": [
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/rules.md",
+            "sha256": "25a65fb31a987bcb400bcd5c098f95076861c080f66210332d94bb2af678441a",
+            "size": 135,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/specs.md",
+            "sha256": "145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6",
+            "size": 85,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/review-loop-rules.md",
+            "sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+            "size": 7081,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/decided.md",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/tickets.md",
+            "sha256": "5be880a0f19e19dc8a636c8ea532affa3b8fc1af050e8616fbe5706a0f0fb0c8",
+            "size": 613,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/impact-declarations.md",
+            "sha256": "0c10f4a0154a4fdf1cd940dedb7d2dd0cac009daad9107bcf9728dc84db324b3",
+            "size": 81,
+            "mode": "100644"
+          },
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/repository-00001",
+            "sha256": "0cc46576dfcc4412477b19db0401c717c4c4a5798bebfd1b2cfe668b4366f02a",
+            "size": 41,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/self-findings.json",
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "size": 2,
+            "mode": "100644"
+          }
+        ],
+        "rule_map": [
+          {
+            "ticket": "feature-01",
+            "rules": []
+          }
+        ],
+        "review_context": {
+          "provenance": "independent",
+          "model": "host",
+          "session_id": "independent-gate-fixture"
+        },
+        "coverage_targets": [
+          "feature-01#A1",
+          "recovery"
+        ]
+      },
+      "submit_exit": 0
+    },
+    "v3_cache_fixture": {
+      "baseline": {
+        "completed": true,
+        "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+        "head": "e5a0fa22b17e7ade1a9213d154b779c8eff3df06",
+        "commands": [
+          "python3 -B -m unittest discover -s suite",
+          "python3 -c 'pass'"
+        ],
+        "results": [
+          {
+            "argv": [
+              "python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "suite"
+            ],
+            "exit_code": 1,
+            "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/opt/homebrew/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": true,
+            "output_complete": true,
+            "output_length": 1058,
+            "unavailable_loader_failures": [
+              "test_behavior (unittest.loader._FailedTest.test_behavior)"
+            ],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+            "command": "python3 -B -m unittest discover -s suite",
+            "failures": [
+              "test_behavior (unittest.loader._FailedTest.test_behavior)"
+            ]
+          },
+          {
+            "argv": [
+              "python3",
+              "-c",
+              "pass"
+            ],
+            "exit_code": 0,
+            "content_id": "191894b73f03404f39d0cb116aaf7a662a3a923c77a27b237d92fad125dcbd65",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/opt/homebrew/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": false,
+            "output_complete": true,
+            "output_length": 0,
+            "unavailable_loader_failures": [],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "",
+            "command": "python3 -c 'pass'",
+            "failures": []
+          }
+        ],
+        "at": "2026-10-02T16:08:50.293948+00:00",
+        "baseline": "e5a0fa22b17e7ade1a9213d154b779c8eff3df06"
+      },
+      "receipt": {
+        "completed": true,
+        "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+        "head": "61a4042071edfd367afad1cb37ba08cb6405f913",
+        "commands": [
+          "python3 -B -m unittest discover -s suite",
+          "python3 -c 'pass'"
+        ],
+        "results": [
+          {
+            "argv": [
+              "python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "suite"
+            ],
+            "exit_code": 1,
+            "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/opt/homebrew/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": true,
+            "output_complete": true,
+            "output_length": 1058,
+            "unavailable_loader_failures": [
+              "test_behavior (unittest.loader._FailedTest.test_behavior)"
+            ],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\", line 1, in <module>\n    import outcome_ci_cli_missing_dependency\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+            "command": "python3 -B -m unittest discover -s suite",
+            "failures": [
+              "test_behavior (unittest.loader._FailedTest.test_behavior)"
+            ]
+          },
+          {
+            "argv": [
+              "python3",
+              "-c",
+              "pass"
+            ],
+            "exit_code": 0,
+            "content_id": "432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a",
+            "environment": {
+              "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+              "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+              "executable": "/opt/homebrew/bin/python3"
+            },
+            "unavailable": false,
+            "comparison_eligible": true,
+            "execution_observed": false,
+            "output_complete": true,
+            "output_length": 0,
+            "unavailable_loader_failures": [],
+            "loader_dependency_fingerprints": {},
+            "dependency_proof_version": 3,
+            "content_changed": false,
+            "output_tail": "",
+            "command": "python3 -c 'pass'",
+            "failures": []
+          }
+        ],
+        "at": "2026-10-02T16:08:51.891194+00:00",
+        "new_failures": [],
+        "known_failures": [
+          {
+            "command": "python3 -B -m unittest discover -s suite",
+            "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+          }
+        ],
+        "unverified": [
+          "python3 -B -m unittest discover -s suite"
+        ]
+      }
+    },
+    "v3_status": {
+      "batch": "01",
+      "decisions_needed": [],
+      "inputs_needed": [],
+      "next_command": "workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0 --topic feature",
+      "self_findings": [],
+      "state": "审查中",
+      "tickets": [
+        "feature-01"
+      ],
+      "topic": "feature",
+      "unverified": []
+    },
+    "v3_close_exit": 1,
+    "variants": {
+      "dynamic": {
+        "receipt": {
+          "at": "2026-10-02T16:08:53.340242+00:00",
+          "commands": [
+            "python3 -B -m unittest discover -s suite",
+            "python3 -c 'pass'"
+          ],
+          "completed": true,
+          "content_id": "197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9",
+          "head": "8925c63c76d5f7e40fddec7a9a2bd917a6908fea",
+          "known_failures": [],
+          "new_failures": [
+            {
+              "command": "python3 -B -m unittest discover -s suite",
+              "comparison": "baseline-identity-unverifiable",
+              "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+            }
+          ],
+          "results": [
+            {
+              "argv": [
+                "python3",
+                "-B",
+                "-m",
+                "unittest",
+                "discover",
+                "-s",
+                "suite"
+              ],
+              "command": "python3 -B -m unittest discover -s suite",
+              "comparison_eligible": false,
+              "content_changed": false,
+              "content_id": "197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/opt/homebrew/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 1,
+              "failures": [
+                "test_behavior (unittest.loader._FailedTest.test_behavior)"
+              ],
+              "loader_dependency_fingerprints": {
+                "test_behavior (unittest.loader._FailedTest.test_behavior)": "16ea420a3daad9ce58a251bb6197dccadfa2f842d9669cbf5e8ba5eb9242fcda"
+              },
+              "output_complete": true,
+              "output_length": 1390,
+              "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\", line 6, in <module>\n    importlib.import_module(selected_plugin())\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'outcome_ci_cli_changed_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+              "unavailable": false,
+              "unavailable_loader_failures": [
+                "test_behavior (unittest.loader._FailedTest.test_behavior)"
+              ]
+            },
+            {
+              "argv": [
+                "python3",
+                "-c",
+                "pass"
+              ],
+              "command": "python3 -c 'pass'",
+              "comparison_eligible": true,
+              "content_changed": false,
+              "content_id": "197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/opt/homebrew/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 0,
+              "failures": [],
+              "loader_dependency_fingerprints": {},
+              "output_complete": true,
+              "output_length": 0,
+              "output_tail": "",
+              "unavailable": false,
+              "unavailable_loader_failures": []
+            }
+          ],
+          "unverified": [
+            "python3 -B -m unittest discover -s suite"
+          ]
+        },
+        "review": {
+          "test_exit": 0,
+          "open_exit": 1
+        },
+        "close_exit": 1,
+        "marker": "selected_plugin entered"
+      },
+      "assertion": {
+        "receipt": {
+          "at": "2026-10-02T16:08:54.565185+00:00",
+          "commands": [
+            "python3 -B -m unittest discover -s suite",
+            "python3 -c 'pass'"
+          ],
+          "completed": true,
+          "content_id": "df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8",
+          "head": "27c51fbb48d52b0fa7a9ae60258d5981a7f19677",
+          "known_failures": [],
+          "new_failures": [
+            {
+              "command": "python3 -B -m unittest discover -s suite",
+              "comparison": "baseline-identity-unverifiable",
+              "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+            }
+          ],
+          "results": [
+            {
+              "argv": [
+                "python3",
+                "-B",
+                "-m",
+                "unittest",
+                "discover",
+                "-s",
+                "suite"
+              ],
+              "command": "python3 -B -m unittest discover -s suite",
+              "comparison_eligible": false,
+              "content_changed": false,
+              "content_id": "df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/opt/homebrew/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 1,
+              "failures": [
+                "test_behavior (unittest.loader._FailedTest.test_behavior)"
+              ],
+              "loader_dependency_fingerprints": {},
+              "output_complete": true,
+              "output_length": 1047,
+              "output_tail": "E\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\", line 3, in <module>\n    assert 7 == 8, 'actual business assertion'\n           ^^^^^^\nAssertionError: actual business assertion\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+              "unavailable": false,
+              "unavailable_loader_failures": []
+            },
+            {
+              "argv": [
+                "python3",
+                "-c",
+                "pass"
+              ],
+              "command": "python3 -c 'pass'",
+              "comparison_eligible": true,
+              "content_changed": false,
+              "content_id": "df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8",
+              "dependency_proof_version": 3,
+              "environment": {
+                "executable": "/opt/homebrew/bin/python3",
+                "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+                "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+                "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+              },
+              "execution_observed": false,
+              "exit_code": 0,
+              "failures": [],
+              "loader_dependency_fingerprints": {},
+              "output_complete": true,
+              "output_length": 0,
+              "output_tail": "",
+              "unavailable": false,
+              "unavailable_loader_failures": []
+            }
+          ],
+          "unverified": [
+            "python3 -B -m unittest discover -s suite"
+          ]
+        },
+        "review": {
+          "test_exit": 0,
+          "open_exit": 1
+        },
+        "close_exit": 1,
+        "marker": "assertion reached"
+      }
+    },
+    "repair": {
+      "at": "2026-10-02T16:08:55.798153+00:00",
+      "commands": [
+        "python3 -B -m unittest discover -s suite",
+        "python3 -c 'pass'"
+      ],
+      "completed": true,
+      "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+      "head": "02a65e1d8b4dcd35755ac2727c278d0c75863721",
+      "known_failures": [],
+      "new_failures": [],
+      "results": [
+        {
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "suite"
+          ],
+          "command": "python3 -B -m unittest discover -s suite",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": true,
+          "exit_code": 0,
+          "failures": [],
+          "loader_dependency_fingerprints": {},
+          "output_complete": true,
+          "output_length": 98,
+          "output_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "command": "python3 -c 'pass'",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+          "dependency_proof_version": 3,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 0,
+          "failures": [],
+          "loader_dependency_fingerprints": {},
+          "output_complete": true,
+          "output_length": 0,
+          "output_tail": "",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        }
+      ],
+      "unverified": [
+        "python3 -B -m unittest discover -s suite"
+      ]
+    },
+    "repair_review": {
+      "test_exit": 0,
+      "open_exit": 0,
+      "manifest": {
+        "unit_id": "8dff90764ec8442ab80f9416553758c0",
+        "content_id": "17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6",
+        "round": 2,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "marker observed"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "repository": [
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/repository-00001",
+            "sha256": "ee0169f79e211509022e92b383e504b8d15ede6e98a9ab77f9040a86549b35ad",
+            "size": 113,
+            "mode": "100644"
+          }
+        ],
+        "baseline": "e5a0fa22b17e7ade1a9213d154b779c8eff3df06",
+        "topic": "feature",
+        "self_findings": [],
+        "head": "02a65e1d8b4dcd35755ac2727c278d0c75863721",
+        "topic_changes": [
+          ".agent/matt-workflow.md",
+          ".agent/metrics.jsonl",
+          ".agent/self.md",
+          ".agent/work/feature/batches.json",
+          ".agent/work/feature/batches/01.json",
+          ".agent/work/feature/briefings/briefing-feature-01.md",
+          ".agent/work/feature/implementations/feature-01.json",
+          ".agent/work/feature/specs/specs-feature-01.md",
+          ".agent/work/feature/test-baseline.json",
+          ".agent/work/feature/tickets/tickets-feature-01.md",
+          ".agent/work/feature/topic-state.json",
+          "code.txt",
+          "suite/test_behavior.py"
+        ],
+        "repository_files": [
+          "code.txt",
+          "suite/test_behavior.py"
+        ],
+        "changes": [
+          {
+            "path": "code.txt",
+            "base": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/0000-base",
+              "sha256": "da68f54607d5f5644954096ce1597c006c5bb9f2497e07441bf064b81003ef8a",
+              "size": 8,
+              "mode": "100644"
+            },
+            "current": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/0000-current",
+              "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+              "size": 9,
+              "mode": "100644"
+            }
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "base": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/0001-base",
+              "sha256": "0cc46576dfcc4412477b19db0401c717c4c4a5798bebfd1b2cfe668b4366f02a",
+              "size": 41,
+              "mode": "100644"
+            },
+            "current": {
+              "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/0001-current",
+              "sha256": "ee0169f79e211509022e92b383e504b8d15ede6e98a9ab77f9040a86549b35ad",
+              "size": 113,
+              "mode": "100644"
+            }
+          }
+        ],
+        "inputs": [
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/rules.md",
+            "sha256": "25a65fb31a987bcb400bcd5c098f95076861c080f66210332d94bb2af678441a",
+            "size": 135,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/specs.md",
+            "sha256": "145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6",
+            "size": 85,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/review-loop-rules.md",
+            "sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+            "size": 7081,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/decided.md",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/tickets.md",
+            "sha256": "5be880a0f19e19dc8a636c8ea532affa3b8fc1af050e8616fbe5706a0f0fb0c8",
+            "size": 613,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/impact-declarations.md",
+            "sha256": "0c10f4a0154a4fdf1cd940dedb7d2dd0cac009daad9107bcf9728dc84db324b3",
+            "size": 81,
+            "mode": "100644"
+          },
+          {
+            "path": "code.txt",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/repository-00000",
+            "sha256": "439876d1ceb924bd276c7b32893e1233940824c7545a1e411f05178403f8b2dd",
+            "size": 9,
+            "mode": "100644"
+          },
+          {
+            "path": "suite/test_behavior.py",
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/repository-00001",
+            "sha256": "ee0169f79e211509022e92b383e504b8d15ede6e98a9ab77f9040a86549b35ad",
+            "size": 113,
+            "mode": "100644"
+          },
+          {
+            "snapshot_path": "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/self-findings.json",
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "size": 2,
+            "mode": "100644"
+          }
+        ],
+        "rule_map": [
+          {
+            "ticket": "feature-01",
+            "rules": []
+          }
+        ],
+        "review_context": {
+          "provenance": "independent",
+          "model": "host",
+          "session_id": "independent-gate-fixture"
+        },
+        "coverage_targets": [
+          "feature-01#A1",
+          "recovery"
+        ]
+      },
+      "submit_exit": 0
+    },
+    "repair_close_exit": 0,
+    "checks": {
+      "v3_stale_blocks": true,
+      "real_dynamic_and_assertion_block": true,
+      "passing_repair_closes": true
+    },
+    "passed": true,
+    "cli_calls": [
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "setup",
+          "--apply",
+          "--agent-directory-mode",
+          "shared",
+          "--test-command",
+          "python3 -B -m unittest discover -s suite",
+          "--test-command",
+          "python3 -c 'pass'",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "start",
+          "--ticket",
+          "feature-01",
+          "--agent",
+          "codex",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"baseline\": \"e5a0fa22b17e7ade1a9213d154b779c8eff3df06\", \"briefing\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "test",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-c\", \"pass\"], \"command_index\": 0, \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"finished_at\": \"2026-10-02T16:08:50.516054+00:00\", \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"progress\": false, \"run_id\": \"27beb63cb093446ba618ae431d3263e9\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "self-review",
+          "--notes-file",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/self.md",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"self_review\": \"已记录\", \"ticket\": \"feature-01\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "implement",
+          "finish",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"commit\": \"61a4042071edfd367afad1cb37ba08cb6405f913\", \"next_command\": \"workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0 --topic feature\", \"status\": \"complete\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:51.494982+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"head\": \"61a4042071edfd367afad1cb37ba08cb6405f913\", \"known_failures\": [{\"command\": \"python3 -B -m unittest discover -s suite\", \"failure\": \"test_behavior (unittest.loader._FailedTest.test_behavior)\"}], \"new_failures\": [], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest.test_behavior)\": \"97258940e50d308d7686c168cad20fa63951b962e48b88ce3e1f432e40bd8a5a\"}, \"output_complete\": true, \"output_length\": 1058, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 426, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 367, in _get_module_from_name\\n    __import__(name)\\n    ~~~~~~~~~~^^^^^^\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\\\", line 1, in <module>\\n    import outcome_ci_cli_missing_dependency\\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:51.891194+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"head\": \"61a4042071edfd367afad1cb37ba08cb6405f913\", \"known_failures\": [{\"command\": \"python3 -B -m unittest discover -s suite\", \"failure\": \"test_behavior (unittest.loader._FailedTest.test_behavior)\"}], \"new_failures\": [], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest.test_behavior)\": \"97258940e50d308d7686c168cad20fa63951b962e48b88ce3e1f432e40bd8a5a\"}, \"output_complete\": true, \"output_length\": 1058, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 426, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 367, in _get_module_from_name\\n    __import__(name)\\n    ~~~~~~~~~~^^^^^^\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\\\", line 1, in <module>\\n    import outcome_ci_cli_missing_dependency\\nModuleNotFoundError: No module named 'outcome_ci_cli_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"]}, \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/manifest.json\", \"manifest_sha256\": \"b28e4eca293c210e67fa6d887bd29531a3bcffb0481cc50a2abc9277445cf471\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/result-a0927f824adc40b2956c1c7690a324dc.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc\", \"unit_id\": \"a0927f824adc40b2956c1c7690a324dc\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--submit",
+          "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/result-a0927f824adc40b2956c1c7690a324dc.json",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-a0927f824adc40b2956c1c7690a324dc/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"content_id\": \"432885d2193a4a360ee9ee19a3264082e6d976e3c0a4e2ce35f329d93b88202a\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 1, \"status\": \"pass\", \"unit_id\": \"a0927f824adc40b2956c1c7690a324dc\"}, \"review_context\": {\"model\": \"host\", \"provenance\": \"independent\", \"session_id\": \"independent-gate-fixture\"}, \"review_series\": \"a0927f824adc40b2956c1c7690a324dc\", \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"status\": \"pass\", \"unit_id\": \"a0927f824adc40b2956c1c7690a324dc\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "status",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0 --topic feature\", \"self_findings\": [], \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": []}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:53.340242+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"head\": \"8925c63c76d5f7e40fddec7a9a2bd917a6908fea\", \"known_failures\": [], \"new_failures\": [{\"command\": \"python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest.test_behavior)\"}], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest.test_behavior)\": \"16ea420a3daad9ce58a251bb6197dccadfa2f842d9669cbf5e8ba5eb9242fcda\"}, \"output_complete\": true, \"output_length\": 1390, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 426, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 367, in _get_module_from_name\\n    __import__(name)\\n    ~~~~~~~~~~^^^^^^\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\\\", line 6, in <module>\\n    importlib.import_module(selected_plugin())\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\\\", line 88, in import_module\\n    return _bootstrap._gcd_import(name[level:], package, level)\\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\nModuleNotFoundError: No module named 'outcome_ci_cli_changed_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:53.731838+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"head\": \"8925c63c76d5f7e40fddec7a9a2bd917a6908fea\", \"known_failures\": [], \"new_failures\": [{\"command\": \"python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest.test_behavior)\"}], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"], \"loader_dependency_fingerprints\": {\"test_behavior (unittest.loader._FailedTest.test_behavior)\": \"16ea420a3daad9ce58a251bb6197dccadfa2f842d9669cbf5e8ba5eb9242fcda\"}, \"output_complete\": true, \"output_length\": 1390, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 426, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 367, in _get_module_from_name\\n    __import__(name)\\n    ~~~~~~~~~~^^^^^^\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\\\", line 6, in <module>\\n    importlib.import_module(selected_plugin())\\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\\\", line 88, in import_module\\n    return _bootstrap._gcd_import(name[level:], package, level)\\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\nModuleNotFoundError: No module named 'outcome_ci_cli_changed_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"]}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"197781397824a52dcc56f873fe2e23913dc3026299fb3dcb0266779c5c08b4b9\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test: 审查需要当前全量测试相对基线无新增失败记录\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:54.565185+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"head\": \"27c51fbb48d52b0fa7a9ae60258d5981a7f19677\", \"known_failures\": [], \"new_failures\": [{\"command\": \"python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest.test_behavior)\"}], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 1047, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 426, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 367, in _get_module_from_name\\n    __import__(name)\\n    ~~~~~~~~~~^^^^^^\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\\\", line 3, in <module>\\n    assert 7 == 8, 'actual business assertion'\\n           ^^^^^^\\nAssertionError: actual business assertion\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:54.957822+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"head\": \"27c51fbb48d52b0fa7a9ae60258d5981a7f19677\", \"known_failures\": [], \"new_failures\": [{\"command\": \"python3 -B -m unittest discover -s suite\", \"comparison\": \"baseline-identity-unverifiable\", \"failure\": \"test_behavior (unittest.loader._FailedTest.test_behavior)\"}], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": false, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 1, \"failures\": [\"test_behavior (unittest.loader._FailedTest.test_behavior)\"], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 1047, \"output_tail\": \"E\\n======================================================================\\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: test_behavior\\nTraceback (most recent call last):\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 426, in _find_test_path\\n    module = self._get_module_from_name(name)\\n  File \\\"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\\\", line 367, in _get_module_from_name\\n    __import__(name)\\n    ~~~~~~~~~~^^^^^^\\n  File \\\"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/suite/test_behavior.py\\\", line 3, in <module>\\n    assert 7 == 8, 'actual business assertion'\\n           ^^^^^^\\nAssertionError: actual business assertion\\n\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (errors=1)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"df46bc3a4c5786e97c758dcef63edeaffcfeb359f19b9aad0260d13b464841b8\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "test: 审查需要当前全量测试相对基线无新增失败记录\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:55.798153+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"head\": \"02a65e1d8b4dcd35755ac2727c278d0c75863721\", \"known_failures\": [], \"new_failures\": [], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 98, \"output_tail\": \".\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nOK\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "test",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"at\": \"2026-10-02T16:08:56.188799+00:00\", \"commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"], \"completed\": true, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"head\": \"02a65e1d8b4dcd35755ac2727c278d0c75863721\", \"known_failures\": [], \"new_failures\": [], \"results\": [{\"argv\": [\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"suite\"], \"command\": \"python3 -B -m unittest discover -s suite\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 98, \"output_tail\": \".\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nOK\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-c\", \"pass\"], \"command\": \"python3 -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"dependency_proof_version\": 3, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"loader_dependency_fingerprints\": {}, \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B -m unittest discover -s suite\"]}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--reviewer-model",
+          "host",
+          "--reviewer-session-id",
+          "independent-gate-fixture",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -c 'pass'\"]}, \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6\", \"ticket\": {\"body\": \"## 要构建什么\\nRun tests\\n## 适用规则与影响区域\\nlocal\\n## 验收标准\\n- [ ] marker observed\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"observe tests\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Execute tests\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/manifest.json\", \"manifest_sha256\": \"453fed674726f3755cf26ac37b5def0ec795fbcaa3c220308fe81ffa58cfcb59\", \"probes\": [\"recovery\"], \"result_file\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/result-8dff90764ec8442ab80f9416553758c0.json\", \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"snapshot_dir\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0\", \"unit_id\": \"8dff90764ec8442ab80f9416553758c0\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "review",
+          "--topic",
+          "feature",
+          "--submit",
+          "/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/result-8dff90764ec8442ab80f9416553758c0.json",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"manifest\": \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0/.agent/work/feature/reviews/branch-8dff90764ec8442ab80f9416553758c0/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"marker observed\"}], \"content_id\": \"17db4f06025ed88a1a4509754d371241c44490f16538ddaa79a1ef8d65826aa6\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 2, \"status\": \"pass\", \"unit_id\": \"8dff90764ec8442ab80f9416553758c0\"}, \"review_context\": {\"model\": \"host\", \"provenance\": \"independent\", \"session_id\": \"independent-gate-fixture\"}, \"review_series\": \"a0927f824adc40b2956c1c7690a324dc\", \"reviewer\": {\"model\": \"host\", \"provenance\": \"independent\"}, \"round\": 2, \"rounds_remaining\": 2, \"rounds_used\": 2, \"status\": \"pass\", \"unit_id\": \"8dff90764ec8442ab80f9416553758c0\"}\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "/private/tmp/outcome-ci-install-final-01/tools/workflow.py",
+          "batch",
+          "close",
+          "--topic",
+          "feature",
+          "--repo",
+          "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0"
+        ],
+        "cwd": "",
+        "exit": 0,
+        "stdout": "{\"batch\": \"01\", \"next_command\": \"workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpytq23bk0 --topic feature\", \"state\": \"已收口\", \"topic\": \"feature\"}\n",
+        "stderr": ""
+      }
+    ]
+  }
+}

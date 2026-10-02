@@ -1,0 +1,54 @@
+{
+  "source_commit": "ee589c2df6fc2ad715b1dd3145486cfe977efb90",
+  "source_manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+  "source_files": 285,
+  "complete_suite_test_count": 357,
+  "complete_gate": {
+    "command": "python3 -B tools/workflow.py deploy --target codex",
+    "exit_code": 0,
+    "scope": "one full unittest discovery on stable build snapshot",
+    "previous_failed_gate_preserved": "outcome-local-final-codex-deploy.log"
+  },
+  "ci": {
+    "run_id": 37032744557,
+    "url": "https://github.com/qx-cn/my-matt-workflow/actions/runs/37032744557",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "check (3.14)",
+        "conclusion": "success"
+      },
+      {
+        "name": "check (3.10)",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "independent": {
+    "control_groups": 7,
+    "public_cli_groups": 2,
+    "blocking_findings": 0,
+    "final02_binding": "independent/outcome-ci-install-review-final02-binding.json"
+  },
+  "installation": {
+    "codex": {
+      "release_id": "20261003-001558",
+      "skills": 32,
+      "runtime_entry": "/Users/sherly/.codex/my-matt-workflow/runtime/20261003-001558/tools/workflow.py",
+      "runtime_help_exit": 0,
+      "changed_runtime_bytes_match_source": true
+    },
+    "claude": {
+      "release_id": "20261003-001558",
+      "skills": 32,
+      "runtime_entry": "/Users/sherly/.claude/my-matt-workflow/runtime/20261003-001558/tools/workflow.py",
+      "runtime_help_exit": 0,
+      "changed_runtime_bytes_match_source": true
+    }
+  },
+  "limitations": [
+    "No real-model capability efficacy trial",
+    "Cleanup Errno66 not reproduced by focused probes; no guarantee against all filesystem races",
+    "Python3.10 verified in real CI, not locally"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "artifact": ".agent/work/workflow-outcome-optimization/deliveries/workflow-outcome-optimization-source-04.tar.gz",
+  "sha256": "ef755188a269f0ea59848c90f655b267483b7b0d430165eff6dbc4dec4f73424",
+  "size_bytes": 2561276,
+  "files": 1708,
+  "source_manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+  "verified": "all archive file bytes and modes checked against package-manifest; complete source plus delivery/index/AC/provenance",
+  "excluded": "Git metadata, old Topic histories, generated releases/current pointer, caches, real host state, historical snapshot archives and package self-hash receipt"
+}

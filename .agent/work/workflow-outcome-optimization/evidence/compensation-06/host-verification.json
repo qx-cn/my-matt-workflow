@@ -1,0 +1,62 @@
+{
+  "doctor": {
+    "current_release": {
+      "release_id": "20261003-001558",
+      "skills": 32,
+      "source_match": true,
+      "status": "valid"
+    },
+    "hosts": {
+      "claude": {
+        "agent_home": "/Users/sherly/.claude",
+        "installed_agent": "claude",
+        "metadata_projection": "claude",
+        "reasons": [],
+        "release_id": "20261003-001558",
+        "skills": 32,
+        "state_path": "/Users/sherly/.claude/my-matt-workflow/install-state.json",
+        "status": "valid"
+      },
+      "codex": {
+        "agent_home": "/Users/sherly/.codex",
+        "installed_agent": "codex",
+        "metadata_projection": "codex",
+        "reasons": [],
+        "release_id": "20261003-001558",
+        "skills": 32,
+        "state_path": "/Users/sherly/.codex/my-matt-workflow/install-state.json",
+        "status": "valid"
+      },
+      "cursor": {
+        "agent_home": "/Users/sherly/.cursor",
+        "state_path": "/Users/sherly/.cursor/my-matt-workflow/install-state.json",
+        "status": "not-installed"
+      }
+    },
+    "source": {
+      "scripts": 2,
+      "skills": 32,
+      "status": "valid"
+    },
+    "status": "diagnostic"
+  },
+  "hosts": {
+    "codex": {
+      "release_id": "20261003-001558",
+      "skills": 32,
+      "runtime_entry": "/Users/sherly/.codex/my-matt-workflow/runtime/20261003-001558/tools/workflow.py",
+      "runtime_help_exit": 0,
+      "changed_runtime_bytes_match_source": true
+    },
+    "claude": {
+      "release_id": "20261003-001558",
+      "skills": 32,
+      "runtime_entry": "/Users/sherly/.claude/my-matt-workflow/runtime/20261003-001558/tools/workflow.py",
+      "runtime_help_exit": 0,
+      "changed_runtime_bytes_match_source": true
+    }
+  },
+  "source_manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+  "source_files": 285,
+  "verification": "host installed content verified by doctor; runtime help actual exit; changed runtime bytes match source"
+}

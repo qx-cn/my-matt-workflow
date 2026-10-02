@@ -1,0 +1,5 @@
+{
+  "frozen_source_manifest_sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b",
+  "discovered_test_count": 357,
+  "suite_execution": "formal deploy and GitHub check run unittest discover without subsets; exit results recorded separately"
+}

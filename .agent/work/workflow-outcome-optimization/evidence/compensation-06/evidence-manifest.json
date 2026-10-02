@@ -1,0 +1,160 @@
+{
+  "files": [
+    {
+      "path": "build-source-package.py",
+      "sha256": "996571fdb330f863658129568604d30896b63ba9106b6e0c040f7bc377748517"
+    },
+    {
+      "path": "ci-final-result.json",
+      "sha256": "772026fce367242b605dbf193e345ae1de89fede7946f7681bc11dd78dc2df94"
+    },
+    {
+      "path": "ci-final.log",
+      "sha256": "fd822c9ee4379919ac45ad1964f06b78ed3c5eb747a69d54ef8cf134c3abe1ea"
+    },
+    {
+      "path": "claude-final-install.log",
+      "sha256": "8ce2707850ff57823ff8fbb3e4abe2eaf6d457c88028ecb652d5a02d69d2987d"
+    },
+    {
+      "path": "codex-final-deploy.log",
+      "sha256": "7764bcd2bdd7a8b6f5aa5c7df2ad16d803fce75acaf234093a66259eb2094b07"
+    },
+    {
+      "path": "completion-evidence.json",
+      "sha256": "ef1def1e139699d2e41e724e9c11afefe0c22c91a0e5dac0dce8908f5404db98"
+    },
+    {
+      "path": "doctor-before.json",
+      "sha256": "f0b079c85ac58b053eb954d428fc59879d30198c1b34f88d684cf04d6cc62ee3"
+    },
+    {
+      "path": "host-verification.json",
+      "sha256": "9041881df36ded3f13f52a31d352532b5df8d7d95822ed8f1c40c4315e57b5d6"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-cli.json",
+      "sha256": "c7b9dea49d18c4803663e6f616a6b985abf1cd7e43a47b8179ad9c749010807a"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-cli.log",
+      "sha256": "d9eb7c6df1119380c6cd75d381dcaad8b6c4e74bf953fd763773f7c7fbda8447"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-cli.py",
+      "sha256": "882761f879d7fc3bc1e73b104f493a23072ddb5c7b3d71db6dcb38f2d4cecca4"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-end.json",
+      "sha256": "33519c2877666c6c26d978e72776dec8f2b48e4bd99547c45da4d003b2fcc2c1"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-evidence-manifest.json",
+      "sha256": "8cebac397d2afe2f069a5999c4945c4c256f480793ff75ee06675abfbe0cd331"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-final.md",
+      "sha256": "4d4b94a893a13dbcebbf2a402418bff96cd3f4d1affbe120cc6792ecbbb1a792"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-final02-binding.json",
+      "sha256": "944ab0ee709dcedf793bdb1ced4b145db7aaa3eed7e58b1315ab70213f18b191"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-final02-binding.md",
+      "sha256": "694fe3d15af21087777fffdee95a1f5309c383795bc8494f1f7f8161e0e3f22b"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-plan.md",
+      "sha256": "0f96f5b2a6b3d19c49868eddb4d18700ec28c0e7990f142611462664e7564973"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-probe.json",
+      "sha256": "a125f12571b3cbb64ad554f05adcbf467a2b1d3e500c7e4942f6da87f9b801ea"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-probe.log",
+      "sha256": "47af58a3544520bf3c6a9ba047c982485fabe617f55d40fd3fea33d75afc3f80"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-probe.py",
+      "sha256": "fe9fa46bca22ab53510ffa6e3f1e566cc3e3eb6cf9e8be804d2af1d400d41dad"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-start.json",
+      "sha256": "d40e7fec5c5dc7ff97e1a38d36a7478fb6b7cb6529a98327a1b65ad1b4ae2b76"
+    },
+    {
+      "path": "independent/outcome-ci-install-review-summary.json",
+      "sha256": "4b123e9c4bab40a2ad5a71d9920e2dd1e1bed0f01b2dc7c82cc352f44b5c2310"
+    },
+    {
+      "path": "outcome-ci-diagnosis.md",
+      "sha256": "459b29e2a276542f56bbc1740476580cac874b54f6aaf278646961fd0c756e4b"
+    },
+    {
+      "path": "outcome-ci-final-result.json",
+      "sha256": "cbefd5ce918be4dba9615b4eea565966e8b06894856f86ec0f06a8c16950290e"
+    },
+    {
+      "path": "outcome-ci-final.log",
+      "sha256": "a0e6e12f5566aa0a293607ee614d8eeecf6fee9f0e4d546960748c2d6197fb9a"
+    },
+    {
+      "path": "outcome-ci-original-failed.log",
+      "sha256": "032b9bb2b9146991ee4ea12bec57ff7a5ea4a6b2bd8924c9eeaf1a0a278f3589"
+    },
+    {
+      "path": "outcome-doctor-scope-repair.md",
+      "sha256": "d9e09509f0f88081832c08d3818ba8188893460f0e03e8999fde5955a553a902"
+    },
+    {
+      "path": "outcome-local-cleanup-investigation.md",
+      "sha256": "f14b0ffe5cc91e4249d38eb58f80fd9b0201e93a814049e33bcaf12c0626f850"
+    },
+    {
+      "path": "outcome-local-codex-deploy.log",
+      "sha256": "996eb02a94937603739f9c9e3a50c5eb2292e9e06a7019e151fd54df5e72a9df"
+    },
+    {
+      "path": "outcome-local-final-codex-deploy.log",
+      "sha256": "aa1e382ec77ff6e1288f04b1af9575e5be6eddeacfe0abed76d95634a54643f6"
+    },
+    {
+      "path": "outcome-migration-cleanup-trace-2.json",
+      "sha256": "38314e6c19cf95667a1ff15d82f2f5a339f3fca0ab92c7029b541594e2e24532"
+    },
+    {
+      "path": "outcome-migration-cleanup-trace-3.json",
+      "sha256": "624a7ca08a7cdae8389f855c4355888d187ef81da0992e33b910e7a56702e7e2"
+    },
+    {
+      "path": "outcome-migration-cleanup-trace-4.json",
+      "sha256": "884c36972b017548c474bbe4750f6e42f03195a0915cbd5ec99a61a1c3d0fb79"
+    },
+    {
+      "path": "outcome-migration-cleanup-trace-5.json",
+      "sha256": "b5fd6803e6acc638afc06c1e195b24ca0f2adfd3c1ce286a2e00403fec831d36"
+    },
+    {
+      "path": "outcome-migration-cleanup-trace.json",
+      "sha256": "a0177b362c0b7ee5e78a5a461e6ad371d505fafd84b1aca7b89576dbc5758ea6"
+    },
+    {
+      "path": "source-manifest-final-02.json",
+      "sha256": "671d93dedb49daf0f3af403ce41572f9a2a125f12f4812a38f0c7fb8191ffc6b"
+    },
+    {
+      "path": "source-manifest.json",
+      "sha256": "00f4a151d8bdbb1280734ec1a0748d0561ffc7b63d4a6257d4e32aeeae060c55"
+    },
+    {
+      "path": "test-discovery.json",
+      "sha256": "d3ad5db969c399b34ca30cbcae03a2c3544a5d0ff8b8842896930acdf80b1a3b"
+    },
+    {
+      "path": "verify-installed-hosts.py",
+      "sha256": "885c2216a8ebedbbda4c7bef856cdc759da22e776613fdcec1d3d96cadc25170"
+    }
+  ]
+}

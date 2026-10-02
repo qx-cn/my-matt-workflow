@@ -1,0 +1,324 @@
+check (3.14)	Set up job	﻿2026-10-02T16:06:38.3631453Z Current runner version: '2.337.0'
+check (3.14)	Set up job	2026-10-02T16:06:38.3652082Z ##[group]Runner Image Provisioner
+check (3.14)	Set up job	2026-10-02T16:06:38.3652935Z Hosted Compute Agent
+check (3.14)	Set up job	2026-10-02T16:06:38.3653450Z Version: 20260901.588
+check (3.14)	Set up job	2026-10-02T16:06:38.3653957Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+check (3.14)	Set up job	2026-10-02T16:06:38.3654624Z Build Date: 2026-09-01T19:56:44Z
+check (3.14)	Set up job	2026-10-02T16:06:38.3655179Z Worker ID: {3217bc30-f306-47cf-87b3-a5a4cad0f291}
+check (3.14)	Set up job	2026-10-02T16:06:38.3655784Z Azure Region: westcentralus
+check (3.14)	Set up job	2026-10-02T16:06:38.3656294Z ##[endgroup]
+check (3.14)	Set up job	2026-10-02T16:06:38.3657336Z ##[group]Operating System
+check (3.14)	Set up job	2026-10-02T16:06:38.3658073Z Ubuntu
+check (3.14)	Set up job	2026-10-02T16:06:38.3658543Z 24.04.5
+check (3.14)	Set up job	2026-10-02T16:06:38.3658994Z LTS
+check (3.14)	Set up job	2026-10-02T16:06:38.3659462Z ##[endgroup]
+check (3.14)	Set up job	2026-10-02T16:06:38.3659917Z ##[group]Runner Image
+check (3.14)	Set up job	2026-10-02T16:06:38.3660483Z Image: ubuntu-24.04
+check (3.14)	Set up job	2026-10-02T16:06:38.3660952Z Version: 20260927.320.1
+check (3.14)	Set up job	2026-10-02T16:06:38.3661796Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+check (3.14)	Set up job	2026-10-02T16:06:38.3663272Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+check (3.14)	Set up job	2026-10-02T16:06:38.3664084Z ##[endgroup]
+check (3.14)	Set up job	2026-10-02T16:06:38.3665051Z ##[group]GITHUB_TOKEN Permissions
+check (3.14)	Set up job	2026-10-02T16:06:38.3666601Z Contents: read
+check (3.14)	Set up job	2026-10-02T16:06:38.3667141Z Metadata: read
+check (3.14)	Set up job	2026-10-02T16:06:38.3668131Z Packages: read
+check (3.14)	Set up job	2026-10-02T16:06:38.3668598Z ##[endgroup]
+check (3.14)	Set up job	2026-10-02T16:06:38.3670398Z Secret source: Actions
+check (3.14)	Set up job	2026-10-02T16:06:38.3671186Z Cache mode: write
+check (3.14)	Set up job	2026-10-02T16:06:38.3671725Z Prepare workflow directory
+check (3.14)	Set up job	2026-10-02T16:06:38.3924453Z Prepare all required actions
+check (3.14)	Set up job	2026-10-02T16:06:38.3962584Z Getting action download info
+check (3.14)	Set up job	2026-10-02T16:06:38.7065565Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+check (3.14)	Set up job	2026-10-02T16:06:38.8759439Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+check (3.14)	Set up job	2026-10-02T16:06:39.1411299Z Complete job name: check (3.14)
+check (3.14)	Run actions/checkout@v4	﻿2026-10-02T16:06:39.2424829Z ##[group]Run actions/checkout@v4
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2425533Z with:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2425899Z   repository: qx-cn/my-matt-workflow
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2429316Z   token: ***
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2429663Z   ssh-strict: true
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2430010Z   ssh-user: git
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2430360Z   persist-credentials: true
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2430744Z   clean: true
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2431096Z   sparse-checkout-cone-mode: true
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2431505Z   fetch-depth: 1
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2431841Z   fetch-tags: false
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2432188Z   show-progress: true
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2432539Z   lfs: false
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2432861Z   submodules: false
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2433221Z   set-safe-directory: true
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2433610Z   allow-unsafe-pr-checkout: false
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.2434151Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3226781Z Syncing repository: qx-cn/my-matt-workflow
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3229020Z ##[group]Getting Git version info
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3229981Z Working directory is '/home/runner/work/my-matt-workflow/my-matt-workflow'
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3231477Z [command]/usr/bin/git version
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3738589Z git version 2.55.0
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3760370Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3773663Z Temporarily overriding HOME='/home/runner/work/_temp/6921d0cb-6291-44d7-886e-78ddc30b23ac' before making global git config changes
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3775197Z Adding repository directory to the temporary git global config as a safe directory
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3788523Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/my-matt-workflow/my-matt-workflow
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3825095Z Deleting the contents of '/home/runner/work/my-matt-workflow/my-matt-workflow'
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3833230Z ##[group]Initializing the repository
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3842235Z [command]/usr/bin/git init /home/runner/work/my-matt-workflow/my-matt-workflow
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3908775Z hint: Using 'master' as the name for the initial branch. This default branch name
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3909813Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3912314Z hint: to use in all of your new repositories, which will suppress this warning,
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3913270Z hint: call:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3913775Z hint:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3914427Z hint: 	git config --global init.defaultBranch <name>
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3915189Z hint:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3915912Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3917057Z hint: 'development'. The just-created branch can be renamed via this command:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3918309Z hint:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3918810Z hint: 	git branch -m <name>
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3919407Z hint:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3920180Z hint: Disable this message with "git config set advice.defaultBranchName false"
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3921775Z Initialized empty Git repository in /home/runner/work/my-matt-workflow/my-matt-workflow/.git/
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3924263Z [command]/usr/bin/git remote add origin https://github.com/qx-cn/my-matt-workflow
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3975334Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3975989Z ##[group]Disabling automatic garbage collection
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3976536Z [command]/usr/bin/git config --local gc.auto 0
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3996262Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.3997194Z ##[group]Setting up auth
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4001741Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4033679Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4331231Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4367438Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4577966Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4608375Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4797964Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4832436Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4833429Z ##[group]Fetching the repository
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:39.4841071Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +718f39f7e7040eec40e753fe9441d2bd60f26016:refs/remotes/origin/main
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.7753135Z From https://github.com/qx-cn/my-matt-workflow
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.7754680Z  * [new ref]         718f39f7e7040eec40e753fe9441d2bd60f26016 -> origin/main
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.7758140Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.7759386Z ##[group]Determining the checkout info
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.7760795Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.7765377Z [command]/usr/bin/git sparse-checkout disable
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.8967692Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.9062252Z ##[group]Checking out the ref
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:42.9065286Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:43.1104038Z Switched to a new branch 'main'
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:43.1106076Z branch 'main' set up to track 'origin/main'.
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:43.1120558Z ##[endgroup]
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:43.1160093Z [command]/usr/bin/git log -1 --format=%H
+check (3.14)	Run actions/checkout@v4	2026-10-02T16:06:43.1183252Z 718f39f7e7040eec40e753fe9441d2bd60f26016
+check (3.14)	Run actions/setup-python@v5	﻿2026-10-02T16:06:43.1467480Z ##[group]Run actions/setup-python@v5
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1468073Z with:
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1468282Z   python-version: 3.14
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1468513Z   check-latest: false
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1470629Z   token: ***
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1470843Z   update-environment: true
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1471079Z   allow-prereleases: false
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1471495Z   freethreaded: false
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.1471706Z ##[endgroup]
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.2482194Z ##[group]Installed versions
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.3053324Z (node:2131) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.3054439Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.3054984Z Successfully set up CPython (3.14.7)
+check (3.14)	Run actions/setup-python@v5	2026-10-02T16:06:43.3055612Z ##[endgroup]
+check (3.14)	Run python3 tools/workflow.py check	﻿2026-10-02T16:06:43.3170384Z ##[group]Run python3 tools/workflow.py check
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.3171019Z ^[[36;1mpython3 tools/workflow.py check^[[0m
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7901416Z shell: /usr/bin/bash -e {0}
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7901750Z env:
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7902034Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7902438Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7902813Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7903194Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7903527Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7903860Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:06:43.7904162Z ##[endgroup]
+check (3.14)	Run python3 tools/workflow.py check	2026-10-02T16:11:06.0801100Z {"status": "valid", "tests": {"evidence_level": "unit", "status": "valid"}}
+check (3.14)	Run git diff --exit-code	﻿2026-10-02T16:11:06.0931972Z ##[group]Run git diff --exit-code
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0932262Z ^[[36;1mgit diff --exit-code^[[0m
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0990098Z shell: /usr/bin/bash -e {0}
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0990306Z env:
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0990517Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0990880Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0991203Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0991492Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0991788Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0992079Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib
+check (3.14)	Run git diff --exit-code	2026-10-02T16:11:06.0992335Z ##[endgroup]
+check (3.14)	Post Run actions/setup-python@v5	﻿2026-10-02T16:11:06.1727075Z Post job cleanup.
+check (3.14)	Post Run actions/setup-python@v5	2026-10-02T16:11:06.2676681Z (node:23178) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check (3.14)	Post Run actions/setup-python@v5	2026-10-02T16:11:06.2677566Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check (3.14)	Post Run actions/checkout@v4	﻿2026-10-02T16:11:06.2875040Z Post job cleanup.
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3604514Z [command]/usr/bin/git version
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3640848Z git version 2.55.0
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3669120Z Temporarily overriding HOME='/home/runner/work/_temp/8680d7a4-1f8e-4cbf-9924-25c2b86b52b8' before making global git config changes
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3670132Z Adding repository directory to the temporary git global config as a safe directory
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3673302Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/my-matt-workflow/my-matt-workflow
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3705419Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3734455Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3951032Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3978035Z http.https://github.com/.extraheader
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.3990372Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.4019144Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.4245519Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+check (3.14)	Post Run actions/checkout@v4	2026-10-02T16:11:06.4279065Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+check (3.14)	Complete job	﻿2026-10-02T16:11:06.4638850Z Cleaning up orphan processes
+check (3.14)	Complete job	2026-10-02T16:11:06.4888990Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+check (3.10)	Set up job	﻿2026-10-02T16:06:38.1513028Z Current runner version: '2.337.0'
+check (3.10)	Set up job	2026-10-02T16:06:38.1533379Z ##[group]Runner Image Provisioner
+check (3.10)	Set up job	2026-10-02T16:06:38.1534190Z Hosted Compute Agent
+check (3.10)	Set up job	2026-10-02T16:06:38.1534873Z Version: 20260901.588
+check (3.10)	Set up job	2026-10-02T16:06:38.1535546Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+check (3.10)	Set up job	2026-10-02T16:06:38.1536249Z Build Date: 2026-09-01T19:56:44Z
+check (3.10)	Set up job	2026-10-02T16:06:38.1536798Z Worker ID: {4c84e147-d4cf-4a0f-9d8f-52196ac7ad8a}
+check (3.10)	Set up job	2026-10-02T16:06:38.1537424Z Azure Region: centralus
+check (3.10)	Set up job	2026-10-02T16:06:38.1537989Z ##[endgroup]
+check (3.10)	Set up job	2026-10-02T16:06:38.1539278Z ##[group]Operating System
+check (3.10)	Set up job	2026-10-02T16:06:38.1539835Z Ubuntu
+check (3.10)	Set up job	2026-10-02T16:06:38.1540264Z 24.04.5
+check (3.10)	Set up job	2026-10-02T16:06:38.1540769Z LTS
+check (3.10)	Set up job	2026-10-02T16:06:38.1541228Z ##[endgroup]
+check (3.10)	Set up job	2026-10-02T16:06:38.1541693Z ##[group]Runner Image
+check (3.10)	Set up job	2026-10-02T16:06:38.1542200Z Image: ubuntu-24.04
+check (3.10)	Set up job	2026-10-02T16:06:38.1542667Z Version: 20260927.320.1
+check (3.10)	Set up job	2026-10-02T16:06:38.1543534Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+check (3.10)	Set up job	2026-10-02T16:06:38.1545133Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+check (3.10)	Set up job	2026-10-02T16:06:38.1545930Z ##[endgroup]
+check (3.10)	Set up job	2026-10-02T16:06:38.1546951Z ##[group]GITHUB_TOKEN Permissions
+check (3.10)	Set up job	2026-10-02T16:06:38.1548730Z Contents: read
+check (3.10)	Set up job	2026-10-02T16:06:38.1549214Z Metadata: read
+check (3.10)	Set up job	2026-10-02T16:06:38.1550028Z Packages: read
+check (3.10)	Set up job	2026-10-02T16:06:38.1550505Z ##[endgroup]
+check (3.10)	Set up job	2026-10-02T16:06:38.1552231Z Secret source: Actions
+check (3.10)	Set up job	2026-10-02T16:06:38.1552985Z Cache mode: write
+check (3.10)	Set up job	2026-10-02T16:06:38.1553536Z Prepare workflow directory
+check (3.10)	Set up job	2026-10-02T16:06:38.1901789Z Prepare all required actions
+check (3.10)	Set up job	2026-10-02T16:06:38.1942342Z Getting action download info
+check (3.10)	Set up job	2026-10-02T16:06:38.4668611Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+check (3.10)	Set up job	2026-10-02T16:06:38.7032863Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+check (3.10)	Set up job	2026-10-02T16:06:38.9531475Z Complete job name: check (3.10)
+check (3.10)	Run actions/checkout@v4	﻿2026-10-02T16:06:39.0091632Z ##[group]Run actions/checkout@v4
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0092430Z with:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0092882Z   repository: qx-cn/my-matt-workflow
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0096225Z   token: ***
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0096715Z   ssh-strict: true
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0097162Z   ssh-user: git
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0097660Z   persist-credentials: true
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0098133Z   clean: true
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0098587Z   sparse-checkout-cone-mode: true
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0099116Z   fetch-depth: 1
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0099544Z   fetch-tags: false
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0099982Z   show-progress: true
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0100427Z   lfs: false
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0100868Z   submodules: false
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0101331Z   set-safe-directory: true
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0101849Z   allow-unsafe-pr-checkout: false
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0102493Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0949796Z Syncing repository: qx-cn/my-matt-workflow
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0951600Z ##[group]Getting Git version info
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0952288Z Working directory is '/home/runner/work/my-matt-workflow/my-matt-workflow'
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.0953495Z [command]/usr/bin/git version
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1009082Z git version 2.55.0
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1025858Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1036873Z Temporarily overriding HOME='/home/runner/work/_temp/d1b74041-f32c-4b96-8e8c-9a5c9f19b5b8' before making global git config changes
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1038715Z Adding repository directory to the temporary git global config as a safe directory
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1041600Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/my-matt-workflow/my-matt-workflow
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1088185Z Deleting the contents of '/home/runner/work/my-matt-workflow/my-matt-workflow'
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1116117Z ##[group]Initializing the repository
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1116993Z [command]/usr/bin/git init /home/runner/work/my-matt-workflow/my-matt-workflow
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1268888Z hint: Using 'master' as the name for the initial branch. This default branch name
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1270585Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1275163Z hint: to use in all of your new repositories, which will suppress this warning,
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1276592Z hint: call:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1277337Z hint:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1278148Z hint: 	git config --global init.defaultBranch <name>
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1279149Z hint:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1280016Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1281279Z hint: 'development'. The just-created branch can be renamed via this command:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1282330Z hint:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1283243Z hint: 	git branch -m <name>
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1283996Z hint:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1285303Z hint: Disable this message with "git config set advice.defaultBranchName false"
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1286888Z Initialized empty Git repository in /home/runner/work/my-matt-workflow/my-matt-workflow/.git/
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1289281Z [command]/usr/bin/git remote add origin https://github.com/qx-cn/my-matt-workflow
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1332587Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1334052Z ##[group]Disabling automatic garbage collection
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1335641Z [command]/usr/bin/git config --local gc.auto 0
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1367903Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1368908Z ##[group]Setting up auth
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1374982Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1405261Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1712721Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1739289Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1910044Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.1939693Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.2112039Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.2146082Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.2147407Z ##[group]Fetching the repository
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:39.2155638Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +718f39f7e7040eec40e753fe9441d2bd60f26016:refs/remotes/origin/main
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3840120Z From https://github.com/qx-cn/my-matt-workflow
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3841749Z  * [new ref]         718f39f7e7040eec40e753fe9441d2bd60f26016 -> origin/main
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3845667Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3847151Z ##[group]Determining the checkout info
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3848937Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3851491Z [command]/usr/bin/git sparse-checkout disable
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3897189Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3933121Z ##[group]Checking out the ref
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.3936449Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.5076690Z Switched to a new branch 'main'
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.5078887Z branch 'main' set up to track 'origin/main'.
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.5088749Z ##[endgroup]
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.5121750Z [command]/usr/bin/git log -1 --format=%H
+check (3.10)	Run actions/checkout@v4	2026-10-02T16:06:40.5141699Z 718f39f7e7040eec40e753fe9441d2bd60f26016
+check (3.10)	Run actions/setup-python@v5	﻿2026-10-02T16:06:40.5457669Z ##[group]Run actions/setup-python@v5
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5458883Z with:
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5459783Z   python-version: 3.10
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5460843Z   check-latest: false
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5467799Z   token: ***
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5468804Z   update-environment: true
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5469865Z   allow-prereleases: false
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5471102Z   freethreaded: false
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.5472105Z ##[endgroup]
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.6593837Z ##[group]Installed versions
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.6672957Z (node:2072) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.6676230Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.6678283Z Successfully set up CPython (3.10.21)
+check (3.10)	Run actions/setup-python@v5	2026-10-02T16:06:40.6680556Z ##[endgroup]
+check (3.10)	Run python3 tools/workflow.py check	﻿2026-10-02T16:06:40.6817813Z ##[group]Run python3 tools/workflow.py check
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.6819263Z ^[[36;1mpython3 tools/workflow.py check^[[0m
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7202103Z shell: /usr/bin/bash -e {0}
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7203255Z env:
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7204290Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7206118Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.21/x64/lib/pkgconfig
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7207633Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7209040Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7210431Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7211837Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.21/x64/lib
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:06:40.7213054Z ##[endgroup]
+check (3.10)	Run python3 tools/workflow.py check	2026-10-02T16:09:58.8475340Z {"status": "valid", "tests": {"evidence_level": "unit", "status": "valid"}}
+check (3.10)	Run git diff --exit-code	﻿2026-10-02T16:09:58.8615706Z ##[group]Run git diff --exit-code
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8616093Z ^[[36;1mgit diff --exit-code^[[0m
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8655427Z shell: /usr/bin/bash -e {0}
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8655810Z env:
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8656239Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8656679Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.21/x64/lib/pkgconfig
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8657113Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8657519Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8657908Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8658321Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.21/x64/lib
+check (3.10)	Run git diff --exit-code	2026-10-02T16:09:58.8658669Z ##[endgroup]
+check (3.10)	Post Run actions/setup-python@v5	﻿2026-10-02T16:09:58.9634907Z Post job cleanup.
+check (3.10)	Post Run actions/setup-python@v5	2026-10-02T16:09:59.0642662Z (node:23086) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check (3.10)	Post Run actions/setup-python@v5	2026-10-02T16:09:59.0643561Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check (3.10)	Post Run actions/checkout@v4	﻿2026-10-02T16:09:59.0815777Z Post job cleanup.
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1577129Z [command]/usr/bin/git version
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1614078Z git version 2.55.0
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1642921Z Temporarily overriding HOME='/home/runner/work/_temp/528b34c6-00d8-49aa-9612-83ea5c35aa25' before making global git config changes
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1644271Z Adding repository directory to the temporary git global config as a safe directory
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1648159Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/my-matt-workflow/my-matt-workflow
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1677925Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1705459Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1891553Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1908726Z http.https://github.com/.extraheader
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1917877Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.1953513Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.2130714Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+check (3.10)	Post Run actions/checkout@v4	2026-10-02T16:09:59.2154015Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+check (3.10)	Complete job	﻿2026-10-02T16:09:59.2475093Z Cleaning up orphan processes
+check (3.10)	Complete job	2026-10-02T16:09:59.2688206Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

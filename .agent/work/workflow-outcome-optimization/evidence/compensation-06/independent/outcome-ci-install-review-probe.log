@@ -1,0 +1,7 @@
+identity_predicate True {'anchored_exact_class': True}
+real_python39_all True {'real_reports': True, 'changed_blocked': True, 'v3_empty_fingerprint_blocked': True}
+real_python39_partial_verbose True {'real_reports': True, 'changed_blocked': True, 'v3_empty_fingerprint_blocked': True}
+real_python314_all_verbose True {'real_reports': True, 'changed_blocked': True, 'v3_empty_fingerprint_blocked': True}
+real_python314_partial True {'real_reports': True, 'changed_blocked': True, 'v3_empty_fingerprint_blocked': True}
+strict_duplicate_truncated True {'complete_only': True, 'duplicate_rejected': True, 'v3_truncated_blocks': True}
+validator_scope True {'root_only_exclusion': True, 'formal_missing_and_escape_rejected': True, 'positive_links_preserved': True}

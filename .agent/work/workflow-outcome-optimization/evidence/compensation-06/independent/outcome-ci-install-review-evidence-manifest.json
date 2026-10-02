@@ -1,0 +1,48 @@
+{
+  "files": [
+    {
+      "path": "/tmp/outcome-ci-install-review-plan.md",
+      "sha256": "0f96f5b2a6b3d19c49868eddb4d18700ec28c0e7990f142611462664e7564973"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-start.json",
+      "sha256": "d40e7fec5c5dc7ff97e1a38d36a7478fb6b7cb6529a98327a1b65ad1b4ae2b76"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-end.json",
+      "sha256": "33519c2877666c6c26d978e72776dec8f2b48e4bd99547c45da4d003b2fcc2c1"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-probe.py",
+      "sha256": "fe9fa46bca22ab53510ffa6e3f1e566cc3e3eb6cf9e8be804d2af1d400d41dad"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-probe.log",
+      "sha256": "47af58a3544520bf3c6a9ba047c982485fabe617f55d40fd3fea33d75afc3f80"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-probe.json",
+      "sha256": "a125f12571b3cbb64ad554f05adcbf467a2b1d3e500c7e4942f6da87f9b801ea"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-cli.py",
+      "sha256": "882761f879d7fc3bc1e73b104f493a23072ddb5c7b3d71db6dcb38f2d4cecca4"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-cli.log",
+      "sha256": "d9eb7c6df1119380c6cd75d381dcaad8b6c4e74bf953fd763773f7c7fbda8447"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-cli.json",
+      "sha256": "c7b9dea49d18c4803663e6f616a6b985abf1cd7e43a47b8179ad9c749010807a"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-summary.json",
+      "sha256": "4b123e9c4bab40a2ad5a71d9920e2dd1e1bed0f01b2dc7c82cc352f44b5c2310"
+    },
+    {
+      "path": "/tmp/outcome-ci-install-review-final.md",
+      "sha256": "4d4b94a893a13dbcebbf2a402418bff96cd3f4d1affbe120cc6792ecbbb1a792"
+    }
+  ]
+}
