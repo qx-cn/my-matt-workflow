@@ -1,0 +1,39 @@
+{
+  "base_commit": "608b72b4783e9117b9c0f68636b158fc3958f1d9",
+  "snapshot": "/tmp/outcome-compensation-final-01",
+  "manifest_sha256": "48126f1f9718524f7a907c75437c777b9f01bb179db77a48fb217de21edd8fa2",
+  "changes": [
+    {
+      "path": "skills/my-ask-matt/SKILL.md",
+      "sha256": "d6f2b1a928a119652d5800981fb5b838220a5e62a5112a44ae69115bf637cbb5"
+    },
+    {
+      "path": "tests/test_batches.py",
+      "sha256": "a166092208e9d2e7e269173c86d903f42f5e75a03893b1e5d1299ba4446090c6"
+    },
+    {
+      "path": "tests/test_failure_classification.py",
+      "sha256": "1c9e4c972adeab14ab664ba7047f5d8d76daccca7faf1cc7b4cd316f21b3a3eb"
+    },
+    {
+      "path": "tests/test_holistic_state_repairs.py",
+      "sha256": "e4b82e59dd432dd821c10e4e1178d98187203e4a50db677c2a1f86aa23d72834"
+    },
+    {
+      "path": "tools/workflow_lib/batches.py",
+      "sha256": "4cb008efe42bfea64940ce251d1f17d56755320ac9872f1612b7ed52b35de4cd"
+    },
+    {
+      "path": "tools/workflow_lib/branch_review.py",
+      "sha256": "12d4fc4c11f05ac5c3312442a4840408fd0b5163a2b37216cad7f9eb19527382"
+    },
+    {
+      "path": "tools/workflow_lib/evidence.py",
+      "sha256": "8783a20e9ba7e90613e894e7a60f98497403b951803913aa92da1a270ee4045a"
+    },
+    {
+      "path": "tools/workflow_lib/topic_service.py",
+      "sha256": "393e1a62a998d28f42a2b5075170da922f4c43db766bc2e21f1e5048861a6fb8"
+    }
+  ]
+}

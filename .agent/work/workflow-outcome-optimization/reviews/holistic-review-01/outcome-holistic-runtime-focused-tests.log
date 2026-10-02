@@ -1,0 +1,9 @@
+Command: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/tmp/outcome-holistic-608b72b:/tmp/outcome-holistic-608b72b/tests python3 -m unittest test_batches.BatchTests.test_self_blocking_requires_changed_evidence_and_preserves_history test_batches.BatchTests.test_unavailable_baseline_current_failure_and_legacy_recovery_block_close test_batches.BatchTests.test_last_ticket_finish_and_status_have_same_executable_batch_step test_review_resolution.ResolutionTests.test_legacy_geometric_stop_releases_only_current_valid_pass
+CWD: /tmp
+Exit code: 0
+Tool output retained:
+....
+----------------------------------------------------------------------
+Ran 4 tests in 11.947s
+
+OK

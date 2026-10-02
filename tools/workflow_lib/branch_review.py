@@ -46,10 +46,16 @@ def load(repo, topic=None, all_complete=True, batch=False):
     record = root / 'branch-review.json'
     unit = json.loads(record.read_text()) if record.exists() else dict(
         topic=topic, baseline=state['baseline'], started_at=topics.now(), reviews=[], status='implementing')
+    effective_state(repo,config,topic,root,tickets,unit,record)
+    return repo, config, topic, root, tickets, unit, record
+
+
+def effective_state(repo, config, topic, root, tickets, unit, record):
+    """Use the same validated legacy recovery for routing and mutations."""
     if unit.get('status')=='needs-user' and review_loop.recover_geometry(unit,
             lambda candidate:require_pass(repo,config,topic,root,tickets,candidate)):
         impl.write_json(record,unit)
-    return repo, config, topic, root, tickets, unit, record
+    return unit
 
 
 def definition(repo, tickets):
@@ -105,9 +111,8 @@ def materials(repo, config, topic, tickets):
         ticket_documents.append(path.read_text())
         history = json.loads(stored.read_text()) if stored.is_file() else {}
         self_text = history.get('self_review',{}).get('text','')
-        from .batches import pending_self_findings
-        self_findings.extend(dict(ticket=identifier,target=f"self:{identifier}:{f['id']}",finding=f,
-            observed_content_id=observation.get('content_id')) for f,observation in pending_self_findings(history).values() if f.get('disposition')=='fix-in-batch')
+        from .batches import self_observations
+        self_findings.extend(self_observations(repo,topic,[identifier]))
         impacts.append(f"### {identifier}（实施者声明，待核实）\n" + impl.section_text(self_text, '影响面'))
         mapped, text = impl.rule_material(repo, config, value, agent, topics.git(repo,'diff','--name-only', topics.state(topics.topic_path(repo,topic))['baseline']).stdout.decode().splitlines())
         rules.append({'ticket': identifier, 'rules': mapped})
@@ -133,7 +138,12 @@ def current_manifest(repo, config, topic, root, tickets, unit):
     if definition(repo, tickets) != active['definition'] or config != active['config']:
         raise topics.TopicError('definition: Ticket/Spec/配置已变化，请重新审查或 reopen')
     material = materials(repo, config, topic, tickets)
-    if material['self_findings']!=manifest.get('self_findings',[]):
+    from . import batches
+    resolved={f"self:{r['ticket']}:{r['finding']}" for b in batches.read(repo,topic)['batches']
+              if b['status']=='closed' and b.get('content_id')==manifest['content_id']
+              for r in b.get('self_finding_resolutions',[]) if r.get('action')!='definition-reopen'} if batches.enabled(repo,topic) else set()
+    expected=[o for o in manifest.get('self_findings',[]) if o['target'] not in resolved]
+    if material['self_findings']!=expected:
         raise topics.TopicError('self-review: 批次待处置发现已变化，请重新审查')
     decided = root / 'decided' / f'decided-{topic}.md'
     if (material['rule_map'] != manifest['rule_map']
@@ -155,6 +165,8 @@ def require_pass(repo, config, topic, root, tickets, unit):
     if unit['status'] == 'needs-user':
         raise topics.TopicError('审查需要用户裁决：' + unit['stop_reason'])
     manifest = current_manifest(repo, config, topic, root, tickets, unit)
+    from . import batches
+    batches.require_self_repairs(repo,topic,unit,manifest.get('self_findings',[]))
     entry = unit['reviews'][-1]
     from . import evidence
     accepted = root / 'reviews' / f"accepted-{manifest['unit_id']}.json"
@@ -191,6 +203,8 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         manifest = current_manifest(repo, config, topic, root, tickets, unit)
         result = reviews.validate_result(json.loads(Path(submit).read_text()), manifest)
         review_loop.check_contradictions(unit, result)
+        if result['status']=='pass':
+            batches.require_self_repairs(repo,topic,unit,manifest.get('self_findings',[]))
         status = result['status']
         if any(f.get('view') == 'spec-challenge' for f in result['findings']):
             status = 'blocked-by-design'

@@ -1,0 +1,10 @@
+test_legacy_blocking_requires_content_repair_and_current_review (test_holistic_state_repairs.HolisticStateRepairs.test_legacy_blocking_requires_content_repair_and_current_review) ... ok
+test_legacy_challenge_accept_is_named_and_disclosed (test_holistic_state_repairs.HolisticStateRepairs.test_legacy_challenge_accept_is_named_and_disclosed) ... ok
+test_legacy_challenges_reopen_only_named_target (test_holistic_state_repairs.HolisticStateRepairs.test_legacy_challenges_reopen_only_named_target) ... ok
+test_mixed_challenge_accept_cannot_waive_correctness (test_holistic_state_repairs.HolisticStateRepairs.test_mixed_challenge_accept_cannot_waive_correctness) ... ok
+test_repaired_discovery_survives_optional_branch_review_and_topic_close (test_holistic_state_repairs.HolisticStateRepairs.test_repaired_discovery_survives_optional_branch_review_and_topic_close) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 21.855s
+
+OK

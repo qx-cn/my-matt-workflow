@@ -1,0 +1,203 @@
+{
+  "candidate": {
+    "at": "2026-10-02T15:42:25.308711+00:00",
+    "root": "/tmp/outcome-compensation-final-01",
+    "manifest_sha256": "48126f1f9718524f7a907c75437c777b9f01bb179db77a48fb217de21edd8fa2",
+    "files": 283,
+    "mismatches": []
+  },
+  "verdict": "No blocking findings in scoped independent review",
+  "cases": {
+    "R1_correctness_recovery": {
+      "passed": true,
+      "checks": {
+        "closes": true,
+        "completes": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 19
+    },
+    "R1_challenge_accept": {
+      "passed": true,
+      "checks": {
+        "closes": true,
+        "completes": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 13
+    },
+    "R1_challenge_reopen": {
+      "passed": true,
+      "checks": {
+        "closes": true,
+        "completes": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 17
+    },
+    "R1_mixed_recovery": {
+      "passed": true,
+      "checks": {
+        "closes": true,
+        "completes": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 20
+    },
+    "R1_correctness": {
+      "passed": true,
+      "checks": {
+        "close_blocked": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 11
+    },
+    "R1_challenge": {
+      "passed": true,
+      "checks": {
+        "close_blocked": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 11
+    },
+    "R2_dynamic": {
+      "passed": true,
+      "checks": {
+        "real_marker": true,
+        "failure_blocks": true,
+        "repair_passes": true,
+        "repair_closes": true
+      },
+      "cli_calls": 15
+    },
+    "R2_dynamic_loader": {
+      "passed": true,
+      "checks": {
+        "real_marker": true,
+        "failure_blocks": true,
+        "repair_passes": true,
+        "repair_closes": true
+      },
+      "cli_calls": 15
+    },
+    "R2_v1": {
+      "passed": true,
+      "checks": {
+        "real_marker": true,
+        "failure_blocks": true,
+        "repair_passes": true,
+        "repair_closes": true
+      },
+      "cli_calls": 16
+    },
+    "R2_startup": {
+      "passed": true,
+      "checks": {
+        "unavailable": true,
+        "unverified": true,
+        "no_behavior_failure": true,
+        "close": true
+      },
+      "cli_calls": 10
+    },
+    "R2_direct_loader_startup": {
+      "passed": true,
+      "checks": {
+        "loader_not_unavailable": true,
+        "same_known": true,
+        "unverified": true,
+        "not_current_pass": true,
+        "no_new_failure": true,
+        "close": true
+      },
+      "cli_calls": 10
+    },
+    "R3_pass": {
+      "passed": true,
+      "checks": {
+        "expected_exit": true,
+        "not_archived": true
+      },
+      "cli_calls": 22
+    },
+    "R3_nonpass": {
+      "passed": true,
+      "checks": {
+        "expected_exit": true,
+        "not_archived": true
+      },
+      "cli_calls": 22
+    },
+    "R2_loader_all_controls": {
+      "passed": true,
+      "checks": {
+        "changed_blocks": true,
+        "legacy_complete_recomputed": true,
+        "known_closes": true
+      },
+      "cli_calls": 26
+    },
+    "R2_loader_partial_controls": {
+      "passed": true,
+      "checks": {
+        "changed_blocks": true,
+        "legacy_complete_recomputed": true,
+        "known_closes": true
+      },
+      "cli_calls": 26
+    },
+    "R2_loader_long_legacy_controls": {
+      "passed": true,
+      "checks": {
+        "closes": true,
+        "full_fingerprint_from_long_output": true
+      },
+      "cli_calls": 17
+    },
+    "R2_v2_loader_cache": {
+      "passed": true,
+      "checks": {
+        "real_marker": true,
+        "failure_blocks": true,
+        "repair_passes": true,
+        "repair_closes": true
+      },
+      "cli_calls": 16
+    },
+    "R1_optionalbranch_close_complete": {
+      "passed": true,
+      "checks": {
+        "close": true,
+        "complete": true,
+        "history_unchanged": true
+      },
+      "cli_calls": 23
+    },
+    "R3_stale_pass_blocks": {
+      "passed": true,
+      "checks": {
+        "blocked": true,
+        "not_archived": true
+      },
+      "cli_calls": 22
+    },
+    "R2_OS_startup_gap": {
+      "passed": true,
+      "checks": {
+        "unavailable": true,
+        "os_exit": true,
+        "unverified": true,
+        "no_new_failure": true,
+        "close": true
+      },
+      "cli_calls": 10
+    }
+  },
+  "valid_cli_call_count": 341,
+  "discarded_fixture_attempt": {
+    "file": "/tmp/outcome-compensation-review-final-controls.json",
+    "case": "R1_optionalbranch_close_complete",
+    "passed": false,
+    "reason": "one-Ticket fixture cannot invoke optional multi-Ticket standard topic review"
+  }
+}

@@ -1,0 +1,13 @@
+R1_correctness_recovery True {'closes': True, 'completes': True, 'history_unchanged': True}
+R1_challenge_accept True {'closes': True, 'completes': True, 'history_unchanged': True}
+R1_challenge_reopen True {'closes': True, 'completes': True, 'history_unchanged': True}
+R1_mixed_recovery True {'closes': True, 'completes': True, 'history_unchanged': True}
+R1_correctness True {'close_blocked': True, 'history_unchanged': True}
+R1_challenge True {'close_blocked': True, 'history_unchanged': True}
+R2_dynamic True {'real_marker': True, 'failure_blocks': True, 'repair_passes': True, 'repair_closes': True}
+R2_dynamic_loader True {'real_marker': True, 'failure_blocks': True, 'repair_passes': True, 'repair_closes': True}
+R2_v1 True {'real_marker': True, 'failure_blocks': True, 'repair_passes': True, 'repair_closes': True}
+R2_startup True {'unavailable': True, 'unverified': True, 'no_behavior_failure': True, 'close': True}
+R2_direct_loader_startup True {'loader_not_unavailable': True, 'same_known': True, 'unverified': True, 'not_current_pass': True, 'no_new_failure': True, 'close': True}
+R3_pass True {'expected_exit': True, 'not_archived': True}
+R3_nonpass True {'expected_exit': True, 'not_archived': True}

@@ -1,0 +1,105 @@
+{
+  "case": "legacy-branch-geometric-stop",
+  "legacy_status": {
+    "advisories": [],
+    "baseline": "c8b416064b217a35243eca21e2cb3839f10b9f47",
+    "batch_status": null,
+    "branch_review": {
+      "rounds_used": 2,
+      "status": "needs-user",
+      "stop_reason": "体积膨胀：基线增删行超过第一轮的 1.5 倍"
+    },
+    "decisions_needed": [],
+    "implementation_started": true,
+    "known_issues": [],
+    "level": "standard",
+    "next_command": "workflow.py resolve --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp__gb0m10 --branch --topic feature --accept --reason '<理由>'",
+    "started_at": "2026-10-02T14:57:59.737059+00:00",
+    "status": "active",
+    "test_runs": 0,
+    "tickets": [
+      {
+        "status": "complete",
+        "stop_reason": null,
+        "ticket": "feature-01"
+      },
+      {
+        "status": "complete",
+        "stop_reason": null,
+        "ticket": "feature-02"
+      }
+    ],
+    "topic": "feature",
+    "unverified": []
+  },
+  "candidate_status": {
+    "advisories": [],
+    "baseline": "c8b416064b217a35243eca21e2cb3839f10b9f47",
+    "batch_status": null,
+    "branch_review": {
+      "historical_stop_reason": null,
+      "rounds_used": 2,
+      "status": "needs-user",
+      "stop_reason": "体积膨胀：基线增删行超过第一轮的 1.5 倍"
+    },
+    "decisions_needed": [],
+    "implementation_started": true,
+    "inputs_needed": [],
+    "known_issues": [],
+    "level": "standard",
+    "next_command": "workflow.py resolve --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp__gb0m10 --branch --topic feature --accept --reason '<理由>'",
+    "started_at": "2026-10-02T14:57:59.737059+00:00",
+    "status": "active",
+    "test_runs": 0,
+    "tickets": [
+      {
+        "status": "complete",
+        "stop_reason": null,
+        "ticket": "feature-01"
+      },
+      {
+        "status": "complete",
+        "stop_reason": null,
+        "ticket": "feature-02"
+      }
+    ],
+    "topic": "feature",
+    "unverified": []
+  },
+  "suggested_action_returncode": 1,
+  "suggested_action_stderr": "branch accept 只接受 needs-user\n",
+  "status_after_failed_action": {
+    "advisories": [],
+    "baseline": "c8b416064b217a35243eca21e2cb3839f10b9f47",
+    "batch_status": null,
+    "branch_review": {
+      "historical_stop_reason": null,
+      "rounds_used": 2,
+      "status": "reviewing",
+      "stop_reason": null
+    },
+    "decisions_needed": [],
+    "implementation_started": true,
+    "inputs_needed": [],
+    "known_issues": [],
+    "level": "standard",
+    "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp__gb0m10 --topic feature",
+    "started_at": "2026-10-02T14:57:59.737059+00:00",
+    "status": "active",
+    "test_runs": 0,
+    "tickets": [
+      {
+        "status": "complete",
+        "stop_reason": null,
+        "ticket": "feature-01"
+      },
+      {
+        "status": "complete",
+        "stop_reason": null,
+        "ticket": "feature-02"
+      }
+    ],
+    "topic": "feature",
+    "unverified": []
+  }
+}

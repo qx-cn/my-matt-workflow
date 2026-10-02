@@ -1,0 +1,56 @@
+{
+  "successful": true,
+  "exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "discovered": 352,
+  "executed": 352,
+  "seconds": 231.065,
+  "shards": [
+    {
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "seconds": 68.19,
+      "successful": true
+    },
+    {
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "seconds": 230.978,
+      "successful": true
+    },
+    {
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "seconds": 206.838,
+      "successful": true
+    },
+    {
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "seconds": 85.297,
+      "successful": true
+    }
+  ],
+  "source_mismatches": [],
+  "source_manifest_sha256": "48126f1f9718524f7a907c75437c777b9f01bb179db77a48fb217de21edd8fa2"
+}

@@ -1,0 +1,9 @@
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpkr7sfhsl/workflow/releases/v1
+INSTALLED v1
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "v1", "status": "built"}, "source": {"status": "valid"}}
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpk4425veh/workflow/releases/v2
+INSTALLED v2
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "v2", "status": "built"}, "source": {"status": "valid"}}
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpa3x8qlsx/workflow/releases/v1
+INSTALLED v1
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "v1", "status": "current"}, "source": {"status": "valid"}}

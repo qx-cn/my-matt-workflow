@@ -1,0 +1,92 @@
+{
+  "reviewed_commit": "608b72b4783e9117b9c0f68636b158fc3958f1d9",
+  "baseline": "7947cb28e37512ab52a0c87c2cfd736bc3205c25",
+  "source_files": 281,
+  "manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+  "current_source_mismatches": [],
+  "prior_suite_receipt": {
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 409.614,
+    "source_manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+    "log_sha256": "e26ef6582b9c1458ba13c39410a1e27bd35dba64b503f28672df2612dc8d3beb"
+  },
+  "prior_suite_log_hash_matches": true,
+  "prior_suite_rerun_this_review": false,
+  "fresh_root_tests": {
+    "command": "python3 -B -m unittest tests.test_text_measurement tests.test_composition tests.test_resources tests.test_skill_packaging_v2 -v",
+    "tests": 48,
+    "seconds": 9.534,
+    "exit_code": 0,
+    "output_source": "live exec session 21246; no standalone raw log captured"
+  },
+  "install_benchmark": [
+    {
+      "counts": {
+        "copytree_calls": 35,
+        "projection_tree_copies": 30,
+        "projection_tree_operations": 15,
+        "release_verifications": 4,
+        "source_match_packaging": 1,
+        "suite_gate_calls": 1
+      },
+      "implementation": "/tmp/outcome-holistic-base-7947cb2",
+      "scenario": "unchanged minimal fixture deploy, suite stubbed for phase isolation",
+      "seconds": {
+        "operation": 0.12158120798994787,
+        "release_verification_seconds": 0.06909766697208397,
+        "source_packaging_seconds": 0.0171300420188345
+      }
+    },
+    {
+      "counts": {
+        "copytree_calls": 0,
+        "projection_tree_copies": 0,
+        "projection_tree_operations": 0,
+        "release_verifications": 1,
+        "source_match_packaging": 0,
+        "suite_gate_calls": 1
+      },
+      "implementation": "/tmp/outcome-holistic-608b72b",
+      "scenario": "unchanged minimal fixture deploy, suite stubbed for phase isolation",
+      "seconds": {
+        "operation": 0.041900375013938174,
+        "release_verification_seconds": 0.013841417006915435,
+        "source_packaging_seconds": 0
+      }
+    }
+  ],
+  "loading": [
+    {
+      "tree": "/tmp/outcome-holistic-base-7947cb2",
+      "characters": 33919,
+      "reachable_files": 75,
+      "unique_contents": 31,
+      "tools_python_lines": 8822
+    },
+    {
+      "tree": "/tmp/outcome-holistic-608b72b",
+      "characters": 38356,
+      "reachable_files": 94,
+      "unique_contents": 34,
+      "tools_python_lines": 9540
+    }
+  ],
+  "package": {
+    "sha256": "e65b64b4ac20a5343cbbada8c065cad6aa2114a41e991541ef6e4db68056a855",
+    "manifest_files": 1569,
+    "bad_files": [],
+    "boundary": "archive files and modes match its manifest; construction-source-manifest.json is package-only"
+  },
+  "model_effect_trials": 0,
+  "real_host_operations": 0
+}

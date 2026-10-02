@@ -1,0 +1,36 @@
+{
+  "user_instruction": "切换6.1sol继续施工。其他在施工的subagent也要切换。",
+  "root_runtime": {
+    "agent_id": "fea41c01-9cef-4ac1-a9d0-5c474e3c0ac7",
+    "model": "gpt-6.1-sol",
+    "thinking": "high",
+    "source": "Paseo get_agent_status runtimeInfo"
+  },
+  "replaced_builtin_agents": [
+    "/root/repair_state",
+    "/root/repair_failure",
+    "/root/repair_independent"
+  ],
+  "new_authors": [
+    {
+      "task": "/root/sol_state",
+      "explicit_spawn_model": "gpt-6.1-sol"
+    },
+    {
+      "task": "/root/sol_failure",
+      "explicit_spawn_model": "gpt-6.1-sol"
+    }
+  ],
+  "independent_reviewer": {
+    "agent_id": "4fc470e4-2563-48e8-9058-3c6a1e3548ec",
+    "runtime_session_id": "01a0fd3f-1354-7ad1-942e-effc0e34962c",
+    "model": "gpt-6.1-sol",
+    "thinking": "high",
+    "source": "Paseo get_agent_status runtimeInfo",
+    "report": "independent/outcome-compensation-review-final.md",
+    "report_sha256": "e1384d9a2da70c22782fd7b6c1751db1a0c9743df5970faa8acf2e81a0265201",
+    "valid_scenarios": 20,
+    "blocking_findings": 0
+  },
+  "review_pending": false
+}

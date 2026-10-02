@@ -1,0 +1,6 @@
+test_status_preserves_geometric_stop_with_stale_pass (test_holistic_state_repairs.HolisticBranchGeometry.test_status_preserves_geometric_stop_with_stale_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.684s
+
+OK

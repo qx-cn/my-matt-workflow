@@ -10,8 +10,9 @@ import shutil
 import subprocess
 import sys
 
-# Cached classifications from before typed module proofs need reevaluation.
-DEPENDENCY_PROOF_VERSION=1
+# Earlier revisions treated exceptions and loader wrappers as startup proof.
+# Neither proves that application initialization did not execute.
+DEPENDENCY_PROOF_VERSION=3
 
 
 def execution_observed(output, failure_identities=None):
@@ -47,14 +48,14 @@ def row_loader_only_failure(row):
     return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not row_execution_observed(row)
 
 
-def unavailable_loader_failures(stdout,stderr):
-    """Prove individual dependency gaps only inside a complete unittest report.
+def loader_dependency_fingerprints(stdout,stderr):
+    """Bind dependency diagnostics inside a complete unittest report.
 
     A passing test elsewhere does not make a loader module name a stable behavior
-    identity. These facts allow unchanged dependency gaps in partial runs without
-    allowing a new import assertion to borrow that same name.
+    identity. Compare the full blocks, including every duplicate occurrence;
+    a wrapper or exception type alone never proves startup-only execution.
     """
-    if stdout.strip():return []
+    if stdout.strip():return {}
     diagnostic=stderr.strip()
     progress=re.match(r'[.EFsxu]+\n',diagnostic)
     verbose=not progress
@@ -62,15 +63,15 @@ def unavailable_loader_failures(stdout,stderr):
         progress=re.match(r'(?:[^\n]+ \.\.\. (?:ok|ERROR|FAIL|expected failure|unexpected success|skipped [^\n]+)\n)+\n',diagnostic)
     footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(([^\n]+)\)$',diagnostic)
     headers=list(re.finditer(r'^={10,}\n(?:FAIL|ERROR): ([^\n]+)\n-{10,}\n',diagnostic,re.M))
-    if not progress or not footer or not headers or headers[0].start()!=progress.end():return []
+    if not progress or not footer or not headers or headers[0].start()!=progress.end():return {}
     counts=dict(re.findall(r'(failures|errors)=(\d+)',footer[2]))
-    if sum(int(n) for n in counts.values())!=len(headers):return []
+    if sum(int(n) for n in counts.values())!=len(headers):return {}
     if verbose:
         lines=progress[0].strip().splitlines()
         announced=[re.sub(r' \.\.\. (?:ERROR|FAIL)$','',line) for line in lines if line.endswith((' ... ERROR',' ... FAIL'))]
-        if len(lines)!=int(footer[1]) or sorted(announced)!=sorted(h[1] for h in headers):return []
+        if len(lines)!=int(footer[1]) or sorted(announced)!=sorted(h[1] for h in headers):return {}
     elif len(progress[0].strip())!=int(footer[1]) or any(progress[0].count(marker)!=int(counts.get(name,0)) for marker,name in (('E','errors'),('F','failures'))):
-        return []
+        return {}
     observations={}
     for index,header in enumerate(headers):
         if 'unittest.loader._FailedTest.' not in header[1]:continue
@@ -78,37 +79,25 @@ def unavailable_loader_failures(stdout,stderr):
         block=diagnostic[header.end():end].strip()
         prefix=re.match(r'ImportError: Failed to import test module: [^\n]+\n',block)
         # The same coarse identity may occur more than once. Every block must
-        # prove a dependency gap; one real/unknown block defeats the shortcut.
-        observations.setdefault(header[1],[]).append(bool(prefix and module_missing_diagnostic(block[prefix.end():])))
-    return [identity for identity,facts in observations.items() if all(facts)]
+        # carry a typed dependency diagnostic; unknown blocks cannot match.
+        observations.setdefault(header[1],[]).append(block if prefix and module_missing_diagnostic(block[prefix.end():]) else None)
+    return {identity:hashlib.sha256(json.dumps(facts,ensure_ascii=False).encode()).hexdigest()
+            for identity,facts in observations.items() if all(facts)}
 
 
-def unittest_startup_gap(diagnostic,code):
-    """Recognize only default/verbose all-loader missing-dependency wrappers."""
-    if code==0:return False
-    progress=re.match(r'E+\n',diagnostic)
-    verbose_progress=None
-    if not progress:
-        verbose_progress=re.match(r'(?:[^\n]+ \(unittest\.loader\._FailedTest\.[^()\n]+\) \.\.\. ERROR\n)+\n',diagnostic)
-        progress=verbose_progress
-    footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(errors=(\d+)\)$',diagnostic)
-    headers=list(re.finditer(r'^={10,}\nERROR: [^\n]*unittest\.loader\._FailedTest\.[^\n]+\n-{10,}\nImportError: Failed to import test module: [^\n]+\n',diagnostic,re.M))
-    if not progress or not footer or not headers or headers[0].start()!=progress.end():return False
-    if int(footer[1])!=len(headers) or int(footer[2])!=len(headers):return False
-    if verbose_progress:
-        announced=[line.removesuffix(' ... ERROR') for line in progress[0].strip().splitlines()]
-        observed=[header[0].splitlines()[1].removeprefix('ERROR: ') for header in headers]
-        if announced!=observed:return False
-    elif len(progress[0].strip())!=len(headers):return False
-    for index,header in enumerate(headers):
-        end=headers[index+1].start() if index+1<len(headers) else footer.start()
-        # Additional failure diagnostics inside a loader block do not qualify.
-        if not module_missing_diagnostic(diagnostic[header.end():end].strip()):return False
-    return True
+def unavailable_loader_failures(stdout,stderr):
+    return list(loader_dependency_fingerprints(stdout,stderr))
+
+
+def current_loader_gap_fingerprints(row):
+    if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:
+        return row.get('loader_dependency_fingerprints',{})
+    if not recorded_output_complete(row):return {}
+    return loader_dependency_fingerprints('',row.get('output_tail',''))
 
 
 def module_missing_diagnostic(diagnostic):
-    """A loader proof requires the specific exception, never a startup prefix."""
+    """Recognize typed diagnostics for comparison, not startup proof."""
     diagnostic=diagnostic.strip()
     if re.fullmatch(r"ModuleNotFoundError: No module named [^\n]+",diagnostic):return True
     if diagnostic.count('Traceback (most recent call last):')!=1 or not diagnostic.startswith('Traceback (most recent call last):'):
@@ -133,7 +122,8 @@ def environment_only_failure(stdout, stderr, code, argv=None):
     """Recognize specific startup evidence; other nonzero runs are failures."""
     if code==0 or stdout.strip():return False
     diagnostic=stderr.strip()
-    if unittest_startup_gap(diagnostic,code) or module_missing_diagnostic(diagnostic):return True
+    # A standalone exception says nothing about when application code ran.
+    # A loader wrapper also cannot prove initialization did not run.
     if python_module_startup_gap(diagnostic,argv):return True
     # Shell diagnostics must actually name a shell, rather than an arbitrary
     # exception whose message happens to mention a missing command or file.
@@ -148,21 +138,12 @@ def recorded_output_complete(row):
 
 def current_unavailable(row):
     if not row.get('unavailable') or row_execution_observed(row):return False
-    # New observations carry the strict proof revision. Older classifications
-    # must be re-proved from complete diagnostics, not from their cached bool.
+    # Reevaluate earlier exception/wrapper exemptions from complete facts.
     if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:return True
     if not recorded_output_complete(row):return False
     import shlex
     argv=row.get('argv') or shlex.split(row.get('command',''))
     return environment_only_failure('',row.get('output_tail',''),row.get('exit_code',1),argv)
-
-
-def current_loader_gaps(row):
-    if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:return set(row.get('unavailable_loader_failures',[]))
-    if not recorded_output_complete(row):return set()
-    # Complete legacy output can recover a genuine typed gap. A truncated old
-    # proof list could conceal a real block and must not establish comparison.
-    return set(unavailable_loader_failures('',row.get('output_tail','')))
 
 
 def environment(repo,argv):
@@ -179,13 +160,15 @@ def execute(repo, argv):
         result=subprocess.run(argv,cwd=repo,capture_output=True,text=True,errors='replace')
         code,output=result.returncode,result.stdout+result.stderr
         unavailable=code!=0 and environment_only_failure(result.stdout,result.stderr,code,argv) and not execution_observed(output)
-        loader_gaps=unavailable_loader_failures(result.stdout,result.stderr)
+        loader_fingerprints=loader_dependency_fingerprints(result.stdout,result.stderr)
+        loader_gaps=list(loader_fingerprints)
     except OSError as exc:
         code,output,unavailable,loader_gaps=127,str(exc),True,[]
+        loader_fingerprints={}
     return dict(argv=argv,exit_code=code,content_id=identity,environment=execution_environment,
                 unavailable=unavailable,comparison_eligible=not loader_only_failure(output),
                 execution_observed=execution_observed(output),output_complete=len(output)<=4000,output_length=len(output),
-                unavailable_loader_failures=loader_gaps,dependency_proof_version=DEPENDENCY_PROOF_VERSION,
+                unavailable_loader_failures=loader_gaps,loader_dependency_fingerprints=loader_fingerprints,dependency_proof_version=DEPENDENCY_PROOF_VERSION,
                 content_changed=topics.content_id(repo)!=identity,output_tail=output[-4000:]),output
 
 

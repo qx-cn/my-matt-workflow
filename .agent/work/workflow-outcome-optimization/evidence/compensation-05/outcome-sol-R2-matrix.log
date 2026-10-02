@@ -1,0 +1,5 @@
+R2_dynamic True {'real_marker': True, 'failure_blocks': True, 'repair_passes': True, 'repair_closes': True}
+R2_dynamic_loader False {'real_marker': True, 'failure_blocks': True, 'repair_passes': False, 'repair_closes': False}
+R2_v1 True {'real_marker': True, 'failure_blocks': True, 'repair_passes': True, 'repair_closes': True}
+R2_startup True {'unavailable': True, 'unverified': True, 'no_behavior_failure': True, 'close': True}
+R2_direct_loader_startup False {'unavailable': False, 'unverified': True, 'no_behavior_failure': True, 'close': True}

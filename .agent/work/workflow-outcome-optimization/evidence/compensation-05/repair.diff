@@ -1,0 +1,935 @@
+diff --git a/skills/my-ask-matt/SKILL.md b/skills/my-ask-matt/SKILL.md
+index 46a408f..d034e0f 100644
+--- a/skills/my-ask-matt/SKILL.md
++++ b/skills/my-ask-matt/SKILL.md
+@@ -24,7 +24,7 @@ disable-model-invocation: true
+ 1. 要换宿主、换目录或仓库、交给其他人/Agent、分出支线任务 → 交接；即使空间充足也先保存恢复包。
+ 2. 接近容量或原始信息大多不再相关 → checkpoint 后压缩，保留必要请求、定义、授权、证据和下一步。
+ 3. 可独立切分且当前请求/规则允许并行代理 → 按收益与容量委派；独立审查仍需实际新上下文。
+-4. 当前信息仍有用且空间足够 → 继续。
++4. 当前授权阶段仍有必要工作、当前信息仍有用且空间足够 → 继续。
+ 5. 完成当前止点且无需继续 → 交付，不自动扩大任务。
+ 
+ 具体恢复内容与状态核对遵循[上下文与恢复](references/policies/context-hygiene.md)。
+diff --git a/tests/test_batches.py b/tests/test_batches.py
+index ffbdd00..7f30de8 100644
+--- a/tests/test_batches.py
++++ b/tests/test_batches.py
+@@ -45,14 +45,12 @@ class BatchTests(unittest.TestCase):
+         return report
+     def test_unavailable_baseline_current_failure_and_legacy_recovery_block_close(self):
+         runner=self.repo/'full.py'
+-        runner.write_text("import outcome_missing_baseline_dependency\n")
+-        self.git('add','full.py');self.git('commit','-qm','unavailable baseline')
+-        self.setup(full='python3 full.py');self.implement()
++        self.setup(full='python3 -B -m full');self.implement()
+         runner.write_text("print('FAIL: actual behavior'); raise SystemExit(1)\n")
+         self.git('add','full.py');self.git('commit','-qm','currently executable failure')
+         current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+         self.assertTrue(current['new_failures'])
+-        self.assertIn('python3 full.py',current['unverified'])
++        self.assertIn('python3 -B -m full',current['unverified'])
+         self.cli('batch','close','--topic','feature',ok=False)
+         # A pre-upgrade record may have hidden the raw failure. Recovery must
+         # recompute from those facts, without changing already completed history.
+@@ -66,7 +64,7 @@ class BatchTests(unittest.TestCase):
+         self.git('add','full.py');self.git('commit','-qm','repair current failure')
+         passed=json.loads(self.cli('batch','test','--topic','feature').stdout)
+         self.assertEqual([],passed['new_failures'])
+-        self.assertIn('python3 full.py',passed['unverified'])
++        self.assertIn('python3 -B -m full',passed['unverified'])
+         self.review();self.cli('batch','close','--topic','feature')
+ 
+     def test_self_blocking_requires_changed_evidence_and_preserves_history(self):
+@@ -182,9 +180,8 @@ class BatchTests(unittest.TestCase):
+         self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
+ 
+     def test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase(self):
+-        runner=self.repo/'full.py';runner.write_text("import outcome_missing_baseline_dependency\n")
+-        self.git('add','full.py');self.git('commit','-qm','baseline dependency missing')
+-        self.setup(full='python3 -B full.py');self.implement()
++        runner=self.repo/'full.py'
++        self.setup(full='python3 -B -m full');self.implement()
+         phases=[
+             "subprocess.run([sys.executable,'-c',\"assert 1 == 2, 'actual regression'\"])",
+             "subprocess.run([sys.executable,'-c',\"raise SystemExit('actual behavior regression')\"])",
+@@ -261,13 +258,13 @@ class BatchTests(unittest.TestCase):
+                 self.git('add','suite');self.git('commit','-qm','loader startup dependency unavailable')
+                 self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
+                 baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
+-                self.assertTrue(baseline['results'][0]['unavailable'])
++                self.assertFalse(baseline['results'][0]['unavailable'])
+                 self.assertFalse(baseline['results'][0]['comparison_eligible'])
+                 self.assertFalse(batches.execution_observed(baseline['results'][0]['output_tail']))
+                 pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+-                self.assertTrue(pure['results'][0]['unavailable'])
++                self.assertFalse(pure['results'][0]['unavailable'])
+                 self.assertEqual([],pure['new_failures']);self.assertTrue(pure['unverified'])
+-                self.review()  # Pure startup gap permits disclosed review in both verbosity modes.
++                self.review()  # Identical complete dependency diagnostics permit disclosed review.
+                 case.write_text("assert 1 == 2, 'actual behavior regression at import'\n")
+                 self.git('add','suite');self.git('commit','-qm','actual assertion with same loader identity')
+                 current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+@@ -275,7 +272,7 @@ class BatchTests(unittest.TestCase):
+                 self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['known_failures'])
+                 status=json.loads(self.cli('batch','status','--topic','feature').stdout)
+                 self.assertTrue(status['unverified'])
+-                self.assertIn('基线环境缺失',status['unverified'][0]['note'])
++                self.assertIn('模块载入失败',status['unverified'][0]['note'])
+                 self.cli('batch','close','--topic','feature',ok=False)
+ 
+     def test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure(self):
+@@ -292,7 +289,7 @@ class BatchTests(unittest.TestCase):
+                 self.assertEqual(12,len(row['failures']))
+                 self.assertLess(row['output_tail'].count('ERROR:'),12)
+                 pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+-                self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
++                self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                 self.review()
+                 (suite/'test_00.py').write_text("assert False, 'actual import assertion with unchanged loader identity'\n")
+                 self.git('add','suite');self.git('commit','-qm','actual import regression')
+@@ -348,10 +345,10 @@ class BatchTests(unittest.TestCase):
+                         old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
+                         current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                         self.assertTrue(current['results'][0]['execution_observed'])
+-                        self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['unverified'])
+-                        self.assertEqual(1,len(current['new_failures']))
+-                        self.assertIn('test_new',current['new_failures'][0]['failure'])
+-                        self.assertEqual(13,len(current['known_failures']))
++                        self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['unverified'])
++                        self.assertEqual(13,len(current['new_failures']))
++                        self.assertTrue(any('test_new' in f['failure'] for f in current['new_failures']))
++                        self.assertEqual(1,len(current['known_failures']))
+                         self.assertTrue(any('test_known' in f['failure'] for f in current['known_failures']))
+                         self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+ 
+@@ -386,8 +383,9 @@ class BatchTests(unittest.TestCase):
+                 self.setup(full='python3 -B runner.py'+verbose);self.implement()
+                 mode.write_text('module-only');self.git('add','mode.txt');self.git('commit','-qm','actual ModuleNotFoundError exception-only control')
+                 pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+-                self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+-                self.assertTrue(pure['results'][0]['unavailable_loader_failures']);self.review()
++                self.assertFalse(pure['results'][0]['unavailable']);self.assertTrue(pure['new_failures'])
++                self.assertTrue(pure['results'][0]['unavailable_loader_failures'])
++                self.assertFalse(pure['known_failures'])  # Changed/truncated diagnostic cannot borrow the module identity.
+                 for kind in ('assertion','runtime'):
+                     with self.subTest(exception=kind):
+                         mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual exception-only behavior failure '+kind)
+@@ -406,13 +404,13 @@ class BatchTests(unittest.TestCase):
+ 
+     def test_direct_concise_exception_and_old_unavailable_cache_require_rerun(self):
+         runner=self.repo/'runner.py'
++        self.setup(full='python3 -B -m runner');self.implement()
+         runner.write_text("import pathlib, sys, traceback\ntry:\n kind=pathlib.Path('mode.txt').read_text()\n if kind=='assertion': assert False, \"No module named 'actual_behavior_condition'\"\n if kind=='runtime': raise RuntimeError(\"No module named 'actual_behavior_condition'\")\n import outcome_missing_direct_concise_dependency\nexcept Exception as exc:\n sys.stderr.write(''.join(traceback.format_exception_only(exc)))\n raise SystemExit(1)\n")
+         mode=self.repo/'mode.txt';mode.write_text('missing')
+         self.git('add','runner.py','mode.txt');self.git('commit','-qm','actual exception-only missing dependency')
+-        self.setup(full='python3 -B runner.py');self.implement()
+         pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+-        self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
+-        self.review()
++        self.assertFalse(pure['results'][0]['unavailable']);self.assertTrue(pure['new_failures']);self.assertTrue(pure['unverified'])
++        self.cli('batch','review','--topic','feature',ok=False)
+         for kind in ('assertion','runtime'):
+             with self.subTest(exception=kind):
+                 mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual direct concise failure '+kind)
+@@ -436,7 +434,9 @@ class BatchTests(unittest.TestCase):
+                 self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
+                 self.review()
+                 receipt=self.repo/'.agent/work/feature/batch-tests-01.json';old=json.loads(receipt.read_text())
+-                old['results'][0].pop('dependency_proof_version',None);receipt.write_text(json.dumps(old))
++                for version in (None,1):
++                    old['results'][0]['dependency_proof_version']=version;receipt.write_text(json.dumps(old))
++                    self.assertIn('batch close',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+                 self.cli('batch','close','--topic','feature')
+ 
+     def test_partial_loader_identity_cannot_hide_new_import_assertion(self):
+diff --git a/tools/workflow_lib/batches.py b/tools/workflow_lib/batches.py
+index bd089ef..ec73d05 100644
+--- a/tools/workflow_lib/batches.py
++++ b/tools/workflow_lib/batches.py
+@@ -129,6 +129,71 @@ def pending_self_findings(unit):
+     return pending
+ 
+ 
++def self_observations(repo, topic, identifiers):
++    """Carry discoveries into the active batch without rewriting completed Tickets."""
++    resolutions = []
++    if enabled(repo, topic):
++        resolutions = [r for b in read(repo, topic)['batches']
++                       for r in b.get('self_finding_resolutions', [])]
++    result = []
++    for identifier in identifiers:
++        record = impl.record_path(repo, topic, identifier)
++        if not record.is_file():continue
++        history = json.loads(record.read_text())
++        for finding, observation in pending_self_findings(history).values():
++            if not enabled(repo,topic) and finding.get('disposition')!='fix-in-batch':continue
++            if history.get('outcome') == 'accepted' and finding in history.get('known_issues', []):continue
++            if any(r['ticket'] == identifier and r['finding'] == finding['id'] for r in resolutions):continue
++            result.append(dict(ticket=identifier, target=f"self:{identifier}:{finding['id']}",
++                finding=finding, observed_content_id=observation.get('content_id'),
++                observed_definition=observation.get('definition', history.get('definition'))))
++    return result
++
++
++def named(reason, target):
++    return bool(re.search(r'(?<![\w-])'+re.escape(target)+r'(?![\w-])', reason))
++
++
++def require_self_repairs(repo, topic, unit, observations, allow_challenges=False):
++    """A review pass cannot substitute for an actual recorded content repair."""
++    if not enabled(repo,topic):return
++    identity = topics.content_id(repo)
++    pending={o['target'] for o in self_observations(repo,topic,{o['ticket'] for o in observations})}
++    for observation in observations:
++        if observation['target'] not in pending:continue
++        finding = observation['finding']
++        if finding.get('view') == 'spec-challenge':
++            if allow_challenges:continue
++            raise topics.TopicError('self-review: 需要点名裁决 '+observation['target']+'；请 batch reopen 或 batch accept')
++        if finding.get('severity') != 'blocking':continue
++        repairs = [r for b in read(repo,topic)['batches'] for r in b.get('self_finding_repairs',[])] if enabled(repo,topic) else unit.get('self_finding_repairs', [])
++        if (observation.get('observed_content_id') == identity or not any(
++                observation['target'] in r['targets'] and r['content_id'] == identity
++                and topics.git(repo,'merge-base','--is-ancestor',r['head'],'HEAD',check=False).returncode == 0
++                for r in repairs)):
++            raise topics.TopicError('self-review: 需要实际 batch repair 和当前测试/审查证据 '+observation['target'])
++
++
++def require_blocking_review(repo, topic, batch, observations):
++    blockers=[o for o in observations if o['finding'].get('severity')=='blocking'
++              and o['finding'].get('view')!='spec-challenge']
++    if not blockers:return
++    from . import branch_review, evidence
++    root=topics.topic_path(repo,topic)
++    tickets=impl.records(repo,topic)
++    manifest=branch_review.current_manifest(repo,topics.read_config(repo),topic,root,
++        {t:tickets[t] for t in batch['tickets']},batch)
++    entry=batch['reviews'][-1]
++    if not evidence.accepted_matches(root/'reviews'/f"accepted-{manifest['unit_id']}.json",entry):
++        raise topics.TopicError('self-review: 接受挑战前必须审查实际 blocking 修复')
++    if any(f.get('view')!='spec-challenge' and (f.get('severity')=='blocking' or f.get('disposition')=='fix-in-batch')
++           for f in entry.get('result',{}).get('findings',[])):
++        raise topics.TopicError('self-review: 当前审查仍有未修复的 correctness/待批次修复发现')
++    coverage={c['target']:c['result'] for c in entry.get('result',{}).get('coverage',[])}
++    if any(coverage.get(o['target'])!='ok' for o in blockers):
++        raise topics.TopicError('self-review: blocking 修复尚未通过当前审查')
++
++
+ def self_review(repo, ticket=None, topic=None, notes_file=None, findings_file=None, no_findings=False):
+     repo, config, topic, path, unit, record = impl.load_active(repo,ticket,topic)
+     text = Path(notes_file).read_text() if notes_file else ''
+@@ -212,7 +277,7 @@ def failures(output, code):
+     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
+ 
+ 
+-from .evidence import execution_observed, row_execution_observed, row_loader_only_failure, current_unavailable, current_loader_gaps
++from .evidence import execution_observed, row_execution_observed, row_loader_only_failure, current_unavailable, current_loader_gap_fingerprints
+ 
+ 
+ def run_full(repo,config):
+@@ -248,10 +313,14 @@ def compare(baseline,current):
+     for old,now in zip(baseline['results'],current['results']):
+         unavailable=current_unavailable(now)
+         gap=baseline_gap(old)
++        old_loader=current_loader_gap_fingerprints(old)
++        now_loader=current_loader_gap_fingerprints(now)
++        matching_loader={f for f,digest in now_loader.items() if old_loader.get(f)==digest}
+         if gap:
+             unverified.append(old['command'])
+             if not unavailable and now.get('exit_code',bool(now.get('failures'))):
+-                new.extend(dict(command=now['command'],failure=f,comparison=gap[0]) for f in now['failures'])
++                new.extend(dict(command=now['command'],failure=f,comparison=gap[0]) for f in now['failures'] if f not in matching_loader)
++                known.extend(dict(command=now['command'],failure=f) for f in now['failures'] if f in matching_loader)
+             continue
+         if unavailable:
+             new.append(dict(command=now['command'],failure='当前环境无法运行'));continue
+@@ -264,10 +333,10 @@ def compare(baseline,current):
+         added=set(now['failures'])-previous
+         unchanged=set(now['failures']) & previous
+         # Loader names identify modules, not executed behavior cases. Only a
+-        # proven current dependency gap may retain a matching loader as known;
+-        # actual/unknown import failures require repair even in partial runs.
++        # identical complete dependency diagnostic may remain known; changed
++        # or unknown import failures require repair even in partial runs.
+         coarse={f for f in unchanged if 'unittest.loader._FailedTest.' in f}
+-        uncertain=coarse-current_loader_gaps(now)
++        uncertain=coarse-matching_loader
+         if uncertain:
+             unverified.append(old['command'])
+             new.extend(dict(command=now['command'],failure=f,comparison='loader-identity-unverifiable') for f in sorted(uncertain))
+@@ -328,17 +397,31 @@ def status(repo,topic=None):
+                         command=f"workflow.py topic review --repo {shlex.quote(str(repo))} --topic {topic} --initiated-by agent --reason '恢复已发起的整分支审查'"
+             except (topics.TopicError,OSError,ValueError):pass
+     content_input=[]
+-    if topics.content_dirty(repo) and batch['status']=='reviewing':
++    if topics.content_dirty(repo) and (batch['status']=='reviewing' or self_observations(repo,topic,batch['tickets'])):
+         if repair_findings(repo,topic,batch):
+             command=f'workflow.py batch repair --repo {shlex.quote(str(repo))} --topic {topic} --notes-file <修复说明>'
+         else:
+             command=None
+             content_input=['恢复未审查的内容漂移，或先将已授权的新工作归入新 Ticket；当前没有待修复发现可供 batch repair']
+     labels={'pending':'待开始','open':'实施中','reviewing':'审查中','needs-user':'需要用户裁决','closed':'已收口'}
+-    latest=batch.get('reviews',[])[-1:] 
++    observations=self_observations(repo,topic,batch['tickets'])
++    challenges=[o for o in observations if o['finding'].get('view')=='spec-challenge']
++    if challenges and not implementing and not topics.content_dirty(repo):
++        targets=' '.join(o['target'] for o in challenges)
++        decision_ready=True
++        try:
++            require_self_repairs(repo,topic,batch,observations,allow_challenges=True)
++            require_blocking_review(repo,topic,batch,observations)
++        except (topics.TopicError,OSError,ValueError):decision_ready=False
++        if decision_ready:
++            command=f"workflow.py batch {'accept' if tests_current else 'test'} --repo {shlex.quote(str(repo))} --topic {topic}"
++            if tests_current:command+=f" --reason '{targets}: <裁决理由>'"
++        content_input=['点名挑战并说明裁决；修订定义后可 batch reopen --reason；接受会保留已知问题；correctness blocking 须先修复并审查']
++    latest=batch.get('reviews',[])[-1:]
+     return dict(topic=topic,batch=batch['id'],state=labels[batch['status']],tickets=batch['tickets'],next_command=command,
+         inputs_needed=content_input or (['实际 reviewer-model 与审查上下文来源'] if command and ' review ' in command else ['包含待修复发现 id 的说明文件'] if command and ' repair ' in command else []),
+-        decisions_needed=implementation_status.get('decisions_needed',[])+[dict(finding=f,decision='请决定修订 Spec、接受风险或按原 Spec 继续') for r in latest for f in r.get('result',{}).get('findings',[]) if f.get('view')=='spec-challenge'],
++        self_findings=observations,
++        decisions_needed=[dict(finding=o['finding'],target=o['target'],decision='请点名修订定义后 reopen 或 accept') for o in challenges]+implementation_status.get('decisions_needed',[])+[dict(finding=f,decision='请决定修订 Spec、接受风险或按原 Spec 继续') for r in latest for f in r.get('result',{}).get('findings',[]) if f.get('view')=='spec-challenge'],
+         unverified=[dict(command=r['command'],note=baseline_gap(r)[1]) for r in json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text()).get('results',[]) if baseline_gap(r)] if (topics.topic_path(repo,topic)/'test-baseline.json').exists() else [])
+ 
+ 
+@@ -347,13 +430,14 @@ def repair_findings(repo,topic,batch):
+     branch=topics.topic_path(repo,topic)/'branch-review.json'
+     if branch.exists():
+         findings += [f for r in json.loads(branch.read_text()).get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
++    findings += [dict(o['finding'],id=o['target']) for o in self_observations(repo,topic,batch['tickets']) if o['finding'].get('view')!='spec-challenge']
+     return findings
+ 
+ 
+ def repair(repo,topic=None,notes_file=None):
+     repo=topics.safe_repo(repo);topic=topics.select_topic(repo,topic)
+     value,batch=active(repo,topic)
+-    if batch['status']!='reviewing':raise topics.TopicError('只有批次审查修复可以提交')
++    if batch['status'] not in ('reviewing','open','needs-user') or not repair_findings(repo,topic,batch):raise topics.TopicError('只有批次审查修复可以提交')
+     findings=repair_findings(repo,topic,batch)
+     notes=Path(notes_file).read_text() if notes_file else ''
+     if not findings or any(f['id'] not in notes for f in findings):raise topics.TopicError('修复说明必须引用全部待修复发现 id')
+@@ -362,6 +446,9 @@ def repair(repo,topic=None,notes_file=None):
+     topics.git(repo,'add','--all','--','.',':(top,exclude).agent')
+     topics.git(repo,'commit','-m',f"Topic {topic} batch {batch['id']} repair\n\n{notes}")
+     batch.setdefault('repair_commits',[]).append(topics.git(repo,'rev-parse','HEAD').stdout.decode().strip())
++    batch.setdefault('self_finding_repairs',[]).append(dict(
++        targets=[o['target'] for o in self_observations(repo,topic,batch['tickets']) if named(notes,o['target'])],
++        head=batch['repair_commits'][-1],content_id=topics.content_id(repo),notes=notes,at=topics.now()))
+     save(repo,topic,value)
+     return dict(batch=batch['id'],commit=batch['repair_commits'][-1],next_command=f'workflow.py batch test --topic {topic}')
+ 
+@@ -380,8 +467,13 @@ def close(repo,topic=None,accept=False,reason=''):
+         raise topics.TopicError(message)
+     if not tests_passed(repo,config,topic,batch):raise topics.TopicError('全量测试新增失败或记录过期；请 batch test')
+     from . import branch_review
++    observations=self_observations(repo,topic,batch['tickets'])
++    challenges=[o for o in observations if o['finding'].get('view')=='spec-challenge']
++    require_self_repairs(repo,topic,batch,observations,allow_challenges=accept)
+     if accept:
+-        if batch['status']!='needs-user' or not reason.strip():raise topics.TopicError('接受需要待裁决批次和非空用户理由')
++        if any(not named(reason,o['target']) for o in challenges):raise topics.TopicError('accept 理由必须点名全部待接受挑战 target')
++        if (batch['status']!='needs-user' and not challenges) or not reason.strip():raise topics.TopicError('接受需要待裁决批次和非空用户理由')
++        require_blocking_review(repo,topic,batch,observations)
+         batch['acceptance']=dict(reason=reason,head=topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),at=topics.now())
+     else:
+         branch_review.require_pass(repo,config,topic,root,{t:tickets[t] for t in batch['tickets']},batch)
+@@ -393,6 +485,11 @@ def close(repo,topic=None,accept=False,reason=''):
+             unit['known_issues'] = [f for r in unit.get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[])]
+             impl.write_json(branch,unit)
+         branch_review.require_pass(repo,config,topic,root,tickets,unit)
++    if accept:
++        batch['known_issues']=[dict(o['finding'],ticket=o['ticket'],target=o['target']) for o in challenges]
++        for o in observations:
++            batch.setdefault('self_finding_resolutions',[]).append(dict(ticket=o['ticket'],finding=o['finding']['id'],
++                action='accept' if o in challenges else 'reviewed-repair',reason=reason,content_id=topics.content_id(repo),at=topics.now()))
+     if not accept:
+         manifest=branch_review.current_manifest(repo,config,topic,root,{t:tickets[t] for t in batch['tickets']},batch)
+         for observation in manifest.get('self_findings',[]):
+@@ -408,7 +505,7 @@ def close(repo,topic=None,accept=False,reason=''):
+                '未验证项':json.dumps(report['unverified'],ensure_ascii=False)}
+     sources={r.get('reviewer',{}).get('provenance') for r in batch.get('reviews',[])}
+     if 'self' in sources:additions['未验证项'] += '\n独立性缺口：宿主未派出新上下文，批次审查来源为 self。'
+-    if accept:additions['已知问题'] += '\n用户接受：'+reason+'\n'+json.dumps(batch.get('reviews',[])[-1:],ensure_ascii=False)
++    if accept:additions['已知问题'] += '\n用户接受：'+reason+'\n'+json.dumps([*batch.get('reviews',[])[-1:],*batch.get('known_issues',[])],ensure_ascii=False)
+     for heading,content in additions.items():
+         marker=f'## {heading}\n'
+         text=text.replace(marker,marker+f"\n批次 {batch['id']}：\n{content}\n",1)
+@@ -420,15 +517,23 @@ def close(repo,topic=None,accept=False,reason=''):
+ def reopen(repo,topic=None,reason=''):
+     repo=topics.safe_repo(repo);topic=topics.select_topic(repo,topic)
+     plan,batch=active(repo,topic)
+-    if batch['status'] not in ('reviewing','needs-user') or not reason.strip():
++    if batch['status'] not in ('open','reviewing','needs-user') or not reason.strip():
+         raise topics.TopicError('重新审查需要未收口批次和用户裁决理由')
+     from . import branch_review
+     tickets=impl.records(repo,topic)
+     subset={t:tickets[t] for t in batch['tickets']}
+     changed=branch_review.definition(repo,subset)
+-    if not batch.get('definition') or changed==batch['definition']:
++    prior_definition=batch.get('definition') or {t:json.loads(impl.record_path(repo,topic,t).read_text())['definition'] for t in subset}
++    if changed==prior_definition:
+         raise topics.TopicError('reopen 要求 Ticket/Spec 有效定义修订；状态或勾选不算')
+     for p,_ in subset.values():impl.validate(repo,p)
++    observations=self_observations(repo,topic,batch['tickets'])
++    for o in observations:
++        if o['finding'].get('view')=='spec-challenge' and named(reason,o['target']):
++            if changed[o['ticket']]==o.get('observed_definition'):
++                raise topics.TopicError('点名挑战的 Ticket/Spec 定义尚未修订：'+o['target'])
++            batch.setdefault('self_finding_resolutions',[]).append(dict(ticket=o['ticket'],finding=o['finding']['id'],
++                action='definition-reopen',reason=reason,definition=changed[o['ticket']],at=topics.now()))
+     from .quality_metrics import preserve_history
+     preserve_history(batch)
+     batch.update(definition=changed,reviews=[],status='reviewing')
+diff --git a/tools/workflow_lib/branch_review.py b/tools/workflow_lib/branch_review.py
+index 8217439..9a77761 100644
+--- a/tools/workflow_lib/branch_review.py
++++ b/tools/workflow_lib/branch_review.py
+@@ -46,10 +46,16 @@ def load(repo, topic=None, all_complete=True, batch=False):
+     record = root / 'branch-review.json'
+     unit = json.loads(record.read_text()) if record.exists() else dict(
+         topic=topic, baseline=state['baseline'], started_at=topics.now(), reviews=[], status='implementing')
++    effective_state(repo,config,topic,root,tickets,unit,record)
++    return repo, config, topic, root, tickets, unit, record
++
++
++def effective_state(repo, config, topic, root, tickets, unit, record):
++    """Use the same validated legacy recovery for routing and mutations."""
+     if unit.get('status')=='needs-user' and review_loop.recover_geometry(unit,
+             lambda candidate:require_pass(repo,config,topic,root,tickets,candidate)):
+         impl.write_json(record,unit)
+-    return repo, config, topic, root, tickets, unit, record
++    return unit
+ 
+ 
+ def definition(repo, tickets):
+@@ -105,9 +111,8 @@ def materials(repo, config, topic, tickets):
+         ticket_documents.append(path.read_text())
+         history = json.loads(stored.read_text()) if stored.is_file() else {}
+         self_text = history.get('self_review',{}).get('text','')
+-        from .batches import pending_self_findings
+-        self_findings.extend(dict(ticket=identifier,target=f"self:{identifier}:{f['id']}",finding=f,
+-            observed_content_id=observation.get('content_id')) for f,observation in pending_self_findings(history).values() if f.get('disposition')=='fix-in-batch')
++        from .batches import self_observations
++        self_findings.extend(self_observations(repo,topic,[identifier]))
+         impacts.append(f"### {identifier}（实施者声明，待核实）\n" + impl.section_text(self_text, '影响面'))
+         mapped, text = impl.rule_material(repo, config, value, agent, topics.git(repo,'diff','--name-only', topics.state(topics.topic_path(repo,topic))['baseline']).stdout.decode().splitlines())
+         rules.append({'ticket': identifier, 'rules': mapped})
+@@ -133,7 +138,12 @@ def current_manifest(repo, config, topic, root, tickets, unit):
+     if definition(repo, tickets) != active['definition'] or config != active['config']:
+         raise topics.TopicError('definition: Ticket/Spec/配置已变化，请重新审查或 reopen')
+     material = materials(repo, config, topic, tickets)
+-    if material['self_findings']!=manifest.get('self_findings',[]):
++    from . import batches
++    resolved={f"self:{r['ticket']}:{r['finding']}" for b in batches.read(repo,topic)['batches']
++              if b['status']=='closed' and b.get('content_id')==manifest['content_id']
++              for r in b.get('self_finding_resolutions',[]) if r.get('action')!='definition-reopen'} if batches.enabled(repo,topic) else set()
++    expected=[o for o in manifest.get('self_findings',[]) if o['target'] not in resolved]
++    if material['self_findings']!=expected:
+         raise topics.TopicError('self-review: 批次待处置发现已变化，请重新审查')
+     decided = root / 'decided' / f'decided-{topic}.md'
+     if (material['rule_map'] != manifest['rule_map']
+@@ -155,6 +165,8 @@ def require_pass(repo, config, topic, root, tickets, unit):
+     if unit['status'] == 'needs-user':
+         raise topics.TopicError('审查需要用户裁决：' + unit['stop_reason'])
+     manifest = current_manifest(repo, config, topic, root, tickets, unit)
++    from . import batches
++    batches.require_self_repairs(repo,topic,unit,manifest.get('self_findings',[]))
+     entry = unit['reviews'][-1]
+     from . import evidence
+     accepted = root / 'reviews' / f"accepted-{manifest['unit_id']}.json"
+@@ -191,6 +203,8 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
+         manifest = current_manifest(repo, config, topic, root, tickets, unit)
+         result = reviews.validate_result(json.loads(Path(submit).read_text()), manifest)
+         review_loop.check_contradictions(unit, result)
++        if result['status']=='pass':
++            batches.require_self_repairs(repo,topic,unit,manifest.get('self_findings',[]))
+         status = result['status']
+         if any(f.get('view') == 'spec-challenge' for f in result['findings']):
+             status = 'blocked-by-design'
+diff --git a/tools/workflow_lib/evidence.py b/tools/workflow_lib/evidence.py
+index 82a2f3d..ebede7d 100644
+--- a/tools/workflow_lib/evidence.py
++++ b/tools/workflow_lib/evidence.py
+@@ -10,8 +10,9 @@ import shutil
+ import subprocess
+ import sys
+ 
+-# Cached classifications from before typed module proofs need reevaluation.
+-DEPENDENCY_PROOF_VERSION=1
++# Earlier revisions treated exceptions and loader wrappers as startup proof.
++# Neither proves that application initialization did not execute.
++DEPENDENCY_PROOF_VERSION=3
+ 
+ 
+ def execution_observed(output, failure_identities=None):
+@@ -47,14 +48,14 @@ def row_loader_only_failure(row):
+     return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not row_execution_observed(row)
+ 
+ 
+-def unavailable_loader_failures(stdout,stderr):
+-    """Prove individual dependency gaps only inside a complete unittest report.
++def loader_dependency_fingerprints(stdout,stderr):
++    """Bind dependency diagnostics inside a complete unittest report.
+ 
+     A passing test elsewhere does not make a loader module name a stable behavior
+-    identity. These facts allow unchanged dependency gaps in partial runs without
+-    allowing a new import assertion to borrow that same name.
++    identity. Compare the full blocks, including every duplicate occurrence;
++    a wrapper or exception type alone never proves startup-only execution.
+     """
+-    if stdout.strip():return []
++    if stdout.strip():return {}
+     diagnostic=stderr.strip()
+     progress=re.match(r'[.EFsxu]+\n',diagnostic)
+     verbose=not progress
+@@ -62,15 +63,15 @@ def unavailable_loader_failures(stdout,stderr):
+         progress=re.match(r'(?:[^\n]+ \.\.\. (?:ok|ERROR|FAIL|expected failure|unexpected success|skipped [^\n]+)\n)+\n',diagnostic)
+     footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(([^\n]+)\)$',diagnostic)
+     headers=list(re.finditer(r'^={10,}\n(?:FAIL|ERROR): ([^\n]+)\n-{10,}\n',diagnostic,re.M))
+-    if not progress or not footer or not headers or headers[0].start()!=progress.end():return []
++    if not progress or not footer or not headers or headers[0].start()!=progress.end():return {}
+     counts=dict(re.findall(r'(failures|errors)=(\d+)',footer[2]))
+-    if sum(int(n) for n in counts.values())!=len(headers):return []
++    if sum(int(n) for n in counts.values())!=len(headers):return {}
+     if verbose:
+         lines=progress[0].strip().splitlines()
+         announced=[re.sub(r' \.\.\. (?:ERROR|FAIL)$','',line) for line in lines if line.endswith((' ... ERROR',' ... FAIL'))]
+-        if len(lines)!=int(footer[1]) or sorted(announced)!=sorted(h[1] for h in headers):return []
++        if len(lines)!=int(footer[1]) or sorted(announced)!=sorted(h[1] for h in headers):return {}
+     elif len(progress[0].strip())!=int(footer[1]) or any(progress[0].count(marker)!=int(counts.get(name,0)) for marker,name in (('E','errors'),('F','failures'))):
+-        return []
++        return {}
+     observations={}
+     for index,header in enumerate(headers):
+         if 'unittest.loader._FailedTest.' not in header[1]:continue
+@@ -78,37 +79,25 @@ def unavailable_loader_failures(stdout,stderr):
+         block=diagnostic[header.end():end].strip()
+         prefix=re.match(r'ImportError: Failed to import test module: [^\n]+\n',block)
+         # The same coarse identity may occur more than once. Every block must
+-        # prove a dependency gap; one real/unknown block defeats the shortcut.
+-        observations.setdefault(header[1],[]).append(bool(prefix and module_missing_diagnostic(block[prefix.end():])))
+-    return [identity for identity,facts in observations.items() if all(facts)]
+-
+-
+-def unittest_startup_gap(diagnostic,code):
+-    """Recognize only default/verbose all-loader missing-dependency wrappers."""
+-    if code==0:return False
+-    progress=re.match(r'E+\n',diagnostic)
+-    verbose_progress=None
+-    if not progress:
+-        verbose_progress=re.match(r'(?:[^\n]+ \(unittest\.loader\._FailedTest\.[^()\n]+\) \.\.\. ERROR\n)+\n',diagnostic)
+-        progress=verbose_progress
+-    footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(errors=(\d+)\)$',diagnostic)
+-    headers=list(re.finditer(r'^={10,}\nERROR: [^\n]*unittest\.loader\._FailedTest\.[^\n]+\n-{10,}\nImportError: Failed to import test module: [^\n]+\n',diagnostic,re.M))
+-    if not progress or not footer or not headers or headers[0].start()!=progress.end():return False
+-    if int(footer[1])!=len(headers) or int(footer[2])!=len(headers):return False
+-    if verbose_progress:
+-        announced=[line.removesuffix(' ... ERROR') for line in progress[0].strip().splitlines()]
+-        observed=[header[0].splitlines()[1].removeprefix('ERROR: ') for header in headers]
+-        if announced!=observed:return False
+-    elif len(progress[0].strip())!=len(headers):return False
+-    for index,header in enumerate(headers):
+-        end=headers[index+1].start() if index+1<len(headers) else footer.start()
+-        # Additional failure diagnostics inside a loader block do not qualify.
+-        if not module_missing_diagnostic(diagnostic[header.end():end].strip()):return False
+-    return True
++        # carry a typed dependency diagnostic; unknown blocks cannot match.
++        observations.setdefault(header[1],[]).append(block if prefix and module_missing_diagnostic(block[prefix.end():]) else None)
++    return {identity:hashlib.sha256(json.dumps(facts,ensure_ascii=False).encode()).hexdigest()
++            for identity,facts in observations.items() if all(facts)}
++
++
++def unavailable_loader_failures(stdout,stderr):
++    return list(loader_dependency_fingerprints(stdout,stderr))
++
++
++def current_loader_gap_fingerprints(row):
++    if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:
++        return row.get('loader_dependency_fingerprints',{})
++    if not recorded_output_complete(row):return {}
++    return loader_dependency_fingerprints('',row.get('output_tail',''))
+ 
+ 
+ def module_missing_diagnostic(diagnostic):
+-    """A loader proof requires the specific exception, never a startup prefix."""
++    """Recognize typed diagnostics for comparison, not startup proof."""
+     diagnostic=diagnostic.strip()
+     if re.fullmatch(r"ModuleNotFoundError: No module named [^\n]+",diagnostic):return True
+     if diagnostic.count('Traceback (most recent call last):')!=1 or not diagnostic.startswith('Traceback (most recent call last):'):
+@@ -133,7 +122,8 @@ def environment_only_failure(stdout, stderr, code, argv=None):
+     """Recognize specific startup evidence; other nonzero runs are failures."""
+     if code==0 or stdout.strip():return False
+     diagnostic=stderr.strip()
+-    if unittest_startup_gap(diagnostic,code) or module_missing_diagnostic(diagnostic):return True
++    # A standalone exception says nothing about when application code ran.
++    # A loader wrapper also cannot prove initialization did not run.
+     if python_module_startup_gap(diagnostic,argv):return True
+     # Shell diagnostics must actually name a shell, rather than an arbitrary
+     # exception whose message happens to mention a missing command or file.
+@@ -148,8 +138,7 @@ def recorded_output_complete(row):
+ 
+ def current_unavailable(row):
+     if not row.get('unavailable') or row_execution_observed(row):return False
+-    # New observations carry the strict proof revision. Older classifications
+-    # must be re-proved from complete diagnostics, not from their cached bool.
++    # Reevaluate earlier exception/wrapper exemptions from complete facts.
+     if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:return True
+     if not recorded_output_complete(row):return False
+     import shlex
+@@ -157,14 +146,6 @@ def current_unavailable(row):
+     return environment_only_failure('',row.get('output_tail',''),row.get('exit_code',1),argv)
+ 
+ 
+-def current_loader_gaps(row):
+-    if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:return set(row.get('unavailable_loader_failures',[]))
+-    if not recorded_output_complete(row):return set()
+-    # Complete legacy output can recover a genuine typed gap. A truncated old
+-    # proof list could conceal a real block and must not establish comparison.
+-    return set(unavailable_loader_failures('',row.get('output_tail','')))
+-
+-
+ def environment(repo,argv):
+     return dict(python=sys.version,python_executable=sys.executable,platform=platform.platform(),
+                 executable=shutil.which(argv[0]) if '/' not in argv[0] else str((repo/argv[0]).resolve()))
+@@ -179,13 +160,15 @@ def execute(repo, argv):
+         result=subprocess.run(argv,cwd=repo,capture_output=True,text=True,errors='replace')
+         code,output=result.returncode,result.stdout+result.stderr
+         unavailable=code!=0 and environment_only_failure(result.stdout,result.stderr,code,argv) and not execution_observed(output)
+-        loader_gaps=unavailable_loader_failures(result.stdout,result.stderr)
++        loader_fingerprints=loader_dependency_fingerprints(result.stdout,result.stderr)
++        loader_gaps=list(loader_fingerprints)
+     except OSError as exc:
+         code,output,unavailable,loader_gaps=127,str(exc),True,[]
++        loader_fingerprints={}
+     return dict(argv=argv,exit_code=code,content_id=identity,environment=execution_environment,
+                 unavailable=unavailable,comparison_eligible=not loader_only_failure(output),
+                 execution_observed=execution_observed(output),output_complete=len(output)<=4000,output_length=len(output),
+-                unavailable_loader_failures=loader_gaps,dependency_proof_version=DEPENDENCY_PROOF_VERSION,
++                unavailable_loader_failures=loader_gaps,loader_dependency_fingerprints=loader_fingerprints,dependency_proof_version=DEPENDENCY_PROOF_VERSION,
+                 content_changed=topics.content_id(repo)!=identity,output_tail=output[-4000:]),output
+ 
+ 
+diff --git a/tools/workflow_lib/topic_service.py b/tools/workflow_lib/topic_service.py
+index df09b76..04ab04c 100644
+--- a/tools/workflow_lib/topic_service.py
++++ b/tools/workflow_lib/topic_service.py
+@@ -333,6 +333,9 @@ def status(repo, topic=None):
+     branch_file = (archive if archive.exists() else path) / 'branch-review.json'
+     branch = json.loads(branch_file.read_text()) if branch_file.exists() else None
+     if branch:
++        if value['status']=='active':
++            from .branch_review import effective_state
++            branch=effective_state(repo,read_config(repo),topic,path,ticket_implementation.records(repo,topic),branch,branch_file)
+         known_issues.extend(branch.get('known_issues', []))
+         latest_findings = branch.get('reviews', [{}])[-1].get('result', {}).get('findings', []) if branch.get('reviews') else []
+         advisories.extend(f for f in latest_findings if f.get('severity') == 'advisory')
+diff --git a/tests/test_failure_classification.py b/tests/test_failure_classification.py
+new file mode 100644
+index 0000000..a95f2a1
+--- /dev/null
++++ b/tests/test_failure_classification.py
+@@ -0,0 +1,124 @@
++"""Public CLI regressions for trusted startup evidence and legacy receipts."""
++import json
++import unittest
++import test_batches
++
++
++class FailureClassificationTests(unittest.TestCase):
++    setUp = test_batches.BatchTests.setUp
++    git = test_batches.BatchTests.git
++    cli = test_batches.BatchTests.cli
++    setup_config = test_batches.BatchTests.setup_config
++    ticket = test_batches.BatchTests.ticket
++    replace = test_batches.BatchTests.replace
++    setup = test_batches.BatchTests.setup
++    implement = test_batches.BatchTests.implement
++    self_review = test_batches.BatchTests.self_review
++    review = test_batches.BatchTests.review
++
++    def dynamic_failure(self):
++        runner = self.repo / 'full.py'
++        runner.write_text('import unavailable_test_dependency\n')
++        self.git('add', 'full.py'); self.git('commit', '-qm', 'original unavailable baseline')
++        self.setup(full='python3 -B full.py'); self.implement()
++        # Recreate the admitted pre-upgrade baseline from the holistic probe.
++        baseline_path = self.repo / '.agent/work/feature/test-baseline.json'
++        baseline = json.loads(baseline_path.read_text())
++        baseline['results'][0].update(unavailable=True, dependency_proof_version=1)
++        baseline_path.write_text(json.dumps(baseline))
++        runner.write_text("from pathlib import Path\nimport importlib\ndef selected_plugin():\n    return 'json_typo_regression'\nPath('.agent/behavior-executed').write_text('selected_plugin invoked')\nimportlib.import_module(selected_plugin())\n")
++        self.git('add', 'full.py'); self.git('commit', '-qm', 'regressed plugin selection')
++        current = json.loads(self.cli('batch', 'test', '--topic', 'feature').stdout)
++        self.assertEqual('selected_plugin invoked', (self.repo / '.agent/behavior-executed').read_text())
++        return current
++
++    def test_dynamic_business_import_failure_blocks_review_and_close(self):
++        current = self.dynamic_failure()
++        self.assertFalse(current['results'][0]['unavailable'])
++        self.assertTrue(current['new_failures'])
++        self.assertIn('python3 -B full.py', current['unverified'])
++        for action in ('review', 'close'):
++            self.assertIn('新增失败', self.cli('batch', action, '--topic', 'feature', ok=False).stderr)
++        # Upgrade recovery must also reject the exact real diagnostic when its
++        # old receipt cached the now-invalid version 1 environment exemption.
++        receipt = self.repo / '.agent/work/feature/batch-tests-01.json'
++        current['results'][0].update(unavailable=True, dependency_proof_version=1)
++        current.update(new_failures=[], known_failures=[], unverified=[])
++        receipt.write_text(json.dumps(current))
++        self.assertIn('batch test', json.loads(self.cli('batch', 'status', '--topic', 'feature').stdout)['next_command'])
++        self.assertIn('新增失败', self.cli('batch', 'close', '--topic', 'feature', ok=False).stderr)
++
++    def test_version_one_cached_dynamic_failure_cannot_close_after_accepted_review(self):
++        # Obtain a real accepted review on the same content, then replace its
++        # test receipt with the historical misclassification. Close must inspect
++        # the receipt facts even when a review has already been accepted.
++        self.setup(full='python3 -B -m missing_startup_runner'); self.implement(); self.review()
++        receipt = self.repo / '.agent/work/feature/batch-tests-01.json'
++        old = json.loads(receipt.read_text())
++        row = old['results'][0]
++        row.update(dependency_proof_version=1, unavailable=True,
++                   output_tail='Traceback (most recent call last):\n  File "full.py", line 4, in <module>\n    importlib.import_module(selected_plugin())\nModuleNotFoundError: No module named \'json_typo_regression\'\n',
++                   output_complete=True, execution_observed=False)
++        old.update(new_failures=[], known_failures=[], unverified=[])
++        receipt.write_text(json.dumps(old))
++        self.assertIn('batch test', json.loads(self.cli('batch', 'status', '--topic', 'feature').stdout)['next_command'])
++        self.assertIn('新增失败', self.cli('batch', 'close', '--topic', 'feature', ok=False).stderr)
++
++    def test_loader_dynamic_business_failure_and_old_caches_block_close(self):
++        runner = self.repo / 'test_loader.py'
++        runner.write_text('import unavailable_test_dependency\n')
++        self.git('add', 'test_loader.py'); self.git('commit', '-qm', 'direct loader baseline')
++        self.setup(full='python3 -B -m unittest test_loader'); self.implement()
++        runner.write_text("from pathlib import Path\nimport importlib\ndef selected_plugin():\n    return 'json_typo_regression'\nPath('.agent/behavior-executed').write_text('selected_plugin invoked')\nimportlib.import_module(selected_plugin())\n")
++        self.git('add', 'test_loader.py'); self.git('commit', '-qm', 'business loader regression')
++        current = json.loads(self.cli('batch', 'test', '--topic', 'feature').stdout)
++        self.assertTrue((self.repo / '.agent/behavior-executed').exists())
++        self.assertFalse(current['results'][0]['unavailable'])
++        self.assertTrue(current['new_failures'])
++        receipt = self.repo / '.agent/work/feature/batch-tests-01.json'
++        for version in (1, 2):
++            with self.subTest(version=version):
++                old = json.loads(json.dumps(current))
++                old['results'][0].update(unavailable=True, dependency_proof_version=version)
++                old.update(new_failures=[], known_failures=[], unverified=[])
++                receipt.write_text(json.dumps(old))
++                self.assertIn('batch test', json.loads(self.cli('batch', 'status', '--topic', 'feature').stdout)['next_command'])
++                self.assertIn('新增失败', self.cli('batch', 'close', '--topic', 'feature', ok=False).stderr)
++
++    def test_identical_direct_loader_dependency_remains_reviewable(self):
++        runner = self.repo / 'test_loader.py'
++        runner.write_text('import unavailable_test_dependency\n')
++        self.git('add', 'test_loader.py'); self.git('commit', '-qm', 'direct loader baseline')
++        self.setup(full='python3 -B -m unittest test_loader'); self.implement()
++        current = json.loads(self.cli('batch', 'test', '--topic', 'feature').stdout)
++        self.assertFalse(current['results'][0]['unavailable'])
++        self.assertFalse(current['new_failures'])
++        self.assertTrue(current['known_failures'])
++        self.assertTrue(current['unverified'])
++        self.review(); self.cli('batch', 'close', '--topic', 'feature')
++
++    def test_partial_loader_new_missing_dependency_is_not_known(self):
++        runner = self.repo / 'test_loader.py'
++        runner.write_text('import unavailable_test_dependency\n')
++        (self.repo / 'test_pass.py').write_text('import unittest\nclass Pass(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\n')
++        self.git('add', 'test_loader.py', 'test_pass.py'); self.git('commit', '-qm', 'partial loader baseline')
++        self.setup(full='python3 -B -m unittest test_loader test_pass'); self.implement()
++        runner.write_text("import importlib\nimportlib.import_module('json_typo_regression')\n")
++        self.git('add', 'test_loader.py'); self.git('commit', '-qm', 'partial loader business regression')
++        current = json.loads(self.cli('batch', 'test', '--topic', 'feature').stdout)
++        self.assertTrue(current['results'][0]['execution_observed'])
++        self.assertTrue(current['new_failures'])
++        self.assertFalse(current['known_failures'])
++        self.assertIn('新增失败', self.cli('batch', 'close', '--topic', 'feature', ok=False).stderr)
++
++    def test_actual_startup_gaps_remain_disclosed(self):
++        commands = ('python3 -B -m missing_startup_runner', './missing-executable')
++        for index, command in enumerate(commands):
++            with self.subTest(command=command):
++                if index: self.setUp()
++                self.setup(full=command); self.implement()
++                current = json.loads(self.cli('batch', 'test', '--topic', 'feature').stdout)
++                self.assertTrue(current['results'][0]['unavailable'])
++                self.assertFalse(current['new_failures'])
++                self.assertIn(command, current['unverified'])
++                self.review(); self.cli('batch', 'close', '--topic', 'feature')
+diff --git a/tests/test_holistic_state_repairs.py b/tests/test_holistic_state_repairs.py
+new file mode 100644
+index 0000000..371d9e3
+--- /dev/null
++++ b/tests/test_holistic_state_repairs.py
+@@ -0,0 +1,173 @@
++"""Legacy active-state recovery through the real CLI; completed records stay immutable."""
++import json
++from pathlib import Path
++import shlex
++import unittest
++import test_batches as batch_seam
++import test_topic_branch as branch_seam
++from tools.workflow_lib import batches, topic_service
++
++
++class HolisticStateRepairs(unittest.TestCase):
++    setUp = batch_seam.BatchTests.setUp
++    git = batch_seam.BatchTests.git
++    cli = batch_seam.BatchTests.cli
++    setup_config = batch_seam.BatchTests.setup_config
++    ticket = batch_seam.BatchTests.ticket
++    setup = batch_seam.BatchTests.setup
++    self_review = batch_seam.BatchTests.self_review
++    implement = batch_seam.BatchTests.implement
++    review = batch_seam.BatchTests.review
++
++    def legacy(self, views):
++        full="python3 -c \"from pathlib import Path; raise SystemExit(0 if Path('code.txt').read_text() == 'fixed output\\n' else 1)\"" if 'correctness' in views else "python3 -c 'pass'"
++        self.setup(full=full);self.implement()
++        path=self.repo/'.agent/work/feature/implementations/feature-01.json'
++        unit=json.loads(path.read_text())
++        unit['self_review']['findings']=[dict(id=f'old-{index}',severity='blocking',view=view,
++            summary='legacy discovery',location='code.txt:1',basis='caller requires fixed output')
++            for index,view in enumerate(views)]
++        unit['self_reviews']=[unit['self_review']]
++        path.write_text(json.dumps(unit))
++        return path,path.read_bytes()
++
++    def open_review(self):
++        self.cli('batch','test','--topic','feature')
++        report=json.loads(self.cli('batch','review','--topic','feature','--reviewer-model','host','--reviewer-session-id','fresh').stdout)
++        manifest=json.loads(Path(report['manifest']).read_text())
++        return report,manifest
++
++    def submit(self,report,manifest,findings=(),ok=True):
++        result=json.loads(Path(report['result_file']).read_text())
++        result.update(status='findings' if findings else 'pass',reviewer=dict(provenance='independent',model='host'),
++            coverage=[dict(target=t,result='ok') for t in manifest['coverage_targets']],findings=list(findings))
++        Path(report['result_file']).write_text(json.dumps(result))
++        return self.cli('batch','review','--topic','feature','--submit',report['result_file'],ok=ok)
++
++    def repair(self,target='self:feature-01:old-0'):
++        (self.repo/'code.txt').write_text('fixed output\n')
++        notes=self.repo/'.agent/repair.md';notes.write_text(target+': corrected actual caller output')
++        status=json.loads(self.cli('batch','status','--topic','feature').stdout)
++        self.assertIn('batch repair',status['next_command'])
++        self.cli('batch','repair','--topic','feature','--notes-file',str(notes))
++
++    def test_legacy_blocking_requires_content_repair_and_current_review(self):
++        record,before=self.legacy(['correctness'])
++        report,manifest=self.open_review()
++        self.assertEqual('self:feature-01:old-0',manifest['self_findings'][0]['target'])
++        self.assertIn('实际 batch repair',self.submit(report,manifest,ok=False).stderr)
++        self.cli('batch','close','--topic','feature',ok=False)
++        self.repair();self.cli('batch','close','--topic','feature',ok=False)
++        self.review();self.cli('batch','close','--topic','feature')
++        self.assertEqual([],batches.self_observations(self.repo,'feature',['feature-01']))
++        self.assertEqual(before,record.read_bytes())
++        self.cli('topic','complete','--topic','feature')
++
++    def test_repaired_discovery_survives_optional_branch_review_and_topic_close(self):
++        self.setup(count=2);self.implement(1);self.implement(2)
++        path=self.repo/'.agent/work/feature/implementations/feature-01.json'
++        unit=json.loads(path.read_text())
++        unit['self_review']['findings']=[dict(id='old-0',severity='blocking',view='correctness',
++            summary='legacy caller bug',location='code.txt:1',basis='output wrong')]
++        unit['self_reviews']=[unit['self_review']];path.write_text(json.dumps(unit));before=path.read_bytes()
++        self.repair();self.review();self.review(action='topic')
++        self.cli('batch','close','--topic','feature');self.cli('topic','complete','--topic','feature')
++        self.assertEqual(before,(self.repo/'.agent/archive/feature/implementations/feature-01.json').read_bytes())
++
++    def test_legacy_challenges_reopen_only_named_target(self):
++        record,before=self.legacy(['spec-challenge','spec-challenge'])
++        report,manifest=self.open_review()
++        self.submit(report,manifest,ok=False)
++        spec=self.repo/'.agent/work/feature/specs/specs-feature-01.md'
++        spec.write_text(spec.read_text()+'\nUser clarified both contracts.\n')
++        self.cli('batch','reopen','--topic','feature','--reason','self:feature-01:old-0: revised first contract')
++        status=json.loads(self.cli('batch','status','--topic','feature').stdout)
++        self.assertEqual(['self:feature-01:old-1'],[x['target'] for x in status['decisions_needed']])
++        report,manifest=self.open_review();self.submit(report,manifest,ok=False)
++        spec.write_text(spec.read_text()+'\nSecond contract decision.\n')
++        self.cli('batch','reopen','--topic','feature','--reason','self:feature-01:old-1: revised second contract')
++        self.review();self.cli('batch','close','--topic','feature')
++        self.assertEqual([],batches.self_observations(self.repo,'feature',['feature-01']))
++        self.assertEqual(before,record.read_bytes())
++        self.cli('topic','complete','--topic','feature')
++
++    def test_legacy_challenge_accept_is_named_and_disclosed(self):
++        record,before=self.legacy(['spec-challenge'])
++        self.cli('batch','test','--topic','feature')
++        self.cli('batch','accept','--topic','feature','--reason','accept all',ok=False)
++        status=json.loads(self.cli('batch','status','--topic','feature').stdout)
++        self.assertIn('batch accept',status['next_command'])
++        self.cli('batch','accept','--topic','feature','--reason','self:feature-01:old-0: user accepts existing semantics')
++        self.assertEqual(before,record.read_bytes())
++        summary=self.repo/'.agent/work/feature/deliveries/deliveries-feature-01.md'
++        self.assertIn('legacy discovery',summary.read_text())
++        self.cli('topic','complete','--topic','feature')
++
++    def test_mixed_challenge_accept_cannot_waive_correctness(self):
++        record,before=self.legacy(['correctness','spec-challenge'])
++        self.cli('batch','test','--topic','feature')
++        reason='self:feature-01:old-1: user accepts definition conflict'
++        self.cli('batch','accept','--topic','feature','--reason',reason,ok=False)
++        self.repair();self.cli('batch','test','--topic','feature')
++        self.cli('batch','accept','--topic','feature','--reason',reason,ok=False)
++        report,manifest=self.open_review()
++        challenge=manifest['self_findings'][1]['finding']
++        self.submit(report,manifest,[manifest['self_findings'][0]['finding']])
++        self.cli('batch','accept','--topic','feature','--reason',reason,ok=False)
++        report,manifest=self.open_review()
++        self.submit(report,manifest,[challenge])
++        self.cli('batch','accept','--topic','feature','--reason',reason)
++        self.assertEqual([],batches.self_observations(self.repo,'feature',['feature-01']))
++        self.assertEqual(before,record.read_bytes())
++        self.cli('topic','complete','--topic','feature')
++
++
++class HolisticBranchGeometry(unittest.TestCase):
++    setUp = branch_seam.BranchTests.setUp
++    git = branch_seam.BranchTests.git
++    cli = branch_seam.BranchTests.cli
++    setup_config = branch_seam.BranchTests.setup_config
++    ticket = branch_seam.BranchTests.ticket
++    replace = branch_seam.BranchTests.replace
++    review = branch_seam.BranchTests.review
++    result = branch_seam.BranchTests.result
++    submit = branch_seam.BranchTests.submit
++    approve = branch_seam.BranchTests.approve
++    summary = branch_seam.BranchTests.summary
++    multi = branch_seam.BranchTests.multi
++    branch_review = branch_seam.BranchTests.branch_review
++    branch_submit = branch_seam.BranchTests.branch_submit
++
++    def test_status_recovers_only_current_pass_and_next_command_executes(self):
++        self.multi();self.cli('topic','test')
++        self.branch_submit(self.result(self.branch_review()))
++        path=self.repo/'.agent/work/feature/branch-review.json'
++        unit=json.loads(path.read_text());unit.update(status='needs-user',stop_reason='体积膨胀：legacy limit')
++        path.write_text(json.dumps(unit))
++        status=json.loads(self.cli('topic','status').stdout)
++        self.assertEqual('reviewing',status['branch_review']['status'])
++        self.assertIn('topic complete',status['next_command'])
++        self.assertTrue(json.loads(path.read_text())['recoveries'])
++        self.cli(*shlex.split(status['next_command'])[1:])
++
++    def test_status_preserves_geometric_stop_without_current_pass(self):
++        self.multi();self.cli('topic','test');self.branch_review()
++        path=self.repo/'.agent/work/feature/branch-review.json'
++        unit=json.loads(path.read_text());unit.update(status='needs-user',stop_reason='体积膨胀：legacy limit')
++        path.write_text(json.dumps(unit))
++        status=json.loads(self.cli('topic','status').stdout)
++        self.assertEqual('needs-user',status['branch_review']['status'])
++        self.cli('topic','complete',ok=False)
++
++    def test_status_preserves_geometric_stop_with_stale_pass(self):
++        self.multi();self.cli('topic','test')
++        self.branch_submit(self.result(self.branch_review()))
++        path=self.repo/'.agent/work/feature/branch-review.json'
++        unit=json.loads(path.read_text());unit.update(status='needs-user',stop_reason='体积膨胀：legacy limit')
++        path.write_text(json.dumps(unit))
++        (self.repo/'code.txt').write_text('unreviewed output\n')
++        self.git('add','code.txt');self.git('commit','-qm','unreviewed content')
++        status=json.loads(self.cli('topic','status').stdout)
++        self.assertEqual('needs-user',status['branch_review']['status'])
++        self.assertNotIn('recoveries',json.loads(path.read_text()))
++        self.cli('topic','complete',ok=False)

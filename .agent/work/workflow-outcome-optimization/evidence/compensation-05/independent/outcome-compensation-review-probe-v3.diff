@@ -1,0 +1,32 @@
+--- /tmp/outcome-compensation-review-probe.py
++++ /tmp/outcome-compensation-review-probe-v3.py
+@@ -74,9 +74,14 @@
+             return dict(initial_receipt=receipt,status=status,failure_review=failure_review,refused_exit=0,checks=dict(failure_blocks=False))
+         # After repair the assertion observes the selected module's actual API.
+         runner.write_text("import importlib\ndef selected_plugin():\n    return 'json'\nmodule=importlib.import_module(selected_plugin())\nassert module.loads('{\"ok\": true}') == {'ok': True}\n")
++        if loader:
++            runner.write_text("import importlib\nimport unittest\ndef selected_plugin():\n    return 'json'\nclass PluginBehavior(unittest.TestCase):\n    def test_selected_plugin_api(self):\n        module=importlib.import_module(selected_plugin())\n        self.assertEqual({'ok': True}, module.loads('{\"ok\": true}'))\n")
+         t.git('add',str(runner.relative_to(t.repo)));t.git('commit','-qm','repair plugin selection')
+         repaired=json.loads(t.cli('batch','test','--topic','feature').stdout);review=fixture_review(t)
+         closed=raw(t,'batch','close','--topic','feature')
++        if loader:
++            assert repaired['results'][0]['exit_code']==0, 'loader repair did not pass actual tests'
++            assert 'Ran 1 test' in repaired['results'][0]['output_tail'], 'loader repair ran no TestCase'
+         return dict(initial_receipt=receipt,status=status,refused_exit=refused.returncode,repair_receipt=repaired,repair_review=review,close_exit=closed.returncode,checks=dict(real_marker=(t.repo/'.agent/behavior-executed').read_text()=='selected_plugin invoked',failure_blocks=refused.returncode!=0,repair_passes=not repaired['new_failures'],repair_closes=closed.returncode==0))
+     finally:t.doCleanups()
+ 
+@@ -87,7 +92,13 @@
+             suite=t.repo/'suite';suite.mkdir();(suite/'test_behavior.py').write_text('import outcome_review_direct_missing_dependency\n');t.git('add','suite');t.git('commit','-qm','direct loader dependency gap')
+         t.setup(full='python3 -B -m unittest discover -s suite' if loader else 'python3 -B -m outcome_review_missing_runner');t.implement()
+         receipt=json.loads(t.cli('batch','test','--topic','feature').stdout);review=fixture_review(t);closed=raw(t,'batch','close','--topic','feature')
+-        return dict(receipt=receipt,review=review,close_exit=closed.returncode,checks=dict(unavailable=receipt['results'][0]['unavailable'],unverified=bool(receipt['unverified']),no_behavior_failure=not receipt['new_failures'],close=closed.returncode==0))
++        checks=dict(unavailable=receipt['results'][0]['unavailable'],unverified=bool(receipt['unverified']),no_behavior_failure=not receipt['new_failures'],close=closed.returncode==0)
++        if loader:
++            checks=dict(loader_not_unavailable=not receipt['results'][0]['unavailable'],
++                        same_known=bool(receipt['known_failures']),unverified=bool(receipt['unverified']),
++                        not_current_pass=receipt['results'][0]['exit_code']!=0,
++                        no_new_failure=not receipt['new_failures'],close=closed.returncode==0)
++        return dict(receipt=receipt,review=review,close_exit=closed.returncode,checks=checks)
+     finally:t.doCleanups()
+ 
+ def geometry(nonpass=False):

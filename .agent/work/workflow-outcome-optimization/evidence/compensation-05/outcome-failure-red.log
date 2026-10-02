@@ -1,0 +1,23 @@
+.FF
+======================================================================
+FAIL: test_dynamic_business_import_failure_blocks_review_and_close (test_failure_classification.FailureClassificationTests.test_dynamic_business_import_failure_blocks_review_and_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_failure_classification.py", line 38, in test_dynamic_business_import_failure_blocks_review_and_close
+    self.assertFalse(current['results'][0]['unavailable'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_version_one_cached_dynamic_failure_cannot_close_after_accepted_review (test_failure_classification.FailureClassificationTests.test_version_one_cached_dynamic_failure_cannot_close_after_accepted_review)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_failure_classification.py", line 57, in test_version_one_cached_dynamic_failure_cannot_close_after_accepted_review
+    self.assertIn('batch test', json.loads(self.cli('batch', 'status', '--topic', 'feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch close --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpxwc7ntaa --topic feature'
+
+----------------------------------------------------------------------
+Ran 3 tests in 9.554s
+
+FAILED (failures=2)

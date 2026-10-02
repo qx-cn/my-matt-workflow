@@ -1,0 +1,72 @@
+{
+  "files": [
+    {
+      "path": "/tmp/outcome-compensation-review-start.json",
+      "sha256": "360e9625dc7e5788b32182d18521668b2a9797d17a758f5fcc739f9598ec8de8"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-end.json",
+      "sha256": "a4765141938df16cbbb8071b78d736105723e1de6c604e3dc34985f694cd6ff8"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-probe.py",
+      "sha256": "ec54b3bb4695648ae197dad35d2e975ac0f6c0d40f2465948e1995abfe7edbd7"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-probe-v3.py",
+      "sha256": "adb38ce4caebe72c521e07e7d45d2daef7f329b8197cddbe4a5bb494de11476d"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-probe-v3.diff",
+      "sha256": "9f013aecf133c7f652b115f79248a553b249363f1bc4c4f6dce849c0b92706f2"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-probe-v3-reasons.md",
+      "sha256": "f7ab5e573ec53f7196f1f26f3d2c7869dc164d480302908e78ad2903846b227e"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-controls-initial.py",
+      "sha256": "50fc03ed1fa19ebc4af1b1580c5f16d676c23085b26c4ffeca95ddb779811e28"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-controls.py",
+      "sha256": "1156273a9bc001bc5aca63026b70753d0ce5410eb4bfedfe773d8a06fdbbaa84"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-controls-fixture-fix.diff",
+      "sha256": "bbe49b2383e50a08d299ade61e3d5831d3425ad5d9069381704a58c687507d23"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-probe.json",
+      "sha256": "c79b3fd7db9aca194ba051447793036dcb3d19613a4c2663222509592a1a7b31"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-probe.log",
+      "sha256": "53f2d8b6070a541a650e3130bd947f8ba475ff4804b33d83a35471dabfeea3d9"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-controls.json",
+      "sha256": "32e327dd81d7ae48889f7bb6a84a6d0852d70510fd6918d944dd227bbaad8de0"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-controls.log",
+      "sha256": "44d276000bfb4426724c43cc911250ad841e2a9e6d1f340c08acffb98cf64458"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-optional.json",
+      "sha256": "99994b4083efed3aebd523dc2b3a8f3964034119ae107f91c651d02b95bc2231"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-optional.log",
+      "sha256": "3b3eb317d0ad12285379eaa6192b9022847a40abd1bef647315770e5f965149a"
+    },
+    {
+      "path": "/tmp/outcome-compensation-review-final-summary.json",
+      "sha256": "985f4a5a95aea517810a5b0ade7fb77553000d6fbc464292ddbc9c235b736fb3"
+    }
+  ],
+  "report": {
+    "path": "/tmp/outcome-compensation-review-final.md",
+    "sha256": "e1384d9a2da70c22782fd7b6c1751db1a0c9743df5970faa8acf2e81a0265201"
+  }
+}

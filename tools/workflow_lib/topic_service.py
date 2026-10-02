@@ -333,6 +333,9 @@ def status(repo, topic=None):
     branch_file = (archive if archive.exists() else path) / 'branch-review.json'
     branch = json.loads(branch_file.read_text()) if branch_file.exists() else None
     if branch:
+        if value['status']=='active':
+            from .branch_review import effective_state
+            branch=effective_state(repo,read_config(repo),topic,path,ticket_implementation.records(repo,topic),branch,branch_file)
         known_issues.extend(branch.get('known_issues', []))
         latest_findings = branch.get('reviews', [{}])[-1].get('result', {}).get('findings', []) if branch.get('reviews') else []
         advisories.extend(f for f in latest_findings if f.get('severity') == 'advisory')

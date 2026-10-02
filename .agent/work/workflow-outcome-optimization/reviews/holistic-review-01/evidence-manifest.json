@@ -1,0 +1,108 @@
+{
+  "source_commit": "608b72b4783e9117b9c0f68636b158fc3958f1d9",
+  "baseline_commit": "7947cb28e37512ab52a0c87c2cfd736bc3205c25",
+  "ordinary_review": true,
+  "reviewers": [
+    {
+      "task": "/root/holistic_runtime",
+      "context": "fresh, fork_turns=none",
+      "findings": [
+        "R1-P1",
+        "R2-P1",
+        "R3-P2"
+      ]
+    },
+    {
+      "task": "/root/holistic_install",
+      "context": "fresh, fork_turns=none",
+      "findings": []
+    },
+    {
+      "task": "/root/holistic_instructions",
+      "context": "fresh, fork_turns=none",
+      "findings": [
+        "O1-P3",
+        "O2-advisory"
+      ]
+    }
+  ],
+  "root_reproductions": "R1 correctness and spec-challenge; R2 dynamic import; R3 legacy branch geometry",
+  "files": [
+    {
+      "path": "outcome-holistic-install.md",
+      "sha256": "de035c8a58bf09c9217d27fd63eb8c62a8c848ea6e15e012f64f44b37ca7aff7"
+    },
+    {
+      "path": "outcome-holistic-instructions.md",
+      "sha256": "ae7d0d9eb367d7d9bd2cbbd021811e82262d9b04f4b07aba79901bb8b22b78e3"
+    },
+    {
+      "path": "outcome-holistic-root-geometry.json",
+      "sha256": "231ea3a46a7a242d08f93f68ea0ee70f7e96e4f42bade768098fc2da3b862521"
+    },
+    {
+      "path": "outcome-holistic-root-geometry.log",
+      "sha256": "6c3d4757ba25e7860825b33c46ee2a71260b46e333373ef108a495740f56cb2e"
+    },
+    {
+      "path": "outcome-holistic-root-geometry.py",
+      "sha256": "9efcb73aef2e2522691ef47f63cbeb2c54abeb35b19520b6b13644f2064dc29b"
+    },
+    {
+      "path": "outcome-holistic-root-repro.json",
+      "sha256": "fb06e3c2cf85c6b91df78a9f8a7cd4a45b45e069663d465a7a9859542aaa64ad"
+    },
+    {
+      "path": "outcome-holistic-root-repro.log",
+      "sha256": "c6314931f96e45208d078a775d76174cb7c257c95294c021b9c9c1687cdf554c"
+    },
+    {
+      "path": "outcome-holistic-root-repro.py",
+      "sha256": "510aa8dbd30b6d3284fa53372706d72ff5ded5c85e4eb8d4ece5385b32202358"
+    },
+    {
+      "path": "outcome-holistic-runtime-focused-tests.log",
+      "sha256": "f2c9787b42298270b0f9d2c889cbdf2a2abe2a3d1ba659e1a1b858a1b14bf247"
+    },
+    {
+      "path": "outcome-holistic-runtime-geometry.json",
+      "sha256": "d4f704d99e2d003500438d548d73a7ca630e07149268e3b48e4fdc1f16dfd4d8"
+    },
+    {
+      "path": "outcome-holistic-runtime-geometry.py",
+      "sha256": "b94d151095b2f037fdf8d3fc4a073d16aaa11581c3d448f4a2e1feb9375404fb"
+    },
+    {
+      "path": "outcome-holistic-runtime-probe.json",
+      "sha256": "3e6fda07263fe9030e66b6ceeff537811e45853ba76fd59a83615bcc84dd77c1"
+    },
+    {
+      "path": "outcome-holistic-runtime-probe.py",
+      "sha256": "290b8066466f1dcdfc15f4e38522694c52851462f9ced304e9fd2c53bdfaac9c"
+    },
+    {
+      "path": "outcome-holistic-runtime.md",
+      "sha256": "d908a11dca4ce381fd6320ee49b221ee273b62f3d32ddbb38cc2c41047e1f163"
+    },
+    {
+      "path": "outcome-install-bench-base.json",
+      "sha256": "d9484d214f5160ce51ee30dbb70ddafb11cebec129b9000f6c53f3e026b07d76"
+    },
+    {
+      "path": "outcome-install-bench-final.json",
+      "sha256": "b9d6d0aa900b188a8544b8190db7dc2befc4049fff16bec237de4d13731463bf"
+    },
+    {
+      "path": "outcome-install-bench.py",
+      "sha256": "17b39dbe84cd176aa0cedfcb8b46ceb5148b6d5bb72d7f6f9dc12d253913e169"
+    },
+    {
+      "path": "root-verification.json",
+      "sha256": "be678602efc5a0f486a5685f0df359e5af4fa62666f138876b17bd964059acbd"
+    },
+    {
+      "path": "source-manifest.json",
+      "sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+...........FF...........FF..........FFFFFF.....
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 386, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                                                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [{'command': 'python3 -B runner.py', 'comparison': 'loader-identity-unverifiable', 'failure': 'same (unittest.loader._FailedTest.same)'}] is not false
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 386, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                                                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [{'command': 'python3 -B runner.py -v', 'comparison': 'loader-identity-unverifiable', 'failure': 'same (unittest.loader._FailedTest.same)'}] is not false
+
+======================================================================
+FAIL: test_loader_only_missing_dependency_is_not_a_known_assertion_failure (test_batches.BatchTests.test_loader_only_missing_dependency_is_not_a_known_assertion_failure) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 261, in test_loader_only_missing_dependency_is_not_a_known_assertion_failure
+    self.assertFalse(baseline['results'][0]['unavailable'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_loader_only_missing_dependency_is_not_a_known_assertion_failure (test_batches.BatchTests.test_loader_only_missing_dependency_is_not_a_known_assertion_failure) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 261, in test_loader_only_missing_dependency_is_not_a_known_assertion_failure
+    self.assertFalse(baseline['results'][0]['unavailable'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 292, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 292, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_truncated_partial_legacy_preserves_real_known_case_difference (test_batches.BatchTests.test_truncated_partial_legacy_preserves_real_known_case_difference) (legacy_unavailable=False, verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 348, in test_truncated_partial_legacy_preserves_real_known_case_difference
+    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['unverified'])
+                                                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['python3 -B -m unittest discover -s suite'] is not false
+
+======================================================================
+FAIL: test_truncated_partial_legacy_preserves_real_known_case_difference (test_batches.BatchTests.test_truncated_partial_legacy_preserves_real_known_case_difference) (legacy_unavailable=True, verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 348, in test_truncated_partial_legacy_preserves_real_known_case_difference
+    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['unverified'])
+                                                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['python3 -B -m unittest discover -s suite'] is not false
+
+======================================================================
+FAIL: test_truncated_partial_legacy_preserves_real_known_case_difference (test_batches.BatchTests.test_truncated_partial_legacy_preserves_real_known_case_difference) (legacy_unavailable=False, verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 348, in test_truncated_partial_legacy_preserves_real_known_case_difference
+    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['unverified'])
+                                                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['python3 -B -m unittest discover -s suite -v'] is not false
+
+======================================================================
+FAIL: test_truncated_partial_legacy_preserves_real_known_case_difference (test_batches.BatchTests.test_truncated_partial_legacy_preserves_real_known_case_difference) (legacy_unavailable=True, verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 348, in test_truncated_partial_legacy_preserves_real_known_case_difference
+    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['unverified'])
+                                                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['python3 -B -m unittest discover -s suite -v'] is not false
+
+----------------------------------------------------------------------
+Ran 41 tests in 135.023s
+
+FAILED (failures=10)

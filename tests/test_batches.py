@@ -45,14 +45,12 @@ class BatchTests(unittest.TestCase):
         return report
     def test_unavailable_baseline_current_failure_and_legacy_recovery_block_close(self):
         runner=self.repo/'full.py'
-        runner.write_text("import outcome_missing_baseline_dependency\n")
-        self.git('add','full.py');self.git('commit','-qm','unavailable baseline')
-        self.setup(full='python3 full.py');self.implement()
+        self.setup(full='python3 -B -m full');self.implement()
         runner.write_text("print('FAIL: actual behavior'); raise SystemExit(1)\n")
         self.git('add','full.py');self.git('commit','-qm','currently executable failure')
         current=json.loads(self.cli('batch','test','--topic','feature').stdout)
         self.assertTrue(current['new_failures'])
-        self.assertIn('python3 full.py',current['unverified'])
+        self.assertIn('python3 -B -m full',current['unverified'])
         self.cli('batch','close','--topic','feature',ok=False)
         # A pre-upgrade record may have hidden the raw failure. Recovery must
         # recompute from those facts, without changing already completed history.
@@ -66,7 +64,7 @@ class BatchTests(unittest.TestCase):
         self.git('add','full.py');self.git('commit','-qm','repair current failure')
         passed=json.loads(self.cli('batch','test','--topic','feature').stdout)
         self.assertEqual([],passed['new_failures'])
-        self.assertIn('python3 full.py',passed['unverified'])
+        self.assertIn('python3 -B -m full',passed['unverified'])
         self.review();self.cli('batch','close','--topic','feature')
 
     def test_self_blocking_requires_changed_evidence_and_preserves_history(self):
@@ -182,9 +180,8 @@ class BatchTests(unittest.TestCase):
         self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
 
     def test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase(self):
-        runner=self.repo/'full.py';runner.write_text("import outcome_missing_baseline_dependency\n")
-        self.git('add','full.py');self.git('commit','-qm','baseline dependency missing')
-        self.setup(full='python3 -B full.py');self.implement()
+        runner=self.repo/'full.py'
+        self.setup(full='python3 -B -m full');self.implement()
         phases=[
             "subprocess.run([sys.executable,'-c',\"assert 1 == 2, 'actual regression'\"])",
             "subprocess.run([sys.executable,'-c',\"raise SystemExit('actual behavior regression')\"])",
@@ -261,13 +258,13 @@ class BatchTests(unittest.TestCase):
                 self.git('add','suite');self.git('commit','-qm','loader startup dependency unavailable')
                 self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
                 baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
-                self.assertTrue(baseline['results'][0]['unavailable'])
+                self.assertFalse(baseline['results'][0]['unavailable'])
                 self.assertFalse(baseline['results'][0]['comparison_eligible'])
                 self.assertFalse(batches.execution_observed(baseline['results'][0]['output_tail']))
                 pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
-                self.assertTrue(pure['results'][0]['unavailable'])
+                self.assertFalse(pure['results'][0]['unavailable'])
                 self.assertEqual([],pure['new_failures']);self.assertTrue(pure['unverified'])
-                self.review()  # Pure startup gap permits disclosed review in both verbosity modes.
+                self.review()  # Identical complete dependency diagnostics permit disclosed review.
                 case.write_text("assert 1 == 2, 'actual behavior regression at import'\n")
                 self.git('add','suite');self.git('commit','-qm','actual assertion with same loader identity')
                 current=json.loads(self.cli('batch','test','--topic','feature').stdout)
@@ -275,7 +272,7 @@ class BatchTests(unittest.TestCase):
                 self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['known_failures'])
                 status=json.loads(self.cli('batch','status','--topic','feature').stdout)
                 self.assertTrue(status['unverified'])
-                self.assertIn('基线环境缺失',status['unverified'][0]['note'])
+                self.assertIn('模块载入失败',status['unverified'][0]['note'])
                 self.cli('batch','close','--topic','feature',ok=False)
 
     def test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure(self):
@@ -292,7 +289,7 @@ class BatchTests(unittest.TestCase):
                 self.assertEqual(12,len(row['failures']))
                 self.assertLess(row['output_tail'].count('ERROR:'),12)
                 pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
-                self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
                 self.review()
                 (suite/'test_00.py').write_text("assert False, 'actual import assertion with unchanged loader identity'\n")
                 self.git('add','suite');self.git('commit','-qm','actual import regression')
@@ -348,10 +345,10 @@ class BatchTests(unittest.TestCase):
                         old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
                         current=json.loads(self.cli('batch','test','--topic','feature').stdout)
                         self.assertTrue(current['results'][0]['execution_observed'])
-                        self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['unverified'])
-                        self.assertEqual(1,len(current['new_failures']))
-                        self.assertIn('test_new',current['new_failures'][0]['failure'])
-                        self.assertEqual(13,len(current['known_failures']))
+                        self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['unverified'])
+                        self.assertEqual(13,len(current['new_failures']))
+                        self.assertTrue(any('test_new' in f['failure'] for f in current['new_failures']))
+                        self.assertEqual(1,len(current['known_failures']))
                         self.assertTrue(any('test_known' in f['failure'] for f in current['known_failures']))
                         self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
 
@@ -386,8 +383,9 @@ class BatchTests(unittest.TestCase):
                 self.setup(full='python3 -B runner.py'+verbose);self.implement()
                 mode.write_text('module-only');self.git('add','mode.txt');self.git('commit','-qm','actual ModuleNotFoundError exception-only control')
                 pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
-                self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
-                self.assertTrue(pure['results'][0]['unavailable_loader_failures']);self.review()
+                self.assertFalse(pure['results'][0]['unavailable']);self.assertTrue(pure['new_failures'])
+                self.assertTrue(pure['results'][0]['unavailable_loader_failures'])
+                self.assertFalse(pure['known_failures'])  # Changed/truncated diagnostic cannot borrow the module identity.
                 for kind in ('assertion','runtime'):
                     with self.subTest(exception=kind):
                         mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual exception-only behavior failure '+kind)
@@ -406,13 +404,13 @@ class BatchTests(unittest.TestCase):
 
     def test_direct_concise_exception_and_old_unavailable_cache_require_rerun(self):
         runner=self.repo/'runner.py'
+        self.setup(full='python3 -B -m runner');self.implement()
         runner.write_text("import pathlib, sys, traceback\ntry:\n kind=pathlib.Path('mode.txt').read_text()\n if kind=='assertion': assert False, \"No module named 'actual_behavior_condition'\"\n if kind=='runtime': raise RuntimeError(\"No module named 'actual_behavior_condition'\")\n import outcome_missing_direct_concise_dependency\nexcept Exception as exc:\n sys.stderr.write(''.join(traceback.format_exception_only(exc)))\n raise SystemExit(1)\n")
         mode=self.repo/'mode.txt';mode.write_text('missing')
         self.git('add','runner.py','mode.txt');self.git('commit','-qm','actual exception-only missing dependency')
-        self.setup(full='python3 -B runner.py');self.implement()
         pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
-        self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
-        self.review()
+        self.assertFalse(pure['results'][0]['unavailable']);self.assertTrue(pure['new_failures']);self.assertTrue(pure['unverified'])
+        self.cli('batch','review','--topic','feature',ok=False)
         for kind in ('assertion','runtime'):
             with self.subTest(exception=kind):
                 mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual direct concise failure '+kind)
@@ -436,7 +434,9 @@ class BatchTests(unittest.TestCase):
                 self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
                 self.review()
                 receipt=self.repo/'.agent/work/feature/batch-tests-01.json';old=json.loads(receipt.read_text())
-                old['results'][0].pop('dependency_proof_version',None);receipt.write_text(json.dumps(old))
+                for version in (None,1):
+                    old['results'][0]['dependency_proof_version']=version;receipt.write_text(json.dumps(old))
+                    self.assertIn('batch close',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
                 self.cli('batch','close','--topic','feature')
 
     def test_partial_loader_identity_cannot_hide_new_import_assertion(self):

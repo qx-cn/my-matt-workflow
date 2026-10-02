@@ -1,0 +1,24 @@
+--- initial controls
++++ corrected controls
+@@ -67,10 +67,11 @@
+ def optional_branch():
+  t=new();use(BASE)
+  try:
+-  t.setup();t.cli('implement','start','--ticket','feature-01');(t.repo/'code.txt').write_text('incorrect result\n');t.cli('implement','test');t.self_review()
++  t.setup(count=2);t.cli('implement','start','--ticket','feature-01');(t.repo/'code.txt').write_text('incorrect result\n');t.cli('implement','test');t.self_review()
+   findings=t.repo/'.agent/findings.json';findings.write_text(json.dumps([dict(id='legacy-correctness',severity='blocking',view='correctness',summary='wrong caller result',location='code.txt:1',basis='caller requires correct result')]))
+   t.cli('implement','self-review','--notes-file',str(t.repo/'.agent/self.md'),'--findings-file',str(findings));root=t.repo/'.agent/work/feature';ticket=root/'tickets/tickets-feature-01.md';ticket.write_text(ticket.read_text().replace('- [ ]','- [x]'));t.cli('implement','finish')
+-  unit=root/'implementations/feature-01.json';history={str(p.relative_to(root)):p.read_bytes() for p in (ticket,unit)}
++  t.implement(number=2)
++  unit=root/'implementations/feature-01.json';history={str(p.relative_to(root)):p.read_bytes() for p in [*root.glob('tickets/*.md'),*root.glob('implementations/*.json')]}
+   use(CANDIDATE);initial=fixture_review(t);assert raw(t,'batch','close','--topic','feature').returncode!=0
+   notes=t.repo/'.agent/repair.md';notes.write_text('self:feature-01:legacy-correctness: actual caller output corrected; independent value oracle.\n');(t.repo/'code.txt').write_text('correct result\n');t.cli('batch','repair','--topic','feature','--notes-file',str(notes));review=fixture_review(t)
+   branch=t.review(action='topic');branch_unit=json.loads((root/'branch-review.json').read_text());closed=raw(t,'batch','close','--topic','feature');completed=raw(t,'topic','complete','--topic','feature');archived=t.repo/'.agent/archive/feature';unchanged=archived.exists() and all((archived/p).read_bytes()==v for p,v in history.items())
+@@ -93,6 +94,7 @@
+ 
+ cases={'R2_loader_all_controls':loader_controls,'R2_loader_partial_controls':lambda:loader_controls(partial=True,verbose=True),'R2_loader_long_legacy_controls':lambda:loader_controls(long=True),'R2_v2_loader_cache':lambda:dynamic_v2(loader=True),'R1_optionalbranch_close_complete':optional_branch,'R3_stale_pass_blocks':stale_geometry,'R2_OS_startup_gap':os_startup}
+ for name,case in cases.items():
++ if os.environ.get('REVIEW_CASES') and name not in os.environ['REVIEW_CASES'].split(','):continue
+  offset=len(LOG)
+  try:
+   result=case();result['passed']=all(result['checks'].values())

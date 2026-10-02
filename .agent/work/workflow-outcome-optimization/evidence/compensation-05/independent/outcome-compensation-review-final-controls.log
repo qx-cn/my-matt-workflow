@@ -1,0 +1,8 @@
+R2_loader_all_controls True {'changed_blocks': True, 'legacy_complete_recomputed': True, 'known_closes': True}
+R2_loader_partial_controls True {'changed_blocks': True, 'legacy_complete_recomputed': True, 'known_closes': True}
+R2_loader_long_legacy_controls True {'closes': True, 'full_fingerprint_from_long_output': True}
+R2_v2_loader_cache True {'real_marker': True, 'failure_blocks': True, 'repair_passes': True, 'repair_closes': True}
+R1_optionalbranch_close_complete False 0 != 1 : topic review 只用于多 Ticket standard
+
+R3_stale_pass_blocks True {'blocked': True, 'not_archived': True}
+R2_OS_startup_gap True {'unavailable': True, 'os_exit': True, 'unverified': True, 'no_new_failure': True, 'close': True}

@@ -1,0 +1,161 @@
+[
+  {
+    "case": "legacy-correctness",
+    "old_finish": {
+      "commit": "5f36a2b34791d9637849e42cfb861548fe700475",
+      "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp8zi_tz03 --topic feature",
+      "status": "complete",
+      "ticket": "feature-01",
+      "topic": "feature"
+    },
+    "candidate_status": {
+      "batch": "01",
+      "decisions_needed": [],
+      "inputs_needed": [],
+      "next_command": "workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp8zi_tz03 --topic feature",
+      "state": "实施中",
+      "tickets": [
+        "feature-01"
+      ],
+      "topic": "feature",
+      "unverified": []
+    },
+    "review_self_findings": [],
+    "candidate_close": {
+      "batch": "01",
+      "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp8zi_tz03 --topic feature",
+      "state": "已收口",
+      "topic": "feature"
+    },
+    "persisted_findings": [
+      {
+        "id": "persisted-old-blocker",
+        "severity": "blocking",
+        "view": "correctness",
+        "summary": "unresolved real caller failure",
+        "location": "code.txt:1",
+        "basis": "real caller requires correct output"
+      }
+    ]
+  },
+  {
+    "case": "legacy-spec-challenge",
+    "old_finish": {
+      "commit": "489323ff929593dab4c99587aade41c241fcf254",
+      "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpp5c181od --topic feature",
+      "status": "complete",
+      "ticket": "feature-01",
+      "topic": "feature"
+    },
+    "candidate_status": {
+      "batch": "01",
+      "decisions_needed": [],
+      "inputs_needed": [],
+      "next_command": "workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpp5c181od --topic feature",
+      "state": "实施中",
+      "tickets": [
+        "feature-01"
+      ],
+      "topic": "feature",
+      "unverified": []
+    },
+    "review_self_findings": [],
+    "candidate_close": {
+      "batch": "01",
+      "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpp5c181od --topic feature",
+      "state": "已收口",
+      "topic": "feature"
+    },
+    "persisted_findings": [
+      {
+        "id": "persisted-old-blocker",
+        "severity": "blocking",
+        "view": "spec-challenge",
+        "summary": "unresolved real caller failure",
+        "location": "code.txt:1",
+        "basis": "real caller requires correct output"
+      }
+    ]
+  },
+  {
+    "case": "actual-dynamic-import-failure",
+    "marker": "selected_plugin invoked",
+    "current": {
+      "at": "2026-10-02T14:54:15.759320+00:00",
+      "commands": [
+        "python3 -B full.py",
+        "python3 -c 'pass'"
+      ],
+      "completed": true,
+      "content_id": "d3ee8baa16d705abc652f37b8d41bd61e9f93fc60453d2d855355cd5723f82b2",
+      "head": "1f2a14421eff3ae603199477cac00e03d6d18267",
+      "known_failures": [],
+      "new_failures": [],
+      "results": [
+        {
+          "argv": [
+            "python3",
+            "-B",
+            "full.py"
+          ],
+          "command": "python3 -B full.py",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "d3ee8baa16d705abc652f37b8d41bd61e9f93fc60453d2d855355cd5723f82b2",
+          "dependency_proof_version": 1,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 1,
+          "failures": [
+            "command:e3f7ee83142f4b923900996957eb21944c117573c0a21f84a47da0c0bbdadd95"
+          ],
+          "output_complete": true,
+          "output_length": 792,
+          "output_tail": "Traceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpzls2nw40/full.py\", line 6, in <module>\n    importlib.import_module(selected_plugin())\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1406, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1371, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1335, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'json_typo_regression'\n",
+          "unavailable": true,
+          "unavailable_loader_failures": []
+        },
+        {
+          "argv": [
+            "python3",
+            "-c",
+            "pass"
+          ],
+          "command": "python3 -c 'pass'",
+          "comparison_eligible": true,
+          "content_changed": false,
+          "content_id": "d3ee8baa16d705abc652f37b8d41bd61e9f93fc60453d2d855355cd5723f82b2",
+          "dependency_proof_version": 1,
+          "environment": {
+            "executable": "/opt/homebrew/bin/python3",
+            "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+            "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+            "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          },
+          "execution_observed": false,
+          "exit_code": 0,
+          "failures": [],
+          "output_complete": true,
+          "output_length": 0,
+          "output_tail": "",
+          "unavailable": false,
+          "unavailable_loader_failures": []
+        }
+      ],
+      "unverified": [
+        "python3 -B full.py"
+      ]
+    },
+    "candidate_close": {
+      "batch": "01",
+      "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpzls2nw40 --topic feature",
+      "state": "已收口",
+      "topic": "feature"
+    }
+  }
+]

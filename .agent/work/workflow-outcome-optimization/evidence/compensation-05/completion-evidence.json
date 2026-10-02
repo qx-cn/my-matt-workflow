@@ -1,0 +1,33 @@
+{
+  "base_commit": "608b72b4783e9117b9c0f68636b158fc3958f1d9",
+  "source_manifest_sha256": "48126f1f9718524f7a907c75437c777b9f01bb179db77a48fb217de21edd8fa2",
+  "findings": {
+    "R1": "fixed; independent negative and recovery controls passed",
+    "R2": "fixed; v3 full loader fingerprints and legacy cache controls passed",
+    "R3": "fixed; valid pass recovery and stale/nonpass controls passed",
+    "O1": "fixed; continue limited to necessary work in authorized stage",
+    "O2": "advisory retained; no capability efficacy trial"
+  },
+  "full_suite": {
+    "discovered": 352,
+    "executed": 352,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "shards": 4,
+    "seconds": 231.065
+  },
+  "independent_review": {
+    "valid_scenarios": 20,
+    "recorded_cli_calls": 341,
+    "blocking_findings": 0,
+    "invalid_optional_fixture": "original failed attempt preserved; corrected two-Ticket rerun passed"
+  },
+  "boundaries": [
+    "synthetic review receipts are gate inputs only",
+    "no real-host install",
+    "no push or release",
+    "no measured real-model capability improvement",
+    "completed Ticket and Spec history preserved"
+  ]
+}

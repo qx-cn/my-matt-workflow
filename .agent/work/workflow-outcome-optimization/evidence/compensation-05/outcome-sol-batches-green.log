@@ -1,0 +1,23 @@
+......FF.............................
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 386, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                                                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [{'command': 'python3 -B runner.py', 'comparison': 'loader-identity-unverifiable', 'failure': 'same (unittest.loader._FailedTest.same)'}] is not false
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 386, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                                                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [{'command': 'python3 -B runner.py -v', 'comparison': 'loader-identity-unverifiable', 'failure': 'same (unittest.loader._FailedTest.same)'}] is not false
+
+----------------------------------------------------------------------
+Ran 36 tests in 134.216s
+
+FAILED (failures=2)

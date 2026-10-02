@@ -1,0 +1,11 @@
+test_batch_self_advisory_is_frozen_and_requires_review_disposition (test_batches.BatchTests.test_batch_self_advisory_is_frozen_and_requires_review_disposition) ... ok
+test_self_spec_challenge_requires_explicit_decision (test_batches.BatchTests.test_self_spec_challenge_requires_explicit_decision) ... ok
+test_revised_definition_reopens_self_challenge_without_losing_history (test_batches.BatchTests.test_revised_definition_reopens_self_challenge_without_losing_history) ... ok
+test_status_recovery_reopen_and_postclosure_drift (test_batches.BatchTests.test_status_recovery_reopen_and_postclosure_drift) ... ok
+test_multi_with_branch_repair_closes_in_both_modes (test_topic_branch.BranchTests.test_multi_with_branch_repair_closes_in_both_modes) ... ok
+test_branch_needs_user_accept_and_definition_only_reopen (test_topic_branch.BranchTests.test_branch_needs_user_accept_and_definition_only_reopen) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 34.276s
+
+OK
