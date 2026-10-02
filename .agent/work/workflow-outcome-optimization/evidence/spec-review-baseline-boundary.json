@@ -1,0 +1,22 @@
+{
+  "kind": "exact-snapshot extracted compare function probes; no LLM behavior, no full suite",
+  "source_snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-36ce314358fa-21w4czad/494-batches.py",
+  "source_sha256": "38fec1cbe2086ea7f17573ca08253708e2b6cca582edd03b7af9a5655b0595ce",
+  "runnable_baseline_current_unavailable": {
+    "new_failures": [
+      {
+        "command": "python3 full.py",
+        "failure": "当前环境无法运行"
+      }
+    ],
+    "known_failures": [],
+    "unverified": []
+  },
+  "unavailable_baseline_current_executed_failure": {
+    "new_failures": [],
+    "known_failures": [],
+    "unverified": [
+      "python3 full.py"
+    ]
+  }
+}

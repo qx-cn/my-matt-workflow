@@ -1,0 +1,59 @@
+{
+  "kind": "derived exact-snapshot public CLI, declared findings fixture; not LLM behavior",
+  "results": [
+    {
+      "view": "correctness",
+      "self_review": {
+        "self_review": "已记录",
+        "ticket": "feature-01"
+      },
+      "status_before": {
+        "baseline": "4fd3cbe6d303f17160f7967bfe2f4e9c65517a0c",
+        "decisions": [],
+        "decisions_needed": [],
+        "definition_changed": false,
+        "next_command": "workflow.py implement finish --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmptxz586_3 --ticket feature-01",
+        "rounds_used": 0,
+        "status": "implementing",
+        "stop_reason": null,
+        "tests_passed": true,
+        "ticket": "feature-01",
+        "topic": "feature"
+      },
+      "finish_result": {
+        "commit": "f93694c370513db730f0f8f981d1ad9565e1d4d9",
+        "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmptxz586_3 --topic feature",
+        "status": "complete",
+        "ticket": "feature-01",
+        "topic": "feature"
+      }
+    },
+    {
+      "view": "spec-challenge",
+      "self_review": {
+        "self_review": "已记录",
+        "ticket": "feature-01"
+      },
+      "status_before": {
+        "baseline": "5af6a18454bb795f2d4564eabb0ff4ea10609f11",
+        "decisions": [],
+        "decisions_needed": [],
+        "definition_changed": false,
+        "next_command": "workflow.py implement finish --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp4lsi4tm_ --ticket feature-01",
+        "rounds_used": 0,
+        "status": "implementing",
+        "stop_reason": null,
+        "tests_passed": true,
+        "ticket": "feature-01",
+        "topic": "feature"
+      },
+      "finish_result": {
+        "commit": "9896fb099937321bdb1913679004a1af985e5779",
+        "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp4lsi4tm_ --topic feature",
+        "status": "complete",
+        "ticket": "feature-01",
+        "topic": "feature"
+      }
+    }
+  ]
+}

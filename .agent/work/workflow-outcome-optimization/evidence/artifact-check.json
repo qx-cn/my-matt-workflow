@@ -1,0 +1,166 @@
+{
+  "scope": "Saved diagnosis/skills/rules/runtime, plan, evidence README and 71-object inventory check; design report references were noticed incidentally. No new full design review, no tests or runtime probes run.",
+  "review_unit": "36ce314358fac1f680ba8c536ef07e1f594964478395a56578923248445b91b0",
+  "coverage": {
+    "skills": {
+      "expected": 32,
+      "listed": 32,
+      "missing": [],
+      "extra": [],
+      "duplicates": []
+    },
+    "rules": {
+      "expected": 39,
+      "listed": 39,
+      "missing": [],
+      "extra": [],
+      "duplicates": []
+    }
+  },
+  "distinct_objects": 71,
+  "source_citations_checked": 139,
+  "source_citation_errors": [
+    {
+      "report": "reviews-workflow-outcome-optimization-design-01.md",
+      "line": 27,
+      "citation": "006-reviews-skill-architecture-optimization-v1.md:13",
+      "resolved_paths": [],
+      "source_mapping": ".agent/work/skill-architecture-optimization/reviews/reviews-skill-architecture-optimization-v1.md"
+    },
+    {
+      "report": "reviews-workflow-outcome-optimization-design-01.md",
+      "line": 27,
+      "citation": "009-reviews-first-principles-deep-review-03.md:13",
+      "resolved_paths": [],
+      "source_mapping": ".agent/work/workflow-first-principles/reviews/reviews-first-principles-deep-review-03.md"
+    }
+  ],
+  "tmp_references": [
+    {
+      "file": "evidence/README.md",
+      "line": 11,
+      "tokens": [
+        "/tmp/my-matt-quality-runtime-reproduced.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-design-01.md",
+      "line": 7,
+      "tokens": [
+        "/tmp/my-matt-quality-spec-review-probe.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-rules-01.md",
+      "line": 3,
+      "tokens": [
+        "/tmp/my-matt-quality-audit-snapshot.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-rules-01.md",
+      "line": 24,
+      "tokens": [
+        "/tmp/my-matt-quality-review-stop-probes.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-runtime-01.md",
+      "line": 3,
+      "tokens": [
+        "/tmp/my-matt-quality-audit-snapshot.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-runtime-01.md",
+      "line": 15,
+      "tokens": [
+        "/tmp/my-matt-quality-cli-self-findings.json",
+        "/tmp/my-matt-quality-runtime-reproduced.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-runtime-01.md",
+      "line": 33,
+      "tokens": [
+        "/tmp/my-matt-quality-cli-baseline-recovery.json",
+        "/tmp/my-matt-quality-runtime-reproduced.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-runtime-01.md",
+      "line": 49,
+      "tokens": [
+        "/tmp/my-matt-quality-review-stop-probes.json"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-runtime-01.md",
+      "line": 91,
+      "tokens": [
+        "/tmp/my-matt-quality-runtime-probe.py"
+      ]
+    },
+    {
+      "file": "reviews/reviews-workflow-outcome-optimization-runtime-01.md",
+      "line": 95,
+      "tokens": [
+        "/tmp/my-matt-quality-runtime-probe.py",
+        "/tmp/my-matt-quality-runtime-reproduced.json",
+        "/tmp/my-matt-quality-runtime-probes.json",
+        "/tmp/my-matt-quality-cli-baseline-recovery.json",
+        "/tmp/my-matt-quality-cli-self-findings.json",
+        "/tmp/my-matt-quality-review-stop-probes.json"
+      ]
+    }
+  ],
+  "notes": [
+    "32 Skill + 39 resource/policy/composition objects = 71; no missing, extra or duplicate rows compared with retained source manifest.",
+    "All explicit source citation numeric ranges are within their frozen source file length; two design report citations use snapshot-prefixed names, exact source mapping is provided.",
+    "No obvious omission of confirmed findings in diagnosis/SPEC. Reports distinguish static, narrow observed/public CLI, synthetic review fixture and no comparative; no formal implementation/deploy/install/push claims.",
+    "Diagnosis tail uses Topic-root-relative specs/specs-workflow-outcome-optimization-01.md in code text; from reviews directory prefer clickable ../specs/specs-workflow-outcome-optimization-01.md.",
+    "Publication headers still describe pending root finalize; runtime/receipts agent owns final lifecycle evidence and should reconcile these as historical team status before final delivery.",
+    "This check validates document references, inventory and stated boundaries, not archival bytes or real model outcome."
+  ],
+  "status": "PASS_WITH_REFERENCE_REPAIRS",
+  "reference_mapping": {
+    "/tmp/my-matt-quality-audit-snapshot.json": {
+      "target": "../evidence/source-manifest.json",
+      "note": "This retained manifest preserves source object/hash/size/content_id, not the temporary runtime review_unit schema; change header wording accordingly."
+    },
+    "/tmp/my-matt-quality-cli-baseline-recovery.json": {
+      "target": "../evidence/my-matt-quality-cli-baseline-recovery.json"
+    },
+    "/tmp/my-matt-quality-cli-self-findings.json": {
+      "target": "../evidence/my-matt-quality-cli-self-findings.json"
+    },
+    "/tmp/my-matt-quality-review-stop-probes.json": {
+      "target": "../evidence/my-matt-quality-review-stop-probes.json"
+    },
+    "/tmp/my-matt-quality-runtime-probe.py": {
+      "target": "../evidence/runtime-probe.py",
+      "note": "Use the persisted invocation from evidence/README.md; its source is retained archive, not the released temporary snapshot."
+    },
+    "/tmp/my-matt-quality-runtime-probes.json": {
+      "target": "../evidence/my-matt-quality-runtime-probes.json"
+    },
+    "/tmp/my-matt-quality-runtime-reproduced.json": {
+      "target": "../evidence/my-matt-quality-runtime-reproduced.json",
+      "note": "README line describing fresh script output under /tmp is intentional; retain that output-path explanation and link saved evidence separately."
+    },
+    "/tmp/my-matt-quality-spec-review-probe.json": {
+      "target": "../evidence/spec-review-baseline-boundary.json",
+      "note": "Incidental new design-report reference; check same probe receipt before alias replacement."
+    }
+  },
+  "confirmed_findings_coverage": {
+    "SK-01": "Diagnosis section 3; SPEC 4.2 / AC04",
+    "SK-02": "Diagnosis section 5; SPEC 4.4 / AC07",
+    "SK-03": "Diagnosis section 5; SPEC 4.4 / AC06",
+    "SK-04": "Diagnosis section 6; SPEC 4.1 / change package B / AC05",
+    "SK-05": "Diagnosis section 7; SPEC 5.3 / AC14",
+    "SK-06": "Diagnosis sections 5 and 7; SPEC 4.4 + 5.3 / AC08 and AC13",
+    "R1-R5": "Diagnosis sections 4,6,5,6,7; SPEC matching review budget, protocol, evidence, authorization and context contracts",
+    "runtime four mechanics": "Diagnosis sections 1,2,4,6; SPEC AC01,AC02,AC03,AC09"
+  }
+}

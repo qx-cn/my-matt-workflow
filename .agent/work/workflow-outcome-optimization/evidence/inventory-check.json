@@ -1,0 +1,14 @@
+{
+  "skills": {
+    "expected": 32,
+    "rows": 32,
+    "missing": [],
+    "duplicates": []
+  },
+  "rules": {
+    "expected": 39,
+    "rows": 39,
+    "missing": [],
+    "extra": []
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "exact snapshot extracted function probes; not host behavior",
+  "source": "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow_lib/review_loop.py",
+  "sha256": "21b6a79ee21561d71cbdc883de4a1687fb9224af432f294a7f3e044b85cddb21",
+  "pass_with_overlap": "同一处连续修改：相邻修复在中间快照行号重叠",
+  "pass_with_volume_increase": "体积膨胀：基线增删行超过第一轮的 1.5 倍"
+}

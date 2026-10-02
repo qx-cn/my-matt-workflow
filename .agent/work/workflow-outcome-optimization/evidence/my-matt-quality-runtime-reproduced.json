@@ -1,0 +1,126 @@
+{
+  "content_id": "36ce314358fac1f680ba8c536ef07e1f594964478395a56578923248445b91b0",
+  "kind": "exact snapshot derived public CLI probes; deterministic fixture review",
+  "limits": "No LLM execution, no independent review, no whole-suite test result",
+  "baseline_recovery": {
+    "baseline": {
+      "content_id": "5456eb4dd5bbc3f8a630a76587dfe03470bda2d5020515b45cc2c8ffe093ad1e",
+      "head": "ef37603912f9dabecaf7033fdee7c9cdf2a49da1",
+      "commands": [
+        "python3 full.py",
+        "python3 -c 'pass'"
+      ],
+      "results": [
+        {
+          "command": "python3 full.py",
+          "exit_code": 1,
+          "unavailable": true,
+          "failures": [
+            "command:9ff558513797f0f8bee71657c28f708d96d66ca77960ee13a74fa064356e8fc4"
+          ],
+          "output_tail": "Traceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpqfdnzlb8/full.py\", line 1, in <module>\n    import quality_probe_missing_dependency\nModuleNotFoundError: No module named 'quality_probe_missing_dependency'\n"
+        },
+        {
+          "command": "python3 -c 'pass'",
+          "exit_code": 0,
+          "unavailable": false,
+          "failures": [],
+          "output_tail": ""
+        }
+      ],
+      "at": "2026-10-02T10:07:05.715890+00:00",
+      "baseline": "ef37603912f9dabecaf7033fdee7c9cdf2a49da1"
+    },
+    "current": {
+      "content_id": "d0701899e52aa2e49df4e5deef5d5db29b9704d410a43a68d3f544d063801d1c",
+      "head": "8cd2846df17f0a48eb672e3126325d26745b6cd8",
+      "commands": [
+        "python3 full.py",
+        "python3 -c 'pass'"
+      ],
+      "results": [
+        {
+          "command": "python3 full.py",
+          "exit_code": 1,
+          "unavailable": false,
+          "failures": [
+            "test_behavior (__main__.Case.test_behavior)"
+          ],
+          "output_tail": "F\n======================================================================\nFAIL: test_behavior (__main__.Case.test_behavior)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpqfdnzlb8/full.py\", line 3, in test_behavior\n    def test_behavior(self): self.assertEqual(1, 2, \"current behavior wrong\")\n                             ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 2 : current behavior wrong\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (failures=1)\n"
+        },
+        {
+          "command": "python3 -c 'pass'",
+          "exit_code": 0,
+          "unavailable": false,
+          "failures": [],
+          "output_tail": ""
+        }
+      ],
+      "at": "2026-10-02T10:07:06.633321+00:00",
+      "new_failures": [],
+      "known_failures": [],
+      "unverified": [
+        "python3 full.py"
+      ]
+    },
+    "closed": {
+      "batch": "01",
+      "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpqfdnzlb8 --topic feature",
+      "state": "已收口",
+      "topic": "feature"
+    },
+    "summary": "## 改动概述\n无\n\n## 测试结果\n无\n\n## 审查发现与修复\n无\n\n## 建议\n无\n\n## 已知问题\n\n批次 01：\n[]\n无\n\n## 长期知识沉淀\n无\n\n## 用户介入记录\n无\n\n## 未验证项\n\n批次 01：\n[\"python3 full.py\"]\n无\n"
+  },
+  "self_findings": [
+    {
+      "view": "correctness",
+      "status_before": {
+        "baseline": "59875dce2aa8c0d3aacaad8c898a7056f38bf045",
+        "decisions": [],
+        "decisions_needed": [],
+        "definition_changed": false,
+        "next_command": "workflow.py implement finish --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpkx4x4khw --ticket feature-01",
+        "rounds_used": 0,
+        "status": "implementing",
+        "stop_reason": null,
+        "tests_passed": true,
+        "ticket": "feature-01",
+        "topic": "feature"
+      },
+      "finished": {
+        "commit": "d99d7aa1a11c03e612b0362d733879f99975ce6e",
+        "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpkx4x4khw --topic feature",
+        "status": "complete",
+        "ticket": "feature-01",
+        "topic": "feature"
+      }
+    },
+    {
+      "view": "spec-challenge",
+      "status_before": {
+        "baseline": "a8823b07bd260a934cc295dcd09807b9a9380dc2",
+        "decisions": [],
+        "decisions_needed": [],
+        "definition_changed": false,
+        "next_command": "workflow.py implement finish --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp7vy1qrvx --ticket feature-01",
+        "rounds_used": 0,
+        "status": "implementing",
+        "stop_reason": null,
+        "tests_passed": true,
+        "ticket": "feature-01",
+        "topic": "feature"
+      },
+      "finished": {
+        "commit": "97f468a6f7d08a6021e650bf7a8bbf1c30adbb70",
+        "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp7vy1qrvx --topic feature",
+        "status": "complete",
+        "ticket": "feature-01",
+        "topic": "feature"
+      }
+    }
+  ],
+  "review_stop_signals": {
+    "pass_with_overlap": "同一处连续修改：相邻修复在中间快照行号重叠",
+    "pass_with_volume_growth": "体积膨胀：基线增删行超过第一轮的 1.5 倍"
+  }
+}

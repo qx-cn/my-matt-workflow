@@ -1,0 +1,70 @@
+{
+  "kind": "derived exact-snapshot public CLI runtime probe, deterministic fixture review; not independent LLM review",
+  "baseline": {
+    "content_id": "5456eb4dd5bbc3f8a630a76587dfe03470bda2d5020515b45cc2c8ffe093ad1e",
+    "head": "01596c10ef70ff38a026eec5d6aa464e8fd542d3",
+    "commands": [
+      "python3 full.py",
+      "python3 -c 'pass'"
+    ],
+    "results": [
+      {
+        "command": "python3 full.py",
+        "exit_code": 1,
+        "unavailable": true,
+        "failures": [
+          "command:9d4c7559ea9b2648371a71a3fd42cd22439d9fcae024b0f44ad81c659b2d7a0f"
+        ],
+        "output_tail": "Traceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp83hzrijz/full.py\", line 1, in <module>\n    import quality_probe_missing_dependency\nModuleNotFoundError: No module named 'quality_probe_missing_dependency'\n"
+      },
+      {
+        "command": "python3 -c 'pass'",
+        "exit_code": 0,
+        "unavailable": false,
+        "failures": [],
+        "output_tail": ""
+      }
+    ],
+    "at": "2026-10-02T09:53:49.850111+00:00",
+    "baseline": "01596c10ef70ff38a026eec5d6aa464e8fd542d3"
+  },
+  "current": {
+    "content_id": "26c89816c2a733f3e06b7f085c76837b4f57b51d1d7160580c269363ac38173d",
+    "head": "213dda43a43baf73e50303b45f02df47ae794047",
+    "commands": [
+      "python3 full.py",
+      "python3 -c 'pass'"
+    ],
+    "results": [
+      {
+        "command": "python3 full.py",
+        "exit_code": 1,
+        "unavailable": false,
+        "failures": [
+          "test_behavior (__main__.Case.test_behavior)"
+        ],
+        "output_tail": "F\n======================================================================\nFAIL: test_behavior (__main__.Case.test_behavior)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp83hzrijz/full.py\", line 3, in test_behavior\n    def test_behavior(self): self.assertEqual(1, 2, \"new behavior wrong\")\n                             ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 2 : new behavior wrong\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (failures=1)\n"
+      },
+      {
+        "command": "python3 -c 'pass'",
+        "exit_code": 0,
+        "unavailable": false,
+        "failures": [],
+        "output_tail": ""
+      }
+    ],
+    "at": "2026-10-02T09:53:50.724880+00:00",
+    "new_failures": [],
+    "known_failures": [],
+    "unverified": [
+      "python3 full.py"
+    ]
+  },
+  "closed": {
+    "batch": "01",
+    "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp83hzrijz --topic feature",
+    "state": "已收口",
+    "topic": "feature"
+  },
+  "summary": "## 改动概述\n无\n\n## 测试结果\n无\n\n## 审查发现与修复\n无\n\n## 建议\n无\n\n## 已知问题\n\n批次 01：\n[]\n无\n\n## 长期知识沉淀\n无\n\n## 用户介入记录\n无\n\n## 未验证项\n\n批次 01：\n[\"python3 full.py\"]\n无\n"
+}

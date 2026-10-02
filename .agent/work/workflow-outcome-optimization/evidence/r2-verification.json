@@ -1,0 +1,18 @@
+{
+  "spec_revision": 2,
+  "spec_sha256": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+  "source_content_id": "29b34fc74cc270435dc400eeffb045142e563c21ed6048633048050732a4abec",
+  "source_match": true,
+  "spec_content_id": "4b698636a03fb5daaffc57cbed9a3feb86d87d777d95be504d1000d28c03a2cb",
+  "spec_match": true,
+  "independent_design_review": "pass",
+  "blocking_findings": 0,
+  "acceptance_count": 26,
+  "current_spec_count": 1,
+  "old_revision": "superseded",
+  "parallel_capability_audits": 3,
+  "formal_workflow_modified": false,
+  "full_test_suite_run": false,
+  "behavior_comparison_run": false,
+  "commit_push_release_install": false
+}

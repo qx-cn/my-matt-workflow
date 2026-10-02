@@ -1,0 +1,139 @@
+{
+  "artifacts": [
+    {
+      "sha256": "9ab976f698223e458b5e90076eb589e1f5bb224b30f5decbb0d2e761b94e383d",
+      "size": 11541,
+      "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/000-reviews-workflow-outcome-optimization-code-debug-02.md",
+      "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-code-debug-02.md"
+    },
+    {
+      "sha256": "0bad348b8e03e2478a51afb32b7667e048c4d4d65c035772583f5916ce12e118",
+      "size": 8830,
+      "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/001-reviews-workflow-outcome-optimization-completion-automation-02.md",
+      "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-completion-automation-02.md"
+    },
+    {
+      "sha256": "99c78839d824494cd8d6b89a43836fc5790d08963daa77a8bf446309e3c9ef9d",
+      "size": 6133,
+      "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/002-reviews-workflow-outcome-optimization-design-02.md",
+      "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-design-02.md"
+    },
+    {
+      "sha256": "ca55c940e8a869a4683986034b7566f86f8dbfd002710841ee9030a48acf7348",
+      "size": 9728,
+      "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/003-reviews-workflow-outcome-optimization-extension-01.md",
+      "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-extension-01.md"
+    },
+    {
+      "sha256": "22c181e91f0b8cca8fc2aa89817ac9741193d187fd209c34553bde4f83b62e00",
+      "size": 6877,
+      "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/004-reviews-workflow-outcome-optimization-requirements-writing-02.md",
+      "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-requirements-writing-02.md"
+    },
+    {
+      "sha256": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+      "size": 40885,
+      "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/005-specs-workflow-outcome-optimization-02.md",
+      "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/specs/specs-workflow-outcome-optimization-02.md"
+    }
+  ],
+  "content_id": "4b698636a03fb5daaffc57cbed9a3feb86d87d777d95be504d1000d28c03a2cb",
+  "review_unit": {
+    "artifact_kind": "design",
+    "artifacts": [
+      {
+        "sha256": "9ab976f698223e458b5e90076eb589e1f5bb224b30f5decbb0d2e761b94e383d",
+        "size": 11541,
+        "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/000-reviews-workflow-outcome-optimization-code-debug-02.md",
+        "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-code-debug-02.md"
+      },
+      {
+        "sha256": "0bad348b8e03e2478a51afb32b7667e048c4d4d65c035772583f5916ce12e118",
+        "size": 8830,
+        "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/001-reviews-workflow-outcome-optimization-completion-automation-02.md",
+        "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-completion-automation-02.md"
+      },
+      {
+        "sha256": "99c78839d824494cd8d6b89a43836fc5790d08963daa77a8bf446309e3c9ef9d",
+        "size": 6133,
+        "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/002-reviews-workflow-outcome-optimization-design-02.md",
+        "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-design-02.md"
+      },
+      {
+        "sha256": "ca55c940e8a869a4683986034b7566f86f8dbfd002710841ee9030a48acf7348",
+        "size": 9728,
+        "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/003-reviews-workflow-outcome-optimization-extension-01.md",
+        "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-extension-01.md"
+      },
+      {
+        "sha256": "22c181e91f0b8cca8fc2aa89817ac9741193d187fd209c34553bde4f83b62e00",
+        "size": 6877,
+        "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/004-reviews-workflow-outcome-optimization-requirements-writing-02.md",
+        "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/reviews/reviews-workflow-outcome-optimization-requirements-writing-02.md"
+      },
+      {
+        "sha256": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+        "size": 40885,
+        "snapshot_path": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr/005-specs-workflow-outcome-optimization-02.md",
+        "source_path": "/Users/sherly/CS/wsp/ai/my-matt-workflow/.agent/work/workflow-outcome-optimization/specs/specs-workflow-outcome-optimization-02.md"
+      }
+    ],
+    "content_id": "4b698636a03fb5daaffc57cbed9a3feb86d87d777d95be504d1000d28c03a2cb",
+    "dispatch": {
+      "lanes": [
+        {
+          "depends_on": [],
+          "lane_id": "final-state-writing",
+          "method": "final-state-writing"
+        },
+        {
+          "depends_on": [
+            "final-state-writing"
+          ],
+          "lane_id": "reader-first-writing",
+          "method": "reader-first-writing"
+        },
+        {
+          "depends_on": [
+            "reader-first-writing"
+          ],
+          "lane_id": "visual-communication",
+          "method": "visual-communication"
+        },
+        {
+          "depends_on": [
+            "visual-communication"
+          ],
+          "lane_id": "humanizer",
+          "method": "humanizer"
+        },
+        {
+          "depends_on": [
+            "humanizer"
+          ],
+          "lane_id": "artifact-finalization",
+          "method": "artifact-finalization"
+        },
+        {
+          "depends_on": [
+            "artifact-finalization"
+          ],
+          "lane_id": "review-design",
+          "method": "review-design"
+        }
+      ],
+      "mode": "serial"
+    },
+    "execution_mode": "serial",
+    "required_checks": [
+      "final-state-writing",
+      "reader-first-writing",
+      "visual-communication",
+      "humanizer",
+      "artifact-finalization",
+      "review-design"
+    ]
+  },
+  "snapshot_dir": "/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-review-snapshots/my-matt-review-4b698636a03f-q63xn2xr",
+  "status": "ready"
+}

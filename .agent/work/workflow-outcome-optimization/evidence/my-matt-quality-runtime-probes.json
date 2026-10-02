@@ -1,0 +1,87 @@
+{
+  "snapshot_source": "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow_lib/batches.py",
+  "snapshot_hash": "38fec1cbe2086ea7f17573ca08253708e2b6cca582edd03b7af9a5655b0595ce",
+  "kind": "exact snapshot AST extracted function probes; not CLI or LLM behavior",
+  "results": [
+    {
+      "probe": "environment restored exposes failing real test",
+      "result": {
+        "new_failures": [],
+        "known_failures": [],
+        "unverified": [
+          "python3 -m unittest discover"
+        ]
+      }
+    },
+    {
+      "probe": "same unittest case different fault",
+      "result": {
+        "new_failures": [],
+        "known_failures": [
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "test_behavior (test_probe.Cases.test_behavior)"
+          }
+        ],
+        "unverified": []
+      }
+    },
+    {
+      "probe": "retained fix Go package identity",
+      "result": {
+        "new_failures": [
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "go:example.com/probe/b:TestSame"
+          },
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "go:example.com/probe/b:[package]"
+          }
+        ],
+        "known_failures": [
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "go:example.com/probe/a:TestSame"
+          },
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "go:example.com/probe/a:[package]"
+          }
+        ],
+        "unverified": []
+      }
+    },
+    {
+      "probe": "retained fix partial import must still compare",
+      "result": {
+        "new_failures": [
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "test_behavior (test_probe.Cases.test_behavior)"
+          }
+        ],
+        "known_failures": [
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "test_missing (unittest.loader._FailedTest.test_missing)"
+          }
+        ],
+        "unverified": []
+      }
+    },
+    {
+      "probe": "retained fix unittest count reduction",
+      "result": {
+        "new_failures": [],
+        "known_failures": [
+          {
+            "command": "python3 -m unittest discover",
+            "failure": "test_b (test_probe.Cases.test_b)"
+          }
+        ],
+        "unverified": []
+      }
+    }
+  ]
+}
