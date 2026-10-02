@@ -15,17 +15,22 @@ import sys
 DEPENDENCY_PROOF_VERSION=3
 
 
+def loader_failure_identity(identity):
+    """Recognize unittest's legacy and qualified loader wrapper identities."""
+    return bool(re.fullmatch(r'[^\n]+ \(unittest\.loader\._FailedTest(?:\.[^()\s]+)?\)',identity))
+
+
 def execution_observed(output, failure_identities=None):
     cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
-    loader_errors=sum('unittest.loader._FailedTest.' in case for case in cases)
+    loader_errors=sum(loader_failure_identity(case) for case in cases)
     if failure_identities is not None:
-        loader_errors=max(loader_errors,sum('unittest.loader._FailedTest.' in case for case in failure_identities))
+        loader_errors=max(loader_errors,sum(loader_failure_identity(case) for case in failure_identities))
     # A stored tail may hide loader headers while retaining Ran N. Complete
     # identities and the footer error count bound loaders, never imply execution.
-    if failure_identities and all('unittest.loader._FailedTest.' in case for case in failure_identities):
+    if failure_identities and all(loader_failure_identity(case) for case in failure_identities):
         errors=re.search(r'^FAILED \(.*?errors=(\d+)',output,re.M)
         if errors:loader_errors=max(loader_errors,int(errors.group(1)))
-    if any('unittest.loader._FailedTest.' not in case for case in cases):return True
+    if any(not loader_failure_identity(case) for case in cases):return True
     ran=re.search(r'^Ran (\d+) tests?\b',output,re.M)
     if ran and int(ran.group(1))>loader_errors:return True
     return bool(re.search(r'^FAILED\s+[^\s(]\S*|^\s*--- FAIL: |\b[1-9]\d* passed\b',output,re.M))
@@ -33,7 +38,7 @@ def execution_observed(output, failure_identities=None):
 
 def loader_only_failure(output):
     cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
-    return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not execution_observed(output)
+    return bool(cases) and all(loader_failure_identity(case) for case in cases) and not execution_observed(output)
 
 
 def row_execution_observed(row):
@@ -45,7 +50,7 @@ def row_execution_observed(row):
 
 def row_loader_only_failure(row):
     cases=row.get('failures',[])
-    return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not row_execution_observed(row)
+    return bool(cases) and all(loader_failure_identity(case) for case in cases) and not row_execution_observed(row)
 
 
 def loader_dependency_fingerprints(stdout,stderr):
@@ -74,7 +79,7 @@ def loader_dependency_fingerprints(stdout,stderr):
         return {}
     observations={}
     for index,header in enumerate(headers):
-        if 'unittest.loader._FailedTest.' not in header[1]:continue
+        if not loader_failure_identity(header[1]):continue
         end=headers[index+1].start() if index+1<len(headers) else footer.start()
         block=diagnostic[header.end():end].strip()
         prefix=re.match(r'ImportError: Failed to import test module: [^\n]+\n',block)

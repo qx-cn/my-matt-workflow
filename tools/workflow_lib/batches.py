@@ -277,7 +277,7 @@ def failures(output, code):
     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
 
 
-from .evidence import execution_observed, row_execution_observed, row_loader_only_failure, current_unavailable, current_loader_gap_fingerprints
+from .evidence import loader_failure_identity, execution_observed, row_execution_observed, row_loader_only_failure, current_unavailable, current_loader_gap_fingerprints
 
 
 def run_full(repo,config):
@@ -335,7 +335,7 @@ def compare(baseline,current):
         # Loader names identify modules, not executed behavior cases. Only a
         # identical complete dependency diagnostic may remain known; changed
         # or unknown import failures require repair even in partial runs.
-        coarse={f for f in unchanged if 'unittest.loader._FailedTest.' in f}
+        coarse={f for f in unchanged if loader_failure_identity(f)}
         uncertain=coarse-matching_loader
         if uncertain:
             unverified.append(old['command'])

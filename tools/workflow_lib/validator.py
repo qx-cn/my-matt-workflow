@@ -43,7 +43,13 @@ def _markdown_references(root: Path) -> list[tuple[Path, str]]:
         "__pycache__",
     }
     for markdown in sorted(root.rglob("*.md")):
-        if ignored_parts & set(markdown.relative_to(root).parts):
+        relative = markdown.relative_to(root)
+        # Active Topic history, immutable review evidence and embedded synthetic
+        # repositories are runtime data excluded from the build snapshot.
+        # Keep repository configuration and other .agent documents in scope.
+        if markdown.is_relative_to(root / ".agent" / "work"):
+            continue
+        if ignored_parts & set(relative.parts):
             continue
         # validate_skills already resolves source Skill links against declared
         # composition/resource outputs; checking them as raw files would reject
