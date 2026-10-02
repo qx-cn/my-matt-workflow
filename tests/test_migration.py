@@ -19,7 +19,12 @@ class MigrationTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.repo = Path(self.tmp.name) / 'project'
-        subprocess.run(['git', 'clone', '-q', str(FIXTURE / 'baseline.bundle'), str(self.repo)], check=True)
+        # Detached Git maintenance can recreate .git files during temp cleanup.
+        # Disable it for clone itself and for subsequent fixture Git commands.
+        subprocess.run(['git', '-c', 'gc.auto=0', '-c', 'maintenance.auto=false',
+                        'clone', '-q', str(FIXTURE / 'baseline.bundle'), str(self.repo)], check=True)
+        self.git('config', 'gc.auto', '0')
+        self.git('config', 'maintenance.auto', 'false')
         shutil.copytree(FIXTURE / 'legacy_project', self.repo, dirs_exist_ok=True)
         self.git('config', 'user.name', 'Test')
         self.git('config', 'user.email', 'test@example.invalid')
