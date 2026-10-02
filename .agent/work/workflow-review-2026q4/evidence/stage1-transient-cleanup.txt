@@ -1,0 +1,40 @@
+.................................................................E...........................................................................................................................................................................................
+======================================================================
+ERROR: test_migrated_active_ticket_runs_tests_review_and_finish (test_migration.MigrationTests.test_migrated_active_ticket_runs_tests_review_and_finish)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py", line 975, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py", line 955, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py", line 852, in rmtree
+    _rmtree_impl(path, dir_fd, onexc)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py", line 721, in _rmtree_safe_fd
+    _rmtree_safe_fd_step(stack, onexc)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py", line 802, in _rmtree_safe_fd_step
+    onexc(func, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py", line 753, in _rmtree_safe_fd_step
+    os.rmdir(name, dir_fd=dirfd)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 66] Directory not empty: '/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp7k6kmeo_/project/.git'
+
+----------------------------------------------------------------------
+Ran 253 tests in 210.874s
+
+FAILED (errors=1)
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmph6qesn8h/releases/r4
+INSTALLED r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpxzygqx2i/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpxzygqx2i/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpxzygqx2i/repo/releases/r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpfstx2xa5/workflow/releases/v1
+INSTALLED v1
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_r51kg45/workflow/releases/v2
+INSTALLED v2
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpw9s690re/workflow/releases/v1
+INSTALLED v1

@@ -1,0 +1,36 @@
+{
+  "reviewer": "whole_rereview",
+  "context": "fresh",
+  "source": "independent",
+  "remaining_blocking": 0,
+  "remaining_advisory": 0,
+  "initial_blocking_fixed": 3,
+  "rereview_advisory_fixed": 1,
+  "final_hashes": {
+    "tools/workflow_lib/batches.py": "38fec1cbe2086ea7f17573ca08253708e2b6cca582edd03b7af9a5655b0595ce",
+    "tests/test_batches.py": "11224db1871999f53739647511927c34db8688e11d2d0820dc1756046a6dbd64"
+  },
+  "targeted": {
+    "command": "python3 -B -m unittest discover -s tests -p test_batches.py",
+    "tests": 15,
+    "seconds": 39.608,
+    "result": "OK",
+    "exit_code": 0
+  },
+  "full": {
+    "command": "python3 -B -m unittest discover -s tests",
+    "tests": 277,
+    "seconds": 296.729,
+    "result": "OK",
+    "exit_code": 0,
+    "qualification": "Started before final Go baseline compatibility and exit-code precedence changes; final diffs verified by targeted tests and actual probes"
+  },
+  "actual_probes": [
+    "Go package identity and legacy baseline",
+    "unittest partial missing dependency",
+    "wrapper exits 127 after actual execution",
+    "missing executable",
+    "unittest two failures reduced to one"
+  ],
+  "pytest": "output-format boundary checks only; runner not installed"
+}

@@ -150,10 +150,32 @@ def require_self(repo,unit):
 def failures(output, code):
     if not code:return []
     cases = re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
-    cases += re.findall(r'^FAILED\s+(\S+)',output,re.M)
-    cases += re.findall(r'^\s*--- FAIL: (\S+)',output,re.M)
+    # pytest node IDs; unittest's FAILED (failures=N) is a summary, not a case.
+    cases += re.findall(r'^(?:FAILED|ERROR)\s+([^\s(]\S*)',output,re.M)
+    pending=[]
+    for line in output.splitlines():
+        failed=re.match(r'^\s*--- FAIL: (\S+)',line)
+        if failed:pending.append(failed.group(1))
+        package=re.match(r'^FAIL\s+(\S+)(?:\s|$)',line)
+        if package:
+            name=package.group(1)
+            cases.extend(f'go:{name}:{test}' for test in pending)
+            # A package can fail to build without any executable test case.
+            cases.append(f'go:{name}:[package]')
+            pending=[]
+    cases.extend(pending)  # Single-package snippets without a Go result line.
     # Unknown runners are compared conservatively by the whole diagnostic.
     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
+
+
+def execution_observed(output):
+    """Distinguish partial test execution from an environment-only failure."""
+    unit_cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
+    loader_errors=sum('unittest.loader._FailedTest.' in case for case in unit_cases)
+    if any('unittest.loader._FailedTest.' not in case for case in unit_cases):return True
+    ran=re.search(r'^Ran (\d+) tests?\b',output,re.M)
+    if ran and int(ran.group(1))>loader_errors:return True
+    return bool(re.search(r'^FAILED\s+[^\s(]\S*|^\s*--- FAIL: |\b[1-9]\d* passed\b',output,re.M))
 
 
 def run_full(repo,config):
@@ -165,7 +187,7 @@ def run_full(repo,config):
         try:
             result=subprocess.run(shlex.split(command),cwd=repo,capture_output=True,text=True,errors='replace')
             output=result.stdout+result.stderr
-            unavailable=result.returncode != 0 and (result.returncode in (126,127) or bool(re.search(r'ModuleNotFoundError|No module named|command not found',output)))
+            unavailable=result.returncode != 0 and (result.returncode in (126,127) or bool(re.search(r'ModuleNotFoundError|No module named|command not found',output))) and not execution_observed(output)
             code=result.returncode
         except OSError as exc:
             output=str(exc);code=127;unavailable=True
@@ -178,13 +200,19 @@ def compare(baseline,current):
     if baseline['commands']!=current['commands']:raise topics.TopicError('全量测试配置与基线不同；不能比较')
     new=[];known=[];unverified=[]
     for old,now in zip(baseline['results'],current['results']):
-        if old['unavailable']:
+        if old['unavailable'] and not execution_observed(old.get('output_tail','')):
             unverified.append(old['command']);continue
         if now['unavailable']:
             new.append(dict(command=now['command'],failure='当前环境无法运行'));continue
-        added=set(now['failures'])-set(old['failures'])
+        previous=set(old['failures'])
+        tail=old.get('output_tail','')
+        if not any(f.startswith('go:') for f in previous) and re.search(r'^FAIL\s+\S+',tail,re.M):
+            # Recover package identity from recorded facts, never from a bare
+            # test-name match that could hide a different package's failure.
+            previous=set(failures(tail,old.get('exit_code',1)))
+        added=set(now['failures'])-previous
         new.extend(dict(command=now['command'],failure=f) for f in sorted(added))
-        known.extend(dict(command=now['command'],failure=f) for f in sorted(set(now['failures']) & set(old['failures'])))
+        known.extend(dict(command=now['command'],failure=f) for f in sorted(set(now['failures']) & previous))
     return dict(new_failures=new,known_failures=known,unverified=unverified)
 
 

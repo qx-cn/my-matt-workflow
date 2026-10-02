@@ -23,4 +23,4 @@
 
 一次全套 253 项运行的行为断言均完成，仅 tempfile.cleanup 出现 OSError 66（临时仓库 .git 非空）；单独迁移用例重跑通过。没有为清理瞬态修改项目代码、配置或环境；保留日志并重跑完整套件确认。
 
-最终完整重跑：`python3 -m unittest discover -s tests -f`，253 项，187.267 秒，OK，退出 0。日志：evidence/stage1-tests.log。文本量：31,513 字符，evidence/stage1-text.json。
+最终完整重跑：`python3 -m unittest discover -s tests -f`，253 项，187.267 秒，OK，退出 0。日志：evidence/stage1-tests.txt。文本量：31,513 字符，evidence/stage1-text.json。

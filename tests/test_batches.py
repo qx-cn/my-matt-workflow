@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 import test_implement_lifecycle as legacy
 import test_topic_lifecycle as topic_tests
-from tools.workflow_lib import batches
+from tools.workflow_lib import batches, topic_service
 
 class BatchTests(unittest.TestCase):
     git=legacy.ImplementationTests.git
@@ -191,6 +191,63 @@ class BatchTests(unittest.TestCase):
         current=dict(commands=['go test ./...'],results=[dict(command='go test ./...',unavailable=False,failures=batches.failures('--- FAIL: TestPaths (0.00s)\n    --- FAIL: TestPaths/old (0.00s)\n    --- FAIL: TestPaths/new (0.00s)\n',1))])
         result=batches.compare(old,current)
         self.assertEqual(['TestPaths/new'],[f['failure'] for f in result['new_failures']])
+
+    def test_go_package_identity_distinguishes_same_named_cases_and_build_failure(self):
+        old_output='--- FAIL: TestSame (0.00s)\nFAIL\texample.com/probe/a\t0.003s\nok\texample.com/probe/b\t0.002s\nFAIL\n'
+        new_output='--- FAIL: TestSame (0.00s)\nFAIL\texample.com/probe/a\t0.003s\n--- FAIL: TestSame (0.00s)\nFAIL\texample.com/probe/b\t0.002s\nFAIL\n'
+        def result(output):
+            return dict(commands=['go test ./...'],results=[dict(command='go test ./...',unavailable=False,failures=batches.failures(output,1))])
+        added=batches.compare(result(old_output),result(new_output))['new_failures']
+        self.assertIn('go:example.com/probe/b:TestSame',[f['failure'] for f in added])
+        self.assertNotIn('go:example.com/probe/a:TestSame',[f['failure'] for f in added])
+        legacy=result(old_output)
+        legacy['results'][0].update(failures=['TestSame'],output_tail=old_output,exit_code=1)
+        self.assertEqual([],batches.compare(legacy,result(old_output))['new_failures'])
+        self.assertIn('go:example.com/probe/b:TestSame',[f['failure'] for f in batches.compare(legacy,result(new_output))['new_failures']])
+        build=batches.compare(result(old_output),result(old_output+'FAIL\texample.com/probe/c [build failed]\n'))
+        self.assertIn('go:example.com/probe/c:[package]',[f['failure'] for f in build['new_failures']])
+
+    def test_partial_missing_dependency_does_not_hide_executed_test_failure(self):
+        suite=self.repo/'suite';suite.mkdir()
+        (suite/'test_missing.py').write_text('import dependency_missing_in_this_toy_repo\n')
+        behavior=suite/'test_behavior.py'
+        behavior.write_text('import unittest\nclass Behavior(unittest.TestCase):\n def test_behavior(self): self.assertEqual(1, 1)\n')
+        self.git('add','suite');self.git('commit','-qm','partial environment baseline')
+        # A wrapper may report a missing dependency via exit 127 even though
+        # unittest already executed another test. Execution evidence wins.
+        (self.repo/'runner.py').write_text(
+            "import subprocess, sys\nsubprocess.run([sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'suite'])\nraise SystemExit(127)\n")
+        self.git('add','runner.py');self.git('commit','-qm','partial runner exit status')
+        self.setup(full='python3 -B runner.py');self.implement();self.review()
+        baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
+        self.assertFalse(baseline['results'][0]['unavailable'])
+        behavior.write_text(behavior.read_text().replace('assertEqual(1, 1)','assertEqual(1, 2)'))
+        self.git('add','suite');self.git('commit','-qm','inject reachable behavior failure')
+        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+        self.assertFalse(current['unverified'])
+        self.assertTrue(any('test_behavior' in f['failure'] for f in current['new_failures']))
+        self.cli('batch','close','--topic','feature',ok=False)
+        self.assertTrue(batches.execution_observed('ERROR tests/test_missing.py - ModuleNotFoundError\n1 passed, 1 error in 0.2s\n'))
+        self.assertFalse(batches.execution_observed('ERROR tests/test_missing.py - ModuleNotFoundError\n1 error during collection\n'))
+        self.assertEqual(['tests/test_missing.py'],batches.failures('ERROR tests/test_missing.py - ModuleNotFoundError\n',1))
+        # Old partial baselines mislabelled unavailable can still be compared.
+        baseline['results'][0]['unavailable']=True
+        observed=batches.run_full(self.repo,topic_service.read_config(self.repo))
+        self.assertTrue(batches.compare(baseline,observed)['new_failures'])
+
+    def test_fixing_one_of_two_unittest_failures_does_not_create_new_case(self):
+        suite=self.repo/'suite';suite.mkdir()
+        behavior=suite/'test_behavior.py'
+        behavior.write_text('import unittest\nclass Behavior(unittest.TestCase):\n def test_a(self): self.assertEqual(1, 2)\n def test_b(self): self.assertEqual(3, 4)\n')
+        self.git('add','suite');self.git('commit','-qm','two failing baseline cases')
+        self.setup(full='python3 -B -m unittest discover -s suite');self.implement()
+        behavior.write_text(behavior.read_text().replace('assertEqual(3, 4)','assertEqual(3, 3)'))
+        self.git('add','suite');self.git('commit','-qm','repair one known failure')
+        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+        self.assertEqual([],current['new_failures'])
+        self.assertTrue(any('test_a' in f['failure'] for f in current['known_failures']))
+        self.assertFalse(any('(failures=' in f['failure'] for f in current['known_failures']))
+        self.review();self.cli('batch','close','--topic','feature')
 
     def test_status_recovery_reopen_and_postclosure_drift(self):
         self.setup()
