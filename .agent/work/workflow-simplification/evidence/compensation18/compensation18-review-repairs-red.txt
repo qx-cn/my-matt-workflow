@@ -1,0 +1,90 @@
+F.F.warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+.warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+...warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+.
+======================================================================
+FAIL: test_accepted_legacy_ticket_resumes_ready_successor (test_completion_compensation.CompletionCompensationTests.test_accepted_legacy_ticket_resumes_ready_successor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_completion_compensation.py", line 151, in test_accepted_legacy_ticket_resumes_ready_successor
+    self.assertIn('implement start',report['next_command']);self.assertIn('--ticket feature-02',report['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'implement start' not found in 'workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmprz3ljpcq --topic feature'
+
+======================================================================
+FAIL: test_batch_human_status_accepts_ticket_id_list (test_completion_compensation.CompletionCompensationTests.test_batch_human_status_accepts_ticket_id_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_completion_compensation.py", line 157, in test_batch_human_status_accepts_ticket_id_list
+    human=case.cli('batch','status','--topic','feature','--human').stdout
+          ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_implement_lifecycle.py", line 18, in cli
+    result = topic_tests.TopicLifecycleTests.cli(self, *args, ok=ok)
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_topic_lifecycle.py", line 56, in cli
+    self.assertEqual(0, result.returncode, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow.py", line 816, in <module>
+    main()
+    ~~~~^^
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow.py", line 803, in main
+    args.func(args)
+    ~~~~~~~~~^^^^^^
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow.py", line 468, in command_batch
+    emit_status(args,report)
+    ~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow.py", line 419, in emit_status
+    print(render(report))
+          ~~~~~~^^^^^^^^
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tools/workflow_lib/status_text.py", line 15, in render
+    line=f"Ticket {ticket['ticket']}：{LABELS.get(ticket['status'], '状态待核实')}"
+                   ~~~~~~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 16.098s
+
+FAILED (failures=2)

@@ -33,6 +33,9 @@ def baseline_files(repo, baseline):
         mode, kind, oid = metadata.decode().split()
         name = name.decode()
         if content_path(name):
+            if mode=='160000' and kind=='commit':
+                files[name]=(mode,f'Subproject commit {oid}\n'.encode())
+                continue
             if kind != 'blob':
                 raise topics.TopicError(f'无法冻结非 blob 内容：{name}')
             files[name] = (mode, topics.git(repo, 'cat-file', 'blob', oid).stdout)
@@ -41,11 +44,14 @@ def baseline_files(repo, baseline):
 
 def current_files(repo):
     files = {}
+    links=topics.gitlinks(repo)
     for name in topics.content_paths(repo):
         if not content_path(name):
             continue
         path = repo / name
-        if path.is_symlink():
+        if name in links:
+            files[name]=('160000',f'Subproject commit {links[name]}\n'.encode())
+        elif path.is_symlink():
             files[name] = ('120000', path.readlink().as_posix().encode())
         elif path.is_file():
             files[name] = ('100755' if path.stat().st_mode & 0o111 else '100644', path.read_bytes())

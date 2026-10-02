@@ -11,16 +11,29 @@ def render(report):
     if report.get('decisions_needed'):state='需要用户裁决'
     lines=[f"工作 {report.get('topic','')}：{state}"]
     if report.get('ticket'):lines.append('Ticket：'+report['ticket'])
+    for ticket in report.get('tickets', []):
+        if isinstance(ticket, str):
+            lines.append('Ticket：'+ticket)
+            continue
+        line=f"Ticket {ticket['ticket']}：{LABELS.get(ticket['status'], '状态待核实')}"
+        if ticket.get('stop_reason'):
+            line+='；原因：'+LABELS.get(ticket['stop_reason'],ticket['stop_reason'])
+        if ticket.get('recovery_error'):
+            line+='；恢复检查：'+ticket['recovery_error']
+        lines.append(line)
     batch=report.get('batch_status')
     if isinstance(batch,dict):lines.append(f"批次 {batch['batch']}：{batch['state']}")
     elif isinstance(report.get('batch'),str):lines.append('批次：'+report['batch'])
     reason=report.get('stop_reason') or (report.get('branch_review') or {}).get('stop_reason')
     if reason:
         for code,label in LABELS.items():
-            if '-' in code:reason=reason.replace(code,label)
+            reason=reason.replace(code,label)
         lines.append('原因：'+reason)
     for decision in report.get('decisions_needed',[]):
-        lines.append((decision.get('finding') or {}).get('summary','方案存在待决事项')+'；'+decision['decision'])
+        subject=(decision.get('finding') or {}).get('summary', '方案存在待决事项')
+        if decision.get('ticket'):
+            subject='Ticket '+decision['ticket']+'：'+LABELS.get(decision.get('reason'),'审查停止，需要用户决定')
+        lines.append(subject+'；'+decision['decision'])
     for item in report.get('unverified',[]):
         lines.append('未验证：'+(item.get('command','')+'；'+item.get('note','') if isinstance(item,dict) else str(item)))
     if report.get('next_command'):lines.append('下一步：'+report['next_command'])

@@ -1,0 +1,8 @@
+{
+  "tools/workflow_lib/review_snapshot.py": "69809a420b4f19296c7442b90b97131199d15161ad1b2fed3bf9bc2f1004dcbb",
+  "tools/workflow_lib/ticket_review.py": "f2d8d4952febd434aee4af3dec0017ee4e45161aa112fa2ce47067c07464a1d9",
+  "tools/workflow_lib/topic_service.py": "51558d7964a8100dbd11d1eec8928b8c493ee4a93d8a4d842689da45531d65ee",
+  "tools/workflow_lib/status_text.py": "f9d650de213b36c52b3b2ff01be8a50eca3b18f600cfb95b115e4025d9f34213",
+  "tests/test_completion_compensation.py": "97bb32afe0d4a9397dbd05c2c526e9f31579742ad714c5d5457eaf5d1c9a1e0f",
+  "tests/fixtures/workflow_simplification/v2_needs_user.json": "b8d9832a41030babf52e391214ce2e03a428fd3be776f4ec0b0718ac1780997b"
+}

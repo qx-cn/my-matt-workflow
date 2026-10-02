@@ -78,7 +78,7 @@ def _plain_entry(repo: Path, relative_path: str) -> tuple[str, str] | None:
     raise ReviewSnapshotError(f"无法快照非常规路径：{relative_path}")
 
 
-def _gitlink_entry(
+def gitlink_entry(
     repo: Path, relative_path: str, index_object_id: str
 ) -> tuple[str, str]:
     path = repo / relative_path
@@ -116,7 +116,7 @@ def _worktree_manifest(
         for relative_path, (mode, object_id) in sorted(index.items()):
             display_path = _prefixed(prefix, relative_path)
             entry = (
-                _gitlink_entry(repo, relative_path, object_id)
+                gitlink_entry(repo, relative_path, object_id)
                 if mode == "160000"
                 else _plain_entry(repo, relative_path)
             )

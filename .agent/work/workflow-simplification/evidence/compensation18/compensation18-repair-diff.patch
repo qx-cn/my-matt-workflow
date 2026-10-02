@@ -1,0 +1,45 @@
+--- first-review/topic_service.py
++++ tools/workflow_lib/topic_service.py
+@@ -302,6 +302,8 @@
+     from . import batches, ticket_implementation
+     from .tickets import frontmatter
+     batch_enabled = batches.enabled(repo, topic)
++    if value['status'] == 'active' and not batch_enabled:
++        command = ticket_implementation.next_start_command(repo, topic)
+     root = archive if archive.exists() else path
+     for ticket_file in sorted((root / 'tickets').glob('*.md')):
+         metadata = frontmatter(ticket_file)
+--- first-review/status_text.py
++++ tools/workflow_lib/status_text.py
+@@ -12,6 +12,9 @@
+     lines=[f"工作 {report.get('topic','')}：{state}"]
+     if report.get('ticket'):lines.append('Ticket：'+report['ticket'])
+     for ticket in report.get('tickets', []):
++        if isinstance(ticket, str):
++            lines.append('Ticket：'+ticket)
++            continue
+         line=f"Ticket {ticket['ticket']}：{LABELS.get(ticket['status'], '状态待核实')}"
+         if ticket.get('stop_reason'):
+             line+='；原因：'+LABELS.get(ticket['stop_reason'],ticket['stop_reason'])
+--- first-review/test_completion_compensation.py
++++ tests/test_completion_compensation.py
+@@ -141,3 +141,19 @@
+         report=json.loads(case.cli('topic','status','--topic','feature').stdout)
+         self.assertIn('implement status',report['next_command'])
+         self.assertIn('缺少新实施记录',report['tickets'][0]['recovery_error'])
++
++    def test_accepted_legacy_ticket_resumes_ready_successor(self):
++        case=self.fixture(2);self.restore_legacy(case)
++        case.cli('implement','test','--ticket','feature-01')
++        case.cli('resolve','--ticket','feature-01','--accept','--reason','user accepts evidence gap')
++        report=json.loads(case.cli('topic','status','--topic','feature').stdout)
++        self.assertEqual(['complete','ready-for-agent'],[ticket['status'] for ticket in report['tickets']])
++        self.assertIn('implement start',report['next_command']);self.assertIn('--ticket feature-02',report['next_command'])
++        case.cli('implement','start','--ticket','feature-02')
++        self.assertIn('implement test',json.loads(case.cli('topic','status','--topic','feature').stdout)['next_command'])
++
++    def test_batch_human_status_accepts_ticket_id_list(self):
++        case=self.fixture();case.cli('implement','start','--ticket','feature-01')
++        human=case.cli('batch','status','--topic','feature','--human').stdout
++        self.assertIn('feature-01',human);self.assertIn('实施中',human)
++        self.assertNotIn('open',human)

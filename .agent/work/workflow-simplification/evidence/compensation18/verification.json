@@ -1,0 +1,47 @@
+{
+  "baseline": "77246b4225a48c6d177ff830c7c00ffb07f7666d",
+  "history_files_checked": 487,
+  "history_changed": [],
+  "source_hashes_match": true,
+  "tests": [
+    {
+      "command": "python3 -m unittest discover -s tests -v",
+      "count": 286,
+      "seconds": 274.242,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_completion_compensation.py",
+      "count": 9,
+      "seconds": 16.452,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 tools/workflow.py validate",
+      "skills": 32,
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "review": {
+    "source": "independent",
+    "agent": "/root/compensation18_review",
+    "blocking": 2,
+    "advisory": 0,
+    "blocking_fixed": 2,
+    "full_test_count": 284,
+    "full_test_exit_code": 1
+  },
+  "rereview": {
+    "source": "independent",
+    "agent": "/root/compensation18_rereview",
+    "blocking": 0,
+    "advisory": 0,
+    "focused_test_count": 52,
+    "test_exit_code": 0
+  },
+  "main_chain_characters": 33919
+}

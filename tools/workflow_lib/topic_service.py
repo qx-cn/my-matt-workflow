@@ -199,12 +199,31 @@ def content_paths(repo):
     return sorted({p.decode() for p in raw.split(b"\0") if p and p != b".agent" and not p.startswith(b".agent/")})
 
 
+def gitlinks(repo):
+    """Resolve tracked submodule commits using the snapshot's clean-tree guard."""
+    from .review_snapshot import gitlink_entry, ReviewSnapshotError
+    links={}
+    for entry in git(repo,'ls-files','--stage','-z').stdout.split(b'\0'):
+        if not entry:continue
+        metadata,name=entry.split(b'\t',1)
+        mode,oid,stage=metadata.decode().split()
+        name=name.decode()
+        if mode=='160000' and name!='.agent' and not name.startswith('.agent/'):
+            if stage!='0':raise TopicError(f'Gitlink尚有未解决冲突：{name}')
+            try:links[name]=gitlink_entry(repo,name,oid)[1]
+            except ReviewSnapshotError as exc:raise TopicError(str(exc)) from exc
+    return links
+
+
 def content_id(repo):
     digest = hashlib.sha256()
+    links=gitlinks(repo)
     for name in content_paths(repo):
         path = repo / name
         digest.update(name.encode() + b"\0")
-        if path.is_symlink():
+        if name in links:
+            digest.update(b'gitlink:'+links[name].encode())
+        elif path.is_symlink():
             digest.update(b"link:" + path.readlink().as_posix().encode())
         elif path.is_file():
             digest.update(path.read_bytes())
@@ -268,6 +287,7 @@ def status(repo, topic=None):
         from .ticket_implementation import next_start_command
         command = next_start_command(repo, topic)
     batch_status = None
+    ticket_states = []
     advisories = []
     known_issues = []
     decisions_needed = []
@@ -279,6 +299,35 @@ def status(repo, topic=None):
             if "accepted" != implementation.get("outcome") and value["status"] != "archived" and review == implementation.get("reviews", [])[-1]:
                 decisions_needed.extend(dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for f in review.get("result", {}).get("findings", []) if f.get("view") == "spec-challenge")
             advisories.extend(f for f in review.get("result", {}).get("findings", []) if f.get("severity") == "advisory")
+    from . import batches, ticket_implementation
+    from .tickets import frontmatter
+    batch_enabled = batches.enabled(repo, topic)
+    if value['status'] == 'active' and not batch_enabled:
+        command = ticket_implementation.next_start_command(repo, topic)
+    root = archive if archive.exists() else path
+    for ticket_file in sorted((root / 'tickets').glob('*.md')):
+        metadata = frontmatter(ticket_file)
+        identifier = metadata.get('id')
+        if not isinstance(identifier, str) or ticket_file.name != f'tickets-{identifier}.md' or not re.fullmatch(re.escape(topic)+r'-[0-9]{2}', identifier):
+            raise TopicError(f'Ticket id 与目录/文件名不一致：{ticket_file}')
+        record = root / 'implementations' / f'{identifier}.json'
+        unit = json.loads(record.read_text()) if record.is_file() else {}
+        ticket_state = dict(ticket=identifier, status=metadata.get('status'),
+                            stop_reason=unit.get('stop_reason') if metadata.get('status') in {'implementing', 'needs-user'} else None)
+        ticket_states.append(ticket_state)
+        if value['status'] == 'active' and not batch_enabled and metadata.get('status') in {'implementing', 'needs-user'}:
+            # Reuse Ticket recovery gates rather than guessing at Topic completion.
+            try:
+                command = ticket_implementation.status(repo, ticket=identifier, topic=topic)['next_command']
+            except (TopicError, OSError) as exc:
+                ticket_state['recovery_error'] = str(exc)
+                command = f'workflow.py implement status --repo {shlex.quote(str(repo))} --ticket {identifier}'
+            if metadata['status'] == 'needs-user' and not any(
+                    f.get('view') == 'spec-challenge'
+                    for review in unit.get('reviews', [])[-1:]
+                    for f in review.get('result', {}).get('findings', [])):
+                decisions_needed.append(dict(ticket=identifier, reason=unit.get('stop_reason'),
+                    decision='请决定接受现状、修订定义后重开或放弃；接受前仍须完成当前内容的测试和自审'))
     branch_file = (archive if archive.exists() else path) / 'branch-review.json'
     branch = json.loads(branch_file.read_text()) if branch_file.exists() else None
     if branch:
@@ -289,8 +338,7 @@ def status(repo, topic=None):
             decisions_needed.extend(dict(finding=f, decision='请决定修订 Spec、接受风险或按原 Spec 继续') for f in latest_findings if f.get('view') == 'spec-challenge')
         if branch.get('status') == 'needs-user' and value['status'] != 'archived':
             command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --branch --topic {topic} --accept --reason '<理由>'"
-    from . import batches
-    if batches.enabled(repo,topic) and value['status'] != 'archived':
+    if batch_enabled and value['status'] != 'archived':
         pending_batches = [b for b in batches.read(repo,topic)['batches'] if b['status'] != 'closed']
         baseline_file=path/'test-baseline.json'
         if baseline_file.exists():
@@ -302,7 +350,7 @@ def status(repo, topic=None):
             unverified = batch_status['unverified']
     return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
             "decisions_needed": decisions_needed, "unverified": unverified,
-            "batch_status":batch_status,
+            "batch_status":batch_status, "tickets": ticket_states,
             "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
             "next_command": command}
 

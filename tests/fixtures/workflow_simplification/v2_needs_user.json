@@ -1,0 +1,95 @@
+{
+  "source_commit": "c4809cc44a99def8433ec84ea47968038416de16",
+  "generation": "Actual v2 implement start/test/review/submit inconclusive; omit expired material paths; rebind baseline/definition in the toy restore",
+  "implementation": {
+    "ticket": "feature-01",
+    "topic": "feature",
+    "baseline": "30be29123a42cbbe5786ff1ed049fc684e8fafc9",
+    "started_at": "2026-10-02T00:55:47.804884+00:00",
+    "execution_agent": "codex",
+    "definition": {
+      "ticket": {
+        "metadata": {
+          "id": "feature-01",
+          "title": "Execute tests",
+          "ticket_kind": "implementation",
+          "spec_id": "feature",
+          "spec_revision": "1",
+          "spec_ref": ".agent/work/feature/specs/specs-feature-01.md",
+          "blocked_by": [],
+          "sequence": "1",
+          "test_commands": [
+            "python3 -c 'pass'"
+          ],
+          "rule_sources": [
+            ".agent/work/feature/specs/specs-feature-01.md"
+          ],
+          "rule_scope": [
+            "code.txt"
+          ],
+          "rule_constraints": [
+            "observe tests"
+          ],
+          "rule_conflicts": [],
+          "review_probes": [
+            "recovery"
+          ],
+          "execution_agent": "auto",
+          "supersedes_ticket": [],
+          "compensates": [],
+          "tags": []
+        },
+        "body": "## 要构建什么\nRun tests\n## 适用规则与影响区域\nlocal\n## 验收标准\n- [ ] marker observed"
+      },
+      "spec_sha256": "145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6"
+    },
+    "tests": [],
+    "implementation_session_id": "12f3c23c17854bbbbe30b0320fb08675",
+    "reviews": [
+      {
+        "repair": [],
+        "unit_id": "ff71dfa5a37c4e1895653ad9babdf145",
+        "content_id": "661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31",
+        "round": 1,
+        "status": "inconclusive",
+        "reviewer": {
+          "provenance": "self",
+          "model": "actual-host-model"
+        },
+        "result": {
+          "unit_id": "ff71dfa5a37c4e1895653ad9babdf145",
+          "content_id": "661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31",
+          "round": 1,
+          "acceptance": [
+            {
+              "id": "feature-01#A1",
+              "text": "marker observed"
+            }
+          ],
+          "probes": [
+            "recovery"
+          ],
+          "downstream_tickets": [],
+          "status": "inconclusive",
+          "reviewer": {
+            "provenance": "self",
+            "model": "actual-host-model"
+          },
+          "coverage": [
+            {
+              "target": "feature-01#A1",
+              "result": "ok"
+            },
+            {
+              "target": "recovery",
+              "result": "ok"
+            }
+          ],
+          "findings": []
+        }
+      }
+    ],
+    "stop_reason": "inconclusive",
+    "needs_user_count": 1
+  }
+}

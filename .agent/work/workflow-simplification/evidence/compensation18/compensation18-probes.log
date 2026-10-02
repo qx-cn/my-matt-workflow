@@ -1,0 +1,37 @@
+warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+Migrating git directory of 'module' from
+'/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp6mn7cuvn/module/.git' to
+'/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp6mn7cuvn/.git/modules/module'
+warning: adding embedded git repository: .agent
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> .agent
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached .agent
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+{"legacy_between_tickets": {"advisories": [], "baseline": "6ef42a1a59272248fd95ce37b1ed1089c3679311", "batch_status": null, "branch_review": null, "decisions_needed": [], "implementation_started": true, "known_issues": [], "level": "standard", "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpiygc5_75 --topic feature", "started_at": "2026-10-02T00:55:47.804884+00:00", "status": "active", "test_runs": 0, "tickets": [{"status": "complete", "stop_reason": null, "ticket": "feature-01"}, {"status": "ready-for-agent", "stop_reason": null, "ticket": "feature-02"}], "topic": "feature", "unverified": []}, "following_next": {"exit": 1, "stderr": "Ticket 尚未 complete；请运行 implement status\n"}}
+{"git_file": true, "identity": "00b734d9c0495f4f651b98319a6ac4243b2ad95c8b70a8647b69608ccb300f01", "frozen_mode": "160000"}
+actual_submodule_dirty_rejected=父仓 gitlink 含未绑定到 commit 的工作树内容：module
+{"private_agent_gitlink_ignored": true, "private_absent_from_frozen": true}

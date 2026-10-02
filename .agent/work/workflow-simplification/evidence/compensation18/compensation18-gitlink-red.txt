@@ -1,0 +1,39 @@
+warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+F
+======================================================================
+FAIL: test_unchanged_gitlink_batch_and_optional_branch_can_close (test_completion_compensation.CompletionCompensationTests.test_unchanged_gitlink_batch_and_optional_branch_can_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_completion_compensation.py", line 45, in test_unchanged_gitlink_batch_and_optional_branch_can_close
+    batch=case.review();self.assert_pointer(batch,oid)
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_batches.py", line 37, in review
+    report=json.loads(self.cli(action,'review','--topic','feature','--reviewer-model','host',
+                      ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 '--reviewer-session-id','fresh-context',*options).stdout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_implement_lifecycle.py", line 18, in cli
+    result = topic_tests.TopicLifecycleTests.cli(self, *args, ok=ok)
+  File "/Users/sherly/CS/wsp/ai/my-matt-workflow/tests/test_topic_lifecycle.py", line 56, in cli
+    self.assertEqual(0, result.returncode, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 无法冻结非 blob 内容：module
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.385s
+
+FAILED (failures=1)
