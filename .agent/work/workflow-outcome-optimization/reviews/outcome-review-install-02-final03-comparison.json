@@ -1,0 +1,49 @@
+{
+  "final_source": "/tmp/outcome-review-final-03",
+  "manifest_sha256": "c8af43e2c97ed827f697d336f8a3c87365a6b49318be6281b9034990cc10cfa2",
+  "registered": 280,
+  "mismatches": [],
+  "production_comparison": {
+    "tools/workflow_lib/installer.py": {
+      "same_bytes": true,
+      "sha256": "9a1df65ebfb2c51379be51150299049cf42eddd234d63b39432ac7396bc76383"
+    },
+    "tools/workflow_lib/doctor.py": {
+      "same_bytes": true,
+      "sha256": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3"
+    },
+    "tools/workflow_lib/release.py": {
+      "same_bytes": true,
+      "sha256": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b"
+    },
+    "tools/workflow_lib/projection.py": {
+      "same_bytes": true,
+      "sha256": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870"
+    },
+    "tools/workflow_lib/fs_safety.py": {
+      "same_bytes": true,
+      "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9"
+    },
+    "tools/workflow_lib/release_references.py": {
+      "same_bytes": true,
+      "sha256": "f42cb6063848f2357da3405c6944441f216dc21dc53b5e0d808b4e7d29f56792"
+    },
+    "tools/workflow_lib/source_walker.py": {
+      "same_bytes": true,
+      "sha256": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4"
+    },
+    "tools/workflow_lib/validator.py": {
+      "same_bytes": true,
+      "sha256": "a9b0515c0607d4367257a6746518cb86ed9b73af75f13c53a19ad02ab20090e2"
+    },
+    "tools/workflow_lib/check.py": {
+      "same_bytes": true,
+      "sha256": "3e84bda07cabeed39ab0b34dbc2fb2cc75d0ca7c930dccaf61107d44bed9d7c3"
+    },
+    "tools/workflow.py": {
+      "same_bytes": true,
+      "sha256": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296"
+    }
+  },
+  "dedicated_test_same_bytes": true
+}

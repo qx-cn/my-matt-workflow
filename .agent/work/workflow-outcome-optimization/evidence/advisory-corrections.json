@@ -1,0 +1,16 @@
+{
+  "source": "reviews/outcome-review-instructions-02.md",
+  "corrections": [
+    {
+      "id": "A1",
+      "path": "evidence/outcome-instructions-object-dispositions.json",
+      "result": "setup routing lists my-ask-matt and my-triage; callers remain empty"
+    },
+    {
+      "id": "A2",
+      "path": "tests/fixtures/codebase_design_order_submission.json",
+      "result": "interface quote attributed SKILL; removal quote exactly matches conditional DEEPENING; independently checked literal source"
+    }
+  ],
+  "boundary": "ordinary root source check; no model efficacy claim"
+}

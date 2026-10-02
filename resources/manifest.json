@@ -78,6 +78,7 @@
       "release_path": "references/shared/document-rendering.md",
       "consumers": [
         "my-improve-codebase-architecture",
+        "my-review-instructions",
         "my-teach",
         "my-tech-design"
       ]
@@ -89,6 +90,7 @@
         "my-code-review",
         "my-domain-modeling",
         "my-edit-article",
+        "my-review-instructions",
         "my-to-spec",
         "my-to-tickets"
       ]
@@ -117,23 +119,18 @@
         "my-ask-matt",
         "my-grill-with-docs",
         "my-implement",
+        "my-review-instructions",
         "my-setup",
-        "my-tdd"
+        "my-tdd",
+        "my-triage"
       ]
     },
     "adapter-work-scope": {
       "source": "resources/adapters/work-scope.md",
       "release_path": "references/shared/adapters/work-scope.md",
       "consumers": [
+        "my-review-instructions",
         "my-tdd"
-      ]
-    },
-    "adapter-write-actions": {
-      "source": "resources/adapters/write-actions.md",
-      "release_path": "references/shared/adapters/write-actions.md",
-      "consumers": [
-        "my-resolving-merge-conflicts",
-        "my-wayfinder"
       ]
     },
     "adapter-artifact-access": {
@@ -166,6 +163,7 @@
       "consumers": [
         "my-codebase-design",
         "my-diagnosing-bugs",
+        "my-review-instructions",
         "my-tdd"
       ]
     },
@@ -201,33 +199,28 @@
         "my-review-instructions"
       ]
     },
-    "policies": {
-      "source_dir": "policies",
-      "release_path": "references/policies",
-      "consumers": [
-        "my-handoff",
-        "my-resolving-merge-conflicts",
-        "my-wayfinder"
-      ]
-    },
     "requirement-analysis": {
       "source": "resources/requirement-analysis.md",
       "release_path": "references/shared/requirement-analysis.md",
       "consumers": [
         "my-grill-with-docs",
-        "my-grilling"
+        "my-grilling",
+        "my-review-instructions"
       ]
     },
     "requirement-reviewer-brief": {
       "source": "resources/requirement-reviewer-brief.md",
       "release_path": "references/shared/requirement-reviewer-brief.md",
-      "consumers": []
+      "consumers": [
+        "my-review-instructions"
+      ]
     },
     "research-method": {
       "source": "resources/research-method.md",
       "release_path": "references/shared/research-method.md",
       "consumers": [
         "my-research",
+        "my-review-instructions",
         "my-wayfinder"
       ]
     },
@@ -255,14 +248,19 @@
         "my-grill-with-docs",
         "my-grilling",
         "my-handoff",
+        "my-humanizer",
         "my-implement",
+        "my-resolving-merge-conflicts",
         "my-review-artifact",
         "my-review-design",
         "my-review-instructions",
         "my-setup",
         "my-tech-design",
         "my-to-spec",
-        "my-to-tickets"
+        "my-to-tickets",
+        "my-triage",
+        "my-wayfinder",
+        "my-wizard"
       ]
     },
     "review-loop": {
@@ -285,7 +283,33 @@
         "my-domain-modeling",
         "my-grill-with-docs",
         "my-implement",
+        "my-review-instructions",
         "my-to-tickets"
+      ]
+    },
+    "policy-context-hygiene": {
+      "source": "policies/context-hygiene.md",
+      "release_path": "references/policies/context-hygiene.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-handoff",
+        "my-review-instructions",
+        "my-triage"
+      ]
+    },
+    "policy-enterprise-safety": {
+      "source": "policies/enterprise-safety.md",
+      "release_path": "references/policies/enterprise-safety.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "policy-merge-conflict-approval": {
+      "source": "policies/merge-conflict-approval.md",
+      "release_path": "references/policies/merge-conflict-approval.md",
+      "consumers": [
+        "my-resolving-merge-conflicts",
+        "my-review-instructions"
       ]
     }
   }

@@ -1,0 +1,38 @@
+{
+  "review": "/tmp/outcome-review-instructions-01.md",
+  "changes": {
+    "F1": "contradicts has one verified semantic admission rule and hardstop; reviewer supplies propositions/conditions/evidence; geometric list does not include it; reopen preserves history and does not erase unresolved self findings",
+    "F2": "local roles do not require external labels; external mapping from real Tracker sources/maintainer; missing local config routes to manual setup and stops, retaining brief and requiring later actual setup receipt",
+    "F3": "Adapter count rule removed in main/design helper and fixture; shared testing-seams solely owns value judgment",
+    "F4": "grilling and domain-modeling separate decisive requirement/domain triggers in text/manifest",
+    "AC26": "unknown external effects query original target/operation identity first; remain unknown/no blind retry; independent authorized work continues; wizard points to shared rule"
+  },
+  "source_validation": "validate_skills and governance passed; actual declared pointers/closure only, not model effects",
+  "directed_checks": {
+    "composition": {
+      "tests": 12,
+      "status": "passed",
+      "log": "/tmp/outcome-instructions-fix-composition.log"
+    },
+    "resources": {
+      "tests": 21,
+      "status": "passed",
+      "log": "/tmp/outcome-instructions-fix-resources.log"
+    },
+    "hosts": {
+      "tests": 1,
+      "status": "passed",
+      "log": "/tmp/outcome-instructions-fix-hosts.log"
+    },
+    "packaging": {
+      "tests": 13,
+      "status": "passed",
+      "log": "/tmp/outcome-instructions-fix-packaging.log",
+      "content_boundary": "Run began before final wizard shared-rule pointer and reopen-history wording; final source/resources/three-host checks passed afterward. Root final full suite covers integrated final content."
+    }
+  },
+  "incremental_patch": "/tmp/outcome-instructions-fix.patch",
+  "objects": "/tmp/outcome-instructions-object-dispositions.json",
+  "loading": "/tmp/outcome-instructions-loading.json",
+  "scope_boundary": "No runtime Python edits, real workflow state, commit/deploy/install or final full suite; root owns integrated full suite and independent rereview."
+}

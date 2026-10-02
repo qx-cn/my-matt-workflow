@@ -1,0 +1,43 @@
+{
+  "baseline_record": 58213,
+  "main_all_optional_branches": {
+    "characters": 37849,
+    "reachable_files": 94,
+    "unique_contents": 34,
+    "missing": []
+  },
+  "entry_bodies": {
+    "my-to-spec": 2561,
+    "my-triage": 4371,
+    "my-test-report": 3030,
+    "my-resolving-merge-conflicts": 510,
+    "my-diagnosing-bugs": 1628
+  },
+  "single_entry_all_optional": {
+    "my-to-spec": {
+      "characters": 13072,
+      "reachable_files": 10,
+      "unique_contents": 10,
+      "missing": []
+    },
+    "my-triage": {
+      "characters": 19413,
+      "reachable_files": 12,
+      "unique_contents": 12,
+      "missing": []
+    },
+    "my-test-report": {
+      "characters": 10019,
+      "reachable_files": 8,
+      "unique_contents": 8,
+      "missing": []
+    },
+    "my-diagnosing-bugs": {
+      "characters": 9605,
+      "reachable_files": 10,
+      "unique_contents": 10,
+      "missing": []
+    }
+  },
+  "note": "Independent virtual Cursor Markdown projection and link traversal; resources available by declared release_path; no host or runtime execution. Not actual model reads."
+}

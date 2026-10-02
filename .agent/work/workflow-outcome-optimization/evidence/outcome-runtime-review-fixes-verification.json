@@ -1,0 +1,33 @@
+{
+  "files": [
+    "tests/test_batches.py",
+    "tests/test_topic_lifecycle.py",
+    "tools/workflow_lib/batches.py",
+    "tools/workflow_lib/branch_review.py",
+    "tools/workflow_lib/evidence.py",
+    "tools/workflow_lib/quality_metrics.py",
+    "tools/workflow_lib/status_text.py",
+    "tools/workflow_lib/ticket_resolution.py",
+    "tools/workflow_lib/topic_service.py"
+  ],
+  "patch_sha256": "30ab134ee7bb7a9c5a8bf13c41c1c0bb131eb311333a51a35d1930f1354180a9",
+  "targeted_tests": {
+    "tests": 7,
+    "seconds": 15.775,
+    "exit_code": 0,
+    "log": "/tmp/outcome-runtime-review-final-targeted.log"
+  },
+  "focused": {
+    "tests": 60,
+    "seconds": 111.478,
+    "exit_code": 0,
+    "log": "/tmp/outcome-runtime-review-focused.log"
+  },
+  "red": {
+    "tests": 5,
+    "failed": 5,
+    "log": "/tmp/outcome-runtime-review-red.log"
+  },
+  "compileall_exit_code": 0,
+  "diff_check_exit_code": 0
+}

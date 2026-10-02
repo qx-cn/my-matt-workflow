@@ -1,0 +1,20 @@
+{
+  "source": "/tmp/outcome-review-final-05",
+  "module_identities": {
+    "tools.workflow_lib.installer": "/tmp/outcome-review-final-05/tools/workflow_lib/installer.py",
+    "tools.workflow_lib.projection": "/tmp/outcome-review-final-05/tools/workflow_lib/projection.py",
+    "tools.workflow_lib.fs_safety": "/tmp/outcome-review-final-05/tools/workflow_lib/fs_safety.py"
+  },
+  "total": 60,
+  "passed": 60,
+  "failed": [],
+  "counts": {
+    "drift": 16,
+    "ancestor": 8,
+    "legal": 16,
+    "recovery-drift": 8,
+    "recovery-positive": 8,
+    "runtime-drift": 4
+  },
+  "script_sha256": "6c2be78481419295ba658bef7b4f709ab8efc0b7ad5ad9ca6139cf508c1d7ba1"
+}

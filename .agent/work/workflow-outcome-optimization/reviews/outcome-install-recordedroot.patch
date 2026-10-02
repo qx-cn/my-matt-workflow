@@ -1,0 +1,245 @@
+diff --git a/tools/workflow_lib/installer.py b/tools/workflow_lib/installer.py
+--- a/tools/workflow_lib/installer.py
++++ b/tools/workflow_lib/installer.py
+@@ -165,6 +165,31 @@
+     except (FilesystemSafetyError, OSError, RuntimeError) as exc:
+         raise InstallError("安装内部路径包含 symlink 或越出宿主根目录") from exc
+ 
++
++def _recorded_directory(raw: str | Path, *, label: str) -> Path:
++    """Validate a persisted canonical identity before resolution loses links.
++
++    A newly selected user root may be canonicalized by the selection adapter;
++    a persisted root already records that result and must not silently redirect.
++    Missing directories can be legitimate during recovery of verified backups.
++    """
++    path = Path(raw)
++    if not path.is_absolute() or any(part in {".", ".."} for part in path.parts):
++        raise InstallError(f"{label}不是 canonical 绝对路径")
++    if any(ancestor.is_symlink() for ancestor in (path, *path.parents)):
++        raise InstallError(f"{label}的记录路径发生 symlink 漂移")
++    if path != path.resolve():
++        raise InstallError(f"{label}的记录路径身份已漂移")
++    if path.exists() and not path.is_dir():
++        raise InstallError(f"{label}不是目录")
++    return path
++
++
++def _verify_recorded_receipt_roots(state: dict[str, object]) -> None:
++    _recorded_directory(str(state["skills_home"]), label="旧 Skill 根")
++    _recorded_directory(Path(str(state["runtime_entry"])).parent.parent,
++                        label="旧 runtime 根")
++
+ def _runtime_inventory(runtime_root: Path) -> dict[str, str]:
+     """Reject path/link drift before ignoring defined execution by-products."""
+     if not runtime_root.is_dir() or runtime_root.is_symlink():
+@@ -178,8 +203,8 @@
+ def _verify_runtime_state(state: dict[str, object], expected: dict[str, str],
+                           *, state_home: Path | None = None) -> None:
+     runtime_entry = Path(str(state["runtime_entry"]))
+-    runtime_root = runtime_entry.parent.parent
+-    if runtime_entry != runtime_root / "tools/workflow.py" or runtime_root != runtime_root.resolve():
++    runtime_root = _recorded_directory(runtime_entry.parent.parent, label="托管 runtime 根")
++    if runtime_entry != runtime_root / "tools/workflow.py":
+         raise InstallError("托管 runtime 入口路径无效")
+     if state_home is not None:
+         expected_root = state_home.resolve() / "my-matt-workflow/runtime" / str(state["release_id"])
+@@ -264,7 +289,7 @@
+                            state_home: Path | None = None) -> None:
+     """Verify that a state receipt still owns the installed Skill bytes."""
+     verify = validation_context.verify if validation_context else verify_release
+-    skills_home = Path(str(state["skills_home"])).resolve()
++    skills_home = _recorded_directory(str(state["skills_home"]), label="托管 Skill 根")
+     skills = list(state["skills"])
+     if state.get("version", 1) == 2:
+         inventory = state["managed_inventory"]
+@@ -674,7 +699,8 @@
+     if not names.issubset(skills):
+         raise InstallError("恢复材料与旧 install-state Skill 集合不一致")
+     old_home = previous_skills_home or skills_home
+-    if previous is not None and Path(str(previous["skills_home"])).resolve() != old_home.resolve():
++    if previous is not None and _recorded_directory(
++        str(previous["skills_home"]), label="旧恢复 Skill 根") != old_home:
+         raise InstallError("恢复材料与旧 install-state home 不一致")
+     if previous_skills_home is None:
+         if old_present != names or legacy_old_present:
+@@ -745,16 +771,14 @@
+             or not isinstance(journal.get("transaction_id"), str)
+         ):
+             raise InstallError(f"安装事务日志 v{version} 无效，需要人工检查")
+-        recorded_home = Path(recorded)
+-        if recorded_home != recorded_home.resolve():
+-            raise InstallError("恢复目录的内部路径发生 symlink 漂移")
++        recorded_home = _recorded_directory(recorded, label="恢复 Skill 根")
+         if skills_home is not None and skills_home.resolve() != recorded_home:
+             raise InstallError("恢复目录与安装事务不一致，拒绝操作")
+         skills_home = recorded_home
+     else:
+         recorded = state.get("skills_home")
+         if isinstance(recorded, str) and Path(recorded).is_absolute():
+-            recorded_home = Path(recorded).resolve()
++            recorded_home = _recorded_directory(recorded, label="旧恢复 Skill 根")
+             if skills_home is not None and skills_home.resolve() != recorded_home:
+                 raise InstallError("恢复目录与安装状态不一致，拒绝操作")
+             skills_home = recorded_home
+@@ -777,9 +801,7 @@
+             or not set(legacy_old_present).issubset(skills)
+         ):
+             raise InstallError("安装事务日志 v3 迁移信息无效，需要人工检查")
+-        previous_skills_home = Path(recorded_previous)
+-        if previous_skills_home != previous_skills_home.resolve():
+-            raise InstallError("旧恢复目录发生 symlink 漂移")
++        previous_skills_home = _recorded_directory(recorded_previous, label="旧迁移 Skill 根")
+     elif version == 4 and "legacy_old_present" in journal:
+         raise InstallError("安装事务日志 v4 迁移信息无效，需要人工检查")
+     transaction_id = journal.get("transaction_id")
+@@ -793,7 +815,8 @@
+         previous_names = set(trusted_state["skills"])
+         if not previous_names.issubset(skills):
+             raise InstallError("旧安装事务与 install-state Skill 集合不一致")
+-        trusted_home = Path(str(trusted_state["skills_home"])).resolve()
++        trusted_home = _recorded_directory(str(trusted_state["skills_home"]),
++                                           label="旧安装状态 Skill 根")
+         if previous_skills_home is None and trusted_home != skills_home.resolve():
+             raise InstallError("旧安装事务与 install-state home 不一致")
+         if previous_skills_home is not None and trusted_home != previous_skills_home:
+@@ -901,12 +924,15 @@
+                 release / "skills" / skill_name, install_target,
+                 invocable=skill_name in manifest.get("invocable_skills", [])
+             )
++    state_dir = state_home / "my-matt-workflow"
++    state_path = state_dir / "install-state.json"
++    existing = load_install_state(state_path)
++    if existing is not None:
++        _verify_recorded_receipt_roots(existing)
+     state_home.mkdir(parents=True, exist_ok=True)
+     skills_home = skills_home or state_home / "skills"
+     skills_home.mkdir(parents=True, exist_ok=True)
+-    state_dir = state_home / "my-matt-workflow"
+     state_dir.mkdir(parents=True, exist_ok=True)
+-    state_path = state_dir / "install-state.json"
+     recover_interrupted_install(state_home, skills_home=skills_home)
+ 
+     loaded_previous = load_install_state(state_path)
+@@ -924,7 +950,7 @@
+     previous_skills_home: Path | None = None
+     recorded_previous_home = previous_state.get("skills_home")
+     if isinstance(recorded_previous_home, str) and Path(recorded_previous_home).is_absolute():
+-        candidate = Path(recorded_previous_home).resolve()
++        candidate = _recorded_directory(recorded_previous_home, label="旧迁移 Skill 根")
+         if candidate != skills_home.resolve():
+             previous_skills_home = candidate
+     for skill_name in manifest["skills"]:
+@@ -1013,6 +1039,7 @@
+                 (staged / skill_name).rename(destination)
+ 
+         if previous_skills_home is not None:
++            _recorded_directory(previous_skills_home, label="旧迁移 Skill 根")
+             legacy_backup = transaction / "legacy-backup"
+             legacy_backup.mkdir()
+             for skill_name in legacy_old_present:
+@@ -1108,6 +1135,9 @@
+     context = validation_context or ReleaseValidationContext()
+     context.verify(release)
+     state_dir = state_home / "my-matt-workflow"
++    existing = load_install_state(state_dir / "install-state.json")
++    if existing is not None:
++        _verify_recorded_receipt_roots(existing)
+     state_dir.mkdir(parents=True, exist_ok=True)
+     try:
+         # This short lock is also held while cleanup reads receipts and deletes.
+diff --git a/tests/test_install_simplification.py b/tests/test_install_simplification.py
+--- a/tests/test_install_simplification.py
++++ b/tests/test_install_simplification.py
+@@ -513,6 +513,91 @@
+             installer.recover_interrupted_install(alias)
+             self.assertEqual('current', installer.install_release(package, alias))
+ 
++    def test_recorded_old_skill_root_drift_rejects_before_any_install_write(self):
++        for version in (1, 2):
++            for target in (None, 'codex', 'cursor', 'claude'):
++                for layout in ('custom', 'default'):
++                    with self.subTest(version=version, target=target, layout=layout), tempfile.TemporaryDirectory() as tmp:
++                        root = fixture(Path(tmp) / 'repo')
++                        agents = root / 'skills/my-demo/agents'
++                        agents.mkdir()
++                        (agents / 'openai.yaml').write_text('policy:\n  allow_implicit_invocation: false\n')
++                        package = release.build_release(root / 'skills', root / 'releases', release_id='v1',
++                                                        upstream_id='local', repo_root=root)
++                        home = Path(tmp) / 'home'
++                        old_home = home / ('legacy-skills' if layout == 'custom' else 'skills')
++                        new_home = home / ('skills' if layout == 'custom' else 'new-skills')
++                        installer.install_release(package, home, target=target, skills_home=old_home)
++                        state_path = home / 'my-matt-workflow/install-state.json'
++                        if version == 1:
++                            state = json.loads(state_path.read_text())
++                            for name in ('version', 'managed_inventory', 'manifest_sha256'):
++                                del state[name]
++                            state_path.write_text(json.dumps(state))
++                        outside = Path(tmp) / 'outside'
++                        old_home.rename(outside)
++                        (outside / 'sentinel').write_bytes(b'outside sentinel')
++                        old_home.symlink_to(outside, target_is_directory=True)
++                        def tree(directory):
++                            return {str(path.relative_to(directory)):
++                                    ('link:' + str(path.readlink()) if path.is_symlink()
++                                     else path.read_bytes() if path.is_file() else 'directory')
++                                    for path in directory.rglob('*')}
++                        (home / 'my-matt-workflow/.install.lock').unlink()
++                        before = (tree(home), tree(outside), state_path.read_bytes())
++                        with self.assertRaises(installer.InstallError):
++                            installer.install_release(package, home, target=target, skills_home=new_home)
++                        self.assertEqual(before, (tree(home), tree(outside), state_path.read_bytes()))
++                        self.assertFalse((home / 'my-matt-workflow/transaction').exists())
++
++    def test_canonical_cross_host_old_skill_root_and_selected_alias_still_migrate(self):
++        for version in (1, 2):
++            with self.subTest(version=version), tempfile.TemporaryDirectory() as tmp:
++                root = fixture(Path(tmp) / 'repo')
++                package = release.build_release(root / 'skills', root / 'releases', release_id='v1',
++                                                upstream_id='local', repo_root=root)
++                home = Path(tmp) / 'home'
++                actual_old_home = Path(tmp) / 'another-host/skills'
++                actual_old_home.mkdir(parents=True)
++                selected_alias = Path(tmp) / 'explicit-old-root-alias'
++                selected_alias.symlink_to(actual_old_home, target_is_directory=True)
++                installer.install_release(package, home, skills_home=selected_alias)
++                state_path = home / 'my-matt-workflow/install-state.json'
++                state = json.loads(state_path.read_text())
++                self.assertEqual(str(actual_old_home.resolve()), state['skills_home'])
++                if version == 1:
++                    for name in ('version', 'managed_inventory', 'manifest_sha256'):
++                        del state[name]
++                    state_path.write_text(json.dumps(state))
++                self.assertEqual('installed', installer.install_release(package, home))
++                self.assertFalse((actual_old_home / 'my-demo').exists())
++                self.assertEqual('current', installer.install_release(package, home))
++                installer.recover_interrupted_install(home)
++
++    def test_recorded_skill_root_ancestor_link_drift_is_rejected(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root = fixture(Path(tmp) / 'repo')
++            package = release.build_release(root / 'skills', root / 'releases', release_id='v1',
++                                            upstream_id='local', repo_root=root)
++            home = Path(tmp) / 'home'
++            old_parent = home / 'nested'
++            installer.install_release(package, home, skills_home=old_parent / 'skills')
++            state_path = home / 'my-matt-workflow/install-state.json'
++            state = installer.load_install_state(state_path)
++            outside = Path(tmp) / 'outside'
++            old_parent.rename(outside)
++            old_parent.symlink_to(outside, target_is_directory=True)
++            contents = (outside / 'skills/my-demo/SKILL.md').read_bytes()
++            receipt = state_path.read_bytes()
++            with self.assertRaises(installer.InstallError):
++                installer.verify_installed_state(state, state_home=home)
++            with self.assertRaises(installer.InstallError):
++                installer.install_release(package, home)
++            self.assertEqual(contents, (outside / 'skills/my-demo/SKILL.md').read_bytes())
++            self.assertEqual(receipt, state_path.read_bytes())
++            self.assertFalse((home / 'skills').exists())
++            self.assertFalse((home / 'my-matt-workflow/transaction').exists())
++
+ 
+ if __name__ == '__main__':
+     unittest.main()

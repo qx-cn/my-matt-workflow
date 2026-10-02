@@ -1,0 +1,43 @@
+{
+  "finding": "R1 initial host internal ancestor symlinks",
+  "patch": "/tmp/outcome-install-parentlink.patch",
+  "base": "/tmp/outcome-install-parentlink-base",
+  "hashes": {
+    "tools/workflow_lib/installer.py": "a8844b5620db2b0da89e019312b4cc88af66f6413fe78bb250ef1f6405c3997b",
+    "tests/test_install_simplification.py": "d161c93b44ccd132160014f2cab7d65fa67563f85110e7a4c71a6192a224551b"
+  },
+  "behavior": "Canonicalize the explicitly selected host root alias; validate internal state/runtime/transaction/receipt/lock paths and selected internal Skill root before any host mutation. Recovery applies the same guard. Recheck before runtime movement and receipt commit; verify actual final host entry without resolve laundering. Persisted recovery directory identities cannot silently redirect through new links.",
+  "results": {
+    "red": {
+      "tests": 22,
+      "failures": 2,
+      "exit_code": 1
+    },
+    "focused": {
+      "tests": 22,
+      "seconds": 4.633,
+      "exit_code": 0
+    },
+    "original_security": {
+      "tests": 21,
+      "seconds": 1.045,
+      "exit_code": 0
+    },
+    "original_installer": {
+      "tests": 16,
+      "seconds": 0.191,
+      "exit_code": 0
+    }
+  },
+  "logs": [
+    "/tmp/outcome-install-parentlink-red.log",
+    "/tmp/outcome-install-parentlink-green.log",
+    "/tmp/outcome-install-parentlink-security.log",
+    "/tmp/outcome-install-parentlink-installer.log"
+  ],
+  "boundaries": [
+    "No real host/release/Topic operation.",
+    "No full suite; root owns integration and independent re-review.",
+    "Locks protect cooperating writers; this does not claim all arbitrary outside-writer TOCTOU interleavings are eliminated."
+  ]
+}

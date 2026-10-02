@@ -1,0 +1,17 @@
+test_recorded_old_skill_root_drift_rejects_before_any_install_write (tests.test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) ... ok
+test_canonical_cross_host_old_skill_root_and_selected_alias_still_migrate (tests.test_install_simplification.SimplifiedInstallTests.test_canonical_cross_host_old_skill_root_and_selected_alias_still_migrate) ... ok
+test_recorded_skill_root_ancestor_link_drift_is_rejected (tests.test_install_simplification.SimplifiedInstallTests.test_recorded_skill_root_ancestor_link_drift_is_rejected) ... ok
+test_rollback_material_is_verified_before_target_or_evidence_mutation (tests.test_install_simplification.SimplifiedInstallTests.test_rollback_material_is_verified_before_target_or_evidence_mutation) ... ok
+test_legacy_v4_without_new_receipt_binding_still_verifies_backup (tests.test_install_simplification.SimplifiedInstallTests.test_legacy_v4_without_new_receipt_binding_still_verifies_backup) ... ok
+test_committed_state_cleanup_checks_actual_new_targets (tests.test_install_simplification.SimplifiedInstallTests.test_committed_state_cleanup_checks_actual_new_targets) ... ok
+test_migration_rollback_proves_old_home_backups_before_any_moves (tests.test_install_simplification.SimplifiedInstallTests.test_migration_rollback_proves_old_home_backups_before_any_moves) ... ok
+test_explicit_host_root_alias_is_allowed_but_internal_links_are_not (tests.test_install_simplification.SimplifiedInstallTests.test_explicit_host_root_alias_is_allowed_but_internal_links_are_not) ... ok
+test_verified_legacy_journal_can_restore_matching_backup (tests.test_security_hardening.SecurityHardeningTests.test_verified_legacy_journal_can_restore_matching_backup) ... ok
+test_v4_recovery_accepts_legitimate_transaction_content_drift (tests.test_security_hardening.SecurityHardeningTests.test_v4_recovery_accepts_legitimate_transaction_content_drift) ... ok
+test_corrupt_install_state_fails_before_foreign_skill_changes (tests.test_security_hardening.SecurityHardeningTests.test_corrupt_install_state_fails_before_foreign_skill_changes) ... ok
+test_legacy_state_cannot_claim_foreign_bytes_via_valid_release (tests.test_security_hardening.SecurityHardeningTests.test_legacy_state_cannot_claim_foreign_bytes_via_valid_release) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 5.842s
+
+OK

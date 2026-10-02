@@ -82,3 +82,41 @@ def skills_inventory(skills_root: Path) -> dict[str, dict[str, str]]:
         for skill_dir in sorted(skills_root.iterdir())
         if skill_dir.is_dir() and not skill_dir.is_symlink()
     }
+
+
+def projected_skill_inventory(skill_dir: Path, target: str) -> dict[str, str]:
+    """Calculate the physical projection's exact file bytes without a copy.
+
+    Match read_text/write_text newline behavior, including Codex's unconditional
+    SKILL metadata write and the conditional macro writes on other Markdown.
+    """
+    if target not in TARGETS:
+        raise ValueError(f"unknown projection target: {target}")
+    result = {}
+    for path in sorted(skill_dir.rglob('*')):
+        relative = path.relative_to(skill_dir)
+        if path.is_symlink():
+            raise ValueError(f"projection source contains symlink: {relative}")
+        if not path.is_file() or _is_ephemeral(relative):
+            continue
+        if target in {'cursor', 'claude'} and relative == Path('agents/openai.yaml'):
+            continue
+        contents = path.read_bytes()
+        if target != 'portable' and path.suffix == '.md':
+            text = path.read_text(encoding='utf-8')
+            projected = text
+            rewrite = target == 'codex' and relative == Path('SKILL.md')
+            if rewrite:
+                projected = re.sub(r'(?m)^disable-model-invocation:\s*true\s*\n?', '', projected, count=1)
+            prefix = '$' if target == 'codex' else '/'
+            with_macros = re.sub(r'\{\{skill-call:(my-[a-z0-9-]+)\}\}',
+                                lambda match: f'{prefix}{match.group(1)}', projected)
+            if rewrite or with_macros != text:
+                contents = with_macros.encode('utf-8')
+        result[relative.as_posix()] = hashlib.sha256(contents).hexdigest()
+    return result
+
+
+def projected_skills_inventory(skills_root: Path, target: str) -> dict[str, dict[str, str]]:
+    return {skill.name: projected_skill_inventory(skill, target)
+            for skill in sorted(skills_root.iterdir()) if skill.is_dir() and not skill.is_symlink()}

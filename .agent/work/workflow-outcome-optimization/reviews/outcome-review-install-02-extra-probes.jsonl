@@ -1,0 +1,12 @@
+{"probe": "modern-runtime-link", "projection": "portable", "home_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "modern-runtime-link", "projection": "codex", "home_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "modern-runtime-link", "projection": "cursor", "home_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "modern-runtime-link", "projection": "claude", "home_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "recovery-replay", "mode": "ordinary", "original_restored": true, "transaction_removed": true}
+{"probe": "recovery-replay", "mode": "migration", "original_restored": true, "transaction_removed": true}
+{"probe": "recovery-replay", "mode": "state-v1", "original_restored": true, "transaction_removed": true}
+{"probe": "recovery-identity-drift", "mode": "state-drift", "unchanged": true, "error_type": "InstallError", "error": "安装事务的旧 install-state 已漂移，保留恢复材料"}
+{"probe": "recovery-identity-drift", "mode": "source-drift", "unchanged": true, "error_type": "InstallError", "error": "校验失败：my-alpha/extra.txt"}
+{"probe": "shared-doctor-and-digest-counts", "shared_verify": 1, "hosts": {"a": "valid", "b": "invalid"}, "digest_source_manifest": 0, "legacy_source_manifest": 1}
+{"probe": "runtime-parent-link-detail", "first_result": "installed", "outside_written": true, "entry": "outside/v1/tools/workflow.py", "doctor": "invalid", "doctor_reason": "托管 runtime 入口不属于安装目录", "second": {"error_type": "InstallError", "error": "托管 runtime 入口不属于安装目录"}}
+{"probe": "extra-complete", "probes": 11, "elapsed_seconds": 3.028}

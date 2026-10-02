@@ -50,6 +50,32 @@ class CompositionManifestTests(unittest.TestCase):
         self.assertEqual("method", design_edge.kind)
         self.assertEqual("design-artifact", design_edge.when)
 
+    def test_local_triage_routes_preserve_spec_lineage(self):
+        manifest = load_composition_manifest(ROOT / "composition/manifest.json")
+        handoffs = {edge.when: edge.skill for edge in manifest.callers["my-triage"]
+                    if edge.kind == "handoff"}
+        self.assertEqual({
+            "confirmed-local-brief-without-matching-spec": "my-to-spec",
+            "confirmed-local-brief-with-matching-spec": "my-to-tickets",
+            "confirmed-local-quick-brief": "my-implement",
+        }, handoffs)
+        # The missing-Spec entry can now reach the sole design gate as well as
+        # the implementation chain; composition remains acyclic.
+        closure = resolve_transitive_closure(manifest, "my-triage")
+        self.assertTrue({"my-to-spec", "my-review-design", "my-to-tickets", "my-implement"} <= set(closure))
+        validate_composition_manifest(manifest, ROOT / "skills")
+
+    def test_triage_setup_and_clarification_edges_are_conditional(self):
+        manifest = load_composition_manifest(ROOT / "composition/manifest.json")
+        for caller in ("my-grill-with-docs", "my-triage"):
+            methods = {edge.skill: edge.when for edge in manifest.callers[caller]
+                       if edge.kind == "method"}
+            self.assertEqual("missing-load-bearing-requirements", methods["my-grilling"])
+            self.assertEqual("unresolved-domain-vocabulary", methods["my-domain-modeling"])
+        self.assertEqual(("my-setup",), manifest.routable_entries["my-triage"])
+        self.assertNotIn("my-setup", resolve_transitive_closure(manifest, "my-triage"))
+        validate_composition_manifest(manifest, ROOT / "skills")
+
     def test_cycle_is_rejected_with_path(self):
         manifest = CompositionManifest(
             version=2,

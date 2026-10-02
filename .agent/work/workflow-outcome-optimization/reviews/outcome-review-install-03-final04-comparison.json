@@ -1,0 +1,40 @@
+{
+  "root": "/tmp/outcome-review-final-04",
+  "manifest_sha256": "feaed39c6e610ffd61566f381b404a7d36d49f69b0cbb4190dcc1abda55eb180",
+  "count": 281,
+  "unique": 281,
+  "bad": [],
+  "comparison": {
+    "tools/workflow_lib/installer.py": {
+      "same": true,
+      "sha256": "a8844b5620db2b0da89e019312b4cc88af66f6413fe78bb250ef1f6405c3997b"
+    },
+    "tools/workflow_lib/release.py": {
+      "same": true,
+      "sha256": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b"
+    },
+    "tools/workflow_lib/doctor.py": {
+      "same": true,
+      "sha256": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3"
+    },
+    "tools/workflow_lib/projection.py": {
+      "same": true,
+      "sha256": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870"
+    },
+    "tools/workflow.py": {
+      "same": true,
+      "sha256": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296"
+    },
+    "tests/test_install_simplification.py": {
+      "same": true,
+      "sha256": "d161c93b44ccd132160014f2cab7d65fa67563f85110e7a4c71a6192a224551b"
+    }
+  },
+  "changed": [
+    "tests/test_batches.py",
+    "tools/workflow_lib/batches.py",
+    "tools/workflow_lib/evidence.py",
+    "tools/workflow_lib/status_text.py",
+    "tools/workflow_lib/topic_service.py"
+  ]
+}

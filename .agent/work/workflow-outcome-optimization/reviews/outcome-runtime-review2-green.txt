@@ -1,0 +1,14 @@
+...F
+======================================================================
+FAIL: test_accepted_branch_status_does_not_repeat_closed_decision (test_batches.BatchTests.test_accepted_branch_status_does_not_repeat_closed_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 240, in test_accepted_branch_status_does_not_repeat_closed_decision
+    self.assertNotIn('请用户决定修订 Spec',human)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '请用户决定修订 Spec' unexpectedly found in '工作 feature：进行中\nTicket feature-01：已提交\nTicket feature-02：已提交\n原因：Spec 与现有系统冲突：请用户决定修订 Spec、接受风险或按原 Spec 继续\n下一步：workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpoksqdhl7 --topic feature\n'
+
+----------------------------------------------------------------------
+Ran 4 tests in 12.595s
+
+FAILED (failures=1)

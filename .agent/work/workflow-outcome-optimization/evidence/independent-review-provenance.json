@@ -1,0 +1,81 @@
+{
+  "method": "ordinary engineering fresh-context frozen-source review; no product runtime receipt",
+  "launch_model": "codex/gpt-6.1-sol",
+  "launch_thinking": "high",
+  "model_change": false,
+  "reviews": [
+    {
+      "agent_id": "cb5e2bcb-d714-4e65-a034-39f017eae705",
+      "scope": "install second-round parent-link repair",
+      "snapshot": "/tmp/outcome-review-install-03",
+      "manifest_sha256": "16a6464e629a34bd5fdf762767a55ac67fad17702fc0ae90c4c499731f6f023d",
+      "status": "completed",
+      "report": "reviews/outcome-review-install-03.md",
+      "blocking": 1
+    },
+    {
+      "agent_id": "29106d5a-85a3-4a29-8ca5-4647095c048e",
+      "scope": "runtime second-round loader-baseline repair and accepted human output",
+      "snapshot": "/tmp/outcome-review-final-04",
+      "manifest_sha256": "feaed39c6e610ffd61566f381b404a7d36d49f69b0cbb4190dcc1abda55eb180",
+      "status": "completed",
+      "report": "reviews/outcome-review-runtime-03.md",
+      "blocking": 0,
+      "advisory": 1
+    },
+    {
+      "agent_id": "0ac98cba-509a-40d7-941f-7343aa16d21d",
+      "scope": "instructions first repairs, unknown, stages and history",
+      "snapshot": "/tmp/outcome-review-final-02",
+      "status": "completed",
+      "report": "reviews/outcome-review-instructions-02.md",
+      "blocking": 0,
+      "advisory": 2,
+      "advisory_followup": "evidence/advisory-corrections.json",
+      "final07_root_byte_binding": "evidence/instruction-final07-byte-binding.json"
+    },
+    {
+      "agent_id": "b937e490-e7c6-4d94-950d-0c5d9d9f284a",
+      "scope": "runtime verbose startup advisory repair only",
+      "snapshot": "/tmp/outcome-review-runtime-04",
+      "manifest_sha256": "92442f8ba859bef3d11c4470cf7b932555aefc50f219ef6756abce4d63ee2203",
+      "status": "completed",
+      "report": "reviews/outcome-review-runtime-04.md",
+      "blocking": 1,
+      "advisory": 0
+    },
+    {
+      "agent_id": "329745e6-5c30-413c-9e05-037d55339b8c",
+      "scope": "install recorded root drift repair and affected verify/recover boundaries",
+      "snapshot": "/tmp/outcome-review-final-05",
+      "manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+      "status": "completed",
+      "report": "reviews/outcome-review-install-04.md",
+      "blocking": 0,
+      "advisory": 0,
+      "final06_byte_binding": "reviews/outcome-review-install-04-final06-binding.json",
+      "final07_byte_binding": "reviews/outcome-review-install-04-final07-binding.json"
+    },
+    {
+      "agent_id": "e42d4feb-2a7f-4d32-8d84-3d91439c8647",
+      "scope": "runtime loader identity/truncated legacy/mixed duplicate repair",
+      "snapshot": "/tmp/outcome-review-final-06",
+      "manifest_sha256": "663a55c183586d85c23f323473b8fc943e8b53558516e688ca11b947349ea187",
+      "status": "completed",
+      "report": "reviews/outcome-review-runtime-05.md",
+      "blocking": 1,
+      "advisory": 0
+    },
+    {
+      "agent_id": "5d1ed9b8-deca-4973-b028-c57d7c5857a1",
+      "scope": "runtime typed concise diagnostics and legacy current-cache reevaluation",
+      "snapshot": "/tmp/outcome-review-final-07",
+      "manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+      "status": "completed",
+      "report": "reviews/outcome-review-runtime-06.md",
+      "blocking": 0,
+      "advisory": 0
+    }
+  ],
+  "boundary": "launch configuration and distinct tool-created sessions are observable; no fabricated runtime independent receipt"
+}

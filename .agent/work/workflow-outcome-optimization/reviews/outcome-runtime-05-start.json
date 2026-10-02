@@ -1,0 +1,1981 @@
+{
+  "root": "/private/tmp/outcome-review-final-06",
+  "manifest_sha256": "663a55c183586d85c23f323473b8fc943e8b53558516e688ca11b947349ea187",
+  "count": 281,
+  "unique": 281,
+  "all_match": true,
+  "rows": [
+    {
+      "path": ".agent/matt-workflow.md",
+      "expected": "ecaa6172267800759ea629f248889b80eaa62d5c8ddc7652aa9648387ebea884",
+      "actual": "ecaa6172267800759ea629f248889b80eaa62d5c8ddc7652aa9648387ebea884",
+      "match": true
+    },
+    {
+      "path": ".agent/work/workflow-outcome-optimization/evidence/outcome-evaluation-runbook.md",
+      "expected": "13e347257ff1709e03e195ea0c8cc34cce58c0aef694d955ec27b20c5d6f3529",
+      "actual": "13e347257ff1709e03e195ea0c8cc34cce58c0aef694d955ec27b20c5d6f3529",
+      "match": true
+    },
+    {
+      "path": ".agent/work/workflow-outcome-optimization/specs/specs-workflow-outcome-optimization-02.md",
+      "expected": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+      "actual": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+      "match": true
+    },
+    {
+      "path": ".github/workflows/check.yml",
+      "expected": "a5b63441b3260e575dd1930f0ecf243beb04395e68aca1a38109acf20d87512d",
+      "actual": "a5b63441b3260e575dd1930f0ecf243beb04395e68aca1a38109acf20d87512d",
+      "match": true
+    },
+    {
+      "path": ".gitignore",
+      "expected": "a4df0a46bd782e4e160dabf74811d312e0bd4151fb0de2d948fe4fbcf7c98cf7",
+      "actual": "a4df0a46bd782e4e160dabf74811d312e0bd4151fb0de2d948fe4fbcf7c98cf7",
+      "match": true
+    },
+    {
+      "path": "README.md",
+      "expected": "9fa2bea856aa301245bdb88471e66b9e13242ac1f17346c2f1ab13c574552b68",
+      "actual": "9fa2bea856aa301245bdb88471e66b9e13242ac1f17346c2f1ab13c574552b68",
+      "match": true
+    },
+    {
+      "path": "chatgpt/custom-instructions.md",
+      "expected": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778",
+      "actual": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778",
+      "match": true
+    },
+    {
+      "path": "composition/manifest.json",
+      "expected": "5f8862c37dd8fd74180762eec0df72a23a9ba06a32abafdbf1b245c1638fd11e",
+      "actual": "5f8862c37dd8fd74180762eec0df72a23a9ba06a32abafdbf1b245c1638fd11e",
+      "match": true
+    },
+    {
+      "path": "policies/context-hygiene.md",
+      "expected": "efc0202a6b29828d7e7a07b21eec8592463deaa5bd7c76641c2e55cef44d6352",
+      "actual": "efc0202a6b29828d7e7a07b21eec8592463deaa5bd7c76641c2e55cef44d6352",
+      "match": true
+    },
+    {
+      "path": "policies/enterprise-safety.md",
+      "expected": "7dd0ea2a9f0a2b087ce5fcabaef1604711ff50d3509cd4a470734d32a4e0ddc7",
+      "actual": "7dd0ea2a9f0a2b087ce5fcabaef1604711ff50d3509cd4a470734d32a4e0ddc7",
+      "match": true
+    },
+    {
+      "path": "policies/merge-conflict-approval.md",
+      "expected": "75d6810b291934d656e83e1c4162f784cf02f5e9f89896625c9ca73624ac460b",
+      "actual": "75d6810b291934d656e83e1c4162f784cf02f5e9f89896625c9ca73624ac460b",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/artifact-access.md",
+      "expected": "a6a998206070472b93a99e6683333fe318f77dd2abc0f2fe4af22580def203a0",
+      "actual": "a6a998206070472b93a99e6683333fe318f77dd2abc0f2fe4af22580def203a0",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/artifact-review-session.md",
+      "expected": "3761c4fdbef76c8724149177bda435705f16aa3e19d2647e56eb82b2bfe03f8b",
+      "actual": "3761c4fdbef76c8724149177bda435705f16aa3e19d2647e56eb82b2bfe03f8b",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/artifact-storage.md",
+      "expected": "6d224dc0c56a1e2b4324b4011e95b6869b266fa34eaae7d471f14168f9a8cb2a",
+      "actual": "6d224dc0c56a1e2b4324b4011e95b6869b266fa34eaae7d471f14168f9a8cb2a",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/assurance-levels.md",
+      "expected": "7615a6e28443e4897f4a924bf0e27ebcd2752ff4b37e3bd15d1f62298d2602dd",
+      "actual": "7615a6e28443e4897f4a924bf0e27ebcd2752ff4b37e3bd15d1f62298d2602dd",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/composition.md",
+      "expected": "a675e0b4b4104b5a8581810c8b24324b6ae2c1ab80c93afb5caa94f0dc94bebd",
+      "actual": "a675e0b4b4104b5a8581810c8b24324b6ae2c1ab80c93afb5caa94f0dc94bebd",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/implementation-session.md",
+      "expected": "4bf78298ac30207d6d885c0def8ec0a3deabb2d757a23d7afecc8445664313eb",
+      "actual": "4bf78298ac30207d6d885c0def8ec0a3deabb2d757a23d7afecc8445664313eb",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/project-rules.md",
+      "expected": "c4f26600bd50d290429ec3fe03fd7a94176d8727a2025ed3a3f60fb1707f22b2",
+      "actual": "c4f26600bd50d290429ec3fe03fd7a94176d8727a2025ed3a3f60fb1707f22b2",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/specialized-review-session.md",
+      "expected": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8",
+      "actual": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/ticket-selection.md",
+      "expected": "08d6970f30bee7281ab5a921f22243d8be785bec8b51dc4775719c6a85a8fff6",
+      "actual": "08d6970f30bee7281ab5a921f22243d8be785bec8b51dc4775719c6a85a8fff6",
+      "match": true
+    },
+    {
+      "path": "resources/adapters/work-scope.md",
+      "expected": "345d5ffe16b4d8120ff893fd708c96a527caf53f8ddf7d245ac503a3b92db154",
+      "actual": "345d5ffe16b4d8120ff893fd708c96a527caf53f8ddf7d245ac503a3b92db154",
+      "match": true
+    },
+    {
+      "path": "resources/agent-rule-applicability.md",
+      "expected": "84735f1dd6edabb0d332b20abb2fb6e03c6b55486397c281eac77300bd4949a7",
+      "actual": "84735f1dd6edabb0d332b20abb2fb6e03c6b55486397c281eac77300bd4949a7",
+      "match": true
+    },
+    {
+      "path": "resources/artifact-finalization.md",
+      "expected": "b0a66530e067d6afc3d6b40a244c9a3dfe7df90ad54f75fb7fbeea49b02f75c8",
+      "actual": "b0a66530e067d6afc3d6b40a244c9a3dfe7df90ad54f75fb7fbeea49b02f75c8",
+      "match": true
+    },
+    {
+      "path": "resources/document-rendering.md",
+      "expected": "e275638dd8d0a416df83c856f7b756b9b236a402e9f824506c7f01c92bcba079",
+      "actual": "e275638dd8d0a416df83c856f7b756b9b236a402e9f824506c7f01c92bcba079",
+      "match": true
+    },
+    {
+      "path": "resources/final-state-writing.md",
+      "expected": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7",
+      "actual": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7",
+      "match": true
+    },
+    {
+      "path": "resources/first-principles-reasoning.md",
+      "expected": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6",
+      "actual": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6",
+      "match": true
+    },
+    {
+      "path": "resources/governance.json",
+      "expected": "09ba672789ef3231c2f9113e8b9e92b417755135a7cb0e2d5c9f56bcd21f9bba",
+      "actual": "09ba672789ef3231c2f9113e8b9e92b417755135a7cb0e2d5c9f56bcd21f9bba",
+      "match": true
+    },
+    {
+      "path": "resources/humanizer.md",
+      "expected": "355ce3ea279dc1bcae53b5f91352c730dab9f9d61c8d1cb1afcebb93deccde03",
+      "actual": "355ce3ea279dc1bcae53b5f91352c730dab9f9d61c8d1cb1afcebb93deccde03",
+      "match": true
+    },
+    {
+      "path": "resources/instruction-authority.md",
+      "expected": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2",
+      "actual": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2",
+      "match": true
+    },
+    {
+      "path": "resources/manifest.json",
+      "expected": "779ad5ff8233710c95e8b35cabca98b9b6d04fda2d9c2002d5ae42ad820d104b",
+      "actual": "779ad5ff8233710c95e8b35cabca98b9b6d04fda2d9c2002d5ae42ad820d104b",
+      "match": true
+    },
+    {
+      "path": "resources/project-rule-review.md",
+      "expected": "299656c047e3bfd132790735aac05cdc02ed12b042b91658eb0a168a72d4403b",
+      "actual": "299656c047e3bfd132790735aac05cdc02ed12b042b91658eb0a168a72d4403b",
+      "match": true
+    },
+    {
+      "path": "resources/reader-first-writing.md",
+      "expected": "1437abbb3958bea066dfeb3e033eedfafe39c3fcfcd7bccf1c80853ae4fd8eb1",
+      "actual": "1437abbb3958bea066dfeb3e033eedfafe39c3fcfcd7bccf1c80853ae4fd8eb1",
+      "match": true
+    },
+    {
+      "path": "resources/requirement-analysis.md",
+      "expected": "2f999b2c35466798f6b2ba0c5177bfa07fc9d401880ef8ff683ed786b4158b7a",
+      "actual": "2f999b2c35466798f6b2ba0c5177bfa07fc9d401880ef8ff683ed786b4158b7a",
+      "match": true
+    },
+    {
+      "path": "resources/requirement-reviewer-brief.md",
+      "expected": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a",
+      "actual": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a",
+      "match": true
+    },
+    {
+      "path": "resources/research-method.md",
+      "expected": "dd02cc9a1e5b2b44fbb92f711c3cecea53eea021bcf1e5db80a8d798170cc498",
+      "actual": "dd02cc9a1e5b2b44fbb92f711c3cecea53eea021bcf1e5db80a8d798170cc498",
+      "match": true
+    },
+    {
+      "path": "resources/review-loop.md",
+      "expected": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+      "actual": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+      "match": true
+    },
+    {
+      "path": "resources/testing-seams.md",
+      "expected": "087dda72071c4ff71bc02f0b1e57a629a5972bccc90988d987bd93ae2a2d2c59",
+      "actual": "087dda72071c4ff71bc02f0b1e57a629a5972bccc90988d987bd93ae2a2d2c59",
+      "match": true
+    },
+    {
+      "path": "resources/user-intervention.md",
+      "expected": "166c1b90d9e83998467f2874b6fc96a8b23ac6d28b58318618a2ba3901c7377a",
+      "actual": "166c1b90d9e83998467f2874b6fc96a8b23ac6d28b58318618a2ba3901c7377a",
+      "match": true
+    },
+    {
+      "path": "resources/visual-communication.md",
+      "expected": "d40e6542f4a4646cec595ba39db7eb9c73998b8012cc905a41183af880a6f5e5",
+      "actual": "d40e6542f4a4646cec595ba39db7eb9c73998b8012cc905a41183af880a6f5e5",
+      "match": true
+    },
+    {
+      "path": "resources/workflow-delivery.md",
+      "expected": "a5f20351448f5354b1b9130ea79648b1e0426f5bc26d8899bb33b68e7028d287",
+      "actual": "a5f20351448f5354b1b9130ea79648b1e0426f5bc26d8899bb33b68e7028d287",
+      "match": true
+    },
+    {
+      "path": "skills/my-ask-matt/SKILL.md",
+      "expected": "f3629292f9d7e34efd97e80049eeb83f03dd63ef8648bbf595303b409e8be5a7",
+      "actual": "f3629292f9d7e34efd97e80049eeb83f03dd63ef8648bbf595303b409e8be5a7",
+      "match": true
+    },
+    {
+      "path": "skills/my-ask-matt/agents/openai.yaml",
+      "expected": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c",
+      "actual": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c",
+      "match": true
+    },
+    {
+      "path": "skills/my-code-review/SKILL.md",
+      "expected": "730c1139700bfedb412c6a8c888697082968880643c5ea0612146d2fddd4abb2",
+      "actual": "730c1139700bfedb412c6a8c888697082968880643c5ea0612146d2fddd4abb2",
+      "match": true
+    },
+    {
+      "path": "skills/my-code-review/agents/openai.yaml",
+      "expected": "a9750905fe9e5d33d65ee5a286fbb6ba727d0200084d83bc6e8cfded0184e3ee",
+      "actual": "a9750905fe9e5d33d65ee5a286fbb6ba727d0200084d83bc6e8cfded0184e3ee",
+      "match": true
+    },
+    {
+      "path": "skills/my-codebase-design/DEEPENING.md",
+      "expected": "9db1ed0ea12e496f7b1095b3fcc9643285a24a895760ed8884079322bf74d7eb",
+      "actual": "9db1ed0ea12e496f7b1095b3fcc9643285a24a895760ed8884079322bf74d7eb",
+      "match": true
+    },
+    {
+      "path": "skills/my-codebase-design/DESIGN-IT-TWICE.md",
+      "expected": "53add89fcd450aab37ba3f017dad8dfcd3c261b1692ecc3684551d534bfb056c",
+      "actual": "53add89fcd450aab37ba3f017dad8dfcd3c261b1692ecc3684551d534bfb056c",
+      "match": true
+    },
+    {
+      "path": "skills/my-codebase-design/SKILL.md",
+      "expected": "de67ce60da000788508a31efd64d3ff6653148adf2dd08111662177db95b54ce",
+      "actual": "de67ce60da000788508a31efd64d3ff6653148adf2dd08111662177db95b54ce",
+      "match": true
+    },
+    {
+      "path": "skills/my-codebase-design/agents/openai.yaml",
+      "expected": "0ab3aef48940645a2a1ae69f8f630efb03b12e6b1fef531dd7667ee76055d473",
+      "actual": "0ab3aef48940645a2a1ae69f8f630efb03b12e6b1fef531dd7667ee76055d473",
+      "match": true
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/SKILL.md",
+      "expected": "e75f96452b943bd05281b6481993ad29fca10c981fa42939b79d16f0003c75ef",
+      "actual": "e75f96452b943bd05281b6481993ad29fca10c981fa42939b79d16f0003c75ef",
+      "match": true
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/agents/openai.yaml",
+      "expected": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+      "actual": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+      "match": true
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/references/feedback-methods.md",
+      "expected": "f859e0d9609f4ee14208615026147d21c7faa61c80aaaee7244ef1666ff7a55d",
+      "actual": "f859e0d9609f4ee14208615026147d21c7faa61c80aaaee7244ef1666ff7a55d",
+      "match": true
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/scripts/hitl-loop.template.sh",
+      "expected": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+      "actual": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+      "match": true
+    },
+    {
+      "path": "skills/my-domain-modeling/ADR-FORMAT.md",
+      "expected": "d788c9f024148ae86d671540a44b43ef343b2e2ab0eb700f500450b7fa090ead",
+      "actual": "d788c9f024148ae86d671540a44b43ef343b2e2ab0eb700f500450b7fa090ead",
+      "match": true
+    },
+    {
+      "path": "skills/my-domain-modeling/CONTEXT-FORMAT.md",
+      "expected": "d7587b1a6154767d934b38a82341ef5acad9733fdcd76a3707559f394245909c",
+      "actual": "d7587b1a6154767d934b38a82341ef5acad9733fdcd76a3707559f394245909c",
+      "match": true
+    },
+    {
+      "path": "skills/my-domain-modeling/SKILL.md",
+      "expected": "69df2491a9dbda1f04b52617980f4dc306a69d9a200e007a5a19c2636326ba81",
+      "actual": "69df2491a9dbda1f04b52617980f4dc306a69d9a200e007a5a19c2636326ba81",
+      "match": true
+    },
+    {
+      "path": "skills/my-domain-modeling/agents/openai.yaml",
+      "expected": "504d329c7c0bead5d8621ecdc447f7f285ec4900d8977a5fefad9ff949f9599e",
+      "actual": "504d329c7c0bead5d8621ecdc447f7f285ec4900d8977a5fefad9ff949f9599e",
+      "match": true
+    },
+    {
+      "path": "skills/my-edit-article/SKILL.md",
+      "expected": "5a019a30469c614385c2bb022792592f63abe3c28e42d71d60c6f6f0db9d2a8b",
+      "actual": "5a019a30469c614385c2bb022792592f63abe3c28e42d71d60c6f6f0db9d2a8b",
+      "match": true
+    },
+    {
+      "path": "skills/my-edit-article/agents/openai.yaml",
+      "expected": "4873c8a1310b0159b404b42de01ba069b899dda4a4d2bd214c6881bc6305d45d",
+      "actual": "4873c8a1310b0159b404b42de01ba069b899dda4a4d2bd214c6881bc6305d45d",
+      "match": true
+    },
+    {
+      "path": "skills/my-grill-me/SKILL.md",
+      "expected": "55ca97cca398f50e9d339063449a3c1895be2df287513b8d41a52f0caa5ff6fc",
+      "actual": "55ca97cca398f50e9d339063449a3c1895be2df287513b8d41a52f0caa5ff6fc",
+      "match": true
+    },
+    {
+      "path": "skills/my-grill-me/agents/openai.yaml",
+      "expected": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b",
+      "actual": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b",
+      "match": true
+    },
+    {
+      "path": "skills/my-grill-with-docs/SKILL.md",
+      "expected": "f70ea1f06ae438bee5d922e58e989907bf51357b9fa3ee65d92f79f674f67a65",
+      "actual": "f70ea1f06ae438bee5d922e58e989907bf51357b9fa3ee65d92f79f674f67a65",
+      "match": true
+    },
+    {
+      "path": "skills/my-grill-with-docs/agents/openai.yaml",
+      "expected": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9",
+      "actual": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9",
+      "match": true
+    },
+    {
+      "path": "skills/my-grilling/SKILL.md",
+      "expected": "fa2f8ac201f67ac676095efb08e09d846a1f2321284b5c864e537efe2a339276",
+      "actual": "fa2f8ac201f67ac676095efb08e09d846a1f2321284b5c864e537efe2a339276",
+      "match": true
+    },
+    {
+      "path": "skills/my-grilling/agents/openai.yaml",
+      "expected": "6c1322e84f39c2ee04d33e8eac6f28367c9386807c2263c8d20434745e39e615",
+      "actual": "6c1322e84f39c2ee04d33e8eac6f28367c9386807c2263c8d20434745e39e615",
+      "match": true
+    },
+    {
+      "path": "skills/my-handoff/SKILL.md",
+      "expected": "de341c5238f09cfb031ba6e9f320b076be6fb5af3ef611379fe31215c725014e",
+      "actual": "de341c5238f09cfb031ba6e9f320b076be6fb5af3ef611379fe31215c725014e",
+      "match": true
+    },
+    {
+      "path": "skills/my-handoff/agents/openai.yaml",
+      "expected": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28",
+      "actual": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28",
+      "match": true
+    },
+    {
+      "path": "skills/my-humanizer/PATTERNS.md",
+      "expected": "c4edd6fd174fbf19be784bef84c07cb03070f0be09f0373073461da9b57d1f31",
+      "actual": "c4edd6fd174fbf19be784bef84c07cb03070f0be09f0373073461da9b57d1f31",
+      "match": true
+    },
+    {
+      "path": "skills/my-humanizer/SKILL.md",
+      "expected": "75494db8e6aa7765bd8bcbf9ecc382d6e0c561b583a6581343d560dfbeed7061",
+      "actual": "75494db8e6aa7765bd8bcbf9ecc382d6e0c561b583a6581343d560dfbeed7061",
+      "match": true
+    },
+    {
+      "path": "skills/my-humanizer/agents/openai.yaml",
+      "expected": "026777f2a53fed1827286c68a181f04f6f79ffd47fc9ecbcc783da5abcb5427a",
+      "actual": "026777f2a53fed1827286c68a181f04f6f79ffd47fc9ecbcc783da5abcb5427a",
+      "match": true
+    },
+    {
+      "path": "skills/my-implement/SKILL.md",
+      "expected": "f9d1217c765a9fd1338d0f4a03547e2df0f3c535f3eaeac0474dd910e2c54a49",
+      "actual": "f9d1217c765a9fd1338d0f4a03547e2df0f3c535f3eaeac0474dd910e2c54a49",
+      "match": true
+    },
+    {
+      "path": "skills/my-implement/agents/openai.yaml",
+      "expected": "7d531e17370288bdf5eabb7a586d7c2de16c21db12afb91873685b6165c88db6",
+      "actual": "7d531e17370288bdf5eabb7a586d7c2de16c21db12afb91873685b6165c88db6",
+      "match": true
+    },
+    {
+      "path": "skills/my-improve-codebase-architecture/CONTENT.md",
+      "expected": "9d12c0e0f6b67e5528508c64a5abfe2767df00bd2cc868e0634e923a1b270336",
+      "actual": "9d12c0e0f6b67e5528508c64a5abfe2767df00bd2cc868e0634e923a1b270336",
+      "match": true
+    },
+    {
+      "path": "skills/my-improve-codebase-architecture/FRONTEND.md",
+      "expected": "18f1f95e14e10108e33254af145b1ebe246d5783109f53ef67ad3f252845b4d2",
+      "actual": "18f1f95e14e10108e33254af145b1ebe246d5783109f53ef67ad3f252845b4d2",
+      "match": true
+    },
+    {
+      "path": "skills/my-improve-codebase-architecture/HTML-REPORT.md",
+      "expected": "f575dd4cdc0879ddca7548168cc445f1a03fe801daae3cd96cf7084c281cea50",
+      "actual": "f575dd4cdc0879ddca7548168cc445f1a03fe801daae3cd96cf7084c281cea50",
+      "match": true
+    },
+    {
+      "path": "skills/my-improve-codebase-architecture/SKILL.md",
+      "expected": "f0616db5cc4789737d842b4fca94554e4aa81938d6516b555641784f0b372c3e",
+      "actual": "f0616db5cc4789737d842b4fca94554e4aa81938d6516b555641784f0b372c3e",
+      "match": true
+    },
+    {
+      "path": "skills/my-improve-codebase-architecture/agents/openai.yaml",
+      "expected": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1",
+      "actual": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1",
+      "match": true
+    },
+    {
+      "path": "skills/my-install/SKILL.md",
+      "expected": "5a9950821da4412dca302cdb7c14de6eeb28c73309d2536fb8b86d685ffbeff4",
+      "actual": "5a9950821da4412dca302cdb7c14de6eeb28c73309d2536fb8b86d685ffbeff4",
+      "match": true
+    },
+    {
+      "path": "skills/my-install/agents/openai.yaml",
+      "expected": "695f55f8bcadbd5c539a48d299e16597252692d2ec28bc54e1996f1a5e5fc3c4",
+      "actual": "695f55f8bcadbd5c539a48d299e16597252692d2ec28bc54e1996f1a5e5fc3c4",
+      "match": true
+    },
+    {
+      "path": "skills/my-prototype/LOGIC.md",
+      "expected": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+      "actual": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+      "match": true
+    },
+    {
+      "path": "skills/my-prototype/SKILL.md",
+      "expected": "9dbb4c403c649501d3b7f2586779289df23cbf38797366edfde8773e3049b61a",
+      "actual": "9dbb4c403c649501d3b7f2586779289df23cbf38797366edfde8773e3049b61a",
+      "match": true
+    },
+    {
+      "path": "skills/my-prototype/UI.md",
+      "expected": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+      "actual": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+      "match": true
+    },
+    {
+      "path": "skills/my-prototype/agents/openai.yaml",
+      "expected": "fc7126c462962a94f2ce916b2f51c995b26a0a8aec9f670ae40d43482da15c01",
+      "actual": "fc7126c462962a94f2ce916b2f51c995b26a0a8aec9f670ae40d43482da15c01",
+      "match": true
+    },
+    {
+      "path": "skills/my-research/SKILL.md",
+      "expected": "16bd12f202a84c6054e531a2ab2f6013d6295a843b5b48cbfa5027618c26ee12",
+      "actual": "16bd12f202a84c6054e531a2ab2f6013d6295a843b5b48cbfa5027618c26ee12",
+      "match": true
+    },
+    {
+      "path": "skills/my-research/agents/openai.yaml",
+      "expected": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+      "actual": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+      "match": true
+    },
+    {
+      "path": "skills/my-resolving-merge-conflicts/SKILL.md",
+      "expected": "6b1a3148bd17c9e887be8bc7a4dd021d122c3b0b2f768e1209f175da57722f12",
+      "actual": "6b1a3148bd17c9e887be8bc7a4dd021d122c3b0b2f768e1209f175da57722f12",
+      "match": true
+    },
+    {
+      "path": "skills/my-resolving-merge-conflicts/agents/openai.yaml",
+      "expected": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+      "actual": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+      "match": true
+    },
+    {
+      "path": "skills/my-review-artifact/SKILL.md",
+      "expected": "7a3294e587a55efbebf34b4b824096932a5da008aeaee7b452951ebb81a4c0df",
+      "actual": "7a3294e587a55efbebf34b4b824096932a5da008aeaee7b452951ebb81a4c0df",
+      "match": true
+    },
+    {
+      "path": "skills/my-review-artifact/agents/openai.yaml",
+      "expected": "7acd9b3610f05929004d067765194584d73ed78e53d335e111d7496df56a71d7",
+      "actual": "7acd9b3610f05929004d067765194584d73ed78e53d335e111d7496df56a71d7",
+      "match": true
+    },
+    {
+      "path": "skills/my-review-design/SKILL.md",
+      "expected": "1445ad92d36a0b7b68d3e18e881d0e6866bb2418404c306e310ea0946c46692c",
+      "actual": "1445ad92d36a0b7b68d3e18e881d0e6866bb2418404c306e310ea0946c46692c",
+      "match": true
+    },
+    {
+      "path": "skills/my-review-design/agents/openai.yaml",
+      "expected": "8bace5fd51295c6889dd538a47b17b80b53cbccf6e390ef20a0c3055a562dcce",
+      "actual": "8bace5fd51295c6889dd538a47b17b80b53cbccf6e390ef20a0c3055a562dcce",
+      "match": true
+    },
+    {
+      "path": "skills/my-review-instructions/SKILL.md",
+      "expected": "9acf86ddc8125cd3d2b354f60e38f42541d6b6db4758b59135cfcb080efaf9e6",
+      "actual": "9acf86ddc8125cd3d2b354f60e38f42541d6b6db4758b59135cfcb080efaf9e6",
+      "match": true
+    },
+    {
+      "path": "skills/my-review-instructions/agents/openai.yaml",
+      "expected": "df94121f2aeb492bc22ed29dd27e6dc74d520ab69c8d9cab057304a44827e539",
+      "actual": "df94121f2aeb492bc22ed29dd27e6dc74d520ab69c8d9cab057304a44827e539",
+      "match": true
+    },
+    {
+      "path": "skills/my-setup/SKILL.md",
+      "expected": "a95152aa945908e4400c547c9a4cc5cc131b142a5dfa403d283903ae68027d21",
+      "actual": "a95152aa945908e4400c547c9a4cc5cc131b142a5dfa403d283903ae68027d21",
+      "match": true
+    },
+    {
+      "path": "skills/my-setup/agents/openai.yaml",
+      "expected": "e3ae4343a3c46e00c1bf630327290b62165713e9abbfff45f20e0994fcca8074",
+      "actual": "e3ae4343a3c46e00c1bf630327290b62165713e9abbfff45f20e0994fcca8074",
+      "match": true
+    },
+    {
+      "path": "skills/my-tdd/SKILL.md",
+      "expected": "fab6c7c3e66e6a5e7fa3d8c8bdf4992a179693d3ab8e90c5149f82540bba2284",
+      "actual": "fab6c7c3e66e6a5e7fa3d8c8bdf4992a179693d3ab8e90c5149f82540bba2284",
+      "match": true
+    },
+    {
+      "path": "skills/my-tdd/agents/openai.yaml",
+      "expected": "c25ebfa7ae11903cbee88880c5221d90fcab1fdab74cda624950881520d6212b",
+      "actual": "c25ebfa7ae11903cbee88880c5221d90fcab1fdab74cda624950881520d6212b",
+      "match": true
+    },
+    {
+      "path": "skills/my-tdd/mocking.md",
+      "expected": "672be095a8663b2e21922882ad48d50889d1a9a0277eaa86a30fe76d1bd2bd2d",
+      "actual": "672be095a8663b2e21922882ad48d50889d1a9a0277eaa86a30fe76d1bd2bd2d",
+      "match": true
+    },
+    {
+      "path": "skills/my-tdd/tests.md",
+      "expected": "918a6875acb3d81ea08c8718359c908ff82c0c7da0569c84840e167b11f93f91",
+      "actual": "918a6875acb3d81ea08c8718359c908ff82c0c7da0569c84840e167b11f93f91",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/CONTENT.md",
+      "expected": "625eed46584e25d2ce3c9905672e733bfb7a7ce856408a0eb0c4f6d1d9c53be0",
+      "actual": "625eed46584e25d2ce3c9905672e733bfb7a7ce856408a0eb0c4f6d1d9c53be0",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/FRONTEND.md",
+      "expected": "83a8edbcb58d3f8c18eee07a3e1b5d42ce6160a618c6344595d4009729e558e3",
+      "actual": "83a8edbcb58d3f8c18eee07a3e1b5d42ce6160a618c6344595d4009729e558e3",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/GLOSSARY-FORMAT.md",
+      "expected": "0adaa5a845dfcc1af249c44d35f430d8f4874a35a749c72dde933fad1c674900",
+      "actual": "0adaa5a845dfcc1af249c44d35f430d8f4874a35a749c72dde933fad1c674900",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/LEARNING-RECORD-FORMAT.md",
+      "expected": "199a482e092be0e19ed58e6000b7aac5b6dacb392d7f36a135ff9d5530fe0e61",
+      "actual": "199a482e092be0e19ed58e6000b7aac5b6dacb392d7f36a135ff9d5530fe0e61",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/MISSION-FORMAT.md",
+      "expected": "34795a146494816b55a6ef7d83c62624e14f59b599850f02fce59944d3751947",
+      "actual": "34795a146494816b55a6ef7d83c62624e14f59b599850f02fce59944d3751947",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/RESOURCES-FORMAT.md",
+      "expected": "e66202357468ab6d49a0c9ba911adf1ca5de2f8eafbb6bf3f8d363f378b6e3b6",
+      "actual": "e66202357468ab6d49a0c9ba911adf1ca5de2f8eafbb6bf3f8d363f378b6e3b6",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/SKILL.md",
+      "expected": "3eaa0d9e13a3d50bc0b7cc044e9c1f36f73d816199d235c13c1415417eb36c6d",
+      "actual": "3eaa0d9e13a3d50bc0b7cc044e9c1f36f73d816199d235c13c1415417eb36c6d",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/agents/openai.yaml",
+      "expected": "d38a4924ccbae2d2ddbb1df048bd9d03b3563d92a52979ef50cf0dfbfbac0273",
+      "actual": "d38a4924ccbae2d2ddbb1df048bd9d03b3563d92a52979ef50cf0dfbfbac0273",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/assets/TEMPLATE.html",
+      "expected": "73bd4eb8c8b432f8a421f50c942b375a964d149e49b0642d4d84fc8af183cb64",
+      "actual": "73bd4eb8c8b432f8a421f50c942b375a964d149e49b0642d4d84fc8af183cb64",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/assets/course.css",
+      "expected": "71f5f1f46135ac3b5e7af445872baaae3985478efe32cdd462324e7b37595895",
+      "actual": "71f5f1f46135ac3b5e7af445872baaae3985478efe32cdd462324e7b37595895",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/assets/course.js",
+      "expected": "86ff93c58bc839f86b3c058eaea6d1056aeb29f78324dea479b27f1fca226de8",
+      "actual": "86ff93c58bc839f86b3c058eaea6d1056aeb29f78324dea479b27f1fca226de8",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/references/course-quality.md",
+      "expected": "02a35c583a3f477dc9df782099d590f8be8dee3b6f07eb8f1bb0c23555b944c2",
+      "actual": "02a35c583a3f477dc9df782099d590f8be8dee3b6f07eb8f1bb0c23555b944c2",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/scripts/check_content.py",
+      "expected": "dfeb85cb4c9b1e388fde9e31383cedb10a5936e2bc69fa4d3b9251035850c72a",
+      "actual": "dfeb85cb4c9b1e388fde9e31383cedb10a5936e2bc69fa4d3b9251035850c72a",
+      "match": true
+    },
+    {
+      "path": "skills/my-teach/scripts/check_html.py",
+      "expected": "c483ac4649518d788635e8ab66bccdbdea3d39f2935e4acf5722943f87711809",
+      "actual": "c483ac4649518d788635e8ab66bccdbdea3d39f2935e4acf5722943f87711809",
+      "match": true
+    },
+    {
+      "path": "skills/my-tech-design/CONTENT.md",
+      "expected": "d6007bacfafba8dea0f4578dd90e19bd9a6073d679c860a82646cb0c181aae4d",
+      "actual": "d6007bacfafba8dea0f4578dd90e19bd9a6073d679c860a82646cb0c181aae4d",
+      "match": true
+    },
+    {
+      "path": "skills/my-tech-design/FRONTEND.md",
+      "expected": "36b8e8ce61e915782048ddbc7a4ba9fecb22edfa46cbb5222783245a4cec8611",
+      "actual": "36b8e8ce61e915782048ddbc7a4ba9fecb22edfa46cbb5222783245a4cec8611",
+      "match": true
+    },
+    {
+      "path": "skills/my-tech-design/SKILL.md",
+      "expected": "2b0b695766d1dddaa6d04ee2e14791824a265d2a535e5c3b53140481f630d49f",
+      "actual": "2b0b695766d1dddaa6d04ee2e14791824a265d2a535e5c3b53140481f630d49f",
+      "match": true
+    },
+    {
+      "path": "skills/my-tech-design/agents/openai.yaml",
+      "expected": "d8167fd6d59ca1bee2a79f3d1620bd8d131f1befe078ed9101887a5ff62c15d1",
+      "actual": "d8167fd6d59ca1bee2a79f3d1620bd8d131f1befe078ed9101887a5ff62c15d1",
+      "match": true
+    },
+    {
+      "path": "skills/my-tech-design/assets/TEMPLATE.html",
+      "expected": "84fe7962df9e5bfaf582152c9bf84988acf6e151b9e98fb964b7a2b8580775c4",
+      "actual": "84fe7962df9e5bfaf582152c9bf84988acf6e151b9e98fb964b7a2b8580775c4",
+      "match": true
+    },
+    {
+      "path": "skills/my-tech-design/scripts/check_html.py",
+      "expected": "68bde5d8a2ecebbb61f39371eaaa2c0f25d6901993284dffabf44e373b68b071",
+      "actual": "68bde5d8a2ecebbb61f39371eaaa2c0f25d6901993284dffabf44e373b68b071",
+      "match": true
+    },
+    {
+      "path": "skills/my-test-report/SKILL.md",
+      "expected": "6449bee33d2189b9ed30eb80f831883e94d5c1ff5601df0363fb6e345b279ca8",
+      "actual": "6449bee33d2189b9ed30eb80f831883e94d5c1ff5601df0363fb6e345b279ca8",
+      "match": true
+    },
+    {
+      "path": "skills/my-test-report/agents/openai.yaml",
+      "expected": "7a384f6b6006e54ba591e79090e11f72d7db406eba3a2750e2b4ddee1e40a8a7",
+      "actual": "7a384f6b6006e54ba591e79090e11f72d7db406eba3a2750e2b4ddee1e40a8a7",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-questionnaire/SKILL.md",
+      "expected": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+      "actual": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-questionnaire/agents/openai.yaml",
+      "expected": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+      "actual": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-spec/SKILL.md",
+      "expected": "5b19e76ca24563183ffb94095d2b70d87b0bf9ae39655c02a48efb52a4790c5d",
+      "actual": "5b19e76ca24563183ffb94095d2b70d87b0bf9ae39655c02a48efb52a4790c5d",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-spec/agents/openai.yaml",
+      "expected": "37828cc6c0f903575798fe17374b0bb6fd28e59bc622d7fb32df76f55946d2b3",
+      "actual": "37828cc6c0f903575798fe17374b0bb6fd28e59bc622d7fb32df76f55946d2b3",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-tickets/SKILL.md",
+      "expected": "01b660496f862269734115b6be25f815ac9cff174f1989d23aa7860bb8dc3652",
+      "actual": "01b660496f862269734115b6be25f815ac9cff174f1989d23aa7860bb8dc3652",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-tickets/TICKET-FORMATS.md",
+      "expected": "fdc7a92609c355660b6ccf010b3990b9802d0f9d82ca408f4ddcfe5c0b642ef4",
+      "actual": "fdc7a92609c355660b6ccf010b3990b9802d0f9d82ca408f4ddcfe5c0b642ef4",
+      "match": true
+    },
+    {
+      "path": "skills/my-to-tickets/agents/openai.yaml",
+      "expected": "836fa8476e3ab9bc1bcfca13bfbebadf600fba6c6e8b69407a1e8a1f2b9d87b1",
+      "actual": "836fa8476e3ab9bc1bcfca13bfbebadf600fba6c6e8b69407a1e8a1f2b9d87b1",
+      "match": true
+    },
+    {
+      "path": "skills/my-triage/AGENT-BRIEF.md",
+      "expected": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+      "actual": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+      "match": true
+    },
+    {
+      "path": "skills/my-triage/OUT-OF-SCOPE.md",
+      "expected": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+      "actual": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+      "match": true
+    },
+    {
+      "path": "skills/my-triage/SKILL.md",
+      "expected": "4eb8771cd59c8911d7705753e3c00beb237d5bc6126074d794543fdcaeb0c9bb",
+      "actual": "4eb8771cd59c8911d7705753e3c00beb237d5bc6126074d794543fdcaeb0c9bb",
+      "match": true
+    },
+    {
+      "path": "skills/my-triage/agents/openai.yaml",
+      "expected": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+      "actual": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+      "match": true
+    },
+    {
+      "path": "skills/my-wayfinder/SKILL.md",
+      "expected": "84dbd89b94da30f83f441bd4414b9431f37faaf09395a248aa9538438d294c19",
+      "actual": "84dbd89b94da30f83f441bd4414b9431f37faaf09395a248aa9538438d294c19",
+      "match": true
+    },
+    {
+      "path": "skills/my-wayfinder/agents/openai.yaml",
+      "expected": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+      "actual": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+      "match": true
+    },
+    {
+      "path": "skills/my-wayfinder/references/map-and-ticket-format.md",
+      "expected": "35003d20ca4d0129fe2e55fabd84d76db1c81a11dc87aaf16c09e7347f71b73c",
+      "actual": "35003d20ca4d0129fe2e55fabd84d76db1c81a11dc87aaf16c09e7347f71b73c",
+      "match": true
+    },
+    {
+      "path": "skills/my-wizard/SKILL.md",
+      "expected": "2b774fed78f27ac27739cec0525437fba839eafd1ce8aafb2ed319183b757ed7",
+      "actual": "2b774fed78f27ac27739cec0525437fba839eafd1ce8aafb2ed319183b757ed7",
+      "match": true
+    },
+    {
+      "path": "skills/my-wizard/agents/openai.yaml",
+      "expected": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+      "actual": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+      "match": true
+    },
+    {
+      "path": "skills/my-wizard/template.sh",
+      "expected": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+      "actual": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+      "match": true
+    },
+    {
+      "path": "skills/my-writing-for-agents/GLOSSARY.md",
+      "expected": "29c26642f05482bc81176bf7e434ed4d0b5b9b28106ea5ccabc9effb7abe1ad1",
+      "actual": "29c26642f05482bc81176bf7e434ed4d0b5b9b28106ea5ccabc9effb7abe1ad1",
+      "match": true
+    },
+    {
+      "path": "skills/my-writing-for-agents/SKILL.md",
+      "expected": "3022371cdc703ee3c9e7a34554dc1f18c3246674b985025920189982a524a292",
+      "actual": "3022371cdc703ee3c9e7a34554dc1f18c3246674b985025920189982a524a292",
+      "match": true
+    },
+    {
+      "path": "skills/my-writing-for-agents/agents/openai.yaml",
+      "expected": "1aff00457e1c6838e0499b7bd8f275760ab03aefbdc70fba84b18c894914e343",
+      "actual": "1aff00457e1c6838e0499b7bd8f275760ab03aefbdc70fba84b18c894914e343",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/architecture_application.json",
+      "expected": "c42bd7cb1f096283c01620e50837edf1d04c2874e49dab05c021d51cd0a5952a",
+      "actual": "c42bd7cb1f096283c01620e50837edf1d04c2874e49dab05c021d51cd0a5952a",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/codebase_design_order_submission.json",
+      "expected": "27c2211f237da6d91c5cddd226ebae56252252fc16d87ef42aeb23571df67777",
+      "actual": "27c2211f237da6d91c5cddd226ebae56252252fc16d87ef42aeb23571df67777",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/domain_modeling_application.json",
+      "expected": "e36d4c7c4f006ff20d95cf0ea8d6caf28c5c55935c05047b013ee68f46ce360b",
+      "actual": "e36d4c7c4f006ff20d95cf0ea8d6caf28c5c55935c05047b013ee68f46ce360b",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/grilling_application.json",
+      "expected": "10020aa94c442a088dbc83730ba21ea9f0ef446767b6148f26dee942ad3318f1",
+      "actual": "10020aa94c442a088dbc83730ba21ea9f0ef446767b6148f26dee942ad3318f1",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/questionnaire_application.json",
+      "expected": "6eec5fa58f0518c297f1ca41bd771ea3c3c0bd6c2e61ca8314287283e46fc430",
+      "actual": "6eec5fa58f0518c297f1ca41bd771ea3c3c0bd6c2e61ca8314287283e46fc430",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/task_12_application.json",
+      "expected": "b53ddb59bd585a8659959b3c375cd30ea7b7ea9e4586b73bd76eb946b3f2e6d7",
+      "actual": "b53ddb59bd585a8659959b3c375cd30ea7b7ea9e4586b73bd76eb946b3f2e6d7",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/tdd_application.json",
+      "expected": "db90cfd5570807c6ac00626df538ffea4f45e7d201be57344dd75a5105a5cb62",
+      "actual": "db90cfd5570807c6ac00626df538ffea4f45e7d201be57344dd75a5105a5cb62",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/teach_application.json",
+      "expected": "38d443b8974aebfe0f61d96ca0e6d8e3b202b15a5fefcef9ec070650877b0890",
+      "actual": "38d443b8974aebfe0f61d96ca0e6d8e3b202b15a5fefcef9ec070650877b0890",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/triage_workflow_application.json",
+      "expected": "ee096273a61e5a7c35b605a7a5dfc0ecf4fc92a63836b912eb5233ca3d83cec8",
+      "actual": "ee096273a61e5a7c35b605a7a5dfc0ecf4fc92a63836b912eb5233ca3d83cec8",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/wizard_application.json",
+      "expected": "e4f6b2810faae86edfd56b98bc8dc588d8dfb81329acbe3613f97085cb4b276b",
+      "actual": "e4f6b2810faae86edfd56b98bc8dc588d8dfb81329acbe3613f97085cb4b276b",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/README.md",
+      "expected": "b0470d8b2f32024aabb17076e7bfc85288f1f7ca0a2c8913564ee42e01020585",
+      "actual": "b0470d8b2f32024aabb17076e7bfc85288f1f7ca0a2c8913564ee42e01020585",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/baseline.bundle",
+      "expected": "bcf4934e14c3971233c35783867ba1c890d8bc5915aead164cd14c4139c9de0d",
+      "actual": "bcf4934e14c3971233c35783867ba1c890d8bc5915aead164cd14c4139c9de0d",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/baseline.json",
+      "expected": "3cf6ab88c31ae07149b59eeb08aa7f553297ae7a13ebe700c3390b483fdab687",
+      "actual": "3cf6ab88c31ae07149b59eeb08aa7f553297ae7a13ebe700c3390b483fdab687",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/generation.json",
+      "expected": "7030f0794f5a09bddd93961e7e401726cee6ec83879be88a8f3e493da67a02b0",
+      "actual": "7030f0794f5a09bddd93961e7e401726cee6ec83879be88a8f3e493da67a02b0",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/matt-workflow.md",
+      "expected": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+      "actual": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-a.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-b.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-c.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-d.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-e.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/contexts/contexts-legacy-a-01.md",
+      "expected": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "actual": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-02.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-03.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json",
+      "expected": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "actual": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/dfdab5fd13e9b6d727d6d1a34a062268ae281f1099acc45d92bf8ac76301b913.json",
+      "expected": "b88eddeb5eb22db663ab69701e91eae493bd7382bbdaa72e3ec68945cd680b5a",
+      "actual": "b88eddeb5eb22db663ab69701e91eae493bd7382bbdaa72e3ec68945cd680b5a",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-results/d30f270e1ae5fec9b08b234e849a3908.json",
+      "expected": "47530d4e74975daf71410ed690f1b79f0c87333e1c3614835816cb0c13c59604",
+      "actual": "47530d4e74975daf71410ed690f1b79f0c87333e1c3614835816cb0c13c59604",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.json",
+      "expected": "7f5bcf3e5bc90a31c1e73aec8e745454feb7ce86a8b36cf38a6343724cc411fe",
+      "actual": "7f5bcf3e5bc90a31c1e73aec8e745454feb7ce86a8b36cf38a6343724cc411fe",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-03-spec-r1.json",
+      "expected": "feb3b3fe8a3759fb055e2be0a74b346164d3c37dc70c613e502d5f774e5d07c1",
+      "actual": "feb3b3fe8a3759fb055e2be0a74b346164d3c37dc70c613e502d5f774e5d07c1",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/specs/specs-legacy-a-01.md",
+      "expected": "5d71acde259d0dc2f3b05278352eeffb8d1dddbb18e1e5125406cdc1c8f3e291",
+      "actual": "5d71acde259d0dc2f3b05278352eeffb8d1dddbb18e1e5125406cdc1c8f3e291",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-01.md",
+      "expected": "231e334ca2e3fa38d11b40232089079f8ee3e15f6726c5a7342e30f430f5d1e9",
+      "actual": "231e334ca2e3fa38d11b40232089079f8ee3e15f6726c5a7342e30f430f5d1e9",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-02.md",
+      "expected": "47434a02cd59978b663c64b0e062b3145802ba546de77f181ed7f88b7524af47",
+      "actual": "47434a02cd59978b663c64b0e062b3145802ba546de77f181ed7f88b7524af47",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md",
+      "expected": "712613d09cc3162989a28397d6d7df84dc1e73659f6ce3581d8f1e42498f8bb5",
+      "actual": "712613d09cc3162989a28397d6d7df84dc1e73659f6ce3581d8f1e42498f8bb5",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/contexts/contexts-legacy-b-01.md",
+      "expected": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "actual": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/locks/legacy-b-01.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/run-legacy-b-01-spec-r1.json",
+      "expected": "fc678fdb6dbe3781f6d812d3da1143b8427cda2dd55a057bd13cf7d597ce634a",
+      "actual": "fc678fdb6dbe3781f6d812d3da1143b8427cda2dd55a057bd13cf7d597ce634a",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/specs/specs-legacy-b-01.md",
+      "expected": "9b6c15c87c20d4f31d26672b5ee69883cf92c7cdb487beb0f66e63d3b39367c2",
+      "actual": "9b6c15c87c20d4f31d26672b5ee69883cf92c7cdb487beb0f66e63d3b39367c2",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/tickets/tickets-legacy-b-01.md",
+      "expected": "3a801e043941a1a6ad0c439e26168535df2034885bd5b98a0c1ba61f28634600",
+      "actual": "3a801e043941a1a6ad0c439e26168535df2034885bd5b98a0c1ba61f28634600",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/contexts/contexts-legacy-c-01.md",
+      "expected": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "actual": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/locks/legacy-c-01.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/run-legacy-c-01-spec-r1.json",
+      "expected": "18e4d41742c311509645672f845bfe89a51c2ebd113dbc8870bf871a2db90c61",
+      "actual": "18e4d41742c311509645672f845bfe89a51c2ebd113dbc8870bf871a2db90c61",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/specs/specs-legacy-c-01.md",
+      "expected": "a88e4aefa56845dc1727b235a4550ec5d40333d57569565fd91d9213948cc001",
+      "actual": "a88e4aefa56845dc1727b235a4550ec5d40333d57569565fd91d9213948cc001",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/tickets/tickets-legacy-c-01.md",
+      "expected": "71056bda201df6296b7cccb256bf3d0402b6f0e4c3e1f6accdbc669272a3cc8c",
+      "actual": "71056bda201df6296b7cccb256bf3d0402b6f0e4c3e1f6accdbc669272a3cc8c",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/contexts/contexts-legacy-d-01.md",
+      "expected": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "actual": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/locks/legacy-d-01.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json",
+      "expected": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "actual": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/e9d496eab8b8465f861a4e903a2eff316c8ea207b3a6ab4b991c99a91ab4de67.json",
+      "expected": "29f75df5b8f0c2cbcfc22bc41da2a9f51053f5032ce284c73d04a70fbd171ad5",
+      "actual": "29f75df5b8f0c2cbcfc22bc41da2a9f51053f5032ce284c73d04a70fbd171ad5",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-results/4ee325b1bba83eb08622d2416e2298bf.json",
+      "expected": "0f99df10673b967c3c8a1a54f76b5aa50beec61a7982c410cf055072eb8f325d",
+      "actual": "0f99df10673b967c3c8a1a54f76b5aa50beec61a7982c410cf055072eb8f325d",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-snapshots/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.json",
+      "expected": "514b0f1d73af2f4e6acc0f891186fe5c08c6c9153a02eacd6d47f5c28104034f",
+      "actual": "514b0f1d73af2f4e6acc0f891186fe5c08c6c9153a02eacd6d47f5c28104034f",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/specs/specs-legacy-d-01.md",
+      "expected": "5b4cad5073f8d44904b84b1b5d7f5c1c47bf14606f482dc0898c538b4d707949",
+      "actual": "5b4cad5073f8d44904b84b1b5d7f5c1c47bf14606f482dc0898c538b4d707949",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/tickets/tickets-legacy-d-01.md",
+      "expected": "a210c9a9272baa88c16d846c705fe2d242b2ae5b6e7220c55fe592657ed6262a",
+      "actual": "a210c9a9272baa88c16d846c705fe2d242b2ae5b6e7220c55fe592657ed6262a",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/contexts/contexts-legacy-e-01.md",
+      "expected": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "actual": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/lifecycle-transactions/.my-matt-ownership.json",
+      "expected": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "actual": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-01.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-02.lock",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-01-spec-r1.json",
+      "expected": "cbf2c44b9f5108a2bad6d48747b217de1949c85ab44d3b34e1d3af552be31558",
+      "actual": "cbf2c44b9f5108a2bad6d48747b217de1949c85ab44d3b34e1d3af552be31558",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-02-spec-r1.json",
+      "expected": "4a44609a5514bb7968553fed996737ba69290a9c4aae2ceff6b4993e046005cc",
+      "actual": "4a44609a5514bb7968553fed996737ba69290a9c4aae2ceff6b4993e046005cc",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/specs/specs-legacy-e-01.md",
+      "expected": "5cca50d8569089d03544122fc991065d72bb28b8eb2192c6a67723c3906fe551",
+      "actual": "5cca50d8569089d03544122fc991065d72bb28b8eb2192c6a67723c3906fe551",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-01.md",
+      "expected": "9536956876e566757dee9d9a0058205453ec78d150fbbd39596f530fd79393b1",
+      "actual": "9536956876e566757dee9d9a0058205453ec78d150fbbd39596f530fd79393b1",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md",
+      "expected": "5fad145b5705c526b492b10755f81c4d20a05a38d1d0ead19fcf82b8e2fd7053",
+      "actual": "5fad145b5705c526b492b10755f81c4d20a05a38d1d0ead19fcf82b8e2fd7053",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/.gitignore",
+      "expected": "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793",
+      "actual": "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/AGENTS.md",
+      "expected": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+      "actual": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/app.py",
+      "expected": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "actual": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/legacy_project/test_app.py",
+      "expected": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "actual": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/matt-workflow.md",
+      "expected": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "actual": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/specs/specs-turn-closure-01.md",
+      "expected": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "actual": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md",
+      "expected": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "actual": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md",
+      "expected": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "actual": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/AGENTS.md",
+      "expected": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "actual": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/app.py",
+      "expected": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "actual": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/review.py",
+      "expected": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "actual": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/unfinished_session/test_app.py",
+      "expected": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "actual": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/workflow_simplification/v2_needs_user.json",
+      "expected": "b8d9832a41030babf52e391214ce2e03a428fd3be776f4ec0b0718ac1780997b",
+      "actual": "b8d9832a41030babf52e391214ce2e03a428fd3be776f4ec0b0718ac1780997b",
+      "match": true
+    },
+    {
+      "path": "tests/fixtures/writing_great_skills_wording.json",
+      "expected": "87f28b236e7bcde665da11d4b5b77858819b3b7d0ee85f6f43eb09066a5ed7ff",
+      "actual": "87f28b236e7bcde665da11d4b5b77858819b3b7d0ee85f6f43eb09066a5ed7ff",
+      "match": true
+    },
+    {
+      "path": "tests/test_batches.py",
+      "expected": "806ec771fa7f6d76709b3d55f24c52b9c94af5579b783ee23fd3126141b95d9b",
+      "actual": "806ec771fa7f6d76709b3d55f24c52b9c94af5579b783ee23fd3126141b95d9b",
+      "match": true
+    },
+    {
+      "path": "tests/test_completion_compensation.py",
+      "expected": "97bb32afe0d4a9397dbd05c2c526e9f31579742ad714c5d5457eaf5d1c9a1e0f",
+      "actual": "97bb32afe0d4a9397dbd05c2c526e9f31579742ad714c5d5457eaf5d1c9a1e0f",
+      "match": true
+    },
+    {
+      "path": "tests/test_composition.py",
+      "expected": "403ea7d4b8554b8d8c984299b7b5e4e983265670379d27befe0e7833e6d3d560",
+      "actual": "403ea7d4b8554b8d8c984299b7b5e4e983265670379d27befe0e7833e6d3d560",
+      "match": true
+    },
+    {
+      "path": "tests/test_design_contract.py",
+      "expected": "9d138b59dbcb6dc3ad7e67e4f8ee719c6a5efefd8e4e46ad1a4470aa6964119f",
+      "actual": "9d138b59dbcb6dc3ad7e67e4f8ee719c6a5efefd8e4e46ad1a4470aa6964119f",
+      "match": true
+    },
+    {
+      "path": "tests/test_doctor.py",
+      "expected": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "actual": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+      "match": true
+    },
+    {
+      "path": "tests/test_final_integration.py",
+      "expected": "d7cccb691855cfce0b331fbf32d10c34543de009ffaac5a646af120dbbd674b2",
+      "actual": "d7cccb691855cfce0b331fbf32d10c34543de009ffaac5a646af120dbbd674b2",
+      "match": true
+    },
+    {
+      "path": "tests/test_implement_finish.py",
+      "expected": "1efb64e7053793a800c43bc76fd5ce5d20dccf6eb0766bded3ef05ef9204dc8e",
+      "actual": "1efb64e7053793a800c43bc76fd5ce5d20dccf6eb0766bded3ef05ef9204dc8e",
+      "match": true
+    },
+    {
+      "path": "tests/test_implement_lifecycle.py",
+      "expected": "7fdecc40927cb9e7700c21766450392c155707a698c912d5099e268efa73b6cd",
+      "actual": "7fdecc40927cb9e7700c21766450392c155707a698c912d5099e268efa73b6cd",
+      "match": true
+    },
+    {
+      "path": "tests/test_implement_review.py",
+      "expected": "447126520675c96f171ec72b15ae39a6f5c40800cce998240e3ec3b07b1ec52b",
+      "actual": "447126520675c96f171ec72b15ae39a6f5c40800cce998240e3ec3b07b1ec52b",
+      "match": true
+    },
+    {
+      "path": "tests/test_install_simplification.py",
+      "expected": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd",
+      "actual": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd",
+      "match": true
+    },
+    {
+      "path": "tests/test_migration.py",
+      "expected": "ff170abb159da3a273857886612286ce447d828e3a687a006b87a10079e96d7d",
+      "actual": "ff170abb159da3a273857886612286ce447d828e3a687a006b87a10079e96d7d",
+      "match": true
+    },
+    {
+      "path": "tests/test_portfolio.py",
+      "expected": "5f2602143c99faf8e1a856601e495d1575331c199c74425c8c26c5c13428fadc",
+      "actual": "5f2602143c99faf8e1a856601e495d1575331c199c74425c8c26c5c13428fadc",
+      "match": true
+    },
+    {
+      "path": "tests/test_quality_metrics.py",
+      "expected": "7c1d9d430f46accbc1acfe7f3ed4d68dac23e7ab9f0229ae63fa64d69f6ff1a5",
+      "actual": "7c1d9d430f46accbc1acfe7f3ed4d68dac23e7ab9f0229ae63fa64d69f6ff1a5",
+      "match": true
+    },
+    {
+      "path": "tests/test_repository_configuration.py",
+      "expected": "6d2b2d4f9bd1447c0522dbc6cd0b00a36601303a58c4c6308302ffe1d7a9f1e9",
+      "actual": "6d2b2d4f9bd1447c0522dbc6cd0b00a36601303a58c4c6308302ffe1d7a9f1e9",
+      "match": true
+    },
+    {
+      "path": "tests/test_resources.py",
+      "expected": "14df4870ac5f333729359ab337ada3c033402356607aeac6492a777c9469610b",
+      "actual": "14df4870ac5f333729359ab337ada3c033402356607aeac6492a777c9469610b",
+      "match": true
+    },
+    {
+      "path": "tests/test_review_findings.py",
+      "expected": "f489f4ed6b8434876f52c2c5ea8b79df79d8cafd36314873d47439ef05ef2918",
+      "actual": "f489f4ed6b8434876f52c2c5ea8b79df79d8cafd36314873d47439ef05ef2918",
+      "match": true
+    },
+    {
+      "path": "tests/test_review_resolution.py",
+      "expected": "2e4aab5d309c2776edc6c6eca5899fb3f8d70dd906c56c2724df30da4058357e",
+      "actual": "2e4aab5d309c2776edc6c6eca5899fb3f8d70dd906c56c2724df30da4058357e",
+      "match": true
+    },
+    {
+      "path": "tests/test_review_snapshot.py",
+      "expected": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "actual": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+      "match": true
+    },
+    {
+      "path": "tests/test_security_hardening.py",
+      "expected": "edf421fb0aaf4279fc7584b78713fb63aedee5be221bdd1715e23a112232cd6d",
+      "actual": "edf421fb0aaf4279fc7584b78713fb63aedee5be221bdd1715e23a112232cd6d",
+      "match": true
+    },
+    {
+      "path": "tests/test_skill_packaging_v2.py",
+      "expected": "39d992651003039d7fbb1ad8912bafce1ff4090dedc3f9be52060a6a98255745",
+      "actual": "39d992651003039d7fbb1ad8912bafce1ff4090dedc3f9be52060a6a98255745",
+      "match": true
+    },
+    {
+      "path": "tests/test_teach_quality.py",
+      "expected": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "actual": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+      "match": true
+    },
+    {
+      "path": "tests/test_text_measurement.py",
+      "expected": "73b913d434558ff597b8986f2ca82f411e60c8e6aca4c7c6423c3927a7acf292",
+      "actual": "73b913d434558ff597b8986f2ca82f411e60c8e6aca4c7c6423c3927a7acf292",
+      "match": true
+    },
+    {
+      "path": "tests/test_topic_branch.py",
+      "expected": "8e9cc846acd49d5857c33d328a6f7b90e0b96213287e24885df66faaa1a0c085",
+      "actual": "8e9cc846acd49d5857c33d328a6f7b90e0b96213287e24885df66faaa1a0c085",
+      "match": true
+    },
+    {
+      "path": "tests/test_topic_lifecycle.py",
+      "expected": "f05aafcd8ae9e7ea63ac40adec9e524660b2a4f762ebc7adde1b2871449ba04c",
+      "actual": "f05aafcd8ae9e7ea63ac40adec9e524660b2a4f762ebc7adde1b2871449ba04c",
+      "match": true
+    },
+    {
+      "path": "tests/test_workflow.py",
+      "expected": "356629829d3b0a444f7f3c65b1f7dee8604e2521b5814f7916ab47ec6f47e80d",
+      "actual": "356629829d3b0a444f7f3c65b1f7dee8604e2521b5814f7916ab47ec6f47e80d",
+      "match": true
+    },
+    {
+      "path": "tests/test_workflow_baseline.py",
+      "expected": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "actual": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+      "match": true
+    },
+    {
+      "path": "tests/test_workflow_texts_v2.py",
+      "expected": "74f23f26e73e246aea63a17048accbee29d2922af7eff732e6e6cc370c576a30",
+      "actual": "74f23f26e73e246aea63a17048accbee29d2922af7eff732e6e6cc370c576a30",
+      "match": true
+    },
+    {
+      "path": "tools/__init__.py",
+      "expected": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "actual": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+      "match": true
+    },
+    {
+      "path": "tools/capture_legacy_fixtures.py",
+      "expected": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "actual": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+      "match": true
+    },
+    {
+      "path": "tools/capture_workflow_baseline.py",
+      "expected": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "actual": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+      "match": true
+    },
+    {
+      "path": "tools/workflow.py",
+      "expected": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296",
+      "actual": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/__init__.py",
+      "expected": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "actual": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/artifact_review.py",
+      "expected": "a52ed3ba1df0808e73237e5cc730e3d2b99e18cf039bb5f4c499c57f662d21d9",
+      "actual": "a52ed3ba1df0808e73237e5cc730e3d2b99e18cf039bb5f4c499c57f662d21d9",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/batches.py",
+      "expected": "cf24cd1d39ade17e753eb2c5f6d427a9df158df426aa94b13947debb616eed3b",
+      "actual": "cf24cd1d39ade17e753eb2c5f6d427a9df158df426aa94b13947debb616eed3b",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/branch_review.py",
+      "expected": "aac5917d511c0261ccfda1495e2d6c9f36b52de08fddee5cc55f24021360bda9",
+      "actual": "aac5917d511c0261ccfda1495e2d6c9f36b52de08fddee5cc55f24021360bda9",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/check.py",
+      "expected": "3e84bda07cabeed39ab0b34dbc2fb2cc75d0ca7c930dccaf61107d44bed9d7c3",
+      "actual": "3e84bda07cabeed39ab0b34dbc2fb2cc75d0ca7c930dccaf61107d44bed9d7c3",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/composition.py",
+      "expected": "945db06cce95bc99c952aaf13ccf0b3f64fc06e4c1b76917965328d11b5697bd",
+      "actual": "945db06cce95bc99c952aaf13ccf0b3f64fc06e4c1b76917965328d11b5697bd",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/doctor.py",
+      "expected": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+      "actual": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/evidence.py",
+      "expected": "234cd85c82c5830be90c27358f6de401e431da1efe9367088c3f612483b715ad",
+      "actual": "234cd85c82c5830be90c27358f6de401e431da1efe9367088c3f612483b715ad",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/fs_safety.py",
+      "expected": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "actual": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/installer.py",
+      "expected": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+      "actual": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/metrics.py",
+      "expected": "724c19e3c0ac648f14706ed2beec48b02c37c1e8215ba13b9adaa86fa8b73578",
+      "actual": "724c19e3c0ac648f14706ed2beec48b02c37c1e8215ba13b9adaa86fa8b73578",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/migration.py",
+      "expected": "0af15d2ca5da47e663b4ad740aa3a1e8d575967133354e6514d485518cb273d4",
+      "actual": "0af15d2ca5da47e663b4ad740aa3a1e8d575967133354e6514d485518cb273d4",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/projection.py",
+      "expected": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+      "actual": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/quality_metrics.py",
+      "expected": "99432dce2124f00753fca5ebf57c54bab9e9b58ff4fd7c89ff8523e0e8bdaaef",
+      "actual": "99432dce2124f00753fca5ebf57c54bab9e9b58ff4fd7c89ff8523e0e8bdaaef",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/release.py",
+      "expected": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b",
+      "actual": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/release_references.py",
+      "expected": "f42cb6063848f2357da3405c6944441f216dc21dc53b5e0d808b4e7d29f56792",
+      "actual": "f42cb6063848f2357da3405c6944441f216dc21dc53b5e0d808b4e7d29f56792",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/resource_governance.py",
+      "expected": "4b1901a440cdcebeb62feae03bba2c0bcf51edda1a90d00267ee9c3c758b1466",
+      "actual": "4b1901a440cdcebeb62feae03bba2c0bcf51edda1a90d00267ee9c3c758b1466",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/resources.py",
+      "expected": "1088648b3f65cd849f3b79c926af36ef35eb34c627e685d51d522f4b69c0a075",
+      "actual": "1088648b3f65cd849f3b79c926af36ef35eb34c627e685d51d522f4b69c0a075",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/review_loop.py",
+      "expected": "2bdf16ac7c3a19158f00e24c50b5cbdb48319bca01091e5da489bc22f97b104f",
+      "actual": "2bdf16ac7c3a19158f00e24c50b5cbdb48319bca01091e5da489bc22f97b104f",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/review_snapshot.py",
+      "expected": "69809a420b4f19296c7442b90b97131199d15161ad1b2fed3bf9bc2f1004dcbb",
+      "actual": "69809a420b4f19296c7442b90b97131199d15161ad1b2fed3bf9bc2f1004dcbb",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/rules.py",
+      "expected": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "actual": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/source_walker.py",
+      "expected": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "actual": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/status_text.py",
+      "expected": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+      "actual": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/text_measurement.py",
+      "expected": "e47fa8942b8caf04eb3fc5e24ea217928d30d49318cd8cdf4523b7168bc1a7eb",
+      "actual": "e47fa8942b8caf04eb3fc5e24ea217928d30d49318cd8cdf4523b7168bc1a7eb",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/ticket_completion.py",
+      "expected": "628abf9eaae2012cc0146a630c3d1b8bb88e470513cce571179116d5fe88fbf0",
+      "actual": "628abf9eaae2012cc0146a630c3d1b8bb88e470513cce571179116d5fe88fbf0",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/ticket_implementation.py",
+      "expected": "706132113ce957c9214ce0bd44ba74a6943d35e48c5b1de2c6d3c20d8124d40e",
+      "actual": "706132113ce957c9214ce0bd44ba74a6943d35e48c5b1de2c6d3c20d8124d40e",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/ticket_resolution.py",
+      "expected": "ca621ba9cf380026fc7bc74f52bbb0b51d8d44d838d1d0eca9b7c644ec5964ef",
+      "actual": "ca621ba9cf380026fc7bc74f52bbb0b51d8d44d838d1d0eca9b7c644ec5964ef",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/ticket_review.py",
+      "expected": "32bd7a9ae384e79c869d1aeeeeae97962df44c22ee9c0540a022b7c771badc32",
+      "actual": "32bd7a9ae384e79c869d1aeeeeae97962df44c22ee9c0540a022b7c771badc32",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/tickets.py",
+      "expected": "2785018e89410fff350e1af8b95204eb408d5bb39fb43127a6a3fa678830c19f",
+      "actual": "2785018e89410fff350e1af8b95204eb408d5bb39fb43127a6a3fa678830c19f",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/topic_service.py",
+      "expected": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0",
+      "actual": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0",
+      "match": true
+    },
+    {
+      "path": "tools/workflow_lib/validator.py",
+      "expected": "a9b0515c0607d4367257a6746518cb86ed9b73af75f13c53a19ad02ab20090e2",
+      "actual": "a9b0515c0607d4367257a6746518cb86ed9b73af75f13c53a19ad02ab20090e2",
+      "match": true
+    }
+  ],
+  "tree": {
+    "source-manifest.json": "663a55c183586d85c23f323473b8fc943e8b53558516e688ca11b947349ea187",
+    "repair.patch": "d3dd9c13bb3d1f36dd0c01dd87f393636ce427572be0ebd25f24de24d1f79f6d",
+    "README.md": "9fa2bea856aa301245bdb88471e66b9e13242ac1f17346c2f1ab13c574552b68",
+    "prior-findings.md": "4e9dfe3d52493ab61782d22a3ef0a377d68a95ccad9df25a8cf93778a950f270",
+    ".gitignore": "a4df0a46bd782e4e160dabf74811d312e0bd4151fb0de2d948fe4fbcf7c98cf7",
+    "tools/capture_workflow_baseline.py": "0cf2441181314d434a207148ff915bd92a38da3e37f8fd2a8be04dcfd05eed35",
+    "tools/capture_legacy_fixtures.py": "1a06db1900d7150fd372f432ac8c401b22089a233f00d3dd40b268be87f139c8",
+    "tools/__init__.py": "3f2fe68852c930e73460abd7f046b3bc1da99179417f0924ddcb8157d5886e3d",
+    "tools/workflow.py": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296",
+    "resources/agent-rule-applicability.md": "84735f1dd6edabb0d332b20abb2fb6e03c6b55486397c281eac77300bd4949a7",
+    "resources/artifact-finalization.md": "b0a66530e067d6afc3d6b40a244c9a3dfe7df90ad54f75fb7fbeea49b02f75c8",
+    "resources/research-method.md": "dd02cc9a1e5b2b44fbb92f711c3cecea53eea021bcf1e5db80a8d798170cc498",
+    "resources/first-principles-reasoning.md": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6",
+    "resources/humanizer.md": "355ce3ea279dc1bcae53b5f91352c730dab9f9d61c8d1cb1afcebb93deccde03",
+    "resources/workflow-delivery.md": "a5f20351448f5354b1b9130ea79648b1e0426f5bc26d8899bb33b68e7028d287",
+    "resources/document-rendering.md": "e275638dd8d0a416df83c856f7b756b9b236a402e9f824506c7f01c92bcba079",
+    "resources/testing-seams.md": "087dda72071c4ff71bc02f0b1e57a629a5972bccc90988d987bd93ae2a2d2c59",
+    "resources/requirement-analysis.md": "2f999b2c35466798f6b2ba0c5177bfa07fc9d401880ef8ff683ed786b4158b7a",
+    "resources/project-rule-review.md": "299656c047e3bfd132790735aac05cdc02ed12b042b91658eb0a168a72d4403b",
+    "resources/user-intervention.md": "166c1b90d9e83998467f2874b6fc96a8b23ac6d28b58318618a2ba3901c7377a",
+    "resources/final-state-writing.md": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7",
+    "resources/instruction-authority.md": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2",
+    "resources/manifest.json": "779ad5ff8233710c95e8b35cabca98b9b6d04fda2d9c2002d5ae42ad820d104b",
+    "resources/reader-first-writing.md": "1437abbb3958bea066dfeb3e033eedfafe39c3fcfcd7bccf1c80853ae4fd8eb1",
+    "resources/governance.json": "09ba672789ef3231c2f9113e8b9e92b417755135a7cb0e2d5c9f56bcd21f9bba",
+    "resources/requirement-reviewer-brief.md": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a",
+    "resources/review-loop.md": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+    "resources/visual-communication.md": "d40e6542f4a4646cec595ba39db7eb9c73998b8012cc905a41183af880a6f5e5",
+    "tests/test_review_resolution.py": "2e4aab5d309c2776edc6c6eca5899fb3f8d70dd906c56c2724df30da4058357e",
+    "tests/test_resources.py": "14df4870ac5f333729359ab337ada3c033402356607aeac6492a777c9469610b",
+    "tests/test_skill_packaging_v2.py": "39d992651003039d7fbb1ad8912bafce1ff4090dedc3f9be52060a6a98255745",
+    "tests/test_review_findings.py": "f489f4ed6b8434876f52c2c5ea8b79df79d8cafd36314873d47439ef05ef2918",
+    "tests/test_repository_configuration.py": "6d2b2d4f9bd1447c0522dbc6cd0b00a36601303a58c4c6308302ffe1d7a9f1e9",
+    "tests/test_install_simplification.py": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd",
+    "tests/test_portfolio.py": "5f2602143c99faf8e1a856601e495d1575331c199c74425c8c26c5c13428fadc",
+    "tests/test_final_integration.py": "d7cccb691855cfce0b331fbf32d10c34543de009ffaac5a646af120dbbd674b2",
+    "tests/test_doctor.py": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+    "tests/test_text_measurement.py": "73b913d434558ff597b8986f2ca82f411e60c8e6aca4c7c6423c3927a7acf292",
+    "tests/test_migration.py": "ff170abb159da3a273857886612286ce447d828e3a687a006b87a10079e96d7d",
+    "tests/test_completion_compensation.py": "97bb32afe0d4a9397dbd05c2c526e9f31579742ad714c5d5457eaf5d1c9a1e0f",
+    "tests/test_implement_review.py": "447126520675c96f171ec72b15ae39a6f5c40800cce998240e3ec3b07b1ec52b",
+    "tests/test_composition.py": "403ea7d4b8554b8d8c984299b7b5e4e983265670379d27befe0e7833e6d3d560",
+    "tests/test_workflow.py": "356629829d3b0a444f7f3c65b1f7dee8604e2521b5814f7916ab47ec6f47e80d",
+    "tests/test_workflow_baseline.py": "66ec24dc7a107c43ccd5045956406e9fbe8a98f9bc95ef42d5e0ee2f9260b1a2",
+    "tests/test_teach_quality.py": "f5fcb82bd5e6aae089ec0319f2c8ddcc9142404f57ee2fa15dfacdfbac37f91b",
+    "tests/test_design_contract.py": "9d138b59dbcb6dc3ad7e67e4f8ee719c6a5efefd8e4e46ad1a4470aa6964119f",
+    "tests/test_review_snapshot.py": "b7a30955290c3ef0f541390b67296a3464b35cd69cebd10e2d58d2b0f288c5d2",
+    "tests/test_topic_lifecycle.py": "f05aafcd8ae9e7ea63ac40adec9e524660b2a4f762ebc7adde1b2871449ba04c",
+    "tests/test_topic_branch.py": "8e9cc846acd49d5857c33d328a6f7b90e0b96213287e24885df66faaa1a0c085",
+    "tests/test_implement_lifecycle.py": "7fdecc40927cb9e7700c21766450392c155707a698c912d5099e268efa73b6cd",
+    "tests/test_quality_metrics.py": "7c1d9d430f46accbc1acfe7f3ed4d68dac23e7ab9f0229ae63fa64d69f6ff1a5",
+    "tests/test_security_hardening.py": "edf421fb0aaf4279fc7584b78713fb63aedee5be221bdd1715e23a112232cd6d",
+    "tests/test_workflow_texts_v2.py": "74f23f26e73e246aea63a17048accbee29d2922af7eff732e6e6cc370c576a30",
+    "tests/test_implement_finish.py": "1efb64e7053793a800c43bc76fd5ce5d20dccf6eb0766bded3ef05ef9204dc8e",
+    "tests/test_batches.py": "806ec771fa7f6d76709b3d55f24c52b9c94af5579b783ee23fd3126141b95d9b",
+    "composition/manifest.json": "5f8862c37dd8fd74180762eec0df72a23a9ba06a32abafdbf1b245c1638fd11e",
+    "policies/enterprise-safety.md": "7dd0ea2a9f0a2b087ce5fcabaef1604711ff50d3509cd4a470734d32a4e0ddc7",
+    "policies/merge-conflict-approval.md": "75d6810b291934d656e83e1c4162f784cf02f5e9f89896625c9ca73624ac460b",
+    "policies/context-hygiene.md": "efc0202a6b29828d7e7a07b21eec8592463deaa5bd7c76641c2e55cef44d6352",
+    ".agent/matt-workflow.md": "ecaa6172267800759ea629f248889b80eaa62d5c8ddc7652aa9648387ebea884",
+    "chatgpt/custom-instructions.md": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778",
+    "skills/my-handoff/SKILL.md": "de341c5238f09cfb031ba6e9f320b076be6fb5af3ef611379fe31215c725014e",
+    "skills/my-grill-with-docs/SKILL.md": "f70ea1f06ae438bee5d922e58e989907bf51357b9fa3ee65d92f79f674f67a65",
+    "skills/my-to-spec/SKILL.md": "5b19e76ca24563183ffb94095d2b70d87b0bf9ae39655c02a48efb52a4790c5d",
+    "skills/my-resolving-merge-conflicts/SKILL.md": "6b1a3148bd17c9e887be8bc7a4dd021d122c3b0b2f768e1209f175da57722f12",
+    "skills/my-humanizer/PATTERNS.md": "c4edd6fd174fbf19be784bef84c07cb03070f0be09f0373073461da9b57d1f31",
+    "skills/my-humanizer/SKILL.md": "75494db8e6aa7765bd8bcbf9ecc382d6e0c561b583a6581343d560dfbeed7061",
+    "skills/my-review-design/SKILL.md": "1445ad92d36a0b7b68d3e18e881d0e6866bb2418404c306e310ea0946c46692c",
+    "skills/my-review-instructions/SKILL.md": "9acf86ddc8125cd3d2b354f60e38f42541d6b6db4758b59135cfcb080efaf9e6",
+    "skills/my-implement/SKILL.md": "f9d1217c765a9fd1338d0f4a03547e2df0f3c535f3eaeac0474dd910e2c54a49",
+    "skills/my-setup/SKILL.md": "a95152aa945908e4400c547c9a4cc5cc131b142a5dfa403d283903ae68027d21",
+    "skills/my-install/SKILL.md": "5a9950821da4412dca302cdb7c14de6eeb28c73309d2536fb8b86d685ffbeff4",
+    "skills/my-grill-me/SKILL.md": "55ca97cca398f50e9d339063449a3c1895be2df287513b8d41a52f0caa5ff6fc",
+    "skills/my-grilling/SKILL.md": "fa2f8ac201f67ac676095efb08e09d846a1f2321284b5c864e537efe2a339276",
+    "skills/my-writing-for-agents/GLOSSARY.md": "29c26642f05482bc81176bf7e434ed4d0b5b9b28106ea5ccabc9effb7abe1ad1",
+    "skills/my-writing-for-agents/SKILL.md": "3022371cdc703ee3c9e7a34554dc1f18c3246674b985025920189982a524a292",
+    "skills/my-review-artifact/SKILL.md": "7a3294e587a55efbebf34b4b824096932a5da008aeaee7b452951ebb81a4c0df",
+    "skills/my-research/SKILL.md": "16bd12f202a84c6054e531a2ab2f6013d6295a843b5b48cbfa5027618c26ee12",
+    "skills/my-prototype/SKILL.md": "9dbb4c403c649501d3b7f2586779289df23cbf38797366edfde8773e3049b61a",
+    "skills/my-prototype/LOGIC.md": "01cd1dcba84c7bff546186b9eec386371b09e20b2718e5685833b497360511c2",
+    "skills/my-prototype/UI.md": "9ecd786fbe7363e5a29832af86e23a058183103d44a2730fe241e72e33a96dcf",
+    "skills/my-code-review/SKILL.md": "730c1139700bfedb412c6a8c888697082968880643c5ea0612146d2fddd4abb2",
+    "skills/my-to-tickets/TICKET-FORMATS.md": "fdc7a92609c355660b6ccf010b3990b9802d0f9d82ca408f4ddcfe5c0b642ef4",
+    "skills/my-to-tickets/SKILL.md": "01b660496f862269734115b6be25f815ac9cff174f1989d23aa7860bb8dc3652",
+    "skills/my-tech-design/CONTENT.md": "d6007bacfafba8dea0f4578dd90e19bd9a6073d679c860a82646cb0c181aae4d",
+    "skills/my-tech-design/SKILL.md": "2b0b695766d1dddaa6d04ee2e14791824a265d2a535e5c3b53140481f630d49f",
+    "skills/my-tech-design/FRONTEND.md": "36b8e8ce61e915782048ddbc7a4ba9fecb22edfa46cbb5222783245a4cec8611",
+    "skills/my-tdd/mocking.md": "672be095a8663b2e21922882ad48d50889d1a9a0277eaa86a30fe76d1bd2bd2d",
+    "skills/my-tdd/tests.md": "918a6875acb3d81ea08c8718359c908ff82c0c7da0569c84840e167b11f93f91",
+    "skills/my-tdd/SKILL.md": "fab6c7c3e66e6a5e7fa3d8c8bdf4992a179693d3ab8e90c5149f82540bba2284",
+    "skills/my-to-questionnaire/SKILL.md": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9",
+    "skills/my-domain-modeling/SKILL.md": "69df2491a9dbda1f04b52617980f4dc306a69d9a200e007a5a19c2636326ba81",
+    "skills/my-domain-modeling/CONTEXT-FORMAT.md": "d7587b1a6154767d934b38a82341ef5acad9733fdcd76a3707559f394245909c",
+    "skills/my-domain-modeling/ADR-FORMAT.md": "d788c9f024148ae86d671540a44b43ef343b2e2ab0eb700f500450b7fa090ead",
+    "skills/my-teach/MISSION-FORMAT.md": "34795a146494816b55a6ef7d83c62624e14f59b599850f02fce59944d3751947",
+    "skills/my-teach/RESOURCES-FORMAT.md": "e66202357468ab6d49a0c9ba911adf1ca5de2f8eafbb6bf3f8d363f378b6e3b6",
+    "skills/my-teach/CONTENT.md": "625eed46584e25d2ce3c9905672e733bfb7a7ce856408a0eb0c4f6d1d9c53be0",
+    "skills/my-teach/LEARNING-RECORD-FORMAT.md": "199a482e092be0e19ed58e6000b7aac5b6dacb392d7f36a135ff9d5530fe0e61",
+    "skills/my-teach/GLOSSARY-FORMAT.md": "0adaa5a845dfcc1af249c44d35f430d8f4874a35a749c72dde933fad1c674900",
+    "skills/my-teach/SKILL.md": "3eaa0d9e13a3d50bc0b7cc044e9c1f36f73d816199d235c13c1415417eb36c6d",
+    "skills/my-teach/FRONTEND.md": "83a8edbcb58d3f8c18eee07a3e1b5d42ce6160a618c6344595d4009729e558e3",
+    "skills/my-improve-codebase-architecture/CONTENT.md": "9d12c0e0f6b67e5528508c64a5abfe2767df00bd2cc868e0634e923a1b270336",
+    "skills/my-improve-codebase-architecture/SKILL.md": "f0616db5cc4789737d842b4fca94554e4aa81938d6516b555641784f0b372c3e",
+    "skills/my-improve-codebase-architecture/HTML-REPORT.md": "f575dd4cdc0879ddca7548168cc445f1a03fe801daae3cd96cf7084c281cea50",
+    "skills/my-improve-codebase-architecture/FRONTEND.md": "18f1f95e14e10108e33254af145b1ebe246d5783109f53ef67ad3f252845b4d2",
+    "skills/my-edit-article/SKILL.md": "5a019a30469c614385c2bb022792592f63abe3c28e42d71d60c6f6f0db9d2a8b",
+    "skills/my-wayfinder/SKILL.md": "84dbd89b94da30f83f441bd4414b9431f37faaf09395a248aa9538438d294c19",
+    "skills/my-codebase-design/DESIGN-IT-TWICE.md": "53add89fcd450aab37ba3f017dad8dfcd3c261b1692ecc3684551d534bfb056c",
+    "skills/my-codebase-design/SKILL.md": "de67ce60da000788508a31efd64d3ff6653148adf2dd08111662177db95b54ce",
+    "skills/my-codebase-design/DEEPENING.md": "9db1ed0ea12e496f7b1095b3fcc9643285a24a895760ed8884079322bf74d7eb",
+    "skills/my-ask-matt/SKILL.md": "f3629292f9d7e34efd97e80049eeb83f03dd63ef8648bbf595303b409e8be5a7",
+    "skills/my-triage/OUT-OF-SCOPE.md": "c648d352111e3bdf146bd1136799b946946082455adcce3d90508c504bc6d14a",
+    "skills/my-triage/SKILL.md": "4eb8771cd59c8911d7705753e3c00beb237d5bc6126074d794543fdcaeb0c9bb",
+    "skills/my-triage/AGENT-BRIEF.md": "a80a8c7584d68e531a527f48b48b72ccdfb8d9c444f799d804fe8d1e2c5b6fdd",
+    "skills/my-wizard/template.sh": "4ebf795271ea5be1326e42de60608ab5f01dd6e070ee6d16168e618dca70a14f",
+    "skills/my-wizard/SKILL.md": "2b774fed78f27ac27739cec0525437fba839eafd1ce8aafb2ed319183b757ed7",
+    "skills/my-diagnosing-bugs/SKILL.md": "e75f96452b943bd05281b6481993ad29fca10c981fa42939b79d16f0003c75ef",
+    "skills/my-test-report/SKILL.md": "6449bee33d2189b9ed30eb80f831883e94d5c1ff5601df0363fb6e345b279ca8",
+    "skills/my-test-report/agents/openai.yaml": "7a384f6b6006e54ba591e79090e11f72d7db406eba3a2750e2b4ddee1e40a8a7",
+    "skills/my-diagnosing-bugs/references/feedback-methods.md": "f859e0d9609f4ee14208615026147d21c7faa61c80aaaee7244ef1666ff7a55d",
+    "skills/my-diagnosing-bugs/agents/openai.yaml": "aeffa835f10b859e8a77d73d632c6c133f0123377302ff722204b84a047e7ce8",
+    "skills/my-diagnosing-bugs/scripts/hitl-loop.template.sh": "b23d8dfc8c25bdd98f199252f20ed89d5bb946eaef2397b42c3f60c648781eb6",
+    "skills/my-wizard/agents/openai.yaml": "32eedcaeba41943b1c4dea47e9a4f1604d8f6ec630652a6a64b08d24c8b9db86",
+    "skills/my-triage/agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c",
+    "skills/my-ask-matt/agents/openai.yaml": "bdffbc5a0a99ed1b6ef3253d251d755fd18162b9845972e380007f844b09b05c",
+    "skills/my-codebase-design/agents/openai.yaml": "0ab3aef48940645a2a1ae69f8f630efb03b12e6b1fef531dd7667ee76055d473",
+    "skills/my-wayfinder/references/map-and-ticket-format.md": "35003d20ca4d0129fe2e55fabd84d76db1c81a11dc87aaf16c09e7347f71b73c",
+    "skills/my-wayfinder/agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
+    "skills/my-edit-article/agents/openai.yaml": "4873c8a1310b0159b404b42de01ba069b899dda4a4d2bd214c6881bc6305d45d",
+    "skills/my-improve-codebase-architecture/agents/openai.yaml": "c8cb20f68ebf0edb4e497bc11ae5fcaa196004e661cd189015b04f4109ced7f1",
+    "skills/my-teach/references/course-quality.md": "02a35c583a3f477dc9df782099d590f8be8dee3b6f07eb8f1bb0c23555b944c2",
+    "skills/my-teach/agents/openai.yaml": "d38a4924ccbae2d2ddbb1df048bd9d03b3563d92a52979ef50cf0dfbfbac0273",
+    "skills/my-teach/scripts/check_content.py": "dfeb85cb4c9b1e388fde9e31383cedb10a5936e2bc69fa4d3b9251035850c72a",
+    "skills/my-teach/scripts/check_html.py": "c483ac4649518d788635e8ab66bccdbdea3d39f2935e4acf5722943f87711809",
+    "skills/my-teach/assets/course.js": "86ff93c58bc839f86b3c058eaea6d1056aeb29f78324dea479b27f1fca226de8",
+    "skills/my-teach/assets/TEMPLATE.html": "73bd4eb8c8b432f8a421f50c942b375a964d149e49b0642d4d84fc8af183cb64",
+    "skills/my-teach/assets/course.css": "71f5f1f46135ac3b5e7af445872baaae3985478efe32cdd462324e7b37595895",
+    "skills/my-domain-modeling/agents/openai.yaml": "504d329c7c0bead5d8621ecdc447f7f285ec4900d8977a5fefad9ff949f9599e",
+    "skills/my-to-questionnaire/agents/openai.yaml": "aca15f796eb6ec08144a5ac2f7b92499c3d7d1605b101ee52c1a2421adcff436",
+    "skills/my-tdd/agents/openai.yaml": "c25ebfa7ae11903cbee88880c5221d90fcab1fdab74cda624950881520d6212b",
+    "skills/my-tech-design/agents/openai.yaml": "d8167fd6d59ca1bee2a79f3d1620bd8d131f1befe078ed9101887a5ff62c15d1",
+    "skills/my-tech-design/scripts/check_html.py": "68bde5d8a2ecebbb61f39371eaaa2c0f25d6901993284dffabf44e373b68b071",
+    "skills/my-tech-design/assets/TEMPLATE.html": "84fe7962df9e5bfaf582152c9bf84988acf6e151b9e98fb964b7a2b8580775c4",
+    "skills/my-to-tickets/agents/openai.yaml": "836fa8476e3ab9bc1bcfca13bfbebadf600fba6c6e8b69407a1e8a1f2b9d87b1",
+    "skills/my-code-review/agents/openai.yaml": "a9750905fe9e5d33d65ee5a286fbb6ba727d0200084d83bc6e8cfded0184e3ee",
+    "skills/my-prototype/agents/openai.yaml": "fc7126c462962a94f2ce916b2f51c995b26a0a8aec9f670ae40d43482da15c01",
+    "skills/my-research/agents/openai.yaml": "fd37df5265c46fcb3b199622582b47ba6548d6525f6c0ae7f6453caa873a45dc",
+    "skills/my-review-artifact/agents/openai.yaml": "7acd9b3610f05929004d067765194584d73ed78e53d335e111d7496df56a71d7",
+    "skills/my-writing-for-agents/agents/openai.yaml": "1aff00457e1c6838e0499b7bd8f275760ab03aefbdc70fba84b18c894914e343",
+    "skills/my-grilling/agents/openai.yaml": "6c1322e84f39c2ee04d33e8eac6f28367c9386807c2263c8d20434745e39e615",
+    "skills/my-grill-me/agents/openai.yaml": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b",
+    "skills/my-install/agents/openai.yaml": "695f55f8bcadbd5c539a48d299e16597252692d2ec28bc54e1996f1a5e5fc3c4",
+    "skills/my-setup/agents/openai.yaml": "e3ae4343a3c46e00c1bf630327290b62165713e9abbfff45f20e0994fcca8074",
+    "skills/my-implement/agents/openai.yaml": "7d531e17370288bdf5eabb7a586d7c2de16c21db12afb91873685b6165c88db6",
+    "skills/my-review-instructions/agents/openai.yaml": "df94121f2aeb492bc22ed29dd27e6dc74d520ab69c8d9cab057304a44827e539",
+    "skills/my-review-design/agents/openai.yaml": "8bace5fd51295c6889dd538a47b17b80b53cbccf6e390ef20a0c3055a562dcce",
+    "skills/my-humanizer/agents/openai.yaml": "026777f2a53fed1827286c68a181f04f6f79ffd47fc9ecbcc783da5abcb5427a",
+    "skills/my-resolving-merge-conflicts/agents/openai.yaml": "edcbd709173e6a45d9856a6756dac4333069d11163bf10dbe67a81c3b9469b83",
+    "skills/my-to-spec/agents/openai.yaml": "37828cc6c0f903575798fe17374b0bb6fd28e59bc622d7fb32df76f55946d2b3",
+    "skills/my-grill-with-docs/agents/openai.yaml": "94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9",
+    "skills/my-handoff/agents/openai.yaml": "5c479fd562c691851690e8b18c8501045bef0943c10743d636b2fae26add1d28",
+    ".agent/work/workflow-outcome-optimization/evidence/outcome-evaluation-runbook.md": "13e347257ff1709e03e195ea0c8cc34cce58c0aef694d955ec27b20c5d6f3529",
+    ".agent/work/workflow-outcome-optimization/specs/specs-workflow-outcome-optimization-02.md": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+    ".github/workflows/check.yml": "a5b63441b3260e575dd1930f0ecf243beb04395e68aca1a38109acf20d87512d",
+    "tests/fixtures/task_12_application.json": "b53ddb59bd585a8659959b3c375cd30ea7b7ea9e4586b73bd76eb946b3f2e6d7",
+    "tests/fixtures/codebase_design_order_submission.json": "27c2211f237da6d91c5cddd226ebae56252252fc16d87ef42aeb23571df67777",
+    "tests/fixtures/grilling_application.json": "10020aa94c442a088dbc83730ba21ea9f0ef446767b6148f26dee942ad3318f1",
+    "tests/fixtures/architecture_application.json": "c42bd7cb1f096283c01620e50837edf1d04c2874e49dab05c021d51cd0a5952a",
+    "tests/fixtures/teach_application.json": "38d443b8974aebfe0f61d96ca0e6d8e3b202b15a5fefcef9ec070650877b0890",
+    "tests/fixtures/questionnaire_application.json": "6eec5fa58f0518c297f1ca41bd771ea3c3c0bd6c2e61ca8314287283e46fc430",
+    "tests/fixtures/tdd_application.json": "db90cfd5570807c6ac00626df538ffea4f45e7d201be57344dd75a5105a5cb62",
+    "tests/fixtures/wizard_application.json": "e4f6b2810faae86edfd56b98bc8dc588d8dfb81329acbe3613f97085cb4b276b",
+    "tests/fixtures/writing_great_skills_wording.json": "87f28b236e7bcde665da11d4b5b77858819b3b7d0ee85f6f43eb09066a5ed7ff",
+    "tests/fixtures/domain_modeling_application.json": "e36d4c7c4f006ff20d95cf0ea8d6caf28c5c55935c05047b013ee68f46ce360b",
+    "tests/fixtures/triage_workflow_application.json": "ee096273a61e5a7c35b605a7a5dfc0ecf4fc92a63836b912eb5233ca3d83cec8",
+    "tests/fixtures/workflow_simplification/v2_needs_user.json": "b8d9832a41030babf52e391214ce2e03a428fd3be776f4ec0b0718ac1780997b",
+    "tests/fixtures/workflow_simplification/README.md": "b0470d8b2f32024aabb17076e7bfc85288f1f7ca0a2c8913564ee42e01020585",
+    "tests/fixtures/workflow_simplification/baseline.json": "3cf6ab88c31ae07149b59eeb08aa7f553297ae7a13ebe700c3390b483fdab687",
+    "tests/fixtures/workflow_simplification/generation.json": "7030f0794f5a09bddd93961e7e401726cee6ec83879be88a8f3e493da67a02b0",
+    "tests/fixtures/workflow_simplification/baseline.bundle": "bcf4934e14c3971233c35783867ba1c890d8bc5915aead164cd14c4139c9de0d",
+    "tests/fixtures/workflow_simplification/unfinished_session/review.py": "cf1f784fbd4b073977d62987e2eac7b6430b61eb86788602d07da97e28c3dcca",
+    "tests/fixtures/workflow_simplification/unfinished_session/app.py": "3e1c1e391252f0708f4697150ea00f172405f4b6c03df60029d4617dcb0e2be6",
+    "tests/fixtures/workflow_simplification/unfinished_session/AGENTS.md": "493ab37446be6cd7755f2551d18957b7ce20f3577555d4a9d2a1df92c375ec45",
+    "tests/fixtures/workflow_simplification/unfinished_session/test_app.py": "71aa219267dd57fd7724263cbf1e13585d5d58d75ef0d369a1f6fb48e3938451",
+    "tests/fixtures/workflow_simplification/legacy_project/.gitignore": "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793",
+    "tests/fixtures/workflow_simplification/legacy_project/app.py": "7e058118288906189de1138cc279372b9c03355f300234748cbef5bfd6ac01d6",
+    "tests/fixtures/workflow_simplification/legacy_project/AGENTS.md": "1037ac8cd89094c14062cd902a5621fa57c9732b3f80ae48170ed6f02bef5ae3",
+    "tests/fixtures/workflow_simplification/legacy_project/test_app.py": "8223ccb7498cd0605bb62a1a17ef524f5d6ed796dcb528741c23fa35ae9368ef",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/matt-workflow.md": "86a3fc9f57d725bb9ee42b3f4cb6d7d08d200c9057b8f7d9a4fcffc26fcad1e7",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-d.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-e.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-b.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-c.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/topic-locks/legacy-a.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-01.md": "9536956876e566757dee9d9a0058205453ec78d150fbbd39596f530fd79393b1",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/tickets/tickets-legacy-e-02.md": "5fad145b5705c526b492b10755f81c4d20a05a38d1d0ead19fcf82b8e2fd7053",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/contexts/contexts-legacy-e-01.md": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/specs/specs-legacy-e-01.md": "5cca50d8569089d03544122fc991065d72bb28b8eb2192c6a67723c3906fe551",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-01-spec-r1.json": "cbf2c44b9f5108a2bad6d48747b217de1949c85ab44d3b34e1d3af552be31558",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/run-legacy-e-02-spec-r1.json": "4a44609a5514bb7968553fed996737ba69290a9c4aae2ceff6b4993e046005cc",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-02.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/locks/legacy-e-01.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-e/runs/lifecycle-transactions/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/tickets/tickets-legacy-b-01.md": "3a801e043941a1a6ad0c439e26168535df2034885bd5b98a0c1ba61f28634600",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/contexts/contexts-legacy-b-01.md": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/specs/specs-legacy-b-01.md": "9b6c15c87c20d4f31d26672b5ee69883cf92c7cdb487beb0f66e63d3b39367c2",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/run-legacy-b-01-spec-r1.json": "fc678fdb6dbe3781f6d812d3da1143b8427cda2dd55a057bd13cf7d597ce634a",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/locks/legacy-b-01.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-b/runs/lifecycle-transactions/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/tickets/tickets-legacy-c-01.md": "71056bda201df6296b7cccb256bf3d0402b6f0e4c3e1f6accdbc669272a3cc8c",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/contexts/contexts-legacy-c-01.md": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/specs/specs-legacy-c-01.md": "a88e4aefa56845dc1727b235a4550ec5d40333d57569565fd91d9213948cc001",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/run-legacy-c-01-spec-r1.json": "18e4d41742c311509645672f845bfe89a51c2ebd113dbc8870bf871a2db90c61",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/locks/legacy-c-01.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-c/runs/lifecycle-transactions/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/tickets/tickets-legacy-d-01.md": "a210c9a9272baa88c16d846c705fe2d242b2ae5b6e7220c55fe592657ed6262a",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/contexts/contexts-legacy-d-01.md": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/specs/specs-legacy-d-01.md": "5b4cad5073f8d44904b84b1b5d7f5c1c47bf14606f482dc0898c538b4d707949",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.json": "514b0f1d73af2f4e6acc0f891186fe5c08c6c9153a02eacd6d47f5c28104034f",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/locks/legacy-d-01.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/e9d496eab8b8465f861a4e903a2eff316c8ea207b3a6ab4b991c99a91ab4de67.json": "29f75df5b8f0c2cbcfc22bc41da2a9f51053f5032ce284c73d04a70fbd171ad5",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/lifecycle-transactions/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-snapshots/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-d/runs/run-legacy-d-01-spec-r1.evidence/review-results/4ee325b1bba83eb08622d2416e2298bf.json": "0f99df10673b967c3c8a1a54f76b5aa50beec61a7982c410cf055072eb8f325d",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-01.md": "231e334ca2e3fa38d11b40232089079f8ee3e15f6726c5a7342e30f430f5d1e9",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-02.md": "47434a02cd59978b663c64b0e062b3145802ba546de77f181ed7f88b7524af47",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/tickets/tickets-legacy-a-03.md": "712613d09cc3162989a28397d6d7df84dc1e73659f6ce3581d8f1e42498f8bb5",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/contexts/contexts-legacy-a-01.md": "06d8c9cd96d969adac063ddb350d4aa8f5fda6cd2226f7e00696a2b65cef05ff",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/specs/specs-legacy-a-01.md": "5d71acde259d0dc2f3b05278352eeffb8d1dddbb18e1e5125406cdc1c8f3e291",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.json": "7f5bcf3e5bc90a31c1e73aec8e745454feb7ce86a8b36cf38a6343724cc411fe",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-03-spec-r1.json": "feb3b3fe8a3759fb055e2be0a74b346164d3c37dc70c613e502d5f774e5d07c1",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-03.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/locks/legacy-a-02.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/dfdab5fd13e9b6d727d6d1a34a062268ae281f1099acc45d92bf8ac76301b913.json": "b88eddeb5eb22db663ab69701e91eae493bd7382bbdaa72e3ec68945cd680b5a",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf.json": "6494a9fef7bce86be216e392183195efc7c554a280d5b15191cc3d97318ea03a",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/lifecycle-transactions/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-snapshots/.my-matt-ownership.json": "5217eefb65a9762e426268f750f0a44ee7e977a0a4ffebbe3078c0c47fa04214",
+    "tests/fixtures/workflow_simplification/legacy_project/.agent/work/legacy-a/runs/run-legacy-a-02-spec-r1.evidence/review-results/d30f270e1ae5fec9b08b234e849a3908.json": "47530d4e74975daf71410ed690f1b79f0c87333e1c3614835816cb0c13c59604",
+    "tests/fixtures/workflow_simplification/unfinished_session/.agent/matt-workflow.md": "4d84ea1835eebe3ce58b35416d7c25764a734bef7106f2dc33833f25db4269aa",
+    "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-01.md": "5fdb5d5e3998ecae16edfc5a96d9f42de16d41cc31a2f38a10196ae2e90992c9",
+    "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/tickets/tickets-turn-closure-02.md": "092e93c5c48e3161836dbec84bcd1fd2d50a65ef0c2c7468886989adc09c3148",
+    "tests/fixtures/workflow_simplification/unfinished_session/.agent/work/turn-closure/specs/specs-turn-closure-01.md": "377ac35e28e2abbae501bc70682abbac1d58718582527567283bb4f9c5259451",
+    "resources/adapters/specialized-review-session.md": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8",
+    "resources/adapters/work-scope.md": "345d5ffe16b4d8120ff893fd708c96a527caf53f8ddf7d245ac503a3b92db154",
+    "resources/adapters/artifact-storage.md": "6d224dc0c56a1e2b4324b4011e95b6869b266fa34eaae7d471f14168f9a8cb2a",
+    "resources/adapters/artifact-review-session.md": "3761c4fdbef76c8724149177bda435705f16aa3e19d2647e56eb82b2bfe03f8b",
+    "resources/adapters/composition.md": "a675e0b4b4104b5a8581810c8b24324b6ae2c1ab80c93afb5caa94f0dc94bebd",
+    "resources/adapters/project-rules.md": "c4f26600bd50d290429ec3fe03fd7a94176d8727a2025ed3a3f60fb1707f22b2",
+    "resources/adapters/assurance-levels.md": "7615a6e28443e4897f4a924bf0e27ebcd2752ff4b37e3bd15d1f62298d2602dd",
+    "resources/adapters/implementation-session.md": "4bf78298ac30207d6d885c0def8ec0a3deabb2d757a23d7afecc8445664313eb",
+    "resources/adapters/ticket-selection.md": "08d6970f30bee7281ab5a921f22243d8be785bec8b51dc4775719c6a85a8fff6",
+    "resources/adapters/artifact-access.md": "a6a998206070472b93a99e6683333fe318f77dd2abc0f2fe4af22580def203a0",
+    "tools/workflow_lib/validator.py": "a9b0515c0607d4367257a6746518cb86ed9b73af75f13c53a19ad02ab20090e2",
+    "tools/workflow_lib/tickets.py": "2785018e89410fff350e1af8b95204eb408d5bb39fb43127a6a3fa678830c19f",
+    "tools/workflow_lib/metrics.py": "724c19e3c0ac648f14706ed2beec48b02c37c1e8215ba13b9adaa86fa8b73578",
+    "tools/workflow_lib/release_references.py": "f42cb6063848f2357da3405c6944441f216dc21dc53b5e0d808b4e7d29f56792",
+    "tools/workflow_lib/resource_governance.py": "4b1901a440cdcebeb62feae03bba2c0bcf51edda1a90d00267ee9c3c758b1466",
+    "tools/workflow_lib/release.py": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b",
+    "tools/workflow_lib/review_loop.py": "2bdf16ac7c3a19158f00e24c50b5cbdb48319bca01091e5da489bc22f97b104f",
+    "tools/workflow_lib/topic_service.py": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0",
+    "tools/workflow_lib/check.py": "3e84bda07cabeed39ab0b34dbc2fb2cc75d0ca7c930dccaf61107d44bed9d7c3",
+    "tools/workflow_lib/ticket_completion.py": "628abf9eaae2012cc0146a630c3d1b8bb88e470513cce571179116d5fe88fbf0",
+    "tools/workflow_lib/quality_metrics.py": "99432dce2124f00753fca5ebf57c54bab9e9b58ff4fd7c89ff8523e0e8bdaaef",
+    "tools/workflow_lib/review_snapshot.py": "69809a420b4f19296c7442b90b97131199d15161ad1b2fed3bf9bc2f1004dcbb",
+    "tools/workflow_lib/__init__.py": "ce1bce59cffc6e8bd29633ad912dde76ec61b0ec748ba72b4e00c5be3c28e5a1",
+    "tools/workflow_lib/rules.py": "b523902c913c8bc43f60b37d9ffae3e07d0e5dd7bc66bf327b45de4c54ffe972",
+    "tools/workflow_lib/artifact_review.py": "a52ed3ba1df0808e73237e5cc730e3d2b99e18cf039bb5f4c499c57f662d21d9",
+    "tools/workflow_lib/installer.py": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+    "tools/workflow_lib/branch_review.py": "aac5917d511c0261ccfda1495e2d6c9f36b52de08fddee5cc55f24021360bda9",
+    "tools/workflow_lib/ticket_resolution.py": "ca621ba9cf380026fc7bc74f52bbb0b51d8d44d838d1d0eca9b7c644ec5964ef",
+    "tools/workflow_lib/source_walker.py": "3400c64545ae298dee6c5decdd55f55a3ce5ec33cea7f5f53b743b15c97858e4",
+    "tools/workflow_lib/text_measurement.py": "e47fa8942b8caf04eb3fc5e24ea217928d30d49318cd8cdf4523b7168bc1a7eb",
+    "tools/workflow_lib/fs_safety.py": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+    "tools/workflow_lib/status_text.py": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+    "tools/workflow_lib/resources.py": "1088648b3f65cd849f3b79c926af36ef35eb34c627e685d51d522f4b69c0a075",
+    "tools/workflow_lib/composition.py": "945db06cce95bc99c952aaf13ccf0b3f64fc06e4c1b76917965328d11b5697bd",
+    "tools/workflow_lib/ticket_review.py": "32bd7a9ae384e79c869d1aeeeeae97962df44c22ee9c0540a022b7c771badc32",
+    "tools/workflow_lib/projection.py": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+    "tools/workflow_lib/batches.py": "cf24cd1d39ade17e753eb2c5f6d427a9df158df426aa94b13947debb616eed3b",
+    "tools/workflow_lib/ticket_implementation.py": "706132113ce957c9214ce0bd44ba74a6943d35e48c5b1de2c6d3c20d8124d40e",
+    "tools/workflow_lib/migration.py": "0af15d2ca5da47e663b4ad740aa3a1e8d575967133354e6514d485518cb273d4",
+    "tools/workflow_lib/evidence.py": "234cd85c82c5830be90c27358f6de401e431da1efe9367088c3f612483b715ad",
+    "tools/workflow_lib/doctor.py": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3"
+  }
+}

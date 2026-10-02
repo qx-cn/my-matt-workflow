@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 386.647,
+  "source_manifest_sha256": "663a55c183586d85c23f323473b8fc943e8b53558516e688ca11b947349ea187",
+  "log_sha256": "a15ef30257088a8b701f452833c7d8434c84f0743a699756a1f5b0a7039e7b55"
+}

@@ -92,19 +92,30 @@ def signals(unit, manifest, result, repair):
         return result['status']
     if any(f.get('contradicts') for f in result['findings']):
         return '前后矛盾：contradicts 指向之前的问题'
-    prior = unit.get('reviews', [])[:-1]
-    if repair and prior:
-        previous_repair = prior[-1].get('repair', [])
-        if any(a['path'] == b['path'] and overlap(a['new'], b['old'])
-               for a in previous_repair for b in repair):
-            return '同一处连续修改：相邻修复在中间快照行号重叠'
-        if (prior[-1].get('status') == 'findings' and previous_repair
-                and inside(prior[-1]['result']['findings'], previous_repair)
-                and inside(result['findings'], repair)):
-            return '同一根因：连续复审阻断落在前次修复内'
-    first_volume = unit.get('first_review_volume', volume(manifest))
-    if volume(manifest) > first_volume * 1.5:
-        return '体积膨胀：基线增删行超过第一轮的 1.5 倍'
+    # Line overlap and diff volume describe geometry, not causal progress.
+    # They remain available in repair/first_review_volume for review evidence,
+    # but only semantic contradictions, design/evidence stops and budgets gate.
     if manifest['round'] == 4 and any(f['severity'] == 'blocking' for f in result['findings']):
         return '轮数耗尽：第 4 轮仍有阻断问题'
     return None
+
+
+def geometric_stop(reason):
+    return isinstance(reason,str) and reason.startswith(('同一处连续修改：','同一根因：连续复审阻断落在前次修复内','体积膨胀：'))
+
+
+def recover_geometry(unit, validate_pass, path=None):
+    """Release only an obsolete geometric stop with current valid evidence."""
+    if not geometric_stop(unit.get('stop_reason')):return False
+    candidate=dict(unit,status='reviewing')
+    try:
+        validate_pass(candidate)
+    except (topics.TopicError,OSError,ValueError,KeyError):return False
+    unit.setdefault('recoveries',[]).append(dict(reason=unit['stop_reason'],at=topics.now(),
+        action='release-obsolete-geometric-stop',content_id=unit['reviews'][-1]['content_id']))
+    unit.pop('stop_reason',None)
+    if path:
+        path.write_text(re.sub(r'^status:.*$','status: implementing',path.read_text(),count=1,flags=re.M))
+    else:
+        unit['status']='reviewing'
+    return True

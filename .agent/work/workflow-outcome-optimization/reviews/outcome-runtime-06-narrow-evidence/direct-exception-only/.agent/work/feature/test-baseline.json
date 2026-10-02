@@ -1,0 +1,68 @@
+{
+  "completed": true,
+  "content_id": "b4526000704d2f50fc311c415a3a02a46f5c8dc2f8dad3006c53fe100ce8f71d",
+  "head": "6e56bbd2e52102270f67495e0c83d20aebef7ea4",
+  "commands": [
+    "python3 -B runner.py",
+    "python3 -B -c 'pass'"
+  ],
+  "results": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "runner.py"
+      ],
+      "exit_code": 1,
+      "content_id": "b4526000704d2f50fc311c415a3a02a46f5c8dc2f8dad3006c53fe100ce8f71d",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": true,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 78,
+      "unavailable_loader_failures": [],
+      "dependency_proof_version": 1,
+      "content_changed": false,
+      "output_tail": "ModuleNotFoundError: No module named 'independent_review06_absent_dependency'\n",
+      "command": "python3 -B runner.py",
+      "failures": [
+        "command:bc85e2e794cd406e01d975da2208000a3a63d105b747468256e6173e2bf21001"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "exit_code": 0,
+      "content_id": "b4526000704d2f50fc311c415a3a02a46f5c8dc2f8dad3006c53fe100ce8f71d",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 0,
+      "unavailable_loader_failures": [],
+      "dependency_proof_version": 1,
+      "content_changed": false,
+      "output_tail": "",
+      "command": "python3 -B -c 'pass'",
+      "failures": []
+    }
+  ],
+  "at": "2026-10-02T14:31:56.454240+00:00",
+  "baseline": "6e56bbd2e52102270f67495e0c83d20aebef7ea4"
+}

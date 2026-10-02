@@ -1,0 +1,53 @@
+--- a/tools/workflow_lib/evidence.py
++++ b/tools/workflow_lib/evidence.py
+@@ -26,13 +26,22 @@
+ 
+ 
+ def unittest_startup_gap(diagnostic,code):
+-    """Recognize only the default all-loader-error unittest wrapper."""
++    """Recognize only default/verbose all-loader missing-dependency wrappers."""
+     if code==0:return False
+     progress=re.match(r'E+\n',diagnostic)
++    verbose_progress=None
++    if not progress:
++        verbose_progress=re.match(r'(?:[^\n]+ \(unittest\.loader\._FailedTest\.[^()\n]+\) \.\.\. ERROR\n)+\n',diagnostic)
++        progress=verbose_progress
+     footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(errors=(\d+)\)$',diagnostic)
+     headers=list(re.finditer(r'^={10,}\nERROR: [^\n]*unittest\.loader\._FailedTest\.[^\n]+\n-{10,}\nImportError: Failed to import test module: [^\n]+\n',diagnostic,re.M))
+     if not progress or not footer or not headers or headers[0].start()!=progress.end():return False
+-    if int(footer[1])!=len(headers) or int(footer[2])!=len(headers) or len(progress[0].strip())!=len(headers):return False
++    if int(footer[1])!=len(headers) or int(footer[2])!=len(headers):return False
++    if verbose_progress:
++        announced=[line.removesuffix(' ... ERROR') for line in progress[0].strip().splitlines()]
++        observed=[header[0].splitlines()[1].removeprefix('ERROR: ') for header in headers]
++        if announced!=observed:return False
++    elif len(progress[0].strip())!=len(headers):return False
+     for index,header in enumerate(headers):
+         end=headers[index+1].start() if index+1<len(headers) else footer.start()
+         # Additional failure diagnostics inside a loader block do not qualify.
+--- a/tests/test_batches.py
++++ b/tests/test_batches.py
+@@ -261,9 +261,13 @@
+                 self.git('add','suite');self.git('commit','-qm','loader startup dependency unavailable')
+                 self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
+                 baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
+-                if not verbose:self.assertTrue(baseline['results'][0]['unavailable'])
++                self.assertTrue(baseline['results'][0]['unavailable'])
+                 self.assertFalse(baseline['results'][0]['comparison_eligible'])
+                 self.assertFalse(batches.execution_observed(baseline['results'][0]['output_tail']))
++                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertTrue(pure['results'][0]['unavailable'])
++                self.assertEqual([],pure['new_failures']);self.assertTrue(pure['unverified'])
++                self.review()  # Pure startup gap permits disclosed review in both verbosity modes.
+                 case.write_text("assert 1 == 2, 'actual behavior regression at import'\n")
+                 self.git('add','suite');self.git('commit','-qm','actual assertion with same loader identity')
+                 current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+@@ -271,7 +275,7 @@
+                 self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['known_failures'])
+                 status=json.loads(self.cli('batch','status','--topic','feature').stdout)
+                 self.assertTrue(status['unverified'])
+-                if verbose:self.assertIn('载入失败身份',status['unverified'][0]['note'])
++                self.assertIn('基线环境缺失',status['unverified'][0]['note'])
+                 self.cli('batch','close','--topic','feature',ok=False)
+ 
+     def test_briefing_contains_predecessor_contracts_batch_impacts_and_hints(self):

@@ -1,0 +1,182 @@
+diff --git a/tools/workflow_lib/installer.py b/tools/workflow_lib/installer.py
+--- a/tools/workflow_lib/installer.py
++++ b/tools/workflow_lib/installer.py
+@@ -119,6 +119,51 @@
+     return directory_inventory(skill_dir)
+ 
+ 
++
++
++def _canonical_host_layout(state_home: Path, *, skills_home: Path | None = None,
++                           release_id: str | None = None,
++                           validate_default_skills: bool = True) -> tuple[Path, Path | None]:
++    """Trust the explicitly selected root alias, never links inside that root."""
++    selected = state_home.absolute()
++    home = selected.resolve()
++    if home.exists() and not home.is_dir():
++        raise InstallError("安装宿主根目录无效")
++    try:
++        for relative in ("my-matt-workflow", "my-matt-workflow/runtime",
++                         "my-matt-workflow/transaction"):
++            path = strict_relative_path(home, relative)
++            if path.exists() and not path.is_dir():
++                raise InstallError("安装内部目录类型无效")
++        for relative in ("my-matt-workflow/install-state.json",
++                         "my-matt-workflow/.install.lock",
++                         "my-matt-workflow/.my-matt-ownership.json"):
++            path = strict_relative_path(home, relative)
++            if path.exists() and not path.is_file():
++                raise InstallError("安装内部状态路径类型无效")
++        if release_id is not None:
++            strict_relative_path(home, f"my-matt-workflow/runtime/{release_id}")
++        if skills_home is None:
++            if validate_default_skills:
++                strict_relative_path(home, "skills")
++            return home, None
++        skills = skills_home.absolute()
++        relative = None
++        for selected_root in (selected, home):
++            try:
++                relative = skills.relative_to(selected_root)
++                break
++            except ValueError:
++                pass
++        if relative == Path("."):
++            skills = home
++        elif relative is not None:
++            skills = strict_relative_path(home, relative)
++        else:
++            skills = skills.resolve()
++        return home, skills
++    except (FilesystemSafetyError, OSError, RuntimeError) as exc:
++        raise InstallError("安装内部路径包含 symlink 或越出宿主根目录") from exc
+ 
+ def _runtime_inventory(runtime_root: Path) -> dict[str, str]:
+     """Reject path/link drift before ignoring defined execution by-products."""
+@@ -656,6 +701,8 @@
+     state_home: Path, *, skills_home: Path | None = None
+ ) -> None:
+     """Restore the previous install from a persisted transaction journal."""
++    state_home, skills_home = _canonical_host_layout(
++        state_home, skills_home=skills_home, validate_default_skills=False)
+     transaction = state_home / "my-matt-workflow" / "transaction"
+     journal_path = transaction / "journal.json"
+     if not journal_path.exists():
+@@ -698,7 +745,9 @@
+             or not isinstance(journal.get("transaction_id"), str)
+         ):
+             raise InstallError(f"安装事务日志 v{version} 无效，需要人工检查")
+-        recorded_home = Path(recorded).resolve()
++        recorded_home = Path(recorded)
++        if recorded_home != recorded_home.resolve():
++            raise InstallError("恢复目录的内部路径发生 symlink 漂移")
+         if skills_home is not None and skills_home.resolve() != recorded_home:
+             raise InstallError("恢复目录与安装事务不一致，拒绝操作")
+         skills_home = recorded_home
+@@ -728,7 +777,9 @@
+             or not set(legacy_old_present).issubset(skills)
+         ):
+             raise InstallError("安装事务日志 v3 迁移信息无效，需要人工检查")
+-        previous_skills_home = Path(recorded_previous).resolve()
++        previous_skills_home = Path(recorded_previous)
++        if previous_skills_home != previous_skills_home.resolve():
++            raise InstallError("旧恢复目录发生 symlink 漂移")
+     elif version == 4 and "legacy_old_present" in journal:
+         raise InstallError("安装事务日志 v4 迁移信息无效，需要人工检查")
+     transaction_id = journal.get("transaction_id")
+@@ -831,6 +882,8 @@
+     validation_context: ReleaseValidationContext | None = None,
+ ) -> str:
+     """Install one immutable release, restoring the old install on failure."""
++    state_home, skills_home = _canonical_host_layout(
++        state_home, skills_home=skills_home, release_id=release.name)
+     context = validation_context or ReleaseValidationContext()
+     manifest = context.verify(release)
+     install_target = target
+@@ -971,6 +1024,8 @@
+             state_dir, transaction, purpose="install-transaction"
+         )
+ 
++        _canonical_host_layout(state_home, skills_home=skills_home,
++                               release_id=str(manifest["release_id"]))
+         runtime_dir = state_dir / "runtime" / manifest["release_id"]
+         if runtime_dir.exists():
+             for relative, expected in manifest["runtime"].items():
+@@ -1013,10 +1068,13 @@
+             "installed_agent": install_target,
+             "metadata_projection": projection_name,
+             "skills_home": str(skills_home.resolve()),
+-            "runtime_entry": str(runtime_entry.resolve()),
++            "runtime_entry": str(runtime_entry),
+             "manifest_sha256": sha256_file(release / "manifest.json"),
+             "managed_inventory": installed_inventory,
+         }
++        _canonical_host_layout(state_home, skills_home=skills_home,
++                               release_id=str(manifest["release_id"]))
++        verify_installed_state(state, validation_context=context, state_home=state_home)
+         state_temp = transaction / "install-state.json"
+         state_temp.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
+         state_temp.replace(state_path)
+@@ -1045,6 +1103,8 @@
+     validation_context: ReleaseValidationContext | None = None,
+ ) -> str:
+     """Install under a single-writer lock for the selected state home."""
++    state_home, skills_home = _canonical_host_layout(
++        state_home, skills_home=skills_home, release_id=release.name)
+     context = validation_context or ReleaseValidationContext()
+     context.verify(release)
+     state_dir = state_home / "my-matt-workflow"
+diff --git a/tests/test_install_simplification.py b/tests/test_install_simplification.py
+--- a/tests/test_install_simplification.py
++++ b/tests/test_install_simplification.py
+@@ -469,6 +469,50 @@
+                     self.assertFalse((new_home / 'my-demo').exists())
+                     self.assertFalse(transaction.exists())
+ 
++    def test_initial_install_rejects_internal_parent_links_before_any_host_write(self):
++        for parent in ('my-matt-workflow', 'my-matt-workflow/runtime'):
++            with self.subTest(parent=parent), tempfile.TemporaryDirectory() as tmp:
++                root = fixture(Path(tmp) / 'repo')
++                package = release.build_release(root / 'skills', root / 'releases', release_id='v1',
++                                                upstream_id='local', repo_root=root)
++                home = Path(tmp) / 'home'
++                outside = Path(tmp) / 'outside'
++                outside.mkdir()
++                (outside / 'sentinel').write_bytes(b'existing outside bytes')
++                linked = home / parent
++                linked.parent.mkdir(parents=True)
++                linked.symlink_to(outside, target_is_directory=True)
++                def tree(directory):
++                    return {str(path.relative_to(directory)): ('link:' + str(path.readlink())
++                            if path.is_symlink() else path.read_bytes() if path.is_file() else 'directory')
++                            for path in directory.rglob('*')}
++                before_outside = tree(outside)
++                before_home = tree(home)
++                with self.assertRaises(installer.InstallError):
++                    installer.install_release(package, home)
++                self.assertEqual(before_outside, tree(outside))
++                self.assertEqual(before_home, tree(home))
++                with self.assertRaises(installer.InstallError):
++                    installer.recover_interrupted_install(home)
++                self.assertEqual(before_outside, tree(outside))
++                self.assertEqual(before_home, tree(home))
++
++    def test_explicit_host_root_alias_is_allowed_but_internal_links_are_not(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root = fixture(Path(tmp) / 'repo')
++            package = release.build_release(root / 'skills', root / 'releases', release_id='v1',
++                                            upstream_id='local', repo_root=root)
++            actual_home = Path(tmp) / 'actual-home'
++            actual_home.mkdir()
++            alias = Path(tmp) / 'explicit-home-alias'
++            alias.symlink_to(actual_home, target_is_directory=True)
++            self.assertEqual('installed', installer.install_release(package, alias))
++            state = installer.load_install_state(actual_home / 'my-matt-workflow/install-state.json')
++            self.assertEqual(str(actual_home.resolve() / 'my-matt-workflow/runtime/v1/tools/workflow.py'), state['runtime_entry'])
++            installer.verify_installed_state(state, state_home=alias)
++            installer.recover_interrupted_install(alias)
++            self.assertEqual('current', installer.install_release(package, alias))
++
+ 
+ if __name__ == '__main__':
+     unittest.main()

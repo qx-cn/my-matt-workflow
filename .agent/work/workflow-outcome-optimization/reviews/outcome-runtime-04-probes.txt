@@ -1,0 +1,12 @@
+single-default PASS
+partial-default PASS
+multi-default PASS
+phase-default PASS
+unknown-default PASS
+single-verbose PASS
+partial-verbose PASS
+multi-verbose PASS
+phase-verbose PASS
+unknown-verbose PASS
+announcement-mismatch PASS
+ALL INDEPENDENT PROBES PASS

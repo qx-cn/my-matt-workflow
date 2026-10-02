@@ -1,0 +1,55 @@
+.......F..FF.....F.
+======================================================================
+FAIL: test_last_ticket_finish_and_status_have_same_executable_batch_step (test_batches.BatchTests.test_last_ticket_finish_and_status_have_same_executable_batch_step)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 111, in test_last_ticket_finish_and_status_have_same_executable_batch_step
+    self.assertEqual(status['next_command'],output['next_command'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'workflow.py batch test --repo /private/var/folders/19[57 chars]ture' != 'workflow.py topic complete --repo /private/var/folder[61 chars]ture'
+- workflow.py batch test --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpb1fncrnn --topic feature
+?             --  ^^  --
++ workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpb1fncrnn --topic feature
+?              +++ ^^^^^^^
+
+
+======================================================================
+FAIL: test_self_blocking_requires_changed_evidence_and_preserves_history (test_batches.BatchTests.test_self_blocking_requires_changed_evidence_and_preserves_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 82, in test_self_blocking_requires_changed_evidence_and_preserves_history
+    self.assertIn('self-bug',self.cli('implement','finish',ok=False).stderr)
+                             ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_implement_lifecycle.py", line 18, in cli
+    result = topic_tests.TopicLifecycleTests.cli(self, *args, ok=ok)
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_topic_lifecycle.py", line 58, in cli
+    self.assertNotEqual(0, result.returncode, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"commit": "23014c1b0f1b2380ec88cf0826237111f26c1f41", "next_command": "workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp0jhviiq1 --topic feature", "status": "complete", "ticket": "feature-01", "topic": "feature"}
+
+
+======================================================================
+FAIL: test_self_spec_challenge_requires_explicit_decision (test_batches.BatchTests.test_self_spec_challenge_requires_explicit_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 101, in test_self_spec_challenge_requires_explicit_decision
+    self.assertEqual('needs-user',status['status']);self.assertTrue(status['decisions_needed'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'needs-user' != 'implementing'
+- needs-user
++ implementing
+
+
+======================================================================
+FAIL: test_unavailable_baseline_current_failure_and_legacy_recovery_block_close (test_batches.BatchTests.test_unavailable_baseline_current_failure_and_legacy_recovery_block_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 54, in test_unavailable_baseline_current_failure_and_legacy_recovery_block_close
+    self.assertTrue(current['new_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+----------------------------------------------------------------------
+Ran 19 tests in 45.709s
+
+FAILED (failures=4)

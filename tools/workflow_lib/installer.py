@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import copy
 import json
 import os
 import re
@@ -29,6 +30,7 @@ from .projection import (
     directory_inventory,
     project_skill_directory,
     skills_inventory,
+    projected_skills_inventory,
 )
 
 
@@ -41,6 +43,7 @@ _RELEASE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
 _MANIFEST_FIELDS = {
     "release_id", "upstream_id", "skills", "runtime", "composed",
     "shared_resources", "resource_consumers", "target_manifests", "invocable_skills",
+    "source_input_digest",
 }
 
 
@@ -75,8 +78,16 @@ def _validated_journal(journal: object) -> tuple[int, list[str], set[str]]:
             "new_release_id", "transaction_id",
         }
         migration_fields = {"previous_skills_home", "legacy_old_present"}
-        if set(journal) not in {frozenset(base_fields), frozenset(base_fields | migration_fields)}:
+        recovery_fields = {"previous_state_sha256"}
+        allowed_fields = {frozenset(base_fields | extra)
+                          for extra in (set(), migration_fields, recovery_fields,
+                                        migration_fields | recovery_fields)}
+        if set(journal) not in allowed_fields:
             raise InstallError("安装事务日志 v4 schema 无效，需要人工检查")
+        if "previous_state_sha256" in journal and journal["previous_state_sha256"] is not None:
+            digest = journal["previous_state_sha256"]
+            if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+                raise InstallError("安装事务日志旧状态摘要无效，需要人工检查")
     skills = journal.get("skills")
     old_present = journal.get("old_present")
     if (
@@ -103,10 +114,104 @@ def _skill_inventory(skill_dir: Path) -> dict[str, str]:
     if not skill_dir.is_dir() or skill_dir.is_symlink():
         raise InstallError(f"托管 Skill 目录无效：{skill_dir.name}")
     for path in sorted(skill_dir.rglob("*")):
-        if path.is_symlink():
-            raise InstallError(f"托管 Skill 包含 symlink：{skill_dir.name}")
+        if path.is_symlink() or not (path.is_file() or path.is_dir()):
+            raise InstallError(f"托管 Skill 包含 symlink 或非常规路径：{skill_dir.name}")
     return directory_inventory(skill_dir)
 
+
+
+
+def _canonical_host_layout(state_home: Path, *, skills_home: Path | None = None,
+                           release_id: str | None = None,
+                           validate_default_skills: bool = True) -> tuple[Path, Path | None]:
+    """Trust the explicitly selected root alias, never links inside that root."""
+    selected = state_home.absolute()
+    home = selected.resolve()
+    if home.exists() and not home.is_dir():
+        raise InstallError("安装宿主根目录无效")
+    try:
+        for relative in ("my-matt-workflow", "my-matt-workflow/runtime",
+                         "my-matt-workflow/transaction"):
+            path = strict_relative_path(home, relative)
+            if path.exists() and not path.is_dir():
+                raise InstallError("安装内部目录类型无效")
+        for relative in ("my-matt-workflow/install-state.json",
+                         "my-matt-workflow/.install.lock",
+                         "my-matt-workflow/.my-matt-ownership.json"):
+            path = strict_relative_path(home, relative)
+            if path.exists() and not path.is_file():
+                raise InstallError("安装内部状态路径类型无效")
+        if release_id is not None:
+            strict_relative_path(home, f"my-matt-workflow/runtime/{release_id}")
+        if skills_home is None:
+            if validate_default_skills:
+                strict_relative_path(home, "skills")
+            return home, None
+        skills = skills_home.absolute()
+        relative = None
+        for selected_root in (selected, home):
+            try:
+                relative = skills.relative_to(selected_root)
+                break
+            except ValueError:
+                pass
+        if relative == Path("."):
+            skills = home
+        elif relative is not None:
+            skills = strict_relative_path(home, relative)
+        else:
+            skills = skills.resolve()
+        return home, skills
+    except (FilesystemSafetyError, OSError, RuntimeError) as exc:
+        raise InstallError("安装内部路径包含 symlink 或越出宿主根目录") from exc
+
+
+def _recorded_directory(raw: str | Path, *, label: str) -> Path:
+    """Validate a persisted canonical identity before resolution loses links.
+
+    A newly selected user root may be canonicalized by the selection adapter;
+    a persisted root already records that result and must not silently redirect.
+    Missing directories can be legitimate during recovery of verified backups.
+    """
+    path = Path(raw)
+    if not path.is_absolute() or any(part in {".", ".."} for part in path.parts):
+        raise InstallError(f"{label}不是 canonical 绝对路径")
+    if any(ancestor.is_symlink() for ancestor in (path, *path.parents)):
+        raise InstallError(f"{label}的记录路径发生 symlink 漂移")
+    if path != path.resolve():
+        raise InstallError(f"{label}的记录路径身份已漂移")
+    if path.exists() and not path.is_dir():
+        raise InstallError(f"{label}不是目录")
+    return path
+
+
+def _verify_recorded_receipt_roots(state: dict[str, object]) -> None:
+    _recorded_directory(str(state["skills_home"]), label="旧 Skill 根")
+    _recorded_directory(Path(str(state["runtime_entry"])).parent.parent,
+                        label="旧 runtime 根")
+
+def _runtime_inventory(runtime_root: Path) -> dict[str, str]:
+    """Reject path/link drift before ignoring defined execution by-products."""
+    if not runtime_root.is_dir() or runtime_root.is_symlink():
+        raise InstallError("托管 runtime 目录或路径无效")
+    if any(path.is_symlink() or not (path.is_file() or path.is_dir())
+           for path in runtime_root.rglob("*")):
+        raise InstallError("托管 runtime 包含 symlink 或非常规路径")
+    return directory_inventory(runtime_root)
+
+
+def _verify_runtime_state(state: dict[str, object], expected: dict[str, str],
+                          *, state_home: Path | None = None) -> None:
+    runtime_entry = Path(str(state["runtime_entry"]))
+    runtime_root = _recorded_directory(runtime_entry.parent.parent, label="托管 runtime 根")
+    if runtime_entry != runtime_root / "tools/workflow.py":
+        raise InstallError("托管 runtime 入口路径无效")
+    if state_home is not None:
+        expected_root = state_home.resolve() / "my-matt-workflow/runtime" / str(state["release_id"])
+        if runtime_root != expected_root:
+            raise InstallError("托管 runtime 入口不属于安装目录")
+    if _runtime_inventory(runtime_root) != expected:
+        raise InstallError("已安装 runtime 与 release 内容不一致")
 
 def load_install_state(path: Path) -> dict[str, object] | None:
     """Load and strictly validate a persisted installer ownership receipt."""
@@ -179,15 +284,18 @@ def load_install_state(path: Path) -> dict[str, object] | None:
     return state
 
 
-def verify_installed_state(state: dict[str, object]) -> None:
+def verify_installed_state(state: dict[str, object], *,
+                           validation_context: ReleaseValidationContext | None = None,
+                           state_home: Path | None = None) -> None:
     """Verify that a state receipt still owns the installed Skill bytes."""
-    skills_home = Path(str(state["skills_home"])).resolve()
+    verify = validation_context.verify if validation_context else verify_release
+    skills_home = _recorded_directory(str(state["skills_home"]), label="托管 Skill 根")
     skills = list(state["skills"])
     if state.get("version", 1) == 2:
         inventory = state["managed_inventory"]
         assert isinstance(inventory, dict)
         source = Path(str(state["source"]))
-        source_release = verify_release(source)
+        source_release = verify(source)
         if (
             source_release.get("release_id") != state["release_id"]
             or set(source_release["skills"]) != set(skills)
@@ -197,9 +305,10 @@ def verify_installed_state(state: dict[str, object]) -> None:
         expected_target = (
             target_manifests[str(state["metadata_projection"])]
             if isinstance(target_manifests, dict)
-            else None
+            else {"skills": projected_skills_inventory(source / "skills", str(state["metadata_projection"])),
+                  "runtime": source_release["runtime"]}
         )
-        if expected_target is not None and inventory != expected_target["skills"]:
+        if inventory != expected_target["skills"]:
             raise InstallError("安装状态 inventory 与 release target manifest 不一致")
         for name in skills:
             target = strict_relative_path(skills_home, name, direct_child=True)
@@ -208,16 +317,12 @@ def verify_installed_state(state: dict[str, object]) -> None:
         source_manifest = source / "manifest.json"
         if not source_manifest.is_file() or sha256_file(source_manifest) != state["manifest_sha256"]:
             raise InstallError("安装状态引用的 release manifest 已漂移")
-        if expected_target is not None:
-            runtime_entry = Path(str(state["runtime_entry"])).resolve()
-            runtime_root = runtime_entry.parent.parent
-            if directory_inventory(runtime_root) != expected_target["runtime"]:
-                raise InstallError("已安装 runtime 与 release target manifest 不一致")
+        _verify_runtime_state(state, expected_target["runtime"], state_home=state_home)
         return
     # Legacy receipts are accepted only when their immutable source release is
     # still available and proves the exact managed name set.
     source = Path(str(state["source"]))
-    previous = verify_release(source)
+    previous = verify(source)
     if previous.get("release_id") != state["release_id"] or set(previous["skills"]) != set(skills):
         raise InstallError("旧安装状态与 source release 不一致")
     projection = str(state["metadata_projection"])
@@ -233,6 +338,8 @@ def verify_installed_state(state: dict[str, object]) -> None:
             if _skill_inventory(target) != _skill_inventory(staged):
                 raise InstallError(f"旧安装状态无法证明托管 Skill ownership：{name}")
 
+    _verify_runtime_state(state, previous["runtime"], state_home=state_home)
+
 
 def _projected_release_inventories(state: dict[str, object]) -> dict[str, dict[str, str]]:
     """Derive byte inventories for a legacy host projection."""
@@ -242,16 +349,12 @@ def _projected_release_inventories(state: dict[str, object]) -> dict[str, dict[s
     if manifest.get("release_id") != state["release_id"] or set(manifest["skills"]) != set(skills):
         raise InstallError("旧安装状态与 source release 不一致")
     projection = str(state["metadata_projection"])
-    result: dict[str, dict[str, str]] = {}
-    with tempfile.TemporaryDirectory(prefix="my-matt-legacy-recovery-") as tmp:
-        staging = Path(tmp)
-        for name in skills:
-            staged = staging / name
-            shutil.copytree(source / "skills" / name, staged)
-            _project_skill_metadata_for_target(
-                staged, None if projection == "portable" else projection
-            )
-            result[name] = _skill_inventory(staged)
+    result = projected_skills_inventory(source / "skills", projection)
+    if state.get("version", 1) == 2 and (
+        sha256_file(source / "manifest.json") != state["manifest_sha256"]
+        or result != state["managed_inventory"]
+    ):
+        raise InstallError("旧安装状态与 source release ownership 已漂移")
     return result
 
 
@@ -278,7 +381,47 @@ def load_manifest(release: Path) -> dict:
         raise InstallError("release invocable_skills 与 Skill 集合不一致")
     if set(manifest) - _MANIFEST_FIELDS:
         raise InstallError("release manifest 包含未知字段")
+    if "source_input_digest" in manifest and (
+        not isinstance(manifest["source_input_digest"], str) or
+        not re.fullmatch(r"[0-9a-f]{64}", manifest["source_input_digest"])
+    ):
+        raise InstallError("release source_input_digest 无效")
     return manifest
+
+
+class ReleaseValidationContext:
+    """One operation only; a fresh byte identity guards every cached use.
+
+    Callers performing mutations hold the release-reference lock. Read-only
+    callers get drift detection before and after full validation instead.
+    """
+    def __init__(self):
+        self._validated = {}
+
+    def verify(self, release: Path) -> dict:
+        identity = self._identity(release)
+        key = str(release.resolve())
+        cached = self._validated.get(key)
+        if cached is not None and cached[0] == identity:
+            return copy.deepcopy(cached[1])
+        manifest = verify_release(release)
+        if self._identity(release) != identity:
+            raise InstallError("release 在验证期间发生漂移")
+        self._validated[key] = (identity, copy.deepcopy(manifest))
+        return manifest
+
+    @staticmethod
+    def _identity(release):
+        if not release.is_dir() or release.is_symlink():
+            raise InstallError("release 目录无效或为 symlink")
+        paths = sorted(release.rglob("*"))
+        if any(path.is_symlink() for path in paths):
+            raise InstallError("release 不能包含 symlink")
+        stat = release.stat()
+        return (stat.st_dev, stat.st_ino,
+                tuple((str(path.relative_to(release)),
+                       sha256_file(path) if path.is_file() else "directory")
+                      for path in paths))
 
 
 def verify_release(release: Path, manifest: dict | None = None) -> dict:
@@ -451,17 +594,8 @@ def verify_release(release: Path, manifest: dict | None = None) -> dict:
         if portable["skills"] != manifest["skills"] or portable["runtime"] != manifest["runtime"]:
             raise InstallError("portable target manifest 与 release 内容不一致")
         for target in TARGETS:
-            if target == "portable":
-                projected_skills = manifest["skills"]
-            else:
-                with tempfile.TemporaryDirectory(
-                    prefix=f"my-matt-verify-{target}-"
-                ) as tmp:
-                    projected_root = Path(tmp) / "skills"
-                    shutil.copytree(skills_root, projected_root)
-                    for skill_dir in sorted(projected_root.iterdir()):
-                        project_skill_directory(skill_dir, target)
-                    projected_skills = skills_inventory(projected_root)
+            projected_skills = (manifest["skills"] if target == "portable" else
+                                projected_skills_inventory(skills_root, target))
             if (
                 target_manifests[target]["skills"] != projected_skills
                 or target_manifests[target]["runtime"] != manifest["runtime"]
@@ -541,10 +675,60 @@ def _remove_path(path: Path) -> None:
         path.unlink()
 
 
+
+def _verify_rollback_materials(transaction: Path, skills_home: Path,
+                               skills: list[str], old_present: set[str],
+                               previous_skills_home: Path | None,
+                               legacy_old_present: list[str],
+                               previous: dict[str, object] | None,
+                               *, state_home: Path) -> None:
+    """Prove each old byte source, allowing interruption between any moves.
+
+    Whole transaction digests cannot establish this: staging and move phases
+    legitimately change it before its ownership registration is refreshed.
+    """
+    if any(path.is_symlink() or not (path.is_file() or path.is_dir())
+           for path in transaction.rglob("*")):
+        raise InstallError("安装事务包含不允许的链接或非常规恢复路径")
+    inventories = _projected_release_inventories(previous) if previous else {}
+    if previous is not None:
+        source = Path(str(previous["source"]))
+        manifest = load_manifest(source)
+        _verify_runtime_state(previous, manifest["runtime"], state_home=state_home)
+    names = set(inventories)
+    if not names.issubset(skills):
+        raise InstallError("恢复材料与旧 install-state Skill 集合不一致")
+    old_home = previous_skills_home or skills_home
+    if previous is not None and _recorded_directory(
+        str(previous["skills_home"]), label="旧恢复 Skill 根") != old_home:
+        raise InstallError("恢复材料与旧 install-state home 不一致")
+    if previous_skills_home is None:
+        if old_present != names or legacy_old_present:
+            raise InstallError("恢复材料无法证明旧目标所有权")
+    elif old_present or set(legacy_old_present) != names:
+        raise InstallError("恢复材料无法证明迁移目标所有权")
+    backup_root = transaction / ("legacy-backup" if previous_skills_home else "backup")
+    for folder in (transaction / "backup", transaction / "legacy-backup"):
+        allowed = names if folder == backup_root else set()
+        if folder.is_symlink() or (folder.exists() and not folder.is_dir()):
+            raise InstallError("恢复 backup 路径无效")
+        if folder.exists():
+            for backup in folder.iterdir():
+                if backup.name not in allowed or _skill_inventory(backup) != inventories[backup.name]:
+                    raise InstallError(f"恢复无法证明 backup ownership：{backup.name}")
+    for name in names:
+        backup = backup_root / name
+        if not backup.exists():
+            target = strict_relative_path(old_home, name, direct_child=True)
+            if _skill_inventory(target) != inventories[name]:
+                raise InstallError(f"恢复无法证明尚未移动的旧目标：{name}")
+
 def recover_interrupted_install(
     state_home: Path, *, skills_home: Path | None = None
 ) -> None:
     """Restore the previous install from a persisted transaction journal."""
+    state_home, skills_home = _canonical_host_layout(
+        state_home, skills_home=skills_home, validate_default_skills=False)
     transaction = state_home / "my-matt-workflow" / "transaction"
     journal_path = transaction / "journal.json"
     if not journal_path.exists():
@@ -587,14 +771,14 @@ def recover_interrupted_install(
             or not isinstance(journal.get("transaction_id"), str)
         ):
             raise InstallError(f"安装事务日志 v{version} 无效，需要人工检查")
-        recorded_home = Path(recorded).resolve()
+        recorded_home = _recorded_directory(recorded, label="恢复 Skill 根")
         if skills_home is not None and skills_home.resolve() != recorded_home:
             raise InstallError("恢复目录与安装事务不一致，拒绝操作")
         skills_home = recorded_home
     else:
         recorded = state.get("skills_home")
         if isinstance(recorded, str) and Path(recorded).is_absolute():
-            recorded_home = Path(recorded).resolve()
+            recorded_home = _recorded_directory(recorded, label="旧恢复 Skill 根")
             if skills_home is not None and skills_home.resolve() != recorded_home:
                 raise InstallError("恢复目录与安装状态不一致，拒绝操作")
             skills_home = recorded_home
@@ -617,7 +801,7 @@ def recover_interrupted_install(
             or not set(legacy_old_present).issubset(skills)
         ):
             raise InstallError("安装事务日志 v3 迁移信息无效，需要人工检查")
-        previous_skills_home = Path(recorded_previous).resolve()
+        previous_skills_home = _recorded_directory(recorded_previous, label="旧迁移 Skill 根")
     elif version == 4 and "legacy_old_present" in journal:
         raise InstallError("安装事务日志 v4 迁移信息无效，需要人工检查")
     transaction_id = journal.get("transaction_id")
@@ -631,7 +815,8 @@ def recover_interrupted_install(
         previous_names = set(trusted_state["skills"])
         if not previous_names.issubset(skills):
             raise InstallError("旧安装事务与 install-state Skill 集合不一致")
-        trusted_home = Path(str(trusted_state["skills_home"])).resolve()
+        trusted_home = _recorded_directory(str(trusted_state["skills_home"]),
+                                           label="旧安装状态 Skill 根")
         if previous_skills_home is None and trusted_home != skills_home.resolve():
             raise InstallError("旧安装事务与 install-state home 不一致")
         if previous_skills_home is not None and trusted_home != previous_skills_home:
@@ -653,6 +838,22 @@ def recover_interrupted_install(
                 raise InstallError(
                     f"旧安装事务无法证明新增 Skill ownership：{skill_name}"
                 )
+    if version == 4:
+        if transaction_id and state.get("transaction_id") == transaction_id:
+            committed = load_install_state(state_path)
+            if committed is None:
+                raise InstallError("已提交事务缺少可验证安装状态")
+            verify_installed_state(committed, state_home=state_home)
+        else:
+            if "previous_state_sha256" in journal:
+                expected_state = journal["previous_state_sha256"]
+                actual_state = sha256_file(state_path) if state_path.is_file() else None
+                if actual_state != expected_state:
+                    raise InstallError("安装事务的旧 install-state 已漂移，保留恢复材料")
+            previous = load_install_state(state_path)
+            _verify_rollback_materials(transaction, skills_home, skills, old_present,
+                                       previous_skills_home, legacy_old_present, previous,
+                                       state_home=state_home)
     if transaction_id and state.get("transaction_id") == transaction_id:
         if version == 4:
             refresh_owned_directory(
@@ -701,16 +902,21 @@ def _install_release(
     *,
     target: str | None = None,
     skills_home: Path | None = None,
-) -> None:
+    validation_context: ReleaseValidationContext | None = None,
+) -> str:
     """Install one immutable release, restoring the old install on failure."""
-    manifest = verify_release(release)
+    state_home, skills_home = _canonical_host_layout(
+        state_home, skills_home=skills_home, release_id=release.name)
+    context = validation_context or ReleaseValidationContext()
+    manifest = context.verify(release)
     install_target = target
     projection_name = install_target or "portable"
     target_manifests = manifest.get("target_manifests")
     expected_target = (
         target_manifests[projection_name]
         if isinstance(target_manifests, dict)
-        else None
+        else {"skills": projected_skills_inventory(release / "skills", projection_name),
+              "runtime": manifest["runtime"]}
     )
     if install_target is not None:
         for skill_name in sorted(manifest["skills"]):
@@ -718,24 +924,33 @@ def _install_release(
                 release / "skills" / skill_name, install_target,
                 invocable=skill_name in manifest.get("invocable_skills", [])
             )
+    state_dir = state_home / "my-matt-workflow"
+    state_path = state_dir / "install-state.json"
+    existing = load_install_state(state_path)
+    if existing is not None:
+        _verify_recorded_receipt_roots(existing)
     state_home.mkdir(parents=True, exist_ok=True)
     skills_home = skills_home or state_home / "skills"
     skills_home.mkdir(parents=True, exist_ok=True)
-    state_dir = state_home / "my-matt-workflow"
     state_dir.mkdir(parents=True, exist_ok=True)
-    state_path = state_dir / "install-state.json"
     recover_interrupted_install(state_home, skills_home=skills_home)
 
     loaded_previous = load_install_state(state_path)
     previous_state: dict[str, object] = loaded_previous or {}
     if previous_state:
-        verify_installed_state(previous_state)
+        verify_installed_state(previous_state, validation_context=context, state_home=state_home)
+        if (previous_state.get("version") == 2 and
+            previous_state.get("source") == str(release.resolve()) and
+            previous_state.get("manifest_sha256") == sha256_file(release / "manifest.json") and
+            previous_state.get("metadata_projection") == projection_name and
+            previous_state.get("skills_home") == str(skills_home.resolve())):
+            return "current"
 
     previous_managed = set(previous_state.get("skills", []))
     previous_skills_home: Path | None = None
     recorded_previous_home = previous_state.get("skills_home")
     if isinstance(recorded_previous_home, str) and Path(recorded_previous_home).is_absolute():
-        candidate = Path(recorded_previous_home).resolve()
+        candidate = _recorded_directory(recorded_previous_home, label="旧迁移 Skill 根")
         if candidate != skills_home.resolve():
             previous_skills_home = candidate
     for skill_name in manifest["skills"]:
@@ -759,6 +974,7 @@ def _install_release(
         "old_present": old_present,
         "new_release_id": manifest["release_id"],
         "transaction_id": transaction_id,
+        "previous_state_sha256": sha256_file(state_path) if previous_state else None,
     }
     legacy_old_present: list[str] = []
     if previous_skills_home is not None:
@@ -794,7 +1010,7 @@ def _install_release(
         shutil.copytree(release / "runtime", staged_runtime)
         if expected_target is not None and (
             skills_inventory(staged) != expected_target["skills"]
-            or directory_inventory(staged_runtime) != expected_target["runtime"]
+            or _runtime_inventory(staged_runtime) != expected_target["runtime"]
         ):
             raise InstallError(
                 f"{projection_name} target manifest 与安装 staging 不一致"
@@ -823,6 +1039,7 @@ def _install_release(
                 (staged / skill_name).rename(destination)
 
         if previous_skills_home is not None:
+            _recorded_directory(previous_skills_home, label="旧迁移 Skill 根")
             legacy_backup = transaction / "legacy-backup"
             legacy_backup.mkdir()
             for skill_name in legacy_old_present:
@@ -834,6 +1051,8 @@ def _install_release(
             state_dir, transaction, purpose="install-transaction"
         )
 
+        _canonical_host_layout(state_home, skills_home=skills_home,
+                               release_id=str(manifest["release_id"]))
         runtime_dir = state_dir / "runtime" / manifest["release_id"]
         if runtime_dir.exists():
             for relative, expected in manifest["runtime"].items():
@@ -861,7 +1080,7 @@ def _install_release(
                 raise InstallError(
                     f"{projection_name} target manifest 与最终 Skill 安装不一致"
                 )
-            if directory_inventory(runtime_dir) != expected_target["runtime"]:
+            if _runtime_inventory(runtime_dir) != expected_target["runtime"]:
                 raise InstallError(
                     f"{projection_name} target manifest 与最终 runtime 安装不一致"
                 )
@@ -876,10 +1095,13 @@ def _install_release(
             "installed_agent": install_target,
             "metadata_projection": projection_name,
             "skills_home": str(skills_home.resolve()),
-            "runtime_entry": str(runtime_entry.resolve()),
+            "runtime_entry": str(runtime_entry),
             "manifest_sha256": sha256_file(release / "manifest.json"),
             "managed_inventory": installed_inventory,
         }
+        _canonical_host_layout(state_home, skills_home=skills_home,
+                               release_id=str(manifest["release_id"]))
+        verify_installed_state(state, validation_context=context, state_home=state_home)
         state_temp = transaction / "install-state.json"
         state_temp.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
         state_temp.replace(state_path)
@@ -896,6 +1118,7 @@ def _install_release(
             )
         recover_interrupted_install(state_home, skills_home=skills_home)
         raise InstallError("安装中断，已恢复旧版本") from exc
+    return "installed"
 
 
 def install_release(
@@ -904,22 +1127,31 @@ def install_release(
     *,
     target: str | None = None,
     skills_home: Path | None = None,
-) -> None:
+    validation_context: ReleaseValidationContext | None = None,
+) -> str:
     """Install under a single-writer lock for the selected state home."""
-    verify_release(release)
+    state_home, skills_home = _canonical_host_layout(
+        state_home, skills_home=skills_home, release_id=release.name)
+    context = validation_context or ReleaseValidationContext()
+    context.verify(release)
     state_dir = state_home / "my-matt-workflow"
+    existing = load_install_state(state_dir / "install-state.json")
+    if existing is not None:
+        _verify_recorded_receipt_roots(existing)
     state_dir.mkdir(parents=True, exist_ok=True)
     try:
         # This short lock is also held while cleanup reads receipts and deletes.
         # The build/source gate uses a different lock and can run concurrently.
         with exclusive_lock(release.resolve().parent, REFERENCE_LOCK):
             with exclusive_lock(state_dir, "install"):
+                context.verify(release)
                 remember_installation(release.resolve().parent, state_home)
-                _install_release(
+                return _install_release(
                     release,
                     state_home,
                     target=target,
                     skills_home=skills_home,
+                    validation_context=context,
                 )
     except FilesystemSafetyError as exc:
         raise InstallError(str(exc)) from exc

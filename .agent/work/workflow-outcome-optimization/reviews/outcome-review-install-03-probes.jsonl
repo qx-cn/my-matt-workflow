@@ -1,0 +1,161 @@
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/runtime", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/runtime", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/runtime", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/transaction", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/transaction", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/transaction", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/runtime/v1", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/runtime/v1", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/runtime/v1", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "nested/skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "nested/skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "nested/skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/install-state.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/install-state.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/install-state.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/.install.lock", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/.install.lock", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/.install.lock", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "portable", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/runtime", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/runtime", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/runtime", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/transaction", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/transaction", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/transaction", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/runtime/v1", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/runtime/v1", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/runtime/v1", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "nested/skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "nested/skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "nested/skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/install-state.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/install-state.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/install-state.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/.install.lock", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/.install.lock", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/.install.lock", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "codex", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/runtime", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/runtime", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/runtime", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/transaction", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/transaction", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/transaction", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/runtime/v1", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/runtime/v1", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/runtime/v1", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "nested/skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "nested/skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "nested/skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/install-state.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/install-state.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/install-state.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/.install.lock", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/.install.lock", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/.install.lock", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "cursor", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/runtime", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/runtime", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/runtime", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/transaction", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/transaction", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/transaction", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/runtime/v1", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/runtime/v1", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/runtime/v1", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "nested/skills", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "nested/skills", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "nested/skills", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": false}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/install-state.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/install-state.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/install-state.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/.install.lock", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/.install.lock", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/.install.lock", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "outside", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "dangling", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "initial-link-refusal", "target": "claude", "path": "my-matt-workflow/.my-matt-ownership.json", "kind": "internal", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true, "recover_rejected": true}
+{"probe": "interrupted-internal-link-refusal", "path": "my-matt-workflow", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true}
+{"probe": "interrupted-internal-link-refusal", "path": "my-matt-workflow/runtime", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true}
+{"probe": "interrupted-internal-link-refusal", "path": "my-matt-workflow/transaction", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true}
+{"probe": "interrupted-internal-link-refusal", "path": "my-matt-workflow/install-state.json", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true}
+{"probe": "interrupted-internal-link-refusal", "path": "my-matt-workflow/.install.lock", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true}
+{"probe": "interrupted-internal-link-refusal", "path": "my-matt-workflow/.my-matt-ownership.json", "error": "安装内部路径包含 symlink 或越出宿主根目录", "fixture_unchanged": true}
+{"probe": "explicit-root-alias", "target": "portable", "spelling": "default", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "portable", "spelling": "selected", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "portable", "spelling": "canonical", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "portable", "spelling": "parent-alias", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "codex", "spelling": "default", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "codex", "spelling": "selected", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "codex", "spelling": "canonical", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "codex", "spelling": "parent-alias", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "cursor", "spelling": "default", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "cursor", "spelling": "selected", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "cursor", "spelling": "canonical", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "cursor", "spelling": "parent-alias", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "claude", "spelling": "default", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "claude", "spelling": "selected", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "claude", "spelling": "canonical", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "explicit-root-alias", "target": "claude", "spelling": "parent-alias", "installed": true, "current": true, "recover": true, "doctor": "valid"}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": false, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": false, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": false, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": true, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": true, "seam": "legacy-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": true, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "portable", "migration": true, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": false, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": false, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": false, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": true, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": true, "seam": "legacy-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": true, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "codex", "migration": true, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": false, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": false, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": false, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": true, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": true, "seam": "legacy-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": true, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "cursor", "migration": true, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": false, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": false, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": false, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": true, "seam": "new-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": true, "seam": "legacy-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": true, "seam": "runtime-move", "recovered": true, "subsequent_current": true}
+{"probe": "alias-upgrade-recover", "target": "claude", "migration": true, "seam": "committed", "recovered": true, "subsequent_current": true}
+{"probe": "recorded-root-recovery-drift", "root": "new-skills", "error": "恢复目录的内部路径发生 symlink 漂移", "fixture_unchanged": true}
+{"probe": "recorded-root-recovery-drift", "root": "old-recorded", "error": "旧恢复目录发生 symlink 漂移", "fixture_unchanged": true}
+{"probe": "fresh-migration-recorded-root-drift", "result": "installed", "external_unchanged": false, "external_old_skill_present": false}

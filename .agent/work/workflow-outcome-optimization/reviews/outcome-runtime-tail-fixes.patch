@@ -1,0 +1,262 @@
+--- a/tools/workflow_lib/evidence.py
++++ b/tools/workflow_lib/evidence.py
+@@ -11,9 +11,16 @@
+ import sys
+ 
+ 
+-def execution_observed(output):
++def execution_observed(output, failure_identities=None):
+     cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
+     loader_errors=sum('unittest.loader._FailedTest.' in case for case in cases)
++    if failure_identities is not None:
++        loader_errors=max(loader_errors,sum('unittest.loader._FailedTest.' in case for case in failure_identities))
++    # A stored tail may hide loader headers while retaining Ran N. Complete
++    # identities and the footer error count bound loaders, never imply execution.
++    if failure_identities and all('unittest.loader._FailedTest.' in case for case in failure_identities):
++        errors=re.search(r'^FAILED \(.*?errors=(\d+)',output,re.M)
++        if errors:loader_errors=max(loader_errors,int(errors.group(1)))
+     if any('unittest.loader._FailedTest.' not in case for case in cases):return True
+     ran=re.search(r'^Ran (\d+) tests?\b',output,re.M)
+     if ran and int(ran.group(1))>loader_errors:return True
+@@ -23,6 +30,54 @@
+ def loader_only_failure(output):
+     cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
+     return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not execution_observed(output)
++
++
++def row_execution_observed(row):
++    """Use full-output facts; legacy tails need their complete identity array."""
++    observed=row.get('execution_observed')
++    if isinstance(observed,bool):return observed
++    return execution_observed(row.get('output_tail',''),row.get('failures',[]))
++
++
++def row_loader_only_failure(row):
++    cases=row.get('failures',[])
++    return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not row_execution_observed(row)
++
++
++def unavailable_loader_failures(stdout,stderr):
++    """Prove individual dependency gaps only inside a complete unittest report.
++
++    A passing test elsewhere does not make a loader module name a stable behavior
++    identity. These facts allow unchanged dependency gaps in partial runs without
++    allowing a new import assertion to borrow that same name.
++    """
++    if stdout.strip():return []
++    diagnostic=stderr.strip()
++    progress=re.match(r'[.EFsxu]+\n',diagnostic)
++    verbose=not progress
++    if verbose:
++        progress=re.match(r'(?:[^\n]+ \.\.\. (?:ok|ERROR|FAIL|expected failure|unexpected success|skipped [^\n]+)\n)+\n',diagnostic)
++    footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(([^\n]+)\)$',diagnostic)
++    headers=list(re.finditer(r'^={10,}\n(?:FAIL|ERROR): ([^\n]+)\n-{10,}\n',diagnostic,re.M))
++    if not progress or not footer or not headers or headers[0].start()!=progress.end():return []
++    counts=dict(re.findall(r'(failures|errors)=(\d+)',footer[2]))
++    if sum(int(n) for n in counts.values())!=len(headers):return []
++    if verbose:
++        lines=progress[0].strip().splitlines()
++        announced=[re.sub(r' \.\.\. (?:ERROR|FAIL)$','',line) for line in lines if line.endswith((' ... ERROR',' ... FAIL'))]
++        if len(lines)!=int(footer[1]) or sorted(announced)!=sorted(h[1] for h in headers):return []
++    elif len(progress[0].strip())!=int(footer[1]) or any(progress[0].count(marker)!=int(counts.get(name,0)) for marker,name in (('E','errors'),('F','failures'))):
++        return []
++    observations={}
++    for index,header in enumerate(headers):
++        if 'unittest.loader._FailedTest.' not in header[1]:continue
++        end=headers[index+1].start() if index+1<len(headers) else footer.start()
++        block=diagnostic[header.end():end].strip()
++        prefix=re.match(r'ImportError: Failed to import test module: [^\n]+\n',block)
++        # The same coarse identity may occur more than once. Every block must
++        # prove a dependency gap; one real/unknown block defeats the shortcut.
++        observations.setdefault(header[1],[]).append(bool(prefix and environment_only_failure('',block[prefix.end():],1)))
++    return [identity for identity,facts in observations.items() if all(facts)]
+ 
+ 
+ def unittest_startup_gap(diagnostic,code):
+@@ -86,11 +141,14 @@
+         result=subprocess.run(argv,cwd=repo,capture_output=True,text=True,errors='replace')
+         code,output=result.returncode,result.stdout+result.stderr
+         unavailable=code!=0 and environment_only_failure(result.stdout,result.stderr,code) and not execution_observed(output)
++        loader_gaps=unavailable_loader_failures(result.stdout,result.stderr)
+     except OSError as exc:
+-        code,output,unavailable=127,str(exc),True
++        code,output,unavailable,loader_gaps=127,str(exc),True,[]
+     return dict(argv=argv,exit_code=code,content_id=identity,environment=execution_environment,
+-                unavailable=unavailable,comparison_eligible=not loader_only_failure(output),content_changed=topics.content_id(repo)!=identity,
+-                output_tail=output[-4000:]),output
++                unavailable=unavailable,comparison_eligible=not loader_only_failure(output),
++                execution_observed=execution_observed(output),output_complete=len(output)<=4000,output_length=len(output),
++                unavailable_loader_failures=loader_gaps,
++                content_changed=topics.content_id(repo)!=identity,output_tail=output[-4000:]),output
+ 
+ 
+ def bytes_match(path, sha256, size=None):
+--- a/tools/workflow_lib/batches.py
++++ b/tools/workflow_lib/batches.py
+@@ -212,7 +212,7 @@
+     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
+ 
+ 
+-from .evidence import execution_observed, loader_only_failure
++from .evidence import execution_observed, row_execution_observed, row_loader_only_failure
+ 
+ 
+ def run_full(repo,config):
+@@ -231,9 +231,9 @@
+ 
+ 
+ def baseline_gap(row):
+-    if row.get('unavailable') and not execution_observed(row.get('output_tail','')):
++    if row.get('unavailable') and not row_execution_observed(row):
+         return ('baseline-unavailable','基线环境缺失，无法比较；当前执行失败仍须修复')
+-    if row.get('comparison_eligible') is False or loader_only_failure(row.get('output_tail','')):
++    if row.get('comparison_eligible') is False or row_loader_only_failure(row):
+         return ('baseline-identity-unverifiable','基线仅有模块载入失败身份，不能可靠比较；当前执行失败仍须修复')
+     return None
+ 
+@@ -261,8 +261,17 @@
+             # test-name match that could hide a different package's failure.
+             previous=set(failures(tail,old.get('exit_code',1)))
+         added=set(now['failures'])-previous
++        unchanged=set(now['failures']) & previous
++        # Loader names identify modules, not executed behavior cases. Only a
++        # proven current dependency gap may retain a matching loader as known;
++        # actual/unknown import failures require repair even in partial runs.
++        coarse={f for f in unchanged if 'unittest.loader._FailedTest.' in f}
++        uncertain=coarse-set(now.get('unavailable_loader_failures',[]))
++        if uncertain:
++            unverified.append(old['command'])
++            new.extend(dict(command=now['command'],failure=f,comparison='loader-identity-unverifiable') for f in sorted(uncertain))
+         new.extend(dict(command=now['command'],failure=f) for f in sorted(added))
+-        known.extend(dict(command=now['command'],failure=f) for f in sorted(set(now['failures']) & previous))
++        known.extend(dict(command=now['command'],failure=f) for f in sorted(unchanged-uncertain))
+     return dict(new_failures=new,known_failures=known,unverified=unverified)
+ 
+ 
+--- a/tests/test_batches.py
++++ b/tests/test_batches.py
+@@ -277,6 +277,124 @@
+                 self.assertTrue(status['unverified'])
+                 self.assertIn('基线环境缺失',status['unverified'][0]['note'])
+                 self.cli('batch','close','--topic','feature',ok=False)
++
++    def test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure(self):
++        for verbose in ('',' -v'):
++            with self.subTest(verbose=verbose):
++                if verbose:self.setUp()
++                suite=self.repo/'suite';suite.mkdir()
++                for number in range(12):
++                    (suite/f'test_{number:02d}.py').write_text('import outcome_missing_tail_dependency\n')
++                self.git('add','suite');self.git('commit','-qm','twelve unavailable loader modules')
++                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
++                baseline_path=self.repo/'.agent/work/feature/test-baseline.json'
++                baseline=json.loads(baseline_path.read_text());row=baseline['results'][0]
++                self.assertEqual(12,len(row['failures']))
++                self.assertLess(row['output_tail'].count('ERROR:'),12)
++                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
++                self.review()
++                (suite/'test_00.py').write_text("assert False, 'actual import assertion with unchanged loader identity'\n")
++                self.git('add','suite');self.git('commit','-qm','actual import regression')
++                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['new_failures'])
++                self.assertFalse(current['results'][0]['execution_observed'])
++                for unavailable in (False,True):
++                    with self.subTest(legacy_unavailable=unavailable):
++                        legacy_baseline=json.loads(json.dumps(baseline));old=legacy_baseline['results'][0]
++                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures'):
++                            old.pop(field,None)
++                        old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
++                        receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
++                        stale=json.loads(json.dumps(current))
++                        for item in stale['results']:
++                            for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures'):
++                                item.pop(field,None)
++                        stale.update(new_failures=[],known_failures=[dict(command=old['command'],failure=f) for f in old['failures']],unverified=[])
++                        receipt.write_text(json.dumps(stale))
++                        self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
++                        rerun=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                        self.assertFalse(rerun['results'][0]['unavailable'])
++                        self.assertTrue(rerun['new_failures']);self.assertTrue(rerun['unverified'])
++                        self.assertIn('新增失败',self.cli('batch','review','--topic','feature','--reviewer-model','host','--reviewer-session-id','fresh-context',ok=False).stderr)
++                baseline_path.write_text(json.dumps(baseline))
++                self.assertFalse(row['execution_observed']);self.assertFalse(row['output_complete'])
++                self.assertGreater(row['output_length'],len(row['output_tail']))
++
++    def test_truncated_partial_legacy_preserves_real_known_case_difference(self):
++        for verbose in ('',' -v'):
++            with self.subTest(verbose=verbose):
++                if verbose:self.setUp()
++                suite=self.repo/'suite';suite.mkdir()
++                for number in range(12):
++                    (suite/f'test_{number:02d}.py').write_text('import outcome_missing_partial_tail_dependency\n')
++                behavior=suite/'test_behavior.py'
++                behavior.write_text('import unittest\nclass Behavior(unittest.TestCase):\n def test_known(self): self.assertEqual(1, 2)\n def test_new(self): self.assertEqual(3, 3)\n')
++                self.git('add','suite');self.git('commit','-qm','twelve loader gaps and real behavior cases')
++                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
++                baseline_path=self.repo/'.agent/work/feature/test-baseline.json'
++                baseline=json.loads(baseline_path.read_text());row=baseline['results'][0]
++                self.assertTrue(row['execution_observed']);self.assertFalse(row['output_complete'])
++                self.assertEqual(13,len(row['failures']))
++                self.assertEqual(12,len(row['unavailable_loader_failures']))
++                self.review()  # Known executed failure plus unchanged loader gaps remain reviewable.
++                behavior.write_text(behavior.read_text().replace('assertEqual(3, 3)','assertEqual(3, 4)'))
++                self.git('add','suite');self.git('commit','-qm','new real behavior failure')
++                for unavailable in (False,True):
++                    with self.subTest(legacy_unavailable=unavailable):
++                        legacy_baseline=json.loads(json.dumps(baseline));old=legacy_baseline['results'][0]
++                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures'):
++                            old.pop(field,None)
++                        old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
++                        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                        self.assertTrue(current['results'][0]['execution_observed'])
++                        self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['unverified'])
++                        self.assertEqual(1,len(current['new_failures']))
++                        self.assertIn('test_new',current['new_failures'][0]['failure'])
++                        self.assertEqual(13,len(current['known_failures']))
++                        self.assertTrue(any('test_known' in f['failure'] for f in current['known_failures']))
++                        self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
++
++    def test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps(self):
++        for verbose in ('',' -v'):
++            with self.subTest(verbose=verbose):
++                if verbose:self.setUp()
++                runner=self.repo/'runner.py'
++                runner.write_text("import pathlib, sys, traceback, unittest\nfrom unittest.loader import _FailedTest\ndef failed(real):\n try:\n  if real: assert False, 'actual duplicate loader assertion'\n  import outcome_missing_duplicate_dependency\n except Exception:\n  return _FailedTest('same', ImportError('Failed to import test module: same\\n'+traceback.format_exc()))\nclass Behavior(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\nreal=pathlib.Path('mode.txt').read_text()=='bad'\nsuite=unittest.TestSuite([failed(real), failed(False), Behavior('test_ok')])\nresult=unittest.TextTestRunner(verbosity=2 if '-v' in sys.argv else 1).run(suite)\nraise SystemExit(not result.wasSuccessful())\n")
++                mode=self.repo/'mode.txt';mode.write_text('good')
++                self.git('add','runner.py','mode.txt');self.git('commit','-qm','duplicate pure loader failures with executed test')
++                self.setup(full='python3 -B runner.py'+verbose);self.implement()
++                baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
++                self.assertTrue(baseline['results'][0]['execution_observed'])
++                self.assertTrue(baseline['results'][0]['unavailable_loader_failures'])
++                self.review()
++                mode.write_text('bad');self.git('add','mode.txt');self.git('commit','-qm','real duplicate block before pure environment block')
++                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertFalse(current['results'][0]['unavailable'])
++                self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
++                self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
++                self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
++
++    def test_partial_loader_identity_cannot_hide_new_import_assertion(self):
++        for verbose in ('',' -v'):
++            with self.subTest(verbose=verbose):
++                if verbose:self.setUp()
++                suite=self.repo/'suite';suite.mkdir()
++                (suite/'test_ok.py').write_text('import unittest\nclass Behavior(unittest.TestCase):\n def test_ok(self): self.assertEqual(1, 1)\n')
++                missing=suite/'test_missing.py';missing.write_text('import outcome_missing_partial_dependency\n')
++                self.git('add','suite');self.git('commit','-qm','one real passing test and one loader gap')
++                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
++                baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
++                self.assertFalse(baseline['results'][0]['unavailable']);self.assertTrue(baseline['results'][0]['comparison_eligible'])
++                self.assertTrue(baseline['results'][0]['execution_observed'])
++                self.review()
++                missing.write_text("assert False, 'new actual import behavior regression'\n")
++                self.git('add','suite');self.git('commit','-qm','same loader identity now real failure')
++                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertFalse(current['results'][0]['unavailable'])
++                self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
++                self.assertTrue(current['unverified'])
++                self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+ 
+     def test_briefing_contains_predecessor_contracts_batch_impacts_and_hints(self):
+         self.setup(2)

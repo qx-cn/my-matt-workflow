@@ -46,6 +46,9 @@ def load(repo, topic=None, all_complete=True, batch=False):
     record = root / 'branch-review.json'
     unit = json.loads(record.read_text()) if record.exists() else dict(
         topic=topic, baseline=state['baseline'], started_at=topics.now(), reviews=[], status='implementing')
+    if unit.get('status')=='needs-user' and review_loop.recover_geometry(unit,
+            lambda candidate:require_pass(repo,config,topic,root,tickets,candidate)):
+        impl.write_json(record,unit)
     return repo, config, topic, root, tickets, unit, record
 
 
@@ -82,7 +85,7 @@ def test(repo, topic=None):
 
 def materials(repo, config, topic, tickets):
     rules, sources, specs, acceptance, probes, scope = [], [], [], [], [], []
-    ticket_documents, impacts = [], []
+    ticket_documents, impacts, self_findings = [], [], []
     for identifier, (path, value) in tickets.items():
         stored = impl.record_path(repo, topic, identifier)
         if stored.is_file():
@@ -102,6 +105,9 @@ def materials(repo, config, topic, tickets):
         ticket_documents.append(path.read_text())
         history = json.loads(stored.read_text()) if stored.is_file() else {}
         self_text = history.get('self_review',{}).get('text','')
+        from .batches import pending_self_findings
+        self_findings.extend(dict(ticket=identifier,target=f"self:{identifier}:{f['id']}",finding=f,
+            observed_content_id=observation.get('content_id')) for f,observation in pending_self_findings(history).values() if f.get('disposition')=='fix-in-batch')
         impacts.append(f"### {identifier}（实施者声明，待核实）\n" + impl.section_text(self_text, '影响面'))
         mapped, text = impl.rule_material(repo, config, value, agent, topics.git(repo,'diff','--name-only', topics.state(topics.topic_path(repo,topic))['baseline']).stdout.decode().splitlines())
         rules.append({'ticket': identifier, 'rules': mapped})
@@ -111,20 +117,15 @@ def materials(repo, config, topic, tickets):
         probes.extend(value['review_probes'])
         scope.extend(value.get('rule_scope', []))
     return dict(rule_map=rules, rules='\n\n'.join(sources), specs='\n\n'.join(specs),
-                acceptance=acceptance, probes=list(dict.fromkeys(probes)), scope=scope,ticket_documents='\n\n'.join(ticket_documents),impacts='\n\n'.join(impacts))
+                acceptance=acceptance, probes=list(dict.fromkeys(probes)), scope=scope,self_findings=self_findings,ticket_documents='\n\n'.join(ticket_documents),impacts='\n\n'.join(impacts))
 
 
 def current_manifest(repo, config, topic, root, tickets, unit):
     active = unit.get('active_review')
     if not active:
         raise topics.TopicError('review: 缺少整分支审查记录')
-    path = Path(active['manifest'])
-    if reviews.digest(path.read_bytes()) != active['manifest_sha256']:
-        raise topics.TopicError('manifest: 整分支冻结材料已变化')
-    manifest = json.loads(path.read_text())
-    for entry in manifest['inputs'] + [e for c in manifest['changes'] for e in (c['base'], c['current']) if e]:
-        if reviews.digest(Path(entry['snapshot_path']).read_bytes()) != entry['sha256']:
-            raise topics.TopicError('snapshot: 整分支冻结材料已变化')
+    from .evidence import frozen_manifest
+    manifest=frozen_manifest(active)
     if manifest.get('head') and topics.git(repo,'rev-parse','HEAD').stdout.decode().strip() != manifest['head']:
         raise topics.TopicError('HEAD 已变化；请对变化部分复审')
     if topics.content_id(repo) != manifest['content_id']:
@@ -132,6 +133,8 @@ def current_manifest(repo, config, topic, root, tickets, unit):
     if definition(repo, tickets) != active['definition'] or config != active['config']:
         raise topics.TopicError('definition: Ticket/Spec/配置已变化，请重新审查或 reopen')
     material = materials(repo, config, topic, tickets)
+    if material['self_findings']!=manifest.get('self_findings',[]):
+        raise topics.TopicError('self-review: 批次待处置发现已变化，请重新审查')
     decided = root / 'decided' / f'decided-{topic}.md'
     if (material['rule_map'] != manifest['rule_map']
             or reviews.digest(material['rules'].encode()) != manifest['inputs'][0]['sha256']
@@ -140,16 +143,22 @@ def current_manifest(repo, config, topic, root, tickets, unit):
     return manifest
 
 
+def acceptance_current(repo,unit):
+    accepted=unit.get('acceptance',{})
+    return accepted.get('head')==topics.git(repo,'rev-parse','HEAD').stdout.decode().strip() and accepted.get('content_id')==topics.content_id(repo)
+
+
 def require_pass(repo, config, topic, root, tickets, unit):
     accepted = unit.get('acceptance',{})
-    if accepted.get('head') == topics.git(repo,'rev-parse','HEAD').stdout.decode().strip() and accepted.get('content_id') == topics.content_id(repo):
+    if acceptance_current(repo,unit):
         return dict(status='accepted',reason=accepted['reason'])
     if unit['status'] == 'needs-user':
         raise topics.TopicError('审查需要用户裁决：' + unit['stop_reason'])
     manifest = current_manifest(repo, config, topic, root, tickets, unit)
     entry = unit['reviews'][-1]
+    from . import evidence
     accepted = root / 'reviews' / f"accepted-{manifest['unit_id']}.json"
-    if entry.get('status') != 'pass' or entry['unit_id'] != manifest['unit_id'] or not accepted.exists() or json.loads(accepted.read_text()) != entry:
+    if entry.get('status') != 'pass' or entry['unit_id'] != manifest['unit_id'] or not evidence.accepted_matches(accepted,entry):
         raise topics.TopicError('review: 当前整分支审查未通过')
     reviews.validate_result(entry['result'], manifest)
     return entry
@@ -191,6 +200,7 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         entry = dict(manifest=unit['active_review']['manifest'], repair=repair, unit_id=manifest['unit_id'],
                      content_id=manifest['content_id'], round=manifest['round'], status=status,
                      reviewer=result['reviewer'], result=result,review_context=manifest['review_context'],review_series=unit['reviews'][-1].get('review_series',manifest['unit_id']))
+        from . import evidence
         accepted = root / 'reviews' / f"accepted-{manifest['unit_id']}.json"
         if accepted.exists() and json.loads(accepted.read_text()) != entry:
             raise topics.TopicError('unit_id: 当前单元已登记不同结果')
@@ -241,9 +251,10 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
                        reviews.frozen_file(directory,'impact-declarations.md',material['impacts'].encode())])
         repository = reviews.freeze_repository(directory,current)
         inputs.extend(repository)
+        inputs.append(reviews.frozen_file(directory,'self-findings.json',json.dumps(material['self_findings'],ensure_ascii=False).encode()))
         manifest = {**{k:skeleton[k] for k in reviews.PREFILLED},'repository':repository, 'baseline':unit['baseline'], 'topic':topic,
-                    'head':topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),'topic_changes':unit.get('topic_changes',[]),'repository_files': sorted(current),'changes':changes,'inputs':inputs,'rule_map':material['rule_map'],'review_context':context,
-                    'coverage_targets':[a['id'] for a in material['acceptance']] + material['probes']
+                    'self_findings':material['self_findings'],'head':topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),'topic_changes':unit.get('topic_changes',[]),'repository_files': sorted(current),'changes':changes,'inputs':inputs,'rule_map':material['rule_map'],'review_context':context,
+                    'coverage_targets':[a['id'] for a in material['acceptance']] + material['probes'] + [f['target'] for f in material['self_findings']]
                         + sorted(set(re.findall(r'\*\*(I-(?:[A-Z]+)?[0-9]+)\*\*',material['specs'])))}
         path = directory / 'manifest.json'
         impl.write_json(path,manifest)

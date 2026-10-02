@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 import re
 import shlex
-import subprocess
 import uuid
 from . import topic_service as topics, ticket_implementation as impl
 
@@ -79,6 +78,13 @@ def active(repo, topic, identifier=None):
     batch = next((b for b in value['batches'] if b['id']==identifier), None) if identifier else (candidates[0] if candidates else None)
     if not batch:
         raise topics.TopicError('没有待收口批次')
+    if batch.get('status')=='needs-user':
+        from . import branch_review, review_loop
+        tickets=impl.records(repo,topic)
+        if review_loop.recover_geometry(batch,lambda candidate:branch_review.require_pass(
+                repo,topics.read_config(repo),topic,topics.topic_path(repo,topic),
+                {t:tickets[t] for t in batch['tickets']},candidate)):
+            save(repo,topic,value)
     return value, batch
 
 
@@ -103,6 +109,24 @@ def before_start(repo, topic, ticket):
         baseline['baseline'] = batch['baseline']
         impl.write_json(baseline_file, baseline)
     return batch['id']
+
+
+def pending_self_findings(unit):
+    """Missing old fields never silently dispose of an earlier discovery."""
+    history=unit.get('self_reviews',[])
+    latest=unit.get('self_review')
+    if latest and (not history or history[-1]!=latest):history=[*history,latest]
+    pending={}
+    for observation in history:
+        for resolution in observation.get('resolutions',[]):pending.pop(resolution['id'],None)
+        for finding in observation.get('findings',[]):
+            prior=pending.get(finding['id'])
+            if prior and (prior[0].get('severity')=='blocking' or prior[0].get('view')=='spec-challenge'):
+                continue  # A later missing/downgraded field is not a resolution.
+            if finding.get('severity')=='blocking' or finding.get('view')=='spec-challenge' or finding.get('disposition')=='fix-in-batch':
+                pending[finding['id']]=(finding,observation)
+            else:pending.pop(finding['id'],None)
+    return pending
 
 
 def self_review(repo, ticket=None, topic=None, notes_file=None, findings_file=None, no_findings=False):
@@ -130,21 +154,41 @@ def self_review(repo, ticket=None, topic=None, notes_file=None, findings_file=No
         result={k:manifest[k] for k in review.PREFILLED}
         result.update(status='findings' if findings else 'pass',reviewer=manifest['review_context'],coverage=[],findings=findings)
         review.validate_result(result,manifest)
+    pending=pending_self_findings(unit)
+    unresolved=[f for f,_ in pending.values()]
+    incoming={f['id']:f for f in findings or []}
+    removed=[f for f in unresolved if findings is not None and (f['id'] not in incoming or
+        (f.get('severity')=='blocking' and incoming[f['id']].get('severity')!='blocking') or
+        (f.get('view')=='spec-challenge' and incoming[f['id']].get('view')!='spec-challenge'))]
+    if any(f.get('view')=='spec-challenge' or
+           pending[f['id']][1].get('content_id')==topics.content_id(repo) for f in removed):
+        raise topics.TopicError('self-review: 未修复内容或未裁决 Spec 挑战，不能仅删除 findings')
+    if findings is None and unresolved:findings=unresolved
     history=unit.setdefault('self_reviews',[unit['self_review']] if 'self_review' in unit else [])
     unit['self_review']=dict(content_id=topics.content_id(repo),text=text,at=topics.now(),definition=impl.definition(repo,path))
     if findings is not None:unit['self_review']['findings']=findings
+    if removed:
+        unit['self_review']['resolutions']=[dict(id=f['id'],prior_content_id=pending[f['id']][1].get('content_id'),
+            content_id=unit['self_review']['content_id'],at=topics.now(),evidence=text) for f in removed]
     history.append(unit['self_review'])
-    impl.write_json(record,unit)
+    if any(f.get('view')=='spec-challenge' for f in findings or []):
+        from .review_loop import stop
+        stop(unit,path,record,'Spec 与现有系统冲突：增强自审需要用户裁决')
+    else:
+        impl.write_json(record,unit)
     return dict(ticket=unit['ticket'],self_review='已记录')
 
 
-def require_self(repo,unit):
+def require_self(repo,unit,allow_findings=False):
     value=unit.get('self_review',{})
     _, path = impl.ticket_path(repo,unit['ticket'])
     if value.get('definition') != impl.definition(repo,path) or value.get('content_id') != topics.content_id(repo):
         raise topics.TopicError('self-review: 当前内容缺少完整增强自审；请 implement self-review --notes-file <记录>')
     if not set(SELF_SECTIONS) <= {t for t,_ in topics.summary_headings(value.get('text',''))}:
         raise topics.TopicError('self-review: 增强自审缺节')
+    blocking=[f for f,_ in pending_self_findings(unit).values() if f.get('severity')=='blocking' or f.get('view')=='spec-challenge']
+    if blocking and not allow_findings:
+        raise topics.TopicError('self-review: 未解决发现：'+', '.join(f['id'] for f in blocking))
 
 
 def failures(output, code):
@@ -168,14 +212,7 @@ def failures(output, code):
     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
 
 
-def execution_observed(output):
-    """Distinguish partial test execution from an environment-only failure."""
-    unit_cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
-    loader_errors=sum('unittest.loader._FailedTest.' in case for case in unit_cases)
-    if any('unittest.loader._FailedTest.' not in case for case in unit_cases):return True
-    ran=re.search(r'^Ran (\d+) tests?\b',output,re.M)
-    if ran and int(ran.group(1))>loader_errors:return True
-    return bool(re.search(r'^FAILED\s+[^\s(]\S*|^\s*--- FAIL: |\b[1-9]\d* passed\b',output,re.M))
+from .evidence import execution_observed, row_execution_observed, row_loader_only_failure, current_unavailable, current_loader_gaps
 
 
 def run_full(repo,config):
@@ -184,25 +221,39 @@ def run_full(repo,config):
     identity=topics.content_id(repo)
     rows=[]
     for command in commands:
-        try:
-            result=subprocess.run(shlex.split(command),cwd=repo,capture_output=True,text=True,errors='replace')
-            output=result.stdout+result.stderr
-            unavailable=result.returncode != 0 and (result.returncode in (126,127) or bool(re.search(r'ModuleNotFoundError|No module named|command not found',output))) and not execution_observed(output)
-            code=result.returncode
-        except OSError as exc:
-            output=str(exc);code=127;unavailable=True
-        rows.append(dict(command=command,exit_code=code,unavailable=unavailable,failures=failures(output,code),output_tail=output[-4000:]))
+        from .evidence import execute
+        observed,output=execute(repo,shlex.split(command))
+        rows.append(dict(observed,command=command,failures=failures(output,observed['exit_code'])))
+        if observed['content_changed']:raise topics.TopicError('全量测试改变了内容；本次记录无效')
+
     if topics.content_id(repo)!=identity:raise topics.TopicError('全量测试改变了内容；本次记录无效')
-    return dict(content_id=identity,head=topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),commands=commands,results=rows,at=topics.now())
+    return dict(completed=True,content_id=identity,head=topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),commands=commands,results=rows,at=topics.now())
+
+
+def baseline_gap(row):
+    if row.get('unavailable') and not row_execution_observed(row):
+        return ('baseline-unavailable','基线环境缺失，无法比较；当前执行失败仍须修复')
+    if row.get('comparison_eligible') is False or row_loader_only_failure(row):
+        return ('baseline-identity-unverifiable','基线仅有模块载入失败身份，不能可靠比较；当前执行失败仍须修复')
+    return None
 
 
 def compare(baseline,current):
     if baseline['commands']!=current['commands']:raise topics.TopicError('全量测试配置与基线不同；不能比较')
+    if any(len(value.get('results',[]))!=len(value['commands']) or
+           any(row.get('command')!=command for row,command in zip(value.get('results',[]),value['commands']))
+           for value in (baseline,current)):
+        raise topics.TopicError('全量测试记录不完整；不能比较')
     new=[];known=[];unverified=[]
     for old,now in zip(baseline['results'],current['results']):
-        if old['unavailable'] and not execution_observed(old.get('output_tail','')):
-            unverified.append(old['command']);continue
-        if now['unavailable']:
+        unavailable=current_unavailable(now)
+        gap=baseline_gap(old)
+        if gap:
+            unverified.append(old['command'])
+            if not unavailable and now.get('exit_code',bool(now.get('failures'))):
+                new.extend(dict(command=now['command'],failure=f,comparison=gap[0]) for f in now['failures'])
+            continue
+        if unavailable:
             new.append(dict(command=now['command'],failure='当前环境无法运行'));continue
         previous=set(old['failures'])
         tail=old.get('output_tail','')
@@ -211,8 +262,17 @@ def compare(baseline,current):
             # test-name match that could hide a different package's failure.
             previous=set(failures(tail,old.get('exit_code',1)))
         added=set(now['failures'])-previous
+        unchanged=set(now['failures']) & previous
+        # Loader names identify modules, not executed behavior cases. Only a
+        # proven current dependency gap may retain a matching loader as known;
+        # actual/unknown import failures require repair even in partial runs.
+        coarse={f for f in unchanged if 'unittest.loader._FailedTest.' in f}
+        uncertain=coarse-current_loader_gaps(now)
+        if uncertain:
+            unverified.append(old['command'])
+            new.extend(dict(command=now['command'],failure=f,comparison='loader-identity-unverifiable') for f in sorted(uncertain))
         new.extend(dict(command=now['command'],failure=f) for f in sorted(added))
-        known.extend(dict(command=now['command'],failure=f) for f in sorted(set(now['failures']) & previous))
+        known.extend(dict(command=now['command'],failure=f) for f in sorted(unchanged-uncertain))
     return dict(new_failures=new,known_failures=known,unverified=unverified)
 
 
@@ -220,6 +280,8 @@ def test(repo,topic=None):
     repo=topics.safe_repo(repo);topic=topics.select_topic(repo,topic)
     value,batch=active(repo,topic)
     if batch['status']=='closed':raise topics.TopicError('批次已收口')
+    record=topics.topic_path(repo,topic)/f"batch-tests-{batch['id']}.json"
+    impl.write_json(record,dict(content_id=topics.content_id(repo),completed=False))
     current=run_full(repo,topics.read_config(repo))
     baseline=json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text())
     current.update(compare(baseline,current))
@@ -231,7 +293,14 @@ def tests_passed(repo,config,topic,batch):
     path=topics.topic_path(repo,topic)/f"batch-tests-{batch['id']}.json"
     if not path.exists():return False
     value=json.loads(path.read_text())
-    return value['content_id']==topics.content_id(repo) and value['commands']==topics.full_tests(config) and not value['new_failures']
+    if value.get('completed') is not True or value.get('content_id')!=topics.content_id(repo) or value.get('commands')!=topics.full_tests(config):return False
+    try:
+        baseline=json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text())
+        from .evidence import environment
+        if any(row.get('environment')!=environment(repo,shlex.split(row['command'])) for row in value['results']):return False
+        # Re-evaluate raw legacy receipts; a pre-upgrade empty comparison is not proof.
+        return not compare(baseline,value)['new_failures']
+    except (KeyError,ValueError,OSError,topics.TopicError):return False
 
 
 def status(repo,topic=None):
@@ -239,32 +308,53 @@ def status(repo,topic=None):
     value,batch=active(repo,topic)
     config=topics.read_config(repo)
     tickets=impl.records(repo,topic)
+    tests_current=tests_passed(repo,config,topic,batch)
     implementing=[t for t in batch['tickets'] if tickets[t][1]['status'] in ('implementing','needs-user')]
-    command=impl.status(repo,implementing[0],topic)['next_command'] if implementing else impl.next_start_command(repo,topic)
+    implementation_status=impl.status(repo,implementing[0],topic) if implementing else {}
+    command=implementation_status.get('next_command') or impl.next_ready_command(repo,topic)
     if all(tickets[t][1]['status']=='complete' for t in batch['tickets']):
-        command=f'workflow.py batch {"review" if tests_passed(repo,config,topic,batch) else "test"} --repo {shlex.quote(str(repo))} --topic {topic}'
-        if batch['status']=='needs-user':command=f'workflow.py batch accept --repo {shlex.quote(str(repo))} --topic {topic} --reason <裁决>'
-        else:
+        command=f'workflow.py batch {"review" if tests_current else "test"} --repo {shlex.quote(str(repo))} --topic {topic}'
+        if batch['status']=='needs-user' and tests_current:command=f'workflow.py batch accept --repo {shlex.quote(str(repo))} --topic {topic} --reason <裁决>'
+        elif tests_current:
             from . import branch_review
             try:
                 branch_review.require_pass(repo,config,topic,topics.topic_path(repo,topic),{t:tickets[t] for t in batch['tickets']},batch)
                 command=f'workflow.py batch close --repo {shlex.quote(str(repo))} --topic {topic}'
+                branch=topics.topic_path(repo,topic)/'branch-review.json'
+                if branch.exists():
+                    try:
+                        branch_review.require_pass(repo,config,topic,topics.topic_path(repo,topic),tickets,json.loads(branch.read_text()))
+                    except (topics.TopicError,OSError,ValueError):
+                        command=f"workflow.py topic review --repo {shlex.quote(str(repo))} --topic {topic} --initiated-by agent --reason '恢复已发起的整分支审查'"
             except (topics.TopicError,OSError,ValueError):pass
+    content_input=[]
+    if topics.content_dirty(repo) and batch['status']=='reviewing':
+        if repair_findings(repo,topic,batch):
+            command=f'workflow.py batch repair --repo {shlex.quote(str(repo))} --topic {topic} --notes-file <修复说明>'
+        else:
+            command=None
+            content_input=['恢复未审查的内容漂移，或先将已授权的新工作归入新 Ticket；当前没有待修复发现可供 batch repair']
     labels={'pending':'待开始','open':'实施中','reviewing':'审查中','needs-user':'需要用户裁决','closed':'已收口'}
     latest=batch.get('reviews',[])[-1:] 
     return dict(topic=topic,batch=batch['id'],state=labels[batch['status']],tickets=batch['tickets'],next_command=command,
-        decisions_needed=[dict(finding=f,decision='请决定修订 Spec、接受风险或按原 Spec 继续') for r in latest for f in r.get('result',{}).get('findings',[]) if f.get('view')=='spec-challenge'],
-        unverified=[dict(command=r['command'],note='基线环境缺失，无法验证；收口摘要必须披露') for r in json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text()).get('results',[]) if r['unavailable']] if (topics.topic_path(repo,topic)/'test-baseline.json').exists() else [])
+        inputs_needed=content_input or (['实际 reviewer-model 与审查上下文来源'] if command and ' review ' in command else ['包含待修复发现 id 的说明文件'] if command and ' repair ' in command else []),
+        decisions_needed=implementation_status.get('decisions_needed',[])+[dict(finding=f,decision='请决定修订 Spec、接受风险或按原 Spec 继续') for r in latest for f in r.get('result',{}).get('findings',[]) if f.get('view')=='spec-challenge'],
+        unverified=[dict(command=r['command'],note=baseline_gap(r)[1]) for r in json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text()).get('results',[]) if baseline_gap(r)] if (topics.topic_path(repo,topic)/'test-baseline.json').exists() else [])
+
+
+def repair_findings(repo,topic,batch):
+    findings=[f for r in batch.get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
+    branch=topics.topic_path(repo,topic)/'branch-review.json'
+    if branch.exists():
+        findings += [f for r in json.loads(branch.read_text()).get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
+    return findings
 
 
 def repair(repo,topic=None,notes_file=None):
     repo=topics.safe_repo(repo);topic=topics.select_topic(repo,topic)
     value,batch=active(repo,topic)
     if batch['status']!='reviewing':raise topics.TopicError('只有批次审查修复可以提交')
-    findings=[f for r in batch.get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
-    branch=topics.topic_path(repo,topic)/'branch-review.json'
-    if branch.exists():
-        findings += [f for r in json.loads(branch.read_text()).get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
+    findings=repair_findings(repo,topic,batch)
     notes=Path(notes_file).read_text() if notes_file else ''
     if not findings or any(f['id'] not in notes for f in findings):raise topics.TopicError('修复说明必须引用全部待修复发现 id')
     topics.preflight_commit(repo,topics.read_config(repo))
@@ -285,7 +375,9 @@ def close(repo,topic=None,accept=False,reason=''):
         receipt=batch.get('submitted',{}).get(t)
         if not receipt or topics.git(repo,'merge-base','--is-ancestor',receipt['head'],'HEAD',check=False).returncode:
             raise topics.TopicError(f'{t}: 缺少当前分支的提交回执')
-    if topics.content_dirty(repo):raise topics.TopicError('批次内容尚未提交；请 batch repair')
+    if topics.content_dirty(repo):
+        message='批次内容尚未提交；请 batch repair' if repair_findings(repo,topic,batch) else '批次存在未审查内容且无待修复发现；请恢复内容，或先归入已授权的新 Ticket'
+        raise topics.TopicError(message)
     if not tests_passed(repo,config,topic,batch):raise topics.TopicError('全量测试新增失败或记录过期；请 batch test')
     from . import branch_review
     if accept:
@@ -301,6 +393,11 @@ def close(repo,topic=None,accept=False,reason=''):
             unit['known_issues'] = [f for r in unit.get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[])]
             impl.write_json(branch,unit)
         branch_review.require_pass(repo,config,topic,root,tickets,unit)
+    if not accept:
+        manifest=branch_review.current_manifest(repo,config,topic,root,{t:tickets[t] for t in batch['tickets']},batch)
+        for observation in manifest.get('self_findings',[]):
+            batch.setdefault('self_finding_resolutions',[]).append(dict(ticket=observation['ticket'],
+                finding=observation['finding']['id'],review_unit=manifest['unit_id'],content_id=manifest['content_id'],at=topics.now()))
     batch.update(status='closed',closed_at=topics.now(),head=topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),content_id=topics.content_id(repo))
     report=json.loads((root/f"batch-tests-{batch['id']}.json").read_text())
     summary=root/'deliveries'/f'deliveries-{topic}-01.md'

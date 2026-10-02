@@ -71,6 +71,9 @@ def all_reviews(unit):
 
 def preserve_history(unit):
     unit.setdefault('past_reviews',[]).extend(unit.get('reviews',[]))
+    singleton=unit.get('self_review')
+    if singleton and singleton not in unit.setdefault('self_reviews',[]):
+        unit['self_reviews'].append(singleton)
 
 
 def unit_items(unit,source,scope):

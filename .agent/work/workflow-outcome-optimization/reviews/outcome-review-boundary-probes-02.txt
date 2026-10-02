@@ -1,0 +1,20 @@
+
+PROBE dirty_next
+DIRTY_STATUS {'rc': 0, 'stdout': '{"batch": "01", "decisions_needed": [], "inputs_needed": ["恢复未审查的内容漂移，或先将已授权的新工作归入新 Ticket；当前没有待修复发现可供 batch repair"], "next_command": null, "state": "审查中", "tickets": ["feature-01"], "topic": "feature", "unverified": []}', 'stderr': ''}
+DIRTY_NEXT_MUTATION {'rc': 1, 'stdout': '', 'stderr': '修复说明必须引用全部待修复发现 id'}
+DIRTY_CLOSE {'rc': 1, 'stdout': '', 'stderr': '批次存在未审查内容且无待修复发现；请恢复内容，或先归入已授权的新 Ticket'}
+
+PROBE singleton_history
+LEGACY_BEFORE ['legacy-bug']
+LEGACY_REOPEN {'rc': 0, 'stdout': '{"baseline": "1f0d8a0396ca3b7ef21a5ded9af577e25cecd067", "reason": "approved unrelated wording", "status": "implementing", "ticket": "feature-01"}', 'stderr': ''}
+LEGACY_AFTER {"pending": ["legacy-bug"], "self_review": null, "self_reviews": [{"content_id": "661090448c2ebcbe8bfbb340f87da9cbf99117282e636aea95e13d3cff3caa31", "text": "## 验收对照\n无：玩具用例无此风险。\n\n## 现状核实\n无：玩具用例无此风险。\n\n## 影响面\n无：玩具用例无此风险。\n\n## 对抗检查\n无：玩具用例无此风险。\n\n## 简洁与约定\n无：玩具用例无此风险。\n\n## 已知缺口\n无：玩具用例无此风险。\n", "at": "2026-10-02T12:51:00.615904+00:00", "definition": {"ticket": {"metadata": {"id": "feature-01", "title": "Execute tests", "ticket_kind": "implementation", "spec_id": "feature", "spec_revision": "1", "spec_ref": ".agent/work/feature/specs/specs-feature-01.md", "blocked_by": [], "sequence": "1", "test_commands": ["python3 -c 'pass'"], "rule_sources": [".agent/work/feature/specs/specs-feature-01.md"], "rule_scope": ["code.txt"], "rule_constraints": ["observe tests"], "rule_conflicts": [], "review_probes": ["recovery"], "execution_agent": "auto", "supersedes_ticket": [], "compensates": [], "tags": []}, "body": "## 要构建什么\nRun tests\n## 适用规则与影响区域\nlocal\n## 验收标准\n- [ ] marker observed"}, "spec_sha256": "145569fc8dfcec88c7f8dcbb5a1e660f45b3d4e3ed300ea80eb5daa49908bea6"}, "findings": [{"id": "legacy-bug", "severity": "blocking", "view": "correctness", "summary": "marker fails", "location": "code.txt:1", "basis": "marker mismatches caller"}]}], "past_reviews": []}
+
+PROBE head_integrity
+HEAD_DRIFT_CLOSE {'rc': 1, 'stdout': '', 'stderr': 'HEAD 已变化；请对变化部分复审'}
+
+PROBE artifact_scope
+ARTIFACT_DIFFERENT_PATH {'status': 'stale', 'content_id': 'cdb284c287aee9572c30e81fc4423be7af3cf54ae314a8e2a0fa89a988b1366e', 'expected_content_id': 'fd1905ad823a8a1a8682b8439c8fa1985a9cae0d1558bb99124df8c832107a1d', 'released': True}
+
+PROBE frozen_corruption
+FROZEN_INTACT True
+FROZEN_CORRUPT_REJECT TopicError snapshot: 冻结材料已变化，请重新 review

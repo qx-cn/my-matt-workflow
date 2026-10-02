@@ -1,0 +1,148 @@
+[
+  {
+    "at": "2026-10-02T13:15:40.398291+00:00",
+    "commands": [
+      "python3 -B -m unittest discover -s suite -v",
+      "python3 -B -c 'pass'"
+    ],
+    "completed": true,
+    "content_id": "05a4fc58c3129d4a36747337f3892ea8c361c03e5cd22dcca884460928eab01d",
+    "head": "ade038a1434cfb3025919e7d8f357bd08d8d5317",
+    "known_failures": [],
+    "new_failures": [
+      {
+        "command": "python3 -B -m unittest discover -s suite -v",
+        "comparison": "baseline-identity-unverifiable",
+        "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+      }
+    ],
+    "results": [
+      {
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "command": "python3 -B -m unittest discover -s suite -v",
+        "comparison_eligible": false,
+        "content_changed": false,
+        "content_id": "05a4fc58c3129d4a36747337f3892ea8c361c03e5cd22dcca884460928eab01d",
+        "environment": {
+          "executable": "/opt/homebrew/bin/python3",
+          "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+          "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+        },
+        "exit_code": 1,
+        "failures": [
+          "test_behavior (unittest.loader._FailedTest.test_behavior)"
+        ],
+        "output_tail": "test_behavior (unittest.loader._FailedTest.test_behavior) ... ERROR\n\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/tmp/runtime03-loader-v-8me38hpt/suite/test_behavior.py\", line 1, in <module>\n    import runtime03_missing_dependency\nModuleNotFoundError: No module named 'runtime03_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+        "unavailable": false
+      },
+      {
+        "argv": [
+          "python3",
+          "-B",
+          "-c",
+          "pass"
+        ],
+        "command": "python3 -B -c 'pass'",
+        "comparison_eligible": true,
+        "content_changed": false,
+        "content_id": "05a4fc58c3129d4a36747337f3892ea8c361c03e5cd22dcca884460928eab01d",
+        "environment": {
+          "executable": "/opt/homebrew/bin/python3",
+          "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+          "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+        },
+        "exit_code": 0,
+        "failures": [],
+        "output_tail": "",
+        "unavailable": false
+      }
+    ],
+    "unverified": [
+      "python3 -B -m unittest discover -s suite -v"
+    ]
+  },
+  {
+    "at": "2026-10-02T13:16:39.931265+00:00",
+    "commands": [
+      "python3 -B -m unittest discover -s suite -v",
+      "python3 -B -c 'pass'"
+    ],
+    "completed": true,
+    "content_id": "05a4fc58c3129d4a36747337f3892ea8c361c03e5cd22dcca884460928eab01d",
+    "head": "a3124105dce8e2b98185341ce2c2937362ffd748",
+    "known_failures": [],
+    "new_failures": [
+      {
+        "command": "python3 -B -m unittest discover -s suite -v",
+        "comparison": "baseline-identity-unverifiable",
+        "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+      }
+    ],
+    "results": [
+      {
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "suite",
+          "-v"
+        ],
+        "command": "python3 -B -m unittest discover -s suite -v",
+        "comparison_eligible": false,
+        "content_changed": false,
+        "content_id": "05a4fc58c3129d4a36747337f3892ea8c361c03e5cd22dcca884460928eab01d",
+        "environment": {
+          "executable": "/opt/homebrew/bin/python3",
+          "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+          "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+        },
+        "exit_code": 1,
+        "failures": [
+          "test_behavior (unittest.loader._FailedTest.test_behavior)"
+        ],
+        "output_tail": "test_behavior (unittest.loader._FailedTest.test_behavior) ... ERROR\n\n======================================================================\nERROR: test_behavior (unittest.loader._FailedTest.test_behavior)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_behavior\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/tmp/runtime03-loader-v-4onav7ci/suite/test_behavior.py\", line 1, in <module>\n    import runtime03_missing_dependency\nModuleNotFoundError: No module named 'runtime03_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+        "unavailable": false
+      },
+      {
+        "argv": [
+          "python3",
+          "-B",
+          "-c",
+          "pass"
+        ],
+        "command": "python3 -B -c 'pass'",
+        "comparison_eligible": true,
+        "content_changed": false,
+        "content_id": "05a4fc58c3129d4a36747337f3892ea8c361c03e5cd22dcca884460928eab01d",
+        "environment": {
+          "executable": "/opt/homebrew/bin/python3",
+          "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+          "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+        },
+        "exit_code": 0,
+        "failures": [],
+        "output_tail": "",
+        "unavailable": false
+      }
+    ],
+    "unverified": [
+      "python3 -B -m unittest discover -s suite -v"
+    ]
+  }
+]

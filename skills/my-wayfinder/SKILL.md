@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # My Wayfinder
 
-一个松散想法到来：它大到单个 Agent 会话装不下，又被迷雾包围——从这里到**目的地**的路还不可见。Wayfinding 的目标是找到那条路，而非直接冲向目的地。它把路径绘为共享的**决策地图**，再一次处理一个**决策 Ticket**（其解决结果是一个决定，而非待执行的构建切片），直到路线清晰。写回 Tracker 或团队文档前遵循[写操作 Gate](references/shared/adapters/write-actions.md)。
+一个松散想法到来：它大到单个 Agent 会话装不下，又被迷雾包围——从这里到**目的地**的路还不可见。Wayfinding 的目标是找到那条路，而非直接冲向目的地。它把路径绘为共享的**决策地图**，再一次处理一个**决策 Ticket**（其解决结果是一个决定，而非待执行的构建切片），直到路线清晰。写回 Tracker 或团队文档前遵循[写操作 Gate](references/shared/user-intervention.md)。
 
 每项工作有不同目的地，命名它是绘图的第一步，因为它塑造每个 Ticket。目的地可以是待移交并迭代的 Spec、规划开始前必须确定的决定，或数据结构迁移等就地变更。地图与领域无关：工程工作、课程内容或任何符合此形状的事项都适用。
 
@@ -47,7 +47,7 @@ disable-model-invocation: true
 
 有两种模式。除研究 Ticket 外，**每个会话绝不解决多于一个 Ticket**。依赖调用和地图完成后的交接遵循 [组合调用](references/shared/adapters/composition.md)。
 
-调用关系以组合清单为准：`{{skill-call:my-grilling}}`、`{{skill-call:my-domain-modeling}}` 和 `{{skill-call:my-prototype}}` 是内部方法，执行后返回宿主；研究读取[研究方法](references/shared/research-method.md)，不另调用研究 Skill。交给 `{{skill-call:my-to-spec}}` 属于阶段交接，调用前向用户确认一次。
+调用关系以组合清单为准：`{{skill-call:my-grilling}}`、`{{skill-call:my-domain-modeling}}` 和 `{{skill-call:my-prototype}}` 是内部方法，执行后返回宿主；研究读取[研究方法](references/shared/research-method.md)，不另调用研究 Skill。交给 `{{skill-call:my-to-spec}}` 属于阶段交接，先检查该阶段是否已授权，已授权直接继续。参与者只代表自己的意见，不能把待用户回答的决定变成实施授权。
 
 ### 绘制地图
 

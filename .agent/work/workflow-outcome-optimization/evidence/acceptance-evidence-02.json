@@ -1,0 +1,215 @@
+{
+  "completion_source": "direct-engineering",
+  "acceptance_count": 26,
+  "entries": [
+    {
+      "acceptance": "AC01",
+      "owner": "workflow-outcome-optimization-01",
+      "evidence": "tests/test_batches.py::test_unavailable_baseline_current_failure_and_legacy_recovery_block_close; reviews/outcome-review-runtime-06.md",
+      "evidence_boundary": "隔离公共CLI/旧记录反例",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC02",
+      "owner": "workflow-outcome-optimization-01",
+      "evidence": "tests/test_batches.py::test_self_blocking_requires_changed_evidence_and_preserves_history; test_self_spec_challenge_requires_explicit_decision",
+      "evidence_boundary": "隔离CLI/发现历史",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC03",
+      "owner": "workflow-outcome-optimization-01",
+      "evidence": "tests/test_batches.py::test_last_ticket_finish_and_status_have_same_executable_batch_step",
+      "evidence_boundary": "隔离CLI路由",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC04",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "skills/my-triage/SKILL.md; composition/manifest.json; tests/test_composition.py::test_local_triage_routes_preserve_spec_lineage",
+      "evidence_boundary": "正文/机械链/独立场景重建",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC05",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/user-intervention.md; policies/merge-conflict-approval.md",
+      "evidence_boundary": "正文/独立场景重建，非真实外部写入",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC06",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/workflow-delivery.md; skills/my-tdd/tests.md",
+      "evidence_boundary": "正文，实际模型选择待对照",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC07",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/testing-seams.md; skills/my-tdd/tests.md",
+      "evidence_boundary": "正文，独立存储/路由案例要求可定位，非完成模型端到端试验",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC08",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/testing-seams.md; skills/my-codebase-design/SKILL.md",
+      "evidence_boundary": "正文，新增抽象判断待实际模型任务",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC09",
+      "owner": "workflow-outcome-optimization-01",
+      "evidence": "tests/test_review_resolution.py::test_locations_alone_do_not_prove_same_root; test_volume_growth_with_pass_is_not_a_stop; test_legacy_geometric_stop_releases_only_current_valid_pass",
+      "evidence_boundary": "隔离CLI/旧停止恢复",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC10",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "skills/my-tdd/SKILL.md; skills/my-tdd/tests.md; resources/review-loop.md",
+      "evidence_boundary": "正文/权限条件重建",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC11",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/review-loop.md; policies/context-hygiene.md; tests/test_batches.py::test_high_risk_review_blocks_ticket_and_never_replaces_batch",
+      "evidence_boundary": "来源记录/真实新上下文外部工程复审，不能从字段证明宿主独立性",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC12",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/manifest.json; composition/manifest.json; tests/test_resources.py; tests/test_workflow_texts_v2.py; evidence/outcome-instructions-object-dispositions.json",
+      "evidence_boundary": "机械路径/打包/临时三宿主投影",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC13",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "tests/test_topic_lifecycle.py::test_quick_concise_evidence_summary_completes_without_empty_standard_sections; tests/test_batches.py::test_submit_requires_targeted_test_and_complete_self_review",
+      "evidence_boundary": "隔离CLI摘要准入，语义充分由读者判断",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC14",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "policies/context-hygiene.md; resources/adapters/implementation-session.md",
+      "evidence_boundary": "正文/独立恢复条件重建",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC15",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/visual-communication.md; resources/reader-first-writing.md",
+      "evidence_boundary": "正文/独立读者场景",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC16",
+      "owner": "workflow-outcome-optimization-04",
+      "evidence": "当前完整源码; evidence/outcome-instructions-object-dispositions.json; deliveries/deliveries-workflow-outcome-optimization-02.md",
+      "evidence_boundary": "完整可替换候选源码；未真实发布/安装",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC17",
+      "owner": "workflow-outcome-optimization-04",
+      "evidence": "deliveries/deliveries-workflow-outcome-optimization-02.md; evidence/outcome-evaluation-runbook.md",
+      "evidence_boundary": "证据口径，不声称模型效果",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC18",
+      "owner": "workflow-outcome-optimization-01",
+      "evidence": "tests/test_batches.py::test_unavailable_baseline_current_failure_and_legacy_recovery_block_close; test_revised_definition_reopens_self_challenge_without_losing_history; tests/test_review_resolution.py::test_legacy_geometric_stop_releases_only_current_valid_pass; reviews/outcome-review-runtime-06.md",
+      "evidence_boundary": "隔离旧活动记录/历史未改/混写限制README",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC19",
+      "owner": "workflow-outcome-optimization-01",
+      "evidence": "tools/workflow_lib/evidence.py; tests/test_batches.py::test_interrupted_batch_run_invalidates_prior_success; test_definition_change_between_status_and_finish_is_rechecked; 原Ticket/branch/artifact完整suite; reviews/outcome-review-runtime-06.md",
+      "evidence_boundary": "共用事实内核+各scope原回归",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC20",
+      "owner": "workflow-outcome-optimization-02",
+      "evidence": "tests/test_install_simplification.py::test_public_deploy_runs_actual_suite_once; test_failed_suite_does_not_publish_or_install; test_context_reuses_same_bytes_and_revalidates_drift_and_other_package",
+      "evidence_boundary": "隔离真实suite计数/失败/漂移",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC21",
+      "owner": "workflow-outcome-optimization-02",
+      "evidence": "tests/test_install_simplification.py::test_unchanged_deploy_neither_stages_source_nor_rewrites_host; test_digest_binds_tests_config_links_permissions_and_upstream; test_legacy_digest_missing_uses_full_source_comparison; reviews/outcome-review-install-02.md; reviews/outcome-review-install-04-final07-binding.json",
+      "evidence_boundary": "同版/摘要/旧包/损坏runtime的隔离公共CLI与冻结源码独立探针；真实宿主未升级",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC22",
+      "owner": "workflow-outcome-optimization-02",
+      "evidence": "tests/test_install_simplification.py::test_projection_manifest_matches_physical_bytes_without_copytree; 原安全/rollback suite; reviews/outcome-review-install-02.md; reviews/outcome-review-install-03.md; reviews/outcome-review-install-04.md; evidence/outcome-install-benchmark-*.json",
+      "evidence_boundary": "投影等价/计数/隔离回滚与链接路径反例；stub阶段计时不等于真实速度提升",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC23",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "skills/my-diagnosing-bugs/SKILL.md; skills/my-diagnosing-bugs/references/feedback-methods.md; reviews/outcome-review-instructions-01.md; reviews/outcome-review-instructions-02.md",
+      "evidence_boundary": "静态场景推进，真实Bug能力未对照",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC24",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "resources/requirement-analysis.md; skills/my-grill-with-docs/SKILL.md; skills/my-to-spec/SKILL.md; skills/my-to-tickets/SKILL.md; reviews/outcome-review-instructions-01.md",
+      "evidence_boundary": "来源/假设/跨票用户验收正文与场景重建",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC25",
+      "owner": "workflow-outcome-optimization-03",
+      "evidence": "skills/my-test-report/SKILL.md; resources/artifact-finalization.md; reviews/outcome-review-instructions-01.md; reviews/outcome-review-instructions-02.md",
+      "evidence_boundary": "独立读者探针，非模型写作能力效果",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    },
+    {
+      "acceptance": "AC26",
+      "owner": "workflow-outcome-optimization-04",
+      "evidence": "evidence/outcome-evaluation-runbook.md",
+      "evidence_boundary": "7能力机制/任务/口径与限制，无实际效果样本",
+      "final_status": "verified-within-stated-evidence-boundary",
+      "integration_evidence": "evidence/outcome-integrated-full-07-result.json"
+    }
+  ],
+  "final_scope": "approved Spec revision 2 source implementation; no real host deployment or model efficacy trial"
+}

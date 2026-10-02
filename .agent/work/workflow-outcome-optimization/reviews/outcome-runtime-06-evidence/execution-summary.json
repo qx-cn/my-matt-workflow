@@ -1,0 +1,23 @@
+{
+  "fixtures": 7,
+  "public_cli": 171,
+  "direct_runner": 16,
+  "command_exit_counts": {
+    "close": {
+      "1": 38,
+      "0": 2
+    },
+    "status": {
+      "0": 44
+    },
+    "test": {
+      "0": 20
+    }
+  },
+  "preserved_materials_match": [
+    "/tmp/outcome-runtime-05-proof-extra.py",
+    "/tmp/outcome-runtime-05-proof-extra.log",
+    "/tmp/outcome-runtime-05-probes.py",
+    "/tmp/outcome-review-final-07/prior-findings.md"
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "unit_id": "c86e37f6a3e740e4b920b45c3c9f9593",
+  "content_id": "ab2466847d054d7c5372f2ae39e9e673feb279af3a6412430709e8bd2212b9f4",
+  "round": 1,
+  "acceptance": [
+    {
+      "id": "feature-01#A1",
+      "text": "independent marker is written"
+    }
+  ],
+  "probes": [
+    "recovery"
+  ],
+  "downstream_tickets": [],
+  "repository": [
+    {
+      "path": "code.txt",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00000",
+      "sha256": "fd6a97960db35518d9d48758f448af858d5afc7b4d9f0e648c5e3ca18c5c94df",
+      "size": 30,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_00.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00001",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_01.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00002",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_02.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00003",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_03.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00004",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_04.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00005",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_05.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00006",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_06.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00007",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_07.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00008",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_08.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00009",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_09.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00010",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_10.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00011",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_11.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00012",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_behavior.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00013",
+      "sha256": "972fb08ba9b341c7dadd5638c6e97ed15e8671e80b2a0dff533aa66842f6d3c8",
+      "size": 138,
+      "mode": "100644"
+    }
+  ],
+  "baseline": "62dd46bf6d2a3d97009bd434afd4eaba2eac4c7f",
+  "topic": "feature",
+  "self_findings": [],
+  "head": "ac2ae8645179cb3413157607e4377eb4c3c0672e",
+  "topic_changes": [
+    ".agent/fixture-self.md",
+    ".agent/matt-workflow.md",
+    ".agent/metrics.jsonl",
+    ".agent/work/feature/batches.json",
+    ".agent/work/feature/batches/01.json",
+    ".agent/work/feature/briefings/briefing-feature-01.md",
+    ".agent/work/feature/implementations/feature-01.json",
+    ".agent/work/feature/specs/specs-feature-01.md",
+    ".agent/work/feature/test-baseline.json",
+    ".agent/work/feature/tickets/tickets-feature-01.md",
+    ".agent/work/feature/topic-state.json",
+    "code.txt"
+  ],
+  "repository_files": [
+    "code.txt",
+    "suite/test_00.py",
+    "suite/test_01.py",
+    "suite/test_02.py",
+    "suite/test_03.py",
+    "suite/test_04.py",
+    "suite/test_05.py",
+    "suite/test_06.py",
+    "suite/test_07.py",
+    "suite/test_08.py",
+    "suite/test_09.py",
+    "suite/test_10.py",
+    "suite/test_11.py",
+    "suite/test_behavior.py"
+  ],
+  "changes": [
+    {
+      "path": "code.txt",
+      "base": {
+        "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/0000-base",
+        "sha256": "3cf367285ce89e09185e05cbe3fdb6187a53d3565c255aadc684db0e488b5ea6",
+        "size": 23,
+        "mode": "100644"
+      },
+      "current": {
+        "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/0000-current",
+        "sha256": "fd6a97960db35518d9d48758f448af858d5afc7b4d9f0e648c5e3ca18c5c94df",
+        "size": 30,
+        "mode": "100644"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/rules.md",
+      "sha256": "159820857410c5345b038b15c2d58e2ffee07a5e973275d8ce25f95e56b181ca",
+      "size": 157,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/specs.md",
+      "sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730",
+      "size": 107,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/review-loop-rules.md",
+      "sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+      "size": 7081,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/decided.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/tickets.md",
+      "sha256": "ee8711542f755b41b03c3ea8b53c66cf3e5ba4a7a7d32e7d0dda110f5cf7b6fa",
+      "size": 643,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/impact-declarations.md",
+      "sha256": "cf23d3e0addc7070546cf4f4008cee419a3c5fdf34c679f1cc22f311a8359770",
+      "size": 115,
+      "mode": "100644"
+    },
+    {
+      "path": "code.txt",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00000",
+      "sha256": "fd6a97960db35518d9d48758f448af858d5afc7b4d9f0e648c5e3ca18c5c94df",
+      "size": 30,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_00.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00001",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_01.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00002",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_02.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00003",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_03.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00004",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_04.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00005",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_05.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00006",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_06.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00007",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_07.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00008",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_08.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00009",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_09.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00010",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_10.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00011",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_11.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00012",
+      "sha256": "cef5f03755691b54f9b00a2c266addc30948f5b23dc7cac2488afe1ac608efc5",
+      "size": 53,
+      "mode": "100644"
+    },
+    {
+      "path": "suite/test_behavior.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/repository-00013",
+      "sha256": "972fb08ba9b341c7dadd5638c6e97ed15e8671e80b2a0dff533aa66842f6d3c8",
+      "size": 138,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/.agent/work/feature/reviews/branch-c86e37f6a3e740e4b920b45c3c9f9593/self-findings.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "size": 2,
+      "mode": "100644"
+    }
+  ],
+  "rule_map": [
+    {
+      "ticket": "feature-01",
+      "rules": []
+    }
+  ],
+  "review_context": {
+    "provenance": "independent",
+    "model": "synthetic-fixture",
+    "session_id": "fixture-fresh-partial-known-verbose"
+  },
+  "coverage_targets": [
+    "feature-01#A1",
+    "recovery"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "baseline": {
+    "exit_code": 1,
+    "unavailable": false,
+    "execution_observed": false,
+    "failures": [
+      "test_behavior (unittest.loader._FailedTest.test_behavior)"
+    ],
+    "missing_dependency": true
+  },
+  "current": {
+    "exit_code": 1,
+    "unavailable": false,
+    "assertion": true,
+    "new_failures": [],
+    "known_failures": [
+      {
+        "command": "python3 -B -m unittest discover -s suite",
+        "failure": "test_behavior (unittest.loader._FailedTest.test_behavior)"
+      }
+    ],
+    "unverified": []
+  },
+  "batch_close": {
+    "rc": 0,
+    "stdout": "{\"batch\": \"01\", \"next_command\": \"workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp763sbca1 --topic feature\", \"state\": \"已收口\", \"topic\": \"feature\"}",
+    "stderr": ""
+  }
+}

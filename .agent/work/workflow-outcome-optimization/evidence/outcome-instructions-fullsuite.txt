@@ -1,0 +1,127 @@
+...................warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+.warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+...warning: adding embedded git repository: module
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> module
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached module
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+....................F...............................................................F..........................................................................F....................F....................................................FF.............................
+======================================================================
+FAIL: test_removed_names_are_absent_from_skill_resources_and_policies (test_final_integration.FinalIntegrationTests.test_removed_names_are_absent_from_skill_resources_and_policies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-instructions/tests/test_final_integration.py", line 40, in test_removed_names_are_absent_from_skill_resources_and_policies
+    self.assertFalse([name for name in REMOVED+keys if name in text],str(path))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['smoke'] is not false : /private/tmp/my-matt-outcome-instructions/resources/workflow-delivery.md
+
+======================================================================
+FAIL: test_testing_seam_contract_is_shared (test_portfolio.PortfolioContractTests.test_testing_seam_contract_is_shared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-instructions/tests/test_portfolio.py", line 41, in test_testing_seam_contract_is_shared
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        {
+        ^
+    ...<4 lines>...
+        set(resource["consumers"]),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Items in the second set but not the first:
+'my-review-instructions'
+
+======================================================================
+FAIL: test_catalog_and_invocation_graph_match_approved_spec (test_skill_packaging_v2.PackagingV2Tests.test_catalog_and_invocation_graph_match_approved_spec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-instructions/tests/test_skill_packaging_v2.py", line 109, in test_catalog_and_invocation_graph_match_approved_spec
+    self.assertEqual(expected_edges, {(caller, edge.skill, edge.kind)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                     for caller, edges in manifest.callers.items() for edge in edges})
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+('my-triage', 'my-to-spec', 'handoff')
+('my-triage', 'my-implement', 'handoff')
+
+======================================================================
+FAIL: test_cursor_main_chain_stays_under_budget (test_text_measurement.TextMeasurementTests.test_cursor_main_chain_stays_under_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-instructions/tests/test_text_measurement.py", line 20, in test_cursor_main_chain_stays_under_budget
+    self.assertLessEqual(measure_markdown(release/'skills',MAIN_CHAIN)['characters'],35000)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 37405 not less than or equal to 35000
+
+======================================================================
+FAIL: test_adopted_skills_include_metadata_and_safety_boundaries (test_workflow.ReleaseTests.test_adopted_skills_include_metadata_and_safety_boundaries) (skill='my-resolving-merge-conflicts')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-instructions/tests/test_workflow.py", line 964, in test_adopted_skills_include_metadata_and_safety_boundaries
+    self.assertIn(phrase, text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: '批准前' not found in '---\nname: my-resolving-merge-conflicts\ndescription: 在用户批准的前提下，安全审阅并解决进行中的 Git merge 或 rebase 冲突\ndisable-model-invocation: true\n---\n\n# 安全解决冲突\n\n用于正在进行的 merge 或 rebase 冲突。在用户已授权解决本次冲突的范围内直接完成可逆解决；语义分歧、授权缺口和固定禁止项遵循 [Merge 冲突批准](references/policies/merge-conflict-approval.md) 与[写操作 Gate](references/shared/user-intervention.md)。\n\n1. 读取 `git status`、冲突文件、相关提交、PR/Issue 或本地 Ticket，说明每一方变更的原始意图。\n2. 按 hunk 给出解决方案：保留哪些意图、不能兼容时选择什么、对应权衡、验证计划与可执行回滚路径。不得凭空增加行为。\n3. 在既有授权内执行、验证并报告证据和回滚方式；不能兼容双方意图或超出授权后果时，先完成具体可审阅选择再请求裁决。\n'
+
+======================================================================
+FAIL: test_adopted_skills_include_metadata_and_safety_boundaries (test_workflow.ReleaseTests.test_adopted_skills_include_metadata_and_safety_boundaries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-instructions/tests/test_workflow.py", line 969, in test_adopted_skills_include_metadata_and_safety_boundaries
+    self.assertIn("Force Push", conflict_policy)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Force Push' not found in '# 冲突解决边界\n\n先读状态、两侧提交和相关要求，核对每一方意图、冲突 hunk、验证与回滚方式。用户已要求解决本次冲突时，授权内可逆、保留双方语义的本地解决可直接执行，不为每个 hunk 再问。\n\n若双方产品行为无法兼容、必须丢失已批准意图、扩大范围或承担未授权不可逆后果，给出具体选择与影响，按当前 Skill 根目录的 `references/shared/user-intervention.md` 请求裁决。能查证的新事实继续查证，不能把任意不确定性都当暂停理由。\n\n本地提交须有相应测试与审查证据；continue 仅在已授权本次操作且冲突解决已验证时执行。push 需要具体目标授权；危险 Git 和敏感外发遵循 [敏感操作与固定边界](enterprise-safety.md)。\n'
+
+----------------------------------------------------------------------
+Ran 286 tests in 352.062s
+
+FAILED (failures=6)
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpox4mp31d/releases/r4
+INSTALLED r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpts71xbi3/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpts71xbi3/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpts71xbi3/repo/releases/r4
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp5snd7je5/workflow/releases/v1
+INSTALLED v1
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpejkjbh0g/workflow/releases/v2
+INSTALLED v2
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp4hy5vqnh/workflow/releases/v1
+INSTALLED v1

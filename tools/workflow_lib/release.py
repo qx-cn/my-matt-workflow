@@ -31,6 +31,7 @@ from .fs_safety import (
     refresh_owned_directory,
     register_owned_directory,
     release_ownership,
+    verify_owned_directory_identity,
 )
 from .release_references import REFERENCE_LOCK, read_references, write_references
 from .projection import (
@@ -38,6 +39,7 @@ from .projection import (
     directory_inventory,
     project_skill_directory,
     skills_inventory,
+    projected_skills_inventory,
 )
 from .source_walker import (
     SourceWalkError,
@@ -506,18 +508,8 @@ def _manifest_for_staged_tree(
     runtime = directory_inventory(staged_runtime_dir)
     target_manifests: dict[str, dict[str, object]] = {}
     for target in TARGETS:
-        if target == "portable":
-            projected_skills = portable_skills
-        else:
-            with tempfile.TemporaryDirectory(
-                prefix=f"my-matt-{target}-projection-"
-            ) as tmp:
-                projected_root = Path(tmp) / "skills"
-                shutil.copytree(staged_skills_dir, projected_root)
-                for skill_dir in sorted(projected_root.iterdir()):
-                    if skill_dir.is_dir():
-                        project_skill_directory(skill_dir, target)
-                projected_skills = skills_inventory(projected_root)
+        projected_skills = (portable_skills if target == "portable" else
+                            projected_skills_inventory(staged_skills_dir, target))
         target_manifests[target] = {
             "skills": projected_skills,
             "runtime": runtime,
@@ -656,6 +648,36 @@ def source_manifest(
         )
 
 
+def source_input_digest(root: Path, *, upstream_id: str,
+                        skills_relative: Path = Path("skills"),
+                        composition_relative: Path | None = None,
+                        resources_relative: Path | None = None) -> str:
+    """Bind all source/test/config bytes and build parameters, never test success.
+
+    Also bind fallback packaging/runtime code used by minimal library fixtures.
+    Normal source repositories already include those modules in the inventory.
+    """
+    implementation_root = (root / "tools" if (root / "tools/workflow.py").is_file()
+                           else Path(__file__).resolve().parents[1])
+    implementation = {path.relative_to(implementation_root).as_posix():
+                      hashlib.sha256(path.read_bytes()).hexdigest()
+                      for path in sorted(implementation_root.rglob("*.py"))
+                      if "__pycache__" not in path.parts}
+    inputs = _snapshot_inventory(root)
+    modes = {relative: (root / relative).stat().st_mode & 0o777
+             for relative in inputs if not (root / relative).is_symlink()}
+    loop_source = root / "resources/review-loop.md"
+    if not loop_source.is_file():
+        loop_source = Path(__file__).resolve().parents[2] / "resources/review-loop.md"
+    value = {"protocol": 1, "inputs": inputs, "modes": modes,
+             "review_loop": hashlib.sha256(loop_source.read_bytes()).hexdigest(),
+             "implementation": implementation, "upstream_id": upstream_id,
+             "skills": str(skills_relative),
+             "composition": str(composition_relative) if composition_relative else None,
+             "resources": str(resources_relative) if resources_relative else None}
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
 def release_matches_source(
     release: Path,
     skills_dir: Path,
@@ -670,6 +692,26 @@ def release_matches_source(
         manifest = json.loads((release / "manifest.json").read_text())
     except (OSError, json.JSONDecodeError):
         return False
+    root = (repo_root or skills_dir.parent).resolve()
+    trusted_digest = False
+    if "source_input_digest" in manifest:
+        try:
+            verify_owned_directory_identity(release.parent, release, purpose="release",
+                                            required_controls=("manifest.json",))
+            trusted_digest = True
+        except FilesystemSafetyError:
+            # Copied/legacy packages have no independent binding for this field;
+            # compare actual generated contents instead of trusting a claim.
+            pass
+    if trusted_digest:
+        return (manifest.get("release_id") == release.name and
+                manifest["source_input_digest"] == source_input_digest(
+                    root, upstream_id=upstream_id,
+                    skills_relative=skills_dir.resolve().relative_to(root),
+                    composition_relative=(composition_manifest_path.resolve().relative_to(root)
+                                          if composition_manifest_path else None),
+                    resources_relative=(resources_manifest_path.resolve().relative_to(root)
+                                        if resources_manifest_path else None)))
     expected = source_manifest(
         skills_dir,
         upstream_id=upstream_id,
@@ -679,7 +721,7 @@ def release_matches_source(
     )
     return (
         manifest.get("release_id") == release.name
-        and set(manifest) == {"release_id", *expected}
+        and set(manifest) - {"source_input_digest"} == {"release_id", *expected}
         and all(manifest.get(key) == value for key, value in expected.items())
     )
 
@@ -805,7 +847,12 @@ def build_release(
                                 else None
                             ),
                         )
-                        manifest = {"release_id": release_id, **source}
+                        manifest = {"release_id": release_id, **source,
+                                    "source_input_digest": source_input_digest(
+                                        snapshot_root, upstream_id=upstream_id,
+                                        skills_relative=skills_relative,
+                                        composition_relative=composition_relative,
+                                        resources_relative=resources_relative)}
                         (staged / "manifest.json").write_text(
                             json.dumps(manifest, ensure_ascii=False, indent=2)
                             + "\n"
@@ -825,6 +872,7 @@ def build_release(
                             releases_dir,
                             release,
                             purpose="release",
+                            control_paths=("manifest.json",),
                         )
                         if current_pointer is not None:
                             temporary_pointer: Path | None = None

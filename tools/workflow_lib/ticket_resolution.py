@@ -19,22 +19,25 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
     status = frontmatter(path)['status']
     if accept:
         repo, config, topic, path, unit, record = impl.load_active(repo, ticket, topic)
+        if impl.definition(repo,path)!=unit['definition']:
+            raise topics.TopicError('definition: 定义已变化；接受前需用户确认后 resolve --reopen')
         if status != 'needs-user':
             raise topics.TopicError('accept 只接受 needs-user')
         if not impl.tests_passed(repo, unit):
             raise topics.TopicError('test: 接受必须有当前完整声明测试通过记录')
         from . import batches
-        batches.require_self(repo,unit)
+        batches.require_self(repo,unit,allow_findings=True)
         reviews = unit.get('reviews', [])
-        if not reviews and not unit.get('migrated'):
+        self_findings=[f for f,_ in batches.pending_self_findings(unit).values()]
+        if not reviews and not unit.get('migrated') and not any(f.get('view')=='spec-challenge' for f in self_findings):
             raise topics.TopicError('accept 缺少审查或迁移阻塞记录')
         latest = reviews[-1] if reviews else {}
-        known = [f for f in latest.get('result', {}).get('findings', []) if f['severity'] == 'blocking' or f.get('view') == 'spec-challenge']
+        known = [f for f in [*latest.get('result', {}).get('findings', []),*self_findings] if f['severity'] == 'blocking' or f.get('view') == 'spec-challenge']
         unit['known_issues'] = known
         unit.setdefault('decisions', []).append(dict(action='accept', reason=reason, at=topics.now()))
         if unit.get('batch_id'):
             from . import batches
-            batches.require_self(repo,unit)
+            batches.require_self(repo,unit,allow_findings=True)
             plan, batch = batches.active(repo,topic,unit['batch_id'])
             batch['status'] = 'open'
             batch.setdefault('decisions',[]).append(dict(ticket=unit['ticket'],reason=reason,at=topics.now()))
@@ -50,6 +53,13 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
     impl.rule_material(repo, config, frontmatter(path), unit['execution_agent'])
     from .quality_metrics import preserve_history
     preserve_history(unit)
+    from . import batches
+    challenges=[f for f,_ in batches.pending_self_findings(unit).values() if f.get('view')=='spec-challenge' and
+        re.search(r'(?<![\w-])'+re.escape(f['id'])+r'(?![\w-])',reason)]
+    if challenges:
+        unit['self_reviews'].append(dict(at=topics.now(),content_id=topics.content_id(repo),definition=changed,
+            text=reason,findings=[],resolutions=[dict(id=f['id'],action='definition-reopen',reason=reason,
+                prior_definition=unit['definition'],definition=changed,at=topics.now()) for f in challenges]))
     unit.update(definition=changed, tests=[], reviews=[])
     for key in ('test_run', 'active_review', 'first_review_volume', 'stop_reason'):
         unit.pop(key, None)
@@ -60,6 +70,7 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
         batch.pop('stop_reason',None)
         batch.setdefault('decisions',[]).append(dict(action='ticket-reopen',ticket=unit['ticket'],reason=reason,at=topics.now()))
         batches.save(repo,topic,plan)
+    unit.pop('self_review_epoch_start',None)
     unit.pop('self_review',None)
     unit.setdefault('decisions', []).append(dict(action='reopen', reason=reason, at=topics.now()))
     impl.write_json(record, unit)

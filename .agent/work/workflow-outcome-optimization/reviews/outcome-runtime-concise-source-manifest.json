@@ -1,0 +1,21 @@
+{
+  "patch": "/tmp/outcome-runtime-concise-fixes.patch",
+  "patch_sha256": "25d163adfe5d40fd9e7a602d24f0656ed6a0230b30d4578a26c1a024a90596cf",
+  "files": [
+    {
+      "path": "tools/workflow_lib/evidence.py",
+      "base_sha256": "234cd85c82c5830be90c27358f6de401e431da1efe9367088c3f612483b715ad",
+      "sha256": "0a5e4165d70ac7fee507ca6d224329c78f5068441aa51d5708d6ae442ba4206b"
+    },
+    {
+      "path": "tools/workflow_lib/batches.py",
+      "base_sha256": "cf24cd1d39ade17e753eb2c5f6d427a9df158df426aa94b13947debb616eed3b",
+      "sha256": "d82b07f6955a49ba6e5e074acde93db75e3851ebe3c6c5729845be8aa4645949"
+    },
+    {
+      "path": "tests/test_batches.py",
+      "base_sha256": "806ec771fa7f6d76709b3d55f24c52b9c94af5579b783ee23fd3126141b95d9b",
+      "sha256": "c8e3b7789f7e5145556155e813ee2782e0e9ac506246677671e3b2fd639bd58d"
+    }
+  ]
+}

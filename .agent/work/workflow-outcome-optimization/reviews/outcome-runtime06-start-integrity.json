@@ -1,0 +1,12 @@
+{
+  "phase": "start",
+  "root": "/private/tmp/outcome-review-final-07",
+  "manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+  "checked": 281,
+  "mismatches": [],
+  "extras": [
+    "prior-findings.md",
+    "repair.patch",
+    "source-manifest.json"
+  ]
+}

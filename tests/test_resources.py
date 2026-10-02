@@ -48,13 +48,15 @@ class SharedResourceTests(unittest.TestCase):
             set(entry["consumers"]),
         )
 
-        text = (ROOT / "resources/artifact-finalization.md").read_text()
-        self.assertIn("可以持久化明确标为 `draft`", text)
-        self.assertIn("不得称为已发布、可直接继续或可交接", text)
-        self.assertIn("敏感信息尚未移除时连草稿也不得保存", text)
-        text = (ROOT / entry["source"]).read_text()
-        for gate in ("来源账本", "内部一致性", "读者重建", "事实正确性"):
-            self.assertIn(gate, text)
+        # The release contract is reachability and unchanged bytes. Semantic
+        # policy validity is evaluated by independent scenario review.
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "my-to-spec"
+            target.mkdir()
+            bundle_resources_for_skill(load_resource_manifest(ROOT / "resources/manifest.json"),
+                                       ROOT, "my-to-spec", target)
+            self.assertEqual((ROOT / entry["source"]).read_bytes(),
+                             (target / entry["release_path"]).read_bytes())
 
     def test_every_shared_document_has_a_reviewer_or_validation(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
@@ -171,8 +173,7 @@ class SharedResourceTests(unittest.TestCase):
                 bundle_resources_for_skill(manifest, ROOT, name, target)
                 reference = target / "references/shared/visual-communication.md"
                 self.assertTrue(reference.is_file(), name)
-                self.assertIn("图只回答一个核心问题", reference.read_text())
-                self.assertIn("字溢出、叠字、遮挡", reference.read_text())
+                self.assertEqual((ROOT / "resources/visual-communication.md").read_bytes(), reference.read_bytes())
                 skill = ROOT / "skills" / name
                 body = (skill / "SKILL.md").read_text()
                 if name == "my-teach":
@@ -283,7 +284,7 @@ class SharedResourceTests(unittest.TestCase):
             ),
             "my-wayfinder": (
                 "references/shared/adapters/composition.md",
-                "references/policies/decision-taxonomy.md",
+                "references/shared/user-intervention.md",
             ),
         }
 
@@ -312,14 +313,14 @@ class SharedResourceTests(unittest.TestCase):
                 self.assertTrue(authority.is_file(), skill)
                 self.assertIn("user-intervention.md", authority.read_text())
 
-    def test_policies_are_bundled_only_for_explicit_consumers(self):
+    def test_policies_are_bundled_for_explicit_and_dependency_consumers(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
         effective = self._effective_consumers()
         with tempfile.TemporaryDirectory() as tmp:
             for skill, policy in {
                 "my-handoff": "context-hygiene.md",
                 "my-resolving-merge-conflicts": "merge-conflict-approval.md",
-                "my-wayfinder": "decision-taxonomy.md",
+                "my-ask-matt": "context-hygiene.md",
             }.items():
                 target = Path(tmp) / skill
                 target.mkdir()
@@ -332,11 +333,41 @@ class SharedResourceTests(unittest.TestCase):
                 )
                 self.assertTrue((target / "references/policies" / policy).is_file())
 
-            for skill in ("my-install", "my-grilling", "my-grill-me"):
+            for skill in ("my-grilling", "my-grill-me"):
                 target = Path(tmp) / skill
                 target.mkdir()
-                bundle_resources_for_skill(manifest, ROOT, skill, target)
-                self.assertFalse((target / "references/policies").exists(), skill)
+                bundle_resources_for_skill(manifest, ROOT, skill, target,
+                                           effective_consumers=effective)
+                self.assertEqual({"enterprise-safety.md"},
+                                 {p.name for p in (target / "references/policies").glob("*.md")})
+            target = Path(tmp) / "my-install"
+            target.mkdir()
+            bundle_resources_for_skill(manifest, ROOT, "my-install", target,
+                                       effective_consumers=effective)
+            self.assertFalse((target / "references/policies").exists())
+
+    def test_policy_bundling_is_file_granular_and_dependency_closed(self):
+        manifest = load_resource_manifest(ROOT / "resources/manifest.json")
+        effective = self._effective_consumers()
+        # Previously the whole policies directory was copied for each consumer.
+        # Now ordinary handoff and conflict resolution carry only relevant policy
+        # files, including the safety dependency of conflict resolution.
+        expected = {
+            "my-handoff": {"context-hygiene.md", "enterprise-safety.md"},
+            "my-resolving-merge-conflicts": {"merge-conflict-approval.md", "enterprise-safety.md"},
+            "my-install": set(),
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            for skill, files in expected.items():
+                target = Path(tmp) / skill
+                target.mkdir()
+                bundle_resources_for_skill(manifest, ROOT, skill, target,
+                                           effective_consumers=effective)
+                actual = {p.name for p in (target / "references/policies").glob("*.md")}
+                self.assertEqual(files, actual, skill)
+                for file in files:
+                    self.assertEqual((ROOT / "policies" / file).read_bytes(),
+                                     (target / "references/policies" / file).read_bytes())
 
     def test_direct_consumers_are_exact_and_effective_consumers_are_derived(self):
         manifest = load_resource_manifest(ROOT / "resources/manifest.json")
@@ -348,12 +379,13 @@ class SharedResourceTests(unittest.TestCase):
             manifest, skills, composition, ROOT
         )
 
-        self.assertEqual({"my-tdd"}, direct["adapter-work-scope"])
+        self.assertEqual({"my-tdd", "my-review-instructions"}, direct["adapter-work-scope"])
         self.assertTrue(
             {"my-implement", "my-prototype", "my-wayfinder"}
             <= effective["adapter-work-scope"]
         )
-        self.assertNotIn("my-triage", direct["adapter-write-actions"])
+        self.assertNotIn("adapter-write-actions", direct)
+        self.assertIn("my-triage", direct["user-intervention"])
         self.assertIn("my-triage", effective["user-intervention"])
         self.assertIn("my-to-spec", effective["instruction-authority"])
 

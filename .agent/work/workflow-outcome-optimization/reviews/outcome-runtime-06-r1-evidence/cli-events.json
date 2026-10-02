@@ -1,0 +1,405 @@
+[
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "setup",
+      "--apply",
+      "--agent-directory-mode",
+      "shared",
+      "--test-command",
+      "python3 -B runner.py",
+      "--test-command",
+      "python3 -B -c 'pass'",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B runner.py\", \"python3 -B -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "start",
+      "--ticket",
+      "feature-01",
+      "--agent",
+      "codex",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"baseline\": \"9fcfdefc0e06446cf8505a26a049fb7a6d928d74\", \"briefing\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "test",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-B\", \"-c\", \"pass\"], \"command_index\": 0, \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"finished_at\": \"2026-10-02T14:30:18.554134+00:00\", \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"progress\": false, \"run_id\": \"7d8233d1d1ec4701a90a56de2eca1449\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "self-review",
+      "--notes-file",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/fixture-self.md",
+      "--no-findings",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"self_review\": \"已记录\", \"ticket\": \"feature-01\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "finish",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"commit\": \"f9c4f504569ae6c1809d3b1cafa4acbef085f403\", \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default --topic feature\", \"status\": \"complete\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "test",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"at\": \"2026-10-02T14:30:19.532715+00:00\", \"commands\": [\"python3 -B runner.py\", \"python3 -B -c 'pass'\"], \"completed\": true, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"head\": \"f9c4f504569ae6c1809d3b1cafa4acbef085f403\", \"known_failures\": [{\"command\": \"python3 -B runner.py\", \"failure\": \"collision (unittest.loader._FailedTest.collision)\"}], \"new_failures\": [], \"results\": [{\"argv\": [\"python3\", \"-B\", \"runner.py\"], \"command\": \"python3 -B runner.py\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 1, \"failures\": [\"collision (unittest.loader._FailedTest.collision)\"], \"output_complete\": true, \"output_length\": 1212, \"output_tail\": \"EE.\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nTraceback (most recent call last):\\n  File \\\"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/runner.py\\\", line 6, in construct\\n    import independent_review05_extra_missing_dependency\\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\\n\\n\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nTraceback (most recent call last):\\n  File \\\"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/runner.py\\\", line 6, in construct\\n    import independent_review05_extra_missing_dependency\\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 3 tests in 0.000s\\n\\nFAILED (errors=2)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"collision (unittest.loader._FailedTest.collision)\"]}, {\"argv\": [\"python3\", \"-B\", \"-c\", \"pass\"], \"command\": \"python3 -B -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "test",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"at\": \"2026-10-02T14:30:19.969887+00:00\", \"commands\": [\"python3 -B runner.py\", \"python3 -B -c 'pass'\"], \"completed\": true, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"head\": \"47e3052f44d15fc4b5837576d85be60031060baf\", \"known_failures\": [], \"new_failures\": [{\"command\": \"python3 -B runner.py\", \"comparison\": \"loader-identity-unverifiable\", \"failure\": \"collision (unittest.loader._FailedTest.collision)\"}], \"results\": [{\"argv\": [\"python3\", \"-B\", \"runner.py\"], \"command\": \"python3 -B runner.py\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 1, \"failures\": [\"collision (unittest.loader._FailedTest.collision)\"], \"output_complete\": true, \"output_length\": 980, \"output_tail\": \"EE.\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nAssertionError: No module named 'review05_behavior_condition'\\n\\n\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nTraceback (most recent call last):\\n  File \\\"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/runner.py\\\", line 6, in construct\\n    import independent_review05_extra_missing_dependency\\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 3 tests in 0.000s\\n\\nFAILED (errors=2)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-B\", \"-c\", \"pass\"], \"command\": \"python3 -B -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B runner.py\"]}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "direct-runner-confirmation",
+    "argv": [
+      "python3",
+      "-B",
+      "runner.py"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "EE.\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nAssertionError: No module named 'review05_behavior_condition'\n\n\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/runner.py\", line 6, in construct\n    import independent_review05_extra_missing_dependency\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nFAILED (errors=2)\n"
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "synthetic-review-create",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "review",
+      "--topic",
+      "feature",
+      "--reviewer-model",
+      "synthetic-fixture",
+      "--reviewer-session-id",
+      "fixture-fresh-proof-concise-assertion-default",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"independent marker is written\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B runner.py\", \"python3 -B -c 'pass'\"]}, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730\", \"ticket\": {\"body\": \"## 要构建什么\\nWrite marker\\n## 适用规则与影响区域\\ncode.txt\\n## 验收标准\\n- [ ] independent marker is written\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"write the marker\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -B -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Independent marker\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/work/feature/reviews/branch-cec93abe8e4548c8ab3434992b323dd2/manifest.json\", \"manifest_sha256\": \"d912df2f085d2aab3359a1b16051831f5934eba101d85999a4bfe002015eb326\", \"probes\": [\"recovery\"], \"result_file\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/work/feature/reviews/result-cec93abe8e4548c8ab3434992b323dd2.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/work/feature/reviews/branch-cec93abe8e4548c8ab3434992b323dd2\", \"unit_id\": \"cec93abe8e4548c8ab3434992b323dd2\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "synthetic-review-submit",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "review",
+      "--topic",
+      "feature",
+      "--submit",
+      "/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/work/feature/reviews/result-cec93abe8e4548c8ab3434992b323dd2.json",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"manifest\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.agent/work/feature/reviews/branch-cec93abe8e4548c8ab3434992b323dd2/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"independent marker is written\"}], \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"synthetic-fixture\", \"provenance\": \"independent\"}, \"round\": 1, \"status\": \"pass\", \"unit_id\": \"cec93abe8e4548c8ab3434992b323dd2\"}, \"review_context\": {\"model\": \"synthetic-fixture\", \"provenance\": \"independent\", \"session_id\": \"fixture-fresh-proof-concise-assertion-default\"}, \"review_series\": \"cec93abe8e4548c8ab3434992b323dd2\", \"reviewer\": {\"model\": \"synthetic-fixture\", \"provenance\": \"independent\"}, \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"status\": \"pass\", \"unit_id\": \"cec93abe8e4548c8ab3434992b323dd2\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-default"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "setup",
+      "--apply",
+      "--agent-directory-mode",
+      "shared",
+      "--test-command",
+      "python3 -B runner.py -v",
+      "--test-command",
+      "python3 -B -c 'pass'",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B runner.py -v\", \"python3 -B -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "start",
+      "--ticket",
+      "feature-01",
+      "--agent",
+      "codex",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"baseline\": \"6d186b632ed172466b9bac5cef2aa23fc8352452\", \"briefing\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/work/feature/briefings/briefing-feature-01.md\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "test",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"progress\": false, \"tests\": [{\"argv\": [\"python3\", \"-B\", \"-c\", \"pass\"], \"command_index\": 0, \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"finished_at\": \"2026-10-02T14:30:21.784985+00:00\", \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"progress\": false, \"run_id\": \"c344a9da6556478fb0e830d1e15c0112\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"tests_passed\": true, \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "self-review",
+      "--notes-file",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/fixture-self.md",
+      "--no-findings",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"self_review\": \"已记录\", \"ticket\": \"feature-01\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "implement",
+      "finish",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"commit\": \"e68bdba117fbe008109b6f3480970395563dafc7\", \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose --topic feature\", \"status\": \"complete\", \"ticket\": \"feature-01\", \"topic\": \"feature\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "test",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"at\": \"2026-10-02T14:30:22.763950+00:00\", \"commands\": [\"python3 -B runner.py -v\", \"python3 -B -c 'pass'\"], \"completed\": true, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"head\": \"e68bdba117fbe008109b6f3480970395563dafc7\", \"known_failures\": [{\"command\": \"python3 -B runner.py -v\", \"failure\": \"collision (unittest.loader._FailedTest.collision)\"}], \"new_failures\": [], \"results\": [{\"argv\": [\"python3\", \"-B\", \"runner.py\", \"-v\"], \"command\": \"python3 -B runner.py -v\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 1, \"failures\": [\"collision (unittest.loader._FailedTest.collision)\"], \"output_complete\": true, \"output_length\": 1371, \"output_tail\": \"collision (unittest.loader._FailedTest.collision) ... ERROR\\ncollision (unittest.loader._FailedTest.collision) ... ERROR\\ntest_ok (__main__.Visible.test_ok) ... ok\\n\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nTraceback (most recent call last):\\n  File \\\"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/runner.py\\\", line 6, in construct\\n    import independent_review05_extra_missing_dependency\\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\\n\\n\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nTraceback (most recent call last):\\n  File \\\"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/runner.py\\\", line 6, in construct\\n    import independent_review05_extra_missing_dependency\\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 3 tests in 0.000s\\n\\nFAILED (errors=2)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": [\"collision (unittest.loader._FailedTest.collision)\"]}, {\"argv\": [\"python3\", \"-B\", \"-c\", \"pass\"], \"command\": \"python3 -B -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"784aa21f2cf94fd3ff0b646bf733e978996f3a8087d78030e47f915c44d8a3aa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "test",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"at\": \"2026-10-02T14:30:23.199910+00:00\", \"commands\": [\"python3 -B runner.py -v\", \"python3 -B -c 'pass'\"], \"completed\": true, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"head\": \"c7249eba76e8aa3a546d266698df0e5f82a79044\", \"known_failures\": [], \"new_failures\": [{\"command\": \"python3 -B runner.py -v\", \"comparison\": \"loader-identity-unverifiable\", \"failure\": \"collision (unittest.loader._FailedTest.collision)\"}], \"results\": [{\"argv\": [\"python3\", \"-B\", \"runner.py\", \"-v\"], \"command\": \"python3 -B runner.py -v\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": true, \"exit_code\": 1, \"failures\": [\"collision (unittest.loader._FailedTest.collision)\"], \"output_complete\": true, \"output_length\": 1139, \"output_tail\": \"collision (unittest.loader._FailedTest.collision) ... ERROR\\ncollision (unittest.loader._FailedTest.collision) ... ERROR\\ntest_ok (__main__.Visible.test_ok) ... ok\\n\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nAssertionError: No module named 'review05_behavior_condition'\\n\\n\\n======================================================================\\nERROR: collision (unittest.loader._FailedTest.collision)\\n----------------------------------------------------------------------\\nImportError: Failed to import test module: collision\\nTraceback (most recent call last):\\n  File \\\"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/runner.py\\\", line 6, in construct\\n    import independent_review05_extra_missing_dependency\\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\\n\\n\\n----------------------------------------------------------------------\\nRan 3 tests in 0.000s\\n\\nFAILED (errors=2)\\n\", \"unavailable\": false, \"unavailable_loader_failures\": []}, {\"argv\": [\"python3\", \"-B\", \"-c\", \"pass\"], \"command\": \"python3 -B -c 'pass'\", \"comparison_eligible\": true, \"content_changed\": false, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"dependency_proof_version\": 1, \"environment\": {\"executable\": \"/opt/homebrew/bin/python3\", \"platform\": \"macOS-27.0.1-arm64-arm-64bit-Mach-O\", \"python\": \"3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"python_executable\": \"/opt/homebrew/opt/python@3.14/bin/python3.14\"}, \"execution_observed\": false, \"exit_code\": 0, \"failures\": [], \"output_complete\": true, \"output_length\": 0, \"output_tail\": \"\", \"unavailable\": false, \"unavailable_loader_failures\": []}], \"unverified\": [\"python3 -B runner.py -v\"]}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "direct-runner-confirmation",
+    "argv": [
+      "python3",
+      "-B",
+      "runner.py",
+      "-v"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "collision (unittest.loader._FailedTest.collision) ... ERROR\ncollision (unittest.loader._FailedTest.collision) ... ERROR\ntest_ok (__main__.Visible.test_ok) ... ok\n\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nAssertionError: No module named 'review05_behavior_condition'\n\n\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/runner.py\", line 6, in construct\n    import independent_review05_extra_missing_dependency\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nFAILED (errors=2)\n"
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "synthetic-review-create",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "review",
+      "--topic",
+      "feature",
+      "--reviewer-model",
+      "synthetic-fixture",
+      "--reviewer-session-id",
+      "fixture-fresh-proof-concise-assertion-verbose",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"independent marker is written\"}], \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B runner.py -v\", \"python3 -B -c 'pass'\"]}, \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"definition\": {\"feature-01\": {\"spec_sha256\": \"813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730\", \"ticket\": {\"body\": \"## 要构建什么\\nWrite marker\\n## 适用规则与影响区域\\ncode.txt\\n## 验收标准\\n- [ ] independent marker is written\", \"metadata\": {\"blocked_by\": [], \"compensates\": [], \"execution_agent\": \"auto\", \"id\": \"feature-01\", \"review_probes\": [\"recovery\"], \"rule_conflicts\": [], \"rule_constraints\": [\"write the marker\"], \"rule_scope\": [\"code.txt\"], \"rule_sources\": [\".agent/work/feature/specs/specs-feature-01.md\"], \"sequence\": \"1\", \"spec_id\": \"feature\", \"spec_ref\": \".agent/work/feature/specs/specs-feature-01.md\", \"spec_revision\": \"1\", \"supersedes_ticket\": [], \"tags\": [], \"test_commands\": [\"python3 -B -c 'pass'\"], \"ticket_kind\": \"implementation\", \"title\": \"Independent marker\"}}}}, \"downstream_tickets\": [], \"manifest\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/work/feature/reviews/branch-8cbde647120142d783cabbcfb73e6c38/manifest.json\", \"manifest_sha256\": \"2dc2098e0ae71e1437eff1e04ccbfa3a2df6533a2e9b2dd8111041760a6f533c\", \"probes\": [\"recovery\"], \"result_file\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/work/feature/reviews/result-8cbde647120142d783cabbcfb73e6c38.json\", \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"snapshot_dir\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/work/feature/reviews/branch-8cbde647120142d783cabbcfb73e6c38\", \"unit_id\": \"8cbde647120142d783cabbcfb73e6c38\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "synthetic-review-submit",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "review",
+      "--topic",
+      "feature",
+      "--submit",
+      "/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/work/feature/reviews/result-8cbde647120142d783cabbcfb73e6c38.json",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"manifest\": \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.agent/work/feature/reviews/branch-8cbde647120142d783cabbcfb73e6c38/manifest.json\", \"repair\": [], \"result\": {\"acceptance\": [{\"id\": \"feature-01#A1\", \"text\": \"independent marker is written\"}], \"content_id\": \"e91af7874c911262970966390d59c2bdec0099534574b259928091012d1f12fa\", \"coverage\": [{\"result\": \"ok\", \"target\": \"feature-01#A1\"}, {\"result\": \"ok\", \"target\": \"recovery\"}], \"downstream_tickets\": [], \"findings\": [], \"probes\": [\"recovery\"], \"reviewer\": {\"model\": \"synthetic-fixture\", \"provenance\": \"independent\"}, \"round\": 1, \"status\": \"pass\", \"unit_id\": \"8cbde647120142d783cabbcfb73e6c38\"}, \"review_context\": {\"model\": \"synthetic-fixture\", \"provenance\": \"independent\", \"session_id\": \"fixture-fresh-proof-concise-assertion-verbose\"}, \"review_series\": \"8cbde647120142d783cabbcfb73e6c38\", \"reviewer\": {\"model\": \"synthetic-fixture\", \"provenance\": \"independent\"}, \"round\": 1, \"rounds_remaining\": 3, \"rounds_used\": 1, \"status\": \"pass\", \"unit_id\": \"8cbde647120142d783cabbcfb73e6c38\"}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "proof-concise-assertion-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  }
+]

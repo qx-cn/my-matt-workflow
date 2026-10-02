@@ -1,0 +1,8 @@
+{
+  "kind": "root byte-binding of instruction production files; not new independent review",
+  "earlier_snapshot": "/tmp/outcome-review-final-02",
+  "current_snapshot": "/tmp/outcome-review-final-07",
+  "checked_files": 134,
+  "changed_files": [],
+  "boundary": "only selected production instruction and README files, not runtime or tests; reviewer conclusions limited to original scope"
+}

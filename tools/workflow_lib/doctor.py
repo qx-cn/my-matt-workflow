@@ -6,7 +6,7 @@ import json
 import re
 from pathlib import Path
 
-from .installer import InstallError, load_install_state, verify_installed_state, verify_release
+from .installer import InstallError, ReleaseValidationContext, load_install_state, verify_installed_state, verify_release
 from .release import release_matches_source
 from .validator import ValidationError, validate_repository
 
@@ -23,7 +23,7 @@ def _source_skills(root: Path) -> list[str]:
     )
 
 
-def _current_release(root: Path) -> tuple[dict[str, object], str | None]:
+def _current_release(root: Path, context: ReleaseValidationContext) -> tuple[dict[str, object], str | None]:
     pointer = root / "current.json"
     if not pointer.is_file():
         return {"status": "not-applicable", "reason": "current-pointer-missing"}, None
@@ -35,7 +35,7 @@ def _current_release(root: Path) -> tuple[dict[str, object], str | None]:
         if not isinstance(identifier, str) or not _RELEASE_ID.fullmatch(identifier):
             raise ValueError("current release id")
         release = root / "releases" / identifier
-        manifest = verify_release(release)
+        manifest = context.verify(release)
     except (OSError, ValueError, KeyError, InstallError, RuntimeError) as exc:
         return {"status": "invalid", "reason": str(exc)}, None
     try:
@@ -62,7 +62,8 @@ def _current_release(root: Path) -> tuple[dict[str, object], str | None]:
 
 
 def _host_status(
-    home: Path, *, current_release_id: str | None, source_skills: list[str]
+    home: Path, *, current_release_id: str | None, source_skills: list[str],
+    validation_context: ReleaseValidationContext
 ) -> dict[str, object]:
     state_path = home.resolve() / "my-matt-workflow" / "install-state.json"
     try:
@@ -73,7 +74,7 @@ def _host_status(
                 "agent_home": str(home.resolve()),
                 "state_path": str(state_path),
             }
-        verify_installed_state(state)
+        verify_installed_state(state, validation_context=validation_context, state_home=home)
     except (InstallError, OSError) as exc:
         return {
             "status": "invalid",
@@ -121,14 +122,16 @@ def diagnose_repository(
             "skills": len(skills),
             "reason": str(exc),
         }
-    release, current_id = _current_release(root)
+    context = ReleaseValidationContext()
+    release, current_id = _current_release(root, context)
     return {
         "status": "diagnostic",
         "source": source_report,
         "current_release": release,
         "hosts": {
             label: _host_status(
-                home, current_release_id=current_id, source_skills=skills
+                home, current_release_id=current_id, source_skills=skills,
+                validation_context=context
             )
             for label, home in sorted(agent_homes.items())
         },

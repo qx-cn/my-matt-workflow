@@ -1,0 +1,25 @@
+{
+  "patch_sha256": "608bfd18edaddf8f526d0e36ccdad7e6b5273b339901efaf130a904709505832",
+  "files": {
+    "tests/test_batches.py": "7057599831102a2a8a1dd018a67778fcf06161a5616ce224a46b10b4a6e2cfb3",
+    "tools/workflow_lib/batches.py": "c9ac620ede26a1ff193effb5d13d1f795335d73ed54f8c4576e0dafc778c9d1e",
+    "tools/workflow_lib/evidence.py": "eb926e1e204bda1621f0de7759caf399525997b481fc6ae13975ed8eb9090d6f",
+    "tools/workflow_lib/status_text.py": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+    "tools/workflow_lib/topic_service.py": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0"
+  },
+  "red": {
+    "tests": 2,
+    "failures": 2,
+    "exit_code": 1,
+    "log": "/tmp/outcome-runtime-review2-red.log"
+  },
+  "focused": {
+    "tests": 6,
+    "seconds": 16.159,
+    "exit_code": 0,
+    "log": "/tmp/outcome-runtime-review2-final-focused.log"
+  },
+  "compileall_exit_code": 0,
+  "diff_check_exit_code": 0,
+  "full_suite": "not run; root integrates and verifies"
+}

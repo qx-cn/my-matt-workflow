@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # 从需求到交付
 
-调用 {{skill-call:my-grilling}} 访谈，调用 {{skill-call:my-domain-modeling}} 澄清领域术语与承重决定；方法完成后返回本流程。复杂或类比请求在摘要形成前读取[需求核对](references/shared/requirement-analysis.md)。共同遵循[找用户的条件](references/shared/user-intervention.md)。
+已有确认摘要直接复用；只有未决需求会改变交付时调用 {{skill-call:my-grilling}}，只有承重领域术语含义未清时调用 {{skill-call:my-domain-modeling}}，分别按需处理；方法完成后返回本流程。复杂或类比请求在摘要形成前读取[需求核对](references/shared/requirement-analysis.md)。共同遵循[找用户的条件](references/shared/user-intervention.md)。
 
 没有代码库时采用 my-grill-me 的访谈用途，只产需求摘要，停止主链；不创建 Topic、Spec 或 Ticket。
 
@@ -16,4 +16,4 @@ disable-model-invocation: true
 
 quick 直接实施和自审，不创建 Spec/Ticket；遵循[实施适配](references/shared/adapters/implementation-session.md)与[交付规则](references/shared/workflow-delivery.md)，完成 Topic。
 
-standard 直接调用 {{skill-call:my-to-spec}}，由它继续 to-tickets；两者合并呈现对齐点2。用户确认后按依赖逐张实施。逐张定向测试、自审、本地提交；批次末 batch test/review/close。整分支审查可选、不能替代批次审查；全部批次收口后沉淀长期知识、写摘要，再 topic complete。中间直接调用已确认阶段，用户无需手动切换 Skill。
+standard 在授权阶段内直接调用 {{skill-call:my-to-spec}}，用户只要求当前摘要时交付并停止；由它继续 to-tickets；两者合并呈现对齐点2。用户确认后按依赖逐张实施。逐张定向测试、自审、本地提交；批次末 batch test/review/close。整分支审查可选、不能替代批次审查；全部批次收口后沉淀长期知识、写摘要，再 topic complete。中间直接调用已确认阶段，用户无需手动切换 Skill。

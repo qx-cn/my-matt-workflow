@@ -1,0 +1,40 @@
+[
+  {
+    "phase": "first_install",
+    "elapsed_seconds": 0.075252,
+    "verify_release": 1,
+    "source_manifest": 0,
+    "result": "installed"
+  },
+  {
+    "phase": "current_install",
+    "elapsed_seconds": 0.042669,
+    "verify_release": 1,
+    "source_manifest": 0,
+    "result": "current"
+  },
+  {
+    "phase": "two_hosts_same_package",
+    "elapsed_seconds": 0.038345,
+    "verify_release": 1,
+    "source_manifest": 0,
+    "result": {
+      "a": "valid",
+      "b": "valid"
+    }
+  },
+  {
+    "phase": "trusted_digest_match",
+    "elapsed_seconds": 0.005827,
+    "verify_release": 0,
+    "source_manifest": 0,
+    "result": true
+  },
+  {
+    "phase": "missing_digest_fallback",
+    "elapsed_seconds": 0.022215,
+    "verify_release": 0,
+    "source_manifest": 1,
+    "result": true
+  }
+]

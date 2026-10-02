@@ -1,0 +1,256 @@
+--- a/tools/workflow_lib/evidence.py
++++ b/tools/workflow_lib/evidence.py
+@@ -9,6 +9,9 @@
+ import shutil
+ import subprocess
+ import sys
++
++# Cached classifications from before typed module proofs need reevaluation.
++DEPENDENCY_PROOF_VERSION=1
+ 
+ 
+ def execution_observed(output, failure_identities=None):
+@@ -76,7 +79,7 @@
+         prefix=re.match(r'ImportError: Failed to import test module: [^\n]+\n',block)
+         # The same coarse identity may occur more than once. Every block must
+         # prove a dependency gap; one real/unknown block defeats the shortcut.
+-        observations.setdefault(header[1],[]).append(bool(prefix and environment_only_failure('',block[prefix.end():],1)))
++        observations.setdefault(header[1],[]).append(bool(prefix and module_missing_diagnostic(block[prefix.end():])))
+     return [identity for identity,facts in observations.items() if all(facts)]
+ 
+ 
+@@ -100,31 +103,66 @@
+     for index,header in enumerate(headers):
+         end=headers[index+1].start() if index+1<len(headers) else footer.start()
+         # Additional failure diagnostics inside a loader block do not qualify.
+-        if not environment_only_failure('',diagnostic[header.end():end].strip(),code):return False
++        if not module_missing_diagnostic(diagnostic[header.end():end].strip()):return False
+     return True
+ 
+ 
+-def environment_only_failure(stdout, stderr, code):
+-    """Conservative startup-gap classification; other nonzero runs are failures.
+-
+-    An import-error keyword anywhere in a multi-stage runner is insufficient.
+-    Only an otherwise empty, single startup diagnostic qualifies. OSError is
+-    separately observed by execute before any program could run.
+-    """
+-    if stdout.strip():return False
+-    diagnostic=stderr.strip()
+-    if unittest_startup_gap(diagnostic,code):return True
+-    if code in (126,127) and re.fullmatch(r"[^\n]*(?:command not found|: not found|No such file or directory)",diagnostic):
+-        return True
+-    if re.fullmatch(r"[^\n]*: No module named [^\n]+",diagnostic):return True
++def module_missing_diagnostic(diagnostic):
++    """A loader proof requires the specific exception, never a startup prefix."""
++    diagnostic=diagnostic.strip()
++    if re.fullmatch(r"ModuleNotFoundError: No module named [^\n]+",diagnostic):return True
+     if diagnostic.count('Traceback (most recent call last):')!=1 or not diagnostic.startswith('Traceback (most recent call last):'):
+         return False
+     lines=diagnostic.splitlines()
+     if not re.fullmatch(r"ModuleNotFoundError: No module named [^\n]+",lines[-1]):return False
+-    # Every intermediate line must belong to that traceback; preceding child
+-    # failures, SystemExit messages and phase diagnostics refuse this shortcut.
+     return all(line.startswith(('  File ','    ','    ~','    ^')) or not line.strip()
+                for line in lines[1:-1])
++
++
++def python_module_startup_gap(diagnostic,argv):
++    # -m must precede any script operand; a Python script printing a startup-like
++    # line is not an interpreter startup failure.
++    if not argv or '-m' not in argv or any(not arg.startswith('-') or arg in ('-c','--') for arg in argv[1:argv.index('-m')]):return False
++    name=r'python(?:\d+(?:\.\d+)*)?(?:\.exe)?'
++    if not re.fullmatch(name,re.split(r'[/\\]',argv[0])[-1],re.I):return False
++    match=re.fullmatch(r"((?:[A-Za-z]:)?[^:\n]+): (?:No module named [^\n]+|Error while finding module specification for [^\n]+ \(ModuleNotFoundError: No module named [^\n]+\))",diagnostic)
++    return bool(match and re.fullmatch(name,re.split(r'[/\\]',match[1])[-1],re.I))
++
++
++def environment_only_failure(stdout, stderr, code, argv=None):
++    """Recognize specific startup evidence; other nonzero runs are failures."""
++    if code==0 or stdout.strip():return False
++    diagnostic=stderr.strip()
++    if unittest_startup_gap(diagnostic,code) or module_missing_diagnostic(diagnostic):return True
++    if python_module_startup_gap(diagnostic,argv):return True
++    # Shell diagnostics must actually name a shell, rather than an arbitrary
++    # exception whose message happens to mention a missing command or file.
++    shell=argv and re.fullmatch(r'(?:sh|bash|zsh|dash|ksh)',re.split(r'[/\\]',argv[0])[-1])
++    if code in (126,127) and shell and re.fullmatch(r"(?:[^:\n]*/)?(?:sh|bash|zsh|dash|ksh): [^\n]*(?:command not found|: not found|No such file or directory)",diagnostic):return True
++    return False
++
++
++def recorded_output_complete(row):
++    return row.get('output_complete') is True or ('output_complete' not in row and len(row.get('output_tail',''))<4000)
++
++
++def current_unavailable(row):
++    if not row.get('unavailable') or row_execution_observed(row):return False
++    # New observations carry the strict proof revision. Older classifications
++    # must be re-proved from complete diagnostics, not from their cached bool.
++    if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:return True
++    if not recorded_output_complete(row):return False
++    import shlex
++    argv=row.get('argv') or shlex.split(row.get('command',''))
++    return environment_only_failure('',row.get('output_tail',''),row.get('exit_code',1),argv)
++
++
++def current_loader_gaps(row):
++    if row.get('dependency_proof_version')==DEPENDENCY_PROOF_VERSION:return set(row.get('unavailable_loader_failures',[]))
++    if not recorded_output_complete(row):return set()
++    # Complete legacy output can recover a genuine typed gap. A truncated old
++    # proof list could conceal a real block and must not establish comparison.
++    return set(unavailable_loader_failures('',row.get('output_tail','')))
+ 
+ 
+ def environment(repo,argv):
+@@ -140,14 +178,14 @@
+     try:
+         result=subprocess.run(argv,cwd=repo,capture_output=True,text=True,errors='replace')
+         code,output=result.returncode,result.stdout+result.stderr
+-        unavailable=code!=0 and environment_only_failure(result.stdout,result.stderr,code) and not execution_observed(output)
++        unavailable=code!=0 and environment_only_failure(result.stdout,result.stderr,code,argv) and not execution_observed(output)
+         loader_gaps=unavailable_loader_failures(result.stdout,result.stderr)
+     except OSError as exc:
+         code,output,unavailable,loader_gaps=127,str(exc),True,[]
+     return dict(argv=argv,exit_code=code,content_id=identity,environment=execution_environment,
+                 unavailable=unavailable,comparison_eligible=not loader_only_failure(output),
+                 execution_observed=execution_observed(output),output_complete=len(output)<=4000,output_length=len(output),
+-                unavailable_loader_failures=loader_gaps,
++                unavailable_loader_failures=loader_gaps,dependency_proof_version=DEPENDENCY_PROOF_VERSION,
+                 content_changed=topics.content_id(repo)!=identity,output_tail=output[-4000:]),output
+ 
+ 
+--- a/tools/workflow_lib/batches.py
++++ b/tools/workflow_lib/batches.py
+@@ -212,7 +212,7 @@
+     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
+ 
+ 
+-from .evidence import execution_observed, row_execution_observed, row_loader_only_failure
++from .evidence import execution_observed, row_execution_observed, row_loader_only_failure, current_unavailable, current_loader_gaps
+ 
+ 
+ def run_full(repo,config):
+@@ -246,13 +246,14 @@
+         raise topics.TopicError('全量测试记录不完整；不能比较')
+     new=[];known=[];unverified=[]
+     for old,now in zip(baseline['results'],current['results']):
++        unavailable=current_unavailable(now)
+         gap=baseline_gap(old)
+         if gap:
+             unverified.append(old['command'])
+-            if not now.get('unavailable') and now.get('exit_code',bool(now.get('failures'))):
++            if not unavailable and now.get('exit_code',bool(now.get('failures'))):
+                 new.extend(dict(command=now['command'],failure=f,comparison=gap[0]) for f in now['failures'])
+             continue
+-        if now['unavailable']:
++        if unavailable:
+             new.append(dict(command=now['command'],failure='当前环境无法运行'));continue
+         previous=set(old['failures'])
+         tail=old.get('output_tail','')
+@@ -266,7 +267,7 @@
+         # proven current dependency gap may retain a matching loader as known;
+         # actual/unknown import failures require repair even in partial runs.
+         coarse={f for f in unchanged if 'unittest.loader._FailedTest.' in f}
+-        uncertain=coarse-set(now.get('unavailable_loader_failures',[]))
++        uncertain=coarse-current_loader_gaps(now)
+         if uncertain:
+             unverified.append(old['command'])
+             new.extend(dict(command=now['command'],failure=f,comparison='loader-identity-unverifiable') for f in sorted(uncertain))
+--- a/tests/test_batches.py
++++ b/tests/test_batches.py
+@@ -302,13 +302,13 @@
+                 for unavailable in (False,True):
+                     with self.subTest(legacy_unavailable=unavailable):
+                         legacy_baseline=json.loads(json.dumps(baseline));old=legacy_baseline['results'][0]
+-                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures'):
++                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures','dependency_proof_version'):
+                             old.pop(field,None)
+                         old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
+                         receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
+                         stale=json.loads(json.dumps(current))
+                         for item in stale['results']:
+-                            for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures'):
++                            for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures','dependency_proof_version'):
+                                 item.pop(field,None)
+                         stale.update(new_failures=[],known_failures=[dict(command=old['command'],failure=f) for f in old['failures']],unverified=[])
+                         receipt.write_text(json.dumps(stale))
+@@ -343,7 +343,7 @@
+                 for unavailable in (False,True):
+                     with self.subTest(legacy_unavailable=unavailable):
+                         legacy_baseline=json.loads(json.dumps(baseline));old=legacy_baseline['results'][0]
+-                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures'):
++                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures','dependency_proof_version'):
+                             old.pop(field,None)
+                         old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
+                         current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+@@ -374,6 +374,70 @@
+                 self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
+                 self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+                 self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
++
++    def test_concise_loader_exceptions_are_not_dependency_proof(self):
++        for verbose in ('',' -v'):
++            with self.subTest(verbose=verbose):
++                if verbose:self.setUp()
++                runner=self.repo/'runner.py'
++                runner.write_text("import pathlib, sys, traceback, unittest\nfrom unittest.loader import _FailedTest\ndef failed(kind):\n try:\n  if kind=='assertion': assert False, \"No module named 'actual_behavior_condition'\"\n  if kind=='runtime': raise RuntimeError(\"No module named 'actual_behavior_condition'\")\n  import outcome_missing_concise_dependency\n except Exception as exc:\n  detail=traceback.format_exc() if kind=='missing' else ''.join(traceback.format_exception_only(exc))\n  return _FailedTest('same', ImportError('Failed to import test module: same\\n'+detail))\nclass Behavior(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\nsuite=unittest.TestSuite([failed(pathlib.Path('mode.txt').read_text()), failed('missing'), Behavior('test_ok')])\nresult=unittest.TextTestRunner(verbosity=2 if '-v' in sys.argv else 1).run(suite)\nraise SystemExit(not result.wasSuccessful())\n")
++                mode=self.repo/'mode.txt';mode.write_text('missing')
++                self.git('add','runner.py','mode.txt');self.git('commit','-qm','typed loader dependency gaps')
++                self.setup(full='python3 -B runner.py'+verbose);self.implement()
++                mode.write_text('module-only');self.git('add','mode.txt');self.git('commit','-qm','actual ModuleNotFoundError exception-only control')
++                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
++                self.assertTrue(pure['results'][0]['unavailable_loader_failures']);self.review()
++                for kind in ('assertion','runtime'):
++                    with self.subTest(exception=kind):
++                        mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual exception-only behavior failure '+kind)
++                        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                        with self.subTest(fresh_classification=kind):
++                            self.assertFalse(current['results'][0]['unavailable'])
++                            self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
++                            self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
++                        receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
++                        old=json.loads(json.dumps(current));old['results'][0].pop('dependency_proof_version',None)
++                        old['results'][0]['unavailable_loader_failures']=old['results'][0]['failures']
++                        old.update(new_failures=[],known_failures=[dict(command=old['commands'][0],failure=f) for f in old['results'][0]['failures']],unverified=[])
++                        receipt.write_text(json.dumps(old))
++                        self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
++                        self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
++
++    def test_direct_concise_exception_and_old_unavailable_cache_require_rerun(self):
++        runner=self.repo/'runner.py'
++        runner.write_text("import pathlib, sys, traceback\ntry:\n kind=pathlib.Path('mode.txt').read_text()\n if kind=='assertion': assert False, \"No module named 'actual_behavior_condition'\"\n if kind=='runtime': raise RuntimeError(\"No module named 'actual_behavior_condition'\")\n import outcome_missing_direct_concise_dependency\nexcept Exception as exc:\n sys.stderr.write(''.join(traceback.format_exception_only(exc)))\n raise SystemExit(1)\n")
++        mode=self.repo/'mode.txt';mode.write_text('missing')
++        self.git('add','runner.py','mode.txt');self.git('commit','-qm','actual exception-only missing dependency')
++        self.setup(full='python3 -B runner.py');self.implement()
++        pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
++        self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
++        self.review()
++        for kind in ('assertion','runtime'):
++            with self.subTest(exception=kind):
++                mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual direct concise failure '+kind)
++                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                with self.subTest(fresh_classification=kind):
++                    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['new_failures'])
++                receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
++                old=json.loads(json.dumps(current));old['results'][0].pop('dependency_proof_version',None)
++                old['results'][0]['unavailable']=True
++                old.update(new_failures=[],known_failures=[],unverified=[]);receipt.write_text(json.dumps(old))
++                self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
++                self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
++                self.assertFalse(json.loads(self.cli('batch','test','--topic','feature').stdout)['results'][0]['unavailable'])
++
++    def test_python_module_startup_gap_and_legacy_receipt_remain_disclosed(self):
++        for module in ('outcome_missing_python_module','outcome_missing_python_module.nested'):
++            with self.subTest(module=module):
++                if module.endswith('.nested'):self.setUp()
++                self.setup(full='python3 -B -m '+module);self.implement()
++                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
++                self.review()
++                receipt=self.repo/'.agent/work/feature/batch-tests-01.json';old=json.loads(receipt.read_text())
++                old['results'][0].pop('dependency_proof_version',None);receipt.write_text(json.dumps(old))
++                self.cli('batch','close','--topic','feature')
+ 
+     def test_partial_loader_identity_cannot_hide_new_import_assertion(self):
+         for verbose in ('',' -v'):

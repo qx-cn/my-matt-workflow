@@ -1,0 +1,49 @@
+{
+  "manifest": "/private/tmp/outcome-runtime-06-narrow-evidence/python-m-nested/.agent/work/feature/reviews/branch-b227e363a8cf433dbda6a7c863fe2a66/manifest.json",
+  "repair": [],
+  "unit_id": "b227e363a8cf433dbda6a7c863fe2a66",
+  "content_id": "38be6b9fe4bf218591137354f0de9122bfbb7c18f33b87f4e0680e76235edb75",
+  "round": 1,
+  "status": "pass",
+  "reviewer": {
+    "provenance": "independent",
+    "model": "synthetic-fixture"
+  },
+  "result": {
+    "unit_id": "b227e363a8cf433dbda6a7c863fe2a66",
+    "content_id": "38be6b9fe4bf218591137354f0de9122bfbb7c18f33b87f4e0680e76235edb75",
+    "round": 1,
+    "acceptance": [
+      {
+        "id": "feature-01#A1",
+        "text": "independent marker is written"
+      }
+    ],
+    "probes": [
+      "recovery"
+    ],
+    "downstream_tickets": [],
+    "status": "pass",
+    "reviewer": {
+      "provenance": "independent",
+      "model": "synthetic-fixture"
+    },
+    "coverage": [
+      {
+        "target": "feature-01#A1",
+        "result": "ok"
+      },
+      {
+        "target": "recovery",
+        "result": "ok"
+      }
+    ],
+    "findings": []
+  },
+  "review_context": {
+    "provenance": "independent",
+    "model": "synthetic-fixture",
+    "session_id": "fixture-fresh-python-m-nested"
+  },
+  "review_series": "b227e363a8cf433dbda6a7c863fe2a66"
+}

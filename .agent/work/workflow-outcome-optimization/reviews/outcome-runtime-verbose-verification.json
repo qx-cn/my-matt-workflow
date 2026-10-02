@@ -1,0 +1,21 @@
+{
+  "patch_sha256": "72554e3e0e2f812f83ad077cd28d387486bc2eff312f9bd4e2fbaa79959694a2",
+  "files": {
+    "tools/workflow_lib/evidence.py": "74f52c48c1dfa40d28ef69b4e2bc00fc2fffb5199cf67e9f2008867df3722119",
+    "tests/test_batches.py": "448df5aec041fcda84bb2f564a721ed33a39bfcd11ef2bee7cf23a0e0ffcd544"
+  },
+  "red": {
+    "tests": 1,
+    "failed_subcase": "verbose -v",
+    "exit_code": 1,
+    "log": "/tmp/outcome-runtime-verbose-red.log"
+  },
+  "green": {
+    "tests": 3,
+    "seconds": 11.61,
+    "exit_code": 0,
+    "log": "/tmp/outcome-runtime-verbose-green.log"
+  },
+  "compileall_exit_code": 0,
+  "diff_check_exit_code": 0
+}

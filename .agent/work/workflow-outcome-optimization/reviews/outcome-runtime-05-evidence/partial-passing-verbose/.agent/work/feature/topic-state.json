@@ -1,0 +1,8 @@
+{
+  "status": "active",
+  "level": "standard",
+  "started_at": "2026-10-02T14:01:11.125647+00:00",
+  "baseline": "c3efb9eadd383ef0f979e11ee158e70836863cec",
+  "test_runs": 0,
+  "implementation_started": true
+}

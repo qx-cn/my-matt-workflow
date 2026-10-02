@@ -1,0 +1,22 @@
+{
+  "snapshot": "/tmp/outcome-review-final-07",
+  "file_count": 281,
+  "manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+  "suite": {
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 409.614,
+    "source_manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+    "log_sha256": "e26ef6582b9c1458ba13c39410a1e27bd35dba64b503f28672df2612dc8d3beb"
+  },
+  "boundary": "source implementation and limited ordinary independent reviews complete; no real host deployment or model effect trial"
+}

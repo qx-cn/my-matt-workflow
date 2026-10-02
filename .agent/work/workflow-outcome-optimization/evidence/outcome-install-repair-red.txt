@@ -1,0 +1,69 @@
+........FFF...FFF...
+======================================================================
+FAIL: test_legacy_manifest_runtime_changes_cannot_return_current (test_install_simplification.SimplifiedInstallTests.test_legacy_manifest_runtime_changes_cannot_return_current) (mutation='modify')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 308, in test_legacy_manifest_runtime_changes_cannot_return_current
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_legacy_manifest_runtime_changes_cannot_return_current (test_install_simplification.SimplifiedInstallTests.test_legacy_manifest_runtime_changes_cannot_return_current) (mutation='delete')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 308, in test_legacy_manifest_runtime_changes_cannot_return_current
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_legacy_manifest_runtime_changes_cannot_return_current (test_install_simplification.SimplifiedInstallTests.test_legacy_manifest_runtime_changes_cannot_return_current) (mutation='add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 308, in test_legacy_manifest_runtime_changes_cannot_return_current
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_rollback_material_is_verified_before_target_or_evidence_mutation (test_install_simplification.SimplifiedInstallTests.test_rollback_material_is_verified_before_target_or_evidence_mutation) (refreshed=False, corrupt=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 355, in test_rollback_material_is_verified_before_target_or_evidence_mutation
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_rollback_material_is_verified_before_target_or_evidence_mutation (test_install_simplification.SimplifiedInstallTests.test_rollback_material_is_verified_before_target_or_evidence_mutation) (refreshed=True, corrupt=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 355, in test_rollback_material_is_verified_before_target_or_evidence_mutation
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_runtime_extra_symlink_is_rejected_before_current (test_install_simplification.SimplifiedInstallTests.test_runtime_extra_symlink_is_rejected_before_current)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 320, in test_runtime_extra_symlink_is_rejected_before_current
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+----------------------------------------------------------------------
+Ran 17 tests in 2.867s
+
+FAILED (failures=6)
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp364ub574/repo/releases/v1
+INSTALLED v1
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "v1", "status": "built"}, "source": {"status": "valid"}}
+{"status": "invalid", "error": "unit tests failed:\nF\n======================================================================\nFAIL: test_fails (test_gate.Gate.test_fails)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-build-source-ke5xm5mb/repo/tests/test_gate.py\", line 3, in test_fails\n    def test_fails(self): self.fail(\"candidate is invalid\")\n                          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate is invalid\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (failures=1)"}
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpqxgpqj06/repo/releases/actual-suite
+INSTALLED actual-suite
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "actual-suite", "status": "built"}, "source": {"status": "valid"}}
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpa46nnkgy/repo/releases/v1
+CURRENT v1
+{"host": {"status": "current", "target": "auto"}, "release": {"release_id": "v1", "status": "current"}, "source": {"status": "valid"}}

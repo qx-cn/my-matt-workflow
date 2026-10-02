@@ -1,0 +1,11 @@
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 7.766s
+
+OK
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpd6u3wohn/releases/r4
+INSTALLED r4
+{"host": {"status": "installed", "target": "codex"}, "release": {"release_id": "r4", "status": "built"}, "source": {"status": "valid"}}
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmz685hrg/repo/releases/r2
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmz685hrg/repo/releases/r3
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmz685hrg/repo/releases/r4

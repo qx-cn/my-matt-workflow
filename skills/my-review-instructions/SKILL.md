@@ -80,3 +80,20 @@ Portfolio Survey 的完成条件：范围内每个 Skill 恰好进入一次 inve
 先写 `Review-Unit`、`Target-Host`、`Evidence-Level` 与一个 Verdict。每个 finding 用一个短段落说明根因、失败路径或不变量、证据、影响及最小干预方向。只列会改变 Verdict 的 `Evidence Gaps`，并给出取得最终判断的最小 `Next Validation`。
 
 没有合格发现写 `No findings.`；缺少足以判断有效性的行为证据时用 `INCONCLUSIVE` 并报告当前可证明结论，不得把静态检查通过写成“Skill 已验证有效”，也不得默认要求 comparative。只有满足上述争议门槛时，才把授权请求作为 `Next Validation`。不复述完整审查过程、逐项通过清单、被拒绝候选或未经请求的改写稿。
+
+## 共享规则定向审查索引
+
+只在目标涉及该规则时读取相应来源，不把此索引作为常驻检查清单。语义审查依据真实请求及可达行为；打包/文件存在测试只证明可达，不证明政策能改善交付。
+
+- [document-rendering](references/shared/document-rendering.md)
+- [instruction-authority](references/shared/instruction-authority.md)
+- [assurance-levels](references/shared/adapters/assurance-levels.md)
+- [work-scope](references/shared/adapters/work-scope.md)
+- [testing-seams](references/shared/testing-seams.md)
+- [context-hygiene](references/policies/context-hygiene.md)
+- [enterprise-safety](references/policies/enterprise-safety.md)
+- [merge-conflict-approval](references/policies/merge-conflict-approval.md)
+- [requirement-analysis](references/shared/requirement-analysis.md)
+- [requirement-reviewer-brief](references/shared/requirement-reviewer-brief.md)
+- [research-method](references/shared/research-method.md)
+- [workflow-delivery](references/shared/workflow-delivery.md)

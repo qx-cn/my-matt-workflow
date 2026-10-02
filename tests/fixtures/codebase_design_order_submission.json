@@ -27,20 +27,20 @@
     },
     {
       "id": "real-seam",
-      "document": "DEEPENING.md",
-      "text": "两个 Adapter 才意味着真实的 Seam",
-      "consequence": "separate-production-and-test-adapters"
+      "document": "references/shared/testing-seams.md",
+      "text": "用真实生产变化轴和维护需要判断",
+      "consequence": "reuse-or-introduce-port-for-real-boundary-need"
     },
     {
       "id": "interface-test-surface",
-      "document": "DEEPENING.md",
+      "document": "SKILL.md",
       "text": "Interface 就是测试面",
       "consequence": "test-public-interface-only"
     },
     {
       "id": "replace-shallow-tests",
       "document": "DEEPENING.md",
-      "text": "替换，而不是叠加",
+      "text": "只移除已被新测试面完整替代、且不再证明独立行为的旧测试",
       "consequence": "remove-obsolete-shallow-tests"
     },
     {
@@ -59,7 +59,8 @@
     },
     "dependency_injection": {
       "port": "PaymentGateway",
-      "injected_into": "OrderSubmission"
+      "injected_into": "OrderSubmission",
+      "reason": "Stripe是实际不可控支付边界；优先复用已有支付契约，需要port时由该真实边界和维护需求证明，测试adapter数量不证明价值。"
     },
     "adapters": {
       "production": "StripePaymentGateway",
@@ -82,7 +83,7 @@
     "consequence_by_constraint": {
       "accept-dependencies": "inject-payment-gateway",
       "external-dependency": "inject-payment-gateway",
-      "real-seam": "separate-production-and-test-adapters",
+      "real-seam": "reuse-or-introduce-port-for-real-boundary-need",
       "interface-test-surface": "test-public-interface-only",
       "replace-shallow-tests": "remove-obsolete-shallow-tests",
       "small-surface": "one-deep-submit-interface"

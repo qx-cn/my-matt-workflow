@@ -1,0 +1,128 @@
+test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) ... 
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='assertion', exception='assertion', verbose='') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='assertion', verbose='') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='runtime', exception='runtime', verbose='') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='runtime', verbose='') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='assertion', exception='assertion', verbose=' -v') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='assertion', verbose=' -v') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='runtime', exception='runtime', verbose=' -v') ... FAIL
+  test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='runtime', verbose=' -v') ... FAIL
+test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) ... 
+  test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (fresh_classification='assertion', exception='assertion') ... FAIL
+  test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (exception='assertion') ... FAIL
+  test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (fresh_classification='runtime', exception='runtime') ... FAIL
+  test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (exception='runtime') ... FAIL
+test_python_module_startup_gap_and_legacy_receipt_remain_disclosed (test_batches.BatchTests.test_python_module_startup_gap_and_legacy_receipt_remain_disclosed) ... ok
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='assertion', exception='assertion', verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 397, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='assertion', verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 404, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp0b9gnl34 --topic feature'
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='runtime', exception='runtime', verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 397, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='runtime', verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 404, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp0b9gnl34 --topic feature'
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='assertion', exception='assertion', verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 397, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='assertion', verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 404, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpucyz5pk7 --topic feature'
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (fresh_classification='runtime', exception='runtime', verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 397, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_concise_loader_exceptions_are_not_dependency_proof (test_batches.BatchTests.test_concise_loader_exceptions_are_not_dependency_proof) (exception='runtime', verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 404, in test_concise_loader_exceptions_are_not_dependency_proof
+    self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpucyz5pk7 --topic feature'
+
+======================================================================
+FAIL: test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (fresh_classification='assertion', exception='assertion')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 421, in test_direct_concise_exception_and_old_unavailable_cache_require_rerun
+    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['new_failures'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (exception='assertion')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 426, in test_direct_concise_exception_and_old_unavailable_cache_require_rerun
+    self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpsx7ng864 --topic feature'
+
+======================================================================
+FAIL: test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (fresh_classification='runtime', exception='runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 421, in test_direct_concise_exception_and_old_unavailable_cache_require_rerun
+    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['new_failures'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_direct_concise_exception_and_old_unavailable_cache_require_rerun (test_batches.BatchTests.test_direct_concise_exception_and_old_unavailable_cache_require_rerun) (exception='runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 426, in test_direct_concise_exception_and_old_unavailable_cache_require_rerun
+    self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch test' not found in 'workflow.py batch review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpsx7ng864 --topic feature'
+
+----------------------------------------------------------------------
+Ran 3 tests in 15.565s
+
+FAILED (failures=12)

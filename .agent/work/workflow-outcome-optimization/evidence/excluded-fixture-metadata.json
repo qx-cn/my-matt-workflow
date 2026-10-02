@@ -1,0 +1,24 @@
+{
+  "removed_from_durable_copy_only": [
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-proof-extra-evidence/proof-concise-assertion-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/duplicate-loader-verbose/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/tail-legacy-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-narrow-evidence/python-m-nested/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-r1-evidence/proof-concise-assertion-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/tail-legacy-verbose/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/duplicate-loader-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-narrow-evidence/python-m-plain/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/partial-known-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/partial-passing-verbose/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/partial-known-verbose/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-narrow-evidence/typed-loader-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-evidence/partial-passing-default/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-narrow-evidence/typed-loader-verbose/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-06-narrow-evidence/direct-exception-only/.git",
+    ".agent/work/workflow-outcome-optimization/reviews/outcome-runtime-05-proof-extra-evidence/proof-concise-assertion-verbose/.git"
+  ],
+  "reason": "exclude disposable nested Git metadata and caches from source/audit package and prevent embedded Gitlinks",
+  "original_tmp_evidence_and_reports_unchanged": true,
+  "raw_cli_events_receipts_and_fixture_source_retained": true
+}

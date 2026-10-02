@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/outcome-runtime-04-probes.py", line 66, in <module>
+    f=Fixture('single-'+mode,{'suite/test_import.py':missing},full)
+  File "/tmp/outcome-runtime-04-probes.py", line 26, in __init__
+    self.cli('implement','start','--ticket','feature-01','--agent','codex')
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/outcome-runtime-04-probes.py", line 37, in cli
+    if ok:assert p.returncode==0,(self.label,args,p.stderr)
+                 ^^^^^^^^^^^^^^^
+AssertionError: ('single-default', ('implement', 'start', '--ticket', 'feature-01', '--agent', 'codex'), 'Ticket review_probes 必须是 recovery, unknown-response 的去重列表：/private/tmp/outcome-runtime04-single-default-mkuo91wq/.agent/work/feature/tickets/tickets-feature-01.md\n')

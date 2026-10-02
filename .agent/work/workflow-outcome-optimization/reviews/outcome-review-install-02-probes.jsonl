@@ -1,0 +1,79 @@
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "clean", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "modify", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "delete", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "add", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "dangling", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "cache-link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "fifo", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "portable", "mutation": "byproducts", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "clean", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "modify", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "delete", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "add", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "dangling", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "cache-link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "fifo", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "codex", "mutation": "byproducts", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "clean", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "modify", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "delete", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "add", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "dangling", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "cache-link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "fifo", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "cursor", "mutation": "byproducts", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "clean", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "modify", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "delete", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "add", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "已安装 runtime 与 release 内容不一致"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "dangling", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "cache-link", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "fifo", "host": "invalid", "state_unchanged": true, "error_type": "InstallError", "error": "托管 runtime 包含 symlink 或非常规路径"}
+{"probe": "legacy-runtime", "projection": "claude", "mutation": "byproducts", "host": "valid", "state_unchanged": true, "returned": "current"}
+{"probe": "interrupted", "mode": "upgrade", "phase": "old-first", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "upgrade", "phase": "old-first", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "upgrade", "phase": "old-last", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "upgrade", "phase": "old-last", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "upgrade", "phase": "new-first", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "upgrade", "phase": "new-first", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "upgrade", "phase": "after-refresh", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "upgrade", "phase": "after-refresh", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "upgrade", "phase": "runtime", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "upgrade", "phase": "runtime", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "upgrade", "phase": "commit", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "upgrade", "phase": "commit", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "托管 Skill ownership 已漂移：my-alpha"}
+{"probe": "interrupted", "mode": "migration", "phase": "old-last", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "migration", "phase": "old-last", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "migration", "phase": "new-first", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "migration", "phase": "new-first", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明尚未移动的旧目标：my-alpha"}
+{"probe": "interrupted", "mode": "migration", "phase": "after-refresh", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "migration", "phase": "after-refresh", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "migration", "phase": "runtime", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "migration", "phase": "runtime", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "migration", "phase": "commit", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "migration", "phase": "commit", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "托管 Skill ownership 已漂移：my-alpha"}
+{"probe": "interrupted", "mode": "initial", "phase": "new-first", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "initial", "phase": "after-refresh", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "initial", "phase": "runtime", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "initial", "phase": "commit", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "old-first", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "old-first", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "old-last", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "old-last", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "new-first", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "new-first", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "after-refresh", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "after-refresh", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "runtime", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "runtime", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "恢复无法证明 backup ownership：my-alpha"}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "commit", "corrupt": false, "evidence_preserved": false, "returned": null}
+{"probe": "interrupted", "mode": "legacy-v4", "phase": "commit", "corrupt": true, "evidence_preserved": true, "error_type": "InstallError", "error": "托管 Skill ownership 已漂移：my-alpha"}
+{"probe": "validation-counts", "current": 1, "upgrade": 2, "doctor_distinct_packages": 2, "hosts": {"a": "valid", "b": "drift"}}
+{"probe": "foreign-runtime-receipt", "host": "invalid", "error_type": "InstallError", "error": "托管 runtime 入口路径无效"}
+{"probe": "runtime-parent-link", "parent": "runtime", "outside_written": true, "returned": "installed"}
+{"probe": "runtime-parent-link", "parent": "my-matt-workflow", "outside_written": true, "returned": "installed"}
+{"probe": "complete", "probes": 78, "elapsed_seconds": 19.44}

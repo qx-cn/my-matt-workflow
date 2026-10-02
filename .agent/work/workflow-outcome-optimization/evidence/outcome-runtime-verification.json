@@ -1,0 +1,14 @@
+{
+  "patch_sha256": "22325162cfc4a02804562e673b58f3b5542b1abf015b926d6499df3921ab7f18",
+  "source_match": true,
+  "full_suite": {
+    "command": "python3 -m unittest discover -s tests",
+    "tests": 296,
+    "seconds": 326.11,
+    "exit_code": 0,
+    "status": "OK",
+    "log": "/tmp/outcome-runtime-final-full-suite.log"
+  },
+  "git_diff_check_exit_code": 0,
+  "compileall_exit_code": 0
+}

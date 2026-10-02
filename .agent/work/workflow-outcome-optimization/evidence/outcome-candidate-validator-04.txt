@@ -1,0 +1,1 @@
+VALID skills=32

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/outcome-review-install-02-extra-probes.py", line 78, in <module>
+    assert R.release_matches_source(package,root/'skills',upstream_id='local');fallback_count=stage.call_count
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

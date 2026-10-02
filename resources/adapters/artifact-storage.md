@@ -1,7 +1,7 @@
-# 工作产物存储适配
+# 工作产物存储
 
-项目内生成的本地工作产物统一写入 `.agent/work/<topic>/<type>/`，文件名使用 `<type>-<topic>-<time-or-sequence>.<extension>`。`topic` 与 `type` 必须是路径安全的单段名称；按项目配置处理 `.agent/` 的 private/shared 归属，不修改主仓库忽略规则。
+项目内工作产物写入 `.agent/work/<topic>/<type>/`，文件名 `<type>-<topic>-<time-or-sequence>.<extension>`；topic/type为路径安全单段。写入前解析目标绝对路径，默认新增而不覆盖历史；用户指定其他安全位置时尊重该选择。授权遵循[用户决定与授权](../user-intervention.md)。
 
-写入前解析并报告目标绝对路径。默认只新增、不覆盖历史；若目标已存在，选择新的可排序键。用户明确指定其他安全位置时尊重该位置，但不得把默认位置当成覆盖用户选择的理由。
+`.agent/matt-workflow.md` 的 agent_directory_mode 决定归属：private 是无 remote 的个人嵌套 Git，shared 由主仓库跟踪；两者都不修改主仓库忽略规则。`.agent/CONTEXT.md` 保存项目术语，`.agent/adr/` 保存难以撤回的决定；handoffs/prototypes/researches/learning/architecture-reports 分别保存相应工件。非项目交接用临时目录，非项目学习按安装配置的学习目录，未配置用当前目录。
 
-产物内记录实际来源路径或 URL、生成阶段和仍缺少的输入。发送、发布、Commit 或其他外部写入是独立动作，不由“文件已生成”自动授权。
+产物保留影响下一步的来源、阶段、未知和证据边界；不复制无关材料或敏感信息。本地保存、提交、发送、发布是不同动作，文件生成不自授权其他动作。

@@ -1,0 +1,101 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--initial-branch=main"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "config",
+      "user.name",
+      "Review Fixture"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "config",
+      "user.email",
+      "review@example.invalid"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "add",
+      "--all"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "commit",
+      "-qm",
+      "initial runner"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/outcome-review-runtime-04/tools/workflow.py",
+      "setup",
+      "--apply",
+      "--agent-directory-mode",
+      "shared",
+      "--test-command",
+      "python3 -B -m unittest discover -s suite",
+      "--test-command",
+      "python3 -B -c 'pass'",
+      "--repo",
+      "/tmp/outcome-runtime04-single-default-mkuo91wq"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 0,
+    "stdout": "{\"agent_directory\": {\"mode\": \"shared\"}, \"applied\": true, \"config\": {\"agent_directory_mode\": \"shared\", \"assurance_level\": \"standard\", \"default_base_branch\": \"main\", \"default_execution_agent\": \"auto\", \"domain_sources\": [], \"schema_version\": 2, \"standards_sources\": [], \"task_backend\": \"local\", \"test_commands\": [\"python3 -B -m unittest discover -s suite\", \"python3 -B -c 'pass'\"]}, \"detected_standards_sources\": []}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/outcome-review-runtime-04/tools/workflow.py",
+      "implement",
+      "start",
+      "--ticket",
+      "feature-01",
+      "--agent",
+      "codex",
+      "--repo",
+      "/tmp/outcome-runtime04-single-default-mkuo91wq"
+    ],
+    "cwd": "/tmp/outcome-runtime04-single-default-mkuo91wq",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Ticket review_probes 必须是 recovery, unknown-response 的去重列表：/private/tmp/outcome-runtime04-single-default-mkuo91wq/.agent/work/feature/tickets/tickets-feature-01.md\n"
+  }
+]

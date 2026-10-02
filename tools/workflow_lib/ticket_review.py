@@ -289,13 +289,8 @@ def current_manifest(repo, config, topic, path, unit):
     active = unit.get('active_review')
     if not active:
         raise topics.TopicError('unit_id: 没有当前冻结单元；请先 implement review')
-    manifest_path = Path(active['manifest'])
-    if digest(manifest_path.read_bytes()) != active['manifest_sha256']:
-        raise topics.TopicError('manifest: 冻结材料已变化，请重新 review')
-    manifest = json.loads(manifest_path.read_text())
-    for entry in manifest['inputs'] + [e for c in manifest['changes'] for e in (c['base'], c['current']) if e]:
-        if digest(Path(entry['snapshot_path']).read_bytes()) != entry['sha256']:
-            raise topics.TopicError('snapshot: 冻结材料已变化，请重新 review')
+    from .evidence import frozen_manifest
+    manifest=frozen_manifest(active)
     if topics.content_id(repo) != manifest['content_id']:
         raise topics.TopicError('content_id: 当前内容已变化，请重新测试和 review')
     if impl.definition(repo, path) != active['definition']:
@@ -318,8 +313,9 @@ def require_pass(repo, config, topic, path, unit):
     entry = unit.get('reviews', [{}])[-1]
     if entry.get('status') != 'pass' or entry.get('unit_id') != manifest['unit_id']:
         raise topics.TopicError('review: 当前冻结单元没有通过记录')
+    from . import evidence
     accepted = topics.topic_path(repo, topic) / 'reviews' / f"accepted-{manifest['unit_id']}.json"
-    if not accepted.is_file() or json.loads(accepted.read_text()) != entry:
+    if not evidence.accepted_matches(accepted,entry):
         raise topics.TopicError('review: 登记记录不一致，请重新 review')
     validate_result(entry['result'], manifest)
     return entry
@@ -344,6 +340,7 @@ def submit_review(repo, ticket=None, topic=None, result_file=None):
     repair = review_loop.repair_for(unit, manifest)
     entry = {'manifest': unit['active_review']['manifest'], 'repair': repair, 'unit_id': manifest['unit_id'], 'content_id': manifest['content_id'], 'round': manifest['round'],
              'status': status, 'reviewer': result['reviewer'], 'result': result, 'review_context':manifest['review_context'], 'review_series':unit['reviews'][-1].get('review_series',manifest['unit_id'])}
+    from . import evidence
     accepted = topics.topic_path(repo, topic) / 'reviews' / f"accepted-{manifest['unit_id']}.json"
     if accepted.exists():
         if json.loads(accepted.read_text()) != entry:

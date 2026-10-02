@@ -1,0 +1,97 @@
+{
+  "scope": [
+    "AC20",
+    "AC21",
+    "AC22"
+  ],
+  "files": [
+    "tools/workflow.py",
+    "tools/workflow_lib/doctor.py",
+    "tools/workflow_lib/installer.py",
+    "tools/workflow_lib/projection.py",
+    "tools/workflow_lib/release.py",
+    "tests/test_install_simplification.py"
+  ],
+  "patch": "/tmp/outcome-install.patch",
+  "evidence": {
+    "red": "/tmp/outcome-install-red.log",
+    "focused": "/tmp/outcome-install-focused.log",
+    "security": "/tmp/outcome-install-security.log",
+    "packaging": "/tmp/outcome-install-packaging.log",
+    "doctor": "/tmp/outcome-install-doctor.log",
+    "initial_full": "/tmp/outcome-install-full.log",
+    "final_full": "/tmp/outcome-install-full-final.log"
+  },
+  "results": {
+    "focused": {
+      "tests": 14,
+      "exit_code": 0
+    },
+    "security": {
+      "tests": 21,
+      "exit_code": 0
+    },
+    "packaging": {
+      "tests": 13,
+      "exit_code": 0
+    },
+    "doctor": {
+      "tests": 2,
+      "exit_code": 0
+    },
+    "initial_full": {
+      "tests": 289,
+      "seconds": 298.653,
+      "exit_code": 0
+    },
+    "final_full": {
+      "tests": 300,
+      "seconds": 324.644,
+      "exit_code": 0,
+      "note": "Production snapshot unchanged throughout final run; afterward strengthened the unchanged-deploy source-packaging guard to patch the actual CLI helper globals, with focused re-run passing."
+    }
+  },
+  "isolated_fixture_benchmark": {
+    "before": {
+      "counts": {
+        "copytree_calls": 35,
+        "projection_tree_copies": 30,
+        "projection_tree_operations": 15,
+        "release_verifications": 4,
+        "source_match_packaging": 1,
+        "suite_gate_calls": 1
+      },
+      "implementation": "/tmp/outcome-install-before",
+      "scenario": "unchanged minimal fixture deploy, suite stubbed for phase isolation",
+      "seconds": {
+        "operation": 0.13583158300025389,
+        "release_verification_seconds": 0.07592558301985264,
+        "source_packaging_seconds": 0.018692832993110642
+      }
+    },
+    "after": {
+      "counts": {
+        "copytree_calls": 0,
+        "projection_tree_copies": 0,
+        "projection_tree_operations": 0,
+        "release_verifications": 1,
+        "source_match_packaging": 0,
+        "suite_gate_calls": 1
+      },
+      "implementation": "/tmp/my-matt-outcome-install",
+      "scenario": "unchanged minimal fixture deploy, suite stubbed for phase isolation",
+      "seconds": {
+        "operation": 0.04324891700525768,
+        "release_verification_seconds": 0.014950082986615598,
+        "source_packaging_seconds": 0
+      }
+    }
+  },
+  "boundaries": [
+    "No real host install, repo release, deploy or Topic state mutation.",
+    "Benchmark mocks the suite solely to isolate packaging/verification/install phases; separate regression invokes a real unittest suite once.",
+    "No cross-command test-success cache and no affected-test selector.",
+    "Copied or old release manifests without independently bound input digest use full generated-content comparison.",
+    "Seven-capability behavioral benefit requires the later fixed-condition evaluation."
+  ]
+}

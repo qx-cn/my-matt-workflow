@@ -1,0 +1,12 @@
+{
+  "root": "/tmp/outcome-review-final-05",
+  "manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+  "count": 281,
+  "unique": 281,
+  "errors": [],
+  "metadata": {},
+  "auxiliary_sha256": {
+    "prior-findings.md": "8e16ce98403afb84df6a27be41dc912d99ee99e3e9352178b75ea4dbc6a1a62f",
+    "repair.patch": "0c116d7f0f1d551ec8cf7337f66933825e4ac4b2ff15aea86e3da1c71c63e643"
+  }
+}

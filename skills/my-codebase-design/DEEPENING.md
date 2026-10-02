@@ -16,17 +16,17 @@
 
 ### 3. 远程但自有（Ports & Adapters）
 
-网络边界另一侧的自有服务（微服务、内部 API）。在 Seam 处定义一个 **port**（Interface）。深 Module 拥有逻辑；传输层作为 **Adapter** 注入。测试使用内存 Adapter；生产环境使用 HTTP/gRPC/队列 Adapter。
+网络边界另一侧的自有服务（微服务、内部 API）。优先复用既有传输边界；需要新 port 时按共享合同判断真实变化与维护价值，深 Module 拥有逻辑，传输层作为 Adapter 注入。测试替身保留 HTTP/gRPC/队列的必要边界语义，不以生产/测试各一个实现证明抽象价值。
 
-推荐表述：*“在 Seam 处定义一个 port，为生产实现 HTTP Adapter，为测试实现内存 Adapter；即使它跨网络部署，逻辑仍位于一个深 Module 中。”*
+表述应说明真实边界与选择依据；跨网络部署本身不要求新增一层公开接口。
 
 ### 4. 真正外部（Mock）
 
-你无法控制的第三方服务（Stripe、Twilio 等）。深化后的 Module 接受外部依赖作为注入的 port；测试提供 mock Adapter。
+你无法控制的第三方服务（Stripe、Twilio 等）。优先通过项目已有稳定边界注入依赖/替身；确需新增 port 时按共享合同解释必要性，不因需要 mock 就新增公开接口。
 
 ## Seam 纪律
 
-- **一个 Adapter 只意味着假设的 Seam；两个 Adapter 才意味着真实的 Seam。** 只有至少两个 Adapter 有充分理由时（通常是生产和测试），才引入 port。单 Adapter 的 Seam 只是间接层。
+- 是否新增 port 或复用既有单实现边界，只按下文共享测试合同判断；测试替身不作为新生产抽象的价值证据。
 - **内部 Seam 与外部 Seam。** 深 Module 可以有内部 Seam（其 Implementation 私有，供自身测试使用），也可以有位于其 Interface 的外部 Seam。不要仅因为测试使用内部 Seam，就通过 Interface 暴露它。
 
 ## 测试策略

@@ -1,0 +1,218 @@
+[
+  {
+    "fixture": "direct-exception-only",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "status",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/direct-exception-only"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-narrow-evidence/direct-exception-only --topic feature\", \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": [{\"command\": \"python3 -B runner.py\", \"note\": \"基线环境缺失，无法比较；当前执行失败仍须修复\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "direct-exception-only",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/direct-exception-only"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  },
+  {
+    "fixture": "direct-exception-only",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "status",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/direct-exception-only"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-narrow-evidence/direct-exception-only --topic feature\", \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": [{\"command\": \"python3 -B runner.py\", \"note\": \"基线环境缺失，无法比较；当前执行失败仍须修复\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "direct-exception-only",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/direct-exception-only"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  },
+  {
+    "fixture": "typed-loader-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "status",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-narrow-evidence/typed-loader-default --topic feature\", \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "typed-loader-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-default"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  },
+  {
+    "fixture": "typed-loader-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "status",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-default"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-narrow-evidence/typed-loader-default --topic feature\", \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "typed-loader-default",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-default"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  },
+  {
+    "fixture": "typed-loader-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "status",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose --topic feature\", \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "typed-loader-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  },
+  {
+    "fixture": "typed-loader-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "status",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"batch\": \"01\", \"decisions_needed\": [], \"inputs_needed\": [], \"next_command\": \"workflow.py batch test --repo /private/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose --topic feature\", \"state\": \"审查中\", \"tickets\": [\"feature-01\"], \"topic\": \"feature\", \"unverified\": []}\n",
+    "stderr": ""
+  },
+  {
+    "fixture": "typed-loader-verbose",
+    "role": "public-cli",
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/tmp/outcome-review-final-07/tools/workflow.py",
+      "batch",
+      "close",
+      "--topic",
+      "feature",
+      "--repo",
+      "/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "全量测试新增失败或记录过期；请 batch test\n"
+  }
+]

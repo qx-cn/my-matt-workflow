@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 import re
 import shlex
-import subprocess
 import shutil
 import uuid
 
@@ -290,6 +289,14 @@ def load_active(repo, ticket, topic, check_commands=True):
     if not record.is_file():
         raise topics.TopicError("缺少新实施记录；请运行 migrate")
     unit = json.loads(record.read_text())
+    from . import ticket_review, review_loop
+    if value.get('status')=='needs-user' and review_loop.recover_geometry(unit,
+            lambda candidate:ticket_review.require_pass(repo,config,topic,path,candidate),path):
+        write_json(record,unit)
+    from .batches import pending_self_findings
+    challenges=[f for f,_ in pending_self_findings(unit).values() if f.get('view')=='spec-challenge']
+    if challenges and frontmatter(path)['status']=='implementing':
+        review_loop.stop(unit,path,record,'Spec 与现有系统冲突：增强自审需要用户裁决')
     if check_commands and value.get("test_commands") != unit["definition"]["ticket"]["metadata"].get("test_commands"):
         raise topics.TopicError("test_commands 与定义快照不同；恢复原值，或用户确认修订后 resolve --reopen")
     if check_commands:
@@ -302,12 +309,14 @@ def tests_passed(repo, unit, commands=None):
     commands = commands if commands is not None else [shlex.split(c) for c in unit["definition"]["ticket"]["metadata"]["test_commands"]]
     run = unit.get("test_run")
     # Old per-command history cannot prove one whole declaration completed.
-    if not run or not run["completed"] or run["commands"] != commands:
+    if not run or run.get("completed") is not True or run.get("commands") != commands:
         return False
     entries = [t for t in unit["tests"] if not t["progress"] and t.get("run_id") == run["id"]]
+    from .evidence import environment
     return len(entries) == len(commands) and all(
         t.get("command_index") == index and t["argv"] == command
-        and t["content_id"] == content and t["exit_code"] == 0
+        and t.get("content_id") == content and t.get("exit_code") == 0
+        and not t.get("content_changed",False) and t.get("environment")==environment(repo,command)
         for index, (t, command) in enumerate(zip(entries, commands)))
 
 
@@ -331,19 +340,14 @@ def run_test_batch(repo, unit, record, commands, progress=False):
     outputs = []
     failed = False
     for index, command in enumerate(commands):
-        content = topics.content_id(repo)
-        try:
-            result = subprocess.run(command, cwd=repo, capture_output=True, text=True, errors="replace")
-            exit_code, output = result.returncode, result.stdout + result.stderr
-        except OSError as exc:
-            exit_code, output = 127, str(exc)
-        entry = {"argv": command, "exit_code": exit_code, "content_id": content,
-                 "run_id": run_id, "command_index": index,
-                 "progress": progress, "finished_at": topics.now(), "output_tail": output[-4000:]}
+        from .evidence import execute
+        observed,_ = execute(repo,command)
+        entry = {**observed,"run_id":run_id,"command_index":index,
+                 "progress":progress,"finished_at":topics.now()}
         unit["tests"].append(entry)
         write_json(record, unit)
         outputs.append(entry)
-        failed = failed or exit_code != 0
+        failed = failed or entry["exit_code"] != 0
     if not progress:
         unit["test_run"]["completed"] = True
         write_json(record, unit)
@@ -355,6 +359,7 @@ def run_test_batch(repo, unit, record, commands, progress=False):
 
 def status(repo, ticket=None, topic=None):
     repo, config, topic, path, unit, _ = load_active(repo, ticket, topic, check_commands=False)
+    from .batches import pending_self_findings
     passed = tests_passed(repo, unit)
     definition_changed = definition(repo, path) != unit["definition"]
     command = "review" if passed else "test"
@@ -374,19 +379,25 @@ def status(repo, ticket=None, topic=None):
     next_command = f"workflow.py implement {command} --repo {shlex.quote(str(repo))} --ticket {unit['ticket']}"
     if command == 'review' and unit.get('high_risk_reason'):
         next_command += ' --reason '+shlex.quote(unit['high_risk_reason'])
-    if frontmatter(path)['status'] == 'needs-user' and passed and command != 'self-review':
-        next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --accept --reason '<理由>'"
+    if frontmatter(path)['status'] == 'needs-user' and passed:
+        try:
+            batches.require_self(repo,unit,allow_findings=True)
+        except topics.TopicError:
+            pass
+        else:
+            next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --accept --reason '<理由>'"
     if definition_changed:
         next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --reopen --reason '<理由>'"
     return {"ticket": unit["ticket"], "topic": topic, "status": frontmatter(path)["status"],
             "baseline": unit["baseline"], "tests_passed": passed, "definition_changed": definition_changed,
             "stop_reason": unit.get("stop_reason"),
-            "decisions_needed": [dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for r in unit.get("reviews", [])[-1:] for f in r.get("result", {}).get("findings", []) if f.get("view") == "spec-challenge"], "rounds_used": len(unit.get("reviews", [])),
+            "decisions_needed": [dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for r in [dict(findings=[f for f,_ in pending_self_findings(unit).values()]),*[r.get('result',{}) for r in unit.get('reviews',[])[-1:]]] for f in r.get('findings',[]) if f.get("view") == "spec-challenge"], "rounds_used": len(unit.get("reviews", [])),
             "decisions": unit.get("decisions", []),
+            "inputs_needed": ["补齐并勾选当前验收"] if command=="finish" and re.search(r"^\s*- \[ \]",path.read_text(),re.M) else ["实际 reviewer-model 与审查上下文来源"] if command=="review" else [],
             "next_command": next_command}
 
 
-def next_start_command(repo, topic):
+def next_ready_command(repo, topic):
     for path, value in records(repo, topic).values():
         try:
             if value.get("status") == "ready-for-agent":
@@ -395,3 +406,13 @@ def next_start_command(repo, topic):
         except (topics.TopicError, TicketError):
             continue
     return f"workflow.py topic complete --repo {shlex.quote(str(repo))} --topic {topic}"
+
+
+def next_start_command(repo, topic):
+    """One serial routing predicate shared by status and mutation receipts."""
+    from . import batches
+    if batches.enabled(repo,topic):
+        plan=batches.read(repo,topic)
+        if any(b['status']!='closed' for b in plan['batches']):
+            return batches.status(repo,topic)['next_command']
+    return next_ready_command(repo,topic)

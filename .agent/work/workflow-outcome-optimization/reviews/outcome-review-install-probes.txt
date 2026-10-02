@@ -1,0 +1,7 @@
+LEGACY_RUNTIME_DRIFT {"result": "current", "tampered_runtime_remains": true}
+RUNTIME_EXTRA_SYMLINK {"result": "current", "symlink_remains": true}
+BACKUP_FULL_BINDING_REJECTS 托管目录 ownership 或 identity 不匹配
+ROLLBACK_TAMPER {"restored_text": "CORRUPTED BACKUP", "transaction_removed": true, "state_release": "v1"}
+SHORTCUT_DISABLED_CONTROL 安装中断，已恢复旧版本 cause 已安装的同名 runtime 已损坏：v1
+SOURCE_PHYSICAL_PROJECTION {"comparisons": 128, "elapsed_seconds": 0.275}
+UNCHANGED_ACTUAL_GATE {"exit": 1, "host_state_unchanged": true}

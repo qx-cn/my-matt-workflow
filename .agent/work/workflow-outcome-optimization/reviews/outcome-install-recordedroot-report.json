@@ -1,0 +1,50 @@
+{
+  "finding": "R2 persisted old Skill root symlink drift during migration",
+  "patch": "/tmp/outcome-install-recordedroot.patch",
+  "base": "/tmp/outcome-install-recordedroot-base",
+  "hashes": {
+    "tools/workflow_lib/installer.py": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+    "tests/test_install_simplification.py": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd"
+  },
+  "red": {
+    "tests": 24,
+    "failing_matrix_cases": 16,
+    "exit_code": 1
+  },
+  "results": {
+    "focused": {
+      "tests": 25,
+      "seconds": 7.208,
+      "exit_code": 0
+    },
+    "original_security": {
+      "tests": 21,
+      "seconds": 1.272,
+      "exit_code": 0
+    },
+    "original_installer": {
+      "tests": 16,
+      "seconds": 0.202,
+      "exit_code": 0
+    },
+    "doctor": {
+      "tests": 2,
+      "seconds": 0.01,
+      "exit_code": 0
+    }
+  },
+  "behavior": "One _recorded_directory validator rejects persisted root/ancestor symlinks before resolve; receipt verification, v1-v4 recovery and migration share it. Outer installer reads old receipt and checks old roots before creating any state/lock/destination/transaction; locked installer and old-root migration recheck. Explicit current host aliases and unredirected canonical cross-host roots remain supported.",
+  "negative_matrix": "v1/v2 receipts x portable/codex/cursor/claude x custom/default old internal roots; each leaves full host/outside trees and receipt unchanged, including absent .install.lock remaining absent. Additional ancestor-link test.",
+  "logs": [
+    "/tmp/outcome-install-recordedroot-red.log",
+    "/tmp/outcome-install-recordedroot-green.log",
+    "/tmp/outcome-install-recordedroot-security.log",
+    "/tmp/outcome-install-recordedroot-installer.log",
+    "/tmp/outcome-install-recordedroot-doctor.log"
+  ],
+  "boundaries": [
+    "No real host/release/Topic operation.",
+    "Full suite and independent re-review remain root integration checks.",
+    "No claim to eliminate arbitrary outside-writer TOCTOU interleavings."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "root": "/tmp/outcome-review-final-05",
+  "manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+  "count": 281,
+  "unique": 281,
+  "errors": [],
+  "metadata": {},
+  "auxiliary_sha256": {
+    "prior-findings.md": "8e16ce98403afb84df6a27be41dc912d99ee99e3e9352178b75ea4dbc6a1a62f",
+    "repair.patch": "0c116d7f0f1d551ec8cf7337f66933825e4ac4b2ff15aea86e3da1c71c63e643"
+  },
+  "unchanged_from_start": true,
+  "key_files_sha256": {
+    "tools/workflow_lib/installer.py": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+    "tools/workflow_lib/fs_safety.py": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+    "tools/workflow_lib/projection.py": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+    "tests/test_install_simplification.py": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd"
+  },
+  "bytecode_paths": [],
+  "imported_modules": {
+    "tools": "/tmp/outcome-review-final-05/tools/__init__.py",
+    "tools.workflow_lib": "/tmp/outcome-review-final-05/tools/workflow_lib/__init__.py",
+    "tools.workflow_lib.fs_safety": "/tmp/outcome-review-final-05/tools/workflow_lib/fs_safety.py",
+    "tools.workflow_lib.release_references": "/tmp/outcome-review-final-05/tools/workflow_lib/release_references.py",
+    "tools.workflow_lib.projection": "/tmp/outcome-review-final-05/tools/workflow_lib/projection.py",
+    "tools.workflow_lib.installer": "/tmp/outcome-review-final-05/tools/workflow_lib/installer.py"
+  }
+}

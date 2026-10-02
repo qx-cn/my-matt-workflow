@@ -1,0 +1,52 @@
+{
+  "scope": "nine source entry bodies; projection and actual reads not included",
+  "before": 15233,
+  "after": 15886,
+  "entries": [
+    {
+      "skill": "my-grill-with-docs",
+      "before_source_characters": 1045,
+      "after_source_characters": 1095
+    },
+    {
+      "skill": "my-grilling",
+      "before_source_characters": 642,
+      "after_source_characters": 642
+    },
+    {
+      "skill": "my-domain-modeling",
+      "before_source_characters": 834,
+      "after_source_characters": 834
+    },
+    {
+      "skill": "my-to-spec",
+      "before_source_characters": 2468,
+      "after_source_characters": 2589
+    },
+    {
+      "skill": "my-to-tickets",
+      "before_source_characters": 1534,
+      "after_source_characters": 1632
+    },
+    {
+      "skill": "my-implement",
+      "before_source_characters": 1657,
+      "after_source_characters": 1973
+    },
+    {
+      "skill": "my-tdd",
+      "before_source_characters": 1646,
+      "after_source_characters": 1677
+    },
+    {
+      "skill": "my-code-review",
+      "before_source_characters": 3667,
+      "after_source_characters": 3667
+    },
+    {
+      "skill": "my-review-design",
+      "before_source_characters": 1740,
+      "after_source_characters": 1777
+    }
+  ]
+}

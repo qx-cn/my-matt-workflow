@@ -43,6 +43,7 @@ class PortfolioContractTests(unittest.TestCase):
                 "my-codebase-design",
                 "my-diagnosing-bugs",
                 "my-tdd",
+                "my-review-instructions",
             },
             set(resource["consumers"]),
         )

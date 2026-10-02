@@ -705,12 +705,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertNotIn("window.print", template_text)
         self.assertNotIn("@media print", template_text)
         self.assertEqual([{"skill":"my-review-design", "kind":"method", "when":"load-bearing-design"}], composition["callers"]["my-tech-design"])
-        self.assertTrue(
-            all(
-                "my-tech-design" in entries
-                for entries in composition["routable_entries"].values()
-            )
-        )
+        self.assertIn("my-tech-design", composition["routable_entries"]["my-ask-matt"])
 
     def test_rendered_document_skills_have_independent_stage_contracts(self):
         root = Path(__file__).resolve().parents[1] / "skills"
@@ -928,7 +923,7 @@ render_root: 学生课程
         root = Path(__file__).resolve().parents[1] / "skills"
         expected = {
             "my-resolving-merge-conflicts": [
-                "批准前",
+                "用户已授权解决本次冲突",
                 "references/policies/merge-conflict-approval.md",
             ],
             "my-to-questionnaire": [
@@ -966,7 +961,8 @@ render_root: 学生课程
         conflict_policy = (
             root.parent / "policies" / "merge-conflict-approval.md"
         ).read_text()
-        self.assertIn("Force Push", conflict_policy)
+        self.assertIn("enterprise-safety.md", conflict_policy)
+        self.assertIn("Force Push", (root.parent / "policies" / "enterprise-safety.md").read_text())
         self.assertIn("回滚", conflict_policy)
         self.assertEqual(32, len(validate_skills(root)))
 
@@ -1036,7 +1032,7 @@ render_root: 学生课程
             self.assertIn("{{skill-call:my-tdd}}", body)
             self.assertIn("{{skill-call:my-code-review}}", body)
 
-    def test_release_bundles_policies_only_for_explicit_consumers(self):
+    def test_release_bundles_only_applicable_policy_dependency_closure(self):
         root = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as tmp:
             release = build_release(
@@ -1055,11 +1051,13 @@ render_root: 学生课程
                     self.assertTrue(
                         (release / "skills" / skill / "references/policies").is_dir()
                     )
-            for skill in ("my-install", "my-grilling", "my-grill-me"):
-                with self.subTest(non_consumer=skill):
-                    self.assertFalse(
-                        (release / "skills" / skill / "references/policies").exists()
+            for skill in ("my-grilling", "my-grill-me"):
+                with self.subTest(dependency_consumer=skill):
+                    self.assertEqual(
+                        {"enterprise-safety.md"},
+                        {p.name for p in (release / "skills" / skill / "references/policies").glob("*.md")},
                     )
+            self.assertFalse((release / "skills/my-install/references/policies").exists())
 
     def test_build_materializes_plan_2_adapters_for_declared_consumers(self):
         root = Path(__file__).resolve().parents[1]

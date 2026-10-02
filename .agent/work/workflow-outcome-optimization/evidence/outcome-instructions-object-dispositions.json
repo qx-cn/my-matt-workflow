@@ -1,0 +1,2236 @@
+{
+  "counts": {
+    "original_skills": 32,
+    "original_shared_objects": 39,
+    "new_references": 1
+  },
+  "objects": [
+    {
+      "object": "chatgpt/custom-instructions.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "chatgpt/custom-instructions.md"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "独立用户设置，不进入开发主链",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778",
+      "candidate_sha256": "f3c6eb1c08864c86a3fa311693c853e9a17e4e0da299d216ee2cd00481457778"
+    },
+    {
+      "object": "composition/manifest.json",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "composition/manifest.json"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "分发/构建校验",
+      "reason": "triage合法匹配Spec/缺Spec和原quick分支均声明真实handoff，闭包到唯一设计关口。 F2setup为manual路由边而非method，F4决定性需求与领域词汇未知分开条件。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "c9e026cc10421412e939ff088292ff8e9a4ed484d8f14a3845c4d28ae88146f7",
+      "candidate_sha256": "5f8862c37dd8fd74180762eec0df72a23a9ba06a32abafdbf1b245c1638fd11e"
+    },
+    {
+      "object": "policies/context-hygiene.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "policies/context-hygiene.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-handoff",
+          "my-review-instructions",
+          "my-triage"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-grill-with-docs",
+          "my-handoff",
+          "my-implement",
+          "my-prototype",
+          "my-review-instructions",
+          "my-tdd",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "容量、分支、职责/宿主切换或恢复",
+      "reason": "允许阶段内checkpoint/compact与跨上下文恢复；换宿主优先于空间足够，独立审查仅真实新上下文。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "495ecf2731144e4386a0c03adcd58959e049b6bf8f44778c6fd7ce318c80a4cb",
+      "candidate_sha256": "efc0202a6b29828d7e7a07b21eec8592463deaa5bd7c76641c2e55cef44d6352"
+    },
+    {
+      "object": "policies/decision-taxonomy.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MERGE",
+      "authority": [
+        "resources/user-intervention.md",
+        "skills/my-wayfinder/SKILL.md"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "独立用户设置，不进入开发主链",
+      "reason": "移除重复指针，必要行为已迁移到所列唯一来源。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "623987e6be2a98a07cae141c8900990c6da867b67c6045c955c705919c9a3c24",
+      "candidate_sha256": null
+    },
+    {
+      "object": "policies/enterprise-safety.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "policies/enterprise-safety.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-handoff",
+          "my-humanizer",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-research",
+          "my-resolving-merge-conflicts",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-setup",
+          "my-tdd",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder",
+          "my-wizard",
+          "my-writing-for-agents"
+        ]
+      },
+      "trigger": "敏感信息、同步、危险Git或原生Skill操作",
+      "reason": "将危险Git/敏感外发集中保留，移除项目配置二次审批与一概禁止外写矛盾。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "264e9964dd54066ce5de63299d0a4e3edcec4caad958ad8f600f4e1098fb8eed",
+      "candidate_sha256": "7dd0ea2a9f0a2b087ce5fcabaef1604711ff50d3509cd4a470734d32a4e0ddc7"
+    },
+    {
+      "object": "policies/merge-conflict-approval.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "policies/merge-conflict-approval.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-resolving-merge-conflicts",
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-resolving-merge-conflicts",
+          "my-review-instructions"
+        ]
+      },
+      "trigger": "进行中的merge/rebase冲突",
+      "reason": "核对双方意图，已有解决授权内推进；实质语义分歧或不可逆后果才询问。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "6465bc51898eb952e0d0fa9a62b6f12d8b84a9db88ceffd08bcad192b73489a1",
+      "candidate_sha256": "75d6810b291934d656e83e1c4162f784cf02f5e9f89896625c9ca73624ac460b"
+    },
+    {
+      "object": "policies/project-discovery.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MERGE",
+      "authority": [
+        "skills/my-setup/SKILL.md"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "独立用户设置，不进入开发主链",
+      "reason": "移除重复指针，必要行为已迁移到所列唯一来源。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "b3bbd2ccd83970e56fb3bebe352fc897f1c8a13f80301c9a222ae9d97917e15e",
+      "candidate_sha256": null
+    },
+    {
+      "object": "policies/project-storage.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MERGE",
+      "authority": [
+        "resources/adapters/artifact-storage.md"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "独立用户设置，不进入开发主链",
+      "reason": "移除重复指针，必要行为已迁移到所列唯一来源。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "5879ab91d437010acf5c4aa887ab214dc54460aca00f77c940c67fd939be4be2",
+      "candidate_sha256": null
+    },
+    {
+      "object": "policies/write-boundaries.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MERGE",
+      "authority": [
+        "resources/user-intervention.md",
+        "policies/enterprise-safety.md"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "独立用户设置，不进入开发主链",
+      "reason": "移除重复指针，必要行为已迁移到所列唯一来源。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "862bbe99076f7f3456975aaf65a64e43afdfdc78485bf7c84a0fbc125b8334f8",
+      "candidate_sha256": null
+    },
+    {
+      "object": "resources/adapters/artifact-access.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/adapters/artifact-access.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-review-design",
+          "my-tdd",
+          "my-wayfinder"
+        ],
+        "effective": [
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-artifact",
+          "my-review-design",
+          "my-tdd",
+          "my-tech-design",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "读取有效工件",
+      "reason": "只负责有效reader路径与来源，存储归属指向统一来源而不重复写入审批。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "e503a0426fff173bf682468260a2e91109df9e78b807a0cb2a534311ed6f6c38",
+      "candidate_sha256": "a6a998206070472b93a99e6683333fe318f77dd2abc0f2fe4af22580def203a0"
+    },
+    {
+      "object": "resources/adapters/artifact-review-session.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/adapters/artifact-review-session.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-artifact"
+        ],
+        "effective": [
+          "my-review-artifact"
+        ]
+      },
+      "trigger": "普通或设计产物固定快照审查",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "3761c4fdbef76c8724149177bda435705f16aa3e19d2647e56eb82b2bfe03f8b",
+      "candidate_sha256": "3761c4fdbef76c8724149177bda435705f16aa3e19d2647e56eb82b2bfe03f8b"
+    },
+    {
+      "object": "resources/adapters/artifact-storage.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/adapters/artifact-storage.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-edit-article",
+          "my-grill-with-docs",
+          "my-handoff",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec"
+        ],
+        "effective": [
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-with-docs",
+          "my-handoff",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-artifact",
+          "my-review-design",
+          "my-tdd",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "生成/保存本地工件",
+      "reason": "合并原project-storage路径/归属与非项目位置；保持新增历史、安全单段、用户位置和外部授权边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "44085cded50be3d93cb37234d3f3c3aadc4593917bd76867d33541fa52f7c5d0",
+      "candidate_sha256": "6d224dc0c56a1e2b4324b4011e95b6869b266fa34eaae7d471f14168f9a8cb2a"
+    },
+    {
+      "object": "resources/adapters/assurance-levels.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/adapters/assurance-levels.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-review-instructions",
+          "my-setup",
+          "my-tdd",
+          "my-triage"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-instructions",
+          "my-setup",
+          "my-tdd",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "选择/确认quick/standard保证等级",
+      "reason": "保留低风险准入，quick不填空六节，不以quick放宽授权或证据。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "9c8c254b41f6c28a1fa11ea199a4d7f0f24505d2bc9308bfe60951a428323f56",
+      "candidate_sha256": "7615a6e28443e4897f4a924bf0e27ebcd2752ff4b37e3bd15d1f62298d2602dd"
+    },
+    {
+      "object": "resources/adapters/composition.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/adapters/composition.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-improve-codebase-architecture",
+          "my-wayfinder",
+          "my-writing-for-agents"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-improve-codebase-architecture",
+          "my-review-instructions",
+          "my-wayfinder",
+          "my-writing-for-agents"
+        ]
+      },
+      "trigger": "实际阶段调用、止点与宿主宏投影",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "dce7a84a62ab3e1691e089538185b886549c2cd309895647bb647300e9926385",
+      "candidate_sha256": "a675e0b4b4104b5a8581810c8b24324b6ae2c1ab80c93afb5caa94f0dc94bebd"
+    },
+    {
+      "object": "resources/adapters/implementation-session.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/adapters/implementation-session.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-grill-with-docs",
+          "my-implement"
+        ],
+        "effective": [
+          "my-grill-with-docs",
+          "my-implement",
+          "my-prototype",
+          "my-review-instructions",
+          "my-tdd",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "standard开工、恢复、测试/审查/收口",
+      "reason": "新旧活动恢复、当前实际失败与发现门禁如实处理；quick简洁，六风险可引用，不强制无限同会话。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "2fe77238c0022fbb10ac214883a2ca25eef0e457c9651cf3e2a68aa334fe2f3c",
+      "candidate_sha256": "4bf78298ac30207d6d885c0def8ec0a3deabb2d757a23d7afecc8445664313eb"
+    },
+    {
+      "object": "resources/adapters/project-rules.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/adapters/project-rules.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-code-review",
+          "my-review-instructions",
+          "my-to-spec",
+          "my-to-tickets"
+        ],
+        "effective": [
+          "my-code-review",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-prototype",
+          "my-review-instructions",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "真实计划/影响路径的原生规则解析",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "c4f26600bd50d290429ec3fe03fd7a94176d8727a2025ed3a3f60fb1707f22b2",
+      "candidate_sha256": "c4f26600bd50d290429ec3fe03fd7a94176d8727a2025ed3a3f60fb1707f22b2"
+    },
+    {
+      "object": "resources/adapters/specialized-review-session.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/adapters/specialized-review-session.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-review-instructions"
+        ]
+      },
+      "trigger": "指令专项冻结与match/stale处理",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8",
+      "candidate_sha256": "99845145aae35608d02c93e8b73f4a3f4d29b8583b0ac97325651d8a8a26efe8"
+    },
+    {
+      "object": "resources/adapters/ticket-selection.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/adapters/ticket-selection.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-triage"
+        ],
+        "effective": [
+          "my-triage"
+        ]
+      },
+      "trigger": "Ticket选择/准入/依赖与血缘",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "08d6970f30bee7281ab5a921f22243d8be785bec8b51dc4775719c6a85a8fff6",
+      "candidate_sha256": "08d6970f30bee7281ab5a921f22243d8be785bec8b51dc4775719c6a85a8fff6"
+    },
+    {
+      "object": "resources/adapters/work-scope.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/adapters/work-scope.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-instructions",
+          "my-tdd"
+        ],
+        "effective": [
+          "my-grill-with-docs",
+          "my-implement",
+          "my-prototype",
+          "my-review-instructions",
+          "my-tdd",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "方法内确定当前批准工作范围",
+      "reason": "移除旧Topic test/review硬前置，唯一生命周期指向implementation-session。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "526f387e8df1625117061140001562a7c02f8d27b718f1ca0fe92bb91c0c1268",
+      "candidate_sha256": "345d5ffe16b4d8120ff893fd708c96a527caf53f8ddf7d245ac503a3b92db154"
+    },
+    {
+      "object": "resources/adapters/write-actions.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MERGE",
+      "authority": [
+        "resources/user-intervention.md"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "独立用户设置，不进入开发主链",
+      "reason": "移除重复指针，必要行为已迁移到所列唯一来源。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "1e9ba4ef1a92c8255c2a10e9bfa18c5fe35fcd5556534bf3c9facc8de56d6766",
+      "candidate_sha256": null
+    },
+    {
+      "object": "resources/agent-rule-applicability.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/agent-rule-applicability.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-review-instructions"
+        ]
+      },
+      "trigger": "项目规则宿主/路径适用性判断",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "84735f1dd6edabb0d332b20abb2fb6e03c6b55486397c281eac77300bd4949a7",
+      "candidate_sha256": "84735f1dd6edabb0d332b20abb2fb6e03c6b55486397c281eac77300bd4949a7"
+    },
+    {
+      "object": "resources/artifact-finalization.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/artifact-finalization.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-review-artifact",
+          "my-to-spec"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-grill-with-docs",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-tech-design",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "承重成品有效性/提案/执行边界",
+      "reason": "真实独立来源，draft/proposal/approved/completed分离；承重缺证据阻断执行而不阻断恢复草稿。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "a5a7b920a4b678e2b5688dc936a14132f1dedfb0bf5665502568e4cb15c5c671",
+      "candidate_sha256": "b0a66530e067d6afc3d6b40a244c9a3dfe7df90ad54f75fb7fbeea49b02f75c8"
+    },
+    {
+      "object": "resources/document-rendering.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/document-rendering.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-improve-codebase-architecture",
+          "my-review-instructions",
+          "my-teach",
+          "my-tech-design"
+        ],
+        "effective": [
+          "my-improve-codebase-architecture",
+          "my-review-instructions",
+          "my-teach",
+          "my-tech-design"
+        ]
+      },
+      "trigger": "content/frontend/full交接",
+      "reason": "content/frontend职责与语义工件保持，none可合理选择而不由前端发明事实。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "ef0867f4d9bbba54bdd5331e4fe042d56b709e64231dd3ce82c9925fc510547e",
+      "candidate_sha256": "e275638dd8d0a416df83c856f7b756b9b236a402e9f824506c7f01c92bcba079"
+    },
+    {
+      "object": "resources/final-state-writing.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/final-state-writing.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-codebase-design",
+          "my-grilling",
+          "my-handoff",
+          "my-review-artifact",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-spec",
+          "my-to-tickets"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-codebase-design",
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-handoff",
+          "my-improve-codebase-architecture",
+          "my-review-artifact",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "版本化最终成品与历史边界",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7",
+      "candidate_sha256": "529c6522c6e0a6603c4ab7612f889af0d81221794ad17c02cc97ce4e30bb90e7"
+    },
+    {
+      "object": "resources/first-principles-reasoning.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/first-principles-reasoning.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-design",
+          "my-review-instructions",
+          "my-to-spec",
+          "my-to-tickets"
+        ],
+        "effective": [
+          "my-grill-with-docs",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-tech-design",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "承重选择必要贡献与替代方案",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6",
+      "candidate_sha256": "06d34d209b1504630e0d05a287fba2e00feb544f8369d132c4a1f29a1c7f45a6"
+    },
+    {
+      "object": "resources/governance.json",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/governance.json"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "分发/构建校验",
+      "reason": "既有schema内将行为政策归语义只读审查；机械/打包验证不冒充语义保障。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "f7bd2d306c20c314f1186022e3abc35587c0e7e60980bd30e53d98ba8d3aa125",
+      "candidate_sha256": "09ba672789ef3231c2f9113e8b9e92b417755135a7cb0e2d5c9f56bcd21f9bba"
+    },
+    {
+      "object": "resources/humanizer.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/humanizer.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-humanizer",
+          "my-review-artifact"
+        ],
+        "effective": [
+          "my-humanizer",
+          "my-review-artifact"
+        ]
+      },
+      "trigger": "显式润色或自然表达只读审查",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "355ce3ea279dc1bcae53b5f91352c730dab9f9d61c8d1cb1afcebb93deccde03",
+      "candidate_sha256": "355ce3ea279dc1bcae53b5f91352c730dab9f9d61c8d1cb1afcebb93deccde03"
+    },
+    {
+      "object": "resources/instruction-authority.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/instruction-authority.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-code-review",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-review-instructions",
+          "my-to-spec",
+          "my-to-tickets"
+        ],
+        "effective": [
+          "my-code-review",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-tech-design",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "承重指令冲突与权限判断",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2",
+      "candidate_sha256": "536234ace1c99c6b95849181ed2f0e91d62c7cd28bdd810eb1692e72688bc8c2"
+    },
+    {
+      "object": "resources/manifest.json",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/manifest.json"
+      ],
+      "consumer": {
+        "direct": [],
+        "effective": []
+      },
+      "trigger": "分发/构建校验",
+      "reason": "删除退休项及整个policies目录群，逐文件声明实际direct consumer并保留derived闭包。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "383571a8cf2ec54c925f7d40f783959c41c22d3dd8b262cd4dc166477b1cd62f",
+      "candidate_sha256": "779ad5ff8233710c95e8b35cabca98b9b6d04fda2d9c2002d5ae42ad820d104b"
+    },
+    {
+      "object": "resources/project-rule-review.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/project-rule-review.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-review-instructions"
+        ]
+      },
+      "trigger": "指定宿主/路径项目指令专项审查",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "299656c047e3bfd132790735aac05cdc02ed12b042b91658eb0a168a72d4403b",
+      "candidate_sha256": "299656c047e3bfd132790735aac05cdc02ed12b042b91658eb0a168a72d4403b"
+    },
+    {
+      "object": "resources/reader-first-writing.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/reader-first-writing.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-artifact",
+          "my-teach",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-triage",
+          "my-wizard"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-research",
+          "my-review-artifact",
+          "my-review-instructions",
+          "my-teach",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder",
+          "my-wizard"
+        ]
+      },
+      "trigger": "撰写/审查目标读者成品",
+      "reason": "保持读者与最终态，取消教学结构默认强制图示。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "925fee70191ecabafd1162618a1e628207c5dcba9abc90fdcb7b6b87b070e5ff",
+      "candidate_sha256": "1437abbb3958bea066dfeb3e033eedfafe39c3fcfcd7bccf1c80853ae4fd8eb1"
+    },
+    {
+      "object": "resources/requirement-analysis.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/requirement-analysis.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-improve-codebase-architecture",
+          "my-review-instructions",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "有会改变交付的歧义或显式需求核对",
+      "reason": "保留歧义风险触发与来源，补区分解释的例子及上游目的，不增加普遍访谈。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "0ac9343544d531349280c1f7107cdfb9fb3086658f67e60b45563b15b0d52168",
+      "candidate_sha256": "2f999b2c35466798f6b2ba0c5177bfa07fc9d401880ef8ff683ed786b4158b7a"
+    },
+    {
+      "object": "resources/requirement-reviewer-brief.md",
+      "object_kind": "original-shared-object",
+      "disposition": "KEEP",
+      "authority": [
+        "resources/requirement-reviewer-brief.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-review-instructions"
+        ],
+        "effective": [
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-improve-codebase-architecture",
+          "my-review-instructions",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "真实独立需求核对者材料包",
+      "reason": "原审核的具体故障防护/按需职责有效，未有比较证据支持删除；保持真实来源及现有边界。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a",
+      "candidate_sha256": "81a0821b2b30aedede77048456a4dbb76b434bf749e40b343cae7a403cc2bb7a"
+    },
+    {
+      "object": "resources/research-method.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/research-method.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-research",
+          "my-review-instructions",
+          "my-wayfinder"
+        ],
+        "effective": [
+          "my-research",
+          "my-review-instructions",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "外部一手研究与事实推断边界",
+      "reason": "保持一手/时效/事实推断，写回检查既有授权不重复审批。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "12f884b80b068c24b64e2b7cd0e5abffdce8345123d810a9fb1b3755b284394f",
+      "candidate_sha256": "dd02cc9a1e5b2b44fbb92f711c3cecea53eea021bcf1e5db80a8d798170cc498"
+    },
+    {
+      "object": "resources/review-loop.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/review-loop.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-code-review",
+          "my-implement",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-tech-design",
+          "my-to-spec"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-handoff",
+          "my-humanizer",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-research",
+          "my-resolving-merge-conflicts",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-setup",
+          "my-tdd",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder",
+          "my-wizard",
+          "my-writing-for-agents"
+        ]
+      },
+      "trigger": "审查、修复与证据失效",
+      "reason": "几何仅诊断信号，真实无进展/设计阻断与预算保持；负向回归不是新增产品要求。 独立审查F1补已核实语义contradicts唯一准入及hardstop；reopen只开series，旧审查/自审历史可追溯，不全量消解发现。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "5c0fe429789cd80d8251d26655a95da427e384fa572dd9677e931f0bdfea7819",
+      "candidate_sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb"
+    },
+    {
+      "object": "resources/testing-seams.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/testing-seams.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-codebase-design",
+          "my-diagnosing-bugs",
+          "my-review-instructions",
+          "my-tdd"
+        ],
+        "effective": [
+          "my-codebase-design",
+          "my-diagnosing-bugs",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-instructions",
+          "my-tdd",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "行为验证、持久化恢复或接口边界选择",
+      "reason": "允许独立存储和close/reopen及正式路由oracle；测试adapter数不证明新生产抽象价值。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "7852133fbf40fd5dc1fa7416dd87db09b92d7957371adb84fc7b98b6e964c62d",
+      "candidate_sha256": "087dda72071c4ff71bc02f0b1e57a629a5972bccc90988d987bd93ae2a2d2c59"
+    },
+    {
+      "object": "resources/user-intervention.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/user-intervention.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-handoff",
+          "my-humanizer",
+          "my-implement",
+          "my-resolving-merge-conflicts",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-setup",
+          "my-tech-design",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder",
+          "my-wizard"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-handoff",
+          "my-humanizer",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-research",
+          "my-resolving-merge-conflicts",
+          "my-review-artifact",
+          "my-review-design",
+          "my-review-instructions",
+          "my-setup",
+          "my-tdd",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder",
+          "my-wizard",
+          "my-writing-for-agents"
+        ]
+      },
+      "trigger": "实际需用户决定/授权或阶段止点判断",
+      "reason": "同一具体动作授权持续有效，尊重请求阶段止点；未授权范围/目的地/后果仍需决定。 AC26未知外部结果先查原目标/操作身份，不盲重试，独立授权工作可继续。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "e0e1dcaf52fa27331af0ec9e65c41f4d2efbf4bd5d612573199b85a86e902d45",
+      "candidate_sha256": "166c1b90d9e83998467f2874b6fc96a8b23ac6d28b58318618a2ba3901c7377a"
+    },
+    {
+      "object": "resources/visual-communication.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/visual-communication.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-ask-matt",
+          "my-review-artifact",
+          "my-teach",
+          "my-test-report"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-code-review",
+          "my-diagnosing-bugs",
+          "my-domain-modeling",
+          "my-edit-article",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-research",
+          "my-review-artifact",
+          "my-review-instructions",
+          "my-teach",
+          "my-tech-design",
+          "my-test-report",
+          "my-to-questionnaire",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder",
+          "my-wizard"
+        ]
+      },
+      "trigger": "选取降低目标读者理解/解析成本的表达",
+      "reason": "按目标读者理解/解析成本选形式，none不因结构类别被机械阻断；文字保留关键规则。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "f99b0ca04c5c163b85a77da9e77157bd8ca2875811645e2b275a17ef295eb3ec",
+      "candidate_sha256": "d40e6542f4a4646cec595ba39db7eb9c73998b8012cc905a41183af880a6f5e5"
+    },
+    {
+      "object": "resources/workflow-delivery.md",
+      "object_kind": "original-shared-object",
+      "disposition": "MODIFY",
+      "authority": [
+        "resources/workflow-delivery.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-domain-modeling",
+          "my-grill-with-docs",
+          "my-implement",
+          "my-review-instructions",
+          "my-to-tickets"
+        ],
+        "effective": [
+          "my-ask-matt",
+          "my-domain-modeling",
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-grilling",
+          "my-implement",
+          "my-improve-codebase-architecture",
+          "my-prototype",
+          "my-review-instructions",
+          "my-setup",
+          "my-tdd",
+          "my-to-spec",
+          "my-to-tickets",
+          "my-triage",
+          "my-wayfinder"
+        ]
+      },
+      "trigger": "quick/standard交付证据与长期知识",
+      "reason": "允许多对多可定位证据，quick仅三类重建信息，standard保持六风险和摘要。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source closure validated; installed host projection tested",
+        "mechanical": "existing runtime tests only where applicable; no semantic claim"
+      },
+      "baseline_sha256": "7df4247d544622843cadd6d73a92911d50be85dab8eea2394766f1412c3b4cc2",
+      "candidate_sha256": "a5f20351448f5354b1b9130ea79648b1e0426f5bc26d8899bb33b68e7028d287"
+    },
+    {
+      "object": "skills/my-ask-matt/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-ask-matt/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "user"
+        ]
+      },
+      "trigger": "判断当前情境适合哪个个人 Matt Skill 或工作流。",
+      "reason": "让换宿主/目录/人交接优先于空间足够，触发恢复参考；止点完成不自动委派或扩大。",
+      "representative_cases": "普通想法路由 / 空间充足换宿主 / 交接条件被 first-match 遮蔽",
+      "changed_owned_files": [
+        "skills/my-ask-matt/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "f3629292f9d7e34efd97e80049eeb83f03dd63ef8648bbf595303b409e8be5a7"
+    },
+    {
+      "object": "skills/my-code-review/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-code-review/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-implement"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-implement 流程中作为指定阶段的方法被调用。",
+      "reason": "固定基线、完整五视角、可达故障不因后续归属放行，避免只按验收发现",
+      "representative_cases": "runtime batch / 无 Spec 仍审 code / stale 或 bad ref 无结论",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "730c1139700bfedb412c6a8c888697082968880643c5ea0612146d2fddd4abb2"
+    },
+    {
+      "object": "skills/my-codebase-design/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-codebase-design/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-improve-codebase-architecture"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。",
+      "reason": "保留深模块、删除测试与真实变化价值判断，项目术语优先，取消统一API/组件/服务/边界禁词。 F3同步DEEPENING及Order fixture，消除残留两Adapter门槛，价值判断统一testing-seams。",
+      "representative_cases": "深化候选 / 项目已有 DDD/Service / 测试替身被当 port 理由",
+      "changed_owned_files": [
+        "skills/my-codebase-design/DEEPENING.md",
+        "skills/my-codebase-design/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "de67ce60da000788508a31efd64d3ff6653148adf2dd08111662177db95b54ce"
+    },
+    {
+      "object": "skills/my-diagnosing-bugs/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-diagnosing-bugs/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "诊断难复现 Bug、间歇失败或性能回退",
+      "reason": "取消秒级、最低复现率、完全最小、固定假设数量、复现命令前不得读代码等硬门；准确症状/因果区分/原场景回归保留，方法按需外置。",
+      "representative_cases": "稳定复现 / 性能或非确定性 / 缺环境访问不猜修复",
+      "changed_owned_files": [
+        "skills/my-diagnosing-bugs/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "e75f96452b943bd05281b6481993ad29fca10c981fa42939b79d16f0003c75ef"
+    },
+    {
+      "object": "skills/my-domain-modeling/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-domain-modeling/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-grill-with-docs",
+          "my-improve-codebase-architecture",
+          "my-triage",
+          "my-wayfinder"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。",
+      "reason": "只保存项目特有术语；ADR 三条件防模板堆积",
+      "representative_cases": "冲突概念 / 无值得记录的新知识 / 未确认业务语义不能自作决定",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "69df2491a9dbda1f04b52617980f4dc306a69d9a200e007a5a19c2636326ba81"
+    },
+    {
+      "object": "skills/my-edit-article/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-edit-article/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "按读者用途重组并润色文章，默认保留原稿",
+      "reason": "移除profile gate额外暂停，原地修改授权和冻结事实边界归唯一来源。",
+      "representative_cases": "新稿 / 已授权原地修改 / 需改变立场才 gate",
+      "changed_owned_files": [
+        "skills/my-edit-article/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "5a019a30469c614385c2bb022792592f63abe3c28e42d71d60c6f6f0db9d2a8b"
+    },
+    {
+      "object": "skills/my-grill-me/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-grill-me/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "通过高强度访谈打磨计划或设计。",
+      "reason": "无代码库时只形成需求摘要，防止伪造 Topic/Spec",
+      "representative_cases": "计划访谈 / 需求已明确 / 没有代码库不进主链",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "55ca97cca398f50e9d339063449a3c1895be2df287513b8d41a52f0caa5ff6fc"
+    },
+    {
+      "object": "skills/my-grill-with-docs/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-grill-with-docs/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "通过高强度访谈澄清设计决定，并在过程中建立 ADR 与术语表。",
+      "reason": "已有确认不重复访谈；主链调用遵守用户阶段止点，原quick/standard对齐与事实来源保留。 F4正文与manifest分别按决定性需求/承重术语未知触发，不always载入。",
+      "representative_cases": "已有仓库新行为 / 低风险 quick / 配置缺失先 setup",
+      "changed_owned_files": [
+        "skills/my-grill-with-docs/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "f70ea1f06ae438bee5d922e58e989907bf51357b9fa3ee65d92f79f674f67a65"
+    },
+    {
+      "object": "skills/my-grilling/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-grilling/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-grill-me",
+          "my-grill-with-docs",
+          "my-improve-codebase-architecture",
+          "my-triage",
+          "my-wayfinder"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-grill-me、my-grill-with-docs、my-triage、my-wayfinder、my-improve-codebase-architecture 流程中作为指定阶段的方法被调用。",
+      "reason": "只问承重未知；代码可查事实不问用户；独立问题同轮",
+      "representative_cases": "模糊真实目标 / 已有充分输入 / 方案类比混淆目标手段",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "fa2f8ac201f67ac676095efb08e09d846a1f2321284b5c864e537efe2a339276"
+    },
+    {
+      "object": "skills/my-handoff/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-handoff/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "为新的 Agent 会话生成精简且可恢复的上下文交接",
+      "reason": "以 runtime status 为准、状态分开、历史引用不复制",
+      "representative_cases": "换宿主 / 无项目临时产物 / 缺状态证据标未知",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "de341c5238f09cfb031ba6e9f320b076be6fb5af3ef611379fe31215c725014e"
+    },
+    {
+      "object": "skills/my-humanizer/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-humanizer/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "审查或移除文本中的 AI 写作痕迹；先区分可改叙述与冻结契约，且不改变事实或 Agent 执行表面。",
+      "reason": "冻结契约与review只读保留；指定文件已授权润色直接完成，不把文风/概念说明变重复审批。",
+      "representative_cases": "可改叙述 / 全文契约 / 未经允许改变事实必须防止",
+      "changed_owned_files": [
+        "skills/my-humanizer/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "75494db8e6aa7765bd8bcbf9ecc382d6e0c561b583a6581343d560dfbeed7061"
+    },
+    {
+      "object": "skills/my-implement/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-implement/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-prototype",
+          "my-to-tickets",
+          "my-triage"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-to-tickets、my-prototype 流程中作为指定阶段的工作单元被调用。",
+      "reason": "标准六风险可引用证据，多对多映射，quick简洁按风险；当前未解发现控制finish/close，修复重test且显式登记处置，Spec挑战不能自删。",
+      "representative_cases": "scoped Ticket / 机械配置小修 / Spec 与现状冲突",
+      "changed_owned_files": [
+        "skills/my-implement/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "f9d1217c765a9fd1338d0f4a03547e2df0f3c535f3eaeac0474dd910e2c54a49"
+    },
+    {
+      "object": "skills/my-improve-codebase-architecture/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-improve-codebase-architecture/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "扫描代码库中的深化机会，分阶段生成候选内容与 HTML 报告，并深挖用户选择的候选项；内容与前端可使用不同模型。",
+      "reason": "保持content/frontend与证据决策，HTML报告不以统一词表禁掉项目API/服务等术语。",
+      "representative_cases": "content/full / 无视觉收益 / frontend 内容缺口 blocked",
+      "changed_owned_files": [
+        "skills/my-improve-codebase-architecture/HTML-REPORT.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "f0616db5cc4789737d842b4fca94554e4aa81938d6516b555641784f0b372c3e"
+    },
+    {
+      "object": "skills/my-install/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-install/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "安装、查询或回滚个人 My Matt Workflow release",
+      "reason": "绝对入口、安装清单保护、source 与 project root 区分、回滚预览",
+      "representative_cases": "指定宿主 install / 任意 cwd / 状态损坏不相对入口回退",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "5a9950821da4412dca302cdb7c14de6eeb28c73309d2536fb8b86d685ffbeff4"
+    },
+    {
+      "object": "skills/my-prototype/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-prototype/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-wayfinder"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-wayfinder 流程中作为指定阶段的方法被调用。",
+      "reason": "一问题、隔离、可抛弃、不能外推生产，获批 implementation 才吸收",
+      "representative_cases": "状态或 UI 问题 / 项目无运行器 / 未授权真实写路径",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "9dbb4c403c649501d3b7f2586779289df23cbf38797366edfde8773e3049b61a"
+    },
+    {
+      "object": "skills/my-research/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-research/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "针对技术问题查阅一手来源并保存带引用的研究结论",
+      "reason": "把一手来源方法作为可记忆的手动入口；正文单一资源定义",
+      "representative_cases": "技术问题 / 资料缺失 / 无一手验证不能装确定",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "16bd12f202a84c6054e531a2ab2f6013d6295a843b5b48cbfa5027618c26ee12"
+    },
+    {
+      "object": "skills/my-resolving-merge-conflicts/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-resolving-merge-conflicts/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在用户批准的前提下，安全审阅并解决进行中的 Git merge 或 rebase 冲突",
+      "reason": "保留两侧意图、hunk验证/回滚；已有本次解决授权内执行，真实产品分歧交裁决。",
+      "representative_cases": "已授权冲突处理 / 新意图冲突 / 范围变更需用户决定",
+      "changed_owned_files": [
+        "skills/my-resolving-merge-conflicts/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "6b1a3148bd17c9e887be8bc7a4dd021d122c3b0b2f768e1209f175da57722f12"
+    },
+    {
+      "object": "skills/my-review-artifact/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-review-artifact/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "对一个固定版本的交付产物做综合只读审查，合并适用质量维度并输出有证据、低重复的 findings。",
+      "reason": "snapshot/required_checks 闭环、多维根因去重、N/A 不凑 finding",
+      "representative_cases": "固定交付物 / 不适用视觉 / 缺证据 inconclusive",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "7a3294e587a55efbebf34b4b824096932a5da008aeaee7b452951ebb81a4c0df"
+    },
+    {
+      "object": "skills/my-review-design/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-review-design/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-review-artifact",
+          "my-tech-design",
+          "my-to-spec"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-to-spec、my-tech-design、my-review-artifact 流程中作为指定阶段的方法被调用。",
+      "reason": "保持四组承重结果与独立设计关口，已决产品选择不凭偏好重开，证据推翻事实可以核实影响。",
+      "representative_cases": "持久状态方案 / 无风险触发 / 未决业务假设不给 pass",
+      "changed_owned_files": [
+        "skills/my-review-design/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "1445ad92d36a0b7b68d3e18e881d0e6866bb2418404c306e310ea0946c46692c"
+    },
+    {
+      "object": "skills/my-review-instructions/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-review-instructions/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "只读审查 Skill、AGENTS.md、CLAUDE.md 或 Cursor 项目指令；按 kind 与 host 参数检查存在价值、适用范围和指令设计。",
+      "reason": "保持存在性和证据级别，新增按目标读取共享行为政策索引；governance由语义审查归属，不把文件存在测试算政策保障。",
+      "representative_cases": "单 Skill / 用户明确多项并行 / 效果证据不足 INCONCLUSIVE",
+      "changed_owned_files": [
+        "skills/my-review-instructions/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "9acf86ddc8125cd3d2b354f60e38f42541d6b6db4758b59135cfcb080efaf9e6"
+    },
+    {
+      "object": "skills/my-setup/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-setup/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt",
+          "my-triage"
+        ]
+      },
+      "trigger": "为当前项目初始化一次性的个人 Matt 工作流配置",
+      "reason": "配置探测零写入、一次确认、private/shared 归属不猜、迁移预览",
+      "representative_cases": "新项目 / 有效配置不重复询问 / 既有归属冲突不删 metadata",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "a95152aa945908e4400c547c9a4cc5cc131b142a5dfa403d283903ae68027d21"
+    },
+    {
+      "object": "skills/my-tdd/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-tdd/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-implement"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-implement 流程中作为指定阶段的方法被调用。",
+      "reason": "保持red-green等价例外，独立存储/事务/恢复oracle合法，多断言生命周期可覆盖多验收，正式路由接线检出。",
+      "representative_cases": "新行为 red/green / 已有覆盖机械修 / persisted oracle 误被禁",
+      "changed_owned_files": [
+        "skills/my-tdd/SKILL.md",
+        "skills/my-tdd/tests.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "fab6c7c3e66e6a5e7fa3d8c8bdf4992a179693d3ab8e90c5149f82540bba2284"
+    },
+    {
+      "object": "skills/my-teach/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-teach/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "把可信材料转化为帮助学生理解、练习并迁移的完整课程；支持显式的内容与 HTML 阶段。",
+      "reason": "保持课程质量/制作记录隔离，文字足够时可选择none，不限于短列表或结论。",
+      "representative_cases": "full / content 指定止点 / 内容不全不能靠 frontend 补",
+      "changed_owned_files": [
+        "skills/my-teach/CONTENT.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "3eaa0d9e13a3d50bc0b7cc044e9c1f36f73d816199d235c13c1415417eb36c6d"
+    },
+    {
+      "object": "skills/my-tech-design/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-tech-design/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "将讨论与代码库事实整理为可评审的技术方案；支持内容语义工件、HTML 前端与可选飞书阶段执行，以便分别选择内容模型和前端模型。",
+      "reason": "保留内容/前端和原文事实边界；写回检查已有授权，不重复同一范围审批。",
+      "representative_cases": "content/full / 无图最清楚 / 缺现状证据或 blocked-by-content",
+      "changed_owned_files": [
+        "skills/my-tech-design/CONTENT.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "2b0b695766d1dddaa6d04ee2e14791824a265d2a535e5c3b53140481f630d49f"
+    },
+    {
+      "object": "skills/my-test-report/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-test-report/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "基于需求、改动和可追溯证据生成结构化 Markdown 测试报告。",
+      "reason": "代码中输入/断言/替身可提取静态内容，动机未知不杜撰，无运行日志不宣称通过；humanizer仅显式按需。",
+      "representative_cases": "新行为报告 / 人工待測结果留空 / 无日志不能“全通过”",
+      "changed_owned_files": [
+        "skills/my-test-report/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "6449bee33d2189b9ed30eb80f831883e94d5c1ff5601df0363fb6e345b279ca8"
+    },
+    {
+      "object": "skills/my-to-questionnaire/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "KEEP",
+      "authority": [
+        "skills/my-to-questionnaire/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "将外部知情人才能回答的决策缺口整理为异步发现问卷",
+      "reason": "外部知情缺口异步提取，不代答；问题数量服从信息需求",
+      "representative_cases": "一名知情人 / 收件人/决策已明确可不重问 / 用户能查的事实不转采访",
+      "changed_owned_files": [],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "4e12115a2f8f463de3283e17e4636142b626a2ac8101f9dd6638050b5f648fe9"
+    },
+    {
+      "object": "skills/my-to-spec/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-to-spec/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-grill-with-docs",
+          "my-triage",
+          "my-wayfinder"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "从已确认需求或分诊简报与仓库事实生成版本化 Spec，供获准的后续阶段使用。",
+      "reason": "接入confirmed brief，完整版本与唯一设计关口保留，需求来源/区分解释明确，只要求Spec停于Spec。",
+      "representative_cases": "已确认需求 / 仅要 Spec 到此停止 / 未核实现状不能写事实",
+      "changed_owned_files": [
+        "skills/my-to-spec/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "5b19e76ca24563183ffb94095d2b70d87b0bf9ae39655c02a48efb52a4790c5d"
+    },
+    {
+      "object": "skills/my-to-tickets/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-to-tickets/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-to-spec",
+          "my-triage"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-to-spec、my-triage 流程中作为指定阶段的工作单元被调用。",
+      "reason": "保持纵向切片/真实依赖/历史不改；用户结果及来源下传，跨Ticket用户验收有归属，仅拆分请求不启动实施。",
+      "representative_cases": "current Spec / expand-contract / 无 Spec 不造 lineage",
+      "changed_owned_files": [
+        "skills/my-to-tickets/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "01b660496f862269734115b6be25f815ac9cff174f1989d23aa7860bb8dc3652"
+    },
+    {
+      "object": "skills/my-triage/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-triage/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "通过分诊角色的状态机推进 Issue 和外部 PR：分类、验证、按需追问，并编写可供 Agent 执行的简报。",
+      "reason": "保存真实brief，建立/复用合法Topic，匹配Spec复用、缺Spec先toSpec；只分诊/brief不自动开发，quick原准入保持。 F2本地不依赖Tracker映射，外部从真实配置/维护者获取；缺local配置仅路由setup后停止，显式入口性质不改。F4两方法分别按决定性未知触发。",
+      "representative_cases": "新 Bug / 已实现与拒绝分别处理 / 本地新 brief 无 Spec",
+      "changed_owned_files": [
+        "skills/my-triage/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "4eb8771cd59c8911d7705753e3c00beb237d5bc6126074d794543fdcaeb0c9bb"
+    },
+    {
+      "object": "skills/my-wayfinder/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-wayfinder/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "为超出单会话容量的模糊工作建立逐步消除未知的决策地图",
+      "reason": "保留地图/决定职责，退休的决策/写入重复指针移入唯一授权，参与者意见不代替用户授权。",
+      "representative_cases": "frontier 决定 / 单会话已清晰不造地图 / 未批准执行不跳实现",
+      "changed_owned_files": [
+        "skills/my-wayfinder/SKILL.md",
+        "skills/my-wayfinder/references/map-and-ticket-format.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "84dbd89b94da30f83f441bd4414b9431f37faaf09395a248aa9538438d294c19"
+    },
+    {
+      "object": "skills/my-wizard/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-wizard/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "生成交互式 Bash 向导，引导人类完成手动流程",
+      "reason": "保留手动步骤、秘密隐藏及安全落盘验证；外部写入/结果未知按需消费现有user-intervention，原操作先查状态不盲重试，不把脚本生成当已生效。",
+      "representative_cases": "第三方配置 / gh 未准备 / 安全落盘检查不满足停止",
+      "changed_owned_files": [
+        "skills/my-wizard/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "2b774fed78f27ac27739cec0525437fba839eafd1ce8aafb2ed319183b757ed7"
+    },
+    {
+      "object": "skills/my-writing-for-agents/SKILL.md",
+      "object_kind": "original-skill",
+      "disposition": "MODIFY",
+      "authority": [
+        "skills/my-writing-for-agents/SKILL.md"
+      ],
+      "consumer": {
+        "callers": [
+          "my-review-instructions"
+        ],
+        "routing": [
+          "my-ask-matt"
+        ]
+      },
+      "trigger": "在 my-review-instructions 流程中作为指定阶段的方法被调用。",
+      "reason": "保持渐进加载/剪枝/可判定完成，证据可定位而非验收独占test；调用清单不产生动作授权。",
+      "representative_cases": "单指令正文 / 可达规则来自 runtime / 删除没有行为依据的句子",
+      "changed_owned_files": [
+        "skills/my-writing-for-agents/SKILL.md"
+      ],
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "32 source closure and three host projection validated"
+      },
+      "candidate_sha256": "3022371cdc703ee3c9e7a34554dc1f18c3246674b985025920189982a524a292"
+    },
+    {
+      "object": "skills/my-diagnosing-bugs/references/feedback-methods.md",
+      "object_kind": "new-reference",
+      "disposition": "MERGE",
+      "authority": [
+        "skills/my-diagnosing-bugs/references/feedback-methods.md"
+      ],
+      "consumer": {
+        "direct": [
+          "my-diagnosing-bugs"
+        ]
+      },
+      "trigger": "选择反馈、取证或探针时按需",
+      "reason": "原诊断skill的具体方法保留外置；取消固定秒数/概率/唯一HITL模板门槛，保留准确症状与因果区分。",
+      "evidence_level": {
+        "semantic": "ordinary independent frozen-source review; reports instructions-01 and instructions-02; not model effect",
+        "packaging": "source walker reachable"
+      },
+      "candidate_sha256": "f859e0d9609f4ee14208615026147d21c7faa61c80aaaee7244ef1666ff7a55d"
+    }
+  ],
+  "loading_report": "/tmp/outcome-instructions-loading.json",
+  "changed_supporting_artifacts": [
+    {
+      "path": "skills/my-codebase-design/DEEPENING.md",
+      "consumer": "my-codebase-design深化方法",
+      "change": "F3去Adapter数量门槛并将新port/替身价值归共享testing-seams",
+      "evidence_level": "static; source closure validated"
+    },
+    {
+      "path": "tests/fixtures/codebase_design_order_submission.json",
+      "consumer": "retrievable design example fixture; no real model trace claim",
+      "change": "F3真实不可控支付边界/维护需求决定port，生产+测试数量不作设计依据",
+      "evidence_level": "synthetic static fixture"
+    },
+    {
+      "path": "tests/test_composition.py",
+      "change": "parser实际读取条件methods与manual routing、闭包无环",
+      "evidence_level": "mechanical directed unittest"
+    },
+    {
+      "path": "skills/my-diagnosing-bugs/references/feedback-methods.md",
+      "change": "首次patch具体取证方法渐进披露",
+      "evidence_level": "static + source reachability"
+    }
+  ],
+  "review_repairs": {
+    "report": "/tmp/outcome-review-instructions-01.md",
+    "findings": [
+      "F1",
+      "F2",
+      "F3",
+      "F4"
+    ],
+    "followup": "AC26 unknown external results and reopen history semantics",
+    "incremental_patch": "/tmp/outcome-instructions-fix.patch",
+    "modified_paths": [
+      "composition/manifest.json",
+      "resources/manifest.json",
+      "resources/review-loop.md",
+      "resources/user-intervention.md",
+      "skills/my-codebase-design/DEEPENING.md",
+      "skills/my-codebase-design/SKILL.md",
+      "skills/my-grill-with-docs/SKILL.md",
+      "skills/my-triage/SKILL.md",
+      "skills/my-wizard/SKILL.md",
+      "tests/fixtures/codebase_design_order_submission.json",
+      "tests/test_composition.py"
+    ],
+    "semantic_review": "repairs pending independent rereview",
+    "second_review": "reviews/outcome-review-instructions-02.md",
+    "advisory_corrections": "evidence/advisory-corrections.json"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "root": "/private/tmp/outcome-review-final-04",
+  "manifest_sha256": "feaed39c6e610ffd61566f381b404a7d36d49f69b0cbb4190dcc1abda55eb180",
+  "manifest_count": 281,
+  "unique_count": 281,
+  "mismatches": [],
+  "file_count": 284,
+  "added": [],
+  "removed": [],
+  "changed": [],
+  "outside_manifest": [
+    "prior-findings.md",
+    "repair.patch",
+    "source-manifest.json"
+  ],
+  "prior_findings_sha256": "c7e94d324f919c6f867bc07a3a9ec580be150af8461091b0d2c8abb01ac85b40",
+  "repair_patch_sha256": "608bfd18edaddf8f526d0e36ccdad7e6b5273b339901efaf130a904709505832"
+}

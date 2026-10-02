@@ -1,0 +1,16 @@
+{
+  "source": "/tmp/outcome-review-install-repair-02b",
+  "manifest_sha256": "1775f5169a33cf5be57545414e27adf1b7e1b344e8babd11f5dc6b94866c6b97",
+  "expected_sha256": "1775f5169a33cf5be57545414e27adf1b7e1b344e8babd11f5dc6b94866c6b97",
+  "registered": 280,
+  "unique": 280,
+  "mismatches": [],
+  "files": {
+    "/tmp/outcome-review-install-repair-02b/repair.patch": "08956e487cd1f6b5a4de7cae70b4f027f0a7427fb635e03893dbf75663ca4198",
+    "/tmp/outcome-review-install-repair-02b/prior-findings.md": "2e4d66c06fd1cb3f64ae18f9acd9631c9a46b8d28444b57fa3d927abb781e773",
+    "/tmp/outcome-review-install-repair-02b/tools/workflow_lib/installer.py": "9a1df65ebfb2c51379be51150299049cf42eddd234d63b39432ac7396bc76383",
+    "/tmp/outcome-review-install-repair-02b/tools/workflow_lib/doctor.py": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+    "/tmp/outcome-review-install-repair-02b/tests/test_install_simplification.py": "670217c5d5179e6b79b037b2d3b16a6aeaba9728e7df9314ad8125bd4447c6a8",
+    "/tmp/outcome-review-install-repair-02b/.agent/work/workflow-outcome-optimization/specs/specs-workflow-outcome-optimization-02.md": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13"
+  }
+}

@@ -218,16 +218,18 @@ def _release_path(release_id: str) -> Path:
     return ROOT / "releases" / release_id
 
 
-def command_install(args: argparse.Namespace) -> None:
+def command_install(args: argparse.Namespace, *, validation_context=None) -> str:
     release = _release_path(args.release) if args.release else _current_release()
     state_home, skills_home, target = _resolve_agent_layout(args)
-    install_release(
+    outcome = install_release(
         release,
         state_home,
         target=target,
         skills_home=skills_home,
+        validation_context=validation_context,
     )
-    print(f"INSTALLED {release.name}")
+    print(f"{'CURRENT' if outcome == 'current' else 'INSTALLED'} {release.name}")
+    return outcome
 
 
 def command_resolve_rules(args: argparse.Namespace) -> None:
@@ -364,32 +366,48 @@ def command_artifact_review_finalize(args: argparse.Namespace) -> None:
 
 def command_deploy(args: argparse.Namespace) -> None:
     """Install the current content, creating a release only when it changed."""
-    _run_all_up_gate(check_current_release=False)
+    from workflow_lib.installer import ReleaseValidationContext
+    from workflow_lib.fs_safety import exclusive_lock, FilesystemSafetyError
+    from workflow_lib.release_references import REFERENCE_LOCK
+    validation_context = ReleaseValidationContext()
     current = _current_release() if (ROOT / "current.json").exists() else None
     reusable = False
     if not args.release_id and current is not None:
         try:
             # A release can be source-equivalent while being corrupt on disk;
             # check integrity before deciding it is safe to reuse.
-            from workflow_lib.installer import verify_release
-
-            verify_release(current)
-            reusable = release_matches_source(
-                current,
-                ROOT / "skills",
-                upstream_id=args.upstream_id,
-                repo_root=ROOT,
-            )
+            with exclusive_lock(current.parent, REFERENCE_LOCK):
+                validation_context.verify(current)
+                reusable = release_matches_source(
+                    current,
+                    ROOT / "skills",
+                    upstream_id=args.upstream_id,
+                    repo_root=ROOT,
+                )
+        except FilesystemSafetyError as exc:
+            raise SystemExit(str(exc)) from exc
         except Exception:
             reusable = False
+    selected = current
     if not reusable:
-        _build_release(
+        selected = _build_release(
             argparse.Namespace(release_id=args.release_id, upstream_id=args.upstream_id,
                                agent_home=args.agent_home)
         )
     else:
+        _run_all_up_gate(check_current_release=False)
+        # The check ran on live input: bind the decision again after it.
+        if not release_matches_source(current, ROOT / "skills",
+                                      upstream_id=args.upstream_id, repo_root=ROOT):
+            raise SystemExit("source 在 deploy check 期间发生变化；请重试")
         print(f"REUSED {current}")
-    command_install(argparse.Namespace(release=None, target=args.target, agent_home=args.agent_home))
+    host_status = command_install(
+        argparse.Namespace(release=selected.name, target=args.target, agent_home=args.agent_home),
+        validation_context=validation_context)
+    print(json.dumps({"source": {"status": "valid"},
+                      "release": {"status": "current" if reusable else "built",
+                                  "release_id": selected.name},
+                      "host": {"status": host_status, "target": args.target}}, sort_keys=True))
 
 
 def command_migrate(args: argparse.Namespace) -> None:

@@ -1,0 +1,6 @@
+test_tech_design_splits_content_and_frontend_with_dynamic_html (test_workflow.ReleaseTests.test_tech_design_splits_content_and_frontend_with_dynamic_html) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK

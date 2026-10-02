@@ -29,6 +29,8 @@ def render(report):
         for code,label in LABELS.items():
             reason=reason.replace(code,label)
         lines.append('原因：'+reason)
+    historical_reason=(report.get('branch_review') or {}).get('historical_stop_reason')
+    if historical_reason:lines.append('已接受的历史原因：'+historical_reason.replace('请用户决定修订 Spec、接受风险或按原 Spec 继续','用户已接受该冲突；作为已知问题保留'))
     for decision in report.get('decisions_needed',[]):
         subject=(decision.get('finding') or {}).get('summary', '方案存在待决事项')
         if decision.get('ticket'):
@@ -36,5 +38,7 @@ def render(report):
         lines.append(subject+'；'+decision['decision'])
     for item in report.get('unverified',[]):
         lines.append('未验证：'+(item.get('command','')+'；'+item.get('note','') if isinstance(item,dict) else str(item)))
+    for item in report.get('inputs_needed',[]):
+        lines.append('所需输入：'+str(item))
     if report.get('next_command'):lines.append('下一步：'+report['next_command'])
     return '\n'.join(lines)

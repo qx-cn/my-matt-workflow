@@ -1,0 +1,52 @@
+{
+  "runtime_root": "/tmp/outcome-review-runtime-04",
+  "final_root": "/tmp/outcome-review-final-05",
+  "final_physical_root": "/private/tmp/outcome-review-final-05",
+  "expected_manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+  "actual_manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+  "manifest_entries": 281,
+  "unique_entries": 281,
+  "files": [
+    {
+      "path": "tools/workflow_lib/evidence.py",
+      "runtime04_sha256": "74f52c48c1dfa40d28ef69b4e2bc00fc2fffb5199cf67e9f2008867df3722119",
+      "final05_sha256": "74f52c48c1dfa40d28ef69b4e2bc00fc2fffb5199cf67e9f2008867df3722119",
+      "byte_identical": true,
+      "final05_manifest_sha256": "74f52c48c1dfa40d28ef69b4e2bc00fc2fffb5199cf67e9f2008867df3722119",
+      "final05_manifest_match": true
+    },
+    {
+      "path": "tests/test_batches.py",
+      "runtime04_sha256": "448df5aec041fcda84bb2f564a721ed33a39bfcd11ef2bee7cf23a0e0ffcd544",
+      "final05_sha256": "448df5aec041fcda84bb2f564a721ed33a39bfcd11ef2bee7cf23a0e0ffcd544",
+      "byte_identical": true,
+      "final05_manifest_sha256": "448df5aec041fcda84bb2f564a721ed33a39bfcd11ef2bee7cf23a0e0ffcd544",
+      "final05_manifest_match": true
+    },
+    {
+      "path": "tools/workflow_lib/batches.py",
+      "runtime04_sha256": "c9ac620ede26a1ff193effb5d13d1f795335d73ed54f8c4576e0dafc778c9d1e",
+      "final05_sha256": "c9ac620ede26a1ff193effb5d13d1f795335d73ed54f8c4576e0dafc778c9d1e",
+      "byte_identical": true,
+      "final05_manifest_sha256": "c9ac620ede26a1ff193effb5d13d1f795335d73ed54f8c4576e0dafc778c9d1e",
+      "final05_manifest_match": true
+    },
+    {
+      "path": "tools/workflow_lib/status_text.py",
+      "runtime04_sha256": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+      "final05_sha256": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+      "byte_identical": true,
+      "final05_manifest_sha256": "972ab78827adf8097c98195fc54fc659e2258f52c9b7585f66032c612d78bb64",
+      "final05_manifest_match": true
+    },
+    {
+      "path": "tools/workflow_lib/topic_service.py",
+      "runtime04_sha256": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0",
+      "final05_sha256": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0",
+      "byte_identical": true,
+      "final05_manifest_sha256": "d08b3f6a24e518e6332b34dff69cb7697ee5f31e64636d1e3601ef6b05ec7aa0",
+      "final05_manifest_match": true
+    }
+  ],
+  "rechecked_after_truncation_probe": true
+}

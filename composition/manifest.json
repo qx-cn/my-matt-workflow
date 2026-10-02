@@ -12,12 +12,12 @@
       {
         "skill": "my-grilling",
         "kind": "method",
-        "when": "always"
+        "when": "missing-load-bearing-requirements"
       },
       {
         "skill": "my-domain-modeling",
         "kind": "method",
-        "when": "domain-vocabulary"
+        "when": "unresolved-domain-vocabulary"
       },
       {
         "skill": "my-to-spec",
@@ -74,17 +74,27 @@
       {
         "skill": "my-grilling",
         "kind": "method",
-        "when": "missing-information"
+        "when": "missing-load-bearing-requirements"
       },
       {
         "skill": "my-domain-modeling",
         "kind": "method",
-        "when": "domain-vocabulary"
+        "when": "unresolved-domain-vocabulary"
+      },
+      {
+        "skill": "my-to-spec",
+        "kind": "handoff",
+        "when": "confirmed-local-brief-without-matching-spec"
       },
       {
         "skill": "my-to-tickets",
         "kind": "handoff",
-        "when": "confirmed-local-brief"
+        "when": "confirmed-local-brief-with-matching-spec"
+      },
+      {
+        "skill": "my-implement",
+        "kind": "handoff",
+        "when": "confirmed-local-quick-brief"
       }
     ],
     "my-wayfinder": [
@@ -174,6 +184,9 @@
       "my-wayfinder",
       "my-wizard",
       "my-writing-for-agents"
+    ],
+    "my-triage": [
+      "my-setup"
     ]
   }
 }

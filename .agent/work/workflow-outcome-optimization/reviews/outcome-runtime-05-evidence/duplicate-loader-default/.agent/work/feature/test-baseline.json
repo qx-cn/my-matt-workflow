@@ -1,0 +1,68 @@
+{
+  "completed": true,
+  "content_id": "bee800d60778b6c07a3ec5006968888773742691d6ac625797d0a29ecff282f2",
+  "head": "57487773254fd1e09600269b605a88e0ead141d1",
+  "commands": [
+    "python3 -B runner.py",
+    "python3 -B -c 'pass'"
+  ],
+  "results": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "runner.py"
+      ],
+      "exit_code": 1,
+      "content_id": "bee800d60778b6c07a3ec5006968888773742691d6ac625797d0a29ecff282f2",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": true,
+      "output_complete": true,
+      "output_length": 1198,
+      "unavailable_loader_failures": [
+        "collision (unittest.loader._FailedTest.collision)"
+      ],
+      "content_changed": false,
+      "output_tail": "EE.\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/runner.py\", line 8, in make\n    import independent_review05_missing_duplicate_dependency\nModuleNotFoundError: No module named 'independent_review05_missing_duplicate_dependency'\n\n\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/runner.py\", line 8, in make\n    import independent_review05_missing_duplicate_dependency\nModuleNotFoundError: No module named 'independent_review05_missing_duplicate_dependency'\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nFAILED (errors=2)\n",
+      "command": "python3 -B runner.py",
+      "failures": [
+        "collision (unittest.loader._FailedTest.collision)"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "exit_code": 0,
+      "content_id": "bee800d60778b6c07a3ec5006968888773742691d6ac625797d0a29ecff282f2",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 0,
+      "unavailable_loader_failures": [],
+      "content_changed": false,
+      "output_tail": "",
+      "command": "python3 -B -c 'pass'",
+      "failures": []
+    }
+  ],
+  "at": "2026-10-02T14:00:59.527909+00:00",
+  "baseline": "57487773254fd1e09600269b605a88e0ead141d1"
+}

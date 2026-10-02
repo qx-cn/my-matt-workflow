@@ -1,0 +1,116 @@
+{
+  "scope": "Read-only current own Topic index/docs and instruction source references; no runtime/installer implementation reads, no workflow Skills, no tests, no repository edits. Known draft/pending statuses are not blockers.",
+  "inventory": {
+    "rows": 72,
+    "unique": 72,
+    "counts": {
+      "KEEP": 23,
+      "MODIFY": 43,
+      "MERGE": 6
+    },
+    "expected_counts": {
+      "KEEP": 23,
+      "MODIFY": 43,
+      "MERGE": 6
+    },
+    "original_skills": 32,
+    "original_shared": 39,
+    "new_reference": 1,
+    "retired_paths": [
+      "policies/decision-taxonomy.md",
+      "policies/project-discovery.md",
+      "policies/project-storage.md",
+      "policies/write-boundaries.md",
+      "resources/adapters/write-actions.md"
+    ],
+    "missing_authority_targets": [],
+    "candidate_hash_mismatches": []
+  },
+  "setup_advisory": {
+    "recorded": {
+      "callers": [],
+      "routing": [
+        "my-ask-matt",
+        "my-triage"
+      ]
+    },
+    "actual_routing": [
+      "my-ask-matt",
+      "my-triage"
+    ],
+    "actual_callers": [],
+    "matches": true
+  },
+  "spec": {
+    "sha256": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+    "expected": "efd7c71b787657623b1d5d58a817330cdbf32b5f532b5d55192db2c3cbe72d13",
+    "same_bytes_as_HEAD": true
+  },
+  "broken_references": [
+    {
+      "acceptance": "AC23",
+      "reference": "references/feedback-methods.md",
+      "exists": false
+    }
+  ],
+  "index_omissions": [
+    {
+      "acceptance": "AC10",
+      "kind": "authority-source-omitted",
+      "detail": "批准行为的负向回归不算新增需求的唯一权威定义位于review-loop，但该行只指TDD。",
+      "suggested_refs": [
+        "resources/review-loop.md"
+      ]
+    },
+    {
+      "acceptance": "AC23",
+      "kind": "non-navigable-existing-evidence",
+      "detail": "独立场景报告以文字代称，未给真实相对报告路径；报告已存在，不是缺少执行结果。",
+      "suggested_refs": [
+        "reviews/outcome-review-instructions-01.md",
+        "reviews/outcome-review-instructions-02.md"
+      ]
+    },
+    {
+      "acceptance": "AC24",
+      "kind": "abbreviated-source-reference",
+      "detail": "my-to-spec / my-to-tickets 是入口名称而非文件路径；对应源码实际存在。",
+      "suggested_refs": [
+        "skills/my-to-spec/SKILL.md",
+        "skills/my-to-tickets/SKILL.md"
+      ]
+    },
+    {
+      "acceptance": "AC25",
+      "kind": "non-navigable-existing-evidence",
+      "detail": "独立场景报告以文字代称，未给真实相对报告路径；报告已存在，不是缺少执行结果。",
+      "suggested_refs": [
+        "reviews/outcome-review-instructions-01.md",
+        "reviews/outcome-review-instructions-02.md"
+      ]
+    }
+  ],
+  "production_findings": [],
+  "boundary": "Existence/index verification only; not independent semantic re-review or new implementation/behavior efficacy evidence.",
+  "acceptance_reference_summary": {
+    "checked": [
+      "AC04",
+      "AC05",
+      "AC06",
+      "AC07",
+      "AC08",
+      "AC10",
+      "AC11",
+      "AC12",
+      "AC13",
+      "AC14",
+      "AC15",
+      "AC23",
+      "AC24",
+      "AC25"
+    ],
+    "actual_file_or_callable_refs": 33,
+    "missing_acceptance_entries": [],
+    "boundary": "Existing paths and test callable names verified only; no execution or semantic re-review."
+  }
+}

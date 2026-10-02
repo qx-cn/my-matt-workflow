@@ -97,6 +97,8 @@ class PackagingV2Tests(unittest.TestCase):
             ('my-triage', 'my-grilling', 'method'),
             ('my-triage', 'my-domain-modeling', 'method'),
             ('my-triage', 'my-to-tickets', 'handoff'),
+            ('my-triage', 'my-to-spec', 'handoff'),
+            ('my-triage', 'my-implement', 'handoff'),
             ('my-wayfinder', 'my-grilling', 'method'),
             ('my-wayfinder', 'my-domain-modeling', 'method'),
             ('my-wayfinder', 'my-prototype', 'method'),

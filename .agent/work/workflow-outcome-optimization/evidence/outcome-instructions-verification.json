@@ -1,0 +1,77 @@
+{
+  "scope": "Ticket03 product instructions/resources/composition only; no runtime mutations or implementation under reviewed workflow Skill procedures",
+  "source_validation": "passed: validate_skills plus validate_resource_governance; packaging and mechanical closure only",
+  "full_suite": {
+    "command": "python3 -m unittest discover -s tests",
+    "exit_code": 1,
+    "tests": 286,
+    "seconds": 352.062,
+    "failures": [
+      "test_removed_names_are_absent_from_skill_resources_and_policies (test_final_integration.FinalIntegrationTests.test_removed_names_are_absent_from_skill_resources_and_policies)",
+      "test_testing_seam_contract_is_shared (test_portfolio.PortfolioContractTests.test_testing_seam_contract_is_shared)",
+      "test_catalog_and_invocation_graph_match_approved_spec (test_skill_packaging_v2.PackagingV2Tests.test_catalog_and_invocation_graph_match_approved_spec)",
+      "test_cursor_main_chain_stays_under_budget (test_text_measurement.TextMeasurementTests.test_cursor_main_chain_stays_under_budget)",
+      "test_adopted_skills_include_metadata_and_safety_boundaries (test_workflow.ReleaseTests.test_adopted_skills_include_metadata_and_safety_boundaries) (skill='my-resolving-merge-conflicts')",
+      "test_adopted_skills_include_metadata_and_safety_boundaries (test_workflow.ReleaseTests.test_adopted_skills_include_metadata_and_safety_boundaries)"
+    ],
+    "log": "/tmp/outcome-instructions-fullsuite.log",
+    "note": "Ran once on pre-final instruction diff. Graph failure fixed and directed packaging suite passed; shared assertions and overall context budget are root integration work, not silently accepted."
+  },
+  "directed_checks": {
+    "resource_tests": {
+      "count": 21,
+      "exit_code": 0,
+      "log": "/tmp/outcome-instructions-resources.log"
+    },
+    "composition_tests": {
+      "count": 11,
+      "exit_code": 0,
+      "log": "/tmp/outcome-instructions-composition.log"
+    },
+    "skill_packaging_tests": {
+      "log": "/tmp/outcome-instructions-packaging.log",
+      "exit_code": 0
+    },
+    "three_host_projection_test": {
+      "test": "test_workflow_texts_v2.WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection",
+      "exit_code": 0
+    },
+    "teaching_quality_tests": {
+      "count": 10,
+      "exit_code": 0
+    },
+    "design_contract_tests": {
+      "count": 3,
+      "exit_code": 0
+    }
+  },
+  "generic_skill_creator_validator": {
+    "count": 32,
+    "passed": 11,
+    "preexisting_cross_host_schema_rejections": 21,
+    "reason": "disable-model-invocation and my-teach argument-hint supported by repository host projection but not generic quick_validate schema. Preserve unrelated host controls.",
+    "log": "/tmp/outcome-instructions-skill-validation.json"
+  },
+  "shared_assertion_replacements": [
+    {
+      "test": "test_final_integration.test_removed_names_are_absent_from_skill_resources_and_policies",
+      "direction": "Restrict retired CLI name checks to actual command invocations/schema keys; ordinary term smoke describing insufficient evidence is valid English and not retired command use."
+    },
+    {
+      "test": "test_portfolio.test_testing_seam_contract_is_shared",
+      "direction": "Add my-review-instructions as direct semantic-policy reviewer consumer. Keep direct==actual-source and derived==actual-closure contract."
+    },
+    {
+      "test": "test_text_measurement.test_cursor_main_chain_stays_under_budget",
+      "direction": "Report complete conditional Markdown closure and activation limits; preserve <=58213 old scale baseline, do not claim new total <=35000 or measure actual model loading. Final total37849; entry15763/ref22086."
+    },
+    {
+      "test": "test_workflow.test_adopted_skills_include_metadata_and_safety_boundaries",
+      "direction": "Metadata/invocation control is unchanged. Follow conflict→enterprise-safety closure for Force Push etc, and shared user-intervention for persisted authorization. Delete old unconditional 批准前 wording assertion; do not reinstate duplicate pause or copy fixed prohibitions into conflict text."
+    }
+  ],
+  "patch": "/tmp/outcome-instructions.patch",
+  "inventory": "/tmp/outcome-instructions-object-dispositions.json",
+  "loading": "/tmp/outcome-instructions-loading.json",
+  "not_verified": "Seven capability improvements versus baseline require fixed-condition real task comparison; policy semantics need root independent review and raw-input scenario evaluation."
+}

@@ -56,7 +56,7 @@ sequence: <NN>
 <本 Ticket 要解决的决定或调查>
 ```
 
-每个 Ticket 标记 `wayfinder:<type>`，类型为 `research`、`prototype`、`grilling` 或 `task`（见[Ticket 类型](#ticket-类型)）。这些 Ticket 的 `ticket_kind` 永远是 `wayfinder-decision`；不得改成 implementation 或交给 `my-implement`。产品取舍必须保留给用户，见[决策分类](policies/decision-taxonomy.md)。
+每个 Ticket 标记 `wayfinder:<type>`，类型为 `research`、`prototype`、`grilling` 或 `task`（见[Ticket 类型](#ticket-类型)）。这些 Ticket 的 `ticket_kind` 永远是 `wayfinder-decision`；不得改成 implementation 或交给 `my-implement`。产品取舍必须保留给用户，见[用户决定与授权](shared/user-intervention.md)。
 
 会话开始时先**认领**一个 Ticket，再做任何工作：Tracker 中将其分配给当前负责人；本地 Ticket 标明认领会话、时间与负责人。未关闭、未认领的 Ticket 才可认领，以避免并行会话重复工作。
 

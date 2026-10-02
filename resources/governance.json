@@ -26,12 +26,12 @@
       "review_skill": "my-review-artifact"
     },
     "resources/document-rendering.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow.py::ReleaseTests.test_rendered_document_skills_have_independent_stage_contracts"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/instruction-authority.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/adapters/composition.md": {
       "kind": "execution-protocol",
@@ -42,16 +42,12 @@
       "validation": "tests/test_implement_lifecycle.py::ImplementationTests.test_start_guards_dependencies_content_and_quick"
     },
     "resources/adapters/assurance-levels.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/adapters/work-scope.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
-    },
-    "resources/adapters/write-actions.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/adapters/artifact-access.md": {
       "kind": "execution-protocol",
@@ -62,8 +58,8 @@
       "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
     },
     "resources/testing-seams.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/adapters/project-rules.md": {
       "kind": "execution-protocol",
@@ -82,64 +78,48 @@
       "validation": "tests/test_resources.py::SharedResourceTests.test_specialized_review_session_is_bundled_for_reviewers"
     },
     "policies/context-hygiene.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_resources.py::SharedResourceTests.test_workflow_control_pointers_are_bundled_for_consumers"
-    },
-    "policies/decision-taxonomy.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_resources.py::SharedResourceTests.test_workflow_control_pointers_are_bundled_for_consumers"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "policies/enterprise-safety.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "policies/merge-conflict-approval.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
-    },
-    "policies/project-discovery.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
-    },
-    "policies/project-storage.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_resources.py::SharedResourceTests.test_policies_are_bundled_only_for_explicit_consumers"
-    },
-    "policies/write-boundaries.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_implement_finish.py::FinishTests.test_five_steps_finish_commits_once_and_archives_single_ticket"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/requirement-analysis.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/requirement-reviewer-brief.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/research-method.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/agent-rule-applicability.md": {
       "kind": "execution-protocol",
       "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
     },
     "resources/project-rule-review.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/user-intervention.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/review-loop.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     },
     "resources/workflow-delivery.md": {
-      "kind": "execution-protocol",
-      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
     }
   }
 }

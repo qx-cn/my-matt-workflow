@@ -1,0 +1,24 @@
+{
+  "topic": "feature",
+  "reason": "默认整个 Topic 一个批次",
+  "implementation_session_id": "af8693e3b1a84c0f88a8dd01f4ecfb6a",
+  "batches": [
+    {
+      "id": "01",
+      "tickets": [
+        "feature-01"
+      ],
+      "status": "open",
+      "reviews": [],
+      "baseline": "3a5a3e164a7b2507497dd57968b524a18a6583bb",
+      "topic": "feature",
+      "implementation_session_id": "af8693e3b1a84c0f88a8dd01f4ecfb6a",
+      "submitted": {
+        "feature-01": {
+          "head": "f4b6d250fa88fe26c85762ebfaa19eebdf856ab7",
+          "at": "2026-10-02T14:01:05.376370+00:00"
+        }
+      }
+    }
+  ]
+}

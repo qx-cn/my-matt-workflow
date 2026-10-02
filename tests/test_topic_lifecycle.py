@@ -182,13 +182,31 @@ class TopicLifecycleTests(unittest.TestCase):
     def test_quick_summary_and_test_failure_leave_active(self):
         self.setup_config(tests=("python3 -c 'raise SystemExit(7)'",))
         self.cli("topic", "start", "--topic", "change", "--level", "quick")
-        self.summary(headings=[h for h in HEADINGS if h != "验收对照"])
-        self.assertIn("验收对照", self.cli("topic", "complete", ok=False).stderr)
+        self.summary(headings=[h for h in HEADINGS if h not in {"验收对照","测试结果"}])
+        self.assertIn("验收证据", self.cli("topic", "complete", ok=False).stderr)
         self.summary()
         result = self.cli("topic", "complete", ok=False)
         self.assertIn("7", result.stderr)
         self.assertFalse((self.repo / ".agent/archive/change").exists())
         self.assertEqual("active", json.loads(self.cli("topic", "status").stdout)["status"])
+
+    def test_quick_concise_evidence_summary_completes_without_empty_standard_sections(self):
+        self.setup_config(tests=("python3 -c 'pass'",))
+        self.cli('topic','start','--topic','change','--level','quick')
+        (self.repo/'code.txt').write_text('quick fix')
+        summary=self.repo/'.agent/work/change/deliveries/deliveries-change-01.md'
+        summary.parent.mkdir(parents=True)
+        summary.write_text('## 验收对照\n当前 marker 正确，声明命令验证它。\n## 影响面\n唯一调用者使用 marker；缺值路径已检查。\n## 已知缺口\n此 toy 无外部依赖。\n')
+        self.cli('topic','complete','--topic','change')
+        self.assertTrue((self.repo/'.agent/archive/change').is_dir())
+
+    def test_quick_concise_summary_without_configured_tests_completes(self):
+        self.setup_config(tests=());self.cli('topic','start','--topic','change','--level','quick')
+        summary=self.repo/'.agent/work/change/deliveries/deliveries-change-01.md';summary.parent.mkdir(parents=True)
+        summary.write_text('## 验收证据\n人工读取 marker 正确。\n## 影响与风险\n唯一调用者核验。\n## 未验证项\n无自动测试，人工观测边界已披露。\n')
+        self.cli('topic','complete','--topic','change')
+        saved=self.repo/'.agent/archive/change/deliveries/deliveries-change-01.md'
+        self.assertIn('未配置测试',saved.read_text())
 
     def test_quick_complete_in_each_directory_mode(self):
         for mode in ("shared", "private"):

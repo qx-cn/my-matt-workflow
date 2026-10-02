@@ -1,0 +1,170 @@
+--- a/tests/test_batches.py
++++ b/tests/test_batches.py
+@@ -236,6 +236,9 @@
+         status=json.loads(self.cli('topic','status','--topic','feature').stdout)
+         self.assertEqual(accepted['next_command'],status['next_command'])
+         self.assertFalse(status['decisions_needed']);self.assertTrue(status['known_issues'])
++        human=self.cli('topic','status','--topic','feature','--human').stdout
++        self.assertNotIn('请用户决定修订 Spec',human)
++        self.assertIn('已接受的历史原因',human)
+         self.cli('topic','complete','--topic','feature')
+ 
+     def test_accept_with_changed_definition_requires_reopen(self):
+@@ -248,6 +251,28 @@
+         self.cli('implement','test');self.cli('implement','self-review','--notes-file',str(notes))
+         self.assertIn('definition',self.cli('resolve','--ticket','feature-01','--accept','--reason','accept challenge',ok=False).stderr)
+         self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
++
++    def test_loader_only_missing_dependency_is_not_a_known_assertion_failure(self):
++        for verbose in ('',' -v'):
++            with self.subTest(verbose=verbose):
++                if verbose:self.setUp()
++                suite=self.repo/'suite';suite.mkdir();case=suite/'test_behavior.py'
++                case.write_text('import outcome_missing_startup_dependency\n')
++                self.git('add','suite');self.git('commit','-qm','loader startup dependency unavailable')
++                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
++                baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
++                if not verbose:self.assertTrue(baseline['results'][0]['unavailable'])
++                self.assertFalse(baseline['results'][0]['comparison_eligible'])
++                self.assertFalse(batches.execution_observed(baseline['results'][0]['output_tail']))
++                case.write_text("assert 1 == 2, 'actual behavior regression at import'\n")
++                self.git('add','suite');self.git('commit','-qm','actual assertion with same loader identity')
++                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
++                self.assertTrue(current['new_failures']);self.assertTrue(current['unverified'])
++                self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['known_failures'])
++                status=json.loads(self.cli('batch','status','--topic','feature').stdout)
++                self.assertTrue(status['unverified'])
++                if verbose:self.assertIn('载入失败身份',status['unverified'][0]['note'])
++                self.cli('batch','close','--topic','feature',ok=False)
+ 
+     def test_briefing_contains_predecessor_contracts_batch_impacts_and_hints(self):
+         self.setup(2)
+--- a/tools/workflow_lib/batches.py
++++ b/tools/workflow_lib/batches.py
+@@ -212,7 +212,7 @@
+     return sorted(set(cases)) or ['command:'+hashlib.sha256(output.encode()).hexdigest()]
+ 
+ 
+-from .evidence import execution_observed
++from .evidence import execution_observed, loader_only_failure
+ 
+ 
+ def run_full(repo,config):
+@@ -230,6 +230,14 @@
+     return dict(completed=True,content_id=identity,head=topics.git(repo,'rev-parse','HEAD').stdout.decode().strip(),commands=commands,results=rows,at=topics.now())
+ 
+ 
++def baseline_gap(row):
++    if row.get('unavailable') and not execution_observed(row.get('output_tail','')):
++        return ('baseline-unavailable','基线环境缺失，无法比较；当前执行失败仍须修复')
++    if row.get('comparison_eligible') is False or loader_only_failure(row.get('output_tail','')):
++        return ('baseline-identity-unverifiable','基线仅有模块载入失败身份，不能可靠比较；当前执行失败仍须修复')
++    return None
++
++
+ def compare(baseline,current):
+     if baseline['commands']!=current['commands']:raise topics.TopicError('全量测试配置与基线不同；不能比较')
+     if any(len(value.get('results',[]))!=len(value['commands']) or
+@@ -238,10 +246,11 @@
+         raise topics.TopicError('全量测试记录不完整；不能比较')
+     new=[];known=[];unverified=[]
+     for old,now in zip(baseline['results'],current['results']):
+-        if old['unavailable'] and not execution_observed(old.get('output_tail','')):
++        gap=baseline_gap(old)
++        if gap:
+             unverified.append(old['command'])
+             if not now.get('unavailable') and now.get('exit_code',bool(now.get('failures'))):
+-                new.extend(dict(command=now['command'],failure=f,comparison='baseline-unavailable') for f in now['failures'])
++                new.extend(dict(command=now['command'],failure=f,comparison=gap[0]) for f in now['failures'])
+             continue
+         if now['unavailable']:
+             new.append(dict(command=now['command'],failure='当前环境无法运行'));continue
+@@ -320,7 +329,7 @@
+     return dict(topic=topic,batch=batch['id'],state=labels[batch['status']],tickets=batch['tickets'],next_command=command,
+         inputs_needed=content_input or (['实际 reviewer-model 与审查上下文来源'] if command and ' review ' in command else ['包含待修复发现 id 的说明文件'] if command and ' repair ' in command else []),
+         decisions_needed=implementation_status.get('decisions_needed',[])+[dict(finding=f,decision='请决定修订 Spec、接受风险或按原 Spec 继续') for r in latest for f in r.get('result',{}).get('findings',[]) if f.get('view')=='spec-challenge'],
+-        unverified=[dict(command=r['command'],note='基线环境缺失，无法验证；收口摘要必须披露') for r in json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text()).get('results',[]) if r['unavailable']] if (topics.topic_path(repo,topic)/'test-baseline.json').exists() else [])
++        unverified=[dict(command=r['command'],note=baseline_gap(r)[1]) for r in json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text()).get('results',[]) if baseline_gap(r)] if (topics.topic_path(repo,topic)/'test-baseline.json').exists() else [])
+ 
+ 
+ def repair_findings(repo,topic,batch):
+--- a/tools/workflow_lib/evidence.py
++++ b/tools/workflow_lib/evidence.py
+@@ -20,6 +20,26 @@
+     return bool(re.search(r'^FAILED\s+[^\s(]\S*|^\s*--- FAIL: |\b[1-9]\d* passed\b',output,re.M))
+ 
+ 
++def loader_only_failure(output):
++    cases=re.findall(r'^(?:FAIL|ERROR): (.+)$',output,re.M)
++    return bool(cases) and all('unittest.loader._FailedTest.' in case for case in cases) and not execution_observed(output)
++
++
++def unittest_startup_gap(diagnostic,code):
++    """Recognize only the default all-loader-error unittest wrapper."""
++    if code==0:return False
++    progress=re.match(r'E+\n',diagnostic)
++    footer=re.search(r'\n-{10,}\nRan (\d+) tests? in [\d.]+s\n\nFAILED \(errors=(\d+)\)$',diagnostic)
++    headers=list(re.finditer(r'^={10,}\nERROR: [^\n]*unittest\.loader\._FailedTest\.[^\n]+\n-{10,}\nImportError: Failed to import test module: [^\n]+\n',diagnostic,re.M))
++    if not progress or not footer or not headers or headers[0].start()!=progress.end():return False
++    if int(footer[1])!=len(headers) or int(footer[2])!=len(headers) or len(progress[0].strip())!=len(headers):return False
++    for index,header in enumerate(headers):
++        end=headers[index+1].start() if index+1<len(headers) else footer.start()
++        # Additional failure diagnostics inside a loader block do not qualify.
++        if not environment_only_failure('',diagnostic[header.end():end].strip(),code):return False
++    return True
++
++
+ def environment_only_failure(stdout, stderr, code):
+     """Conservative startup-gap classification; other nonzero runs are failures.
+ 
+@@ -29,6 +49,7 @@
+     """
+     if stdout.strip():return False
+     diagnostic=stderr.strip()
++    if unittest_startup_gap(diagnostic,code):return True
+     if code in (126,127) and re.fullmatch(r"[^\n]*(?:command not found|: not found|No such file or directory)",diagnostic):
+         return True
+     if re.fullmatch(r"[^\n]*: No module named [^\n]+",diagnostic):return True
+@@ -59,7 +80,7 @@
+     except OSError as exc:
+         code,output,unavailable=127,str(exc),True
+     return dict(argv=argv,exit_code=code,content_id=identity,environment=execution_environment,
+-                unavailable=unavailable,content_changed=topics.content_id(repo)!=identity,
++                unavailable=unavailable,comparison_eligible=not loader_only_failure(output),content_changed=topics.content_id(repo)!=identity,
+                 output_tail=output[-4000:]),output
+ 
+ 
+--- a/tools/workflow_lib/status_text.py
++++ b/tools/workflow_lib/status_text.py
+@@ -29,6 +29,8 @@
+         for code,label in LABELS.items():
+             reason=reason.replace(code,label)
+         lines.append('原因：'+reason)
++    historical_reason=(report.get('branch_review') or {}).get('historical_stop_reason')
++    if historical_reason:lines.append('已接受的历史原因：'+historical_reason.replace('请用户决定修订 Spec、接受风险或按原 Spec 继续','用户已接受该冲突；作为已知问题保留'))
+     for decision in report.get('decisions_needed',[]):
+         subject=(decision.get('finding') or {}).get('summary', '方案存在待决事项')
+         if decision.get('ticket'):
+--- a/tools/workflow_lib/topic_service.py
++++ b/tools/workflow_lib/topic_service.py
+@@ -346,7 +346,7 @@
+         pending_batches = [b for b in batches.read(repo,topic)['batches'] if b['status'] != 'closed']
+         baseline_file=path/'test-baseline.json'
+         if baseline_file.exists():
+-            unverified=[dict(command=r['command'],note='基线环境缺失，无法验证') for r in json.loads(baseline_file.read_text())['results'] if r['unavailable']]
++            unverified=[dict(command=r['command'],note=batches.baseline_gap(r)[1]) for r in json.loads(baseline_file.read_text())['results'] if batches.baseline_gap(r)]
+         if pending_batches:
+             batch_status = batches.status(repo,topic)
+             command = batch_status['next_command']
+@@ -355,7 +355,10 @@
+     return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
+             "decisions_needed": decisions_needed, "unverified": unverified,
+             "batch_status":batch_status, "tickets": ticket_states,
+-            "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
++            "branch_review": {'status':'accepted' if accepted_current else branch['status'],
++                              'stop_reason':None if accepted_current else branch.get('stop_reason'),
++                              'historical_stop_reason':branch.get('stop_reason') if accepted_current else None,
++                              'rounds_used':len(branch['reviews'])} if branch else None,
+             "inputs_needed":batch_status.get('inputs_needed',[]) if batch_status else [],
+             "next_command": command}
+ 

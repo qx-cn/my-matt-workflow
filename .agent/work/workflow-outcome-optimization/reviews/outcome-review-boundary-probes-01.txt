@@ -1,0 +1,20 @@
+
+PROBE dirty_next
+DIRTY_STATUS {'rc': 0, 'stdout': '{"batch": "01", "decisions_needed": [], "inputs_needed": ["包含待修复发现 id 的说明文件"], "next_command": "workflow.py batch repair --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpfkslqlkv --topic feature --notes-file <修复说明>", "state": "审查中", "tickets": ["feature-01"], "topic": "feature", "unverified": []}', 'stderr': ''}
+DIRTY_NEXT_MUTATION {'rc': 1, 'stdout': '', 'stderr': '修复说明必须引用全部待修复发现 id'}
+DIRTY_CLOSE {'rc': 1, 'stdout': '', 'stderr': '批次内容尚未提交；请 batch repair'}
+
+PROBE singleton_history
+LEGACY_BEFORE ['legacy-bug']
+LEGACY_REOPEN {'rc': 0, 'stdout': '{"baseline": "64d8732b9d02b077b783884d6716fa6e972ad7ca", "reason": "approved unrelated wording", "status": "implementing", "ticket": "feature-01"}', 'stderr': ''}
+LEGACY_AFTER {"pending": [], "self_review": null, "self_reviews": null, "past_reviews": []}
+
+PROBE head_integrity
+HEAD_DRIFT_CLOSE {'rc': 1, 'stdout': '', 'stderr': 'HEAD 已变化；请对变化部分复审'}
+
+PROBE artifact_scope
+ARTIFACT_DIFFERENT_PATH {'status': 'stale', 'content_id': '4e072b41a2d5458dfa48ff978873034dd9dc1b2b5a673ff44538018af85b06f6', 'expected_content_id': 'ffcba44f5352dc16e784071a83cc7aea9fa7a1e5eb92d5d46ade04be6a69e840', 'released': True}
+
+PROBE frozen_corruption
+FROZEN_INTACT True
+FROZEN_CORRUPT_REJECT TopicError snapshot: 冻结材料已变化，请重新 review

@@ -135,14 +135,14 @@ class ResolutionTests(unittest.TestCase):
         self.assertIn(reason, json.loads(self.cli('implement', 'status').stdout)['stop_reason'])
         self.cli('implement', 'review', '--reviewer-model', 'actual-host-model', ok=False)
 
-    def test_same_root_two_repair_reviews_in_distinct_ranges(self):
+    def test_locations_alone_do_not_prove_same_root(self):
         self.prepare_lines()
         self.submit(self.blocking(self.review(), 'first'))
         (self.repo / 'code.txt').write_text('fixed A\nB\nC\nD\nE\nF\n')
         self.submit(self.blocking(self.review(), 'second'))
         (self.repo / 'code.txt').write_text('fixed A\nB\nC\nD\nfixed E\nF\n')
         self.submit(self.blocking(self.review(), 'third', 'code.txt:5'))
-        self.stopped('同一根因')
+        self.assertEqual('implementing',json.loads(self.cli('implement','status').stdout)['status'])
 
     def test_overlapping_repairs_use_middle_snapshot_line_numbers(self):
         self.prepare_lines()
@@ -150,8 +150,8 @@ class ResolutionTests(unittest.TestCase):
         (self.repo / 'code.txt').write_text('inserted\nA\nB\nC\nD\nE\nF\n')
         self.submit(self.blocking(self.review(), 'second', 'code.txt:6'))
         (self.repo / 'code.txt').write_text('edited insertion\nA\nB\nC\nD\nE\nF\n')
-        self.submit(self.blocking(self.review(), 'third', 'code.txt:6'))
-        self.stopped('中间快照')
+        self.submit(self.result(self.review()))
+        self.assertEqual('implementing',json.loads(self.cli('implement','status').stdout)['status'])
 
     def test_contradiction_stops_without_content_change(self):
         self.start()
@@ -159,13 +159,27 @@ class ResolutionTests(unittest.TestCase):
         self.submit(self.blocking(self.review(), 'second', contradicts='first'))
         self.stopped('前后矛盾')
 
-    def test_volume_stops_at_more_than_one_point_five(self):
+    def test_volume_growth_with_pass_is_not_a_stop(self):
         self.start()
         (self.repo / 'code.txt').write_text('first')
         self.submit(self.blocking(self.review(), 'first'))
         (self.repo / 'code.txt').write_text('a\nb\nc\nd\n')
-        self.submit(self.blocking(self.review(), 'second'))
-        self.stopped('1.5')
+        self.submit(self.result(self.review()))
+        self.assertEqual('implementing',json.loads(self.cli('implement','status').stdout)['status'])
+
+    def test_legacy_geometric_stop_releases_only_current_valid_pass(self):
+        self.start();report=self.review();self.submit(self.result(report))
+        ticket=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md'
+        record=self.repo/'.agent/work/feature/implementations/feature-01.json'
+        unit=json.loads(record.read_text());unit['stop_reason']='体积膨胀：基线增删行超过第一轮的 1.5 倍'
+        record.write_text(json.dumps(unit));ticket.write_text(ticket.read_text().replace('status: implementing','status: needs-user'))
+        status=json.loads(self.cli('implement','status').stdout)
+        self.assertEqual('implementing',status['status'])
+        recovered=json.loads(record.read_text());self.assertEqual('release-obsolete-geometric-stop',recovered['recoveries'][0]['action'])
+        unit=json.loads(record.read_text());unit['stop_reason']='同一处连续修改：相邻修复在中间快照行号重叠'
+        record.write_text(json.dumps(unit));ticket.write_text(ticket.read_text().replace('status: implementing','status: needs-user'))
+        (self.repo/'code.txt').write_text('unreviewed new content')
+        self.assertEqual('needs-user',json.loads(self.cli('implement','status').stdout)['status'])
 
     def test_revised_test_argv_revalidates_and_becomes_effective(self):
         self.setup_config(tests=("python3 -c *", "python3 -c 'pass'"))

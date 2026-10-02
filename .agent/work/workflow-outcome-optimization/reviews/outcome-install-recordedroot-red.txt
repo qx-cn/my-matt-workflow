@@ -1,0 +1,159 @@
+.................FFFFFFFFFFFFFFFF......
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target=None, layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target=None, layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target='codex', layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target='codex', layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target='cursor', layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target='cursor', layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target='claude', layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=1, target='claude', layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target=None, layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target=None, layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target='codex', layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target='codex', layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target='cursor', layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target='cursor', layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target='claude', layout='custom')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+======================================================================
+FAIL: test_recorded_old_skill_root_drift_rejects_before_any_install_write (test_install_simplification.SimplifiedInstallTests.test_recorded_old_skill_root_drift_rejects_before_any_install_write) (version=2, target='claude', layout='default')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-install/tests/test_install_simplification.py", line 547, in test_recorded_old_skill_root_drift_rejects_before_any_install_write
+    with self.assertRaises(installer.InstallError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: InstallError not raised
+
+----------------------------------------------------------------------
+Ran 24 tests in 8.333s
+
+FAILED (failures=16)
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpol62i0up/repo/releases/v1
+INSTALLED v1
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "v1", "status": "built"}, "source": {"status": "valid"}}
+{"status": "invalid", "error": "unit tests failed:\nF\n======================================================================\nFAIL: test_fails (test_gate.Gate.test_fails)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-build-source-jbh_ftfn/repo/tests/test_gate.py\", line 3, in test_fails\n    def test_fails(self): self.fail(\"candidate is invalid\")\n                          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate is invalid\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (failures=1)"}
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2701l4qh/repo/releases/actual-suite
+INSTALLED actual-suite
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "actual-suite", "status": "built"}, "source": {"status": "valid"}}
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpy9a0w5fg/repo/releases/v1
+CURRENT v1
+{"host": {"status": "current", "target": "auto"}, "release": {"release_id": "v1", "status": "current"}, "source": {"status": "valid"}}

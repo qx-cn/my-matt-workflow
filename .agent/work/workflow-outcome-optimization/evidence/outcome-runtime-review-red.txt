@@ -1,0 +1,71 @@
+FFFFF
+======================================================================
+FAIL: test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase (test_batches.BatchTests.test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 191, in test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase
+    self.assertTrue(current['new_failures']);self.assertFalse(current['results'][0]['unavailable'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_unrelated_reopen_preserves_correctness_and_legacy_singleton (test_batches.BatchTests.test_unrelated_reopen_preserves_correctness_and_legacy_singleton)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 205, in test_unrelated_reopen_preserves_correctness_and_legacy_singleton
+    self.assertTrue(any(f['id']=='unfixed' for r in reopened.get('self_reviews',[]) for f in r.get('findings',[])))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_dirty_after_pass_without_findings_reports_content_input (test_batches.BatchTests.test_dirty_after_pass_without_findings_reports_content_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 217, in test_dirty_after_pass_without_findings_reports_content_input
+    self.assertNotIn('batch repair',status['next_command']);self.assertTrue(status['inputs_needed'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'batch repair' unexpectedly found in 'workflow.py batch repair --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp4aqrre5y --topic feature --notes-file <修复说明>'
+
+======================================================================
+FAIL: test_accepted_branch_status_does_not_repeat_closed_decision (test_batches.BatchTests.test_accepted_branch_status_does_not_repeat_closed_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 228, in test_accepted_branch_status_does_not_repeat_closed_decision
+    self.assertEqual(accepted['next_command'],status['next_command'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'workflow.py topic complete --repo /priva[74 chars]ture' != "workflow.py resolve --repo /private/var/[101 chars]理由>'"
+- workflow.py topic complete --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp71kv11wm --topic feature
+?             ^ --------  --
++ workflow.py resolve --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp71kv11wm --branch --topic feature --accept --reason '<理由>'
+?             ^^^  +                                                                              +++++++++               +++++++++++++++++++++++++
+
+
+======================================================================
+FAIL: test_quick_concise_summary_without_configured_tests_completes (test_topic_lifecycle.TopicLifecycleTests.test_quick_concise_summary_without_configured_tests_completes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_topic_lifecycle.py", line 207, in test_quick_concise_summary_without_configured_tests_completes
+    self.cli('topic','complete','--topic','change')
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_topic_lifecycle.py", line 56, in cli
+    self.assertEqual(0, result.returncode, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tools/workflow.py", line 816, in <module>
+    main()
+    ~~~~^^
+  File "/private/tmp/my-matt-outcome-runtime/tools/workflow.py", line 803, in main
+    args.func(args)
+    ~~~~~~~~~^^^^^^
+  File "/private/tmp/my-matt-outcome-runtime/tools/workflow.py", line 436, in command_topic
+    report = topic_service.complete(Path(args.repo), args.topic)
+  File "/private/tmp/my-matt-outcome-runtime/tools/workflow_lib/topic_service.py", line 525, in complete
+    index = next(index for title, index in summary_headings(text) if title == "测试结果")
+            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 10.538s
+
+FAILED (failures=5)

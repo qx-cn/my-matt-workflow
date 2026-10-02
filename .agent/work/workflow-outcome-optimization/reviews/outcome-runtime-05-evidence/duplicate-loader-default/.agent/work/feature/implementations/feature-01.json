@@ -1,0 +1,175 @@
+{
+  "ticket": "feature-01",
+  "topic": "feature",
+  "baseline": "57487773254fd1e09600269b605a88e0ead141d1",
+  "started_at": "2026-10-02T14:00:59.528381+00:00",
+  "execution_agent": "codex",
+  "definition": {
+    "ticket": {
+      "metadata": {
+        "id": "feature-01",
+        "title": "Independent marker",
+        "ticket_kind": "implementation",
+        "spec_id": "feature",
+        "spec_revision": "1",
+        "spec_ref": ".agent/work/feature/specs/specs-feature-01.md",
+        "blocked_by": [],
+        "sequence": "1",
+        "test_commands": [
+          "python3 -B -c 'pass'"
+        ],
+        "rule_sources": [
+          ".agent/work/feature/specs/specs-feature-01.md"
+        ],
+        "rule_scope": [
+          "code.txt"
+        ],
+        "rule_constraints": [
+          "write the marker"
+        ],
+        "rule_conflicts": [],
+        "review_probes": [
+          "recovery"
+        ],
+        "execution_agent": "auto",
+        "supersedes_ticket": [],
+        "compensates": [],
+        "tags": []
+      },
+      "body": "## 要构建什么\nWrite marker\n## 适用规则与影响区域\ncode.txt\n## 验收标准\n- [ ] independent marker is written"
+    },
+    "spec_sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730"
+  },
+  "tests": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "exit_code": 0,
+      "content_id": "f300222ce23aa7818c6eedc207f8560f8a60be8d5a017dc994bb7d273c2fbe53",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 0,
+      "unavailable_loader_failures": [],
+      "content_changed": false,
+      "output_tail": "",
+      "run_id": "572790ed40664dbe913feb699b77467c",
+      "command_index": 0,
+      "progress": false,
+      "finished_at": "2026-10-02T14:00:59.742259+00:00"
+    }
+  ],
+  "batch_id": "01",
+  "implementation_session_id": "bcdf828e75504235961c975158983def",
+  "briefing": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/briefings/briefing-feature-01.md",
+  "test_run": {
+    "id": "572790ed40664dbe913feb699b77467c",
+    "commands": [
+      [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ]
+    ],
+    "completed": true
+  },
+  "self_reviews": [
+    {
+      "content_id": "f300222ce23aa7818c6eedc207f8560f8a60be8d5a017dc994bb7d273c2fbe53",
+      "text": "## 验收对照\nFixture marker verified; runner semantics are the probe under test.\n## 现状核实\nFixture marker verified; runner semantics are the probe under test.\n## 影响面\nFixture marker verified; runner semantics are the probe under test.\n## 对抗检查\nFixture marker verified; runner semantics are the probe under test.\n## 简洁与约定\nFixture marker verified; runner semantics are the probe under test.\n## 已知缺口\nFixture marker verified; runner semantics are the probe under test.\n",
+      "at": "2026-10-02T14:00:59.943685+00:00",
+      "definition": {
+        "ticket": {
+          "metadata": {
+            "id": "feature-01",
+            "title": "Independent marker",
+            "ticket_kind": "implementation",
+            "spec_id": "feature",
+            "spec_revision": "1",
+            "spec_ref": ".agent/work/feature/specs/specs-feature-01.md",
+            "blocked_by": [],
+            "sequence": "1",
+            "test_commands": [
+              "python3 -B -c 'pass'"
+            ],
+            "rule_sources": [
+              ".agent/work/feature/specs/specs-feature-01.md"
+            ],
+            "rule_scope": [
+              "code.txt"
+            ],
+            "rule_constraints": [
+              "write the marker"
+            ],
+            "rule_conflicts": [],
+            "review_probes": [
+              "recovery"
+            ],
+            "execution_agent": "auto",
+            "supersedes_ticket": [],
+            "compensates": [],
+            "tags": []
+          },
+          "body": "## 要构建什么\nWrite marker\n## 适用规则与影响区域\ncode.txt\n## 验收标准\n- [ ] independent marker is written"
+        },
+        "spec_sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730"
+      },
+      "findings": []
+    }
+  ],
+  "self_review": {
+    "content_id": "f300222ce23aa7818c6eedc207f8560f8a60be8d5a017dc994bb7d273c2fbe53",
+    "text": "## 验收对照\nFixture marker verified; runner semantics are the probe under test.\n## 现状核实\nFixture marker verified; runner semantics are the probe under test.\n## 影响面\nFixture marker verified; runner semantics are the probe under test.\n## 对抗检查\nFixture marker verified; runner semantics are the probe under test.\n## 简洁与约定\nFixture marker verified; runner semantics are the probe under test.\n## 已知缺口\nFixture marker verified; runner semantics are the probe under test.\n",
+    "at": "2026-10-02T14:00:59.943685+00:00",
+    "definition": {
+      "ticket": {
+        "metadata": {
+          "id": "feature-01",
+          "title": "Independent marker",
+          "ticket_kind": "implementation",
+          "spec_id": "feature",
+          "spec_revision": "1",
+          "spec_ref": ".agent/work/feature/specs/specs-feature-01.md",
+          "blocked_by": [],
+          "sequence": "1",
+          "test_commands": [
+            "python3 -B -c 'pass'"
+          ],
+          "rule_sources": [
+            ".agent/work/feature/specs/specs-feature-01.md"
+          ],
+          "rule_scope": [
+            "code.txt"
+          ],
+          "rule_constraints": [
+            "write the marker"
+          ],
+          "rule_conflicts": [],
+          "review_probes": [
+            "recovery"
+          ],
+          "execution_agent": "auto",
+          "supersedes_ticket": [],
+          "compensates": [],
+          "tags": []
+        },
+        "body": "## 要构建什么\nWrite marker\n## 适用规则与影响区域\ncode.txt\n## 验收标准\n- [ ] independent marker is written"
+      },
+      "spec_sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730"
+    },
+    "findings": []
+  },
+  "outcome": "complete"
+}

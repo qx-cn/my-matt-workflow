@@ -1,0 +1,40 @@
+test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps (test_batches.BatchTests.test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps) ... 
+  test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps (test_batches.BatchTests.test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps) (verbose='') ... FAIL
+  test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps (test_batches.BatchTests.test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps) (verbose=' -v') ... FAIL
+
+======================================================================
+FAIL: test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps (test_batches.BatchTests.test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 374, in test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps
+    self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['same (unittest.loader._FailedTest.same)']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'same (unittest.loader._FailedTest.same)'
+
+- []
++ ['same (unittest.loader._FailedTest.same)']
+
+======================================================================
+FAIL: test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps (test_batches.BatchTests.test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 374, in test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps
+    self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['same (unittest.loader._FailedTest.same)']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'same (unittest.loader._FailedTest.same)'
+
+- []
++ ['same (unittest.loader._FailedTest.same)']
+
+----------------------------------------------------------------------
+Ran 1 test in 4.782s
+
+FAILED (failures=2)

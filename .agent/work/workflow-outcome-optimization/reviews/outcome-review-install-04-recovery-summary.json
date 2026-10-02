@@ -1,0 +1,12 @@
+{
+  "source": "/tmp/outcome-review-final-05",
+  "total": 26,
+  "passed": 26,
+  "failed": [],
+  "counts": {
+    "legacy-journal": 18,
+    "missing-old": 4,
+    "committed-drift": 4
+  },
+  "script_sha256": "f9abdfc77d68251821c9425aad2cbf3434e402c94ac51f1e5100495dc2f56754"
+}

@@ -1,0 +1,71 @@
+{
+  "completed": true,
+  "content_id": "f0d353d7713453c2679ce9eea420939dbedcc7c58f384b7cf726d84719053499",
+  "head": "c7a5927bc9522981c512079c63006d5805a1330a",
+  "commands": [
+    "python3 -B runner.py -v",
+    "python3 -B -c 'pass'"
+  ],
+  "results": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "runner.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "content_id": "f0d353d7713453c2679ce9eea420939dbedcc7c58f384b7cf726d84719053499",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": true,
+      "output_complete": true,
+      "output_length": 1273,
+      "unavailable_loader_failures": [
+        "same (unittest.loader._FailedTest.same)"
+      ],
+      "dependency_proof_version": 1,
+      "content_changed": false,
+      "output_tail": "same (unittest.loader._FailedTest.same) ... ERROR\nsame (unittest.loader._FailedTest.same) ... ERROR\ntest_ok (__main__.Visible.test_ok) ... ok\n\n======================================================================\nERROR: same (unittest.loader._FailedTest.same)\n----------------------------------------------------------------------\nImportError: Failed to import test module: same\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose/runner.py\", line 7, in failed\n    import independent_review06_absent_dependency\nModuleNotFoundError: No module named 'independent_review06_absent_dependency'\n\n\n======================================================================\nERROR: same (unittest.loader._FailedTest.same)\n----------------------------------------------------------------------\nImportError: Failed to import test module: same\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-06-narrow-evidence/typed-loader-verbose/runner.py\", line 7, in failed\n    import independent_review06_absent_dependency\nModuleNotFoundError: No module named 'independent_review06_absent_dependency'\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nFAILED (errors=2)\n",
+      "command": "python3 -B runner.py -v",
+      "failures": [
+        "same (unittest.loader._FailedTest.same)"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "exit_code": 0,
+      "content_id": "f0d353d7713453c2679ce9eea420939dbedcc7c58f384b7cf726d84719053499",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 0,
+      "unavailable_loader_failures": [],
+      "dependency_proof_version": 1,
+      "content_changed": false,
+      "output_tail": "",
+      "command": "python3 -B -c 'pass'",
+      "failures": []
+    }
+  ],
+  "at": "2026-10-02T14:32:17.612058+00:00",
+  "baseline": "c7a5927bc9522981c512079c63006d5805a1330a"
+}

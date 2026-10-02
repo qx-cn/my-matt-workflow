@@ -43,6 +43,423 @@ class BatchTests(unittest.TestCase):
         Path(report['result_file']).write_text(json.dumps(result))
         self.cli(action,'review','--topic','feature','--submit',report['result_file'])
         return report
+    def test_unavailable_baseline_current_failure_and_legacy_recovery_block_close(self):
+        runner=self.repo/'full.py'
+        runner.write_text("import outcome_missing_baseline_dependency\n")
+        self.git('add','full.py');self.git('commit','-qm','unavailable baseline')
+        self.setup(full='python3 full.py');self.implement()
+        runner.write_text("print('FAIL: actual behavior'); raise SystemExit(1)\n")
+        self.git('add','full.py');self.git('commit','-qm','currently executable failure')
+        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+        self.assertTrue(current['new_failures'])
+        self.assertIn('python3 full.py',current['unverified'])
+        self.cli('batch','close','--topic','feature',ok=False)
+        # A pre-upgrade record may have hidden the raw failure. Recovery must
+        # recompute from those facts, without changing already completed history.
+        receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
+        old=json.loads(receipt.read_text());old['new_failures']=[]
+        receipt.write_text(json.dumps(old))
+        status=json.loads(self.cli('batch','status','--topic','feature').stdout)
+        self.assertIn('batch test',status['next_command'])
+        self.cli('batch','close','--topic','feature',ok=False)
+        runner.write_text("print('current passes')\n")
+        self.git('add','full.py');self.git('commit','-qm','repair current failure')
+        passed=json.loads(self.cli('batch','test','--topic','feature').stdout)
+        self.assertEqual([],passed['new_failures'])
+        self.assertIn('python3 full.py',passed['unverified'])
+        self.review();self.cli('batch','close','--topic','feature')
+
+    def test_self_blocking_requires_changed_evidence_and_preserves_history(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01')
+        (self.repo/'code.txt').write_text('wrong')
+        self.cli('implement','test');self.self_review()
+        notes=self.repo/'.agent/self.md';findings=self.repo/'.agent/findings.json'
+        findings.write_text(json.dumps([dict(id='self-bug',severity='blocking',view='correctness',
+            summary='wrong behavior',location='code.txt:1',basis='read marker returns wrong value')]))
+        self.cli('implement','self-review','--notes-file',str(notes),'--findings-file',str(findings))
+        p=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md'
+        p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.assertIn('self-bug',self.cli('implement','finish',ok=False).stderr)
+        self.assertIn('self-review',json.loads(self.cli('implement','status').stdout)['next_command'])
+        record=self.repo/'.agent/work/feature/implementations/feature-01.json'
+        legacy_record=json.loads(record.read_text());legacy_record['self_review'].pop('findings')
+        record.write_text(json.dumps(legacy_record))
+        self.assertIn('self-bug',self.cli('implement','finish',ok=False).stderr)
+        # Merely replacing the findings with zero on identical content is not a repair.
+        self.cli('implement','self-review','--notes-file',str(notes),'--no-findings',ok=False)
+        findings.write_text(json.dumps([dict(id='self-bug',severity='advisory',view='correctness',
+            summary='downgraded only',location='code.txt:1',basis='same code',disposition='decline',reason='just changed severity')]))
+        self.cli('implement','self-review','--notes-file',str(notes),'--findings-file',str(findings),ok=False)
+        (self.repo/'code.txt').write_text('correct');self.cli('implement','test')
+        self.cli('implement','self-review','--notes-file',str(notes),'--no-findings')
+        self.cli('implement','finish')
+        unit=json.loads((self.repo/'.agent/work/feature/implementations/feature-01.json').read_text())
+        self.assertTrue(any(f['id']=='self-bug' for r in unit['self_reviews'] for f in r.get('findings',[])))
+        self.assertTrue(unit['self_review']['resolutions'])
+
+    def test_self_spec_challenge_requires_explicit_decision(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01')
+        self.cli('implement','test');self.self_review()
+        notes=self.repo/'.agent/self.md';findings=self.repo/'.agent/findings.json'
+        findings.write_text(json.dumps([dict(id='self-challenge',severity='blocking',view='spec-challenge',
+            summary='definition conflicts',location='Spec:behavior',basis='approved result contradicts caller')]))
+        self.cli('implement','self-review','--notes-file',str(notes),'--findings-file',str(findings))
+        status=json.loads(self.cli('implement','status').stdout)
+        self.assertEqual('needs-user',status['status']);self.assertTrue(status['decisions_needed'])
+        self.cli('implement','finish',ok=False)
+        self.cli('implement','self-review','--notes-file',str(notes),'--no-findings',ok=False)
+        self.cli('resolve','--ticket','feature-01','--accept','--reason','user accepts conflict')
+        unit=json.loads((self.repo/'.agent/work/feature/implementations/feature-01.json').read_text())
+        self.assertEqual('self-challenge',unit['known_issues'][0]['id'])
+
+    def test_revised_definition_reopens_self_challenge_without_losing_history(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01');self.cli('implement','test');self.self_review()
+        notes=self.repo/'.agent/self.md';findings=self.repo/'.agent/findings.json'
+        findings.write_text(json.dumps([dict(id='definition',severity='blocking',view='spec-challenge',
+            summary='needs definition decision',location='Spec:behavior',basis='incompatible user interpretations')]))
+        self.cli('implement','self-review','--notes-file',str(notes),'--findings-file',str(findings))
+        spec=self.repo/'.agent/work/feature/specs/specs-feature-01.md';spec.write_text(spec.read_text()+'\nUser clarified meaning.\n')
+        self.cli('resolve','--ticket','feature-01','--reopen','--reason','definition: user clarified meaning')
+        self.cli('implement','test');self.cli('implement','self-review','--notes-file',str(notes),'--no-findings')
+        p=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md';p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.cli('implement','finish')
+        unit=json.loads((self.repo/'.agent/work/feature/implementations/feature-01.json').read_text())
+        self.assertTrue(any(f['id']=='definition' for r in unit['self_reviews'] for f in r.get('findings',[])))
+
+    def test_last_ticket_finish_and_status_have_same_executable_batch_step(self):
+        self.setup();output=json.loads(self.implement().stdout)
+        status=json.loads(self.cli('batch','status','--topic','feature').stdout)
+        self.assertEqual(status['next_command'],output['next_command'])
+        self.assertIn('batch test',output['next_command'])
+        import shlex
+        self.cli(*shlex.split(output['next_command'])[1:])
+        self.review();closed=json.loads(self.cli('batch','close','--topic','feature').stdout)
+        self.assertIn('topic complete',closed['next_command'])
+
+    def test_interrupted_batch_run_invalidates_prior_success(self):
+        runner=self.repo/'full.py'
+        runner.write_text("from pathlib import Path\nimport os,signal\nif Path('.agent/interrupt').exists():os.kill(os.getppid(),signal.SIGKILL)\n")
+        self.git('add','full.py');self.git('commit','-qm','interruptible fixture')
+        self.setup(full='python3 full.py');self.implement();self.review()
+        self.assertIn('batch close',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+        marker=self.repo/'.agent/interrupt';marker.touch()
+        self.assertLess(self.cli('batch','test','--topic','feature',ok=False).returncode,0)
+        self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+        self.cli('batch','close','--topic','feature',ok=False)
+        marker.unlink();self.cli('batch','test','--topic','feature');self.cli('batch','close','--topic','feature')
+
+    def test_batch_self_advisory_is_frozen_and_requires_review_disposition(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01')
+        (self.repo/'code.txt').write_text('implementation');self.cli('implement','test');self.self_review()
+        notes=self.repo/'.agent/self.md';findings=self.repo/'.agent/findings.json'
+        findings.write_text(json.dumps([dict(id='debt',severity='advisory',view='maintainability',
+            summary='cleanup before batch close',location='code.txt:1',basis='contract needs clear names',disposition='fix-in-batch')]))
+        self.cli('implement','self-review','--notes-file',str(notes),'--findings-file',str(findings))
+        p=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md';p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.cli('implement','finish');self.cli('batch','test','--topic','feature')
+        report=json.loads(self.cli('batch','review','--topic','feature','--reviewer-model','host','--reviewer-session-id','fresh').stdout)
+        manifest=json.loads(Path(report['manifest']).read_text())
+        target='self:feature-01:debt';self.assertIn(target,manifest['coverage_targets'])
+        result=json.loads(Path(report['result_file']).read_text())
+        result.update(status='pass',reviewer=dict(provenance='independent',model='host'),findings=[],
+            coverage=[dict(target=t,result='ok') for t in manifest['coverage_targets'] if t!=target])
+        Path(report['result_file']).write_text(json.dumps(result))
+        self.cli('batch','review','--topic','feature','--submit',report['result_file'],ok=False)
+        result['coverage'].append(dict(target=target,result='ok'))
+        Path(report['result_file']).write_text(json.dumps(result))
+        self.cli('batch','review','--topic','feature','--submit',report['result_file'])
+        self.cli('batch','close','--topic','feature')
+        batch=batches.read(self.repo,'feature')['batches'][0]
+        self.assertEqual('debt',batch['self_finding_resolutions'][0]['finding'])
+
+    def test_definition_change_between_status_and_finish_is_rechecked(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01');self.cli('implement','test');self.self_review()
+        p=self.repo/'.agent/work/feature/tickets/tickets-feature-01.md';p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.assertIn('implement finish',json.loads(self.cli('implement','status').stdout)['next_command'])
+        p.write_text(p.read_text().replace('marker observed','different acceptance'))
+        self.self_review()
+        self.assertIn('definition',self.cli('implement','finish',ok=False).stderr)
+        self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
+
+    def test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase(self):
+        runner=self.repo/'full.py';runner.write_text("import outcome_missing_baseline_dependency\n")
+        self.git('add','full.py');self.git('commit','-qm','baseline dependency missing')
+        self.setup(full='python3 -B full.py');self.implement()
+        phases=[
+            "subprocess.run([sys.executable,'-c',\"assert 1 == 2, 'actual regression'\"])",
+            "subprocess.run([sys.executable,'-c',\"raise SystemExit('actual behavior regression')\"])",
+            "subprocess.run(['sh','-c','echo actual behavior regression >&2; exit 1'])",
+        ]
+        for index,phase in enumerate(phases):
+            with self.subTest(phase=phase):
+                runner.write_text('import subprocess,sys\n'+phase+'\nimport outcome_missing_optional_phase\n')
+                self.git('add','full.py');self.git('commit','-qm',f'actual behavior then optional phase {index}')
+                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertTrue(current['new_failures']);self.assertFalse(current['results'][0]['unavailable'])
+                self.cli('batch','close','--topic','feature',ok=False)
+
+    def test_unrelated_reopen_preserves_correctness_and_legacy_singleton(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01');(self.repo/'code.txt').write_text('wrong')
+        self.cli('implement','test');self.self_review()
+        root=self.repo/'.agent/work/feature';record=root/'implementations/feature-01.json'
+        unit=json.loads(record.read_text());unit.pop('self_reviews',None)
+        unit['self_review']['findings']=[dict(id='unfixed',severity='blocking',view='correctness',
+            summary='still wrong',location='code.txt:1',basis='real caller needs correct marker')]
+        record.write_text(json.dumps(unit))
+        spec=root/'specs/specs-feature-01.md';spec.write_text(spec.read_text()+'\nUnrelated wording.\n')
+        self.cli('resolve','--ticket','feature-01','--reopen','--reason','approve unrelated wording')
+        reopened=json.loads(record.read_text())
+        self.assertTrue(any(f['id']=='unfixed' for r in reopened.get('self_reviews',[]) for f in r.get('findings',[])))
+        self.cli('implement','test')
+        self.cli('implement','self-review','--notes-file',str(self.repo/'.agent/self.md'),'--no-findings',ok=False)
+        self.cli('implement','finish',ok=False)
+        (self.repo/'code.txt').write_text('correct');self.cli('implement','test')
+        self.cli('implement','self-review','--notes-file',str(self.repo/'.agent/self.md'),'--no-findings')
+        p=root/'tickets/tickets-feature-01.md';p.write_text(p.read_text().replace('- [ ]','- [x]'))
+        self.cli('implement','finish')
+
+    def test_dirty_after_pass_without_findings_reports_content_input(self):
+        self.setup();self.implement();self.review();(self.repo/'code.txt').write_text('unreviewed drift')
+        status=json.loads(self.cli('batch','status','--topic','feature').stdout)
+        self.assertIsNone(status['next_command']);self.assertTrue(status['inputs_needed'])
+        human=self.cli('batch','status','--topic','feature','--human').stdout
+        self.assertIn('恢复未审查的内容漂移',human)
+        self.assertNotIn('请 batch repair',self.cli('batch','close','--topic','feature',ok=False).stderr)
+        self.git('restore','code.txt')
+        self.cli('batch','close','--topic','feature')
+
+    def test_accepted_branch_status_does_not_repeat_closed_decision(self):
+        self.setup(2);self.implement(1);self.implement(2);self.review()
+        self.review(action='topic',finding=dict(id='branch-definition',severity='blocking',view='spec-challenge',
+            summary='user definition conflict',location='Spec:behavior',basis='real caller conflicts'))
+        accepted=json.loads(self.cli('batch','accept','--topic','feature','--reason','user accepts branch conflict').stdout)
+        status=json.loads(self.cli('topic','status','--topic','feature').stdout)
+        self.assertEqual(accepted['next_command'],status['next_command'])
+        self.assertFalse(status['decisions_needed']);self.assertTrue(status['known_issues'])
+        human=self.cli('topic','status','--topic','feature','--human').stdout
+        self.assertNotIn('请用户决定修订 Spec',human)
+        self.assertIn('已接受的历史原因',human)
+        self.cli('topic','complete','--topic','feature')
+
+    def test_accept_with_changed_definition_requires_reopen(self):
+        self.setup();self.cli('implement','start','--ticket','feature-01');self.cli('implement','test');self.self_review()
+        notes=self.repo/'.agent/self.md';findings=self.repo/'.agent/findings.json'
+        findings.write_text(json.dumps([dict(id='challenge',severity='blocking',view='spec-challenge',
+            summary='definition disagreement',location='Spec:behavior',basis='caller contradicts definition')]))
+        self.cli('implement','self-review','--notes-file',str(notes),'--findings-file',str(findings))
+        spec=self.repo/'.agent/work/feature/specs/specs-feature-01.md';spec.write_text(spec.read_text()+'\nApproved definition clarification.\n')
+        self.cli('implement','test');self.cli('implement','self-review','--notes-file',str(notes))
+        self.assertIn('definition',self.cli('resolve','--ticket','feature-01','--accept','--reason','accept challenge',ok=False).stderr)
+        self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
+
+    def test_loader_only_missing_dependency_is_not_a_known_assertion_failure(self):
+        for verbose in ('',' -v'):
+            with self.subTest(verbose=verbose):
+                if verbose:self.setUp()
+                suite=self.repo/'suite';suite.mkdir();case=suite/'test_behavior.py'
+                case.write_text('import outcome_missing_startup_dependency\n')
+                self.git('add','suite');self.git('commit','-qm','loader startup dependency unavailable')
+                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
+                baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
+                self.assertTrue(baseline['results'][0]['unavailable'])
+                self.assertFalse(baseline['results'][0]['comparison_eligible'])
+                self.assertFalse(batches.execution_observed(baseline['results'][0]['output_tail']))
+                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertTrue(pure['results'][0]['unavailable'])
+                self.assertEqual([],pure['new_failures']);self.assertTrue(pure['unverified'])
+                self.review()  # Pure startup gap permits disclosed review in both verbosity modes.
+                case.write_text("assert 1 == 2, 'actual behavior regression at import'\n")
+                self.git('add','suite');self.git('commit','-qm','actual assertion with same loader identity')
+                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertTrue(current['new_failures']);self.assertTrue(current['unverified'])
+                self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['known_failures'])
+                status=json.loads(self.cli('batch','status','--topic','feature').stdout)
+                self.assertTrue(status['unverified'])
+                self.assertIn('基线环境缺失',status['unverified'][0]['note'])
+                self.cli('batch','close','--topic','feature',ok=False)
+
+    def test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure(self):
+        for verbose in ('',' -v'):
+            with self.subTest(verbose=verbose):
+                if verbose:self.setUp()
+                suite=self.repo/'suite';suite.mkdir()
+                for number in range(12):
+                    (suite/f'test_{number:02d}.py').write_text('import outcome_missing_tail_dependency\n')
+                self.git('add','suite');self.git('commit','-qm','twelve unavailable loader modules')
+                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
+                baseline_path=self.repo/'.agent/work/feature/test-baseline.json'
+                baseline=json.loads(baseline_path.read_text());row=baseline['results'][0]
+                self.assertEqual(12,len(row['failures']))
+                self.assertLess(row['output_tail'].count('ERROR:'),12)
+                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                self.review()
+                (suite/'test_00.py').write_text("assert False, 'actual import assertion with unchanged loader identity'\n")
+                self.git('add','suite');self.git('commit','-qm','actual import regression')
+                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['new_failures'])
+                self.assertFalse(current['results'][0]['execution_observed'])
+                for unavailable in (False,True):
+                    with self.subTest(legacy_unavailable=unavailable):
+                        legacy_baseline=json.loads(json.dumps(baseline));old=legacy_baseline['results'][0]
+                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures','dependency_proof_version'):
+                            old.pop(field,None)
+                        old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
+                        receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
+                        stale=json.loads(json.dumps(current))
+                        for item in stale['results']:
+                            for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures','dependency_proof_version'):
+                                item.pop(field,None)
+                        stale.update(new_failures=[],known_failures=[dict(command=old['command'],failure=f) for f in old['failures']],unverified=[])
+                        receipt.write_text(json.dumps(stale))
+                        self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+                        rerun=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                        self.assertFalse(rerun['results'][0]['unavailable'])
+                        self.assertTrue(rerun['new_failures']);self.assertTrue(rerun['unverified'])
+                        self.assertIn('新增失败',self.cli('batch','review','--topic','feature','--reviewer-model','host','--reviewer-session-id','fresh-context',ok=False).stderr)
+                baseline_path.write_text(json.dumps(baseline))
+                self.assertFalse(row['execution_observed']);self.assertFalse(row['output_complete'])
+                self.assertGreater(row['output_length'],len(row['output_tail']))
+
+    def test_truncated_partial_legacy_preserves_real_known_case_difference(self):
+        for verbose in ('',' -v'):
+            with self.subTest(verbose=verbose):
+                if verbose:self.setUp()
+                suite=self.repo/'suite';suite.mkdir()
+                for number in range(12):
+                    (suite/f'test_{number:02d}.py').write_text('import outcome_missing_partial_tail_dependency\n')
+                behavior=suite/'test_behavior.py'
+                behavior.write_text('import unittest\nclass Behavior(unittest.TestCase):\n def test_known(self): self.assertEqual(1, 2)\n def test_new(self): self.assertEqual(3, 3)\n')
+                self.git('add','suite');self.git('commit','-qm','twelve loader gaps and real behavior cases')
+                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
+                baseline_path=self.repo/'.agent/work/feature/test-baseline.json'
+                baseline=json.loads(baseline_path.read_text());row=baseline['results'][0]
+                self.assertTrue(row['execution_observed']);self.assertFalse(row['output_complete'])
+                self.assertEqual(13,len(row['failures']))
+                self.assertEqual(12,len(row['unavailable_loader_failures']))
+                self.review()  # Known executed failure plus unchanged loader gaps remain reviewable.
+                behavior.write_text(behavior.read_text().replace('assertEqual(3, 3)','assertEqual(3, 4)'))
+                self.git('add','suite');self.git('commit','-qm','new real behavior failure')
+                for unavailable in (False,True):
+                    with self.subTest(legacy_unavailable=unavailable):
+                        legacy_baseline=json.loads(json.dumps(baseline));old=legacy_baseline['results'][0]
+                        for field in ('comparison_eligible','execution_observed','output_complete','output_length','unavailable_loader_failures','dependency_proof_version'):
+                            old.pop(field,None)
+                        old['unavailable']=unavailable;baseline_path.write_text(json.dumps(legacy_baseline))
+                        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                        self.assertTrue(current['results'][0]['execution_observed'])
+                        self.assertFalse(current['results'][0]['unavailable']);self.assertFalse(current['unverified'])
+                        self.assertEqual(1,len(current['new_failures']))
+                        self.assertIn('test_new',current['new_failures'][0]['failure'])
+                        self.assertEqual(13,len(current['known_failures']))
+                        self.assertTrue(any('test_known' in f['failure'] for f in current['known_failures']))
+                        self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+
+    def test_duplicate_loader_identity_requires_all_blocks_to_be_environment_gaps(self):
+        for verbose in ('',' -v'):
+            with self.subTest(verbose=verbose):
+                if verbose:self.setUp()
+                runner=self.repo/'runner.py'
+                runner.write_text("import pathlib, sys, traceback, unittest\nfrom unittest.loader import _FailedTest\ndef failed(real):\n try:\n  if real: assert False, 'actual duplicate loader assertion'\n  import outcome_missing_duplicate_dependency\n except Exception:\n  return _FailedTest('same', ImportError('Failed to import test module: same\\n'+traceback.format_exc()))\nclass Behavior(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\nreal=pathlib.Path('mode.txt').read_text()=='bad'\nsuite=unittest.TestSuite([failed(real), failed(False), Behavior('test_ok')])\nresult=unittest.TextTestRunner(verbosity=2 if '-v' in sys.argv else 1).run(suite)\nraise SystemExit(not result.wasSuccessful())\n")
+                mode=self.repo/'mode.txt';mode.write_text('good')
+                self.git('add','runner.py','mode.txt');self.git('commit','-qm','duplicate pure loader failures with executed test')
+                self.setup(full='python3 -B runner.py'+verbose);self.implement()
+                baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
+                self.assertTrue(baseline['results'][0]['execution_observed'])
+                self.assertTrue(baseline['results'][0]['unavailable_loader_failures'])
+                self.review()
+                mode.write_text('bad');self.git('add','mode.txt');self.git('commit','-qm','real duplicate block before pure environment block')
+                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertFalse(current['results'][0]['unavailable'])
+                self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
+                self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+                self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+
+    def test_concise_loader_exceptions_are_not_dependency_proof(self):
+        for verbose in ('',' -v'):
+            with self.subTest(verbose=verbose):
+                if verbose:self.setUp()
+                runner=self.repo/'runner.py'
+                runner.write_text("import pathlib, sys, traceback, unittest\nfrom unittest.loader import _FailedTest\ndef failed(kind):\n try:\n  if kind=='assertion': assert False, \"No module named 'actual_behavior_condition'\"\n  if kind=='runtime': raise RuntimeError(\"No module named 'actual_behavior_condition'\")\n  import outcome_missing_concise_dependency\n except Exception as exc:\n  detail=traceback.format_exc() if kind=='missing' else ''.join(traceback.format_exception_only(exc))\n  return _FailedTest('same', ImportError('Failed to import test module: same\\n'+detail))\nclass Behavior(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\nsuite=unittest.TestSuite([failed(pathlib.Path('mode.txt').read_text()), failed('missing'), Behavior('test_ok')])\nresult=unittest.TextTestRunner(verbosity=2 if '-v' in sys.argv else 1).run(suite)\nraise SystemExit(not result.wasSuccessful())\n")
+                mode=self.repo/'mode.txt';mode.write_text('missing')
+                self.git('add','runner.py','mode.txt');self.git('commit','-qm','typed loader dependency gaps')
+                self.setup(full='python3 -B runner.py'+verbose);self.implement()
+                mode.write_text('module-only');self.git('add','mode.txt');self.git('commit','-qm','actual ModuleNotFoundError exception-only control')
+                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertFalse(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures'])
+                self.assertTrue(pure['results'][0]['unavailable_loader_failures']);self.review()
+                for kind in ('assertion','runtime'):
+                    with self.subTest(exception=kind):
+                        mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual exception-only behavior failure '+kind)
+                        current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                        with self.subTest(fresh_classification=kind):
+                            self.assertFalse(current['results'][0]['unavailable'])
+                            self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+                            self.assertEqual([],current['results'][0]['unavailable_loader_failures'])
+                        receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
+                        old=json.loads(json.dumps(current));old['results'][0].pop('dependency_proof_version',None)
+                        old['results'][0]['unavailable_loader_failures']=old['results'][0]['failures']
+                        old.update(new_failures=[],known_failures=[dict(command=old['commands'][0],failure=f) for f in old['results'][0]['failures']],unverified=[])
+                        receipt.write_text(json.dumps(old))
+                        self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+                        self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+
+    def test_direct_concise_exception_and_old_unavailable_cache_require_rerun(self):
+        runner=self.repo/'runner.py'
+        runner.write_text("import pathlib, sys, traceback\ntry:\n kind=pathlib.Path('mode.txt').read_text()\n if kind=='assertion': assert False, \"No module named 'actual_behavior_condition'\"\n if kind=='runtime': raise RuntimeError(\"No module named 'actual_behavior_condition'\")\n import outcome_missing_direct_concise_dependency\nexcept Exception as exc:\n sys.stderr.write(''.join(traceback.format_exception_only(exc)))\n raise SystemExit(1)\n")
+        mode=self.repo/'mode.txt';mode.write_text('missing')
+        self.git('add','runner.py','mode.txt');self.git('commit','-qm','actual exception-only missing dependency')
+        self.setup(full='python3 -B runner.py');self.implement()
+        pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+        self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
+        self.review()
+        for kind in ('assertion','runtime'):
+            with self.subTest(exception=kind):
+                mode.write_text(kind);self.git('add','mode.txt');self.git('commit','-qm','actual direct concise failure '+kind)
+                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                with self.subTest(fresh_classification=kind):
+                    self.assertFalse(current['results'][0]['unavailable']);self.assertTrue(current['new_failures'])
+                receipt=self.repo/'.agent/work/feature/batch-tests-01.json'
+                old=json.loads(json.dumps(current));old['results'][0].pop('dependency_proof_version',None)
+                old['results'][0]['unavailable']=True
+                old.update(new_failures=[],known_failures=[],unverified=[]);receipt.write_text(json.dumps(old))
+                self.assertIn('batch test',json.loads(self.cli('batch','status','--topic','feature').stdout)['next_command'])
+                self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+                self.assertFalse(json.loads(self.cli('batch','test','--topic','feature').stdout)['results'][0]['unavailable'])
+
+    def test_python_module_startup_gap_and_legacy_receipt_remain_disclosed(self):
+        for module in ('outcome_missing_python_module','outcome_missing_python_module.nested'):
+            with self.subTest(module=module):
+                if module.endswith('.nested'):self.setUp()
+                self.setup(full='python3 -B -m '+module);self.implement()
+                pure=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertTrue(pure['results'][0]['unavailable']);self.assertFalse(pure['new_failures']);self.assertTrue(pure['unverified'])
+                self.review()
+                receipt=self.repo/'.agent/work/feature/batch-tests-01.json';old=json.loads(receipt.read_text())
+                old['results'][0].pop('dependency_proof_version',None);receipt.write_text(json.dumps(old))
+                self.cli('batch','close','--topic','feature')
+
+    def test_partial_loader_identity_cannot_hide_new_import_assertion(self):
+        for verbose in ('',' -v'):
+            with self.subTest(verbose=verbose):
+                if verbose:self.setUp()
+                suite=self.repo/'suite';suite.mkdir()
+                (suite/'test_ok.py').write_text('import unittest\nclass Behavior(unittest.TestCase):\n def test_ok(self): self.assertEqual(1, 1)\n')
+                missing=suite/'test_missing.py';missing.write_text('import outcome_missing_partial_dependency\n')
+                self.git('add','suite');self.git('commit','-qm','one real passing test and one loader gap')
+                self.setup(full='python3 -B -m unittest discover -s suite'+verbose);self.implement()
+                baseline=json.loads((self.repo/'.agent/work/feature/test-baseline.json').read_text())
+                self.assertFalse(baseline['results'][0]['unavailable']);self.assertTrue(baseline['results'][0]['comparison_eligible'])
+                self.assertTrue(baseline['results'][0]['execution_observed'])
+                self.review()
+                missing.write_text("assert False, 'new actual import behavior regression'\n")
+                self.git('add','suite');self.git('commit','-qm','same loader identity now real failure')
+                current=json.loads(self.cli('batch','test','--topic','feature').stdout)
+                self.assertFalse(current['results'][0]['unavailable'])
+                self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+                self.assertTrue(current['unverified'])
+                self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+
     def test_briefing_contains_predecessor_contracts_batch_impacts_and_hints(self):
         self.setup(2)
         self.cli('implement','start','--ticket','feature-01')

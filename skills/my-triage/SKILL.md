@@ -25,6 +25,8 @@ disable-model-invocation: true
 
 ## 角色
 
+先按后端分支：以下标签角色与 Tracker 状态转换用于外部 Tracker。local brief 只使用本地类别/状态语义，不要求外部标签映射；本地 workflow 配置缺失时才按后端段完成 setup。
+
 两种**类别**角色：
 
 - `bug` —— 有功能损坏
@@ -42,7 +44,7 @@ disable-model-invocation: true
 
 每个已分诊的 Issue 都应恰好带有一个类别角色和一个状态角色。如果状态角色冲突，先标出冲突并询问维护者，不得执行其他操作。
 
-这些是规范角色名称——Issue 跟踪器中实际使用的标签字符串可能不同。映射应已提供给你；若未提供，请运行 `{{skill-call:my-setup}}`。
+这些是外部 Tracker 的规范角色名称，真实标签映射从该 Tracker 的配置、已有有效标签或维护者取得；缺少时只请求所缺映射，不调用只配置 local workflow 的 setup 代替它。
 
 状态转换：未标记的 Issue 通常先进入 `needs-triage`；随后可转为 `needs-info`、`ready-for-agent`、`ready-for-human` 或 `wontfix`。报告者回复后，`needs-info` 返回 `needs-triage`。维护者可随时覆盖——标出看起来异常的转换，并在继续前询问。
 
@@ -51,7 +53,7 @@ disable-model-invocation: true
 `my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 也不进入 triage。
 
 - **外部 Tracker**：保留 Tracker 原生的类别、状态、评论与 Agent brief；`ready-for-agent` 仍表示该外部事项已附上可执行简报。
-- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。随后调用 {{skill-call:my-to-tickets}}；需要跨会话时输出 `{{skill-call:my-to-tickets}}` 并停止。`my-to-tickets` 负责生成具有完整 Spec/rules/agent/acceptance lineage 的 Ticket。
+- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。只要求分诊或 brief 时保存后交付，不自动开开发。下一阶段已授权时读取[保证等级](references/shared/adapters/assurance-levels.md)，复用已确认等级与摘要；缺本地 workflow 配置时输出 {{skill-call:my-setup}} 下一跳并停止，保留原请求与 confirmed brief；配置完成后恢复本分诊入口，不把 setup 当作外部 Tracker 映射修复。复用匹配 current Spec 的 Topic，否则在用户选定 Topic 下用 `topic start --repo <repo> --topic <topic> --level <quick|standard>` 建立必要状态，已有 active Topic 先核对而不重复创建。standard 核对 current Spec 是否匹配并覆盖 brief：有则交 {{skill-call:my-to-tickets}}；没有则先交 {{skill-call:my-to-spec}}，改变既有定义则正式修订。已确认 quick 且仍满足原低风险准入时交 {{skill-call:my-implement}}，不造 Spec/Ticket；不符合准入则在既有对齐点说明升级原因。传递确认的 brief、来源和验证，不重复访谈；独立设计关口只在 to-spec 的风险触发处执行。下一阶段与止点按[用户决定与授权](references/shared/user-intervention.md)处理，已授权直接调用；跨会话保存[恢复包](references/policies/context-hygiene.md)。`my-to-tickets` 生成完整血缘 Ticket，不借用不匹配 Spec。
 
 读取既有本地 Ticket 时按 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。
 
@@ -81,7 +83,7 @@ disable-model-invocation: true
 1. **收集上下文。** 阅读完整的 Issue 或 PR（正文、评论、标签、作者、日期；PR 还要读 diff）。解析既有分诊记录，避免重新询问已解决的问题。借助项目的领域词汇表探索代码库，遵循该区域的 ADR。对代码库执行两项检查：(a) **冗余性**——按领域概念（而不只是请求的措辞）搜索是否已有请求行为的实现，并报告搜索位置。若已存在，它是“已实现”的 `wontfix`（步骤 5）。(b) **既往拒绝**——阅读 `.out-of-scope/*.md`，并找出与本请求相似的记录。
 2. **提出建议。** 告知维护者类别和状态建议及理由，并给出与请求相关的简要代码库摘要——包括是否已实现。等待指示。
 3. **验证主张。** 在追问前，先检查主张是否成立。对于 Bug，按报告者的步骤复现。对于 PR，确认 diff 是否实现其声称的内容——检出它，并运行相关测试或命令。报告结果：已确认（附代码路径）、失败，或细节不足（这是强烈的 `needs-info` 信号）。已确认的验证会形成更有力的 Agent 简报。
-4. **追问（如需要）。** 若请求还需充实，调用 {{skill-call:my-grilling}} 与 {{skill-call:my-domain-modeling}}，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
+4. **追问（如需要）。** 只有未决需求会改变交付时调用 {{skill-call:my-grilling}}，按其方法解决决定性歧义；只有承重领域术语含义未清时调用 {{skill-call:my-domain-modeling}}。两条件分别判断，不把查证代码事实或普通信息补充变成两方法必调。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
 5. **应用结果：**
    - `ready-for-agent` —— 发布 Agent 简报评论（[AGENT-BRIEF.md](AGENT-BRIEF.md)）。
    - `ready-for-human` —— 使用与 Agent 简报相同的结构，但说明为何不可委派（判断调用、外部访问、设计决策、手动测试）。
@@ -94,7 +96,7 @@ disable-model-invocation: true
 
 ## 快速状态覆盖
 
-若维护者说“将 #42 移到 ready-for-agent”，信任他们并直接应用角色。确认即将执行的操作（角色变更、评论、关闭），然后执行。跳过追问。若在没有追问会话的情况下移至 `ready-for-agent`，询问他们是否想编写 Agent 简报。
+若维护者说“将 #42 移到 ready-for-agent”，信任他们并直接应用角色。核对既有授权覆盖的操作（角色变更、评论、关闭），然后执行；未授权后果按共享授权规则处理。跳过追问。若在没有追问会话的情况下移至 `ready-for-agent`，询问他们是否想编写 Agent 简报。
 
 ## 需要更多信息模板
 

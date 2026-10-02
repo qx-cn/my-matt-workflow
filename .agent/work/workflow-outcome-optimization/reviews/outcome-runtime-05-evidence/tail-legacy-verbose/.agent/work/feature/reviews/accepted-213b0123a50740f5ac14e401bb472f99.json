@@ -1,0 +1,49 @@
+{
+  "manifest": "/private/tmp/outcome-runtime-05-evidence/tail-legacy-verbose/.agent/work/feature/reviews/branch-213b0123a50740f5ac14e401bb472f99/manifest.json",
+  "repair": [],
+  "unit_id": "213b0123a50740f5ac14e401bb472f99",
+  "content_id": "9a419c37e7ebc7999d6e2a56e34aa54f51125bf4c55218339213f30db5f73045",
+  "round": 2,
+  "status": "pass",
+  "reviewer": {
+    "provenance": "independent",
+    "model": "synthetic-fixture"
+  },
+  "result": {
+    "unit_id": "213b0123a50740f5ac14e401bb472f99",
+    "content_id": "9a419c37e7ebc7999d6e2a56e34aa54f51125bf4c55218339213f30db5f73045",
+    "round": 2,
+    "acceptance": [
+      {
+        "id": "feature-01#A1",
+        "text": "independent marker is written"
+      }
+    ],
+    "probes": [
+      "recovery"
+    ],
+    "downstream_tickets": [],
+    "status": "pass",
+    "reviewer": {
+      "provenance": "independent",
+      "model": "synthetic-fixture"
+    },
+    "coverage": [
+      {
+        "target": "feature-01#A1",
+        "result": "ok"
+      },
+      {
+        "target": "recovery",
+        "result": "ok"
+      }
+    ],
+    "findings": []
+  },
+  "review_context": {
+    "provenance": "independent",
+    "model": "synthetic-fixture",
+    "session_id": "fixture-fresh-tail-legacy-verbose"
+  },
+  "review_series": "dcc60707ec574a728e073fbcd210c339"
+}

@@ -1,0 +1,25 @@
+{
+  "identities": [
+    {
+      "root": "/tmp/outcome-review-install-03",
+      "manifest_sha256": "16a6464e629a34bd5fdf762767a55ac67fad17702fc0ae90c4c499731f6f023d",
+      "count": 281,
+      "unique": 281,
+      "bad": []
+    },
+    {
+      "root": "/tmp/outcome-review-final-04",
+      "manifest_sha256": "feaed39c6e610ffd61566f381b404a7d36d49f69b0cbb4190dcc1abda55eb180",
+      "count": 281,
+      "unique": 281,
+      "bad": []
+    }
+  ],
+  "additional_related_comparison": {
+    "tests/test_workflow.py": true,
+    "tests/test_security_hardening.py": true,
+    "tests/test_doctor.py": true,
+    "tools/workflow_lib/fs_safety.py": true,
+    "tools/workflow_lib/release_references.py": true
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "completed": true,
+  "content_id": "c3e1f695c30c1f8535021dfb4d1f8c27f8c7681fa8ff18716b6d2acb154e138a",
+  "head": "410761cd799a55b1d1c79f749307af41c0d1dd12",
+  "commands": [
+    "python3 -B -m unittest discover -s suite -v",
+    "python3 -B -c 'pass'"
+  ],
+  "results": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "suite",
+        "-v"
+      ],
+      "exit_code": 1,
+      "content_id": "c3e1f695c30c1f8535021dfb4d1f8c27f8c7681fa8ff18716b6d2acb154e138a",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": true,
+      "output_complete": false,
+      "output_length": 13097,
+      "unavailable_loader_failures": [
+        "test_00 (unittest.loader._FailedTest.test_00)",
+        "test_01 (unittest.loader._FailedTest.test_01)",
+        "test_02 (unittest.loader._FailedTest.test_02)",
+        "test_03 (unittest.loader._FailedTest.test_03)",
+        "test_04 (unittest.loader._FailedTest.test_04)",
+        "test_05 (unittest.loader._FailedTest.test_05)",
+        "test_06 (unittest.loader._FailedTest.test_06)",
+        "test_07 (unittest.loader._FailedTest.test_07)",
+        "test_08 (unittest.loader._FailedTest.test_08)",
+        "test_09 (unittest.loader._FailedTest.test_09)",
+        "test_10 (unittest.loader._FailedTest.test_10)",
+        "test_11 (unittest.loader._FailedTest.test_11)"
+      ],
+      "content_changed": false,
+      "output_tail": "independent_review05_missing_known_dependency\nModuleNotFoundError: No module named 'independent_review05_missing_known_dependency'\n\n\n======================================================================\nERROR: test_09 (unittest.loader._FailedTest.test_09)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_09\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/suite/test_09.py\", line 1, in <module>\n    import independent_review05_missing_known_dependency\nModuleNotFoundError: No module named 'independent_review05_missing_known_dependency'\n\n\n======================================================================\nERROR: test_10 (unittest.loader._FailedTest.test_10)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_10\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/suite/test_10.py\", line 1, in <module>\n    import independent_review05_missing_known_dependency\nModuleNotFoundError: No module named 'independent_review05_missing_known_dependency'\n\n\n======================================================================\nERROR: test_11 (unittest.loader._FailedTest.test_11)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_11\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\n    module = self._get_module_from_name(name)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\n    __import__(name)\n    ~~~~~~~~~~^^^^^^\n  File \"/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/suite/test_11.py\", line 1, in <module>\n    import independent_review05_missing_known_dependency\nModuleNotFoundError: No module named 'independent_review05_missing_known_dependency'\n\n\n======================================================================\nFAIL: test_known (test_behavior.Visible.test_known)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/suite/test_behavior.py\", line 3, in test_known\n    def test_known(self): self.assertEqual(1,2)\n                          ~~~~~~~~~~~~~~~~^^^^^\nAssertionError: 1 != 2\n\n======================================================================\nFAIL: test_new (test_behavior.Visible.test_new)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-05-evidence/partial-known-verbose/suite/test_behavior.py\", line 4, in test_new\n    def test_new(self): self.assertEqual(4,5)\n                        ~~~~~~~~~~~~~~~~^^^^^\nAssertionError: 4 != 5\n\n----------------------------------------------------------------------\nRan 14 tests in 0.001s\n\nFAILED (failures=2, errors=12)\n",
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failures": [
+        "test_00 (unittest.loader._FailedTest.test_00)",
+        "test_01 (unittest.loader._FailedTest.test_01)",
+        "test_02 (unittest.loader._FailedTest.test_02)",
+        "test_03 (unittest.loader._FailedTest.test_03)",
+        "test_04 (unittest.loader._FailedTest.test_04)",
+        "test_05 (unittest.loader._FailedTest.test_05)",
+        "test_06 (unittest.loader._FailedTest.test_06)",
+        "test_07 (unittest.loader._FailedTest.test_07)",
+        "test_08 (unittest.loader._FailedTest.test_08)",
+        "test_09 (unittest.loader._FailedTest.test_09)",
+        "test_10 (unittest.loader._FailedTest.test_10)",
+        "test_11 (unittest.loader._FailedTest.test_11)",
+        "test_known (test_behavior.Visible.test_known)",
+        "test_new (test_behavior.Visible.test_new)"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "exit_code": 0,
+      "content_id": "c3e1f695c30c1f8535021dfb4d1f8c27f8c7681fa8ff18716b6d2acb154e138a",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 0,
+      "unavailable_loader_failures": [],
+      "content_changed": false,
+      "output_tail": "",
+      "command": "python3 -B -c 'pass'",
+      "failures": []
+    }
+  ],
+  "at": "2026-10-02T14:01:18.563237+00:00",
+  "new_failures": [
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_new (test_behavior.Visible.test_new)"
+    }
+  ],
+  "known_failures": [
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_00 (unittest.loader._FailedTest.test_00)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_01 (unittest.loader._FailedTest.test_01)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_02 (unittest.loader._FailedTest.test_02)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_03 (unittest.loader._FailedTest.test_03)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_04 (unittest.loader._FailedTest.test_04)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_05 (unittest.loader._FailedTest.test_05)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_06 (unittest.loader._FailedTest.test_06)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_07 (unittest.loader._FailedTest.test_07)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_08 (unittest.loader._FailedTest.test_08)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_09 (unittest.loader._FailedTest.test_09)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_10 (unittest.loader._FailedTest.test_10)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_11 (unittest.loader._FailedTest.test_11)"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s suite -v",
+      "failure": "test_known (test_behavior.Visible.test_known)"
+    }
+  ],
+  "unverified": []
+}

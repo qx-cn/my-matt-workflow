@@ -1,6 +1,6 @@
 ---
 name: my-to-spec
-description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段的工作单元被调用。
+description: 从已确认需求或分诊简报与仓库事实生成版本化 Spec，供获准的后续阶段使用。
 ---
 
 遵循[指令权威](references/shared/instruction-authority.md)。
@@ -11,11 +11,11 @@ description: 在 my-grill-with-docs、my-wayfinder 流程中作为指定阶段�
 
 首次分配 spec_id/revision1；修订递增 revision，用 supersedes 指前版，每版新增 Topic 内文件，整合全部修改，不追加“第 N 轮修正”等补丁段落。被替代版本改为 superseded，同一 spec_id 只有一个 current；阅读全文比较有效行为并记修订索引。Topic Spec 是实施边界，不读取或发布长期 Spec。承重决定用[第一性原理推理](references/shared/first-principles-reasoning.md)连接目标、事实、机制、真实替代与可证伪验收；可逆实现细节留给实施。
 
-写清目标、范围、行为、不变量、验证策略及影响结果的未知。作者逐条核实承重现状断言并完成写作自检。篇幅参考上限为 3,000 + 预计 Ticket 数 × 1,000 字符；超出时在开头说明规模或风险理由。承重决定论证只写一到两句，详细推理写 ADR 或 Topic 决定记录。
+写清可追溯用户目标、范围、行为、不变量、验证策略及影响结果的未知。已有确认直接复用；存在影响交付的第二种解释时用有区分力的例子/反例或问题澄清，不能把实现选择反写成用户要求。作者逐条核实承重现状断言并完成写作自检。篇幅参考上限为 3,000 + 预计 Ticket 数 × 1,000 字符；超出时在开头说明规模或风险理由。承重决定论证只写一到两句，详细推理写 ADR 或 Topic 决定记录。
 
-涉及持久状态或存量数据、并发与锁、对外契约（接口、消息、表结构、配置键、错误码）、发布与回滚兼容、改变其他模块既有行为中的任一类，定稿前自动调用 {{skill-call:my-review-design}}，作为拆 Ticket 前唯一独立设计关口。派新上下文审查者，派不出时增强自审并如实记 self。均不涉及时写“未触发设计审查”及理由。遵循[审查循环](references/shared/review-loop.md)的一次全面审查加最多一次复审；挑战和需求语义假设在下一个已有对齐点交用户，裁决写入已决事项，后续不得重开。来源与事实按[产物最终校验](references/shared/artifact-finalization.md)核对，承重未知保持可定位，不润色成确定结论。
+涉及持久状态或存量数据、并发与锁、对外契约（接口、消息、表结构、配置键、错误码）、发布与回滚兼容、改变其他模块既有行为中的任一类，定稿前自动调用 {{skill-call:my-review-design}}，作为拆 Ticket 前唯一独立设计关口。派新上下文审查者，派不出时增强自审并如实记 self。均不涉及时写“未触发设计审查”及理由。遵循[审查循环](references/shared/review-loop.md)的一次全面审查加最多一次复审；挑战和需求语义假设在下一个已有对齐点交用户，裁决写入已决事项，后续不凭偏好重开；新证据推翻事实时核实影响并按共享裁决规则处理。来源与事实按[产物最终校验](references/shared/artifact-finalization.md)核对，承重未知保持可定位，不润色成确定结论。
 
-按[产物存储](references/shared/adapters/artifact-storage.md)保存 Topic specs，再直接调用 {{skill-call:my-to-tickets}}。Spec 与逐 Ticket 行为、依赖、测试命令和边界合并呈现对齐点2；用户确认前不实施，确认后由 to-tickets 直接继续 implement。
+按[产物存储](references/shared/adapters/artifact-storage.md)保存 Topic specs。用户只要求 Spec 时交付并停止；已授权 Ticket 阶段时直接调用 {{skill-call:my-to-tickets}}。Spec 与逐 Ticket 行为、依赖、测试命令和边界合并呈现对齐点2；用户确认前不实施，确认后由 to-tickets 直接继续 implement。
 
 <spec-template>
 
@@ -66,7 +66,7 @@ status: current
 
 说明需要证明什么、可复用的现有 seam 与证据类型。新增 seam 仅在必要时描述，不锁死具体测试代码。
 
-- 什么构成好测试（只测试外部行为，而非实现）；
+- 什么构成足以区分验收成功/失败的证据（稳定行为接口；存储或恢复是契约时补独立验证）；
 - 将测试哪些模块；
 - 测试的先例（即代码库内相似测试）。
 

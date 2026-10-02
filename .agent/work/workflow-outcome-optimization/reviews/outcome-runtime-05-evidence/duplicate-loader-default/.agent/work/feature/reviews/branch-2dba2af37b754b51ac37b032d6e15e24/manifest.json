@@ -1,0 +1,158 @@
+{
+  "unit_id": "2dba2af37b754b51ac37b032d6e15e24",
+  "content_id": "f300222ce23aa7818c6eedc207f8560f8a60be8d5a017dc994bb7d273c2fbe53",
+  "round": 1,
+  "acceptance": [
+    {
+      "id": "feature-01#A1",
+      "text": "independent marker is written"
+    }
+  ],
+  "probes": [
+    "recovery"
+  ],
+  "downstream_tickets": [],
+  "repository": [
+    {
+      "path": "code.txt",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/repository-00000",
+      "sha256": "fd6a97960db35518d9d48758f448af858d5afc7b4d9f0e648c5e3ca18c5c94df",
+      "size": 30,
+      "mode": "100644"
+    },
+    {
+      "path": "mode.txt",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/repository-00001",
+      "sha256": "ffa63583dfa6706b87d284b86b0d693a161e4840aad2c5cf6b5d27c3b9621f7d",
+      "size": 7,
+      "mode": "100644"
+    },
+    {
+      "path": "runner.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/repository-00002",
+      "sha256": "8bbb3f213985a09bcd7c0fd1c88f794a965ad3cafb1a62b4ee42696c2ac520fe",
+      "size": 778,
+      "mode": "100644"
+    }
+  ],
+  "baseline": "57487773254fd1e09600269b605a88e0ead141d1",
+  "topic": "feature",
+  "self_findings": [],
+  "head": "abe147ab35e1c6d851ca3610f46a7b2490061528",
+  "topic_changes": [
+    ".agent/fixture-self.md",
+    ".agent/matt-workflow.md",
+    ".agent/metrics.jsonl",
+    ".agent/work/feature/batches.json",
+    ".agent/work/feature/batches/01.json",
+    ".agent/work/feature/briefings/briefing-feature-01.md",
+    ".agent/work/feature/implementations/feature-01.json",
+    ".agent/work/feature/specs/specs-feature-01.md",
+    ".agent/work/feature/test-baseline.json",
+    ".agent/work/feature/tickets/tickets-feature-01.md",
+    ".agent/work/feature/topic-state.json",
+    "code.txt"
+  ],
+  "repository_files": [
+    "code.txt",
+    "mode.txt",
+    "runner.py"
+  ],
+  "changes": [
+    {
+      "path": "code.txt",
+      "base": {
+        "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/0000-base",
+        "sha256": "3cf367285ce89e09185e05cbe3fdb6187a53d3565c255aadc684db0e488b5ea6",
+        "size": 23,
+        "mode": "100644"
+      },
+      "current": {
+        "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/0000-current",
+        "sha256": "fd6a97960db35518d9d48758f448af858d5afc7b4d9f0e648c5e3ca18c5c94df",
+        "size": 30,
+        "mode": "100644"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/rules.md",
+      "sha256": "159820857410c5345b038b15c2d58e2ffee07a5e973275d8ce25f95e56b181ca",
+      "size": 157,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/specs.md",
+      "sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730",
+      "size": 107,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/review-loop-rules.md",
+      "sha256": "596db997023429167c25e20e6c4a9a68d36b345595546027930c3936613127eb",
+      "size": 7081,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/decided.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/tickets.md",
+      "sha256": "ee8711542f755b41b03c3ea8b53c66cf3e5ba4a7a7d32e7d0dda110f5cf7b6fa",
+      "size": 643,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/impact-declarations.md",
+      "sha256": "cf23d3e0addc7070546cf4f4008cee419a3c5fdf34c679f1cc22f311a8359770",
+      "size": 115,
+      "mode": "100644"
+    },
+    {
+      "path": "code.txt",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/repository-00000",
+      "sha256": "fd6a97960db35518d9d48758f448af858d5afc7b4d9f0e648c5e3ca18c5c94df",
+      "size": 30,
+      "mode": "100644"
+    },
+    {
+      "path": "mode.txt",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/repository-00001",
+      "sha256": "ffa63583dfa6706b87d284b86b0d693a161e4840aad2c5cf6b5d27c3b9621f7d",
+      "size": 7,
+      "mode": "100644"
+    },
+    {
+      "path": "runner.py",
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/repository-00002",
+      "sha256": "8bbb3f213985a09bcd7c0fd1c88f794a965ad3cafb1a62b4ee42696c2ac520fe",
+      "size": 778,
+      "mode": "100644"
+    },
+    {
+      "snapshot_path": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-default/.agent/work/feature/reviews/branch-2dba2af37b754b51ac37b032d6e15e24/self-findings.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "size": 2,
+      "mode": "100644"
+    }
+  ],
+  "rule_map": [
+    {
+      "ticket": "feature-01",
+      "rules": []
+    }
+  ],
+  "review_context": {
+    "provenance": "independent",
+    "model": "synthetic-fixture",
+    "session_id": "fixture-fresh-duplicate-loader-default"
+  },
+  "coverage_targets": [
+    "feature-01#A1",
+    "recovery"
+  ]
+}

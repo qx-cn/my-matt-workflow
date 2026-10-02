@@ -1,0 +1,71 @@
+{
+  "completed": true,
+  "content_id": "176945b772062559f9a4ea7f770006e7c17249201667e6d838033979301ce61d",
+  "head": "6d186b632ed172466b9bac5cef2aa23fc8352452",
+  "commands": [
+    "python3 -B runner.py -v",
+    "python3 -B -c 'pass'"
+  ],
+  "results": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "runner.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "content_id": "176945b772062559f9a4ea7f770006e7c17249201667e6d838033979301ce61d",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": true,
+      "output_complete": true,
+      "output_length": 1371,
+      "unavailable_loader_failures": [
+        "collision (unittest.loader._FailedTest.collision)"
+      ],
+      "dependency_proof_version": 1,
+      "content_changed": false,
+      "output_tail": "collision (unittest.loader._FailedTest.collision) ... ERROR\ncollision (unittest.loader._FailedTest.collision) ... ERROR\ntest_ok (__main__.Visible.test_ok) ... ok\n\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/runner.py\", line 6, in construct\n    import independent_review05_extra_missing_dependency\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\n\n\n======================================================================\nERROR: collision (unittest.loader._FailedTest.collision)\n----------------------------------------------------------------------\nImportError: Failed to import test module: collision\nTraceback (most recent call last):\n  File \"/private/tmp/outcome-runtime-06-r1-evidence/proof-concise-assertion-verbose/runner.py\", line 6, in construct\n    import independent_review05_extra_missing_dependency\nModuleNotFoundError: No module named 'independent_review05_extra_missing_dependency'\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nFAILED (errors=2)\n",
+      "command": "python3 -B runner.py -v",
+      "failures": [
+        "collision (unittest.loader._FailedTest.collision)"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "exit_code": 0,
+      "content_id": "176945b772062559f9a4ea7f770006e7c17249201667e6d838033979301ce61d",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": false,
+      "output_complete": true,
+      "output_length": 0,
+      "unavailable_loader_failures": [],
+      "dependency_proof_version": 1,
+      "content_changed": false,
+      "output_tail": "",
+      "command": "python3 -B -c 'pass'",
+      "failures": []
+    }
+  ],
+  "at": "2026-10-02T14:30:21.570990+00:00",
+  "baseline": "6d186b632ed172466b9bac5cef2aa23fc8352452"
+}

@@ -28,6 +28,8 @@ def metric(unit, outcome, verdict, repo=None):
 def finish(repo, ticket=None, topic=None, notes_file=None):
     repo, config, topic, path, unit, record = impl.load_active(repo, ticket, topic)
     value = frontmatter(path)
+    if impl.definition(repo,path)!=unit['definition']:
+        raise topics.TopicError('definition: 定义已变化；用户确认后 resolve --reopen')
     if value['status'] != 'implementing':
         raise topics.TopicError('finish 只接受 implementing')
     if not impl.tests_passed(repo, unit):

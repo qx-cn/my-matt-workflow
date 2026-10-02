@@ -1,0 +1,22 @@
+[
+  {
+    "original": "/tmp/outcome-runtime-05-proof-extra.py",
+    "preserved": "/tmp/outcome-runtime-06-evidence/preserved-outcome-runtime-05-proof-extra.py",
+    "sha256": "981e8cf6563872fa0cd6c3972e727570f805a4b536afc2a791d2bbd4d43b8799"
+  },
+  {
+    "original": "/tmp/outcome-runtime-05-proof-extra.log",
+    "preserved": "/tmp/outcome-runtime-06-evidence/preserved-outcome-runtime-05-proof-extra.log",
+    "sha256": "0f07cb4486ce4d06ede912ff13bc2bb14a0f4fe6215c43646e49d38924c33467"
+  },
+  {
+    "original": "/tmp/outcome-runtime-05-probes.py",
+    "preserved": "/tmp/outcome-runtime-06-evidence/preserved-outcome-runtime-05-probes.py",
+    "sha256": "78cd4615d37f28b84583ae1ac9fe0ad7cc5eaaab09244828a59fa1d4b0631d0e"
+  },
+  {
+    "original": "/tmp/outcome-review-final-07/prior-findings.md",
+    "preserved": "/tmp/outcome-runtime-06-evidence/preserved-prior-findings.md",
+    "sha256": "026fd71d7167e5e49ad024788c117779286b8010bffc778bf70c63975e2dbc0b"
+  }
+]

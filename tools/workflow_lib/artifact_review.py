@@ -188,11 +188,8 @@ def finalize_artifact_review_snapshot(
             snapshot = Path(str(entry["snapshot_path"]))
             if snapshot.parent.resolve() != directory or not snapshot.is_file():
                 raise ArtifactReviewError("review snapshot inventory 路径无效")
-            content = snapshot.read_bytes()
-            if (
-                len(content) != entry["size"]
-                or hashlib.sha256(content).hexdigest() != entry["sha256"]
-            ):
+            from .evidence import bytes_match
+            if not bytes_match(snapshot,entry["sha256"],entry["size"]):
                 raise ArtifactReviewError("review snapshot bytes 已漂移")
     except OSError as exc:
         raise ArtifactReviewError("无法验证 review snapshot bytes") from exc

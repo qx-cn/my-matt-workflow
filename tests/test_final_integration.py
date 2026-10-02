@@ -1,5 +1,6 @@
 """Final public contracts; behavioral cases use temporary repositories and CLI."""
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -37,7 +38,9 @@ class FinalIntegrationTests(unittest.TestCase):
             for path in (ROOT/root).rglob('*'):
                 if path.is_file() and path.suffix in {'.md','.json','.yaml'}:
                     text = path.read_text()
-                    self.assertFalse([name for name in REMOVED+keys if name in text],str(path))
+                    self.assertFalse([name for name in REMOVED+keys if name != "smoke" and name in text],str(path))
+                    # The retired CLI command differs from an ordinary smoke test.
+                    self.assertIsNone(re.search(r"workflow\.py\s+smoke\b|`smoke`", text), str(path))
 
     def test_artifact_cli_rejects_retired_kinds_and_options(self):
         with tempfile.TemporaryDirectory() as tmp:

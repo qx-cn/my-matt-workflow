@@ -1,0 +1,6 @@
+test_release_bundles_only_applicable_policy_dependency_closure (test_workflow.ReleaseTests.test_release_bundles_only_applicable_policy_dependency_closure) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.613s
+
+OK

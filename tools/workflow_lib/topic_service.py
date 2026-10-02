@@ -318,7 +318,9 @@ def status(repo, topic=None):
         if value['status'] == 'active' and not batch_enabled and metadata.get('status') in {'implementing', 'needs-user'}:
             # Reuse Ticket recovery gates rather than guessing at Topic completion.
             try:
-                command = ticket_implementation.status(repo, ticket=identifier, topic=topic)['next_command']
+                implementation_status = ticket_implementation.status(repo, ticket=identifier, topic=topic)
+                command=implementation_status['next_command']
+                decisions_needed.extend(implementation_status['decisions_needed'])
             except (TopicError, OSError) as exc:
                 ticket_state['recovery_error'] = str(exc)
                 command = f'workflow.py implement status --repo {shlex.quote(str(repo))} --ticket {identifier}'
@@ -334,15 +336,17 @@ def status(repo, topic=None):
         known_issues.extend(branch.get('known_issues', []))
         latest_findings = branch.get('reviews', [{}])[-1].get('result', {}).get('findings', []) if branch.get('reviews') else []
         advisories.extend(f for f in latest_findings if f.get('severity') == 'advisory')
-        if branch.get('status') == 'needs-user' and value['status'] != 'archived':
+        from .branch_review import acceptance_current
+        accepted_current=acceptance_current(repo,branch)
+        if branch.get('status') == 'needs-user' and value['status'] != 'archived' and not accepted_current:
             decisions_needed.extend(dict(finding=f, decision='请决定修订 Spec、接受风险或按原 Spec 继续') for f in latest_findings if f.get('view') == 'spec-challenge')
-        if branch.get('status') == 'needs-user' and value['status'] != 'archived':
+        if branch.get('status') == 'needs-user' and value['status'] != 'archived' and not accepted_current:
             command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --branch --topic {topic} --accept --reason '<理由>'"
     if batch_enabled and value['status'] != 'archived':
         pending_batches = [b for b in batches.read(repo,topic)['batches'] if b['status'] != 'closed']
         baseline_file=path/'test-baseline.json'
         if baseline_file.exists():
-            unverified=[dict(command=r['command'],note='基线环境缺失，无法验证') for r in json.loads(baseline_file.read_text())['results'] if r['unavailable']]
+            unverified=[dict(command=r['command'],note=batches.baseline_gap(r)[1]) for r in json.loads(baseline_file.read_text())['results'] if batches.baseline_gap(r)]
         if pending_batches:
             batch_status = batches.status(repo,topic)
             command = batch_status['next_command']
@@ -351,7 +355,11 @@ def status(repo, topic=None):
     return {"topic": topic, **value, "advisories": advisories, "known_issues": known_issues,
             "decisions_needed": decisions_needed, "unverified": unverified,
             "batch_status":batch_status, "tickets": ticket_states,
-            "branch_review": {'status':branch['status'],'stop_reason':branch.get('stop_reason'),'rounds_used':len(branch['reviews'])} if branch else None,
+            "branch_review": {'status':'accepted' if accepted_current else branch['status'],
+                              'stop_reason':None if accepted_current else branch.get('stop_reason'),
+                              'historical_stop_reason':branch.get('stop_reason') if accepted_current else None,
+                              'rounds_used':len(branch['reviews'])} if branch else None,
+            "inputs_needed":batch_status.get('inputs_needed',[]) if batch_status else [],
             "next_command": command}
 
 
@@ -391,7 +399,12 @@ def check_summary(path, quick):
     text = summary.read_text()
     sections = {title for title, _ in summary_headings(text)}
     from .batches import SELF_SECTIONS
-    missing = set(HEADINGS + (SELF_SECTIONS if quick else ())) - sections
+    if quick:
+        from .ticket_implementation import section_text
+        groups=(('验收证据','验收对照','测试结果'),('影响与风险','影响面','对抗检查'),('未验证项','已知缺口'))
+        missing={names[0] for names in groups if not any(section_text(text,name) for name in names)}
+    else:
+        missing = set(HEADINGS) - sections
     if missing:
         raise TopicError(f"交付摘要缺少章节：{', '.join(sorted(missing))}")
     return summary
@@ -477,13 +490,13 @@ def complete(repo, topic=None, accepted_reason=None, known_issues=None):
         before = content_id(repo)
         value["test_runs"] = value.get("test_runs", 0) + 1
         (path / STATE_FILE).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
-        try:
-            result = subprocess.run(shlex.split(command), cwd=repo, capture_output=True, text=True)
-        except OSError as exc:
-            raise TopicError(f"测试命令无法执行：{command}：{exc}") from exc
-        if result.returncode:
-            raise TopicError(f"测试失败：{command}\n退出码：{result.returncode}\n{(result.stdout + result.stderr)[-4000:]}")
-        if content_id(repo) != before:
+        from .evidence import execute
+        observation,_ = execute(repo,shlex.split(command))
+        value.setdefault('test_observations',[]).append(dict(observation,command=command,at=now()))
+        (path / STATE_FILE).write_text(json.dumps(value,ensure_ascii=False,indent=2)+"\n")
+        if observation['exit_code']:
+            raise TopicError(f"测试失败：{command}\n退出码：{observation['exit_code']}\n{observation['output_tail']}")
+        if observation['content_changed']:
             raise TopicError(f"测试改变了内容：{command}；请检查后重新运行 topic complete")
     original_summary = summary.read_bytes() if summary else None
     original_branch = (path / "branch-review.json").read_bytes() if multi else None
@@ -515,7 +528,8 @@ def complete(repo, topic=None, accepted_reason=None, known_issues=None):
         if quick and not tests:
             text = summary.read_text()
             lines = text.splitlines()
-            index = next(index for title, index in summary_headings(text) if title == "测试结果")
+            index = next((index for title,index in summary_headings(text) if title in {'测试结果','验收证据','验收对照','未验证项','已知缺口'}),None)
+            if index is None:raise TopicError('缺少可披露未配置测试的 quick 证据章节')
             lines[index] += "\n\n未配置测试"
             summary.write_text("\n".join(lines) + "\n")
         if accepted_reason is not None:

@@ -1,0 +1,87 @@
+test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) ... 
+  test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=False, verbose='') ... FAIL
+  test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=True, verbose='') ... FAIL
+  test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (verbose='') ... ERROR
+  test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=False, verbose=' -v') ... FAIL
+  test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=True, verbose=' -v') ... FAIL
+  test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (verbose=' -v') ... ERROR
+test_partial_loader_identity_cannot_hide_new_import_assertion (test_batches.BatchTests.test_partial_loader_identity_cannot_hide_new_import_assertion) ... 
+  test_partial_loader_identity_cannot_hide_new_import_assertion (test_batches.BatchTests.test_partial_loader_identity_cannot_hide_new_import_assertion) (verbose='') ... FAIL
+  test_partial_loader_identity_cannot_hide_new_import_assertion (test_batches.BatchTests.test_partial_loader_identity_cannot_hide_new_import_assertion) (verbose=' -v') ... FAIL
+
+======================================================================
+ERROR: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 320, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertFalse(row['execution_observed']);self.assertFalse(row['output_complete'])
+                     ~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'execution_observed'
+
+======================================================================
+ERROR: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 320, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertFalse(row['execution_observed']);self.assertFalse(row['output_complete'])
+                     ~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'execution_observed'
+
+======================================================================
+FAIL: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=False, verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 314, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '新增失败' not found in 'HEAD 已变化；请对变化部分复审\n'
+
+======================================================================
+FAIL: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=True, verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 314, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '新增失败' not found in 'HEAD 已变化；请对变化部分复审\n'
+
+======================================================================
+FAIL: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=False, verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 314, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '新增失败' not found in 'HEAD 已变化；请对变化部分复审\n'
+
+======================================================================
+FAIL: test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure (test_batches.BatchTests.test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure) (legacy_unavailable=True, verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 314, in test_truncated_loader_legacy_baseline_does_not_hide_real_import_failure
+    self.assertIn('新增失败',self.cli('batch','close','--topic','feature',ok=False).stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '新增失败' not found in 'HEAD 已变化；请对变化部分复审\n'
+
+======================================================================
+FAIL: test_partial_loader_identity_cannot_hide_new_import_assertion (test_batches.BatchTests.test_partial_loader_identity_cannot_hide_new_import_assertion) (verbose='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 339, in test_partial_loader_identity_cannot_hide_new_import_assertion
+    self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_partial_loader_identity_cannot_hide_new_import_assertion (test_batches.BatchTests.test_partial_loader_identity_cannot_hide_new_import_assertion) (verbose=' -v')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/my-matt-outcome-runtime/tests/test_batches.py", line 339, in test_partial_loader_identity_cannot_hide_new_import_assertion
+    self.assertTrue(current['new_failures']);self.assertFalse(current['known_failures'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 15.175s
+
+FAILED (failures=6, errors=2)

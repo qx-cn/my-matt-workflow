@@ -1,0 +1,61 @@
+{
+  "review_findings": [
+    "F1",
+    "F2",
+    "F3"
+  ],
+  "patch": "/tmp/outcome-install-repair.patch",
+  "base": "/tmp/outcome-install-repair-base",
+  "hashes": {
+    "tools/workflow_lib/installer.py": "9a1df65ebfb2c51379be51150299049cf42eddd234d63b39432ac7396bc76383",
+    "tools/workflow_lib/doctor.py": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+    "tests/test_install_simplification.py": "670217c5d5179e6b79b037b2d3b16a6aeaba9728e7df9314ad8125bd4447c6a8"
+  },
+  "results": {
+    "red": {
+      "tests": 17,
+      "failing_subcases": 6,
+      "exit_code": 1
+    },
+    "new_installer": {
+      "tests": 20,
+      "seconds": 4.165,
+      "exit_code": 0
+    },
+    "original_security": {
+      "tests": 21,
+      "exit_code": 0
+    },
+    "original_installer": {
+      "tests": 16,
+      "seconds": 0.154,
+      "exit_code": 0
+    },
+    "packaging": {
+      "tests": 13,
+      "exit_code": 0
+    },
+    "doctor": {
+      "tests": 2,
+      "exit_code": 0
+    }
+  },
+  "logs": [
+    "/tmp/outcome-install-repair-red.log",
+    "/tmp/outcome-install-repair-green.log",
+    "/tmp/outcome-install-repair-security.log",
+    "/tmp/outcome-install-repair-original-installer.log",
+    "/tmp/outcome-install-repair-packaging.log",
+    "/tmp/outcome-install-repair-doctor.log"
+  ],
+  "fixes": {
+    "F1": "All release generations derive host projected inventory and compare actual runtime before current, staging and final receipt.",
+    "F2": "Before destructive restoration, prove every old backup or surviving old target against old release/receipt and runtime. Newly journal-bound prior receipt digest blocks receipt rewriting; supported old v4 uses actual verified release and v2 receipt inventory/manifest binding. No whole-transaction digest gate. Committed cleanup verifies actual committed install.",
+    "F3": "Reject runtime symlinks/nonregular paths and invalid entry/host location before inventory comparison; reject unsafe recovery tree paths before mutation."
+  },
+  "boundaries": [
+    "No real host/release/Topic mutation.",
+    "Full suite and independent re-review are root integration checks.",
+    "Optional previous_state_sha256 journal field is read by new installer; old v4 without it remains supported with direct old receipt/release proof."
+  ]
+}

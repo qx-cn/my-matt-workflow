@@ -1,0 +1,277 @@
+{
+  "id": "01",
+  "tickets": [
+    "feature-01"
+  ],
+  "status": "reviewing",
+  "reviews": [
+    {
+      "manifest": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-verbose/.agent/work/feature/reviews/branch-b2f7187c2989405bb8a8ff15875b9113/manifest.json",
+      "repair": [],
+      "unit_id": "b2f7187c2989405bb8a8ff15875b9113",
+      "content_id": "f300222ce23aa7818c6eedc207f8560f8a60be8d5a017dc994bb7d273c2fbe53",
+      "round": 1,
+      "status": "pass",
+      "reviewer": {
+        "provenance": "independent",
+        "model": "synthetic-fixture"
+      },
+      "result": {
+        "unit_id": "b2f7187c2989405bb8a8ff15875b9113",
+        "content_id": "f300222ce23aa7818c6eedc207f8560f8a60be8d5a017dc994bb7d273c2fbe53",
+        "round": 1,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "independent marker is written"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "status": "pass",
+        "reviewer": {
+          "provenance": "independent",
+          "model": "synthetic-fixture"
+        },
+        "coverage": [
+          {
+            "target": "feature-01#A1",
+            "result": "ok"
+          },
+          {
+            "target": "recovery",
+            "result": "ok"
+          }
+        ],
+        "findings": []
+      },
+      "review_context": {
+        "provenance": "independent",
+        "model": "synthetic-fixture",
+        "session_id": "fixture-fresh-duplicate-loader-verbose"
+      },
+      "review_series": "b2f7187c2989405bb8a8ff15875b9113"
+    },
+    {
+      "manifest": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-verbose/.agent/work/feature/reviews/branch-fefec506a1064669a201dc0eb40fad78/manifest.json",
+      "repair": [],
+      "unit_id": "fefec506a1064669a201dc0eb40fad78",
+      "content_id": "c1257a991c27bf97a8a20702f8ef2b334b88bb3de53d61e0608fd5b4438bbc20",
+      "round": 2,
+      "status": "pass",
+      "reviewer": {
+        "provenance": "independent",
+        "model": "synthetic-fixture"
+      },
+      "result": {
+        "unit_id": "fefec506a1064669a201dc0eb40fad78",
+        "content_id": "c1257a991c27bf97a8a20702f8ef2b334b88bb3de53d61e0608fd5b4438bbc20",
+        "round": 2,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "independent marker is written"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "status": "pass",
+        "reviewer": {
+          "provenance": "independent",
+          "model": "synthetic-fixture"
+        },
+        "coverage": [
+          {
+            "target": "feature-01#A1",
+            "result": "ok"
+          },
+          {
+            "target": "recovery",
+            "result": "ok"
+          }
+        ],
+        "findings": []
+      },
+      "review_context": {
+        "provenance": "independent",
+        "model": "synthetic-fixture",
+        "session_id": "fixture-fresh-duplicate-loader-verbose"
+      },
+      "review_series": "b2f7187c2989405bb8a8ff15875b9113"
+    },
+    {
+      "manifest": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-verbose/.agent/work/feature/reviews/branch-f2ae765c8ab4401287e8b5123c996472/manifest.json",
+      "repair": [],
+      "unit_id": "f2ae765c8ab4401287e8b5123c996472",
+      "content_id": "7d77bb1d32151b8dcb6d6b0cdcebd8a940ff15959cfb62ea20b538ed1b5882d0",
+      "round": 3,
+      "status": "pass",
+      "reviewer": {
+        "provenance": "independent",
+        "model": "synthetic-fixture"
+      },
+      "result": {
+        "unit_id": "f2ae765c8ab4401287e8b5123c996472",
+        "content_id": "7d77bb1d32151b8dcb6d6b0cdcebd8a940ff15959cfb62ea20b538ed1b5882d0",
+        "round": 3,
+        "acceptance": [
+          {
+            "id": "feature-01#A1",
+            "text": "independent marker is written"
+          }
+        ],
+        "probes": [
+          "recovery"
+        ],
+        "downstream_tickets": [],
+        "status": "pass",
+        "reviewer": {
+          "provenance": "independent",
+          "model": "synthetic-fixture"
+        },
+        "coverage": [
+          {
+            "target": "feature-01#A1",
+            "result": "ok"
+          },
+          {
+            "target": "recovery",
+            "result": "ok"
+          }
+        ],
+        "findings": []
+      },
+      "review_context": {
+        "provenance": "independent",
+        "model": "synthetic-fixture",
+        "session_id": "fixture-fresh-duplicate-loader-verbose"
+      },
+      "review_series": "b2f7187c2989405bb8a8ff15875b9113"
+    }
+  ],
+  "baseline": "7b36bfea1ba9d63fa50f86c49f1bdd1f899ed810",
+  "topic": "feature",
+  "implementation_session_id": "dc30b1011b3143d59661001309ae2d27",
+  "submitted": {
+    "feature-01": {
+      "head": "cd3f50ef10549144ff867bf5907a2e2a96062048",
+      "at": "2026-10-02T14:01:20.389085+00:00"
+    }
+  },
+  "topic_changes": [
+    ".agent/fixture-self.md",
+    ".agent/matt-workflow.md",
+    ".agent/metrics.jsonl",
+    ".agent/work/feature/batches.json",
+    ".agent/work/feature/batches/01.json",
+    ".agent/work/feature/briefings/briefing-feature-01.md",
+    ".agent/work/feature/implementations/feature-01.json",
+    ".agent/work/feature/specs/specs-feature-01.md",
+    ".agent/work/feature/test-baseline.json",
+    ".agent/work/feature/tickets/tickets-feature-01.md",
+    ".agent/work/feature/topic-state.json",
+    "code.txt",
+    "mode.txt"
+  ],
+  "definition": {
+    "feature-01": {
+      "ticket": {
+        "metadata": {
+          "id": "feature-01",
+          "title": "Independent marker",
+          "ticket_kind": "implementation",
+          "spec_id": "feature",
+          "spec_revision": "1",
+          "spec_ref": ".agent/work/feature/specs/specs-feature-01.md",
+          "blocked_by": [],
+          "sequence": "1",
+          "test_commands": [
+            "python3 -B -c 'pass'"
+          ],
+          "rule_sources": [
+            ".agent/work/feature/specs/specs-feature-01.md"
+          ],
+          "rule_scope": [
+            "code.txt"
+          ],
+          "rule_constraints": [
+            "write the marker"
+          ],
+          "rule_conflicts": [],
+          "review_probes": [
+            "recovery"
+          ],
+          "execution_agent": "auto",
+          "supersedes_ticket": [],
+          "compensates": [],
+          "tags": []
+        },
+        "body": "## 要构建什么\nWrite marker\n## 适用规则与影响区域\ncode.txt\n## 验收标准\n- [ ] independent marker is written"
+      },
+      "spec_sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730"
+    }
+  },
+  "first_review_volume": 2,
+  "active_review": {
+    "manifest": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-verbose/.agent/work/feature/reviews/branch-f2ae765c8ab4401287e8b5123c996472/manifest.json",
+    "manifest_sha256": "2b57c81c46758aaa5e9c15079873893b2a72cbdca2d9d3664a148c3d8abe0afc",
+    "snapshot_dir": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-verbose/.agent/work/feature/reviews/branch-f2ae765c8ab4401287e8b5123c996472",
+    "result_file": "/private/tmp/outcome-runtime-05-evidence/duplicate-loader-verbose/.agent/work/feature/reviews/result-f2ae765c8ab4401287e8b5123c996472.json",
+    "definition": {
+      "feature-01": {
+        "ticket": {
+          "metadata": {
+            "id": "feature-01",
+            "title": "Independent marker",
+            "ticket_kind": "implementation",
+            "spec_id": "feature",
+            "spec_revision": "1",
+            "spec_ref": ".agent/work/feature/specs/specs-feature-01.md",
+            "blocked_by": [],
+            "sequence": "1",
+            "test_commands": [
+              "python3 -B -c 'pass'"
+            ],
+            "rule_sources": [
+              ".agent/work/feature/specs/specs-feature-01.md"
+            ],
+            "rule_scope": [
+              "code.txt"
+            ],
+            "rule_constraints": [
+              "write the marker"
+            ],
+            "rule_conflicts": [],
+            "review_probes": [
+              "recovery"
+            ],
+            "execution_agent": "auto",
+            "supersedes_ticket": [],
+            "compensates": [],
+            "tags": []
+          },
+          "body": "## 要构建什么\nWrite marker\n## 适用规则与影响区域\ncode.txt\n## 验收标准\n- [ ] independent marker is written"
+        },
+        "spec_sha256": "813b9160821f30092a7f20e0568feaf767a24e725966fe983fb4cd2207128730"
+      }
+    },
+    "config": {
+      "schema_version": 2,
+      "task_backend": "local",
+      "agent_directory_mode": "shared",
+      "default_base_branch": "main",
+      "test_commands": [
+        "python3 -B runner.py -v",
+        "python3 -B -c 'pass'"
+      ],
+      "standards_sources": [],
+      "domain_sources": [],
+      "default_execution_agent": "auto",
+      "assurance_level": "standard"
+    }
+  }
+}

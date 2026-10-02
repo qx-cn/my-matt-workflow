@@ -1,0 +1,127 @@
+{
+  "independent_review": "ordinary frozen source; not product runtime receipts",
+  "blocking_count": 17,
+  "findings": [
+    {
+      "id": "install-F1",
+      "source": "reviews/outcome-review-install-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-install-02.md"
+    },
+    {
+      "id": "install-F2",
+      "source": "reviews/outcome-review-install-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-install-02.md"
+    },
+    {
+      "id": "install-F3",
+      "source": "reviews/outcome-review-install-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-install-02.md"
+    },
+    {
+      "id": "runtime-R1",
+      "source": "reviews/outcome-review-runtime-01.md",
+      "status": "fixed-and-independently-rechecked; related startup findings separately repaired",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-02.md"
+    },
+    {
+      "id": "runtime-R2",
+      "source": "reviews/outcome-review-runtime-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-02.md"
+    },
+    {
+      "id": "runtime-R3",
+      "source": "reviews/outcome-review-runtime-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-02.md"
+    },
+    {
+      "id": "runtime-R4",
+      "source": "reviews/outcome-review-runtime-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-02.md"
+    },
+    {
+      "id": "runtime-R5",
+      "source": "reviews/outcome-review-runtime-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-02.md"
+    },
+    {
+      "id": "instructions-F1",
+      "source": "reviews/outcome-review-instructions-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-instructions-02.md"
+    },
+    {
+      "id": "instructions-F2",
+      "source": "reviews/outcome-review-instructions-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-instructions-02.md"
+    },
+    {
+      "id": "instructions-F3",
+      "source": "reviews/outcome-review-instructions-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-instructions-02.md"
+    },
+    {
+      "id": "instructions-F4",
+      "source": "reviews/outcome-review-instructions-01.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-instructions-02.md"
+    },
+    {
+      "id": "install-02-R1",
+      "source": "reviews/outcome-review-install-02.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-install-03.md"
+    },
+    {
+      "id": "runtime-02-R1-startup",
+      "source": "reviews/outcome-review-runtime-02.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-03.md"
+    },
+    {
+      "id": "install-03-R2-recorded-root",
+      "source": "reviews/outcome-review-install-03.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-install-04.md"
+    },
+    {
+      "id": "runtime-04-R1-tail-legacy",
+      "source": "reviews/outcome-review-runtime-04.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-05.md",
+      "variants": "truncated legacy; passing + loader Assertion; duplicate full blocks"
+    },
+    {
+      "id": "runtime-05-R1-loader-proof-concise",
+      "source": "reviews/outcome-review-runtime-05.md",
+      "status": "fixed-and-independently-rechecked",
+      "completion_source": "direct-engineering",
+      "review": "reviews/outcome-review-runtime-06.md"
+    }
+  ],
+  "open_blocking_count": 0
+}

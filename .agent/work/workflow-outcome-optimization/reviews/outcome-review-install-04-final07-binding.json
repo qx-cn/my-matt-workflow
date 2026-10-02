@@ -1,0 +1,372 @@
+{
+  "kind": "limited-file-identity-binding",
+  "status": "bound",
+  "review_report": {
+    "path": "/tmp/outcome-review-install-04.md",
+    "sha256": "8e492cf511b1dc32864a44d5412d8422ef28c305a62baf66993552790a9d5df2",
+    "matches_final06_binding": true,
+    "unchanged": true
+  },
+  "prior_binding": {
+    "path": "/tmp/outcome-review-install-04-final06-binding.json",
+    "sha256": "fb86fa4a91dd445fcfc5ed93ec24370ddd75806910f17eaf08bc4bde42dadd70",
+    "unchanged": true,
+    "bound_file_count": 9
+  },
+  "original_review_identity": {
+    "path": "/tmp/outcome-review-install-04-identity-end.json",
+    "sha256": "24902917be40df387703839da8fe965737d2b997fd87f0749d183c86f9ca47e9",
+    "final05_manifest_matches": true
+  },
+  "roots": {
+    "final05": {
+      "path": "/tmp/outcome-review-final-05",
+      "manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+      "expected_manifest_sha256": "4cc4bce59526ea168f0b7f75eebe6b07b595bfd080e6091619561826e956ad03",
+      "expected_manifest_matches": true,
+      "manifest_entry_count": 281,
+      "manifest_unique_paths": 281,
+      "full_manifest_file_hash_verification": {
+        "verified": 281,
+        "mismatches": []
+      },
+      "start_tree_sha256": "4bef8bd62d540ce74b47faa8132361a3156747b4f5183267cfe38216a071e0a4",
+      "snapshot_entry_count": 426,
+      "end_tree_sha256": "4bef8bd62d540ce74b47faa8132361a3156747b4f5183267cfe38216a071e0a4",
+      "whole_frozen_tree_unchanged_from_start": true
+    },
+    "final06": {
+      "path": "/tmp/outcome-review-final-06",
+      "manifest_sha256": "663a55c183586d85c23f323473b8fc943e8b53558516e688ca11b947349ea187",
+      "expected_manifest_sha256": "663a55c183586d85c23f323473b8fc943e8b53558516e688ca11b947349ea187",
+      "expected_manifest_matches": true,
+      "manifest_entry_count": 281,
+      "manifest_unique_paths": 281,
+      "full_manifest_file_hash_verification": {
+        "verified": 281,
+        "mismatches": []
+      },
+      "start_tree_sha256": "27ed9753921697369d319f20e209436672715e525e1fdfd26e224e4c61913187",
+      "snapshot_entry_count": 426,
+      "end_tree_sha256": "27ed9753921697369d319f20e209436672715e525e1fdfd26e224e4c61913187",
+      "whole_frozen_tree_unchanged_from_start": true
+    },
+    "final07": {
+      "path": "/tmp/outcome-review-final-07",
+      "manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+      "expected_manifest_sha256": "0f7c4296a473ec1df31e3e61f87d8a861aa2ef6eaaa904a46c4c85ae4ecd3eb1",
+      "expected_manifest_matches": true,
+      "manifest_entry_count": 281,
+      "manifest_unique_paths": 281,
+      "full_manifest_file_hash_verification": {
+        "verified": 281,
+        "mismatches": []
+      },
+      "start_tree_sha256": "864269e235363a4d6e9fecd6f6acc5af30fde969ba5577e4036be9ad76d021f0",
+      "snapshot_entry_count": 426,
+      "end_tree_sha256": "864269e235363a4d6e9fecd6f6acc5af30fde969ba5577e4036be9ad76d021f0",
+      "whole_frozen_tree_unchanged_from_start": true
+    }
+  },
+  "compared_file_count": 9,
+  "all_requested_files_byte_for_byte_equal_final05_final06_final07": true,
+  "files": [
+    {
+      "path": "tools/workflow_lib/installer.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tools/workflow_lib/installer.py",
+        "size_bytes": 54324,
+        "sha256": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tools/workflow_lib/installer.py",
+        "size_bytes": 54324,
+        "sha256": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tools/workflow_lib/installer.py",
+        "size_bytes": 54324,
+        "sha256": "178dce96f42fe472edb8fca63d0762e0217b068b9913aaaed629eb799f6c35a2",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tools/workflow_lib/doctor.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tools/workflow_lib/doctor.py",
+        "size_bytes": 4945,
+        "sha256": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tools/workflow_lib/doctor.py",
+        "size_bytes": 4945,
+        "sha256": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tools/workflow_lib/doctor.py",
+        "size_bytes": 4945,
+        "sha256": "705bc8c84f94c08188bc563b919e0fd98a0aaf9ddb57310674c04c3520484fc3",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tools/workflow_lib/release.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tools/workflow_lib/release.py",
+        "size_bytes": 39518,
+        "sha256": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tools/workflow_lib/release.py",
+        "size_bytes": 39518,
+        "sha256": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tools/workflow_lib/release.py",
+        "size_bytes": 39518,
+        "sha256": "808b099e83241cc700dfb872efede45adf1ad715857a427b4708e8187fd91e0b",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tools/workflow_lib/projection.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tools/workflow_lib/projection.py",
+        "size_bytes": 4705,
+        "sha256": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tools/workflow_lib/projection.py",
+        "size_bytes": 4705,
+        "sha256": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tools/workflow_lib/projection.py",
+        "size_bytes": 4705,
+        "sha256": "9cfe2e23d53a8860657b0788bb97215074acc17664ff20dd4d30f7437001b870",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tools/workflow.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tools/workflow.py",
+        "size_bytes": 34572,
+        "sha256": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tools/workflow.py",
+        "size_bytes": 34572,
+        "sha256": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tools/workflow.py",
+        "size_bytes": 34572,
+        "sha256": "465272a9da55de436df4a7562aff5c3e065e5ec97d00df3c8687e3d48eba4296",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tests/test_install_simplification.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tests/test_install_simplification.py",
+        "size_bytes": 36858,
+        "sha256": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tests/test_install_simplification.py",
+        "size_bytes": 36858,
+        "sha256": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tests/test_install_simplification.py",
+        "size_bytes": 36858,
+        "sha256": "e0b8c23d8e5d58f6dfb29301a2780b6e99af1321c04c3720531aefb1f1300fdd",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tests/test_security_hardening.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tests/test_security_hardening.py",
+        "size_bytes": 23085,
+        "sha256": "edf421fb0aaf4279fc7584b78713fb63aedee5be221bdd1715e23a112232cd6d",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tests/test_security_hardening.py",
+        "size_bytes": 23085,
+        "sha256": "edf421fb0aaf4279fc7584b78713fb63aedee5be221bdd1715e23a112232cd6d",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tests/test_security_hardening.py",
+        "size_bytes": 23085,
+        "sha256": "edf421fb0aaf4279fc7584b78713fb63aedee5be221bdd1715e23a112232cd6d",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tests/test_doctor.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tests/test_doctor.py",
+        "size_bytes": 2391,
+        "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tests/test_doctor.py",
+        "size_bytes": 2391,
+        "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tests/test_doctor.py",
+        "size_bytes": 2391,
+        "sha256": "0924cef0d8a5bec7413f448270c5d76201b58d6596b2f60ba523e280f75b51b9",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    },
+    {
+      "path": "tools/workflow_lib/fs_safety.py",
+      "final05": {
+        "absolute_path": "/tmp/outcome-review-final-05/tools/workflow_lib/fs_safety.py",
+        "size_bytes": 11363,
+        "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final06": {
+        "absolute_path": "/tmp/outcome-review-final-06/tools/workflow_lib/fs_safety.py",
+        "size_bytes": 11363,
+        "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+        "matches_manifest": true,
+        "matches_prior_binding": true
+      },
+      "final07": {
+        "absolute_path": "/tmp/outcome-review-final-07/tools/workflow_lib/fs_safety.py",
+        "size_bytes": 11363,
+        "sha256": "9e647129421bf428f97dbf45400665222d85872edfebca02164af9562b06c4c9",
+        "matches_manifest": true,
+        "matches_prior_binding": null
+      },
+      "byte_for_byte_equal_all_three": true
+    }
+  ],
+  "conclusion": "原 final05 安装报告的 R2 限定结论，经 final06 binding 身份复核，适用于 final07 中这 9 个逐字节相同的相关文件。仅转移相关相同文件的原限定结论，不形成 final07 全体内容或新测试通过结论。",
+  "manifest_declared_differences_outside_binding": {
+    "final05_to_final07": [
+      {
+        "path": "tests/test_batches.py",
+        "earlier_manifest_sha256": "448df5aec041fcda84bb2f564a721ed33a39bfcd11ef2bee7cf23a0e0ffcd544",
+        "final07_manifest_sha256": "c8e3b7789f7e5145556155e813ee2782e0e9ac506246677671e3b2fd639bd58d"
+      },
+      {
+        "path": "tools/workflow_lib/batches.py",
+        "earlier_manifest_sha256": "c9ac620ede26a1ff193effb5d13d1f795335d73ed54f8c4576e0dafc778c9d1e",
+        "final07_manifest_sha256": "d82b07f6955a49ba6e5e074acde93db75e3851ebe3c6c5729845be8aa4645949"
+      },
+      {
+        "path": "tools/workflow_lib/evidence.py",
+        "earlier_manifest_sha256": "74f52c48c1dfa40d28ef69b4e2bc00fc2fffb5199cf67e9f2008867df3722119",
+        "final07_manifest_sha256": "0a5e4165d70ac7fee507ca6d224329c78f5068441aa51d5708d6ae442ba4206b"
+      }
+    ],
+    "final06_to_final07": [
+      {
+        "path": "tests/test_batches.py",
+        "earlier_manifest_sha256": "806ec771fa7f6d76709b3d55f24c52b9c94af5579b783ee23fd3126141b95d9b",
+        "final07_manifest_sha256": "c8e3b7789f7e5145556155e813ee2782e0e9ac506246677671e3b2fd639bd58d"
+      },
+      {
+        "path": "tools/workflow_lib/batches.py",
+        "earlier_manifest_sha256": "cf24cd1d39ade17e753eb2c5f6d427a9df158df426aa94b13947debb616eed3b",
+        "final07_manifest_sha256": "d82b07f6955a49ba6e5e074acde93db75e3851ebe3c6c5729845be8aa4645949"
+      },
+      {
+        "path": "tools/workflow_lib/evidence.py",
+        "earlier_manifest_sha256": "234cd85c82c5830be90c27358f6de401e431da1efe9367088c3f612483b715ad",
+        "final07_manifest_sha256": "0a5e4165d70ac7fee507ca6d224329c78f5068441aa51d5708d6ae442ba4206b"
+      }
+    ]
+  },
+  "excluded_changes_statement": "不覆盖用户所称 runtime 三文件变化；清单差异仅为内容身份记录，没有审查这些变化的实现、语义或测试结果。冻结树完整性取样读取其字节以核验开始/结束不变，不构成源码审查。",
+  "scope": {
+    "tests_run": false,
+    "suite_run": false,
+    "matrix_run": false,
+    "new_review_performed": false,
+    "product_code_imported_or_executed": false,
+    "main_repository_read": false,
+    "original_report_modified": false,
+    "prior_binding_modified": false,
+    "source_modified": false,
+    "full_frozen_trees_start_end_compared": [
+      "final05",
+      "final06",
+      "final07"
+    ],
+    "tree_comparison_includes": [
+      "relative path set",
+      "lstat type",
+      "permission mode",
+      "regular file size and SHA256",
+      "symlink target"
+    ],
+    "tree_comparison_excludes": [
+      "timestamps",
+      "inode identity",
+      "ACL/xattr",
+      "crash durability"
+    ]
+  },
+  "execution": {
+    "shell_login": false,
+    "python_invocation": "python3 -B",
+    "python_bytecode_disabled": true
+  }
+}

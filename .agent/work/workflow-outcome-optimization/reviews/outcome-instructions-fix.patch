@@ -1,0 +1,261 @@
+diff --git a/composition/manifest.json b/composition/manifest.json
+--- a/composition/manifest.json
++++ b/composition/manifest.json
+@@ -12,12 +12,12 @@
+       {
+         "skill": "my-grilling",
+         "kind": "method",
+-        "when": "always"
++        "when": "missing-load-bearing-requirements"
+       },
+       {
+         "skill": "my-domain-modeling",
+         "kind": "method",
+-        "when": "domain-vocabulary"
++        "when": "unresolved-domain-vocabulary"
+       },
+       {
+         "skill": "my-to-spec",
+@@ -74,12 +74,12 @@
+       {
+         "skill": "my-grilling",
+         "kind": "method",
+-        "when": "missing-information"
++        "when": "missing-load-bearing-requirements"
+       },
+       {
+         "skill": "my-domain-modeling",
+         "kind": "method",
+-        "when": "domain-vocabulary"
++        "when": "unresolved-domain-vocabulary"
+       },
+       {
+         "skill": "my-to-spec",
+@@ -184,6 +184,9 @@
+       "my-wayfinder",
+       "my-wizard",
+       "my-writing-for-agents"
++    ],
++    "my-triage": [
++      "my-setup"
+     ]
+   }
+ }
+diff --git a/resources/manifest.json b/resources/manifest.json
+--- a/resources/manifest.json
++++ b/resources/manifest.json
+@@ -259,7 +259,8 @@
+         "my-to-spec",
+         "my-to-tickets",
+         "my-triage",
+-        "my-wayfinder"
++        "my-wayfinder",
++        "my-wizard"
+       ]
+     },
+     "review-loop": {
+diff --git a/resources/review-loop.md b/resources/review-loop.md
+--- a/resources/review-loop.md
++++ b/resources/review-loop.md
+@@ -26,16 +26,21 @@
+ 
+ - 同一根因：连续两次复审有阻断问题，且落在紧邻的上一次修复差异内。
+ - 同一处连续修改：相邻两次修复在同一文件的行区间重叠，均换算到它们之间快照的行号。
+-- 前后矛盾：finding 的 `contradicts` 指向之前一轮的问题。
+ - 体积膨胀：代码相对基线的增加行加删除行超过第一轮的1.5倍；文档以第一轮字节数为基准，多产物合并计算。
+ 
+-经证据确认同根因修复无进展、无法兼容的决策矛盾或必要验证不可获得时，以具体失败链说明停止；位置相近或变更多本身不证明这些情况。runtime 进入需用户处理的状态后拒绝继续审查；整分支停止也阻止 Topic 完成。用户可接受现状、修订定义后重开，或放弃。Ticket/Spec 的有效定义修订可由 runtime reopen 重置历史，保留代码与基线；只改状态、认领或复选框不算定义变化。整分支重开也需首次审查或上次重开以来任一 Ticket/Spec 有有效变化。未通过的测试不能通过接受现状绕过。
++经证据确认同根因修复无进展、无法兼容的决策矛盾或必要验证不可获得时，以具体失败链说明停止；位置相近或变更多本身不证明这些情况。runtime 进入需用户处理的状态后拒绝继续审查；整分支停止也阻止 Topic 完成。用户可接受现状、修订定义后重开，或放弃。Ticket/Spec 的有效定义修订可由 runtime reopen 开新审查 series，保留代码、基线及可追溯旧审查/自审历史；reopen 不全量消解自审发现，用户裁决只覆盖 reason 点名的 spec-challenge，未解 correctness blocking 仍需真实内容修复与重新验证；只改状态、认领或复选框不算定义变化。整分支重开也需首次审查或上次重开以来任一 Ticket/Spec 有有效变化。未通过的测试不能通过接受现状绕过。
+ 
+ Spec、技术方案与 Ticket 等文档每个产物只一次全面审查加最多一次复审；复审只看修复差异及受影响断言/影响面。仍未解决的问题交用户裁决，不再派第三轮；扩大范围、补审或“直到通过”不重置这个预算，也不能靠修订定义重置同一产物的文档预算。宿主逐轮写 `.agent/work/<topic>/reviews/review-log-<topic>.md`：产物、轮次、阻断数、建议数、修改范围、体积；无 Topic 时在对话报告这些字段。汇报已用轮数与剩余额度，不作趋势判断。
+ 
+ ## 产物审查接口
+ 
+ artifact-review 方法名为 reader-first-writing、final-state-writing、visual-communication、artifact-finalization、humanizer；设计类再加 review-design。保留 expect-content-id；只接受普通产物或设计，不提供修复方案类型、并行或 Topic 参数，命令不计轮数。
++
++## 语义矛盾字段的唯一准入
++
++`contradicts` 仅用于已核实的语义矛盾：当前 finding 与引用的旧 finding 中仍有效的行为要求/决定，在同一适用条件下无法同时满足，且影响正确性、范围、验收或风险承担。reviewer 在 basis 给出双方命题、共同适用条件、不能兼容的证据及需裁决的影响；runtime 校验引用身份，不代替 reviewer 核实语义。有效 `contradicts` 会触发硬停止并请求裁决，不属于几何信号。
++
++位置重叠、体积变化、普通建议差异、后续修正旧事实或已由有效定义消解的差异不填此字段。尚待核实的矛盾线索写入普通 finding/basis；新证据可在既有授权内纠正原事实时先核实影响，不自动等同无法兼容的决定。
+ 
+ ## 结果
+ 
+@@ -44,6 +49,6 @@
+ - `status`: pass/findings/blocked-by-design/inconclusive；
+ - `reviewer`: provenance=independent/self，及实际 model；
+ - `coverage`: target、result=ok/finding/not-applicable、finding_id或reason；
+-- `findings`: id、severity=blocking/advisory、summary、location、view=correctness/impact/spec/spec-challenge/maintainability、basis（出错路径或被违反规则）。可选 anchor、failure_path、reachability、contradicts/downstream_ticket；advisory 必填 disposition=fix-in-batch/defer/decline，defer 附 owner，decline 附 reason。
++- `findings`: id、severity=blocking/advisory、summary、location、view=correctness/impact/spec/spec-challenge/maintainability、basis（出错路径或被违反规则）。可选 anchor、failure_path、reachability、downstream_ticket；contradicts 仅按上述唯一语义准入填写；advisory 必填 disposition=fix-in-batch/defer/decline，defer 附 owner，decline 附 reason。
+ 
+ 发现必须有位置与依据；pass 不含阻断、待修复建议或 spec-challenge。spec-challenge 交用户决定修订 Spec、接受风险或按原 Spec 继续，不能以“Spec 要求如此”放行。影响面必查，独立核实调用方与消费者。保留预填身份与内容不变，按 runtime 返回的材料和格式提交。停止时遵循[找用户的条件](user-intervention.md)。
+diff --git a/resources/user-intervention.md b/resources/user-intervention.md
+--- a/resources/user-intervention.md
++++ b/resources/user-intervention.md
+@@ -5,7 +5,7 @@
+ - 请求的阶段是止点：只要求诊断、方案或 Spec，就交付到该阶段；已批准范围内要求开发，则继续完成实施、验证与收口。不因 Skill 的默认 chain 扩大请求。
+ - 对齐点1确认需求摘要和 quick/standard；对齐点2确认 Spec 与逐 Ticket 行为、依赖、命令和验证边界。已有明确确认可以引用，不重复访谈或重复批准；Spec 获批不能自动证明尚未确认的 Ticket 划分已获批。
+ - 只有影响结果且尚未决定的产品取舍、成功指标、优先级、范围、验收或风险承担交用户裁决。新证据推翻原事实时先核实并说明影响；普通方法选择不另设对齐点。
+-- 推送、建 MR、发布、安装或写外部系统：已授权同一具体动作及目的地则执行；未授权、目的地变化或后果超出授权时，先完成可审阅产物，再请求所缺授权。生成本地文件不自动授权外部发送。
++- 推送、建 MR、发布、安装或写外部系统：已授权同一具体动作及目的地则执行；未授权、目的地变化或后果超出授权时，先完成可审阅产物，再请求所缺授权。生成本地文件不自动授权外部发送。结果未知时先查询原目标状态或原操作身份，确认是否已生效；仍未知则保留未知，不盲目重试副作用，继续不依赖该结果的独立授权工作。相同动作授权不等于重复副作用授权。
+ - setup/migrate apply 前确认预览的具体配置或迁移；已有覆盖该预览的授权则不再问。修改批准范围以外的项目文档同样先确定范围。
+ - triage→Spec/Ticket、wayfinder→Spec、prototype→implement 的交接先检查下一阶段是否已授权；已授权直接调用，未授权交付当前阶段并说明可继续的入口。
+ - 真实设计阻断、无法裁决的证据或[审查预算耗尽](review-loop.md)交用户处理；几何信号本身不新增批准门槛。
+diff --git a/skills/my-codebase-design/DEEPENING.md b/skills/my-codebase-design/DEEPENING.md
+--- a/skills/my-codebase-design/DEEPENING.md
++++ b/skills/my-codebase-design/DEEPENING.md
+@@ -16,17 +16,17 @@
+ 
+ ### 3. 远程但自有（Ports & Adapters）
+ 
+-网络边界另一侧的自有服务（微服务、内部 API）。在 Seam 处定义一个 **port**（Interface）。深 Module 拥有逻辑；传输层作为 **Adapter** 注入。测试使用内存 Adapter；生产环境使用 HTTP/gRPC/队列 Adapter。
++网络边界另一侧的自有服务（微服务、内部 API）。优先复用既有传输边界；需要新 port 时按共享合同判断真实变化与维护价值，深 Module 拥有逻辑，传输层作为 Adapter 注入。测试替身保留 HTTP/gRPC/队列的必要边界语义，不以生产/测试各一个实现证明抽象价值。
+ 
+-推荐表述：*“在 Seam 处定义一个 port，为生产实现 HTTP Adapter，为测试实现内存 Adapter；即使它跨网络部署，逻辑仍位于一个深 Module 中。”*
++表述应说明真实边界与选择依据；跨网络部署本身不要求新增一层公开接口。
+ 
+ ### 4. 真正外部（Mock）
+ 
+-你无法控制的第三方服务（Stripe、Twilio 等）。深化后的 Module 接受外部依赖作为注入的 port；测试提供 mock Adapter。
++你无法控制的第三方服务（Stripe、Twilio 等）。优先通过项目已有稳定边界注入依赖/替身；确需新增 port 时按共享合同解释必要性，不因需要 mock 就新增公开接口。
+ 
+ ## Seam 纪律
+ 
+-- **一个 Adapter 只意味着假设的 Seam；两个 Adapter 才意味着真实的 Seam。** 只有至少两个 Adapter 有充分理由时（通常是生产和测试），才引入 port。单 Adapter 的 Seam 只是间接层。
++- 是否新增 port 或复用既有单实现边界，只按下文共享测试合同判断；测试替身不作为新生产抽象的价值证据。
+ - **内部 Seam 与外部 Seam。** 深 Module 可以有内部 Seam（其 Implementation 私有，供自身测试使用），也可以有位于其 Interface 的外部 Seam。不要仅因为测试使用内部 Seam，就通过 Interface 暴露它。
+ 
+ ## 测试策略
+diff --git a/skills/my-codebase-design/SKILL.md b/skills/my-codebase-design/SKILL.md
+--- a/skills/my-codebase-design/SKILL.md
++++ b/skills/my-codebase-design/SKILL.md
+@@ -66,7 +66,7 @@
+ - **Depth 是 Interface 的属性，不是 Implementation 的属性。** 深 Module 的内部可以由小型、可 mock、可替换的部件组成——只是它们不属于 Interface。Module 可以同时具有**内部 Seam**（仅供 Implementation 私有使用，并由其自身测试使用）和位于 Interface 上的**外部 Seam**。
+ - **删除测试。** 想象删掉这个 Module。若复杂度随之消失，它只是直通；若复杂度在 N 个调用者中重新出现，它就在创造价值。
+ - **Interface 就是测试面。** 调用者和测试跨越同一个 Seam。若你想测试*越过* Interface 的内容，这个 Module 的形状很可能不对。
+-- **一个 Adapter 只意味着假设的 Seam；两个 Adapter 才意味着真实的 Seam。** 除非确有事物在 Seam 两侧变化，否则不要引入 Seam。
++- Seam、port 与测试替身的价值判断只按上述共享合同，不以 Adapter 数量设门槛；已有有效单实现边界可以复用。
+ 
+ ## 为可测试性而设计
+ 
+diff --git a/skills/my-grill-with-docs/SKILL.md b/skills/my-grill-with-docs/SKILL.md
+--- a/skills/my-grill-with-docs/SKILL.md
++++ b/skills/my-grill-with-docs/SKILL.md
+@@ -6,7 +6,7 @@
+ 
+ # 从需求到交付
+ 
+-已有确认摘要时直接复用，仅承重未知调用 {{skill-call:my-grilling}} 访谈，调用 {{skill-call:my-domain-modeling}} 澄清领域术语与承重决定；方法完成后返回本流程。复杂或类比请求在摘要形成前读取[需求核对](references/shared/requirement-analysis.md)。共同遵循[找用户的条件](references/shared/user-intervention.md)。
++已有确认摘要直接复用；只有未决需求会改变交付时调用 {{skill-call:my-grilling}}，只有承重领域术语含义未清时调用 {{skill-call:my-domain-modeling}}，分别按需处理；方法完成后返回本流程。复杂或类比请求在摘要形成前读取[需求核对](references/shared/requirement-analysis.md)。共同遵循[找用户的条件](references/shared/user-intervention.md)。
+ 
+ 没有代码库时采用 my-grill-me 的访谈用途，只产需求摘要，停止主链；不创建 Topic、Spec 或 Ticket。
+ 
+diff --git a/skills/my-triage/SKILL.md b/skills/my-triage/SKILL.md
+--- a/skills/my-triage/SKILL.md
++++ b/skills/my-triage/SKILL.md
+@@ -25,6 +25,8 @@
+ 
+ ## 角色
+ 
++先按后端分支：以下标签角色与 Tracker 状态转换用于外部 Tracker。local brief 只使用本地类别/状态语义，不要求外部标签映射；本地 workflow 配置缺失时才按后端段完成 setup。
++
+ 两种**类别**角色：
+ 
+ - `bug` —— 有功能损坏
+@@ -42,7 +44,7 @@
+ 
+ 每个已分诊的 Issue 都应恰好带有一个类别角色和一个状态角色。如果状态角色冲突，先标出冲突并询问维护者，不得执行其他操作。
+ 
+-这些是规范角色名称——Issue 跟踪器中实际使用的标签字符串可能不同。映射应已提供给你；若未提供，请运行 `{{skill-call:my-setup}}`。
++这些是外部 Tracker 的规范角色名称，真实标签映射从该 Tracker 的配置、已有有效标签或维护者取得；缺少时只请求所缺映射，不调用只配置 local workflow 的 setup 代替它。
+ 
+ 状态转换：未标记的 Issue 通常先进入 `needs-triage`；随后可转为 `needs-info`、`ready-for-agent`、`ready-for-human` 或 `wontfix`。报告者回复后，`needs-info` 返回 `needs-triage`。维护者可随时覆盖——标出看起来异常的转换，并在继续前询问。
+ 
+@@ -51,7 +53,7 @@
+ `my-to-tickets` 已创建的结构化 implementation Ticket 不进入 triage；`wayfinder-decision` 和 `wayfinder:*` Ticket 也不进入 triage。
+ 
+ - **外部 Tracker**：保留 Tracker 原生的类别、状态、评论与 Agent brief；`ready-for-agent` 仍表示该外部事项已附上可执行简报。
+-- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。只要求分诊或 brief 时保存后交付，不自动开开发。下一阶段已授权时读取[保证等级](references/shared/adapters/assurance-levels.md)，复用已确认等级与摘要；缺配置先 setup。复用匹配 current Spec 的 Topic，否则在用户选定 Topic 下用 `topic start --repo <repo> --topic <topic> --level <quick|standard>` 建立必要状态，已有 active Topic 先核对而不重复创建。standard 核对 current Spec 是否匹配并覆盖 brief：有则交 {{skill-call:my-to-tickets}}；没有则先交 {{skill-call:my-to-spec}}，改变既有定义则正式修订。已确认 quick 且仍满足原低风险准入时交 {{skill-call:my-implement}}，不造 Spec/Ticket；不符合准入则在既有对齐点说明升级原因。传递确认的 brief、来源和验证，不重复访谈；独立设计关口只在 to-spec 的风险触发处执行。下一阶段与止点按[用户决定与授权](references/shared/user-intervention.md)处理，已授权直接调用；跨会话保存[恢复包](references/policies/context-hygiene.md)。`my-to-tickets` 生成完整血缘 Ticket，不借用不匹配 Spec。
++- **本地后端**：triage 不自行伪造 implementation Ticket。维护者确认分类、状态与 brief 后，把确认后的 brief、原请求路径或 URL、评论/附件来源和验证证据保存到 `.agent/work/<topic>/triage/triage-<topic>-<time-or-sequence>.md`。只要求分诊或 brief 时保存后交付，不自动开开发。下一阶段已授权时读取[保证等级](references/shared/adapters/assurance-levels.md)，复用已确认等级与摘要；缺本地 workflow 配置时输出 {{skill-call:my-setup}} 下一跳并停止，保留原请求与 confirmed brief；配置完成后恢复本分诊入口，不把 setup 当作外部 Tracker 映射修复。复用匹配 current Spec 的 Topic，否则在用户选定 Topic 下用 `topic start --repo <repo> --topic <topic> --level <quick|standard>` 建立必要状态，已有 active Topic 先核对而不重复创建。standard 核对 current Spec 是否匹配并覆盖 brief：有则交 {{skill-call:my-to-tickets}}；没有则先交 {{skill-call:my-to-spec}}，改变既有定义则正式修订。已确认 quick 且仍满足原低风险准入时交 {{skill-call:my-implement}}，不造 Spec/Ticket；不符合准入则在既有对齐点说明升级原因。传递确认的 brief、来源和验证，不重复访谈；独立设计关口只在 to-spec 的风险触发处执行。下一阶段与止点按[用户决定与授权](references/shared/user-intervention.md)处理，已授权直接调用；跨会话保存[恢复包](references/policies/context-hygiene.md)。`my-to-tickets` 生成完整血缘 Ticket，不借用不匹配 Spec。
+ 
+ 读取既有本地 Ticket 时按 [Ticket 准入与选择](references/shared/adapters/ticket-selection.md) 判断；旧 Ticket 缺少 `ticket_kind` 时按歧义处理，不猜测。
+ 
+@@ -81,7 +83,7 @@
+ 1. **收集上下文。** 阅读完整的 Issue 或 PR（正文、评论、标签、作者、日期；PR 还要读 diff）。解析既有分诊记录，避免重新询问已解决的问题。借助项目的领域词汇表探索代码库，遵循该区域的 ADR。对代码库执行两项检查：(a) **冗余性**——按领域概念（而不只是请求的措辞）搜索是否已有请求行为的实现，并报告搜索位置。若已存在，它是“已实现”的 `wontfix`（步骤 5）。(b) **既往拒绝**——阅读 `.out-of-scope/*.md`，并找出与本请求相似的记录。
+ 2. **提出建议。** 告知维护者类别和状态建议及理由，并给出与请求相关的简要代码库摘要——包括是否已实现。等待指示。
+ 3. **验证主张。** 在追问前，先检查主张是否成立。对于 Bug，按报告者的步骤复现。对于 PR，确认 diff 是否实现其声称的内容——检出它，并运行相关测试或命令。报告结果：已确认（附代码路径）、失败，或细节不足（这是强烈的 `needs-info` 信号）。已确认的验证会形成更有力的 Agent 简报。
+-4. **追问（如需要）。** 若请求还需充实，调用 {{skill-call:my-grilling}} 与 {{skill-call:my-domain-modeling}}，每次提出一个问题以打磨请求并明确领域术语。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
++4. **追问（如需要）。** 只有未决需求会改变交付时调用 {{skill-call:my-grilling}}，按其方法解决决定性歧义；只有承重领域术语含义未清时调用 {{skill-call:my-domain-modeling}}。两条件分别判断，不把查证代码事实或普通信息补充变成两方法必调。决策写入项目实际声明的领域来源或 ADR，不假设固定存在 `CONTEXT.md`。
+ 5. **应用结果：**
+    - `ready-for-agent` —— 发布 Agent 简报评论（[AGENT-BRIEF.md](AGENT-BRIEF.md)）。
+    - `ready-for-human` —— 使用与 Agent 简报相同的结构，但说明为何不可委派（判断调用、外部访问、设计决策、手动测试）。
+diff --git a/skills/my-wizard/SKILL.md b/skills/my-wizard/SKILL.md
+--- a/skills/my-wizard/SKILL.md
++++ b/skills/my-wizard/SKILL.md
+@@ -16,7 +16,9 @@
+ 
+ ## 流程
+ 
+-### 1. 界定流程范围
++#外部写入授权或结果未知时读取[用户决定与授权](references/shared/user-intervention.md)：核对原目标/操作身份，不盲重试副作用；脚本生成不证明操作已生效。
++
++## 1. 界定流程范围
+ 
+ 确定人类必须完成的每一步手动操作，以及过程中捕获的每个值。先阅读仓库——不要凭空提问：
+ 
+diff --git a/tests/fixtures/codebase_design_order_submission.json b/tests/fixtures/codebase_design_order_submission.json
+--- a/tests/fixtures/codebase_design_order_submission.json
++++ b/tests/fixtures/codebase_design_order_submission.json
+@@ -27,9 +27,9 @@
+     },
+     {
+       "id": "real-seam",
+-      "document": "DEEPENING.md",
+-      "text": "两个 Adapter 才意味着真实的 Seam",
+-      "consequence": "separate-production-and-test-adapters"
++      "document": "references/shared/testing-seams.md",
++      "text": "用真实生产变化轴和维护需要判断",
++      "consequence": "reuse-or-introduce-port-for-real-boundary-need"
+     },
+     {
+       "id": "interface-test-surface",
+@@ -59,7 +59,8 @@
+     },
+     "dependency_injection": {
+       "port": "PaymentGateway",
+-      "injected_into": "OrderSubmission"
++      "injected_into": "OrderSubmission",
++      "reason": "Stripe是实际不可控支付边界；优先复用已有支付契约，需要port时由该真实边界和维护需求证明，测试adapter数量不证明价值。"
+     },
+     "adapters": {
+       "production": "StripePaymentGateway",
+@@ -82,7 +83,7 @@
+     "consequence_by_constraint": {
+       "accept-dependencies": "inject-payment-gateway",
+       "external-dependency": "inject-payment-gateway",
+-      "real-seam": "separate-production-and-test-adapters",
++      "real-seam": "reuse-or-introduce-port-for-real-boundary-need",
+       "interface-test-surface": "test-public-interface-only",
+       "replace-shallow-tests": "remove-obsolete-shallow-tests",
+       "small-surface": "one-deep-submit-interface"
+diff --git a/tests/test_composition.py b/tests/test_composition.py
+--- a/tests/test_composition.py
++++ b/tests/test_composition.py
+@@ -65,6 +65,17 @@
+         self.assertTrue({"my-to-spec", "my-review-design", "my-to-tickets", "my-implement"} <= set(closure))
+         validate_composition_manifest(manifest, ROOT / "skills")
+ 
++    def test_triage_setup_and_clarification_edges_are_conditional(self):
++        manifest = load_composition_manifest(ROOT / "composition/manifest.json")
++        for caller in ("my-grill-with-docs", "my-triage"):
++            methods = {edge.skill: edge.when for edge in manifest.callers[caller]
++                       if edge.kind == "method"}
++            self.assertEqual("missing-load-bearing-requirements", methods["my-grilling"])
++            self.assertEqual("unresolved-domain-vocabulary", methods["my-domain-modeling"])
++        self.assertEqual(("my-setup",), manifest.routable_entries["my-triage"])
++        self.assertNotIn("my-setup", resolve_transitive_closure(manifest, "my-triage"))
++        validate_composition_manifest(manifest, ROOT / "skills")
++
+     def test_cycle_is_rejected_with_path(self):
+         manifest = CompositionManifest(
+             version=2,

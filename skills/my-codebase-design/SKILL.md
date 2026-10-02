@@ -5,23 +5,23 @@ description: 在 my-improve-codebase-architecture 流程中作为指定阶段的
 
 # 代码库设计
 
-设计**深模块**：把大量行为置于小接口之后，放在清晰的 Seam 上，并通过该接口测试。无论何时设计或重构代码，都使用这套语言和原则。目标是让调用者获得杠杆，让维护者获得局部性，并让所有人都能测试。
+设计**深模块**：把大量行为置于小接口之后，放在清晰的 Seam 上，并通过该接口测试。在当前设计方法适用时用这些性质判断，不覆盖项目规则。目标是让调用者获得杠杆，让维护者获得局部性，并让所有人都能测试。
 
 输出设计时遵循[最终态写作](references/shared/final-state-writing.md)。
 
 ## 术语表
 
-严格使用这些术语——不要用“组件”、“服务”、“API”或“边界”替代它们。一致的语言正是关键所在。
+这些术语用于区分设计性质；优先沿用项目既有术语。组件、服务、API、边界等词可以准确使用，不用统一禁词覆盖项目语义；仅在容易混淆时定义区别。
 
-**Module（模块）**——任何具有 Interface 和 Implementation 的事物。刻意不限定规模：可以是函数、类、包，或跨层切片。*避免使用*：unit、component、service。
+**Module（模块）**——任何具有 Interface 和 Implementation 的事物。刻意不限定规模：可以是函数、类、包，或跨层切片。项目中的 unit/component/service 按其具体职责命名，不与此分析概念强制互换。
 
-**Interface（接口）**——调用者正确使用 Module 必须知道的一切：类型签名，也包括不变量、顺序约束、错误模式、必需配置和性能特征。*避免使用*：API、signature（过于狭窄——它们只指类型层面的表面）。
+**Interface（接口）**——调用者正确使用 Module 必须知道的一切：类型签名，也包括不变量、顺序约束、错误模式、必需配置和性能特征。API或signature可以描述接口的一部分；若谈完整使用契约，也包含类型以外约束。
 
 **Implementation（实现）**——Module 内部的内容，即代码主体。它不同于 **Adapter**：一个事物可以是小 Adapter 却有很大的 Implementation（例如 Postgres 仓储），也可以是大 Adapter 却有很小的 Implementation（例如内存 fake）。当话题是 Seam 时使用“Adapter”；其他情形使用“Implementation”。
 
 **Depth（深度）**——接口上的杠杆：调用者（或测试）每学习一单位接口所能驱动的行为量。当大量行为位于小接口之后时，Module 是**深的**；当 Interface 几乎和 Implementation 一样复杂时，Module 是**浅的**。
 
-**Seam（接缝）**（Michael Feathers）——无需在该处编辑就能改变行为的位置；也就是 Module 的 Interface 所在的*位置*。Seam 放在哪里本身是一个设计决策，和其后放置什么不同。*避免使用*：boundary（它与 DDD 的 bounded context 含义重叠）。
+**Seam（接缝）**（Michael Feathers）——无需在该处编辑就能改变行为的位置；也就是 Module 的 Interface 所在的*位置*。Seam 放在哪里本身是一个设计决策，和其后放置什么不同。boundary 与 DDD bounded context 等既有边界术语保持项目定义，必要时说明与 seam 的区别。
 
 **Adapter（适配器）**——在 Seam 处满足 Interface 的具体事物。它描述的是*角色*（填补哪个槽位），而不是实体（内部是什么）。
 
@@ -66,7 +66,7 @@ description: 在 my-improve-codebase-architecture 流程中作为指定阶段的
 - **Depth 是 Interface 的属性，不是 Implementation 的属性。** 深 Module 的内部可以由小型、可 mock、可替换的部件组成——只是它们不属于 Interface。Module 可以同时具有**内部 Seam**（仅供 Implementation 私有使用，并由其自身测试使用）和位于 Interface 上的**外部 Seam**。
 - **删除测试。** 想象删掉这个 Module。若复杂度随之消失，它只是直通；若复杂度在 N 个调用者中重新出现，它就在创造价值。
 - **Interface 就是测试面。** 调用者和测试跨越同一个 Seam。若你想测试*越过* Interface 的内容，这个 Module 的形状很可能不对。
-- **一个 Adapter 只意味着假设的 Seam；两个 Adapter 才意味着真实的 Seam。** 除非确有事物在 Seam 两侧变化，否则不要引入 Seam。
+- Seam、port 与测试替身的价值判断只按上述共享合同，不以 Adapter 数量设门槛；已有有效单实现边界可以复用。
 
 ## 为可测试性而设计
 
