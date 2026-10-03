@@ -1,0 +1,113 @@
+[
+  {
+    "scenario": "first-fact",
+    "probes": [
+      {
+        "price": "12.50",
+        "quantity": "2",
+        "expected": "2500",
+        "actual": "2500",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0",
+        "quantity": "9",
+        "expected": "0",
+        "actual": "0",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.01",
+        "quantity": "3",
+        "expected": "3",
+        "actual": "3",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.29",
+        "quantity": "3",
+        "expected": "87",
+        "actual": "87",
+        "exit_code": 0,
+        "passed": true
+      }
+    ]
+  },
+  {
+    "scenario": "registered-fact",
+    "probes": [
+      {
+        "price": "12.50",
+        "quantity": "2",
+        "expected": "2500",
+        "actual": "2500",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0",
+        "quantity": "9",
+        "expected": "0",
+        "actual": "0",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.01",
+        "quantity": "3",
+        "expected": "3",
+        "actual": "3",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.29",
+        "quantity": "3",
+        "expected": "87",
+        "actual": "87",
+        "exit_code": 0,
+        "passed": true
+      }
+    ]
+  },
+  {
+    "scenario": "product-choice",
+    "probes": [
+      {
+        "price": "12.50",
+        "quantity": "2",
+        "expected": "2500",
+        "actual": "2500",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0",
+        "quantity": "9",
+        "expected": "0",
+        "actual": "0",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.01",
+        "quantity": "3",
+        "expected": "3",
+        "actual": "3",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.29",
+        "quantity": "3",
+        "expected": "87",
+        "actual": "87",
+        "exit_code": 0,
+        "passed": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+test_changed_deploy_runs_one_gate_on_packaged_snapshot (test_install_simplification.SimplifiedInstallTests.test_changed_deploy_runs_one_gate_on_packaged_snapshot) ... ok
+test_context_detects_drift_during_validation_and_does_not_share_mutable_claims (test_install_simplification.SimplifiedInstallTests.test_context_detects_drift_during_validation_and_does_not_share_mutable_claims) ... ok
+test_context_reuses_same_bytes_and_revalidates_drift_and_other_package (test_install_simplification.SimplifiedInstallTests.test_context_reuses_same_bytes_and_revalidates_drift_and_other_package) ... ok
+test_digest_binds_tests_config_links_permissions_and_upstream (test_install_simplification.SimplifiedInstallTests.test_digest_binds_tests_config_links_permissions_and_upstream) ... ok
+test_doctor_validates_shared_release_once_and_reports_each_host (test_install_simplification.SimplifiedInstallTests.test_doctor_validates_shared_release_once_and_reports_each_host) ... ok
+test_failed_suite_does_not_publish_or_install (test_install_simplification.SimplifiedInstallTests.test_failed_suite_does_not_publish_or_install) ... ok
+test_install_rechecks_cached_package_inside_lock (test_install_simplification.SimplifiedInstallTests.test_install_rechecks_cached_package_inside_lock) ... ok
+test_legacy_digest_missing_uses_full_source_comparison (test_install_simplification.SimplifiedInstallTests.test_legacy_digest_missing_uses_full_source_comparison) ... ok
+test_projection_manifest_matches_physical_bytes_without_copytree (test_install_simplification.SimplifiedInstallTests.test_projection_manifest_matches_physical_bytes_without_copytree) ... ok
+test_public_deploy_runs_actual_suite_once (test_install_simplification.SimplifiedInstallTests.test_public_deploy_runs_actual_suite_once) ... ok
+test_release_verification_computes_projection_without_copytree (test_install_simplification.SimplifiedInstallTests.test_release_verification_computes_projection_without_copytree) ... ok
+test_same_release_install_verifies_once_and_detects_host_drift (test_install_simplification.SimplifiedInstallTests.test_same_release_install_verifies_once_and_detects_host_drift) ... ok
+test_unbound_or_forged_digest_cannot_hide_stale_package (test_install_simplification.SimplifiedInstallTests.test_unbound_or_forged_digest_cannot_hide_stale_package) ... ok
+test_unchanged_deploy_neither_stages_source_nor_rewrites_host (test_install_simplification.SimplifiedInstallTests.test_unchanged_deploy_neither_stages_source_nor_rewrites_host) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 2.282s
+
+OK
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp2xybwdde/repo/releases/v1
+INSTALLED v1
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "v1", "status": "built"}, "source": {"status": "valid"}}
+{"status": "invalid", "error": "unit tests failed:\nF\n======================================================================\nFAIL: test_fails (test_gate.Gate.test_fails)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/my-matt-build-source-cmh6vumq/repo/tests/test_gate.py\", line 3, in test_fails\n    def test_fails(self): self.fail(\"candidate is invalid\")\n                          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate is invalid\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (failures=1)"}
+/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpms584jw2/repo/releases/actual-suite
+INSTALLED actual-suite
+{"host": {"status": "installed", "target": "auto"}, "release": {"release_id": "actual-suite", "status": "built"}, "source": {"status": "valid"}}
+REUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp5h3daige/repo/releases/v1
+CURRENT v1
+{"host": {"status": "current", "target": "auto"}, "release": {"release_id": "v1", "status": "current"}, "source": {"status": "valid"}}

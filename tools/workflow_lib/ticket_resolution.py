@@ -61,7 +61,7 @@ def resolve(repo, ticket=None, topic=None, accept=False, reason=''):
             text=reason,findings=[],resolutions=[dict(id=f['id'],action='definition-reopen',reason=reason,
                 prior_definition=unit['definition'],definition=changed,at=topics.now()) for f in challenges]))
     unit.update(definition=changed, tests=[], reviews=[])
-    for key in ('test_run', 'active_review', 'first_review_volume', 'stop_reason'):
+    for key in ('test_run', 'active_review', 'first_review_volume', 'stop_reason','refresh_budget_floor','refresh_review_series'):
         unit.pop(key, None)
     if unit.get('batch_id'):
         from . import batches

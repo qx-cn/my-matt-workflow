@@ -1,0 +1,184 @@
+[
+  {
+    "scenario": "first-fact",
+    "probes": [
+      {
+        "price": "12.50",
+        "quantity": "2",
+        "expected": "2500",
+        "actual": "2500",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0",
+        "quantity": "9",
+        "expected": "0",
+        "actual": "0",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.01",
+        "quantity": "3",
+        "expected": "3",
+        "actual": "3",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.29",
+        "quantity": "3",
+        "expected": "87",
+        "actual": "87",
+        "exit_code": 0,
+        "passed": true
+      }
+    ],
+    "outcome": "complete",
+    "stop": null,
+    "technical_resolutions": []
+  },
+  {
+    "scenario": "registered-fact",
+    "probes": [
+      {
+        "price": "12.50",
+        "quantity": "2",
+        "expected": "2500",
+        "actual": "2500",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0",
+        "quantity": "9",
+        "expected": "0",
+        "actual": "0",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.01",
+        "quantity": "3",
+        "expected": "3",
+        "actual": "3",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.29",
+        "quantity": "3",
+        "expected": "87",
+        "actual": "87",
+        "exit_code": 0,
+        "passed": true
+      }
+    ],
+    "outcome": "complete",
+    "stop": null,
+    "technical_resolutions": [
+      {
+        "unit_id": "self:feature-01",
+        "finding_id": "old-fact",
+        "basis": "This is a disproved technical fact / missing implementation; numeric CLI behavior is already approved. Correcting it requires no product decision.",
+        "action": "technical-correction",
+        "evidence": [
+          {
+            "path": "app/cli.py",
+            "detail": "Line 3 passes sys.argv[1] unconverted.",
+            "sha256": "638055feb6844fe44341825fd7c8f9dcdbacc2aed59fc36845699aab49712cdf"
+          },
+          {
+            "path": "app/service.py",
+            "detail": "Lines 1-2 define total(cents, quantity) and direct multiplication.",
+            "sha256": "e93cfafb3ad86cc3e39e617f8edafa24b2513269e604828571a61162d28b3eeb"
+          },
+          {
+            "path": ".agent/work/feature/evidence/initial-red.txt",
+            "detail": "Actual initial unittest command exit 1; 2500 != 12.5012.50.",
+            "sha256": "2684062a7ebe54acb1e6922ba87c1347d3130a73e88bd57d73f6a1bf7183f3a8"
+          },
+          {
+            "path": ".agent/work/feature/specs/specs-feature-02.md",
+            "detail": "Revision 2 supersedes revision 1 and corrects technical fact, preserving approved behavior and acceptance.",
+            "sha256": "e8e8e49b4893f3b892da5bea22837f537a79a556a5fc0c856e5c59736e3f227a"
+          }
+        ],
+        "reason": "Correct disproved CLI conversion fact and implement approved numeric cents output",
+        "at": "2026-10-03T17:24:06.231446+00:00"
+      }
+    ]
+  },
+  {
+    "scenario": "product-choice",
+    "probes": [
+      {
+        "price": "12.50",
+        "quantity": "2",
+        "expected": "2500",
+        "actual": "2500",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0",
+        "quantity": "9",
+        "expected": "0",
+        "actual": "0",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.01",
+        "quantity": "3",
+        "expected": "3",
+        "actual": "3",
+        "exit_code": 0,
+        "passed": true
+      },
+      {
+        "price": "0.29",
+        "quantity": "3",
+        "expected": "87",
+        "actual": "87",
+        "exit_code": 0,
+        "passed": true
+      }
+    ],
+    "outcome": null,
+    "stop": "Spec 与现有系统冲突：增强自审需要用户裁决",
+    "technical_resolutions": [
+      {
+        "unit_id": "self:feature-01",
+        "finding_id": "old-fact",
+        "basis": "This is a disproved technical fact / missing implementation; numeric CLI behavior is already approved. Correcting it requires no product decision.",
+        "action": "technical-correction",
+        "evidence": [
+          {
+            "path": "app/cli.py",
+            "detail": "Line 3 passes sys.argv[1] unconverted.",
+            "sha256": "638055feb6844fe44341825fd7c8f9dcdbacc2aed59fc36845699aab49712cdf"
+          },
+          {
+            "path": "app/service.py",
+            "detail": "Lines 1-2 define total(cents, quantity) and direct multiplication.",
+            "sha256": "e93cfafb3ad86cc3e39e617f8edafa24b2513269e604828571a61162d28b3eeb"
+          },
+          {
+            "path": ".agent/work/feature/evidence/initial-red.txt",
+            "detail": "Actual initial unittest command exit 1; 2500 != 12.5012.50.",
+            "sha256": "2684062a7ebe54acb1e6922ba87c1347d3130a73e88bd57d73f6a1bf7183f3a8"
+          },
+          {
+            "path": ".agent/work/feature/specs/specs-feature-02.md",
+            "detail": "Revision 2 supersedes revision 1 and corrects technical fact, preserving approved behavior and acceptance.",
+            "sha256": "30f977b6d914f7731528d85308a36f9c35c9ce7f9f8d0f23665898a28174c715"
+          }
+        ],
+        "reason": "Correct disproved CLI conversion fact and implement approved numeric cents output",
+        "at": "2026-10-03T17:24:06.530638+00:00"
+      }
+    ]
+  }
+]

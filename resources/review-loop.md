@@ -12,9 +12,9 @@ standard 下宿主派实际新上下文只读审查者，遵守用户的独立�
 
 第一轮穷尽整个固定范围，附覆盖清单：每条验收、每个 review probe、每个不变量均为无问题、对应 finding，或不适用（附理由）。发现给出位置、视角、依据与严重度。可达的出错路径或明确验收、不变量、项目规则足以成为阻断，不要求验收锚点。覆盖只是 spec 视角的一部分，不是发现准入门槛。
 
-blocking 与 advisory/fix-in-batch 进入修复；fix-in-batch 限已触及代码。其他建议 defer（建议归属）或 decline（理由），留到交付摘要。不能因下游拥有能力而放行当前可达故障。只有无需修复的建议时通过。复审仅检查本轮修复差异及可能受影响的地方；范围外新发现默认归建议。
+blocking 与 advisory/fix-in-batch 进入修复；fix-in-batch 包括解决发现所需的相关模块、调用方、消费者、测试与文档同步。其他建议 defer（建议归属）或 decline（理由），留到交付摘要。不能因下游拥有能力而放行当前可达故障。只有无需修复的建议时通过。复审仅检查本轮修复差异及可能受影响的地方；范围外新发现默认归建议。
 
-修复可补齐已批准行为所需逻辑、场景和验证，新增负向回归测试本身不构成新增需求。只有新增产品行为、改变验收或承重设计/风险承诺时返回 `blocked-by-design`。修复前找出同一事实在其他位置的写法一起改；同一规则只在一个共享来源定义。思路写入命令的 `--notes-file`，不另写修复方案文档。
+修复可补齐已批准行为所需逻辑、场景和验证，新增负向回归测试本身不构成新增需求。只有修复需要改变已确认目标、外部行为、验收语义、明确用户限制或风险承诺时返回 `blocked-by-design`。技术事实错误及实现漏项归普通 spec/correctness；技术性设计调整自行记录与验证。修复前找出同一事实在其他位置的写法一起改；同一规则只在一个共享来源定义。思路写入命令的 `--notes-file`，不另写修复方案文档。
 
 ## 轮数与停止
 
@@ -28,7 +28,7 @@ blocking 与 advisory/fix-in-batch 进入修复；fix-in-batch 限已触及代�
 - 同一处连续修改：相邻两次修复在同一文件的行区间重叠，均换算到它们之间快照的行号。
 - 体积膨胀：代码相对基线的增加行加删除行超过第一轮的1.5倍；文档以第一轮字节数为基准，多产物合并计算。
 
-经证据确认同根因修复无进展、无法兼容的决策矛盾或必要验证不可获得时，以具体失败链说明停止；位置相近或变更多本身不证明这些情况。runtime 进入需用户处理的状态后拒绝继续审查；整分支停止也阻止 Topic 完成。用户可接受现状、修订定义后重开，或放弃。Ticket/Spec 的有效定义修订可由 runtime reopen 开新审查 series，保留代码、基线及可追溯旧审查/自审历史；reopen 不全量消解自审发现，用户裁决只覆盖 reason 点名的 spec-challenge，未解 correctness blocking 仍需真实内容修复与重新验证；只改状态、认领或复选框不算定义变化。整分支重开也需首次审查或上次重开以来任一 Ticket/Spec 有有效变化。未通过的测试不能通过接受现状绕过。
+经证据确认同根因修复无进展、无法兼容的决策矛盾或必要验证不可获得时，以具体失败链说明停止；位置相近或变更多本身不证明这些情况。runtime 进入需用户处理的状态后拒绝继续审查；整分支停止也阻止 Topic 完成。技术性定义变化或已登记技术挑战可凭证据用 refresh 更新绑定、追加点名处置并重新验证；它保留同一 series 已开轮次及剩余预算，未提交轮次不返还，其他停止不解除。用户可接受现状、修订定义后重开，或放弃。Ticket/Spec 的有效定义修订可由 runtime reopen 开新审查 series，保留代码、基线及可追溯旧审查/自审历史；reopen 不全量消解自审发现，用户裁决只覆盖 reason 点名的 spec-challenge，未解 correctness blocking 仍需真实内容修复与重新验证；只改状态、认领或复选框不算定义变化。整分支重开也需首次审查或上次重开以来任一 Ticket/Spec 有有效变化。未通过的测试不能通过接受现状绕过。
 
 Spec、技术方案与 Ticket 等文档每个产物只一次全面审查加最多一次复审；复审只看修复差异及受影响断言/影响面。仍未解决的问题交用户裁决，不再派第三轮；扩大范围、补审或“直到通过”不重置这个预算，也不能靠修订定义重置同一产物的文档预算。宿主逐轮写 `.agent/work/<topic>/reviews/review-log-<topic>.md`：产物、轮次、阻断数、建议数、修改范围、体积；无 Topic 时在对话报告这些字段。汇报已用轮数与剩余额度，不作趋势判断。
 
@@ -51,4 +51,4 @@ runtime 骨架预填 `unit_id`、`content_id`、`round`、`acceptance`、`probes
 - `coverage`: target、result=ok/finding/not-applicable、finding_id或reason；
 - `findings`: id、severity=blocking/advisory、summary、location、view=correctness/impact/spec/spec-challenge/maintainability、basis（出错路径或被违反规则）。可选 anchor、failure_path、reachability、downstream_ticket；contradicts 仅按上述唯一语义准入填写；advisory 必填 disposition=fix-in-batch/defer/decline，defer 附 owner，decline 附 reason。
 
-发现必须有位置与依据；pass 不含阻断、待修复建议或 spec-challenge。spec-challenge 交用户决定修订 Spec、接受风险或按原 Spec 继续，不能以“Spec 要求如此”放行。影响面必查，独立核实调用方与消费者。保留预填身份与内容不变，按 runtime 返回的材料和格式提交。停止时遵循[找用户的条件](user-intervention.md)。
+发现必须有位置与依据；pass 不含阻断、待修复建议或 spec-challenge。spec-challenge 仅用于需要改变已确认用户约定的挑战，交用户决定；技术事实错误及实现漏项归普通 spec/correctness，不能以“Spec 要求如此”放行。影响面必查，独立核实调用方与消费者。保留预填身份与内容不变，按 runtime 返回的材料和格式提交。停止时遵循[找用户的条件](user-intervention.md)。

@@ -138,7 +138,7 @@ class ImplementationTests(unittest.TestCase):
         self.assertIn("implement test", out["next_command"])
         self.assertNotIn("finish", out["next_command"])
         self.replace(p, "test_commands", ["python3 -c 'pass'"])
-        self.assertIn("reopen", self.cli("implement", "test", ok=False).stderr)
+        self.assertIn("refresh", self.cli("implement", "test", ok=False).stderr)
 
     def test_test_pass_is_bound_to_content_not_agent_or_ignored_files(self):
         self.setup_config(tests=("python3 -c 'pass'",))

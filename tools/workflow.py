@@ -459,7 +459,11 @@ def command_topic(args: argparse.Namespace) -> None:
 
 def command_resolve(args: argparse.Namespace) -> None:
     try:
-        if args.branch:
+        if args.refresh:
+            from workflow_lib import technical_refresh
+            report = technical_refresh.refresh(Path(args.repo), args.topic, args.ticket, args.branch,
+                                               reason=args.reason, notes_file=args.notes_file)
+        elif args.branch:
             report = branch_review.resolve(Path(args.repo), args.topic, args.accept, args.reason)
         else:
             report = ticket_resolution.resolve(Path(args.repo), args.ticket, args.topic, args.accept, args.reason)
@@ -479,6 +483,9 @@ def command_batch(args):
         elif args.batch_action == 'test':report=batches.test(repo,args.topic)
         elif args.batch_action == 'review':report=branch_review.review(repo,args.topic,args.submit,args.reviewer_model,args.reviewer_session_id,batch=True)
         elif args.batch_action == 'reopen':report=batches.reopen(repo,args.topic,args.reason)
+        elif args.batch_action == 'refresh':
+            from workflow_lib import technical_refresh
+            report=technical_refresh.refresh(repo,args.topic,batch=True,reason=args.reason,notes_file=args.notes_file)
         elif args.batch_action == 'repair':report=batches.repair(repo,args.topic,args.notes_file)
         else:report=batches.close(repo,args.topic,args.batch_action=='accept',args.reason)
     except (TicketError,RuleError,topic_service.TopicError,OSError,ValueError) as exc:
@@ -648,13 +655,13 @@ def parser() -> argparse.ArgumentParser:
 
     batch = sub.add_parser('batch')
     batch_actions=batch.add_subparsers(dest='batch_action',required=True)
-    for action in ('plan','status','test','review','repair','close','accept','reopen'):
+    for action in ('plan','status','test','review','repair','close','accept','reopen','refresh'):
         command=batch_actions.add_parser(action)
         command.add_argument('--repo',default='.')
         command.add_argument('--topic')
-        command.add_argument('--reason',default='默认整个 Topic 一个批次')
+        command.add_argument('--reason',required=action=='refresh',default='默认整个 Topic 一个批次')
         command.add_argument('--groups-file')
-        command.add_argument('--notes-file')
+        command.add_argument('--notes-file',required=action=='refresh')
         command.add_argument('--submit')
         command.add_argument('--reviewer-model')
         command.add_argument('--reviewer-session-id')
@@ -696,6 +703,8 @@ def parser() -> argparse.ArgumentParser:
     decision = resolve.add_mutually_exclusive_group(required=True)
     decision.add_argument("--accept", action="store_true")
     decision.add_argument("--reopen", action="store_true")
+    decision.add_argument("--refresh", action="store_true")
+    resolve.add_argument("--notes-file")
     resolve.add_argument("--reason", required=True)
     resolve.set_defaults(func=command_resolve)
 

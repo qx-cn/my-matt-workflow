@@ -1,0 +1,128 @@
+{
+  "content_id": "9da78010ed28ab8147ce66ddebf02cc4ac39d6cca818edf953bd730ee3383caf",
+  "unit_id": "f3465fbe5bf0447aad971301448e5c8d",
+  "baseline": "24e4f7081509660b37771b19b1b89d796059e93c",
+  "mode": "standalone-frozen-audit",
+  "review_scope": "touched-context",
+  "status": "findings",
+  "coverage": [
+    {
+      "target": "AC-01",
+      "result": "finding",
+      "finding_id": "F1",
+      "evidence": [
+        "完整比较共同规则、my-implement、my-tdd、my-code-review、my-review-design、Ticket格式和实际生成简报。",
+        "rule_material() 使用真实路径；touchpoints/rule_scope 不作权限边界。",
+        "/tmp/workflow-ticket-autonomy-audit-probes/briefing-emitted.txt"
+      ]
+    },
+    {
+      "target": "AC-02",
+      "result": "ok",
+      "evidence": [
+        "implementation-session.md 定义六字段技术记录、原因/消费者/验收归属/验证要求及不可改写收口历史。",
+        "technical_refresh._invalidate 将 prior_definition/current_definition 与原始 history 追加保存；tests 与 reviews 记录保留，self_review 归入 self_reviews。",
+        "独立 legacy-budget 探针基线不变、重复刷新字节不变；17项冻结回归覆盖完整保留及显式 reopen 区分。"
+      ],
+      "limits": [
+        "记录内容的语义真实性由执行 Agent 判断，本次不把非空字段校验当业务正确性证明。"
+      ]
+    },
+    {
+      "target": "AC-03",
+      "result": "ok",
+      "evidence": [
+        "独立 public CLI 运行 resolve --ticket --refresh、resolve --branch --refresh、batch refresh。",
+        "read_notes 严格校验六字段、证据安全路径/非空文件与 finding 精确身份；reason 非空。",
+        "冻结17项回归覆盖缺 notes、缺 evidence、错误kind、空验收说明、不存在路径、错误finding及无状态修改。",
+        "accept/reopen 调用路径仍分开，并在回归中验证显式用户 reopen 新 series。"
+      ]
+    },
+    {
+      "target": "AC-04",
+      "result": "ok",
+      "evidence": [
+        "/tmp/workflow-ticket-autonomy-audit-probes/probe-more-log.json：legacy 3轮恢复为4，重复刷新不重复事件，第5轮exit1。",
+        "/tmp/workflow-ticket-autonomy-audit-probes/stop-log.json：batch及branch已开4轮刷新后remaining=0，仍拒绝新轮。",
+        "冻结17项回归覆盖当前测试、自审与审查资格失效，active_review撤销，已开未提交reviews保留且series不变。",
+        "review_rounds floor 与 round/max 已观测历史共同计算；测试消费者校验refresh_epoch。"
+      ]
+    },
+    {
+      "target": "AC-05",
+      "result": "finding",
+      "finding_id": "F2",
+      "evidence": [
+        "/tmp/workflow-ticket-autonomy-audit-probes/probe-log.json：三个入口混合技术/产品挑战只消解点名技术finding，状态仍needs-user、decisions_needed只留产品挑战。",
+        "/tmp/workflow-ticket-autonomy-audit-probes/stop-log.json：即便点名技术finding，inconclusive结果在三个入口仍保持停止。",
+        "technical_refresh._challenges/_restore_state 检查有效原始发现、contradicts、无关blocked-by-design及全部pending；不批量删挑战。",
+        "/tmp/workflow-ticket-autonomy-audit-probes/probe-more-log.json：branch返回的topic test未恢复batch测试资格。"
+      ]
+    },
+    {
+      "target": "AC-06",
+      "result": "ok",
+      "evidence": [
+        "/tmp/workflow-ticket-autonomy-audit-probes/probe-more-log.json：missing-current-reviews + existing past_reviews场景恢复3轮；同一刷新第二次unchanged且record字节相同；下一轮=4。",
+        "/tmp/workflow-ticket-autonomy-audit-probes/probe-log.json：每个入口错误finding身份exit1。",
+        "冻结17项回归覆盖证据缺失、越界/绝对/symlink证据路径、不解除证据/矛盾停止。"
+      ],
+      "limits": [
+        "预算恢复依据快照现存reviews/past_reviews；未声称恢复不存在或丢失的外部历史。"
+      ]
+    },
+    {
+      "target": "AC-07",
+      "result": "not-applicable",
+      "reason": "完整交付验收含外部全量执行、实际发布包、宿主安装及另一新上下文固定场景演练，未在本次冻结输入中；本轮仅核实源码回归和资源合同，不对完整AC-07作通过判断，也不将看不到的外部执行归为代码缺陷。",
+      "evidence": [
+        "冻结 test_technical_refresh.py 17/17通过，耗时82.536s。",
+        "资源测试21项：19通过；两项copytree保留冻结只读文件权限后负向夹具回写PermissionError，完整stage也遇只读重复复制目标。",
+        "独立resource_probe使用冻结运行库的validate_skills和effective-consumer闭包，七项改动资源对所有有效消费者复制后字节相同（15/29/29/9/9/9/12个消费者），见 /tmp/workflow-ticket-autonomy-audit-probes/resource-bundles/report.json。",
+        "release._stage_release_tree 从workflow_lib/*.py复制 runtime，包含technical_refresh.py；宿主转换/安装未执行。"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P1",
+      "view": "spec",
+      "location": "current/tools/workflow_lib/ticket_implementation.py:267-268",
+      "summary": "implement start 的执行简报仍要求技术事实冲突按 spec-challenge 停止",
+      "basis": "approved-spec.md AC-01 明确技术事实错误和实现漏项按普通 spec/correctness 修复。current/skills/my-implement/SKILL.md:7 明确要求先读 runtime 执行简报，但 start() 写入“事实冲突按 spec-challenge 停止，不任选一边实现。”。独立真实 Git 仓库 briefing 经冻结 current/tools/workflow.py implement start 实际输出该句，见 /tmp/workflow-ticket-autonomy-audit-probes/briefing-emitted.txt 与 probe-log.json。该文案在正式 base 已存在；本次修改共同规则却未同步其直接生成者，形成当前行为合同偏差，属于 touched-context 相关既有漏项。",
+      "failure_path": "Agent 运行 implement start → 读取返回的 briefing 文件 → 核实现状与技术假设冲突 → 简报明确指示以 spec-challenge 停止；新规则要求同一条件下直接纠正事实并继续。无需新的产品取舍即可触发旧停止指令。",
+      "confidence": "high",
+      "disposition": "fix-in-batch",
+      "recommendation": "同步 runtime 简报模板到同一共同授权规则，区分技术事实纠正与改变已确认用户约定的挑战，并对实际 CLI 输出做规则一致性回归。"
+    },
+    {
+      "id": "F2",
+      "severity": "P2",
+      "view": "correctness",
+      "location": "current/tools/workflow_lib/technical_refresh.py:308-311",
+      "summary": "批次模式整分支 refresh 返回的 topic test 不能恢复整分支审查资格",
+      "basis": "AC-05 要求覆盖三个入口及 next_command。整分支 refresh 处置技术 finding 时会刷新相关 batch 的 refresh_epoch；但返回的 next_command 固定为 topic test。branch_review.review() 在 batches.enabled 时只检查 batches.tests_passed()，而 topic test 写 topic-tests.json，不更新 batch-tests-01.json。独立 branch-next 仓库执行返回步骤后 topic review exit 1；执行 batch test 后可正常开启第2轮，见 /tmp/workflow-ticket-autonomy-audit-probes/probe-more-log.json。",
+      "failure_path": "批次模式多 Ticket → topic review 登记技术挑战 → resolve --branch --refresh 点名处置 → 返回 workflow.py topic test --topic audit → topic test exit 0 → topic review exit 1（test: 审查需要当前全量测试相对基线无新增失败记录）→ 改跑 batch test 后 topic review round=2。",
+      "confidence": "high",
+      "disposition": "fix-in-batch",
+      "recommendation": "按真实审查消费者选择下一步：批次启用时返回 batch test，无批次旧协议才返回 topic test，并执行返回的命令后验证下一次审查可进入。"
+    }
+  ],
+  "independence": {
+    "provenance": "independent",
+    "input_boundary": "仅manifest.json、approved-spec.md、ticket.md、base/、current/；未读主仓库/记忆/实施记录，未派子Agent。",
+    "model": "宿主继承模型；本轮未指定模型或思考档位覆盖"
+  },
+  "verification": {
+    "manifest_hashes": "全部匹配；审查前后两次核对无差异",
+    "changed_paths": 25,
+    "probe_runtime": "/tmp/workflow-ticket-autonomy-audit-20261004/current/tools/workflow.py",
+    "source_mutation": false,
+    "external_submission": false
+  },
+  "residual_risks": [
+    "未动态注入写事务中途磁盘故障或并发竞态；审查核实了准备后内容/notes复核、状态原文比较及回滚代码。",
+    "未将格式校验、回归测试或资源复制视为真实Agent行为改善、完整发布构建、安装或长期实际项目效果证据。"
+  ]
+}

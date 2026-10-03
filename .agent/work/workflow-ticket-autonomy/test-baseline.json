@@ -1,0 +1,42 @@
+{
+  "completed": true,
+  "content_id": "d8d5fb775db6ccb953d4fe94262ec285f482a2f5f1d35340bff81799a5606012",
+  "head": "24e4f7081509660b37771b19b1b89d796059e93c",
+  "commands": [
+    "python3 -m unittest discover -s tests"
+  ],
+  "results": [
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests"
+      ],
+      "exit_code": 0,
+      "content_id": "d8d5fb775db6ccb953d4fe94262ec285f482a2f5f1d35340bff81799a5606012",
+      "environment": {
+        "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+        "python_executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "executable": "/opt/homebrew/bin/python3"
+      },
+      "unavailable": false,
+      "comparison_eligible": true,
+      "execution_observed": true,
+      "output_complete": false,
+      "output_length": 4869,
+      "unavailable_loader_failures": [],
+      "loader_dependency_fingerprints": {},
+      "dependency_proof_version": 3,
+      "content_changed": false,
+      "output_tail": "------------------\\nRan 1 test in 0.000s\\n\\nFAILED (failures=1)\"}\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmptq89yde4/repo/releases/actual-suite\nINSTALLED actual-suite\n{\"host\": {\"status\": \"installed\", \"target\": \"auto\"}, \"release\": {\"release_id\": \"actual-suite\", \"status\": \"built\"}, \"source\": {\"status\": \"valid\"}}\nREUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpvqwbro0_/repo/releases/v1\nCURRENT v1\n{\"host\": {\"status\": \"current\", \"target\": \"auto\"}, \"release\": {\"release_id\": \"v1\", \"status\": \"current\"}, \"source\": {\"status\": \"valid\"}}\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpvrvqq3zc/releases/r4\nINSTALLED r4\n{\"host\": {\"status\": \"installed\", \"target\": \"codex\"}, \"release\": {\"release_id\": \"r4\", \"status\": \"built\"}, \"source\": {\"status\": \"valid\"}}\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpp2gf6har/repo/releases/r2\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpp2gf6har/repo/releases/r3\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpp2gf6har/repo/releases/r4\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp3eoahobe/workflow/releases/v1\nINSTALLED v1\n{\"host\": {\"status\": \"installed\", \"target\": \"auto\"}, \"release\": {\"release_id\": \"v1\", \"status\": \"built\"}, \"source\": {\"status\": \"valid\"}}\n/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp5qyw3jd_/workflow/releases/v2\nINSTALLED v2\n{\"host\": {\"status\": \"installed\", \"target\": \"auto\"}, \"release\": {\"release_id\": \"v2\", \"status\": \"built\"}, \"source\": {\"status\": \"valid\"}}\nREUSED /var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmp_08k09xn/workflow/releases/v1\nINSTALLED v1\n{\"host\": {\"status\": \"installed\", \"target\": \"auto\"}, \"release\": {\"release_id\": \"v1\", \"status\": \"current\"}, \"source\": {\"status\": \"valid\"}}\n........................................warning: adding embedded git repository: module\nhint: You've added another git repository inside your current repository.\nhint: Clones of the outer repository will not contain the contents of\nhint: the embedded repository and will not know how to obtain it.\nhint: If you meant to add a submodule, use:\nhint:\nhint: \tgit submodule add <url> module\nhint:\nhint: If you added this path by mistake, you can remove it from the\nhint: index with:\nhint:\nhint: \tgit rm --cached module\nhint:\nhint: See \"git help submodule\" for more information.\nhint: Disable this message with \"git config set advice.addEmbeddedRepo false\"\n.warning: adding embedded git repository: module\nhint: You've added another git repository inside your current repository.\nhint: Clones of the outer repository will not contain the contents of\nhint: the embedded repository and will not know how to obtain it.\nhint: If you meant to add a submodule, use:\nhint:\nhint: \tgit submodule add <url> module\nhint:\nhint: If you added this path by mistake, you can remove it from the\nhint: index with:\nhint:\nhint: \tgit rm --cached module\nhint:\nhint: See \"git help submodule\" for more information.\nhint: Disable this message with \"git config set advice.addEmbeddedRepo false\"\n...warning: adding embedded git repository: module\nhint: You've added another git repository inside your current repository.\nhint: Clones of the outer repository will not contain the contents of\nhint: the embedded repository and will not know how to obtain it.\nhint: If you meant to add a submodule, use:\nhint:\nhint: \tgit submodule add <url> module\nhint:\nhint: If you added this path by mistake, you can remove it from the\nhint: index with:\nhint:\nhint: \tgit rm --cached module\nhint:\nhint: See \"git help submodule\" for more information.\nhint: Disable this message with \"git config set advice.addEmbeddedRepo false\"\n.........................................................................................................................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 357 tests in 444.387s\n\nOK\n",
+      "command": "python3 -m unittest discover -s tests",
+      "failures": []
+    }
+  ],
+  "at": "2026-10-03T16:26:40.167670+00:00",
+  "baseline": "24e4f7081509660b37771b19b1b89d796059e93c"
+}

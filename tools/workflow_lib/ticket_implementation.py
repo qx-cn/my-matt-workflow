@@ -265,7 +265,7 @@ def start(repo, ticket=None, topic=None, agent=None):
                 impact=section_text(previous_unit.get('self_review',{}).get('text',''),'影响面')
                 parts.append(f"### {identifier}\n{impact or '未记录；自行核实'}")
     parts += sources + ["## 测试命令", "\n".join(value["test_commands"]),
-                        "## 实施计划", "Agent 动手前补写：文件和接口；现状断言→代码依据；契约/共享函数/表结构/配置/锁/错误码→调用方/消费者和兼容、数据、并发、权限、性能结论；每项验收各自对应测试断言。事实冲突按 spec-challenge 停止，不任选一边实现。"]
+                        "## 实施计划", "Agent 动手前补写：文件和接口；现状断言→代码依据；契约/共享函数/表结构/配置/锁/错误码→调用方/消费者和兼容、数据、并发、权限、性能结论；每项验收各自对应测试断言。核实技术事实与实现漏项，按 my-implement 的共同授权规则直接修复、记录调整并保持既定验收；需要改变用户已确认目标、外部行为、验收语义、明确限制或风险承诺才提出 spec-challenge。"]
     brief.parent.mkdir(parents=True, exist_ok=True)
     brief.write_text("\n\n".join(parts) + "\n")
     unit["briefing"] = str(brief)
@@ -298,7 +298,7 @@ def load_active(repo, ticket, topic, check_commands=True):
     if challenges and frontmatter(path)['status']=='implementing':
         review_loop.stop(unit,path,record,'Spec 与现有系统冲突：增强自审需要用户裁决')
     if check_commands and value.get("test_commands") != unit["definition"]["ticket"]["metadata"].get("test_commands"):
-        raise topics.TopicError("test_commands 与定义快照不同；恢复原值，或用户确认修订后 resolve --reopen")
+        raise topics.TopicError("test_commands 与定义快照不同；技术调整请 resolve --refresh --reason --notes-file；验收语义变化需用户裁决")
     if check_commands:
         validate(repo, path, config)
     return repo, config, topic, path, unit, record
@@ -360,6 +360,7 @@ def run_test_batch(repo, unit, record, commands, progress=False):
 def status(repo, ticket=None, topic=None):
     repo, config, topic, path, unit, _ = load_active(repo, ticket, topic, check_commands=False)
     from .batches import pending_self_findings
+    from .technical_refresh import review_findings, review_rounds
     passed = tests_passed(repo, unit)
     definition_changed = definition(repo, path) != unit["definition"]
     command = "review" if passed else "test"
@@ -387,13 +388,13 @@ def status(repo, ticket=None, topic=None):
         else:
             next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --accept --reason '<理由>'"
     if definition_changed:
-        next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --reopen --reason '<理由>'"
+        next_command = f"workflow.py resolve --repo {shlex.quote(str(repo))} --ticket {unit['ticket']} --refresh --reason '<技术调整理由>' --notes-file '<技术依据.json>'"
     return {"ticket": unit["ticket"], "topic": topic, "status": frontmatter(path)["status"],
             "baseline": unit["baseline"], "tests_passed": passed, "definition_changed": definition_changed,
             "stop_reason": unit.get("stop_reason"),
-            "decisions_needed": [dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for r in [dict(findings=[f for f,_ in pending_self_findings(unit).values()]),*[r.get('result',{}) for r in unit.get('reviews',[])[-1:]]] for f in r.get('findings',[]) if f.get("view") == "spec-challenge"], "rounds_used": len(unit.get("reviews", [])),
+            "decisions_needed": [dict(finding=f, decision="技术事实纠正可凭证据 refresh；目标、行为或验收语义变化请用户决定") for f in [*[f for f,_ in pending_self_findings(unit).values()], *review_findings(unit)] if f.get("view") == "spec-challenge"], "rounds_used": review_rounds(unit),
             "decisions": unit.get("decisions", []),
-            "inputs_needed": ["补齐并勾选当前验收"] if command=="finish" and re.search(r"^\s*- \[ \]",path.read_text(),re.M) else ["实际 reviewer-model 与审查上下文来源"] if command=="review" else [],
+            "inputs_needed": ["保持既定目标与验收语义的技术依据 JSON；涉及用户约定变化则请求裁决"] if definition_changed else ["补齐并勾选当前验收"] if command=="finish" and re.search(r"^\s*- \[ \]",path.read_text(),re.M) else ["实际 reviewer-model 与审查上下文来源"] if command=="review" else [],
             "next_command": next_command}
 
 

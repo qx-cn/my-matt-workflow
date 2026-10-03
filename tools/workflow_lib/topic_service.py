@@ -292,12 +292,13 @@ def status(repo, topic=None):
     known_issues = []
     decisions_needed = []
     unverified = []
+    from .technical_refresh import review_findings, review_rounds
     for record in ((archive if archive.exists() else path) / "implementations").glob("*.json"):
         implementation = json.loads(record.read_text())
         known_issues.extend(implementation.get("known_issues", []))
         for review in implementation.get("reviews", []):
             if "accepted" != implementation.get("outcome") and value["status"] != "archived" and review == implementation.get("reviews", [])[-1]:
-                decisions_needed.extend(dict(finding=f, decision="请决定修订 Spec、接受风险或按原 Spec 继续") for f in review.get("result", {}).get("findings", []) if f.get("view") == "spec-challenge")
+                decisions_needed.extend(dict(finding=f, decision="技术事实可凭证据 refresh；用户约定变化请决定修订 Spec、接受风险或按原 Spec 继续") for f in review_findings(implementation) if f.get("view") == "spec-challenge")
             advisories.extend(f for f in review.get("result", {}).get("findings", []) if f.get("severity") == "advisory")
     from . import batches, ticket_implementation
     from .tickets import frontmatter
@@ -337,7 +338,7 @@ def status(repo, topic=None):
             from .branch_review import effective_state
             branch=effective_state(repo,read_config(repo),topic,path,ticket_implementation.records(repo,topic),branch,branch_file)
         known_issues.extend(branch.get('known_issues', []))
-        latest_findings = branch.get('reviews', [{}])[-1].get('result', {}).get('findings', []) if branch.get('reviews') else []
+        latest_findings = review_findings(branch)
         advisories.extend(f for f in latest_findings if f.get('severity') == 'advisory')
         from .branch_review import acceptance_current
         accepted_current=acceptance_current(repo,branch)
@@ -361,7 +362,7 @@ def status(repo, topic=None):
             "branch_review": {'status':'accepted' if accepted_current else branch['status'],
                               'stop_reason':None if accepted_current else branch.get('stop_reason'),
                               'historical_stop_reason':branch.get('stop_reason') if accepted_current else None,
-                              'rounds_used':len(branch['reviews'])} if branch else None,
+                              'rounds_used':review_rounds(branch)} if branch else None,
             "inputs_needed":batch_status.get('inputs_needed',[]) if batch_status else [],
             "next_command": command}
 

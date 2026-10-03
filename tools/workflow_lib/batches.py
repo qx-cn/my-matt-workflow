@@ -354,6 +354,7 @@ def test(repo,topic=None):
     current=run_full(repo,topics.read_config(repo))
     baseline=json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text())
     current.update(compare(baseline,current))
+    current['refresh_epoch']=batch.get('refresh_epoch')
     impl.write_json(topics.topic_path(repo,topic)/f"batch-tests-{batch['id']}.json",current)
     return current
 
@@ -362,6 +363,7 @@ def tests_passed(repo,config,topic,batch):
     path=topics.topic_path(repo,topic)/f"batch-tests-{batch['id']}.json"
     if not path.exists():return False
     value=json.loads(path.read_text())
+    if value.get('refresh_epoch') != batch.get('refresh_epoch'):return False
     if value.get('completed') is not True or value.get('content_id')!=topics.content_id(repo) or value.get('commands')!=topics.full_tests(config):return False
     try:
         baseline=json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text())
@@ -417,19 +419,29 @@ def status(repo,topic=None):
             command=f"workflow.py batch {'accept' if tests_current else 'test'} --repo {shlex.quote(str(repo))} --topic {topic}"
             if tests_current:command+=f" --reason '{targets}: <裁决理由>'"
         content_input=['点名挑战并说明裁决；修订定义后可 batch reopen --reason；接受会保留已知问题；correctness blocking 须先修复并审查']
-    latest=batch.get('reviews',[])[-1:]
+    from .technical_refresh import review_findings, review_rounds
+    latest=review_findings(batch)
+    branch_file=topics.topic_path(repo,topic)/'branch-review.json'
+    if branch_file.exists():latest += review_findings(json.loads(branch_file.read_text()))
+    from . import branch_review
+    subset={t:tickets[t] for t in batch['tickets']}
+    if batch.get('definition') and branch_review.definition(repo,subset)!=batch['definition']:
+        command=f"workflow.py batch refresh --repo {shlex.quote(str(repo))} --topic {topic} --reason '<技术调整理由>' --notes-file '<技术依据.json>'"
+        content_input=['技术依据 JSON；目标、行为或验收语义变化需用户裁决']
     return dict(topic=topic,batch=batch['id'],state=labels[batch['status']],tickets=batch['tickets'],next_command=command,
         inputs_needed=content_input or (['实际 reviewer-model 与审查上下文来源'] if command and ' review ' in command else ['包含待修复发现 id 的说明文件'] if command and ' repair ' in command else []),
         self_findings=observations,
-        decisions_needed=[dict(finding=o['finding'],target=o['target'],decision='请点名修订定义后 reopen 或 accept') for o in challenges]+implementation_status.get('decisions_needed',[])+[dict(finding=f,decision='请决定修订 Spec、接受风险或按原 Spec 继续') for r in latest for f in r.get('result',{}).get('findings',[]) if f.get('view')=='spec-challenge'],
+        rounds_used=review_rounds(batch),rounds_remaining=max(0,4-review_rounds(batch)),
+        decisions_needed=[dict(finding=o['finding'],target=o['target'],decision='技术事实可凭证据 refresh；用户约定变化请决定修订 Spec、接受风险或按原 Spec 继续') for o in challenges]+implementation_status.get('decisions_needed',[])+[dict(finding=f,decision='技术事实可凭证据 refresh；用户约定变化请决定修订 Spec、接受风险或按原 Spec 继续') for f in latest if f.get('view')=='spec-challenge'],
         unverified=[dict(command=r['command'],note=baseline_gap(r)[1]) for r in json.loads((topics.topic_path(repo,topic)/'test-baseline.json').read_text()).get('results',[]) if baseline_gap(r)] if (topics.topic_path(repo,topic)/'test-baseline.json').exists() else [])
 
 
 def repair_findings(repo,topic,batch):
-    findings=[f for r in batch.get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
+    from .technical_refresh import review_findings
+    findings=[f for f in review_findings(batch) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
     branch=topics.topic_path(repo,topic)/'branch-review.json'
     if branch.exists():
-        findings += [f for r in json.loads(branch.read_text()).get('reviews',[])[-1:] for f in r.get('result',{}).get('findings',[]) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
+        findings += [f for f in review_findings(json.loads(branch.read_text())) if f['severity']=='blocking' or f.get('disposition')=='fix-in-batch']
     findings += [dict(o['finding'],id=o['target']) for o in self_observations(repo,topic,batch['tickets']) if o['finding'].get('view')!='spec-challenge']
     return findings
 
@@ -537,7 +549,7 @@ def reopen(repo,topic=None,reason=''):
     from .quality_metrics import preserve_history
     preserve_history(batch)
     batch.update(definition=changed,reviews=[],status='reviewing')
-    for key in ('active_review','first_review_volume','stop_reason','acceptance'):batch.pop(key,None)
+    for key in ('active_review','first_review_volume','stop_reason','acceptance','refresh_budget_floor','refresh_review_series'):batch.pop(key,None)
     branch_file=topics.topic_path(repo,topic)/'branch-review.json'
     if branch_file.exists():
         branch=json.loads(branch_file.read_text())
@@ -546,7 +558,7 @@ def reopen(repo,topic=None,reason=''):
             from .quality_metrics import preserve_history
             preserve_history(branch)
             branch.update(definition=full_definition,reviews=[],status='implementing')
-            for key in ('active_review','first_review_volume','stop_reason','acceptance'):branch.pop(key,None)
+            for key in ('active_review','first_review_volume','stop_reason','acceptance','refresh_budget_floor','refresh_review_series'):branch.pop(key,None)
             branch.setdefault('decisions',[]).append(dict(action='reopen',reason=reason,at=topics.now()))
             impl.write_json(branch_file,branch)
     batch.setdefault('decisions',[]).append(dict(action='reopen',reason=reason,at=topics.now()))

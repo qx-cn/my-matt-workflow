@@ -80,7 +80,7 @@ python3 tools/workflow.py metrics --repo <project> --topic <topic>
 
 `topic start` 必须指定 Topic；其他 Topic 操作在只有一个活动 Topic 时可以省略。Ticket id 包含 Topic，指定 `--ticket` 后无需另带 `--topic`；省略 Ticket 时选择该 Topic 唯一的活动 Ticket。多 Topic 时显式选择。
 
-`batch review` 冻结提交范围、完整仓库、批次 Ticket/验收、有效 Spec、已决事项、项目规则与影响声明。新上下文审查者独立核实调用方与消费者。runtime 提供材料包和预填身份的结果骨架，Agent 填判断字段，提交时无需手抄哈希。发现用位置、五种视角（correctness/impact/spec/spec-challenge/maintainability）、依据和严重度登记，验收锚点可选；advisory 附 fix-in-batch/defer（建议归属）/decline（理由）。覆盖验收仍必填；Spec 导致可达故障时交用户裁决，不因符合 Spec 放行。
+`batch review` 冻结提交范围、完整仓库、批次 Ticket/验收、有效 Spec、已决事项、项目规则与影响声明。新上下文审查者独立核实调用方与消费者。runtime 提供材料包和预填身份的结果骨架，Agent 填判断字段，提交时无需手抄哈希。发现用位置、五种视角（correctness/impact/spec/spec-challenge/maintainability）、依据和严重度登记，验收锚点可选；advisory 附 fix-in-batch/defer（建议归属）/decline（理由）。覆盖验收仍必填；技术事实错误或实现漏项按普通 spec/correctness 修复；需要改变已确认目标、外部行为、验收语义、明确限制或风险承诺的 spec-challenge 才交用户裁决，不因符合 Spec 放行。
 
 有阻断或本批次修复建议时，修改后用 `batch repair --notes-file <引用发现id的修复说明>` 提交，再 `batch test/review` 复审差异；不创建逐发现补偿 Ticket。内容变化使通过记录失效。批次收口之后才是不可改写历史，后续改变通过补偿或迁移 Ticket。
 
@@ -98,7 +98,7 @@ Topic 首个批次开工前在干净基线跑一次全量集合；每张 Ticket 
 
 Spec 定稿前遇到持久数据、锁/并发、外部契约、发布回滚兼容或改变其他模块行为，自动一次新上下文设计审查加最多一次差异复审；未触发要写理由。设计审查必须读代码核实事实，报告断言核验、发现、排除风险和待决语义假设四部分。挑战与未决产品取舍交用户；已决目标不反复重开，新代码或运行证据可以更正旧事实。保存设计报告到 Topic reviews，结构化 design_report 或完整四部分 Markdown 可供逃逸登记识别；无可识别记录标“未知”。
 
-审查停止时由用户决定接受、修订后重开或放弃：批次用 `batch accept|reopen --reason <裁决>`；高风险 Ticket 用 `resolve --ticket <id> --accept|--reopen --reason <裁决>`；整分支用 `resolve --branch --accept|--reopen --reason <裁决>`。接受不能绕过测试；停止整个 Topic 用 `topic abandon --reason <原因>`，历史归档且不覆盖。修改行重叠或体积变化只作为诊断信号；当前内容有效通过且满足其他门禁时不能仅因这两项硬停，审查预算和真实未解失败仍有效。
+Ticket 组织工作和验收归属；touchpoints、旧 rule_scope 与原计划都是提示。为已确认目标完成跨模块修改、相关修复、整理、测试和文档同步，不申请技术扩围。技术性定义变化或已登记技术挑战用 `resolve --ticket <id> --refresh`、`resolve --branch --refresh` 或 `batch refresh`，均需 `--reason` 与 `--notes-file`。材料格式与证据要求见[实施适配](resources/adapters/implementation-session.md#技术刷新)。刷新失效旧验证，保留历史、未解发现和同一 series 全部已开轮次；四轮耗尽仍拒绝第五轮。真正需要用户裁决的停止由用户决定接受、修订后重开或放弃：批次用 `batch accept|reopen --reason <裁决>`；高风险 Ticket 用 `resolve --ticket <id> --accept|--reopen --reason <裁决>`；整分支用 `resolve --branch --accept|--reopen --reason <裁决>`。接受不能绕过测试；停止整个 Topic 用 `topic abandon --reason <原因>`，历史归档且不覆盖。修改行重叠或体积变化只作为诊断信号；当前内容有效通过且满足其他门禁时不能仅因这两项硬停，审查预算和真实未解失败仍有效。
 
 Agent 默认消费状态 JSON；给用户展示时用 topic/implement/batch status 的 `--human`，输出中文进度、需要决定的事项、未验证命令与下一步。quick 不建 Spec/Ticket，其摘要保留验收证据、实际影响/关键失败路径和未验证项，不强制空六节或标准全摘要。standard 交付摘要包含改动概述、测试结果、审查发现与修复、建议、已知问题、长期知识沉淀、用户介入记录、未验证项；发现/修复按视角及自审/批次审查/用户来源分别统计，无可靠记录保持未知。
 

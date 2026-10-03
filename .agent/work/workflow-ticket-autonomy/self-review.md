@@ -1,0 +1,31 @@
+## 验收对照
+
+AC-01/02：user-intervention、instruction-authority、work-scope、testing-seams、project-rules、review-loop、实施/TDD/审查Skill、Ticket格式和运行时生成简报一致；两项独立发现修复后差异复审pass。21项公共CLI刷新回归和资源21项回归通过，真实新上下文3个最终场景中两技术目标complete、混合产品挑战保留needs-user；场景只证明固定输入和已测试行为。最终源码与批次各378项通过，content_changed=false，内容身份d697c7f6f038c61f8288506a9e093a83eb8100d70c042d089098b4f1ad0e9e95；规范发布门禁成功，发布包20261004-ticket-autonomy-final。
+
+AC-03/06：test_missing_invalid_or_wrong_evidence_does_not_mutate_records、test_evidence_paths_fail_closed_and_transaction_leaves_no_partial_write、test_existing_temporary_symlink_cannot_redirect_a_refresh_write在真实CLI拒绝缺证据/错误身份/不安全路径，无记录改写或外部写入；read_notes只机械验证，Agent仍承担性质判断。三个入口的实际恢复由混合独立挑战、技术自审、批次和整分支探针覆盖。
+
+AC-04：开放未提交轮次保持数组/series，过期result不能提交；legacy 3→4不清零，三类单位四轮后仍拒绝第五轮；用户显式reopen保持新series语义。旧test_run/active_review/self_review/acceptance保留在invalidated_evidence；批次/分支原全量收据随technical_refreshes/prior_full_tests归档，重跑之后内容仍保留。刷新失效eligibility，要求新的测试与自审。
+
+AC-05：test_mixed_self_challenges_only_dispose_the_named_technical_one和三个独立审查入口混合测试仅消解fact，product/correctness保留；test_technical_disposition_does_not_clear_mirrored_evidence_stop保持branch和batch证据停止；定义变化不能解除未处置产品、inconclusive、contradicts或预算停止。状态/repair读取未处置发现。
+
+AC-07：独立审查R1发现F1/F2，R2差异复审pass；两次候选场景独立上下文真实执行，最终场景的315份规则投影已与当前源码核对一致，正式批次独立审查随后检查最终冻结内容。最终源码、发布包和当前宿主状态分开记录；未做实际宿主安装或外部推送。
+
+## 现状核实
+
+原runtime以reviews长度计轮，reopen清当前数组/停止；旧自审加载再次触发Spec挑战停止。新technical_refresh保持原reviews和budget floor；review_rounds用于所有开轮门禁，用户显式reopen清刷新series/floor但保留历史。batch-tests与topic-tests在独立文件，refresh_epoch用于失效资格；仅删Ticket test_run不足以失效它们。上述事实由真实文件与CLI探针核实。
+
+## 影响面
+
+workflow.py resolve/batch→technical_refresh；ticket/branch开轮与Ticket/batch/topic status→review_rounds/review_findings；self_reviews.resolutions→pending_self_findings→load_active/自审/批次修复/收口；refresh_epoch→batch/topic tests_passed。定义同步相关未收口Ticket、批次与整分支；完成Ticket文档不回写，收口历史另用补偿；已接受Ticket的产品事项不重新作为待决，全部批次收口后拒绝branch技术刷新。消息、生成简报、共享规则和打包消费者同步。声明不等同独立审查；冻结审查者自行核实调用链。
+
+## 对抗检查
+
+已实际覆盖错误身份、证据空/不存在/越界/符号链接、旧通过失效、旧开放单元不能提交、4轮耗尽拒第5轮、混合挑战只处置技术项、mirror evidence stop、定义回到早期值仍是新刷新、重复刷新不重复计数/不改变文件。全量并行执行曾有artifact-review-finalize异常，独立重跑通过；最终门禁按独立TMPDIR隔离，不宣称该既有全局注册表并发路径得到修复或保证。未进行进程强杀中途的多文件写入崩溃恢复保证。
+
+## 简洁与约定
+
+三个刷新入口共享单一实现与严格六字段JSON，无新增finding view或静默历史改标签。原有accept/reopen保持用户裁决语义；旧模型字段/计数从已观察历史恢复。使用当前Topic的一张纵向Ticket承接，related修复留本批次，不逐发现拆补偿。必要CLI回归验证可观察行为与独立字面预期，资源/格式校验不冒充Agent语义或生产验证。
+
+## 已知缺口
+
+runtime不判断笔记技术/产品语义，只验证机械身份/定义/状态与可定位字节；语义由Agent和独立审查负责。固定场景不证明所有模型、上下文或长期实际使用；长期技术扩围请求与产品裁决需后续真实使用记录。没有外部宿主安装、推送、生产运行验证。没有声明共享全局临时目录下多验证进程完全安全，也没有声明多文件事务进程强杀恢复。

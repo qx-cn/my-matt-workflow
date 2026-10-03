@@ -177,7 +177,7 @@ class BatchTests(unittest.TestCase):
         p.write_text(p.read_text().replace('marker observed','different acceptance'))
         self.self_review()
         self.assertIn('definition',self.cli('implement','finish',ok=False).stderr)
-        self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
+        self.assertIn('--refresh',json.loads(self.cli('implement','status').stdout)['next_command'])
 
     def test_custom_partial_runner_assertion_is_not_swallowed_by_missing_phase(self):
         runner=self.repo/'full.py'
@@ -247,7 +247,7 @@ class BatchTests(unittest.TestCase):
         spec=self.repo/'.agent/work/feature/specs/specs-feature-01.md';spec.write_text(spec.read_text()+'\nApproved definition clarification.\n')
         self.cli('implement','test');self.cli('implement','self-review','--notes-file',str(notes))
         self.assertIn('definition',self.cli('resolve','--ticket','feature-01','--accept','--reason','accept challenge',ok=False).stderr)
-        self.assertIn('--reopen',json.loads(self.cli('implement','status').stdout)['next_command'])
+        self.assertIn('--refresh',json.loads(self.cli('implement','status').stdout)['next_command'])
 
     def test_loader_only_missing_dependency_is_not_a_known_assertion_failure(self):
         for verbose in ('',' -v'):

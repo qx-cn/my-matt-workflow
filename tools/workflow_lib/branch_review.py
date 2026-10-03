@@ -69,6 +69,9 @@ def tests_record(repo, topic):
 def tests_passed(repo, config, topic):
     record = tests_record(repo, topic)
     commands = [shlex.split(c) for c in topics.full_tests(config)]
+    branch = topics.topic_path(repo,topic)/'branch-review.json'
+    if record.exists() and branch.exists() and json.loads(record.read_text()).get('refresh_epoch') != json.loads(branch.read_text()).get('refresh_epoch'):
+        return False
     return bool(commands) and record.exists() and impl.tests_passed(repo, json.loads(record.read_text()), commands)
 
 
@@ -85,6 +88,8 @@ def test(repo, topic=None):
         raise topics.TopicError('topic test 需要非空全量测试集合')
     record = tests_record(repo, topic)
     unit = json.loads(record.read_text()) if record.exists() else {'tests': []}
+    branch = topics.topic_path(repo,topic)/'branch-review.json'
+    unit['refresh_epoch'] = json.loads(branch.read_text()).get('refresh_epoch') if branch.exists() else None
     output = impl.run_test_batch(repo, unit, record, commands)
     return dict(topic=topic, tests=output, tests_passed=tests_passed(repo, config, topic))
 
@@ -185,8 +190,9 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         unit.update(initiated_by=initiated_by,reason=reason)
     if unit['status'] == 'needs-user':
         raise topics.TopicError('整分支 needs-user：' + unit['stop_reason'])
+    from .technical_refresh import review_rounds, review_series
     if not submit:
-        if len(unit['reviews']) >= 4:
+        if review_rounds(unit) >= 4:
             try:
                 require_pass(repo, config, topic, root, tickets, unit)
             except (topics.TopicError, OSError, ValueError):
@@ -258,7 +264,7 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
                   reviews.frozen_file(directory,'specs.md',material['specs'].encode()),
                   reviews.frozen_file(directory,'review-loop-rules.md',reviews.loop_rules().encode()),
                   reviews.frozen_file(directory,'decided.md',decided.read_bytes() if decided.exists() else b'')]
-        skeleton = dict(unit_id=unit_id,content_id=identity,round=len(unit['reviews'])+1,
+        skeleton = dict(unit_id=unit_id,content_id=identity,round=review_rounds(unit)+1,
                         acceptance=material['acceptance'],probes=material['probes'],downstream_tickets=[],
                         status=None,reviewer=dict(provenance=None,model=None),coverage=[],findings=[])
         inputs.extend([reviews.frozen_file(directory,'tickets.md',material['ticket_documents'].encode()),
@@ -283,7 +289,8 @@ def review(repo, topic=None, submit=None, reviewer_model=None, reviewer_session_
         unit.setdefault('definition',frozen_definition)
         unit.setdefault('first_review_volume',review_loop.volume(manifest))
         unit['active_review'] = active
-        unit['reviews'].append(dict(unit_id=unit_id,content_id=identity,round=skeleton['round'],status='open',manifest=str(path),review_context=context,review_series=unit['reviews'][0].get('review_series',unit_id) if unit['reviews'] else unit_id))
+        series = review_series(unit, unit_id)
+        unit.setdefault('reviews', []).append(dict(unit_id=unit_id,content_id=identity,round=skeleton['round'],status='open',manifest=str(path),review_context=context,review_series=series))
         impl.write_json(record,unit)
         return {**active,**{k:skeleton[k] for k in reviews.PREFILLED},'rounds_used':skeleton['round'],'rounds_remaining':4-skeleton['round']}
     except Exception:
@@ -309,7 +316,7 @@ def resolve(repo, topic=None, accept=False, reason=''):
     from .quality_metrics import preserve_history
     preserve_history(unit)
     unit.update(definition=definition(repo,tickets),reviews=[],status='implementing')
-    for key in ('active_review','stop_reason','first_review_volume'): unit.pop(key,None)
+    for key in ('active_review','stop_reason','first_review_volume','refresh_budget_floor','refresh_review_series'): unit.pop(key,None)
     from . import batches
     if batches.enabled(repo,topic):
         plan,current=batches.active(repo,topic)
@@ -320,7 +327,7 @@ def resolve(repo, topic=None, accept=False, reason=''):
                 from .quality_metrics import preserve_history
                 preserve_history(current)
                 current.update(definition=changed,reviews=[],status='reviewing')
-                for key in ('active_review','first_review_volume','stop_reason','acceptance'):current.pop(key,None)
+                for key in ('active_review','first_review_volume','stop_reason','acceptance','refresh_budget_floor','refresh_review_series'):current.pop(key,None)
             elif not current.get('definition'):
                 current['status']='open'
             current.setdefault('decisions',[]).append(dict(action='branch-reopen',reason=reason,at=topics.now()))

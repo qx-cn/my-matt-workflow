@@ -1,0 +1,119 @@
+{
+  "content_id": "f30a132b4d7bb80c68590c4826d387135a30bf8037f7e8930584d8b954c2c97b",
+  "unit_id": "06cbafbd6b8f464185b7f3a57ae6ddf4",
+  "baseline": "24e4f7081509660b37771b19b1b89d796059e93c",
+  "comparison_content_id": "9da78010ed28ab8147ce66ddebf02cc4ac39d6cca818edf953bd730ee3383caf",
+  "mode": "standalone-frozen-differential-review",
+  "status": "pass",
+  "review_scope": "上轮current与本轮current的5文件修复差异及受影响调用方/消费者",
+  "changed_paths": [
+    "tests/test_technical_refresh.py",
+    "tools/workflow_lib/batches.py",
+    "tools/workflow_lib/technical_refresh.py",
+    "tools/workflow_lib/ticket_implementation.py",
+    "tools/workflow_lib/topic_service.py"
+  ],
+  "resolutions": [
+    {
+      "id": "F1",
+      "status": "resolved",
+      "location": "current/tools/workflow_lib/ticket_implementation.py:267-268",
+      "basis": "独立 implement start 实际生成简报已移除无条件事实冲突停止指令，改为技术事实/实现漏项按共同授权规则直接修复，仅改变用户已确认约定才提出spec-challenge。",
+      "evidence": [
+        "/tmp/workflow-ticket-autonomy-audit-probes-r2/briefing-emitted.txt",
+        "/tmp/workflow-ticket-autonomy-audit-probes-r2/probe-log.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "status": "resolved",
+      "location": "current/tools/workflow_lib/technical_refresh.py:330-336",
+      "basis": "有批次plan时返回batch test；公共CLI探针在含空格repo路径且不同cwd执行返回命令，仅执行该命令后topic review即可开第2轮。无批次分支仍返回topic test，与其真实消费者一致。",
+      "evidence": [
+        "/tmp/workflow-ticket-autonomy-audit-probes-r2/probe-result.json",
+        "/tmp/workflow-ticket-autonomy-audit-probes-r2/probe-log.json"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "target": "AC-01",
+      "result": "ok",
+      "evidence": [
+        "F1 修复已由实际CLI生成简报核实。",
+        "共同规则/Skill未新增差异；本轮仅检查简报生成者及直接消费者。"
+      ]
+    },
+    {
+      "target": "AC-02",
+      "result": "ok",
+      "evidence": [
+        "新invalidated_evidence追加旧test_run/active_review/self_review/acceptance原值副本，technical_refreshes保存prior_status与prior_stop_reason；原始审查结果保留。",
+        "公共探针逐字段核对旧test_run/active_review/self_review字节语义相等；基线及reviews不变。"
+      ]
+    },
+    {
+      "target": "AC-03",
+      "result": "not-applicable",
+      "reason": "首轮已审查三个刷新入口与入参/身份合同；本轮无CLI输入校验或accept/reopen差异，不重复扩大。"
+    },
+    {
+      "target": "AC-04",
+      "result": "ok",
+      "evidence": [
+        "证据归档只追加历史，随后撤销旧资格；独立探针验证旧证据字段失效，重新test/self-review后下轮为2且reviews未丢失。",
+        "本轮未改review_rounds、series或四轮上限逻辑；已审阅新增跨对象stop gate与其预算停止消费者。"
+      ]
+    },
+    {
+      "target": "AC-05",
+      "result": "ok",
+      "evidence": [
+        "F2修复已独立执行next_command并进入下一轮。",
+        "新增_other_stops保留scope内inconclusive/contradicts/非技术blocked-by-design及其他真实停止；仅共享阻止解除needs-user，不删除原始结果。",
+        "公共CLI生成inconclusive+技术finding后刷新：branch与batch均仍needs-user，batch review实际拒绝。",
+        "技术/产品混合finding只处置technical；batch status只列product，--human给出既有用户裁决选项。"
+      ]
+    },
+    {
+      "target": "AC-06",
+      "result": "ok",
+      "evidence": [
+        "新增归档与停止检查不更改budget恢复算法；本轮探针重复同一refresh返回unchanged，implementation record字节完全不变。",
+        "错误身份/缺证据等无修复差异，沿用首轮已覆盖边界，不重复扩审。"
+      ]
+    },
+    {
+      "target": "AC-07",
+      "result": "not-applicable",
+      "reason": "外部全量执行、完整发布包、宿主安装和另一新上下文Agent场景未提供，仍未验证；本轮仅报告修复相关CLI探针及3项定向回归结果。",
+      "evidence": [
+        "3项定向回归全部通过：证据归档/幂等、批次及整分支旧测试过期与返回命令、新增镜像证据停止；21.554s。",
+        "未执行宿主安装、发布或调用被审runtime提交本审查结论。"
+      ]
+    }
+  ],
+  "findings": [],
+  "verification": {
+    "frozen_manifest_hashes": "审查前后全部匹配",
+    "independent_probe_runtime": "/tmp/workflow-ticket-autonomy-audit-20261004-r2-final/current/tools/workflow.py",
+    "public_cli_probes": "/tmp/workflow-ticket-autonomy-audit-probes-r2/probe-log.json",
+    "focused_regression": "3/3 passed; 21.554 seconds",
+    "source_mutation": false,
+    "runtime_submission": false,
+    "other_agents": false,
+    "model_override": false
+  },
+  "unverified": [
+    "外部全量执行",
+    "完整发布包构建与验证",
+    "宿主安装",
+    "另一新上下文Agent固定场景",
+    "长期实际项目效果"
+  ],
+  "independence": {
+    "provenance": "independent",
+    "input_boundary": "仅上轮原固定根与本轮固定根；自建公共CLI fixture位于独立probes-r2根。未读主仓库、开发草稿、可变实施记录、其他Agent或记忆。",
+    "model": "沿用宿主继承模型，无模型/思考覆盖"
+  }
+}

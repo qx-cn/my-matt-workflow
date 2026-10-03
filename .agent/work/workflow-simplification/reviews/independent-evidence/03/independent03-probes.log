@@ -1,0 +1,12 @@
+start_exit 0
+test_exit 1 stderr 测试失败：python3 -c 'from pathlib import Path; p=Path('"'"'.agent/counter'"'"'); n=int(p.read_text()) if p.exists() else 0; p.write_text(str(n+1)); print('"'"'attempt'"'"',n+1); raise SystemExit(9 if n==0 else 0)'
+退出码：9
+attempt 1
+status_exit 0 status {"baseline": "f90019be1cc4b554111683499613bdba2c939347", "definition_changed": false, "next_command": "workflow.py implement review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpo2fh4n0r --ticket feature-01", "status": "implementing", "tests_passed": true, "ticket": "feature-01", "topic": "feature"}
+recorded_exit_codes [9, 0]
+private_start_exit 0
+private_test_exit 0
+needs_user_test_exit 0
+changed_test_exit 1 stderr test_commands 与定义快照不同；恢复原值，或用户确认修订后 resolve --reopen
+restored_test_exit 0
+restored_status {"baseline": "2940569819da226d2c12df5a6c37070e691a7389", "definition_changed": false, "next_command": "workflow.py implement review --repo /private/var/folders/19/czyfn0rn7yz0gnbrkff0lgd40000gn/T/tmpmpgngdtg --ticket feature-01", "status": "needs-user", "tests_passed": true, "ticket": "feature-01", "topic": "feature"}

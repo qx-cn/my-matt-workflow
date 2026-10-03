@@ -31,4 +31,4 @@ Spec 不声明执行 Agent；输出前只解析跨 Agent 的项目规则与 ADR�
 
 ## 实施与审查
 
-开始每个 Ticket 前，按真实将修改的路径和 run context 固定的 Agent 重新执行 `resolve-rules`，再运行 `python3 <runtime_entry> validate-ticket <ticket-path>`。新规则若改变架构、接口、范围或验收，回到计划确认；审查发现必须引用规则来源与匹配依据。
+开始每个 Ticket 前，按真实将修改的路径和 run context 固定的 Agent 重新执行 `resolve-rules`，再运行 `python3 <runtime_entry> validate-ticket <ticket-path>`。路径提示之外的必要修改也遵守真实路径规则；技术性架构、接口和方法调整自行记录并验证。只有改变已确认目标、外部行为、验收语义、明确限制或风险承诺才请求用户决定；审查发现必须引用规则来源与匹配依据。

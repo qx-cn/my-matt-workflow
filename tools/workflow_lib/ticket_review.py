@@ -100,7 +100,8 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
         raise topics.TopicError('implement review 只接受 implementing')
     if not isinstance(reviewer_model, str) or not reviewer_model.strip():
         raise topics.TopicError('reviewer.model: 开启审查时请用 --reviewer-model 声明宿主实际模型')
-    if len(unit.get('reviews', [])) >= 4:
+    from .technical_refresh import review_rounds, review_series
+    if review_rounds(unit) >= 4:
         try:
             require_pass(repo, config, topic, path, unit)
         except (topics.TopicError, OSError, ValueError):
@@ -135,7 +136,7 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
                   frozen_file(directory, 'review-loop-rules.md', loop_rules().encode()),
                   frozen_file(directory, 'decided.md', decided.read_bytes() if decided.exists() else b'')]
         skeleton = {'unit_id': unit_id, 'content_id': identity,
-                    'round': len(unit.get('reviews', [])) + 1,
+                    'round': review_rounds(unit) + 1,
                     'acceptance': targets(path), 'probes': value['review_probes'],
                     'downstream_tickets': downstream(repo, topic, unit['ticket']),
                     'status': None, 'reviewer': {'provenance': None, 'model': None},
@@ -167,7 +168,8 @@ def open_review(repo, ticket=None, topic=None, reviewer_model=None, reviewer_ses
                   'definition': starting_definition, 'config': config}
         unit.setdefault('first_review_volume', review_loop.volume(manifest))
         unit['active_review'] = active
-        unit.setdefault('reviews', []).append({'unit_id': unit_id, 'content_id': identity, 'round': skeleton['round'], 'status': 'open', 'manifest': str(manifest_path), 'review_context':review_context, 'review_series':unit.get('reviews',[{}])[0].get('review_series',unit_id) if unit.get('reviews') else unit_id})
+        series = review_series(unit, unit_id)
+        unit.setdefault('reviews', []).append({'unit_id': unit_id, 'content_id': identity, 'round': skeleton['round'], 'status': 'open', 'manifest': str(manifest_path), 'review_context':review_context, 'review_series':series})
         impl.write_json(record, unit)
         return {**active, **{k: skeleton[k] for k in PREFILLED}, 'rounds_used': skeleton['round'], 'rounds_remaining': max(0, 4 - skeleton['round'])}
     except Exception:
