@@ -1,0 +1,112 @@
+{
+  "observed_at": "2026-10-03T19:07:57.837256+00:00",
+  "verified_commit": "eb364d709eb23040200e45a66d1ec798ce9216d9",
+  "source_content_id": "02275e47907c77d07b5fd06eee719a49924824a7c4675c983985413f9660b7d6",
+  "source_full_tests_previously_passed": 384,
+  "release_id": "20261004-ticket-autonomy-verified",
+  "main_push_before_this_record": "verified remote matches eb364d709eb23040200e45a66d1ec798ce9216d9",
+  "hosts": [
+    {
+      "target": "codex",
+      "release_id": "20261004-ticket-autonomy-verified",
+      "runtime_entry": "/Users/sherly/.codex/my-matt-workflow/runtime/20261004-ticket-autonomy-verified/tools/workflow.py",
+      "cli_help_smoke": [
+        {
+          "argv": [
+            "python3",
+            "/Users/sherly/.codex/my-matt-workflow/runtime/20261004-ticket-autonomy-verified/tools/workflow.py",
+            "resolve",
+            "--help"
+          ],
+          "exit_code": 0,
+          "expected_cli_flag": "--refresh",
+          "verified": true
+        },
+        {
+          "argv": [
+            "python3",
+            "/Users/sherly/.codex/my-matt-workflow/runtime/20261004-ticket-autonomy-verified/tools/workflow.py",
+            "batch",
+            "refresh",
+            "--help"
+          ],
+          "exit_code": 0,
+          "expected_cli_flag": "--notes-file",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "target": "claude",
+      "release_id": "20261004-ticket-autonomy-verified",
+      "runtime_entry": "/Users/sherly/.claude/my-matt-workflow/runtime/20261004-ticket-autonomy-verified/tools/workflow.py",
+      "cli_help_smoke": [
+        {
+          "argv": [
+            "python3",
+            "/Users/sherly/.claude/my-matt-workflow/runtime/20261004-ticket-autonomy-verified/tools/workflow.py",
+            "resolve",
+            "--help"
+          ],
+          "exit_code": 0,
+          "expected_cli_flag": "--refresh",
+          "verified": true
+        },
+        {
+          "argv": [
+            "python3",
+            "/Users/sherly/.claude/my-matt-workflow/runtime/20261004-ticket-autonomy-verified/tools/workflow.py",
+            "batch",
+            "refresh",
+            "--help"
+          ],
+          "exit_code": 0,
+          "expected_cli_flag": "--notes-file",
+          "verified": true
+        }
+      ]
+    }
+  ],
+  "doctor": {
+    "current_release": {
+      "release_id": "20261004-ticket-autonomy-verified",
+      "skills": 32,
+      "source_match": true,
+      "status": "valid"
+    },
+    "hosts": {
+      "claude": {
+        "agent_home": "/Users/sherly/.claude",
+        "installed_agent": "claude",
+        "metadata_projection": "claude",
+        "reasons": [],
+        "release_id": "20261004-ticket-autonomy-verified",
+        "skills": 32,
+        "state_path": "/Users/sherly/.claude/my-matt-workflow/install-state.json",
+        "status": "valid"
+      },
+      "codex": {
+        "agent_home": "/Users/sherly/.codex",
+        "installed_agent": "codex",
+        "metadata_projection": "codex",
+        "reasons": [],
+        "release_id": "20261004-ticket-autonomy-verified",
+        "skills": 32,
+        "state_path": "/Users/sherly/.codex/my-matt-workflow/install-state.json",
+        "status": "valid"
+      },
+      "cursor": {
+        "agent_home": "/Users/sherly/.cursor",
+        "state_path": "/Users/sherly/.cursor/my-matt-workflow/install-state.json",
+        "status": "not-installed"
+      }
+    },
+    "source": {
+      "scripts": 2,
+      "skills": 32,
+      "status": "valid"
+    },
+    "status": "diagnostic"
+  },
+  "evidence_boundary": "Installed file/runtime identities and help entrypoints verified; fixed Agent scenarios and source tests retain prior evidence scope; not a new end-to-end Agent exercise."
+}
