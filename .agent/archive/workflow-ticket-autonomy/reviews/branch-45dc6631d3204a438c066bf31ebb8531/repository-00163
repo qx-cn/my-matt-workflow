@@ -1,0 +1,25 @@
+{
+  "code_content_id": "47d318c2c8c7a3686b12b60c29e8844a8d39b91cf4798adb0d953fc622510132",
+  "design_gap": null,
+  "findings": [],
+  "follow_ons": [],
+  "review_id": "d30f270e1ae5fec9b08b234e849a3908",
+  "reviewer_provenance": {
+    "kind": "self",
+    "session_id": "cf8cb480ed7f9e398ae11779bb0b2240"
+  },
+  "self_review_coverage": {
+    "acceptance": [
+      {
+        "acceptance_id": "legacy-a-02#A1",
+        "evidence_refs": [
+          "snapshot:app.py",
+          "snapshot:test_app.py",
+          "test:5acd4e4eb298f58c38e8a6cee3b41433317686a6212b613db16e38002bc246cf"
+        ]
+      }
+    ],
+    "probes": []
+  },
+  "status": "pass"
+}

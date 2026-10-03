@@ -1,0 +1,192 @@
+{
+  "version": 2,
+  "callers": {
+    "my-grill-me": [
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "always"
+      }
+    ],
+    "my-grill-with-docs": [
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "missing-load-bearing-requirements"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "unresolved-domain-vocabulary"
+      },
+      {
+        "skill": "my-to-spec",
+        "kind": "chain",
+        "when": "chain-phase"
+      }
+    ],
+    "my-to-spec": [
+      {
+        "skill": "my-review-design",
+        "kind": "method",
+        "when": "load-bearing-design"
+      },
+      {
+        "skill": "my-to-tickets",
+        "kind": "chain",
+        "when": "chain-phase"
+      }
+    ],
+    "my-to-tickets": [
+      {
+        "skill": "my-implement",
+        "kind": "chain",
+        "when": "chain-phase"
+      }
+    ],
+    "my-implement": [
+      {
+        "skill": "my-tdd",
+        "kind": "method",
+        "when": "tdd-phase"
+      },
+      {
+        "skill": "my-code-review",
+        "kind": "method",
+        "when": "review-phase"
+      }
+    ],
+    "my-review-artifact": [
+      {
+        "skill": "my-review-design",
+        "kind": "method",
+        "when": "design-artifact"
+      }
+    ],
+    "my-review-instructions": [
+      {
+        "skill": "my-writing-for-agents",
+        "kind": "method",
+        "when": "method-phase"
+      }
+    ],
+    "my-triage": [
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "missing-load-bearing-requirements"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "unresolved-domain-vocabulary"
+      },
+      {
+        "skill": "my-to-spec",
+        "kind": "handoff",
+        "when": "confirmed-local-brief-without-matching-spec"
+      },
+      {
+        "skill": "my-to-tickets",
+        "kind": "handoff",
+        "when": "confirmed-local-brief-with-matching-spec"
+      },
+      {
+        "skill": "my-implement",
+        "kind": "handoff",
+        "when": "confirmed-local-quick-brief"
+      }
+    ],
+    "my-wayfinder": [
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "grilling-decision"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "domain-decision"
+      },
+      {
+        "skill": "my-prototype",
+        "kind": "method",
+        "when": "prototype-ticket"
+      },
+      {
+        "skill": "my-to-spec",
+        "kind": "handoff",
+        "when": "handoff-to-spec"
+      }
+    ],
+    "my-prototype": [
+      {
+        "skill": "my-implement",
+        "kind": "handoff",
+        "when": "approved-production-absorption"
+      }
+    ],
+    "my-improve-codebase-architecture": [
+      {
+        "skill": "my-codebase-design",
+        "kind": "method",
+        "when": "design-vocabulary"
+      },
+      {
+        "skill": "my-grilling",
+        "kind": "method",
+        "when": "method-phase"
+      },
+      {
+        "skill": "my-domain-modeling",
+        "kind": "method",
+        "when": "method-phase"
+      }
+    ],
+    "my-tech-design": [
+      {
+        "skill": "my-review-design",
+        "kind": "method",
+        "when": "load-bearing-design"
+      }
+    ]
+  },
+  "routable_entries": {
+    "my-ask-matt": [
+      "my-code-review",
+      "my-codebase-design",
+      "my-diagnosing-bugs",
+      "my-domain-modeling",
+      "my-edit-article",
+      "my-grill-me",
+      "my-grill-with-docs",
+      "my-grilling",
+      "my-handoff",
+      "my-humanizer",
+      "my-implement",
+      "my-improve-codebase-architecture",
+      "my-install",
+      "my-prototype",
+      "my-research",
+      "my-resolving-merge-conflicts",
+      "my-review-artifact",
+      "my-review-design",
+      "my-review-instructions",
+      "my-setup",
+      "my-tdd",
+      "my-teach",
+      "my-tech-design",
+      "my-test-report",
+      "my-to-questionnaire",
+      "my-to-spec",
+      "my-to-tickets",
+      "my-triage",
+      "my-wayfinder",
+      "my-wizard",
+      "my-writing-for-agents"
+    ],
+    "my-triage": [
+      "my-setup"
+    ]
+  }
+}

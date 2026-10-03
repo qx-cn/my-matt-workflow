@@ -1,0 +1,29 @@
+# Shared Agent configuration and work artifacts are versioned in this repository.
+
+# Generated release artifacts and local release pointer
+releases/
+current.json
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# Local logs and temporary files
+*.log
+*.tmp
+
+# macOS and iCloud metadata
+.DS_Store
+*.icloud
+
+# Git worktrees
+.worktrees/
+
+# Superpowers SDD scratch
+.superpowers/

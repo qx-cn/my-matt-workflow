@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "documents": {
+    "resources/humanizer.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-humanizer"
+    },
+    "resources/final-state-writing.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-artifact"
+    },
+    "resources/artifact-finalization.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-artifact"
+    },
+    "resources/first-principles-reasoning.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-design"
+    },
+    "resources/visual-communication.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-artifact"
+    },
+    "resources/reader-first-writing.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-artifact"
+    },
+    "resources/document-rendering.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/instruction-authority.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/adapters/composition.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+    },
+    "resources/adapters/ticket-selection.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_implement_lifecycle.py::ImplementationTests.test_start_guards_dependencies_content_and_quick"
+    },
+    "resources/adapters/assurance-levels.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/adapters/work-scope.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/adapters/artifact-access.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_artifact_access_is_bundled_only_for_reader_consumers"
+    },
+    "resources/adapters/artifact-storage.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+    },
+    "resources/testing-seams.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/adapters/project-rules.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_implement_lifecycle.py::ImplementationTests.test_dependency_commit_and_rules_are_in_brief"
+    },
+    "resources/adapters/implementation-session.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+    },
+    "resources/adapters/artifact-review-session.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_workflow_texts_v2.py::WorkflowTextPackagingTests.test_shared_workflow_contracts_survive_host_projection"
+    },
+    "resources/adapters/specialized-review-session.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_resources.py::SharedResourceTests.test_specialized_review_session_is_bundled_for_reviewers"
+    },
+    "policies/context-hygiene.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "policies/enterprise-safety.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "policies/merge-conflict-approval.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/requirement-analysis.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/requirement-reviewer-brief.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/research-method.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/agent-rule-applicability.md": {
+      "kind": "execution-protocol",
+      "validation": "tests/test_skill_packaging_v2.py::PackagingV2Tests.test_resources_are_bundled_without_composed_bodies"
+    },
+    "resources/project-rule-review.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/user-intervention.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/review-loop.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    },
+    "resources/workflow-delivery.md": {
+      "kind": "reviewable-rule",
+      "review_skill": "my-review-instructions"
+    }
+  }
+}

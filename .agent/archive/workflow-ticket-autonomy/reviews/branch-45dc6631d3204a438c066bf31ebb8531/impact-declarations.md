@@ -1,0 +1,2 @@
+### workflow-ticket-autonomy-01（实施者声明，待核实）
+workflow.py resolve/batch→technical_refresh；ticket/branch开轮与Ticket/batch/topic status→review_rounds/review_findings；self_reviews.resolutions→pending_self_findings→load_active/自审/批次修复/收口；refresh_epoch→batch/topic tests_passed。定义同步相关未收口Ticket、批次与整分支；完成Ticket文档不回写，收口历史另用补偿；已接受Ticket的产品事项不重新作为待决，全部批次收口后拒绝branch技术刷新。消息、生成简报、共享规则和打包消费者同步。声明不等同独立审查；冻结审查者自行核实调用链。

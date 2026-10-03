@@ -1,0 +1,5 @@
+interface:
+  display_name: "Install"
+  short_description: "Install a verified Skill release"
+policy:
+  allow_implicit_invocation: false

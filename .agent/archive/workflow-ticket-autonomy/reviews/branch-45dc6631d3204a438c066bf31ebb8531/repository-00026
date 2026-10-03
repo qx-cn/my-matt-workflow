@@ -1,0 +1,316 @@
+{
+  "version": 1,
+  "resources": {
+    "humanizer": {
+      "source": "resources/humanizer.md",
+      "release_path": "references/shared/humanizer.md",
+      "consumers": [
+        "my-humanizer",
+        "my-review-artifact"
+      ]
+    },
+    "final-state-writing": {
+      "source": "resources/final-state-writing.md",
+      "release_path": "references/shared/final-state-writing.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-codebase-design",
+        "my-grilling",
+        "my-handoff",
+        "my-review-artifact",
+        "my-tech-design",
+        "my-test-report",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
+    "artifact-finalization": {
+      "source": "resources/artifact-finalization.md",
+      "release_path": "references/shared/artifact-finalization.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-review-artifact",
+        "my-to-spec"
+      ]
+    },
+    "first-principles-reasoning": {
+      "source": "resources/first-principles-reasoning.md",
+      "release_path": "references/shared/first-principles-reasoning.md",
+      "consumers": [
+        "my-review-design",
+        "my-review-instructions",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
+    "visual-communication": {
+      "source": "resources/visual-communication.md",
+      "release_path": "references/shared/visual-communication.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-review-artifact",
+        "my-teach",
+        "my-test-report"
+      ]
+    },
+    "reader-first-writing": {
+      "source": "resources/reader-first-writing.md",
+      "release_path": "references/shared/reader-first-writing.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-code-review",
+        "my-diagnosing-bugs",
+        "my-domain-modeling",
+        "my-edit-article",
+        "my-improve-codebase-architecture",
+        "my-prototype",
+        "my-review-artifact",
+        "my-teach",
+        "my-tech-design",
+        "my-test-report",
+        "my-to-questionnaire",
+        "my-triage",
+        "my-wizard"
+      ]
+    },
+    "document-rendering": {
+      "source": "resources/document-rendering.md",
+      "release_path": "references/shared/document-rendering.md",
+      "consumers": [
+        "my-improve-codebase-architecture",
+        "my-review-instructions",
+        "my-teach",
+        "my-tech-design"
+      ]
+    },
+    "instruction-authority": {
+      "source": "resources/instruction-authority.md",
+      "release_path": "references/shared/instruction-authority.md",
+      "consumers": [
+        "my-code-review",
+        "my-domain-modeling",
+        "my-edit-article",
+        "my-review-instructions",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
+    "adapter-composition": {
+      "source": "resources/adapters/composition.md",
+      "release_path": "references/shared/adapters/composition.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-improve-codebase-architecture",
+        "my-wayfinder",
+        "my-writing-for-agents"
+      ]
+    },
+    "adapter-ticket-selection": {
+      "source": "resources/adapters/ticket-selection.md",
+      "release_path": "references/shared/adapters/ticket-selection.md",
+      "consumers": [
+        "my-triage"
+      ]
+    },
+    "adapter-assurance-levels": {
+      "source": "resources/adapters/assurance-levels.md",
+      "release_path": "references/shared/adapters/assurance-levels.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-grill-with-docs",
+        "my-implement",
+        "my-review-instructions",
+        "my-setup",
+        "my-tdd",
+        "my-triage"
+      ]
+    },
+    "adapter-work-scope": {
+      "source": "resources/adapters/work-scope.md",
+      "release_path": "references/shared/adapters/work-scope.md",
+      "consumers": [
+        "my-review-instructions",
+        "my-tdd"
+      ]
+    },
+    "adapter-artifact-access": {
+      "source": "resources/adapters/artifact-access.md",
+      "release_path": "references/shared/adapters/artifact-access.md",
+      "consumers": [
+        "my-code-review",
+        "my-diagnosing-bugs",
+        "my-domain-modeling",
+        "my-review-design",
+        "my-tdd",
+        "my-wayfinder"
+      ]
+    },
+    "adapter-artifact-storage": {
+      "source": "resources/adapters/artifact-storage.md",
+      "release_path": "references/shared/adapters/artifact-storage.md",
+      "consumers": [
+        "my-edit-article",
+        "my-grill-with-docs",
+        "my-handoff",
+        "my-test-report",
+        "my-to-questionnaire",
+        "my-to-spec"
+      ]
+    },
+    "testing-seams": {
+      "source": "resources/testing-seams.md",
+      "release_path": "references/shared/testing-seams.md",
+      "consumers": [
+        "my-codebase-design",
+        "my-diagnosing-bugs",
+        "my-review-instructions",
+        "my-tdd"
+      ]
+    },
+    "adapter-project-rules": {
+      "source": "resources/adapters/project-rules.md",
+      "release_path": "references/shared/adapters/project-rules.md",
+      "consumers": [
+        "my-code-review",
+        "my-review-instructions",
+        "my-to-spec",
+        "my-to-tickets"
+      ]
+    },
+    "adapter-implementation-session": {
+      "source": "resources/adapters/implementation-session.md",
+      "release_path": "references/shared/adapters/implementation-session.md",
+      "consumers": [
+        "my-grill-with-docs",
+        "my-implement"
+      ]
+    },
+    "adapter-artifact-review-session": {
+      "source": "resources/adapters/artifact-review-session.md",
+      "release_path": "references/shared/adapters/artifact-review-session.md",
+      "consumers": [
+        "my-review-artifact"
+      ]
+    },
+    "adapter-specialized-review-session": {
+      "source": "resources/adapters/specialized-review-session.md",
+      "release_path": "references/shared/adapters/specialized-review-session.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "requirement-analysis": {
+      "source": "resources/requirement-analysis.md",
+      "release_path": "references/shared/requirement-analysis.md",
+      "consumers": [
+        "my-grill-with-docs",
+        "my-grilling",
+        "my-review-instructions"
+      ]
+    },
+    "requirement-reviewer-brief": {
+      "source": "resources/requirement-reviewer-brief.md",
+      "release_path": "references/shared/requirement-reviewer-brief.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "research-method": {
+      "source": "resources/research-method.md",
+      "release_path": "references/shared/research-method.md",
+      "consumers": [
+        "my-research",
+        "my-review-instructions",
+        "my-wayfinder"
+      ]
+    },
+    "agent-rule-applicability": {
+      "source": "resources/agent-rule-applicability.md",
+      "release_path": "references/shared/agent-rule-applicability.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "project-rule-review": {
+      "source": "resources/project-rule-review.md",
+      "release_path": "references/shared/project-rule-review.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "user-intervention": {
+      "source": "resources/user-intervention.md",
+      "release_path": "references/shared/user-intervention.md",
+      "consumers": [
+        "my-code-review",
+        "my-diagnosing-bugs",
+        "my-domain-modeling",
+        "my-grill-with-docs",
+        "my-grilling",
+        "my-handoff",
+        "my-humanizer",
+        "my-implement",
+        "my-resolving-merge-conflicts",
+        "my-review-artifact",
+        "my-review-design",
+        "my-review-instructions",
+        "my-setup",
+        "my-tech-design",
+        "my-to-spec",
+        "my-to-tickets",
+        "my-triage",
+        "my-wayfinder",
+        "my-wizard"
+      ]
+    },
+    "review-loop": {
+      "source": "resources/review-loop.md",
+      "release_path": "references/shared/review-loop.md",
+      "consumers": [
+        "my-code-review",
+        "my-implement",
+        "my-review-artifact",
+        "my-review-design",
+        "my-review-instructions",
+        "my-tech-design",
+        "my-to-spec"
+      ]
+    },
+    "workflow-delivery": {
+      "source": "resources/workflow-delivery.md",
+      "release_path": "references/shared/workflow-delivery.md",
+      "consumers": [
+        "my-domain-modeling",
+        "my-grill-with-docs",
+        "my-implement",
+        "my-review-instructions",
+        "my-to-tickets"
+      ]
+    },
+    "policy-context-hygiene": {
+      "source": "policies/context-hygiene.md",
+      "release_path": "references/policies/context-hygiene.md",
+      "consumers": [
+        "my-ask-matt",
+        "my-handoff",
+        "my-review-instructions",
+        "my-triage"
+      ]
+    },
+    "policy-enterprise-safety": {
+      "source": "policies/enterprise-safety.md",
+      "release_path": "references/policies/enterprise-safety.md",
+      "consumers": [
+        "my-review-instructions"
+      ]
+    },
+    "policy-merge-conflict-approval": {
+      "source": "policies/merge-conflict-approval.md",
+      "release_path": "references/policies/merge-conflict-approval.md",
+      "consumers": [
+        "my-resolving-merge-conflicts",
+        "my-review-instructions"
+      ]
+    }
+  }
+}

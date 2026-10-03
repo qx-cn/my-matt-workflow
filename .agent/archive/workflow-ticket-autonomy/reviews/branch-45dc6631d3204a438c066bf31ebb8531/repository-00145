@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "skill": "my-triage",
+  "source_path": "skills/engineering/triage",
+  "scenarios": [
+    {
+      "id": "state-transition",
+      "input": {
+        "current_state": "needs-info",
+        "reporter_replied": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "reply-returns-to-triage",
+          "document": "SKILL.md",
+          "text": "报告者回复后，`needs-info` 返回 `needs-triage`。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "current_state": "needs-info",
+            "reporter_replied": true
+          },
+          "constraints": [
+            "reply-returns-to-triage"
+          ],
+          "outcome": {
+            "next_state": "needs-triage",
+            "action": "重新评估"
+          }
+        }
+      ],
+      "expected": {
+        "next_state": "needs-triage",
+        "action": "重新评估"
+      }
+    },
+    {
+      "id": "deterministic-ordering",
+      "input": {
+        "query": "needs-attention",
+        "order": "oldest-first"
+      },
+      "retrieved_constraints": [
+        {
+          "id": "oldest-first-buckets",
+          "document": "SKILL.md",
+          "text": "查询 Issue 跟踪器，并按从旧到新的顺序展示三个桶："
+        },
+        {
+          "id": "three-bucket-order",
+          "document": "SKILL.md",
+          "text": "1. **未标记** —— 从未分诊。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "query": "needs-attention",
+            "order": "oldest-first"
+          },
+          "constraints": [
+            "oldest-first-buckets",
+            "three-bucket-order"
+          ],
+          "outcome": {
+            "bucket_order": [
+              "unlabeled",
+              "needs-triage",
+              "needs-info-with-reporter-activity"
+            ],
+            "item_order": "oldest-first"
+          }
+        }
+      ],
+      "expected": {
+        "bucket_order": [
+          "unlabeled",
+          "needs-triage",
+          "needs-info-with-reporter-activity"
+        ],
+        "item_order": "oldest-first"
+      }
+    },
+    {
+      "id": "needs-info",
+      "input": {
+        "claim_detail": "insufficient",
+        "grilling_resolved_facts": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "insufficient-detail-signal",
+          "document": "SKILL.md",
+          "text": "细节不足（这是强烈的 `needs-info` 信号）"
+        },
+        {
+          "id": "questions-actionable",
+          "document": "SKILL.md",
+          "text": "问题必须具体且可操作，不能写成“请提供更多信息”。"
+        },
+        {
+          "id": "preserve-established-facts",
+          "document": "SKILL.md",
+          "text": "将在追问期间已解决的所有内容记在“目前已确认的内容”下，避免丢失工作。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "claim_detail": "insufficient",
+            "grilling_resolved_facts": true
+          },
+          "constraints": [
+            "insufficient-detail-signal",
+            "questions-actionable",
+            "preserve-established-facts"
+          ],
+          "outcome": {
+            "next_state": "needs-info",
+            "triage_notes": {
+              "preserve_established_facts": true,
+              "questions": "specific-and-actionable"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "next_state": "needs-info",
+        "triage_notes": {
+          "preserve_established_facts": true,
+          "questions": "specific-and-actionable"
+        }
+      }
+    },
+    {
+      "id": "validation-failure",
+      "input": {
+        "state_roles": [
+          "needs-triage",
+          "wontfix"
+        ]
+      },
+      "retrieved_constraints": [
+        {
+          "id": "conflicting-states-stop",
+          "document": "SKILL.md",
+          "text": "如果状态角色冲突，先标出冲突并询问维护者，不得执行其他操作。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "state_roles": [
+              "needs-triage",
+              "wontfix"
+            ]
+          },
+          "constraints": [
+            "conflicting-states-stop"
+          ],
+          "outcome": {
+            "valid": false,
+            "action": "标出冲突并询问维护者",
+            "mutate_roles": false
+          }
+        }
+      ],
+      "expected": {
+        "valid": false,
+        "action": "标出冲突并询问维护者",
+        "mutate_roles": false
+      }
+    },
+    {
+      "id": "recovery",
+      "input": {
+        "prior_triage_notes": true,
+        "reporter_answered_outstanding_questions": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "read-prior-notes",
+          "document": "SKILL.md",
+          "text": "若 Issue 或 PR 上存在既有分诊记录，阅读它们，检查报告者是否已回答未解决的问题，并在继续前给出更新后的全貌。"
+        },
+        {
+          "id": "do-not-reask",
+          "document": "SKILL.md",
+          "text": "不得重新询问已解决的问题。"
+        }
+      ],
+      "constraint_mapping": [
+        {
+          "when": {
+            "prior_triage_notes": true,
+            "reporter_answered_outstanding_questions": true
+          },
+          "constraints": [
+            "read-prior-notes",
+            "do-not-reask"
+          ],
+          "outcome": {
+            "action": "展示更新后的全貌",
+            "reask_resolved_questions": false
+          }
+        }
+      ],
+      "expected": {
+        "action": "展示更新后的全貌",
+        "reask_resolved_questions": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Humanizer"
+  short_description: "分类后去掉 AI 腔，不动契约"
+policy:
+  allow_implicit_invocation: false

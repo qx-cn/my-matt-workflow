@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Artifact"
+  short_description: "Review one deliverable against all applicable shared rules"
+  default_prompt: "Use $my-review-artifact to perform a comprehensive read-only review of this deliverable."
+policy:
+  allow_implicit_invocation: false

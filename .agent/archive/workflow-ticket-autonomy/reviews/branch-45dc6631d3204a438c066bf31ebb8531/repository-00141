@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "skill": "my-to-questionnaire",
+  "source_path": "skills/in-progress/to-questionnaire",
+  "rules": [
+    {
+      "id": "use-discovery-questionnaire-template",
+      "when": {
+        "drafting_questionnaire": true
+      },
+      "requires_constraints": [
+        "discovery-framing",
+        "template-required"
+      ],
+      "outcome": {
+        "document_shape": "discovery-questionnaire-template"
+      }
+    },
+    {
+      "id": "ask-one-gap-focused-question",
+      "when": {
+        "recipient_knowledge_gap_known": true
+      },
+      "requires_constraints": [
+        "gap-focused-questions",
+        "one-idea-per-question"
+      ],
+      "outcome": {
+        "question_style": "one-idea-about-recipient-knowledge-gap"
+      }
+    },
+    {
+      "id": "interview-the-send",
+      "when": {
+        "subject_is_ambiguous": true
+      },
+      "requires_constraints": [
+        "grill-the-send"
+      ],
+      "outcome": {
+        "ask_about": "recipient-and-needed-return",
+        "ask_about_subject": false
+      }
+    },
+    {
+      "id": "complete-recipient-discovery",
+      "when": {
+        "recipient_role_known": true,
+        "recipient_expertise_known": true,
+        "recipient_relationship_known": true,
+        "knowledge_gap_known": true
+      },
+      "requires_constraints": [
+        "recipient-discovery-done"
+      ],
+      "outcome": {
+        "step_one_complete": true
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "questionnaire-structure",
+      "input": {
+        "drafting_questionnaire": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "discovery-framing",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#文档结构",
+          "text": "将文档定位为一份**发现问卷**"
+        },
+        {
+          "id": "template-required",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#文档结构",
+          "text": "请按以下模板编写。"
+        }
+      ],
+      "expected": {
+        "document_shape": "discovery-questionnaire-template"
+      }
+    },
+    {
+      "id": "asking-one-useful-question",
+      "input": {
+        "recipient_knowledge_gap_known": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "gap-focused-questions",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#生成发现问卷",
+          "text": "起草针对步骤 1–2 所确定的知识缺口的问题"
+        },
+        {
+          "id": "one-idea-per-question",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#<主题标题>",
+          "text": "每个问题只问一个概念"
+        }
+      ],
+      "expected": {
+        "question_style": "one-idea-about-recipient-knowledge-gap"
+      }
+    },
+    {
+      "id": "scope-and-ambiguity",
+      "input": {
+        "subject_is_ambiguous": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "grill-the-send",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#生成发现问卷",
+          "text": "只就“发送”采访用户，而不要就主题采访用户。"
+        }
+      ],
+      "expected": {
+        "ask_about": "recipient-and-needed-return",
+        "ask_about_subject": false
+      }
+    },
+    {
+      "id": "done-when",
+      "input": {
+        "recipient_role_known": true,
+        "recipient_expertise_known": true,
+        "recipient_relationship_known": true,
+        "knowledge_gap_known": true
+      },
+      "retrieved_constraints": [
+        {
+          "id": "recipient-discovery-done",
+          "document": "SKILL.md",
+          "source_section": "SKILL.md#生成发现问卷",
+          "text": "完成条件：你知道收件人是谁，以及他们知道而用户不知道的内容。"
+        }
+      ],
+      "expected": {
+        "step_one_complete": true
+      }
+    }
+  ]
+}

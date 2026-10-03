@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{DOCUMENT_TITLE}}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9dee8;
+      --paper: #ffffff;
+      --wash: #f4f6f9;
+      --accent: #315efb;
+      --accent-soft: #e8edff;
+      --good: #13795b;
+      --warn: #b54708;
+      --danger: #c4320a;
+      --sidebar: 248px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--wash);
+      color: var(--ink);
+      font: 15px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+    .shell { min-height: 100vh; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar);
+      padding: 28px 20px;
+      overflow-y: auto;
+      background: #111827;
+      color: #eef2ff;
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #a5b4fc;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .sidebar h1 { margin: 0 0 6px; font-size: 21px; line-height: 1.3; }
+    .sidebar .meta { margin: 0 0 24px; color: #aeb8ca; font-size: 13px; }
+    .nav { display: grid; gap: 6px; }
+    .nav a {
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: #cdd5e4;
+      text-decoration: none;
+    }
+    .nav a:hover, .nav a[aria-current="page"] {
+      background: rgba(255, 255, 255, .1);
+      color: white;
+    }
+    .sidebar-actions { margin-top: 24px; }
+    .sidebar button {
+      padding: 7px 10px;
+      border: 1px solid #4b5563;
+      border-radius: 7px;
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+    .sidebar-actions { display: grid; gap: 9px; }
+    .nav a { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .note-indicator {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, .16);
+    }
+
+    main { margin-left: var(--sidebar); padding: 48px; }
+    .page { max-width: 1120px; margin: 0 auto; }
+    .page[hidden] { display: none; }
+    .page-header { margin-bottom: 28px; }
+    .page-header h2 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+    }
+    .lede { max-width: 780px; margin: 0; color: var(--muted); font-size: 17px; }
+
+    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    .card {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper);
+      box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 17px; }
+    .card > :last-child { margin-bottom: 0; }
+    .muted { color: var(--muted); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #243bb3;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge.good { background: #dcfae6; color: var(--good); }
+    .badge.warn { background: #fef0c7; color: var(--warn); }
+    .badge.danger { background: #fee4e2; color: var(--danger); }
+
+    .diagram { overflow-x: auto; }
+    .diagram svg { display: block; width: 100%; min-width: 600px; height: auto; }
+    .caption { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    td, th { overflow-wrap: break-word; word-break: normal; }
+    code { overflow-wrap: anywhere; }
+
+    details { border-top: 1px solid var(--line); padding: 13px 0; }
+    details:first-of-type { border-top: 0; padding-top: 0; }
+    summary { cursor: pointer; font-weight: 700; }
+    .decision { margin-top: 12px; color: var(--muted); }
+    .decision strong { color: var(--ink); }
+    .callout { border-left: 4px solid var(--accent); }
+    .callout.warn { border-left-color: #f79009; }
+    .callout.danger { border-left-color: #f04438; }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 16px 0;
+    }
+    .comparison-card {
+      min-width: 0;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--paper);
+    }
+    .comparison-card h3,
+    .comparison-card h4 { margin: 0 0 10px; }
+    .comparison-card ul,
+    .comparison-card ol { margin: 0; padding-left: 1.25em; }
+    .comparison-card li + li { margin-top: 8px; }
+
+
+    .decision-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0 0 24px;
+    }
+    .decision-card {
+      min-width: 0;
+      padding: 17px 18px;
+      border: 1px solid;
+      border-radius: 12px;
+    }
+    .decision-card p { margin: 6px 0 0; }
+    .decision-card strong { display: block; line-height: 1.4; }
+    .decision-card code { overflow-wrap: anywhere; }
+    .decision-card.confirmed { border-color: #9bb0ff; background: var(--accent-soft); }
+    .decision-card.rule { border-color: #f5bd72; background: #fef0c7; }
+    .decision-card.risk { border-color: #f7a29b; background: #fee4e2; }
+    .decision-card .badge { color: white; }
+    .decision-card.confirmed .badge { background: var(--accent); }
+    .decision-card.rule .badge { background: var(--warn); }
+    .decision-card.risk .badge { background: var(--danger); }
+    .decision-index {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .decision-index a {
+      padding: 12px 14px;
+      border: 1px solid #c7d2fe;
+      border-radius: 9px;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .decision-index a:hover { border-color: var(--accent); color: var(--accent); }
+
+    .review-notes {
+      margin-top: 30px;
+      padding: 18px 20px;
+      border: 1px solid #c7d2fe;
+      border-radius: 12px;
+      background: #f8faff;
+    }
+    .review-notes h3 { margin: 0 0 5px; font-size: 16px; }
+    .review-notes p { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .review-notes textarea {
+      display: block;
+      width: 100%;
+      min-height: 104px;
+      padding: 10px 12px;
+      resize: vertical;
+      border: 1px solid #b9c4d8;
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      font: inherit;
+    }
+    .review-notes textarea:focus { outline: 2px solid #a5b4fc; outline-offset: 1px; }
+    .review-notes-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+    .review-notes button {
+      padding: 7px 11px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+    .review-notes-status { color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 860px) {
+      .sidebar { position: static; width: auto; }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      main { margin-left: 0; padding: 28px 18px; }
+      .span-8, .span-6, .span-4 { grid-column: span 12; }
+      .comparison { grid-template-columns: 1fr; }
+      .decision-strip, .decision-index { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="eyebrow">Technical design</p>
+      <h1>{{DOCUMENT_TITLE}}</h1>
+      <p class="meta">{{DOCUMENT_META}}</p>
+      <nav class="nav" aria-label="章节">
+        <a href="#overview" data-page-link="overview">方案总览</a>
+        {{NAV_ITEMS}}
+      </nav>
+      <div class="sidebar-actions">
+        <button type="button" id="expand-all">展开细节</button>
+        <button type="button" id="export-notes">导出评审注释</button>
+      </div>
+    </aside>
+
+    <main>
+      <section class="page" id="overview" data-page="overview">
+        <header class="page-header">
+          <p class="eyebrow">Overview</p>
+          <h2>方案总览</h2>
+          <p class="lede">{{ONE_SENTENCE_CONCLUSION}}</p>
+        </header>
+        {{OVERVIEW_DECISION_STRIP}}
+        <div class="grid">
+          {{DECISION_INDEX}}
+          <article class="card span-4"><h3>为什么改</h3><p>{{WHY}}</p></article>
+          <article class="card span-4"><h3>怎么改</h3><p>{{HOW}}</p></article>
+          <article class="card span-4 callout warn"><h3>最大风险</h3><p>{{TOP_RISK}}</p></article>
+          {{OVERVIEW_VISUAL}}
+          <article class="card span-12">
+            <h3>整体改动地图</h3>
+            <table>
+              <thead><tr><th>改动</th><th>方案摘要</th><th>评审重点</th><th>详情</th></tr></thead>
+              <tbody>{{CHANGE_MAP_ROWS}}</tbody>
+            </table>
+          </article>
+          {{OVERVIEW_EXTRA}}
+        </div>
+      </section>
+
+      <!-- Add one matching nav item and one page section per actual chapter. -->
+      {{CHAPTER_SECTIONS}}
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const pages = [...document.querySelectorAll('[data-page]')];
+      const links = [...document.querySelectorAll('[data-page-link]')];
+      const ids = pages.map((page) => page.id);
+      const storageKey = `my-tech-design:review-notes:${location.pathname}:${document.title}`;
+      let notes = {};
+
+      try { notes = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (_) { notes = {}; }
+
+      function pageTitle(page) {
+        return page.querySelector('h2')?.textContent.trim() || page.id;
+      }
+
+      function saveNotes() {
+        localStorage.setItem(storageKey, JSON.stringify(notes));
+        links.forEach((link) => {
+          const hasNote = Boolean(notes[link.dataset.pageLink]?.trim());
+          link.querySelector('.note-indicator')?.remove();
+          if (hasNote) {
+            const indicator = document.createElement('span');
+            indicator.className = 'note-indicator';
+            indicator.title = '有评审注释';
+            indicator.setAttribute('aria-label', '有评审注释');
+            link.append(indicator);
+          }
+        });
+      }
+
+      pages.forEach((page) => {
+        const section = document.createElement('section');
+        section.className = 'review-notes';
+        section.innerHTML = `
+          <h3>本页评审注释</h3>
+          <p>记录本页需要讨论、补充或调整的内容；注释仅保存在当前浏览器。</p>
+          <textarea aria-label="${pageTitle(page)} 的评审注释" placeholder="例如：补充异常场景的处理策略；明确上线灰度条件。"></textarea>
+          <div class="review-notes-footer">
+            <button type="button">保存注释</button>
+            <span class="review-notes-status" aria-live="polite"></span>
+          </div>`;
+        const textarea = section.querySelector('textarea');
+        const status = section.querySelector('.review-notes-status');
+        textarea.value = notes[page.id] || '';
+        const persist = () => {
+          notes[page.id] = textarea.value.trim();
+          saveNotes();
+          status.textContent = '已保存到本地';
+        };
+        section.querySelector('button').addEventListener('click', persist);
+        textarea.addEventListener('input', persist);
+        page.append(section);
+      });
+
+      document.getElementById('export-notes').addEventListener('click', () => {
+        const content = pages
+          .filter((page) => notes[page.id]?.trim())
+          .map((page) => `## ${pageTitle(page)}\n\n${notes[page.id].trim()}`)
+          .join('\n\n');
+        const blob = new Blob([content || '暂无评审注释。\n'], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'design-review-notes.md';
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+      saveNotes();
+
+      function showPage() {
+        const requested = location.hash.slice(1);
+        const active = ids.includes(requested) ? requested : ids[0];
+        pages.forEach((page) => { page.hidden = page.id !== active; });
+        links.forEach((link) => {
+          if (link.dataset.pageLink === active) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+        const title = document.querySelector('h1').textContent;
+        const section = document.querySelector(`#${active} h2`).textContent;
+        document.title = `${title} — ${section}`;
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+
+      document.getElementById('expand-all').addEventListener('click', (event) => {
+        const details = [...document.querySelectorAll('details')];
+        const shouldOpen = details.some((item) => !item.open);
+        details.forEach((item) => { item.open = shouldOpen; });
+        event.currentTarget.textContent = shouldOpen ? '收起细节' : '展开细节';
+      });
+
+      window.addEventListener('hashchange', showPage);
+      showPage();
+    })();
+  </script>
+</body>
+</html>
