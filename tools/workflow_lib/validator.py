@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import re
+import hashlib
+import json
 import subprocess
 from pathlib import Path
 
@@ -32,9 +34,69 @@ def _is_placeholder(markdown: Path, target: str) -> bool:
     )
 
 
+def _archived_review_inputs(root: Path) -> set[Path]:
+    """Recognize recorded frozen blobs, retaining normal archive link checks.
+
+    Blob links belong to their original source context. Their archive contract
+    is identity and byte integrity, not link resolution beside serialized blobs.
+    Rebase only declared snapshot files after the whole Topic has moved.
+    """
+    frozen = set()
+    for topic in (root / '.agent' / 'archive').glob('*'):
+        records = [*topic.glob('implementations/*.json'), *topic.glob('batches/*.json'),
+                   *topic.glob('branch-review.json')]
+        for record in records:
+            try:
+                if record.is_symlink():
+                    raise ValueError('unsafe review record')
+                unit = json.loads(record.read_text())
+                if not isinstance(unit, dict):
+                    raise ValueError('invalid review record')
+                for entry in [*unit.get('reviews', []), *unit.get('past_reviews', [])]:
+                    original = Path(entry['manifest'])
+                    if original.name != 'manifest.json' or not original.parent.name.endswith('-' + entry['unit_id']):
+                        raise ValueError('invalid recorded review location')
+                    directory = topic / 'reviews' / original.parent.name
+                    manifest_path = directory / 'manifest.json'
+                    if directory.resolve() != directory or manifest_path.is_symlink() or not manifest_path.is_file():
+                        raise ValueError('unsafe or missing recorded manifest')
+                    raw = manifest_path.read_bytes()
+                    manifest = json.loads(raw)
+                    for key in ('unit_id', 'content_id', 'round'):
+                        if manifest[key] != entry[key]:
+                            raise ValueError('recorded review identity mismatch')
+                    active = unit.get('active_review', {})
+                    if active.get('manifest') == str(original):
+                        if hashlib.sha256(raw).hexdigest() != active['manifest_sha256']:
+                            raise ValueError('recorded manifest hash mismatch')
+                    rows = manifest['inputs'] + [value for change in manifest['changes']
+                                                 for value in (change['base'], change['current']) if value]
+                    declared = set()
+                    for row in rows:
+                        relative = Path(row['snapshot_path']).relative_to(original.parent)
+                        if len(relative.parts) != 1 or relative.name in ('.', '..'):
+                            raise ValueError('snapshot path is not a local blob')
+                        if relative.suffix == '.md' and relative.name not in {
+                                'rules.md', 'spec.md', 'specs.md', 'review-loop-rules.md',
+                                'decided.md', 'ticket.md', 'tickets.md', 'impact-declarations.md'}:
+                            raise ValueError('unknown Markdown input blob')
+                        path = directory / relative
+                        if path.is_symlink() or directory.resolve() != directory or not path.is_file():
+                            raise ValueError('unsafe or missing snapshot blob')
+                        data = path.read_bytes()
+                        if hashlib.sha256(data).hexdigest() != row['sha256'] or len(data) != row['size']:
+                            raise ValueError('snapshot byte integrity mismatch')
+                        declared.add(path)
+                    frozen.update(declared)
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                raise ValidationError(f'{record.relative_to(root)}: archived review integrity: {exc}') from exc
+    return frozen
+
+
 def _markdown_references(root: Path) -> list[tuple[Path, str]]:
     """Return prose-only local Markdown references from tracked source docs."""
     references: list[tuple[Path, str]] = []
+    archived_inputs = _archived_review_inputs(root)
     ignored_parts = {
         ".git",
         ".worktrees",
@@ -48,6 +110,8 @@ def _markdown_references(root: Path) -> list[tuple[Path, str]]:
         # repositories are runtime data excluded from the build snapshot.
         # Keep repository configuration and other .agent documents in scope.
         if markdown.is_relative_to(root / ".agent" / "work"):
+            continue
+        if markdown in archived_inputs:
             continue
         if ignored_parts & set(relative.parts):
             continue

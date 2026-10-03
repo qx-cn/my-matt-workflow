@@ -1,0 +1,42 @@
+{
+  "unit_id": "c450f6de00d74bc19efb815061747616",
+  "content_id": "02275e47907c77d07b5fd06eee719a49924824a7c4675c983985413f9660b7d6",
+  "round": 1,
+  "acceptance": [
+    {
+      "id": "archive-runtime-data",
+      "text": "已登记、身份和字节匹配的归档审查blob按runtime数据校验，真实归档doctor valid"
+    },
+    {
+      "id": "strict-source-boundary",
+      "text": "普通归档文档、未登记、身份错误、损坏、越界和symlink仍拒绝；原完成历史不改写"
+    }
+  ],
+  "probes": [
+    "archived-source"
+  ],
+  "downstream_tickets": [],
+  "status": "pass",
+  "reviewer": {
+    "provenance": "independent",
+    "model": "GPT-6 (inherited session; exact provider model ID unavailable)"
+  },
+  "coverage": [
+    {
+      "target": "archive-runtime-data",
+      "result": "ok",
+      "reason": "正式基线与当前真实归档fixture的doctor公共诊断入口独立复现source invalid（原blob相对链接missing）→valid；只有精确登记、身份和字节校验通过的输入获得豁免。"
+    },
+    {
+      "target": "strict-source-boundary",
+      "result": "ok",
+      "reason": "8项回归及9组真实归档独立负向探针通过：字节/manifest篡改、错身份、symlink、越界输入、未登记文档、普通归档/近似目录/根配置坏链接全部拒绝；原archive各文件base/current哈希一致。"
+    },
+    {
+      "target": "archived-source",
+      "result": "ok",
+      "reason": "完整重建base/current各651文件，核实doctor/validate/preflight_build消费者；真实归档源码层失效与恢复可达，原历史366个archive文件未变化。未执行完整门禁或实际宿主/发布验证。"
+    }
+  ],
+  "findings": []
+}
