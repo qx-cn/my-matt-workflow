@@ -1,0 +1,6 @@
+interface:
+  display_name: "Grill"
+  short_description: "Clarify goals and decisions"
+  default_prompt: "Use $my-grill for this task."
+policy:
+  allow_implicit_invocation: false

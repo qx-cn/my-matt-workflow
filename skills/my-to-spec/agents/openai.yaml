@@ -1,5 +1,6 @@
 interface:
   display_name: "To Spec"
-  short_description: "Turn a conversation into a spec"
+  short_description: "Organize requirements into a Spec"
+  default_prompt: "Use $my-to-spec for this task."
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

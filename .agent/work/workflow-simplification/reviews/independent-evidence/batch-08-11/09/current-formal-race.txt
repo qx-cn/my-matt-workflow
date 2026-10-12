@@ -1,3 +1,0 @@
-BASE release r2 install verified during current gate
-BASE release r2 deleted True
-CURRENT receipt fails InstallError release 目录无效或为 symlink

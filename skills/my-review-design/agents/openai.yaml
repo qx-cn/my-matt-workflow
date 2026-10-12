@@ -1,6 +1,0 @@
-interface:
-  display_name: "Review Design"
-  short_description: "Focused design-soundness review"
-  default_prompt: "Use $my-review-design to assess whether this formed design is sound and ready for implementation, without rewriting it."
-policy:
-  allow_implicit_invocation: true

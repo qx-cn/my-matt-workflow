@@ -1,9 +1,3 @@
-# Shared Agent configuration and work artifacts are versioned in this repository.
-
-# Generated release artifacts and local release pointer
-releases/
-current.json
-
 # Python caches and local environments
 __pycache__/
 *.py[cod]
@@ -24,6 +18,3 @@ env/
 
 # Git worktrees
 .worktrees/
-
-# Superpowers SDD scratch
-.superpowers/
