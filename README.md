@@ -18,7 +18,7 @@ Cursor 和 Claude Code 用 `/my-grill`，Codex 用 `$my-grill`。产物放在 `.
   1. 用 my-grill 问清需求，决定写进 `decided.md`。
   2. 需要书面方案时，用 my-to-spec 写 `spec.md`。
   3. 开一个新会话，让 Agent "按 `.agent/work/<主题>/spec.md` 实施"。
-  4. 改动涉及存量数据、并发、对外契约或发布回滚时，Agent 会调用 my-review；没调用时可以手动调用。只处理"必须修"，"建议"自己决定。
+  4. 改动涉及存量数据、并发、对外契约、鉴权与权限、敏感数据或发布回滚时，Agent 会调用 my-review；没调用时可以手动调用。只处理"必须修"，"建议"自己决定。
 - 已有 PRD：直接用 my-to-spec；PRD 有含糊处，先用 my-grill。
 - 方案要给别人评审：先用 my-grill，再用 my-tech-design，最后用 my-review 审文档。
 - 审自己或别人的分支：用 my-review，可以指定基准分支。
