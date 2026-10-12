@@ -23,8 +23,10 @@ scripts/sync.sh --check
 `--dry-run` 打印动作，`--check` 只读检查，有问题时返回非零状态。
 
 Skill 软链到 `~/.agents/skills/` 和 `~/.claude/skills/`。
-全局规则软链到 `~/.cursor/rules/my-global.mdc`、`~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
+全局规则软链到 `~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
 迁移前先运行 `scripts/sync.sh --migrate-v1 --dry-run` 查看将删除的内容。
+
+Cursor 不读取软链过去的全局规则，`~/.cursor/rules` 也不是官方的用户规则位置。Cursor 改用个人规则（Customize → Rules → User）中名为'个人通用规则'的一条，内容与 `rules/global.md` 去掉 frontmatter 后的正文一致。`global.md` 修改后，在 Cursor 里让 Agent 用个人规则接口更新这一条，或手动粘贴。
 
 只在 [global.md](rules/global.md) 列出的四种情况下提议往仓库 AGENTS.md 加规则：同一错误第二次出现、评审发现本该知道的仓库知识、同一纠正说了第二遍、新同事也需要知道。确认后再写。
 

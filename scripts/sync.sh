@@ -82,7 +82,7 @@ PY
 # Include previous host Skill locations when finding stale repository links.
 skill_dirs=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.cursor/skills"
             "$codex_home/skills")
-scan_dirs=("${skill_dirs[@]}" "$HOME/.cursor/rules" "$HOME/.claude" "$codex_home")
+scan_dirs=("${skill_dirs[@]}" "$HOME/.claude" "$codex_home")
 for dir in "${scan_dirs[@]}"; do
     [ -d "$dir" ] || continue
     for target in "$dir"/*; do
@@ -153,7 +153,6 @@ for source in "$repo"/skills/*; do
     sync_link "$source" "$HOME/.agents/skills/${source##*/}"
     sync_link "$source" "$HOME/.claude/skills/${source##*/}"
 done
-sync_link "$repo/rules/global.md" "$HOME/.cursor/rules/my-global.mdc"
 sync_link "$repo/rules/global.md" "$HOME/.claude/CLAUDE.md"
 sync_link "$repo/rules/global.md" "$codex_home/AGENTS.md"
 
