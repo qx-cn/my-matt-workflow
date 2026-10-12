@@ -7,7 +7,7 @@
 | my-grill | 澄清目标、范围、术语和设计决定 | 手动 |
 | my-to-spec | 把已有讨论、PRD 和代码事实整理成 Spec | 手动 |
 | my-tech-design | 写供工程师判断方案是否成立的 HTML 技术方案 | 手动 |
-| my-review | 对照 Spec 或需求检查改动的正确性 | 手动或 Agent 自动调用 |
+| my-review | 审查代码改动或文档，按必须修和建议分级报告 | 手动或 Agent 自动调用 |
 
 决定、Spec 和 HTML 方案分别放在 `.agent/work/<主题>/decided.md`、`spec.md` 和 `design.html`。
 
@@ -24,7 +24,7 @@ scripts/sync.sh --check
 
 Skill 软链到 `~/.agents/skills/` 和 `~/.claude/skills/`。
 全局规则软链到 `~/.cursor/rules/my-global.mdc`、`~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
-已有目标会备份成 `.bak.<时间>`；迁移只删除旧安装记录列出的 Skill 和旧安装目录，其他 `my-` 条目只报告。
+迁移前先运行 `scripts/sync.sh --migrate-v1 --dry-run` 查看将删除的内容。
 
 只在 [global.md](rules/global.md) 列出的四种情况下提议往仓库 AGENTS.md 加规则：同一错误第二次出现、评审发现本该知道的仓库知识、同一纠正说了第二遍、新同事也需要知道。确认后再写。
 

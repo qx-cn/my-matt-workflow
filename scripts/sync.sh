@@ -80,8 +80,9 @@ PY
 }
 
 # Include previous host Skill locations when finding stale repository links.
-scan_dirs=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.cursor/skills"
-           "$codex_home/skills" "$HOME/.cursor/rules" "$HOME/.claude" "$codex_home")
+skill_dirs=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.cursor/skills"
+            "$codex_home/skills")
+scan_dirs=("${skill_dirs[@]}" "$HOME/.cursor/rules" "$HOME/.claude" "$codex_home")
 for dir in "${scan_dirs[@]}"; do
     [ -d "$dir" ] || continue
     for target in "$dir"/*; do
@@ -110,13 +111,23 @@ for dir in "${scan_dirs[@]}"; do
                         if [ "$old" = "$target" ]; then planned=true; break; fi
                     done <<< "$plan"
                 fi
-                if ! $planned; then printf 'REPORT unmanaged %s\n' "$target"; fi ;;
+                if ! $planned; then
+                    printf 'REPORT unmanaged %s\n' "$target"
+                    if $check && [ -d "$repo/skills/${target##*/}" ]; then
+                        for skill_dir in "${skill_dirs[@]}"; do
+                            if [ "$dir" = "$skill_dir" ]; then
+                                problem "managed Skill name conflicts with $target"
+                                break
+                            fi
+                        done
+                    fi
+                fi ;;
         esac
     done
 done
 
 sync_link() {
-    local source=$1 target=$2 backup stamp count planned=false old
+    local source=$1 target=$2 planned=false old
     if [ ! -e "$source" ]; then problem "missing source $source"; return; fi
     if $dry && ! $check; then
         while IFS= read -r old; do
@@ -129,14 +140,7 @@ sync_link() {
     fi
     if $check; then problem "expected $target -> $source"; return; fi
     if ! $planned && { [ -e "$target" ] || [ -L "$target" ]; }; then
-        stamp=$(date +%Y%m%d%H%M%S)
-        backup="$target.bak.$stamp"
-        count=0
-        while [ -e "$backup" ] || [ -L "$backup" ]; do
-            count=$((count + 1))
-            backup="$target.bak.$stamp.$count"
-        done
-        action "BACKUP $target -> $backup" mv -- "$target" "$backup"
+        action "REPLACE $target" rm -rf -- "$target"
     fi
     if [ ! -d "${target%/*}" ]; then
         action "MKDIR ${target%/*}" mkdir -p -- "${target%/*}"
