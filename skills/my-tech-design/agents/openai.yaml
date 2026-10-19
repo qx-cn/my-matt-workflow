@@ -1,6 +1,6 @@
 interface:
   display_name: "Tech Design"
-  short_description: "Write an HTML technical design"
+  short_description: "Write a technical design or release doc"
   default_prompt: "Use $my-tech-design for this task."
 policy:
   allow_implicit_invocation: false

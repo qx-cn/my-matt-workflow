@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | my-grill | 澄清目标、范围、术语和设计决定 | 手动 |
 | my-to-spec | 把已有讨论、PRD 和代码事实整理成 Spec | 手动 |
-| my-tech-design | 写供工程师判断方案是否成立的 HTML 技术方案 | 手动 |
+| my-tech-design | 写技术方案或发布文档（飞书云文档或本地 HTML） | 手动 |
 | my-review | 审查代码改动或文档，按必须修和建议分级报告 | 手动或 Agent 自动调用 |
 
 ## 怎么用
@@ -20,7 +20,7 @@ Cursor 和 Claude Code 用 `/my-grill`，Codex 用 `$my-grill`。产物放在 `.
   3. 开一个新会话，让 Agent "按 `.agent/work/<主题>/spec.md` 实施"。
   4. 改动涉及存量数据、并发、对外契约、鉴权与权限、敏感数据或发布回滚时，Agent 会调用 my-review；没调用时可以手动调用。只处理"必须修"，"建议"自己决定。
 - 已有 PRD：直接用 my-to-spec；PRD 有含糊处，先用 my-grill。
-- 方案要给别人评审：先用 my-grill，再用 my-tech-design，最后用 my-review 审文档。
+- 方案评审或上线准备：用 my-tech-design 写技术方案或发布文档（会先询问输出到飞书还是本地 HTML），可用 my-review 审文档。
 - 审自己或别人的分支：用 my-review，可以指定基准分支。
 - 交付时 Agent 提议往仓库 AGENTS.md 加条目：看过再同意。
 
