@@ -4,31 +4,20 @@
 
 ## 1. 权威依据（按需查证）
 
-讨论设计取舍、增删规则条款或评估写法是否合理时，按需用 `WebFetch` 查证以下一手来源（不凭记忆脑补，贴出原文关键句与链接，并核对适用场景是否一致；仅做文字微调或修脚本时不必抓取）：
+讨论本仓库的设计取舍、增删规则或评估写法时，按主题查阅[编写与审核参考](docs/authoring-guidance.md)，用当前可用的网页检索工具核对相关来源，给出原文关键句、链接与适用范围，区分官方结论和项目判断。仅做文字微调或修脚本时不必抓取。
 
-- **Skill 与 Rule 编写规范**：
-  - Anthropic Agent Skills Best Practices：`https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices`
-  - Claude Code Best Practices：`https://code.claude.com/docs/en/best-practices`
-  - Claude Code Memory (`CLAUDE.md` / `AGENTS.md`)：`https://code.claude.com/docs/en/memory`
-  - Anthropic Effective Context Engineering：`https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents`
-  - OpenAI Codex Skills：`https://developers.openai.com/codex/skills`
-  - Cursor Rules：`https://cursor.com/docs/rules`
-- **技术文档写作规范**（优化文档类规则或 Skill 时查证）：
-  - Google Technical Writing：`https://developers.google.com/tech-writing/one/short-sentences` 、`.../lists-and-tables` 、`.../paragraphs` 、`.../active-voice` 、`.../words` 、`https://developers.google.com/tech-writing/two/large-docs` 、`.../illustrations`
-  - Google Developer Documentation Style Guide：`https://developers.google.com/style/code-in-text` 、`.../lists` 、`.../tables` 、`.../headings`
-  - Gemini CLI 官方 `docs-writer`：`https://raw.githubusercontent.com/google-gemini/gemini-cli/main/.gemini/skills/docs-writer/SKILL.md`
-  - 阮一峰《中文技术文档的写作规范》：`https://raw.githubusercontent.com/ruanyf/document-style-guide/master/docs/text.md` 、`.../paragraph.md` 、`.../title.md`
-- **实证研究基线**：
-  - ETH Zurich `AGENTS.md` 实证（`https://arxiv.org/abs/2602.11988`）：只写代码与常识推不出来的非推断信息，冗余上下文会增加约 20% 成本并降低成功率。
-  - SkillsBench（`https://arxiv.org/abs/2602.12670`）：聚焦、模块少（≤3 个）的 Skill 效果最好，复述模型默认能力的 Skill 会产生负优化。
+参考文档保存设计依据和研究限制，不增加执行义务；普通业务写作无需读取，Skill 运行不依赖该文档。相关依据在后续使用时按需查证，不设定期巡检。
 
 ## 2. 审核清单（每次改动自检）
 
+以下准入、规模、排版和调用限制是本项目约定，不是厂商通用阈值。
+
 1. **删减测试**：每加一行规则先问"删掉这行，前沿模型会犯错吗？"只有真实工作里出现过 2 次以上的失误、个人明确偏好、或环境/团队特有约束才写入。
-2. **层级隔离与自洽（零重复）**：
-   - `rules/global.md` 每次会话常驻加载，保持在 30 行以内，只放所有对话通用的底线。
-   - 长文档排版、特定任务流程放在对应 `skills/<name>/SKILL.md` 按需加载；大段模板放同目录子文件（如 `TEMPLATES.md`）。`global.md` 已有内容，Skill 内不再重复。
-   - 本仓库所有 Markdown 文件自身必须遵守 `global.md` 与排版规范（如不用破折号、不标题直接套标题、不设孤立子标题），因为模型模仿示例格式的权重高于字面指令。
+2. **集中定义与任务动作**：
+   - 通用规范由 `rules/global.md` 定义，配置正确时作为宿主常驻规则，保持在 30 行以内；仓库约定由本文件定义。长文档排版和任务流程由对应 `skills/<name>/SKILL.md` 定义，大段模板放同目录子文件（如 `TEMPLATES.md`）。
+   - Skill 优先引用适用规范，只补任务特有动作；必要重申仅保留执行所需内容，不另写完整定义或例外。普通措辞修改只改归属文件；含义变化时核对直接相关动作及参考解释，不要求全库联改。复查上限只在 my-review 定义。
+   - 使用上下文已有的适用规范；缺少时读取已确认可访问的位置，不假定业务目录存在本仓库的相对路径。无法取得时说明限制，不声称已经核对。
+   - 本仓库所有 Markdown 文件自身必须遵守全局写作与排版规范（如不用破折号、不标题直接套标题、不设孤立子标题）。
 3. **触发与自由度**：
    - `description` 用第三人称同时写清"做什么"与"何时使用（触发词前置）"。
    - 仅 `my-review` 允许模型自动调用；其余 Skill 保持手动调用（`disable-model-invocation: true` 及 `openai.yaml` 中 `allow_implicit_invocation: false`）。
@@ -39,5 +28,8 @@
 
 ## 3. 跨宿主同步方式
 
+安装配置与运行时加载分别核实，软链正确不代表当前会话已经读取对应内容。
+
 - 本仓库在 `main` 上维护，v1 历史基线可查 `git show 16c03b5:<path>`。
-- Skill 与 Claude/Codex 全局规则通过 `scripts/sync.sh` 软链生效；修改 `rules/global.md` 后，若当前在 Cursor 本地会话内，调用 `cursor-app-control` 的 `cursor_dialog`（`item="rule", scope="user"`）同步更新名为"个人通用规则"的用户规则；若在云端或其他宿主，提醒用户回本机 Cursor 同步。
+- Skill 与 Claude/Codex 全局规则通过 `scripts/sync.sh` 建立软链，实际加载取决于宿主配置与触发方式。
+- 修改全局规则后，单独同步 Cursor 中名为"个人通用规则"的用户规则。若处于 Cursor 本地会话且工具可用，调用 `cursor-app-control` 的 `cursor_dialog`（`item="rule", scope="user"`）；否则提醒用户在本机 Cursor 手动同步。
