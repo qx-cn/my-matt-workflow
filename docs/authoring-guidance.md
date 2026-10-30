@@ -2,7 +2,7 @@
 
 本文供本仓库迭代规则和 Skill 时按主题查阅，保存当前设计依据、研究边界及验证方法。本文不是另一份执行规范，普通业务写作和 Skill 运行无需读取。
 
-查维护归属与取舍看第 1 节，查产品机制看第 2 节，查写作依据看第 3 节，查论文边界看第 4 节，设计验证看第 5 节。外部资料在相关迭代中按需重新查证，不设定期巡检。
+查维护归属与取舍看第 1 节，查产品机制与工程实践看第 2 节，查写作依据看第 3 节，查研究证据的采用边界看第 4 节，设计验证看第 5 节。外部资料在相关迭代中按需重新查证，不设定期巡检。
 
 ## 1. 维护归属与设计理由
 
@@ -21,7 +21,9 @@
 
 ### 上下文与指示长度
 
-简洁的目标是保留足够信息，而非追求最少字数。[Anthropic Skill 编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) 提醒：“Only add context Claude doesn't already have.” [Context Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 同时说明：“minimal does not necessarily mean short”。
+简洁的目标是保留足够信息，而非追求最少字数。[Anthropic Skill 编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) 提醒：“Only add context Claude doesn't already have.” [Context Engineering](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents) 同时说明：“minimal does not necessarily mean short”。按需读取和围绕真实缺口补充指示仍有现行 Skill 指南支持；文章中的具体模型行为不视作长期保证。
+
+[OpenAI 的 GPT-6 Astra 编写建议](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 强调精确的触发描述、按需展开材料，并提醒：“consider which models will use the instructions you leave behind”。这支持检查跨模型适用范围，不支持在未验证时统一删掉任务步骤；本项目的职责和验收要求仍以主定义为准。
 
 这些建议支持按需读取参考资料及合并重复条文，不证明某个固定长度必然有效。厂商的行数建议不是能力保证；仓库的准入、规模和格式限制是本地约定。大段解释适合留在参考资料，不能因此隐藏执行必需的约束。
 
@@ -30,28 +32,44 @@
 审核 Skill 中的四项原则是本项目对评估和上下文方法的应用，不是厂商发布的固定清单。
 
 - **目标的依据**：[Anthropic 成功条件与评估](https://platform.claude.com/docs/en/test-and-evaluate/develop-tests) 强调具体、可衡量且与实际需要相关的成功条件。本项目将其用于判断计划是否解决原始需求。
-- **措施的依据**：[Agent 评估指南](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) 区分执行记录与最终结果，并建议检查失败轨迹。本项目据此追问措施依赖的条件；具体因果判断仍需任务证据。
+- **措施的依据**：[Agent 评估指南](https://www.anthropic.com/research/demystifying-evals-for-ai-agents) 区分执行记录与最终结果，并建议检查失败轨迹。本项目据此追问措施依赖的条件；具体因果判断仍需任务证据。
 - **成本的依据**：Context Engineering 将上下文视为有限资源；将执行和维护成本纳入方案审核，是本项目的工程判断，不是该文章规定的通用成本公式。
 - **证据的依据**：Agent 评估指南结合任务、判定标准、重复试验和记录检查。本项目将其用于限制效果主张，官方出处只支持对应事实或建议。
 
 这些依据来自 LLM 应用及 Agent 评估。迁移到技术方案审核需要考虑任务差异，不能因贴有官方链接就认为方案有效，也不能因方案没有厂商逐字背书就判错。
 
-## 2. 厂商指南与宿主边界
+## 2. 厂商指南与工程实践
 
-产品机制以对应厂商资料为准，不将一个宿主的加载、导入或调用方式推及其他宿主。
+产品机制以对应厂商的现行文档为准，工程文章用于提出待验证的改进方向。模型成绩和厂商声誉不能替代建议与本地问题的对应关系。
+
+### 宿主机制
+
+查加载、导入和调用方式时，使用实际宿主的文档，不将一个产品的机制推及其他产品。
 
 - [Anthropic Agent Skills Best Practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)：按需加载、描述编写、自由度与评估。关于第三人称和触发描述的建议有具体产品语境。
 - [Claude Code Best Practices](https://code.claude.com/docs/en/best-practices)：上下文管理和实际工作验证。
 - [Claude Code Memory](https://code.claude.com/docs/en/memory)：CLAUDE.md 与导入机制。原文说明“there’s no guarantee of strict compliance”，所以规则进入上下文不等于每次都遵守。
-- [OpenAI Codex Skills](https://developers.openai.com/codex/skills)：查 Codex 的 Skill 发现、调用和配置。
+- [OpenAI Build skills](https://learn.chatgpt.com/docs/build-skills)：查 Codex 的本地 Skill 发现、软链支持和调用配置；页面中的 ChatGPT 分发方式与 Codex 本地加载分别适用。
 - [Cursor Rules](https://cursor.com/docs/rules)：查 User Rules、项目规则、作用范围和引用机制。
 - [Cursor Skills](https://cursor.com/docs/skills)、[Cursor Subagents](https://cursor.com/docs/subagents)：查手动调用、材料可见性和子 Agent 上下文。
 
 仓库的全局规则文件是维护源，具体宿主使用的入口不同。软链检查只验证安装关系，不能替代当前会话加载证据；缺少再次读取记录也不能证明模型未使用先前进入上下文的材料。
 
+### 模型提示与运行环境
+
+Harness 是模型周围的运行机制，包括工具、上下文管理和执行反馈。参考这些机制的设计经验，不要求使用资料对应的产品。
+
+- **Google**：[Gemini 提示设计指南](https://ai.google.dev/gemini-api/docs/prompting-strategies) 说明：“These guidelines and templates are starting points.” 可参考目标、约束、上下文和示例的表达；示例数量及模型专属提示策略需要在实际模型上验证，不能成为所有 Skill 的固定要求。
+- **Cursor**：[Harness 效率实践](https://cursor.com/blog/improved-token-efficiency) 讨论精简失去作用的指示、按需加载工具及子 Agent 的“coordination tax”。可参考上下文成本与协调成本的取舍；缓存、工具发现和文件读取优化由宿主实现，不能靠 AGENTS.md 复现，产品报告的节省比例也不代表本项目收益。
+- **DeepSeek**：[工具调用文档](https://api-docs.deepseek.com/guides/tool_calls/) 明确：“The model itself does not execute specific functions.” [思考模式文档](https://api-docs.deepseek.com/guides/thinking_mode/) 则规定对应模式的参数及多轮消息处理。可据此区分模型输出与客户端执行职责；具体协议只在接入对应模型和 API 时适用，不写入通用规则。
+
+当前实践支持按任务选择验证方法。[Google ADK 评估指南](https://adk.dev/evaluate/) 区分“Evaluate Trajectory and Tool Use”与“Evaluate the Final Response”；本项目参考动作记录与最终答案分别核验的思路，不引入 ADK，也不要求只有一条合法工具调用路径。
+
+[Cursor 的 Harness 迭代实践](https://cursor.com/blog/continually-improving-agent-harness) 将离线评估与实际使用反馈结合。本文采用的工程判断是：先确认具体失败，再比较改动前后的质量和成本；Token 减少、运行更快或一次回答更顺，都不能单独证明任务完成得更好。
+
 ## 3. 写作依据与表达风险
 
-写作依据用于解释选择，不构成新的禁词表。名称清晰与设计准确需要分别判断，来源中出现过的表达也可能不适合成品读者。
+写作依据用于解释选择，不构成新的禁词表。Google 现行指南继续支持术语一致、主动语态和按读者组织内容等稳定实践；英文语法、大小写和标点习惯不能直接成为中文规范。名称清晰与设计准确需要分别判断。
 
 ### Google 官方写作指南
 
@@ -65,11 +83,11 @@
 - 内容组织：[列表与表格](https://developers.google.com/tech-writing/one/lists-and-tables)、[长文档](https://developers.google.com/tech-writing/two/large-docs)、[插图](https://developers.google.com/tech-writing/two/illustrations)。
 - 表达与样式：[术语](https://developers.google.com/style/jargon)、[列表](https://developers.google.com/style/lists)、[标题](https://developers.google.com/style/headings)。
 
-### 项目实践与社区建议
+### 项目实践
 
 [Gemini CLI 的 docs-writer](https://raw.githubusercontent.com/google-gemini/gemini-cli/main/.gemini/skills/docs-writer/SKILL.md) 是该项目的写作实践，适合参考任务组织和准确性检查，不是跨项目统一规范。
 
-阮一峰的中文技术文档指南属于社区建议，可按需参考[文本](https://raw.githubusercontent.com/ruanyf/document-style-guide/master/docs/text.md)、[段落](https://raw.githubusercontent.com/ruanyf/document-style-guide/master/docs/paragraph.md)和[标题](https://raw.githubusercontent.com/ruanyf/document-style-guide/master/docs/title.md)。其中“唯二”改为“仅有的两种”是常用表达的例子，不足以判断业务对象、条件或并发约束是否完整。
+本项目的中文措辞、段落行数和标题层级偏好由全局规则与对应 Skill 定义。项目偏好不依赖外部文章背书，也不能据此判定业务对象、条件或并发约束是否完整。
 
 ### 通用失败模式与已知限制
 
@@ -82,14 +100,20 @@
 
 Spec 整理阶段可能需要额外动作，但输入 Spec 存在含混表达，不能证明由 [my-to-spec](../skills/my-to-spec/SKILL.md) 产生。是否修改该 Skill，取决于其任务基线和实际缺口；这不阻碍对文稿生成、缩减和审核的局部验证。
 
-## 4. 实证研究的适用范围
+## 4. 研究证据的采用边界
 
-论文作为研究证据保留版本和实验范围，不视作厂商规范，也不将组间统计结果转换成单条指示的必然效果。
+现行依据取决于结论的适用性，发布日期和最新版本号只提供核验线索。研究材料需要能支持具体设计判断，不为覆盖厂商或增加引用数量而收录。
 
-- [ETH：Evaluating AGENTS.md，v3](https://arxiv.org/html/2602.11988v3) 在 SWE-bench 与 CTXbench 等软件任务中观察到，上下文文件通常未提高成功率，平均推理成本增加超过 20%。该版本未发现文件长度或特定指示类别对性能有显著影响；不能概括为所有上下文都会降低成功率，也不能据此认定中文文档错误由长度或冗余造成。
-- [SkillsBench，v4](https://arxiv.org/html/2602.12670v4) 比较跨任务、模型和 Agent 执行环境的 Skill 效果。附录 F.1 的数量分组针对任务附带的 Skill 数量，F.2 讨论文档长度；这些结果不是单个 Skill 的章节数上限，也不证明复述模型默认能力必然产生负作用。
+不同证据的适用边界如下：
 
-两项研究都提示效果需要在具体任务中检验。本项目据此保存基线、限制未经验证的效果主张，不以论文中的阈值替代本地行为观察。
+- **产品文档**：核对当前入口、版本和适用产品。旧接口或已被替代的建议退出当前依据；引用与解释一起更新。
+- **实证研究**：核对论文正文、修订版本、实验模型、宿主、任务、预算、比较基准及后续研究。结果只支持匹配的实验范围，不将成功率、成本变化或数量分组直接转换成本项目阈值。
+- **较早资料**：只有适用条件明确的定理，或仍获现行官方指南、后续研究支持的稳定实践，才作为当前依据保留。未发现替代论文不能证明旧模型的观察仍适用；未发现效果也不能证明没有效果。
+- **工程实践**：区分已发布能力、预览实现和厂商自身观察。官方文章不等于跨宿主最佳实践；来源冲突时先比较条件，不拼接成统一要求。
+
+若正文暂时无法获取，先尝试官方替代入口，不能把访问失败判成结论过时。无法核实的主张不作为当前设计依据，也不凭搜索摘要补全；涉及既有规则的含义变化时，按仓库约定确认取舍。
+
+本项目的效果仍需目标宿主和模型上的本地验证。[Anthropic Skill 指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) 要求覆盖实际使用的模型，并先建立基线再迭代。本文据此采用第 5 节的验证方法，不用旧模型上的性能数字推断当前 workflow 的收益。
 
 ## 5. 验证方法与未验证假设
 
