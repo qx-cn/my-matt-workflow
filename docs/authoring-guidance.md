@@ -25,7 +25,7 @@
 
 [OpenAI 的 GPT-6 Astra 编写建议](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 强调精确的触发描述、按需展开材料，并提醒：“consider which models will use the instructions you leave behind”。这支持检查跨模型适用范围，不支持在未验证时统一删掉任务步骤；本项目的职责和验收要求仍以主定义为准。
 
-这些建议支持按需读取参考资料及合并重复条文，不证明某个固定长度必然有效。厂商的行数建议不是能力保证；仓库的准入、规模和格式限制是本地约定。大段解释适合留在参考资料，不能因此隐藏执行必需的约束。
+这些建议支持按需读取参考资料及合并重复条文，不证明某个固定长度必然有效。[Claude Code Memory](https://code.claude.com/docs/en/memory#write-effective-instructions) 建议每份 CLAUDE.md “target under 200 lines”，这是该产品的编写建议。[OpenAI AGENTS.md 文档](https://learn.chatgpt.com/docs/agent-configuration/agents-md) 说明默认合并大小限制为 32 KiB，这是加载容量限制。两者都不能推出跨宿主的 30 行阈值，也不是能力保证。本仓库不设统一行数上限，按规则是否必要、清晰、无冲突及实际效果判断；大段解释适合留在参考资料，不能因此隐藏执行必需的约束。
 
 ### 四项审核原则的依据
 
@@ -87,7 +87,7 @@ Harness 是模型周围的运行机制，包括工具、上下文管理和执行
 
 [Gemini CLI 的 docs-writer](https://raw.githubusercontent.com/google-gemini/gemini-cli/main/.gemini/skills/docs-writer/SKILL.md) 是该项目的写作实践，适合参考任务组织和准确性检查，不是跨项目统一规范。
 
-本项目的中文措辞、段落行数和标题层级偏好由全局规则与对应 Skill 定义。项目偏好不依赖外部文章背书，也不能据此判定业务对象、条件或并发约束是否完整。
+本项目的中文措辞、段落组织和标题层级偏好由全局规则与对应 Skill 定义。段落按主题拆分，不设统一显示行数；代码样式按文本用途判断，不按出现次数限制。Google 的写作指南用于参考表达和辨认方式，不将英文句数建议直接用作中文阈值。项目偏好不依赖外部文章背书，也不能据此判定业务对象、条件或并发约束是否完整。
 
 ### 通用失败模式与已知限制
 
