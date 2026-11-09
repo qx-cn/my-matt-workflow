@@ -55,6 +55,16 @@
 
 仓库的全局规则文件是维护源，具体宿主使用的入口不同。软链检查只验证安装关系，不能替代当前会话加载证据；缺少再次读取记录也不能证明模型未使用先前进入上下文的材料。
 
+### 授权与浏览器环境
+
+授权范围和宿主技术权限分别判断。明确授权范围内的常规工作可以自主完成，业务规则或授权范围的变化仍需确认。[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices) 区分模型判断与权限、沙箱等强制控制。规则文本只能指导行为，不能证明对应限制已经由宿主执行。
+
+[Playwright CLI](https://github.com/microsoft/playwright-cli/blob/main/README.md) 推荐编码 Agent 使用 CLI，同时说明“MCP remains relevant”，列出持续状态和探索自动化等场景。这支持按任务和宿主能力选择工具，不支持只有 CLI 无法完成时才能使用其他工具。[Anthropic 浏览器安全指南](https://support.claude.com/en/articles/12902428-use-claude-in-chrome-safely) 建议使用不含敏感账户的独立 Profile；该建议针对 Claude in Chrome。公开网页与开发验证使用独立环境，必要时复用已授权个人登录态，是本项目基于任务需要和账户暴露范围的工程判断，不是所有宿主的统一规定。
+
+[Playwright 扩展](https://github.com/microsoft/playwright/blob/main/packages/extension/README.md) 的 Token 用于省去连接批准，不定义网站业务操作的授权。[CLI](https://github.com/microsoft/playwright-cli/blob/main/README.md) 的 `detach` 可以断开控制并保留外部浏览器。保留页面与保留自动化连接分别处理，具体能力需核对所用版本；不同宿主的生命周期不视作相同机制。
+
+[Playwright 认证指南](https://playwright.dev/docs/auth) 提醒，认证状态可能包含可用于冒充账户的 Cookie 和请求头，不应提交到公开或私有仓库。隔离浏览器环境也不能消除同一账户在服务端产生的相互影响；并行修改数据时仍需隔离账户或测试数据。命名会话、页面控制归属和账户数据隔离分别核实，规则不据会话名推断隔离已经成立。
+
 ### 模型提示与运行环境
 
 Harness 是模型周围的运行机制，包括工具、上下文管理和执行反馈。参考这些机制的设计经验，不要求使用资料对应的产品。
