@@ -18,3 +18,6 @@ env/
 
 # Git worktrees
 .worktrees/
+
+# Local reference archives (may contain internal docs)
+.agent/work/**/refs/

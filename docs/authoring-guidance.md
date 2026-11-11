@@ -1,8 +1,6 @@
 # 编写与审核参考
 
-本文供本仓库迭代规则和 Skill 时按主题查阅，保存当前设计依据、研究边界及验证方法。本文不是另一份执行规范，普通业务写作和 Skill 运行无需读取。
-
-查维护归属与取舍看第 1 节，查产品机制与工程实践看第 2 节，查写作依据看第 3 节，查研究证据的采用边界看第 4 节，设计验证看第 5 节。外部资料在相关迭代中按需重新查证，不设定期巡检。
+本文供本仓库迭代规则和 Skill 时按主题查阅，保存当前设计依据、研究边界及验证方法。本文不是另一份执行规范，普通业务写作和 Skill 运行无需读取；外部资料在相关迭代中按需重新查证，不设定期巡检。
 
 ## 1. 维护归属与设计理由
 
@@ -17,11 +15,11 @@
 
 集中定义与必要的任务提醒可以并存。[Cursor Rules](https://cursor.com/docs/rules) 建议：“Reference files instead of copying their contents.” 本项目据此优先引用，保留执行需要的短提示；这不是允许在多处维护完整定义或例外。
 
-文件数和行数都不能单独证明维护成本下降。减少重复定义可以缩小常见修改范围，但规则含义改变时，相关动作和设计理由仍可能需要调整。规范已在上下文中时无需反复读取；仅有文件路径或安装链接，也不能证明执行者取得了正文。
+文件数和行数都不能单独证明维护成本下降。减少重复定义可以缩小常见修改范围，但宿主运行时会将常驻规则、项目准则与所调用的 Skill 合并注入同一上下文（[Claude Code Memory](https://code.claude.com/docs/en/memory#write-effective-instructions) 指出：“if two instructions contradict each other, Claude may pick one arbitrarily”），因此规则含义或边界改变时，需同步核对共生栈中的上下游规则、模板、校验脚本及设计理由，需要例外时回上游收窄适用前提而非在局部硬写矛盾条文。规范已在上下文中时无需反复读取；仅有文件路径或安装链接，也不能证明执行者取得了正文。
 
 ### 上下文与指示长度
 
-简洁的目标是保留足够信息，而非追求最少字数。[Anthropic Skill 编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) 提醒：“Only add context Claude doesn't already have.” [Context Engineering](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents) 同时说明：“minimal does not necessarily mean short”。按需读取和围绕真实缺口补充指示仍有现行 Skill 指南支持；文章中的具体模型行为不视作长期保证。
+简洁的目标是保留足够信息并处在恰当的抽象高度（Right Altitude），而非追求最少字数或堆砌边缘特例清单。[Anthropic Skill 编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) 提醒：“Only add context Claude doesn't already have.” [Context Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 同时指出：“minimal does not necessarily mean short”，并强调在“hardcoding complex, brittle logic / stuffing a laundry list of edge cases”与“vague, high-level guidance”之间保持平衡，用通用原则配合简短典型的正反例引导行为。按需读取和围绕真实缺口补充指示仍有现行 Skill 指南支持；文章中的具体模型行为不视作长期保证。
 
 [OpenAI 的 GPT-6 Astra 编写建议](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 强调精确的触发描述、按需展开材料，并提醒：“consider which models will use the instructions you leave behind”。这支持检查跨模型适用范围，不支持在未验证时统一删掉任务步骤；本项目的职责和验收要求仍以主定义为准。
 
@@ -77,6 +75,13 @@ Harness 是模型周围的运行机制，包括工具、上下文管理和执行
 
 [Cursor 的 Harness 迭代实践](https://cursor.com/blog/continually-improving-agent-harness) 将离线评估与实际使用反馈结合。本文采用的工程判断是：先确认具体失败，再比较改动前后的质量和成本；Token 减少、运行更快或一次回答更顺，都不能单独证明任务完成得更好。
 
+### 独立审查隔离与规格同步
+
+交付前审查与实施期规格同步分别依据子 Agent 隔离机制与规格演进实践设定边界：
+
+- **审查载荷隔离与范围刹车**：[Claude Academy Subagents 指南](https://academy.claude.com/courses/introduction-to-subagents/using-subagents-effectively)指出代码在视作他人编写且不带创作历史时审查效果更好（由审查子 Agent 在独立上下文中自行运行 `git diff` 与读取修改文件）；[Claude Code Best Practices](https://code.claude.com/docs/en/best-practices) 提醒跳过纯风格挑刺，否则修完每一条意见会引入多余抽象层与无意义测试。本项目据此要求主 Agent 优先传客观路径（无路径材料原样粘贴全文），禁传主 Agent 归纳的改动导览、偏离辩护与自证式测试总结，并由主 Agent 核实源码事实后只修确认成立的“必须修”，“建议”交由用户决定而不擅自扩改。
+- **代码与规格不一致的分层裁决**：[Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/#implementation-and-iteration) 指出实施碰撞现实时常暴露初始假设偏差，未上线系统的设计文档应同步更新；[Martin Fowler 站点 Spec-Driven Development 分析](https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)区分了一次性 `spec-first` 与持续对齐的 `spec-anchored` 维护负担。本项目采用工程折中：代码漏写或偏离有效 Spec 时修代码；纯底层代码事实或内部签名假设有误（不改变业务规则、对外契约与范围）时以源码为准修正并回写已有的 Spec 与决定记录，不为内部细节频繁改动评审技术方案；涉及业务规则、对外契约、范围或风险取舍变化时先经用户确认再同步代码与相关设计文档。
+
 ## 3. 写作依据与表达风险
 
 写作依据用于解释选择，不构成新的禁词表。Google 现行指南继续支持术语一致、主动语态和按读者组织内容等稳定实践；英文语法、大小写和标点习惯不能直接成为中文规范。名称清晰与设计准确需要分别判断。
@@ -93,11 +98,27 @@ Harness 是模型周围的运行机制，包括工具、上下文管理和执行
 - 内容组织：[列表与表格](https://developers.google.com/tech-writing/one/lists-and-tables)、[长文档](https://developers.google.com/tech-writing/two/large-docs)、[插图](https://developers.google.com/tech-writing/two/illustrations)。
 - 表达与样式：[术语](https://developers.google.com/style/jargon)、[列表](https://developers.google.com/style/lists)、[标题](https://developers.google.com/style/headings)。
 
-### 项目实践
+### 项目实践与中文工程表达
 
 [Gemini CLI 的 docs-writer](https://raw.githubusercontent.com/google-gemini/gemini-cli/main/.gemini/skills/docs-writer/SKILL.md) 是该项目的写作实践，适合参考任务组织和准确性检查，不是跨项目统一规范。
 
-本项目的中文措辞、段落组织和标题层级偏好由全局规则与对应 Skill 定义。段落按主题拆分，不设统一显示行数；代码样式按文本用途判断，不按出现次数限制。Google 的写作指南用于参考表达和辨认方式，不将英文句数建议直接用作中文阈值。项目偏好不依赖外部文章背书，也不能据此判定业务对象、条件或并发约束是否完整。
+本项目的中文措辞、段落组织和视觉层级由全局规则与对应 Skill 定义，依据以下实证研究与工程实践区分中英文差异及文档受众：
+
+- **中英文句法差异与反翻译腔**：
+  - **研究观察**：
+    - [PNAS 2025 研究](https://www.pnas.org/doi/10.1073/pnas.2422455122)：指令微调模型在英文语料上的名词化（Nominalization）频率高于人类基线；
+    - [ArXiv 2506.05339](https://doi.org/10.48550/arxiv.2506.05339)：偏好模型（奖励模型与 LLM 评估器）在受控反事实样本对上对冗长（`length`）、列表结构（`structure`）与专业行话（`jargon`）等表层特征存在显著偏好偏置与校准偏差；
+    - [ACL 2025](https://doi.org/10.18653/v1/2025.acl-long.1308)：偏好模型对列表、加粗等特定格式模式与长度存在显著偏好（“strong biases towards specific format patterns”）；
+    - [MT Summit 2025](https://aclanthology.org/2025.mtsummit-1.8/)：英译中机译语料（NMT 与 LLM）的转折连词频率超过原生中文新闻两倍，且专用翻译模型相比通用 LLM 翻译输出具有更高的因果连词比例。
+  - **项目选择**：结合中文重意合、主题突出的特点，本项目保留原生英文缩写、接口与命令名，用具体动词替代“进行/实现 + 抽象名词”，允许同主题流水句承前省略主语，并停用针对英文维基百科散文的通用 `humanizer`（其第 19 条倾向于将带加粗引导词的列表改写为散文段落，易破坏工程文档的扫读结构）。这些中文工程写作规则属于项目选择，跨模型效果仍需按第 5 节方法在本地验证。
+- **技术方案与施工 Spec 的受众分离**：[Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/) 与 [Martin Fowler ADR 指南](https://martinfowler.com/bliki/ArchitectureDecisionRecord.html) 强调设计文档面向人类评审者，核心是倒金字塔结构、问题背景、系统上下文与备选方案权衡，而非代码级施工说明书。因此 `spec.md` 面向编码 Agent 保留源码行号与全量字段清单，而 `my-tech-design` 面向评审人隐藏源码行号与全量同名字段表，同时遵循四项工程设计原则：
+  1. **首要痛点置顶与排除项降噪**：将触发需求的根本业务痛点放在第一位，调研期排除的候选方案只归入方案取舍，不混作现网系统痛点。
+  2. **动机、归属前置与判据可查验**：引出分支、过滤条件、多步操作或跨组件转换前，交代业务动机与上下游、表字段归属，并指明可查验的状态判据（具体到表名、字段名与枚举值），不裸抛内部实现黑话或无归属状态词。
+  3. **审慎界定不做范围与动态详略**：按 [Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/#goals-and-non-goals) 仅将合理可能包含但决定延后或另案处理的事项列为不做范围，不拿无关的“不改表结构”凑数；按 [Gergely Orosz RFC 指南](https://newsletter.pragmaticengineer.com/p/rfcs-and-design-docs) 根据实际风险分配篇幅，复用现有机制的维度简写，高风险维度配图详述。
+  4. **回滚分离服务版本与数据状态**：回滚预案分别评估服务镜像回滚与运行期间已落库数据、已推进游标的修复手段。
+- **视觉层级、扫读与以图代字**：
+  - **外部依据**：[Nielsen Norman Group 眼动追踪研究](https://www.nngroup.com/articles/layer-cake-pattern-scanning/)、[长文排版指南](https://www.nngroup.com/articles/formatting-long-form-content/)与多媒体学习中的[信号原则（Signaling Principle）](https://pmc.ncbi.nlm.nih.gov/articles/PMC8354981/)表明，读者通过标题、高亮块、双栏分块和关键词加粗/色彩对比进行扫读，并通过聚焦的简明图示（[Google Illustrating](https://developers.google.com/tech-writing/two/illustrations)）降低外在认知负荷。
+  - **项目落地**：`my-tech-design` 据此要求文首提供方案总览，按内容复杂度选用双栏并排、关键差异局部高亮与聚焦画板图（飞书画板按图型采用 JSON DSL 拓扑或栅格布局、时序图等采用 Mermaid，本地 HTML 采用内联 SVG），图下不重复复述图内过程，并在写入飞书画板后导出预览图做视觉自检。
 
 ### 通用失败模式与已知限制
 

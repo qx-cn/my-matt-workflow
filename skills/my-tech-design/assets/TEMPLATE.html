@@ -107,6 +107,9 @@
       box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
     }
     .card h3 { margin: 0 0 10px; font-size: 17px; }
+    .card ul,
+    .card ol { margin: 0; padding-left: 1.25em; }
+    .card li + li { margin-top: 6px; }
     .card > :last-child { margin-bottom: 0; }
     .muted { color: var(--muted); }
 
@@ -276,9 +279,10 @@
         {{OVERVIEW_DECISION_STRIP}}
         <div class="grid">
           {{DECISION_INDEX}}
-          <article class="card span-4"><h3>为什么改</h3><p>{{WHY}}</p></article>
-          <article class="card span-4"><h3>怎么改</h3><p>{{HOW}}</p></article>
-          <article class="card span-4 callout warn"><h3>最大风险</h3><p>{{TOP_RISK}}</p></article>
+          <!-- Fill the WHY, HOW, and TOP_RISK slots with block elements such as <p>...</p> or <ul>...</ul>. -->
+          <article class="card span-4"><h3>背景与问题</h3>{{WHY}}</article>
+          <article class="card span-4"><h3>核心方案</h3>{{HOW}}</article>
+          <article class="card span-4 callout warn"><h3>关键风险与边界</h3>{{TOP_RISK}}</article>
           {{OVERVIEW_VISUAL}}
           <article class="card span-12">
             <h3>整体改动地图</h3>
@@ -374,7 +378,7 @@
         });
         const title = document.querySelector('h1').textContent;
         const section = document.querySelector(`#${active} h2`).textContent;
-        document.title = `${title} — ${section}`;
+        document.title = `${title}: ${section}`;
         window.scrollTo({ top: 0, behavior: 'auto' });
       }
 
