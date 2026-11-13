@@ -23,7 +23,7 @@
 
 [OpenAI 的 GPT-6 Astra 编写建议](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 强调精确的触发描述、按需展开材料，并提醒：“consider which models will use the instructions you leave behind”。这支持检查跨模型适用范围，不支持在未验证时统一删掉任务步骤；本项目的职责和验收要求仍以主定义为准。
 
-这些建议支持按需读取参考资料及合并重复条文，不证明某个固定长度必然有效。[Claude Code Memory](https://code.claude.com/docs/en/memory#write-effective-instructions) 建议每份 CLAUDE.md “target under 200 lines”，这是该产品的编写建议。[OpenAI AGENTS.md 文档](https://learn.chatgpt.com/docs/agent-configuration/agents-md) 说明默认合并大小限制为 32 KiB，这是加载容量限制。两者都不能推出跨宿主的 30 行阈值，也不是能力保证。本仓库不设统一行数上限，按规则是否必要、清晰、无冲突及实际效果判断；大段解释适合留在参考资料，不能因此隐藏执行必需的约束。
+这些建议支持按需读取参考资料及合并重复条文，不证明某个固定长度必然有效。[Claude Code Memory](https://code.claude.com/docs/en/memory#write-effective-instructions) 建议每份 CLAUDE.md “target under 200 lines”，这是该产品的编写建议；[OpenAI AGENTS.md 文档](https://learn.chatgpt.com/docs/agent-configuration/agents-md) 说明默认合并大小限制为 32 KiB，WorkBuddy 则将其用户记忆文件 `MEMORY.md` 硬截断到 4000 个字符（由 `scripts/sync.sh --check` 自动校验 `rules/global.md` 不超过该容量上限）。这些产品建议与加载容量限制都不能推出跨宿主的 30 行阈值，也不是能力保证。本仓库不设统一行数上限，按规则是否必要、清晰、无冲突及实际效果判断；大段解释适合留在参考资料，不能因此隐藏执行必需的约束。
 
 ### 四项审核原则的依据
 
@@ -50,6 +50,7 @@
 - [OpenAI Build skills](https://learn.chatgpt.com/docs/build-skills)：查 Codex 的本地 Skill 发现、软链支持和调用配置；页面中的 ChatGPT 分发方式与 Codex 本地加载分别适用。
 - [Cursor Rules](https://cursor.com/docs/rules)：查 User Rules、项目规则、作用范围和引用机制。
 - [Cursor Skills](https://cursor.com/docs/skills)、[Cursor Subagents](https://cursor.com/docs/subagents)：查手动调用、材料可见性和子 Agent 上下文。
+- WorkBuddy 本地适配：桌面端扫描配置根目录下的 `skills/`（跟随软链并支持 `disable-model-invocation`），并将配置根目录下的 `MEMORY.md` 作为用户级记忆注入（硬截断为 4000 字符）；本仓库通过可选环境变量 `WORKBUDDY_CONFIG_DIR` 按需建立软链，避免在未安装该宿主的机器上创建目录或在公开仓库硬编码专有路径。
 
 仓库的全局规则文件是维护源，具体宿主使用的入口不同。软链检查只验证安装关系，不能替代当前会话加载证据；缺少再次读取记录也不能证明模型未使用先前进入上下文的材料。
 
@@ -77,8 +78,9 @@ Harness 是模型周围的运行机制，包括工具、上下文管理和执行
 
 ### 独立审查隔离与规格同步
 
-交付前审查与实施期规格同步分别依据子 Agent 隔离机制与规格演进实践设定边界：
+独立审查与实施期规格同步分别依据时机控制、子 Agent 隔离机制与规格演进实践设定边界：
 
+- **显式触发控制时机**：[Claude Code Skills 文档](https://code.claude.com/docs/en/skills)指出需要由人控制触发时机的工作流应设置 `disable-model-invocation: true`（原文：“Use this for workflows with side effects or that you want to control timing”），并在排障指南中将关闭自动调用列为解决过度触发的标准方案（[Cursor Skills](https://cursor.com/docs/skills) 同样使用 `SKILL.md` 的 `disable-model-invocation: true`，[OpenAI Build skills](https://learn.chatgpt.com/docs/build-skills) 则使用 `agents/openai.yaml` 的 `allow_implicit_invocation: false`）。因派生干净上下文子 Agent 审查耗时且成本高，本项目将 4 个核心 Skill 统一设为手动调用，仅在 `rules/global.md` 保留高风险代码实施完成后的一句话轻提醒，避免写文档初稿、改临时测试包或普通阅读请求误触发重型审查。
 - **审查载荷隔离与范围刹车**：[Claude Academy Subagents 指南](https://academy.claude.com/courses/introduction-to-subagents/using-subagents-effectively)指出代码在视作他人编写且不带创作历史时审查效果更好（由审查子 Agent 在独立上下文中自行运行 `git diff` 与读取修改文件）；[Claude Code Best Practices](https://code.claude.com/docs/en/best-practices) 提醒跳过纯风格挑刺，否则修完每一条意见会引入多余抽象层与无意义测试。本项目据此要求主 Agent 优先传客观路径（无路径材料原样粘贴全文），禁传主 Agent 归纳的改动导览、偏离辩护与自证式测试总结，并由主 Agent 核实源码事实后只修确认成立的“必须修”，“建议”交由用户决定而不擅自扩改。
 - **代码与规格不一致的分层裁决**：[Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/#implementation-and-iteration) 指出实施碰撞现实时常暴露初始假设偏差，未上线系统的设计文档应同步更新；[Martin Fowler 站点 Spec-Driven Development 分析](https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)区分了一次性 `spec-first` 与持续对齐的 `spec-anchored` 维护负担。本项目采用工程折中：代码漏写或偏离有效 Spec 时修代码；纯底层代码事实或内部签名假设有误（不改变业务规则、对外契约与范围）时以源码为准修正并回写已有的 Spec 与决定记录，不为内部细节频繁改动评审技术方案；涉及业务规则、对外契约、范围或风险取舍变化时先经用户确认再同步代码与相关设计文档。
 

@@ -3,4 +3,4 @@ interface:
   short_description: "Review changes against requirements"
   default_prompt: "Use $my-review for this task."
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

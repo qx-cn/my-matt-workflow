@@ -7,18 +7,20 @@
 | `my-grill` | 澄清目标、范围、术语和设计决定 | 手动 |
 | `my-to-spec` | 把已有讨论、PRD 和代码事实整理成 Spec | 手动 |
 | `my-tech-design` | 写技术方案或发布文档（飞书云文档或本地 HTML） | 手动 |
-| `my-review` | 审查代码改动或文档，按“必须修”和“建议”分级报告 | 手动或 Agent 自动调用 |
+| `my-review` | 审查代码改动或文档，按“必须修”和“建议”分级报告 | 手动 |
 
 ## 使用方式
 
-Cursor 和 Claude Code 用 `/my-grill`，Codex 用 `$my-grill`。外部参考、决定、Spec 和本地 HTML 方案分别放在 `.agent/work/<主题>/` 下的 `refs/`、`decided.md`、`spec.md` 和 `design.html`；含内部信息的 `refs/` 仅留本地（已由 `.gitignore` 忽略，不提交外部同步源）。
+Cursor、Claude Code 和 WorkBuddy 用 `/my-grill`，Codex 用 `$my-grill`。
+
+外部参考、决定、Spec 和本地 HTML 方案分别放在 `.agent/work/<主题>/` 下的 `refs/`、`decided.md`、`spec.md` 和 `design.html`；含内部信息的 `refs/` 仅留本地（已由 `.gitignore` 忽略，不提交外部同步源）。
 
 - **小改动、范围清楚**：直接让 Agent 做，不调用 Skill。
 - **需求不清楚或改动面大**：
   1. 用 `my-grill` 问清需求，外部参考文档归档至 `refs/`，决定写进 `decided.md`。
   2. 需要书面方案时，用 `my-to-spec` 写 `spec.md`。
   3. 开一个新会话，让 Agent “按 `.agent/work/<主题>/spec.md` 实施”。
-  4. 改动涉及存量数据、并发与锁、对外契约、鉴权与权限、敏感数据或发布回滚兼容时，Agent 会调用 `my-review`；未调用时可手动调用。只处理“必须修”，“建议”自己决定。
+  4. 代码实现涉及存量数据、并发与锁、对外契约、鉴权与权限、敏感数据或发布回滚兼容时，Agent 完成后会提醒可运行 `my-review`，按需手动调用；只处理“必须修”，“建议”自己决定。
 - **已有 PRD**：直接用 `my-to-spec`；PRD 有含糊处，先用 `my-grill`。
 - **方案评审或上线准备**：用 `my-tech-design` 写技术方案或发布文档（会先询问输出到飞书还是本地 HTML），可用 `my-review` 审文档。若前序访谈或排查会话较长，建议新开会话或由 Skill 派干净上下文的子 Agent 基于需求/PRD 或已有的 `.agent/work/<主题>/spec.md`、`decided.md`、`refs/` 生成初稿，避免长对话噪音稀释排版与表达规则。
 - **审自己或别人的分支**：用 `my-review`，可指定基准分支。
@@ -45,7 +47,8 @@ Cursor 和 Claude Code 用 `/my-grill`，Codex 用 `$my-grill`。外部参考、
 
 日常升级与同步约定如下：
 
-- **常规升级**：只需 `git pull`；增删或重命名 Skill 时再跑一次 `./scripts/sync.sh`（`--dry-run` 打印动作，`--check` 只读检查并在异常时返回非零状态）。
-- **软链目标**：Skill 软链到 `~/.agents/skills/` 和 `~/.claude/skills/`；全局规则软链到 `~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
+- **常规升级**：只需 `git pull`；增删或重命名 Skill、或启用新宿主时再跑一次 `./scripts/sync.sh`（`--dry-run` 打印动作，`--check` 只读检查软链与长度限制并在异常时返回非零状态；遇到已有同名普通文件会自动备份为 `.bak.<时间戳>`）。
+- **软链目标**：默认将 Skill 软链到 `~/.agents/skills/` 和 `~/.claude/skills/`，将全局规则软链到 `~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
+- **WorkBuddy 按需接入**：在本机 Shell 配置（如 `~/.zshrc`）中设置绝对路径 `export WORKBUDDY_CONFIG_DIR="<配置根目录>"` 后运行 `./scripts/sync.sh`，脚本即额外将 Skill 软链到 `$WORKBUDDY_CONFIG_DIR/skills/`、全局规则软链到 `$WORKBUDDY_CONFIG_DIR/MEMORY.md`（未设置该环境变量的机器自动跳过）。宿主会将 `MEMORY.md` 截断到 4000 字符，该上限已由 `./scripts/sync.sh --check` 自动校验；改动 `rules/global.md` 接近上限时应合并精简条目而非拆分文件。
 - **Cursor 个人规则**：Cursor 不读取软链过去的全局规则，`~/.cursor/rules` 也不是官方用户规则位置。Cursor 改用个人规则（Customize → Rules → User）中名为“个人通用规则”的一条，内容与 `rules/global.md` 一致；修改 `rules/global.md` 后在 Cursor 里通过个人规则接口更新或手动粘贴。
 - **历史基线**：查 v1 旧版内容用 `git show 16c03b5:<路径>`。

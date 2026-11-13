@@ -1,6 +1,6 @@
 # my-matt-workflow 仓库准则
 
-本仓库维护个人跨宿主（Cursor / Claude Code / Codex）的 4 个核心 Skill 与 1 份全局规则 `rules/global.md`。
+本仓库维护个人跨宿主（Cursor / Claude Code / Codex / WorkBuddy）的 4 个核心 Skill 与 1 份全局规则 `rules/global.md`。
 
 ## 1. 权威依据
 
@@ -22,7 +22,7 @@
    - 本仓库所有 Markdown 文件自身必须遵守 `rules/global.md` 的写作与排版规范，不设孤立子标题、不把多层逻辑塞成超长单段列表。
 3. **触发与自由度**：
    - `description` 用第三人称同时写清“做什么”与“何时使用（触发词前置）”。
-   - 仅 `my-review` 允许模型自动调用；其余 Skill 保持手动调用（`disable-model-invocation: true` 及 `openai.yaml` 中 `allow_implicit_invocation: false`）。
+   - 4 个核心 Skill 均保持手动调用（`disable-model-invocation: true` 及 `openai.yaml` 中 `allow_implicit_invocation: false`），避免重型子 Agent 或多步工作流被模型隐式误触发。
    - 避免满篇 `MUST / 必须 / 禁止`；确定性检查交给脚本（`./scripts/sync.sh --check` 与 `python3 skills/my-tech-design/scripts/check_html.py <html路径>`）。审查本仓库自身的规则或 Skill 改动时，不用待审的新版 `my-review` 自举审批自身，改为独立对照本文件、修改前基线与权威依据核查。
 4. **已否决的设计（不要重新引入）**：
    - 不引入 Python runtime 状态机、批次/Ticket 状态管理、审查轮数计数器、强制 JSON 笔记或构建打包复制流程。
@@ -33,5 +33,5 @@
 安装配置与运行时加载分别核实，软链正确不代表当前会话已经读取对应内容。
 
 - 本仓库在 `main` 上维护，v1 历史基线可查 `git show 16c03b5:<path>`。
-- Skill 与 Claude/Codex 全局规则通过 `./scripts/sync.sh` 建立软链；增删或重命名 Skill 时重跑同步（可先加 `--dry-run` 预览），日常改动运行 `./scripts/sync.sh --check` 只读校验。
+- Skill 与 Claude/Codex（及按需配置的 WorkBuddy）全局规则通过 `./scripts/sync.sh` 建立软链；增删或重命名 Skill、或启用新宿主时重跑同步（可先加 `--dry-run` 预览），日常改动运行 `./scripts/sync.sh --check` 只读校验软链与 `rules/global.md` 的 4000 字符上限。WorkBuddy 仅在显式设置环境变量 `WORKBUDDY_CONFIG_DIR` 时启用，将其 `skills/` 与 `MEMORY.md` 软链至本仓库。
 - 修改 `rules/global.md` 后，单独同步 Cursor 中名为“个人通用规则”的用户规则。若处于 Cursor 本地会话且工具可用，调用 `cursor-app-control` 的 `cursor_dialog`（`item="rule", scope="user"`）；否则提醒用户在本机 Cursor 手动同步。

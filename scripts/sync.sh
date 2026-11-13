@@ -14,6 +14,11 @@ for arg in "$@"; do
 done
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
 codex_home=${CODEX_HOME:-"$HOME/.codex"}
+workbuddy_home=${WORKBUDDY_CONFIG_DIR:-""}
+if [ -n "$workbuddy_home" ] && [[ "$workbuddy_home" != /* ]]; then
+    printf 'WORKBUDDY_CONFIG_DIR must be an absolute path: %s\n' "$workbuddy_home" >&2
+    exit 2
+fi
 command -v python3 >/dev/null || { printf 'Python 3 is required.\n' >&2; exit 2; }
 problems=0
 planned_removals=''
@@ -30,8 +35,25 @@ problem() {
     problems=1
 }
 
+# Check rules/global.md UTF-16 code unit length against WorkBuddy MEMORY.md 4000-unit cap.
+global_utf16_len=$(python3 - "$repo/rules/global.md" <<'PY'
+import sys
+from pathlib import Path
+text = Path(sys.argv[1]).read_text(encoding="utf-8")
+print(len(text.encode("utf-16-le")) // 2)
+PY
+)
+if [ "$global_utf16_len" -gt 4000 ]; then
+    problem "rules/global.md length ($global_utf16_len UTF-16 units) exceeds 4000-char MEMORY.md limit"
+fi
+
+legacy_roots=("$HOME/.cursor" "$HOME/.claude" "$codex_home")
+if [ -n "$workbuddy_home" ]; then
+    legacy_roots+=("$workbuddy_home")
+fi
+
 # Validate the entire recorded deletion list before making any changes.
-plan=$(python3 - "$repo" "$HOME/.cursor" "$HOME/.claude" "$codex_home" <<'PY'
+plan=$(python3 - "$repo" "${legacy_roots[@]}" <<'PY'
 import json, os, sys
 from pathlib import Path
 repo = Path(sys.argv[1]).resolve()
@@ -83,6 +105,10 @@ PY
 skill_dirs=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.cursor/skills"
             "$codex_home/skills")
 scan_dirs=("${skill_dirs[@]}" "$HOME/.claude" "$codex_home")
+if [ -n "$workbuddy_home" ]; then
+    skill_dirs+=("$workbuddy_home/skills")
+    scan_dirs+=("$workbuddy_home/skills" "$workbuddy_home")
+fi
 for dir in "${scan_dirs[@]}"; do
     [ -d "$dir" ] || continue
     for target in "$dir"/*; do
@@ -127,7 +153,7 @@ for dir in "${scan_dirs[@]}"; do
 done
 
 sync_link() {
-    local source=$1 target=$2 planned=false old
+    local source=$1 target=$2 planned=false old backup
     if [ ! -e "$source" ]; then problem "missing source $source"; return; fi
     if $dry && ! $check; then
         while IFS= read -r old; do
@@ -140,7 +166,12 @@ sync_link() {
     fi
     if $check; then problem "expected $target -> $source"; return; fi
     if ! $planned && { [ -e "$target" ] || [ -L "$target" ]; }; then
-        action "REPLACE $target" rm -rf -- "$target"
+        if [ -f "$target" ] && [ ! -L "$target" ]; then
+            backup="${target}.bak.$(date +%Y%m%d%H%M%S)"
+            action "BACKUP $target -> $backup" mv -- "$target" "$backup"
+        else
+            action "REPLACE $target" rm -rf -- "$target"
+        fi
     fi
     if [ ! -d "${target%/*}" ]; then
         action "MKDIR ${target%/*}" mkdir -p -- "${target%/*}"
@@ -152,9 +183,15 @@ for source in "$repo"/skills/*; do
     [ -d "$source" ] || continue
     sync_link "$source" "$HOME/.agents/skills/${source##*/}"
     sync_link "$source" "$HOME/.claude/skills/${source##*/}"
+    if [ -n "$workbuddy_home" ]; then
+        sync_link "$source" "$workbuddy_home/skills/${source##*/}"
+    fi
 done
 sync_link "$repo/rules/global.md" "$HOME/.claude/CLAUDE.md"
 sync_link "$repo/rules/global.md" "$codex_home/AGENTS.md"
+if [ -n "$workbuddy_home" ]; then
+    sync_link "$repo/rules/global.md" "$workbuddy_home/MEMORY.md"
+fi
 
 if $check && [ -n "$plan" ]; then problem 'legacy installation remains; run --migrate-v1'; fi
 exit "$problems"
