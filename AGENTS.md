@@ -1,37 +1,45 @@
 # my-matt-workflow 仓库准则
 
-本仓库维护个人跨宿主（Cursor / Claude Code / Codex / WorkBuddy）的 4 个核心 Skill 与 1 份全局规则 `rules/global.md`。
+本仓库维护跨宿主（Cursor / Claude Code / Codex / WorkBuddy）共用的 4 个核心 Skill（`my-grill`、`my-tech-design`、`my-doc-publish`、`my-review`）和 1 份个人通用规则 `rules/global.md`。
+
+---
 
 ## 1. 权威依据
 
-讨论本仓库的设计取舍、增删规则或评估写法时，按主题查阅[编写与审核参考](docs/authoring-guidance.md)，用当前可用的网页检索工具核对相关来源，给出原文关键句、链接与适用范围，区分官方结论和项目判断。该参考文档仅保存设计依据与研究边界，普通业务写作和 Skill 运行无需读取；仅做文字微调或修脚本时不必抓取。
+讨论本仓库的设计取舍、增删规则或评估写法时，按主题查阅[编写与审核参考](docs/authoring-guidance.md)，用网页检索工具核对原始出处，给出原文关键句、链接和适用范围，区分官方结论与项目判断。该文档只用于维护本仓规则，日常业务写作和运行 Skill 时无需读取；只做细微措辞调整或修脚本时也不用重新抓取网页。
 
-## 2. 审核清单
+---
 
-以下准入、职责划分与调用限制为本仓库维护约定（每次改动自检）：
+## 2. 维护自检清单
 
-1. **删减、泛化与脱敏**：
-   - 只保留能解决真实失误、个人明确偏好或团队约束的规则；修改时检查是否保留执行必需的条件和边界，不以行数判断有效性。
-   - 从单次业务复盘提炼规则时，先抽象为跨项目通用的原则（可配 1 个简短的 `❌ / ✅` 正反例），不把单一项目的业务字段、特定命令参数或单次排障特例硬编码成通用规则或模板条文。
-   - 本仓库远端托管于 GitHub，规则、模板、正反例与纳入版本控制的 `decided.md` 不写入企业内部地址、真实业务表名或未脱敏的专有业务标识。
-2. **集中定义与共生栈核对**：
-   - 通用规范由 `rules/global.md` 定义，作为宿主常驻规则只保留跨任务适用的偏好和约束，删除重复或失效内容；仓库约定由本文件定义。任务专用流程由对应 `skills/<name>/SKILL.md` 定义，大段结构模板放同目录子文件（如 `TEMPLATES.md`）。复查上限只在 `my-review` 定义。
-   - Skill 优先引用适用规范，只补充该阶段特有的流程动作、受众边界、结构与视觉要求及简短正反例，不重复抄写 `global.md` 已有的通用规则。
-   - **共生栈核对（防局部打补丁冲突）**：普通措辞微调只改归属文件；修改任一规则或 Skill 的行为、结构或准入条件时，同步核对运行时会合并加载的共生文件，包括上游常驻规则（`rules/global.md`、本文件）、同目录模板与校验脚本（`TEMPLATES.md`、`TEMPLATE.html`、`check_html.py`）、下游验收规则（`my-review/SKILL.md`）、显式引用的外部 Skill 以及 `docs/authoring-guidance.md` 中的参考解释。若局部阶段确需不同于上游通则的做法，同步回上游规则写清适用前提或例外条件，不在下层另写与上游矛盾的指令。
-   - 使用上下文已有的适用规范；缺少时读取已确认可访问的位置，不假定业务目录存在本仓库的相对路径。无法取得时说明限制，不声称已经核对。
-   - 本仓库所有 Markdown 文件自身必须遵守 `rules/global.md` 的写作与排版规范，不设孤立子标题、不把多层逻辑塞成超长单段列表。
-3. **触发与自由度**：
-   - `description` 用第三人称同时写清“做什么”与“何时使用（触发词前置）”。
-   - 4 个核心 Skill 均保持手动调用（`disable-model-invocation: true` 及 `openai.yaml` 中 `allow_implicit_invocation: false`），避免重型子 Agent 或多步工作流被模型隐式误触发。
-   - 避免满篇 `MUST / 必须 / 禁止`；确定性检查交给脚本（`./scripts/sync.sh --check` 与 `python3 skills/my-tech-design/scripts/check_html.py <html路径>`）。审查本仓库自身的规则或 Skill 改动时，不用待审的新版 `my-review` 自举审批自身，改为独立对照本文件、修改前基线与权威依据核查。
-4. **已否决的设计（不要重新引入）**：
-   - 不引入 Python runtime 状态机、批次/Ticket 状态管理、审查轮数计数器、强制 JSON 笔记或构建打包复制流程。
-   - 不把“自动 PR 评论机器人”的窄准入标准（如“只报高确信必修项”）套用到会话内交付前审查。
+每次修改本仓规则、模板或 Skill 时，对照以下四条自检：
+
+1. **保持精简、泛化与脱敏**：
+   - 模型自己读代码就能知道的事和通用常识不写进规则；只在发现 Agent 重复犯错或存在明确团队约束时才加规则，不在同一阶段塞过多细碎要求分散注意力。
+   - 从单次业务复盘提炼规则时，先抽象成跨项目通用的原则（可配 1 个简短的 `❌ / ✅` 正反例），绝不把单一项目的表名、字段、命令参数或单次排障特例写进通用规则或模板。
+   - 本仓库托管于公开 GitHub，所有纳入版本控制的文件不写入企业内部域名、真实业务表名或专有业务代号。
+2. **单文档原则、职责切分与关联核对**：
+   - 跨任务通用规范统一放在 `rules/global.md`；本仓库维护约定放在本文件。
+   - 一个需求最多只维护**一份核心设计文档（`design.md` ⇄ 飞书云文档）**，同时用于团队评审与指导编码验收，不再额外维护重叠的代码级 `spec.md` 或独立 `decided.md` 流水账（关键选型取舍直接收入 `design.md` 的方案取舍表）。
+   - 4 个 Skill 按阶段分工：`my-grill` 查代码后提问澄清需求；`my-tech-design` 编写通顺好懂、契约完整的纯 Markdown 定稿（不混写 XML/HTML/DSL 排版代码）；`my-doc-publish` 将定稿渲染为飞书云文档（含画板）或本地交互式 HTML；审查标尺和复查上限只在 `my-review` 定义。
+   - 各 Skill 只写本阶段特有的动作、受众边界和结构要求，不重复抄写 `rules/global.md` 已有的通用规范。
+   - **关联文件同步核对**：微调字句只改对应文件；一旦改动规则或 Skill 的行为、结构或判定标准，同步检查运行时会一起加载的关联文件，包括 `rules/global.md`、同目录模板与校验脚本（`TEMPLATES.md`、`TEMPLATE.html`、`check_html.py`、`check_feishu.py`）、下游 `my-review/SKILL.md`、引用的外部 Skill 以及 `docs/authoring-guidance.md`。若某阶段确实需要例外做法，回到上游规则写明适用前提，不在下层另写互相打架的指令。
+   - **规则自身必须说人话**：本仓库所有 Markdown 文件自身就是模型最直接的模仿样本，必须遵守 `rules/global.md`，用简明自然的工程师人话编写，不造内部黑话、不连套多层定语和长括号。
+3. **手动触发与脚本兜底**：
+   - Skill 的 `description` 用第三人称写清“做什么”和“什么时候用（触发词放前面）”。
+   - 4 个核心 Skill 统一保持手动触发（`disable-model-invocation: true` 且 `openai.yaml` 设 `allow_implicit_invocation: false`），防止重型工作流被模型误触发。
+   - **能用脚本拦的就不靠加粗强调**：少堆满篇 `MUST / 必须 / 禁止`；如果某条版式或结构要求反复强调模型还是漏掉，就写进确定性校验脚本（`./scripts/sync.sh --check`、`python3 skills/my-doc-publish/scripts/check_html.py <html路径>`、`python3 skills/my-doc-publish/scripts/check_feishu.py <xml路径> [board.json ...]`），在脚本报错信息里直接写明怎么修。审查本仓改动时，不用待审的新版 `my-review` 自己审批自己，改为对照本清单、修改前基线、权威依据和真实样本独立核查。
+4. **不要重新引入的废弃设计**：
+   - 不重新引入双轨文档（同时维护重型代码级 `spec.md` + 评审 `design.md`）或独立 `decided.md` 流水账。
+   - 不搞 Python 状态机、Ticket 状态管理、审查轮数计数器、强制 JSON 中间笔记或构建打包流程。
+   - 不拿自动 PR 评论机器人的窄标准（如“只报高确信崩溃 bug”）套用会话内审查。
+
+---
 
 ## 3. 跨宿主同步与校验
 
-安装配置与运行时加载分别核实，软链正确不代表当前会话已经读取对应内容。
+安装软链正常不代表当前会话已经重新读取了最新规则，两件事要分开核实。
 
-- 本仓库在 `main` 上维护，v1 历史基线可查 `git show 16c03b5:<path>`。
-- Skill 与 Claude/Codex（及按需配置的 WorkBuddy）全局规则通过 `./scripts/sync.sh` 建立软链；增删或重命名 Skill、或启用新宿主时重跑同步（可先加 `--dry-run` 预览），日常改动运行 `./scripts/sync.sh --check` 只读校验软链与 `rules/global.md` 的 4000 字符上限。WorkBuddy 仅在显式设置环境变量 `WORKBUDDY_CONFIG_DIR` 时启用，将其 `skills/` 与 `MEMORY.md` 软链至本仓库。
-- 修改 `rules/global.md` 后，单独同步 Cursor 中名为“个人通用规则”的用户规则。若处于 Cursor 本地会话且工具可用，调用 `cursor-app-control` 的 `cursor_dialog`（`item="rule", scope="user"`）；否则提醒用户在本机 Cursor 手动同步。
+- 本仓库在 `main` 分支维护，v1 旧版基线可用 `git show 16c03b5:<path>` 查看。
+- 运行 `./scripts/sync.sh` 建立 Claude Code、Codex（及按需开启的 WorkBuddy）软链并自动清理已退役 Skill 的残留软链；日常修改后运行 `./scripts/sync.sh --check` 检查软链与 `rules/global.md` 的 4000 字符上限。WorkBuddy 仅在设置了环境变量 `WORKBUDDY_CONFIG_DIR` 时启用，将其 `skills/` 和 `MEMORY.md` 软链到本仓库。
+- 每次修改 `rules/global.md` 后，同步更新本机 Cursor 中名为“个人通用规则”的用户规则：工具可用时直接调用 `cursor-app-control` 的 `cursor_dialog`（`item="rule", scope="user"`）更新，不可用时提醒用户手动粘贴同步。

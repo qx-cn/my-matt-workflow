@@ -1,54 +1,114 @@
 # my-matt-workflow v2
 
-四个自包含 Skill、一份个人通用规则、一个软链同步脚本。
+一套跨宿主共用的极简研发工作流：4 个手动触发的 Skill、1 份个人通用规则、1 个软链同步脚本。核心理念：**小事直接用宿主内置 Plan Mode 零文档开干；复杂或需评审的需求只维护唯一一份人话《技术方案》（`design.md` ⇄ 飞书云文档），同时搞定团队评审与指导编码验收。**
 
-| Skill | 用途 | 调用方式 |
+| Skill | 干什么用 | 调用方式 |
 | --- | --- | --- |
-| `my-grill` | 澄清目标、范围、术语和设计决定 | 手动 |
-| `my-to-spec` | 把已有讨论、PRD 和代码事实整理成 Spec | 手动 |
-| `my-tech-design` | 写技术方案或发布文档（飞书云文档或本地 HTML） | 手动 |
-| `my-review` | 审查代码改动或文档，按“必须修”和“建议”分级报告 | 手动 |
+| `my-grill` | 先查代码再逐轮提问，把需求边界、对外契约和方案取舍问透 | 手动 |
+| `my-tech-design` | 写出唯一一份好讲好读、契约清晰的纯 Markdown 定稿（技术方案 / 发布文档 / 测试报告），可一步发布飞书或 HTML | 手动 |
+| `my-doc-publish` | 把定稿 Markdown 排成留白清晰、带原生画板的飞书云文档或本地交互式 HTML，并跑脚本校验 | 手动 |
+| `my-review` | 派新子 Agent 独立审查代码或文档，按“必须修”和“建议”分级报告 | 手动 |
 
-## 使用方式
+---
 
-Cursor、Claude Code 和 WorkBuddy 用 `/my-grill`，Codex 用 `$my-grill`。
+## 按任务大小怎么用
 
-外部参考、决定、Spec 和本地 HTML 方案分别放在 `.agent/work/<主题>/` 下的 `refs/`、`decided.md`、`spec.md` 和 `design.html`；含内部信息的 `refs/` 仅留本地（已由 `.gitignore` 忽略，不提交外部同步源）。
+Cursor、Claude Code 和 WorkBuddy 里敲 `/my-grill`，Codex 里敲 `$my-grill`。
 
-- **小改动、范围清楚**：直接让 Agent 做，不调用 Skill。
-- **需求不清楚或改动面大**：
-  1. 用 `my-grill` 问清需求，外部参考文档归档至 `refs/`，决定写进 `decided.md`。
-  2. 需要书面方案时，用 `my-to-spec` 写 `spec.md`。
-  3. 开一个新会话，让 Agent “按 `.agent/work/<主题>/spec.md` 实施”。
-  4. 代码实现涉及存量数据、并发与锁、对外契约、鉴权与权限、敏感数据或发布回滚兼容时，Agent 完成后会提醒可运行 `my-review`，按需手动调用；只处理“必须修”，“建议”自己决定。
-- **已有 PRD**：直接用 `my-to-spec`；PRD 有含糊处，先用 `my-grill`。
-- **方案评审或上线准备**：用 `my-tech-design` 写技术方案或发布文档（会先询问输出到飞书还是本地 HTML），可用 `my-review` 审文档。若前序访谈或排查会话较长，建议新开会话或由 Skill 派干净上下文的子 Agent 基于需求/PRD 或已有的 `.agent/work/<主题>/spec.md`、`decided.md`、`refs/` 生成初稿，避免长对话噪音稀释排版与表达规则。
-- **审自己或别人的分支**：用 `my-review`，可指定基准分支。
-- **沉淀仓库知识**：Agent 只在 [global.md](rules/global.md) 列出的四种情况下提议往仓库 `AGENTS.md` 加条目（同一错误第二次出现、评审发现本该知道的仓库知识、同一纠正说了第二遍、新同事也需要知道），看过确认后再写。
+任务本地文件统一放在业务仓库 `.agent/work/<主题>/` 下：外部参考放 `refs/`，测试原始证据放 `evidence/`，唯一方案定稿放 `design.md`（上线期按需生成 `release.md`、`test-report.md`）及对应 `.html` / `.xml` / `board*.json`（不再额外维护重叠的 `spec.md` 与 `decided.md`）。含内部信息的文件只留本地，已被 `.gitignore` 忽略。
 
-日常使用注意以下边界：
+- **小改动 / 修 Bug / 局部重构（不拉会评审）**：
+  - **0 份持久化文档**，不调任何自定义 Skill。直接用宿主内置 **Plan Mode**（如 Cursor `Shift+Tab`）看一眼几行修改计划，确认后改代码跑单测。
+- **跨模块或需拉会评审的中大型需求（只维护 1 份文档）**：
+  1. **问清边界（可选）**：需求还有模糊点时运行 `/my-grill`，查清代码现状、追问边界与取舍，最后在对话中得到结构化定稿摘要。
+  2. **一步生成唯一方案**：运行 `/my-tech-design 发到飞书`（不发飞书就说“只留本地 md”或“出本地 HTML”）。Agent 先写出干净的 `design.md`（包含背景目标、状态矩阵、老接口切换表、时序图、DB/Proto 契约、方案取舍表与验收场景表，不塞源码行号与锁拼接细节），再自动调 `my-doc-publish` 排成飞书文档并画好画板。
+  3. **看着飞书直接改定**：评审时只盯这一份飞书文档；要改哪里直接把飞书链接和大白话意见发给 Agent，局部更新飞书（保留原有画板和评论）并自动同步回本地 `design.md`。
+  4. **新开窗口写代码 + 独立审查**：新开干净聊天窗口，让 Agent “对照源码和 `.agent/work/<主题>/design.md` 先列修改文件计划，确认后实施并补齐验收表对应的测试”。写完涉及存量数据、并发锁、对外契约或回滚风险时，运行 `/my-review` 对照 `design.md` 审代码 diff（只修“必须修”，“建议”自己定）。
+- **上线变更单与测试留证**：按需运行 `/my-tech-design` 生成《发布文档》或引用 `evidence/` 真实报文的《测试报告》，一键发飞书。
+- **已有 Markdown 单独发布**：手头已有现成 `.md` 文稿时，直接调 `/my-doc-publish @xxx.md` 发飞书或出 HTML。
 
-- **按需选用**：不把四个 Skill 机械串跑一遍。
-- **控制审查范围**：不让 Agent 反复修“建议”。
-- **保留工程结构**：不对工程 Spec 或技术方案调用通用 `humanizer`（会抹平加粗列表并增加丢约束风险）。
-- **单文件维护 Spec**：`spec.md` 只保留一份原地更新；业务或方案改动原因记入 `decided.md`（被推翻的旧决定标 `[已废止，见 YYYY-MM-DD]`，纯文字微调不记）。
+---
+
+## 官方权威最佳实践内化（日常协作准则）
+
+本工作流对齐 Anthropic（Claude Code 官方指南）、Cursor（Plan Mode 与 Agent 最佳实践）与 OpenAI（Harness Engineering）的官方推荐方案，不依赖第三方重型方法论套件：
+
+| 场景 | 官方推荐做法 | 落地方式 |
+| --- | --- | --- |
+| **小改动 / 修简单 Bug** | 不写外部文档，直接编码或用宿主内置 **Plan Mode**（`Shift+Tab`）列几步计划后执行 | 0 份持久化文档，不调自定义 Skill |
+| **排查与修复 Bug** | 给 Agent 可自动验证的信号：先写能复现问题的失败单测或最小复现命令，再修绿测试 | 在新会话直接指明症状目录与测试命令（复杂验证可用 Cursor 官方插件 `/verify-this` 比对修改前后证据） |
+| **跨模块 / 需评审需求** | 先提问对齐（`/my-grill`），只落**唯一一份**写清业务不变量与对外契约的 `design.md`（代码里能读到的细节不抄进文档） | `/my-tech-design 发到飞书` 一步成稿并校验 |
+| **长任务编码与审查** | **新开干净会话**基于 `design.md` 实施与补单测；交付前派未见过编写过程的只读子 Agent 对照方案审代码 | 实施跑通测试后按需调 `/my-review` |
+
+日常使用牢记四条官方高杠杆习惯：
+
+1. **阶段切换必清空或开新窗口**（Anthropic `/clear` 准则）：聊完需求生成 `design.md` 后，**关掉旧窗口、新开干净会话**再去写代码，既省 Token 又避免前序讨论噪音干扰编码。
+2. **两次纠偏不收敛就回退重跑**（Anthropic & Cursor 官方准则）：如果连续纠正 AI 两次还没改对，**别纠缠第三次**（对话里已塞满两次错误示范）；直接回退代码，把条件补充进 `design.md` 或新提示词后重跑，结果干净得多。
+3. **守住边界不微操实现，靠测试和脚本兜底**（OpenAI Harness Engineering 准则）：文档只管业务规则、契约与验收场景，让 Agent 自己读源码决定内部写法，靠单测、类型检查和校验脚本（如 `check_feishu.py`）的报错信息引导自愈。
+4. **规则按需演进，能进脚本就不堆文字**（Anthropic & Cursor 官方准则）：只在发现 Agent 重复犯同一个错时才加规则；反复强调仍漏掉的硬要求直接写进脚本或 Hook，不在 Markdown 里堆感叹号和大写字母。
+
+---
+
+## 常见写作毛病与应对办法
+
+AI 写中文技术文档最容易犯下面 6 个毛病（已在全局规则、模板构件和校验脚本里设防）：
+
+1. **乱翻英文原词或译名来回变**：把团队日常直呼英文的服务名、动作词（如 `Approve`、`Reject`、`Dry Run`）猜全称硬翻成中文，或者一会儿叫“签批”一会儿叫“审批”；或者省掉宾语造出“系统草稿”这种容易误解的词。
+2. **背景倒着写、拿空话当目标**：不交代现实业务起因，上来就甩抽象耦合概念，把“保障链路准时启动、保留完整闭环”这种汇报套话当成目标。
+3. **小兼容点满篇刷屏**：把只占 5% 的边角兼容写进主干标题、每节反复念叨，冲散核心主流程。
+4. **该用图和短表的地方写成文字墙**：两套状态机混塞一张大表、漏掉“状态 × 操作权限矩阵表”和“老接口校验切换表”；跨服务调用堆三大段话不画时序图；存量映射用好几个分号挤在一段里；验证表和恢复表单格塞百字小作文。
+5. **提新文件不给样子、靠猜写 SQL 列名**：说新增一份报表或配置却不贴几行真实样例，或者没查 `.sql` / `.proto` 就凭想象编造核查 SQL 列名。
+6. **标题报菜名、一节塞太多、白底没重点**：标题用顿号堆《A、B 与 C》，把痛点和目标塞同一节，或者把高亮全涂在同色提示框里、白底正文反而一片纯黑字。
+
+平时按这三步应对最省心（不需要另建写作检查 Skill，统一用 `my-review` 检查，避免脱离源码事实瞎润色把意思改反）：
+
+1. **新开干净窗口生成**：刚排查完大段代码日志后，新开一个聊天窗口再跑 `/my-tech-design 发到飞书`，免得满屏源码上下文把文风带歪。
+2. **拿不准好不好读就跑一次 `my-review`**：敲 `/my-review <飞书链接或 design.md>`，先让无背景子 Agent 盲读挑刺，再自动核对源码事实。
+3. **自己扫读发现小问题按“1 分钟原则”处理**：
+   - **顺眼度小调整**（挪一下画板框间距、多标一处高亮、顺手改两字语气）：直接在飞书网页上动手改，1 分钟搞定，不用管本地文件。
+   - **段落看不懂、缺例子或要改规则**：直接把飞书链接甩给 Agent 用大白话直说（比如“2.3 节这段看不懂，画个时序图讲清楚”），Agent 局部改飞书并同步更新本地 `design.md`；同类毛病要是犯了第二次，让 Agent 补个通用正反例记进本仓规则。
+
+---
+
+## 哪些靠流程固化，哪些留着自己手调
+
+文档和画板按下面三层分工，不把主观审美硬写成死配额：
+
+| 层次 | 谁来管 | 管哪些事 | 为什么这么分 |
+| --- | --- | --- | --- |
+| **1. 版式与防崩底线** | **脚本硬拦截**（`check_feishu.py` / `check_html.py` / `sync.sh`） | 一级章 `<hr/>` 分割线与二级节 `<p></p>` 空行；`<checkbox>` 禁嵌 `<p>` 防错行；标题重复序号、顿号堆砌标题提醒与 `<ol seq>` 报错；窄栏禁塞代码块或宽表；段落、列表与表格单元格字宽上限及长命令外提检查；单段密集 `<code>` 灰框上限与分号罗列拦截；白底正文零高亮提醒；画板独立标题节点、横向不超 4 级、连线 `label` 与显式锚点防撞框 | 对错客观明确，靠 Python 脚本 100% 拦住，不占模型写作注意力 |
+| **2. 内容结构与代码一致** | **4 个 Skill 默认做好** | 顺着讲方案的顺序写背景和具体能力、主干居前兼容收尾、保留团队英文原词；按需套用状态矩阵表、老接口切换表、时序图、映射小表、方案取舍表与文件样例；竖线结论块 `<blockquote>`、双栏对比卡、红线框、白底重点高亮与复选框（不用中文假斜体与非链接下划线）；改飞书规则时同步本地 `design.md` | 有成熟工程共识，一份文档同时搞定上会评审与指导编码 |
+| **3. 会议侧重与像素微调** | **自己在飞书页面微调** | 画板局部框体的像素对齐与折线弧度；针对某位参会人临时多标黄强调的一句话；某处用双栏卡还是三列表的个人喜好 | 因人和会议场景而异，在飞书页面拖两下比让 AI 盲猜坐标快得多 |
+
+---
 
 ## 安装与同步
 
-同步脚本需要 Bash、Python 3 和 Git，按机器状态执行首次安装或迁移：
+同步脚本依赖 Bash、Python 3 和 Git：
 
-- **全新机器首次安装**：克隆本仓库后在仓库根目录运行 `./scripts/sync.sh` 建立软链，再运行 `./scripts/sync.sh --check` 校验。
-- **曾安装过 v1 的机器首次迁移**：在本仓库先运行 `./scripts/sync.sh --migrate-v1 --dry-run` 预览将删除的旧文件，确认后运行 `./scripts/sync.sh --migrate-v1` 与 `./scripts/sync.sh --check`。
+- **新机器首次安装**：克隆仓库后在根目录运行 `./scripts/sync.sh`，再跑 `./scripts/sync.sh --check` 检查。
+- **装过旧版的机器同步更新**：增删或重命名 Skill 后运行 `./scripts/sync.sh`（脚本会自动清理退役 Skill 的残留软链），再跑 `./scripts/sync.sh --check`。
 
-`my-tech-design` 输出本地 HTML 时仅依赖 Python 3（运行 `check_html.py`）；输出**飞书云文档与内嵌画板**时，依赖宿主机已安装并登录飞书开放平台工具链：
+生成本地 HTML 只需 Python 3；发布飞书云文档和画板还需本机装好飞书工具链并完成登录：
 
 - **外部 Skill**：`lark-doc`、`lark-whiteboard`、`lark-wiki`、`lark-shared`
-- **外部 CLI**：`lark-cli`（需已完成 `lark-cli auth login`）与 Node.js `@larksuite/whiteboard-cli`（用于将画板 JSON DSL 编译为飞书原生画板节点）
+- **外部 CLI**：`lark-cli`（已执行 `lark-cli auth login`）与 Node.js `@larksuite/whiteboard-cli`
 
-日常升级与同步约定如下：
+日常同步说明：
 
-- **常规升级**：只需 `git pull`；增删或重命名 Skill、或启用新宿主时再跑一次 `./scripts/sync.sh`（`--dry-run` 打印动作，`--check` 只读检查软链与长度限制并在异常时返回非零状态；遇到已有同名普通文件会自动备份为 `.bak.<时间戳>`）。
-- **软链目标**：默认将 Skill 软链到 `~/.agents/skills/` 和 `~/.claude/skills/`，将全局规则软链到 `~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
-- **WorkBuddy 按需接入**：在本机 Shell 配置（如 `~/.zshrc`）中设置绝对路径 `export WORKBUDDY_CONFIG_DIR="<配置根目录>"` 后运行 `./scripts/sync.sh`，脚本即额外将 Skill 软链到 `$WORKBUDDY_CONFIG_DIR/skills/`、全局规则软链到 `$WORKBUDDY_CONFIG_DIR/MEMORY.md`（未设置该环境变量的机器自动跳过）。宿主会将 `MEMORY.md` 截断到 4000 字符，该上限已由 `./scripts/sync.sh --check` 自动校验；改动 `rules/global.md` 接近上限时应合并精简条目而非拆分文件。
-- **Cursor 个人规则**：Cursor 不读取软链过去的全局规则，`~/.cursor/rules` 也不是官方用户规则位置。Cursor 改用个人规则（Customize → Rules → User）中名为“个人通用规则”的一条，内容与 `rules/global.md` 一致；修改 `rules/global.md` 后在 Cursor 里通过个人规则接口更新或手动粘贴。
-- **历史基线**：查 v1 旧版内容用 `git show 16c03b5:<路径>`。
+- **软链位置**：默认把 Skill 软链到 `~/.agents/skills/` 和 `~/.claude/skills/`，把 `rules/global.md` 软链到 `~/.claude/CLAUDE.md` 和 `${CODEX_HOME:-~/.codex}/AGENTS.md`。
+- **WorkBuddy 按需启用**：在 `~/.zshrc` 等配置里加上 `export WORKBUDDY_CONFIG_DIR="<绝对路径>"` 后跑 `./scripts/sync.sh`，就会额外软链 `$WORKBUDDY_CONFIG_DIR/skills/` 和 `MEMORY.md`（未配环境变量时自动跳过）。WorkBuddy 会把 `MEMORY.md` 截断在 4000 字符，`./scripts/sync.sh --check` 会自动检查 `rules/global.md` 没超限。
+- **Cursor 用户规则**：Cursor 不读软链文件，改完 `rules/global.md` 后需同步更新 Cursor 设置里名为“个人通用规则”的 User Rule（本地会话可通过 `cursor_dialog` 自动更新，或手动复制粘贴）。
+
+常用本地检查命令：
+
+```bash
+# 检查软链状态与 rules/global.md 4000 字符上限
+./scripts/sync.sh --check
+
+# 检查飞书 XML 留白、重点格式、单元格长度与画板防撞框
+python3 skills/my-doc-publish/scripts/check_feishu.py <design.xml> [board1.json board2.json ...]
+
+# 检查本地 HTML 导航完整性与窄栏防截断
+python3 skills/my-doc-publish/scripts/check_html.py <design.html>
+```

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run deterministic structural checks for a generated tech-design HTML."""
+"""Run deterministic structural checks for a generated local HTML doc."""
 
 from __future__ import annotations
 
@@ -9,6 +9,9 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
+NARROW_TABLE_CONTAINERS = {"span-4", "comparison-card", "decision-card"}
+NARROW_PRE_CONTAINERS = {"span-4", "span-6", "comparison-card", "decision-card"}
+
 
 class DesignParser(HTMLParser):
     def __init__(self) -> None:
@@ -17,6 +20,7 @@ class DesignParser(HTMLParser):
         self.page_ids: set[str] = set()
         self.page_links: set[str] = set()
         self.narrow_tables = 0
+        self.narrow_pres = 0
         self.active_comparison_cards: list[dict[str, int | bool]] = []
         self.comparison_cards: list[bool] = []
 
@@ -27,8 +31,14 @@ class DesignParser(HTMLParser):
             self.page_ids.add(values["id"])
         if values.get("data-page-link"):
             self.page_links.add(values["data-page-link"])
-        if tag == "table" and any("span-4" in item[1] for item in self.stack):
+        if tag == "table" and any(
+            item[1] & NARROW_TABLE_CONTAINERS for item in self.stack
+        ):
             self.narrow_tables += 1
+        if tag == "pre" and any(
+            item[1] & NARROW_PRE_CONTAINERS for item in self.stack
+        ):
+            self.narrow_pres += 1
         if tag in {"ul", "ol"}:
             for card in self.active_comparison_cards:
                 card["has_list"] = True
@@ -71,7 +81,9 @@ def main() -> int:
     if missing_links:
         errors.append(f"章节缺少导航入口：{', '.join(missing_links)}")
     if document.narrow_tables:
-        errors.append(f"发现 {document.narrow_tables} 个表格位于 span-4 窄栏")
+        errors.append(f"发现 {document.narrow_tables} 个表格位于窄栏或对比卡片内")
+    if document.narrow_pres:
+        errors.append(f"发现 {document.narrow_pres} 个 pre 代码块位于窄栏或双栏对比卡片内")
     missing_comparison_lists = document.comparison_cards.count(False)
     if missing_comparison_lists:
         errors.append(

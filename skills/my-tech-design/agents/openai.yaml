@@ -1,6 +1,6 @@
 interface:
   display_name: "Tech Design"
-  short_description: "Write a technical design or release doc"
+  short_description: "Draft clear Markdown design, release, or test docs"
   default_prompt: "Use $my-tech-design for this task."
 policy:
   allow_implicit_invocation: false

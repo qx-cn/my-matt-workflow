@@ -1,0 +1,6 @@
+interface:
+  display_name: "Doc Publish"
+  short_description: "Publish clean Markdown to Feishu or local HTML"
+  default_prompt: "Use $my-doc-publish for this task."
+policy:
+  allow_implicit_invocation: false

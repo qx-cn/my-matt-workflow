@@ -126,6 +126,21 @@
     .badge.good { background: #dcfae6; color: var(--good); }
     .badge.warn { background: #fef0c7; color: var(--warn); }
     .badge.danger { background: #fee4e2; color: var(--danger); }
+    mark {
+      padding: 1px 6px;
+      border-radius: 5px;
+      background: var(--accent-soft);
+      color: #243bb3;
+      font-weight: 650;
+    }
+    blockquote {
+      margin: 0 0 14px;
+      padding: 10px 14px;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: #f8faff;
+    }
+    blockquote p { margin: 0; }
 
     .diagram { overflow-x: auto; }
     .diagram svg { display: block; width: 100%; min-width: 600px; height: auto; }
@@ -142,6 +157,19 @@
     tr:last-child td { border-bottom: 0; }
     td, th { overflow-wrap: break-word; word-break: normal; }
     code { overflow-wrap: anywhere; }
+    pre {
+      margin: 12px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f8fafc;
+      color: var(--ink);
+      font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      overflow-x: auto;
+    }
+    pre code { overflow-wrap: inherit; background: none; padding: 0; }
 
     details { border-top: 1px solid var(--line); padding: 13px 0; }
     details:first-of-type { border-top: 0; padding-top: 0; }
@@ -249,7 +277,7 @@
       main { margin-left: 0; padding: 28px 18px; }
       .span-8, .span-6, .span-4 { grid-column: span 12; }
       .comparison { grid-template-columns: 1fr; }
-      .decision-strip, .decision-index { grid-template-columns: 1fr; }
+      .decision-strip, .decision-index { grid-column: span 12; grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -305,7 +333,7 @@
       const pages = [...document.querySelectorAll('[data-page]')];
       const links = [...document.querySelectorAll('[data-page-link]')];
       const ids = pages.map((page) => page.id);
-      const storageKey = `my-tech-design:review-notes:${location.pathname}:${document.title}`;
+      const storageKey = `my-doc-publish:review-notes:${location.pathname}:${document.title}`;
       let notes = {};
 
       try { notes = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (_) { notes = {}; }
@@ -362,7 +390,10 @@
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'design-review-notes.md';
+        const slug = (document.querySelector('h1')?.textContent.trim() || 'review')
+          .replace(/[^\w\u4e00-\u9fa5-]+/g, '-')
+          .replace(/^-+|-+$/g, '') || 'review';
+        link.download = `${slug}-notes.md`;
         link.click();
         URL.revokeObjectURL(url);
       });
