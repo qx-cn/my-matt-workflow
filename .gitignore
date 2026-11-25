@@ -19,20 +19,5 @@ env/
 # Git worktrees
 .worktrees/
 
-# Local reference archives, verification evidence, and preview/eval drafts (may contain internal data)
-.agent/work/**/refs/
-.agent/work/**/evidence/
-.agent/work/**/draft/
-.agent/work/**/eval*/
-.agent/work/**/spec.md
-.agent/work/**/design.md
-.agent/work/**/release.md
-.agent/work/**/test-report.md
-.agent/work/**/*.xml
-.agent/work/**/*.html
-.agent/work/**/*board*.json
-.agent/work/**/*.openapi.json
-.agent/work/**/*.png
-.agent/work/**/*.jpg
-.agent/work/**/*.jpeg
-.agent/work/**/*.webp
+# Local work directories (references, drafts, evidence, previews; may contain internal data)
+.agent/work/

@@ -102,23 +102,39 @@ PY
 }
 
 # Include previous host Skill locations when finding stale repository links.
-skill_dirs=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.cursor/skills"
-            "$codex_home/skills")
+active_skill_dirs=("$HOME/.agents/skills" "$HOME/.claude/skills")
+legacy_skill_dirs=("$HOME/.cursor/skills" "$codex_home/skills")
+skill_dirs=("${active_skill_dirs[@]}" "${legacy_skill_dirs[@]}")
 scan_dirs=("${skill_dirs[@]}" "$HOME/.claude" "$codex_home")
 if [ -n "$workbuddy_home" ]; then
+    active_skill_dirs+=("$workbuddy_home/skills")
     skill_dirs+=("$workbuddy_home/skills")
     scan_dirs+=("$workbuddy_home/skills" "$workbuddy_home")
 fi
 for dir in "${scan_dirs[@]}"; do
     [ -d "$dir" ] || continue
+    is_legacy_skill_dir=false
+    for ldir in "${legacy_skill_dirs[@]}"; do
+        if [ "$dir" = "$ldir" ]; then is_legacy_skill_dir=true; break; fi
+    done
+    # An active directory is already scanned through its active path.
+    if $is_legacy_skill_dir; then
+        for adir in "${active_skill_dirs[@]}"; do
+            if [ "$dir" -ef "$adir" ]; then continue 2; fi
+        done
+    fi
     for target in "$dir"/*; do
         [ -e "$target" ] || [ -L "$target" ] || continue
-        resolved=$target
         if [ -L "$target" ]; then
             resolved=$(link_target "$target")
+            # A legacy directory symlink can lead into a personal collection.
+            # Only remove Skill links with the name and destination installed by this repo.
+            if $is_legacy_skill_dir && [ -L "$dir" ]; then
+                [[ "${target##*/}" == my-* && "$resolved" == "$repo/skills/${target##*/}" ]] || continue
+            fi
             case "$resolved" in
                 "$repo"/*)
-                    if [ ! -e "$target" ]; then
+                    if [ ! -e "$target" ] || $is_legacy_skill_dir; then
                         if $check; then problem "stale link $target";
                         else
                             action "REMOVE stale $target" rm -- "$target"
@@ -166,11 +182,11 @@ sync_link() {
     fi
     if $check; then problem "expected $target -> $source"; return; fi
     if ! $planned && { [ -e "$target" ] || [ -L "$target" ]; }; then
-        if [ -f "$target" ] && [ ! -L "$target" ]; then
+        if [ ! -L "$target" ]; then
             backup="${target}.bak.$(date +%Y%m%d%H%M%S)"
             action "BACKUP $target -> $backup" mv -- "$target" "$backup"
         else
-            action "REPLACE $target" rm -rf -- "$target"
+            action "REPLACE $target" rm -- "$target"
         fi
     fi
     if [ ! -d "${target%/*}" ]; then

@@ -153,7 +153,7 @@
       text-align: left;
       vertical-align: top;
     }
-    th { color: var(--muted); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+    th { background: #f4f6f9; color: var(--muted); font-size: 12px; letter-spacing: .04em; }
     tr:last-child td { border-bottom: 0; }
     td, th { overflow-wrap: break-word; word-break: normal; }
     code { overflow-wrap: anywhere; }
@@ -284,6 +284,7 @@
 <body>
   <div class="shell">
     <aside class="sidebar">
+      <!-- Adjust eyebrow and overview titles when rendering a Release Plan or Test Report. -->
       <p class="eyebrow">Technical design</p>
       <h1>{{DOCUMENT_TITLE}}</h1>
       <p class="meta">{{DOCUMENT_META}}</p>
@@ -304,13 +305,16 @@
           <h2>方案总览</h2>
           <p class="lede">{{ONE_SENTENCE_CONCLUSION}}</p>
         </header>
+        <!-- Optional: 3-column decision strip (.decision-strip with .decision-card.confirmed/.rule/.risk). Remove if unused. -->
         {{OVERVIEW_DECISION_STRIP}}
         <div class="grid">
+          <!-- Optional: anchor index card (.card.span-12 with .decision-index). Remove if unused. -->
           {{DECISION_INDEX}}
           <!-- Fill the WHY, HOW, and TOP_RISK slots with block elements such as <p>...</p> or <ul>...</ul>. -->
-          <article class="card span-4"><h3>背景与问题</h3>{{WHY}}</article>
+          <article class="card span-4"><h3>业务背景与问题</h3>{{WHY}}</article>
           <article class="card span-4"><h3>核心方案</h3>{{HOW}}</article>
-          <article class="card span-4 callout warn"><h3>关键风险与边界</h3>{{TOP_RISK}}</article>
+          <article class="card span-4 callout warn"><h3>兼容与上线</h3>{{TOP_RISK}}</article>
+          <!-- Optional: full-width overview diagram (.card.span-12.diagram). Remove if unused. -->
           {{OVERVIEW_VISUAL}}
           <article class="card span-12">
             <h3>整体改动地图</h3>
@@ -319,6 +323,7 @@
               <tbody>{{CHANGE_MAP_ROWS}}</tbody>
             </table>
           </article>
+          <!-- Optional: extra overview cards (.card.span-12). Remove if unused. -->
           {{OVERVIEW_EXTRA}}
         </div>
       </section>
@@ -343,7 +348,8 @@
       }
 
       function saveNotes() {
-        localStorage.setItem(storageKey, JSON.stringify(notes));
+        let saved = true;
+        try { localStorage.setItem(storageKey, JSON.stringify(notes)); } catch (_) { saved = false; }
         links.forEach((link) => {
           const hasNote = Boolean(notes[link.dataset.pageLink]?.trim());
           link.querySelector('.note-indicator')?.remove();
@@ -355,6 +361,7 @@
             link.append(indicator);
           }
         });
+        return saved;
       }
 
       pages.forEach((page) => {
@@ -363,18 +370,19 @@
         section.innerHTML = `
           <h3>本页评审注释</h3>
           <p>记录本页需要讨论、补充或调整的内容。注释仅保存在当前浏览器。</p>
-          <textarea aria-label="${pageTitle(page)} 的评审注释" placeholder="例如：补充异常场景的处理策略；明确上线灰度条件。"></textarea>
+          <textarea placeholder="例如：补充异常场景的处理策略；明确上线灰度条件。"></textarea>
           <div class="review-notes-footer">
             <button type="button">保存注释</button>
             <span class="review-notes-status" aria-live="polite"></span>
           </div>`;
         const textarea = section.querySelector('textarea');
+        textarea.setAttribute('aria-label', `${pageTitle(page)} 的评审注释`);
         const status = section.querySelector('.review-notes-status');
         textarea.value = notes[page.id] || '';
         const persist = () => {
           notes[page.id] = textarea.value.trim();
-          saveNotes();
-          status.textContent = '已保存到本地';
+          const saved = saveNotes();
+          status.textContent = saved ? '已保存到本地' : '本地存储不可用，仅本次打开有效';
         };
         section.querySelector('button').addEventListener('click', persist);
         textarea.addEventListener('input', persist);
@@ -407,9 +415,10 @@
           if (link.dataset.pageLink === active) link.setAttribute('aria-current', 'page');
           else link.removeAttribute('aria-current');
         });
-        const title = document.querySelector('h1').textContent;
-        const section = document.querySelector(`#${active} h2`).textContent;
-        document.title = `${title}: ${section}`;
+        const title = document.querySelector('h1')?.textContent.trim() || '';
+        const activePage = pages.find((page) => page.id === active);
+        const section = activePage ? pageTitle(activePage) : '';
+        document.title = section ? `${title}: ${section}` : title;
         window.scrollTo({ top: 0, behavior: 'auto' });
       }
 
