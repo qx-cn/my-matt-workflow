@@ -1,6 +1,6 @@
 interface:
   display_name: "Review"
-  short_description: "Review changes against requirements"
+  short_description: "Review code changes, docs, plans, or rules"
   default_prompt: "Use $my-review for this task."
 policy:
   allow_implicit_invocation: false

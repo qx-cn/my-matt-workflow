@@ -129,7 +129,7 @@
   - **视觉信号与中文排版**：[NN/g Layer-Cake Scanning](https://www.nngroup.com/articles/layer-cake-pattern-scanning/) 与多媒体学习信号原则（[Mayer 综述引述](https://doi.org/10.47941/jep.3588)、[Cognitive Processing 实验](https://link.springer.com/article/10.1007/s10339-020-01002-5)）支持用分组色块、浅灰表头与适度关键词标记降低扫读负荷；W3C [中文排版需求 CLReq](https://www.w3.org/TR/clreq/#emphases) 指出汉字印刷一般不用机械斜体。
   - **长文本后半程衰减防控**：[LongWeave (arXiv:2510.24345)](https://arxiv.org/abs/2510.24345) 证实模型遵循指令的能力随生成长度增加而逐段衰减（原文：“Stepwise deviations show that the ability to follow instructions gets worse as the output becomes longer”），[VOLTBench (arXiv:2605.01357)](https://arxiv.org/html/2605.01357) 记录了长文生成中后段的跳节现象（`Section Skipping`）。在本仓样本里还观察到文档后半篇缺少层次或漏写《方案取舍》，因此把这两项列入核查。上述长文基准没有测试飞书 XML。
   - **三层落地职责划分**：
-    1. **脚本两级校验**（`check_feishu.py` / `check_html.py`）：`ERROR` 阻断客观必错或平台报错项（XML 语法与嵌套禁令、冗余 `<ol seq="auto">`、双码点变体 emoji、占位符、标题跳级、章节分割线与相邻块空行、无灰底表头、中文斜体与非链接下划线、破折号、`<callout>` 小标题紧贴或尾冒号、表内超长命令、极端文字墙、画板 Schema 错配与客观压框）；`WARN` 提醒启发式可读性与构图问题（偏长段落或列表、窄格偏长、分号或斜杠枚举罗列、密集 `<code>` 灰框、标题含顿号、疑似夸张或重复词、后半程视觉偏淡或无标色、技术方案未见《方案取舍》、折线的节点端缺少显式锚点、画板高瘦长链或节点偏多），由作者逐条核查。
+    1. **脚本校验**（`check_feishu.py` / `check_html.py`）：`ERROR` 阻断客观必错或平台报错项（`check_html.py` 只检查客观结构 `ERROR`；两脚本合计覆盖 XML 语法与嵌套禁令、冗余 `<ol seq="auto">`、双码点变体 emoji、占位符、标题跳级、章节分割线与相邻块空行、无灰底表头、中文斜体与非链接下划线、破折号、`<callout>` 小标题紧贴或尾冒号、表内超长命令、极端文字墙、画板 Schema 错配与客观压框等）；`check_feishu.py` 另用 `WARN` 提醒启发式可读性与构图问题（偏长段落或列表、窄格偏长、分号或斜杠枚举罗列、密集 `<code>` 灰框、标题含顿号、疑似夸张或重复词、后半程视觉偏淡或无标色、技术方案未见《方案取舍》、折线的节点端缺少显式锚点、画板高瘦长链或节点偏多），由作者逐条核查。
     2. **Skill 默认结构与视觉映射**（`my-tech-design` 自动衔接 `my-doc-publish`）：分清背景与实施难点、突出改造前后对比、业务规则配置列全量映射表、按三步策划配图，在发布阶段复核预览、全篇各章保持一致视觉层次。
     3. **人工微调留白**：将画板像素级拖拽、特定参会人关注点的临时标黄及等价表格/卡片取舍留给作者在飞书页面微调。
 
